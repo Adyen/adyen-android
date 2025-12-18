@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
-import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -37,6 +37,7 @@ import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.threeds2.ThreeDS2Service
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wallet.AutoResolveHelper
@@ -75,16 +76,17 @@ internal class DefaultGooglePayDelegateTest(
     @Mock private val submitHandler: SubmitHandler<GooglePayComponentState>,
     @Mock private val paymentsClient: PaymentsClient,
     @Mock private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
-    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultGooglePayDelegate
 
     @BeforeEach
     fun beforeEach() {
         whenever(paymentsClient.loadPaymentData(any())) doReturn Tasks.forResult(TEST_PAYMENT_DATA)
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createGooglePayDelegate()
     }
 
@@ -150,7 +152,7 @@ internal class DefaultGooglePayDelegateTest(
                 paymentData = paymentData,
                 paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                 checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
-                sdkData = null,
+                sdkData = TestSdkDataProvider.TEST_SDK_DATA,
             )
             assertEquals(expectedPaymentMethod, paymentComponentData.paymentMethod)
 
@@ -272,6 +274,29 @@ internal class DefaultGooglePayDelegateTest(
                 delegate.updateComponentState(createOutputData(paymentData = TEST_PAYMENT_DATA))
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(createOutputData(paymentData = TEST_PAYMENT_DATA))
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
+        fun `when component state is valid then sdkDataProvider should be called with threeDS2SdkVersion`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(createOutputData(paymentData = TEST_PAYMENT_DATA))
+
+                expectMostRecentItem()
+                sdkDataProvider.assertThreeDS2SdkVersionEquals(ThreeDS2Service.INSTANCE.sdkVersion)
             }
         }
 

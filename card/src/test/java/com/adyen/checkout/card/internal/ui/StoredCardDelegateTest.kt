@@ -38,7 +38,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
-import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -87,11 +87,11 @@ import java.util.Locale
 internal class StoredCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CardComponentState>,
     @Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
-    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
     private lateinit var publicKeyRepository: TestPublicKeyRepository
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: StoredCardDelegate
 
@@ -100,6 +100,7 @@ internal class StoredCardDelegateTest(
         cardEncryptor = TestCardEncryptor()
         publicKeyRepository = TestPublicKeyRepository()
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createCardDelegate()
 
         whenever(cardConfigDataGenerator.generate(any(), any())) doReturn emptyMap()
@@ -483,6 +484,33 @@ internal class StoredCardDelegateTest(
                 }
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    securityCode = TEST_SECURITY_CODE
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
+        fun `when component state is valid then sdkDataProvider should be called with threeDS2SdkVersion`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    securityCode = TEST_SECURITY_CODE
+                }
+
+                expectMostRecentItem()
+                sdkDataProvider.assertThreeDS2SdkVersionEquals(ThreeDS2Service.INSTANCE.sdkVersion)
             }
         }
 

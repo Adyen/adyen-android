@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
-import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -62,10 +62,10 @@ internal class DefaultOnlineBankingDelegateTest(
     @Mock private val context: Context,
     @Mock private val pdfOpener: PdfOpener,
     @Mock private val submitHandler: SubmitHandler<TestOnlineBankingComponentState>,
-    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultOnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
         TestOnlineBankingComponentState,
@@ -74,6 +74,7 @@ internal class DefaultOnlineBankingDelegateTest(
     @BeforeEach
     fun setup() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createOnlineBankingDelegate()
     }
 
@@ -279,6 +280,19 @@ internal class DefaultOnlineBankingDelegateTest(
                 }
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    selectedIssuer = OnlineBankingModel(id = "id", name = "test")
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
             }
         }
 

@@ -38,7 +38,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
-import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -80,15 +80,16 @@ internal class DefaultCashAppPayDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CashAppPayComponentState>,
     @Mock private val cashAppPayFactory: CashAppPayFactory,
     @Mock private val cashAppPay: CashAppPay,
-    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultCashAppPayDelegate
 
     @BeforeEach
     fun before() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         whenever(cashAppPayFactory.createSandbox(any())) doReturn cashAppPay
         whenever(cashAppPayFactory.create(any())) doReturn cashAppPay
         delegate = createDefaultCashAppPayDelegate()
@@ -141,6 +142,7 @@ internal class DefaultCashAppPayDelegateTest(
                     customerId = "customerId",
                     cashtag = "cashTag",
                     storedPaymentMethodId = null,
+                    sdkData = TestSdkDataProvider.TEST_SDK_DATA,
                 ),
                 order = TEST_ORDER,
                 amount = Amount("USD", 10L),
@@ -499,6 +501,21 @@ internal class DefaultCashAppPayDelegateTest(
             }
 
             assertEquals(TEST_CHECKOUT_ATTEMPT_ID, testFlow.latestValue.data.paymentMethod?.checkoutAttemptId)
+        }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            val testFlow = delegate.componentStateFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                authorizationData = CashAppPayAuthorizationData(
+                    oneTimeData = CashAppPayOneTimeData("grantId", "customerId"),
+                    onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId"),
+                )
+            }
+
+            assertEquals(TestSdkDataProvider.TEST_SDK_DATA, testFlow.latestValue.data.paymentMethod?.sdkData)
         }
 
         @Test

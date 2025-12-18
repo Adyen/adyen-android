@@ -22,15 +22,15 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
-internal class SdkDataProviderTest {
+internal class DefaultSdkDataProviderTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
-    private lateinit var sdkDataProvider: SdkDataProvider
+    private lateinit var sdkDataProvider: DefaultSdkDataProvider
 
     @BeforeEach
     fun setup() {
         analyticsManager = TestAnalyticsManager()
-        sdkDataProvider = SdkDataProvider(analyticsManager)
+        sdkDataProvider = DefaultSdkDataProvider(analyticsManager)
     }
 
     @Test
