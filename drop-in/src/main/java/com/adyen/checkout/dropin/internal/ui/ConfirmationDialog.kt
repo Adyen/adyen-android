@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -53,8 +52,7 @@ internal fun ConfirmationDialog(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
-                .padding(Dimensions.Large)
-                .clickable { onDismissRequest() },
+                .padding(Dimensions.Large),
         ) {
             DestructiveButton(
                 text = confirmationText,

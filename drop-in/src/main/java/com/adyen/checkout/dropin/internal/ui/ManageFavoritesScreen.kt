@@ -21,6 +21,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -72,17 +75,32 @@ private fun ManageFavoritesContent(
         ) {
             Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
 
+            var selectedItem by rememberSaveable { mutableStateOf<FavoriteListItem?>(null) }
+
             Section(
                 title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE),
                 favorites = viewState.cards,
-                onItemClick = {},
+                onItemClick = { selectedItem = it },
             )
 
             Section(
                 title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE),
                 favorites = viewState.others,
-                onItemClick = {},
+                onItemClick = { selectedItem = it },
             )
+
+            if (selectedItem != null) {
+                // TODO - string resources
+                ConfirmationDialog(
+                    confirmationText = "Remove ${selectedItem?.title}",
+                    onConfirmationClick = {
+                        // TODO - invoke callback to actually remove the item
+                        selectedItem = null
+                    },
+                    cancellationText = "Cancel",
+                    onDismissRequest = { selectedItem = null },
+                )
+            }
         }
     }
 }
