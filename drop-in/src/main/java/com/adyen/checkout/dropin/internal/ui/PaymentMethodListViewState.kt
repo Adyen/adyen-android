@@ -14,19 +14,19 @@ internal data class PaymentMethodListViewState(
     val amount: String,
     val favoritesSection: FavoritesSection?,
     val paymentOptionsSection: PaymentOptionsSection?,
-)
+) {
+    internal data class FavoritesSection(
+        val options: List<PaymentMethodItem>,
+    )
 
-internal data class FavoritesSection(
-    val options: List<PaymentMethodItem>,
-)
+    internal data class PaymentOptionsSection(
+        val title: CheckoutLocalizationKey,
+        val options: List<PaymentMethodItem>,
+    )
 
-internal data class PaymentOptionsSection(
-    val title: CheckoutLocalizationKey,
-    val options: List<PaymentMethodItem>,
-)
-
-internal data class PaymentMethodItem(
-    val icon: String,
-    val title: String,
-    val subtitle: String? = null,
-)
+    internal data class PaymentMethodItem(
+        val icon: String,
+        val title: String,
+        val subtitle: String? = null,
+    )
+}
