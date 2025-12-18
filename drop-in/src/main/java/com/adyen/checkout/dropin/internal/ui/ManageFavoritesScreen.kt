@@ -146,11 +146,13 @@ private fun ManageFavoritesContentPreview() {
         val viewState = ManageFavoritesViewState(
             cards = listOf(
                 FavoriteListItem(
+                    id = "1",
                     icon = "mc",
                     title = "•••• 1234",
                     subtitle = "Mastercard",
                 ),
                 FavoriteListItem(
+                    id = "2",
                     icon = "visa",
                     title = "•••• 2567",
                     subtitle = "Visa",
@@ -158,11 +160,13 @@ private fun ManageFavoritesContentPreview() {
             ),
             others = listOf(
                 FavoriteListItem(
+                    id = "3",
                     icon = "paybybank",
                     title = "•••• 1234",
                     subtitle = "WELLS FARGO",
                 ),
                 FavoriteListItem(
+                    id = "4",
                     icon = "wechatpay",
                     title = "@someName",
                     subtitle = "WeChat Pay",
@@ -173,6 +177,7 @@ private fun ManageFavoritesContentPreview() {
         ManageFavoritesContent(
             navigator = DropInNavigator(),
             viewState = viewState,
+            onRemoveItem = {},
         )
     }
 }
