@@ -16,8 +16,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
@@ -34,11 +36,12 @@ import java.util.Locale
 @Composable
 internal fun ManageFavoritesScreen(
     navigator: DropInNavigator,
+    viewModel: ManageFavoritesViewModel,
 ) {
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     ManageFavoritesContent(
-        navigator,
-        // TODO - get view state from view model
-        ManageFavoritesViewState(emptyList(), emptyList()),
+        navigator = navigator,
+        viewState = viewState,
     )
 }
 
