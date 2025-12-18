@@ -25,7 +25,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
-import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -62,15 +62,16 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultBacsDirectDebitDelegateTest(
     @Mock private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
-    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultBacsDirectDebitDelegate
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createBacsDelegate()
     }
 
@@ -601,6 +602,24 @@ internal class DefaultBacsDirectDebitDelegateTest(
                 }
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
             }
         }
 
