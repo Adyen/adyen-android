@@ -49,6 +49,7 @@ internal fun ManageFavoritesScreen(
     ManageFavoritesContent(
         navigator = navigator,
         viewState = viewState,
+        onRemoveItem = { viewModel.removeFavorite(it.id) },
     )
 }
 
@@ -56,6 +57,7 @@ internal fun ManageFavoritesScreen(
 private fun ManageFavoritesContent(
     navigator: DropInNavigator,
     viewState: ManageFavoritesViewState,
+    onRemoveItem: (FavoriteListItem) -> Unit,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -89,12 +91,12 @@ private fun ManageFavoritesContent(
                 onItemClick = { selectedItem = it },
             )
 
-            if (selectedItem != null) {
+            selectedItem?.let { item ->
                 // TODO - string resources
                 ConfirmationDialog(
-                    confirmationText = "Remove ${selectedItem?.title}",
+                    confirmationText = "Remove ${item.title}",
                     onConfirmationClick = {
-                        // TODO - invoke callback to actually remove the item
+                        onRemoveItem(item)
                         selectedItem = null
                     },
                     cancellationText = "Cancel",
