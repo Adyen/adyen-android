@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
@@ -31,12 +32,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+@Suppress("LongParameterList")
 internal class DefaultIdealDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     override val componentParams: GenericComponentParams,
     private val analyticsManager: AnalyticsManager,
+    private val sdkDataProvider: SdkDataProvider,
 ) : IdealDelegate {
 
     override val componentStateFlow: StateFlow<IdealComponentState> = MutableStateFlow(createComponentState())
@@ -90,6 +93,7 @@ internal class DefaultIdealDelegate(
             paymentMethod = IdealPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkData = sdkDataProvider.createEncodedSdkData(),
                 // Set issuer to null to force redirect flow (ideal 2.0)
                 issuer = null,
             ),

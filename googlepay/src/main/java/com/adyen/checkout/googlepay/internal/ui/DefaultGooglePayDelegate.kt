@@ -21,12 +21,14 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayCancellationException
 import com.adyen.checkout.googlepay.GooglePayComponentState
@@ -40,6 +42,7 @@ import com.adyen.checkout.googlepay.internal.util.awaitTask
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.threeds2.ThreeDS2Service
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.AutoResolveHelper
@@ -64,6 +67,7 @@ internal class DefaultGooglePayDelegate(
     private val analyticsManager: AnalyticsManager,
     private val paymentsClient: PaymentsClient,
     private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
+    private val sdkDataProvider: SdkDataProvider,
 ) : GooglePayDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -179,6 +183,9 @@ internal class DefaultGooglePayDelegate(
             paymentData = paymentData,
             paymentMethodType = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(
+                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+            ),
         )
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,

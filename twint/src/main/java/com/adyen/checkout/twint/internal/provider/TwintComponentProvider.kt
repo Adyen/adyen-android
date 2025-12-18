@@ -28,6 +28,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
+import com.adyen.checkout.components.core.internal.provider.DefaultSdkDataProvider
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -127,6 +128,7 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
+                sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             )
 
             createComponent(
@@ -204,6 +206,7 @@ constructor(
                 paymentMethod = storedPaymentMethod,
                 order = order,
                 componentParams = componentParams,
+                sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             )
 
             createComponent(
@@ -284,6 +287,7 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
+                sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             )
 
             val sessionComponentEventHandler = createSessionComponentEventHandler(
@@ -370,6 +374,7 @@ constructor(
                 paymentMethod = storedPaymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
+                sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             )
 
             val sessionComponentEventHandler = createSessionComponentEventHandler(

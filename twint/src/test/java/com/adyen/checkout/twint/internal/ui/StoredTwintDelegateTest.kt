@@ -8,6 +8,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -33,11 +34,13 @@ import java.util.Locale
 internal class StoredTwintDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: StoredTwintDelegate
 
     @BeforeEach
     fun before() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createStoredTwintDelegate()
     }
 
@@ -89,6 +92,7 @@ internal class StoredTwintDelegateTest {
                     type = TEST_PAYMENT_METHOD_TYPE,
                     checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     storedPaymentMethodId = TEST_PAYMENT_METHOD_ID,
+                    sdkData = TestSdkDataProvider.TEST_SDK_DATA,
                 ),
                 order = TEST_ORDER,
                 amount = null,
@@ -134,6 +138,14 @@ internal class StoredTwintDelegateTest {
 
             analyticsManager.assertIsCleared()
         }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertEquals(TestSdkDataProvider.TEST_SDK_DATA, componentStateFlow.latestValue.data.paymentMethod?.sdkData)
+        }
     }
 
     private fun createStoredTwintDelegate(
@@ -152,6 +164,7 @@ internal class StoredTwintDelegateTest {
             dropInOverrideParams = null,
             componentSessionParams = null,
         ),
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -51,6 +52,7 @@ internal class StoredACHDirectDebitDelegate(
     private val analyticsManager: AnalyticsManager,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: OrderRequest?,
+    private val sdkDataProvider: SdkDataProvider,
 ) : ACHDirectDebitDelegate {
 
     private val inputData: ACHDirectDebitInputData = ACHDirectDebitInputData()
@@ -125,6 +127,7 @@ internal class StoredACHDirectDebitDelegate(
         val paymentMethod = ACHDirectDebitPaymentMethod(
             type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             storedPaymentMethodId = storedPaymentMethod.id,
         )
 

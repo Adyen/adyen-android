@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -34,23 +35,22 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
 internal class StoredCashAppPayDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: StoredCashAppPayDelegate
 
     @BeforeEach
     fun before() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createStoredCashAppPayDelegate()
     }
 
@@ -102,6 +102,7 @@ internal class StoredCashAppPayDelegateTest {
                     type = TEST_PAYMENT_METHOD_TYPE,
                     checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     storedPaymentMethodId = TEST_PAYMENT_METHOD_ID,
+                    sdkData = TestSdkDataProvider.TEST_SDK_DATA,
                 ),
                 order = TEST_ORDER,
                 amount = null,
@@ -147,6 +148,14 @@ internal class StoredCashAppPayDelegateTest {
 
             analyticsManager.assertIsCleared()
         }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            val testFlow = delegate.componentStateFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertEquals(TestSdkDataProvider.TEST_SDK_DATA, testFlow.latestValue.data.paymentMethod?.sdkData)
+        }
     }
 
     private fun createStoredCashAppPayDelegate(
@@ -167,6 +176,7 @@ internal class StoredCashAppPayDelegateTest {
             storedPaymentMethod = StoredPaymentMethod(),
             context = Application(),
         ),
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -35,7 +36,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultTwintDelegate(
     private val submitHandler: SubmitHandler<TwintComponentState>,
     private val analyticsManager: AnalyticsManager,
@@ -43,6 +44,7 @@ internal class DefaultTwintDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: TwintComponentParams,
+    private val sdkDataProvider: SdkDataProvider,
 ) : TwintDelegate, ButtonDelegate {
 
     private val inputData = TwintInputData()
@@ -123,6 +125,7 @@ internal class DefaultTwintDelegate(
         val paymentMethod = TwintPaymentMethod(
             type = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             subtype = getSubtype(),
         )
 

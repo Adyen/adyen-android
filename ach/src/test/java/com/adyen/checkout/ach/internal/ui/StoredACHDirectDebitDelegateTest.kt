@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -38,19 +39,20 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(TestDispatcherExtension::class)
 internal class StoredACHDirectDebitDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: ACHDirectDebitDelegate
 
     @BeforeEach
     fun setUp() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createAchDelegate()
     }
 
@@ -124,6 +126,15 @@ internal class StoredACHDirectDebitDelegateTest {
 
             analyticsManager.assertIsCleared()
         }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val componentState = delegate.componentStateFlow.first()
+
+            assertEquals(TestSdkDataProvider.TEST_SDK_DATA, componentState.data.paymentMethod?.sdkData)
+        }
     }
 
     private fun createAchDelegate(
@@ -141,6 +152,7 @@ internal class StoredACHDirectDebitDelegateTest {
         componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper())
             .mapToParams(configuration, DEVICE_LOCALE, null, null),
         order = order,
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

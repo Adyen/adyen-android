@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -34,19 +35,20 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, LoggingExtension::class)
+@ExtendWith(LoggingExtension::class)
 internal class StoredPayToDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: PayToDelegate
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createDelegate()
     }
 
@@ -104,6 +106,14 @@ internal class StoredPayToDelegateTest {
 
             analyticsManager.assertIsCleared()
         }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            val testFlow = delegate.componentStateFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertEquals(TestSdkDataProvider.TEST_SDK_DATA, testFlow.latestValue.data.paymentMethod?.sdkData)
+        }
     }
 
     private fun createDelegate(
@@ -123,6 +133,7 @@ internal class StoredPayToDelegateTest {
         ),
         order = TEST_ORDER,
         analyticsManager = analyticsManager,
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

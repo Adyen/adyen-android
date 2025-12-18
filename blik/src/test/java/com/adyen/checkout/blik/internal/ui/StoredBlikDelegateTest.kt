@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -52,11 +54,13 @@ class StoredBlikDelegateTest(
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: StoredBlikDelegate
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createStoredBlikDelegate()
     }
 
@@ -152,6 +156,15 @@ class StoredBlikDelegateTest(
 
             analyticsManager.assertIsCleared()
         }
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
     }
 
     private fun createStoredBlikDelegate(
@@ -172,6 +185,7 @@ class StoredBlikDelegateTest(
         order = TEST_ORDER,
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

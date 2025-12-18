@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -38,6 +39,7 @@ internal class StoredTwintDelegate(
     private val paymentMethod: StoredPaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: TwintComponentParams,
+    private val sdkDataProvider: SdkDataProvider,
 ) : TwintDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -106,6 +108,7 @@ internal class StoredTwintDelegate(
         val twintPaymentMethod = TwintPaymentMethod(
             type = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             storedPaymentMethodId = paymentMethod.id,
         )
 

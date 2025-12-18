@@ -27,6 +27,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -75,13 +76,14 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultACHDirectDebitDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>
+    @Mock private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
 ) {
 
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var addressRepository: TestAddressRepository
     private lateinit var genericEncryptor: TestGenericEncryptor
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultACHDirectDebitDelegate
 
     @BeforeEach
@@ -90,6 +92,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         addressRepository = TestAddressRepository()
         genericEncryptor = TestGenericEncryptor()
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createAchDelegate()
     }
 
@@ -511,6 +514,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                     encryptedBankAccountNumber = TEST_BANK_ACCOUNT_NUMBER,
                     encryptedBankLocationId = TEST_BANK_BANK_LOCATION_ID,
                     ownerName = TEST_OWNER_NAME,
+                    sdkData = TestSdkDataProvider.TEST_SDK_DATA,
                 )
 
                 val expectedPaymentComponentData = PaymentComponentData(
@@ -692,6 +696,22 @@ internal class DefaultACHDirectDebitDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                bankLocationId = TEST_BANK_BANK_LOCATION_ID
+                bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
+                ownerName = TEST_OWNER_NAME
+                address = getValidAddressInputData()
+            }
+
+            val componentState = delegate.componentStateFlow.first()
+
+            assertEquals(TestSdkDataProvider.TEST_SDK_DATA, componentState.data.paymentMethod?.sdkData)
+        }
+
+        @Test
         fun `when fetching the public key fails, then an error event is tracked`() = runTest {
             publicKeyRepository.shouldReturnError = true
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -757,6 +777,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper())
             .mapToParams(configuration, DEVICE_LOCALE, null, null),
         order = order,
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(
@@ -780,7 +801,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             apartmentSuite = "apartment",
             city = "Istanbul",
             country = "TR",
-            countryDisplayName = "Turkey"
+            countryDisplayName = "Turkey",
         )
     }
 

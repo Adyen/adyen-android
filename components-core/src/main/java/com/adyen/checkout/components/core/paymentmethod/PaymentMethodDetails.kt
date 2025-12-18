@@ -23,11 +23,16 @@ import org.json.JSONObject
 abstract class PaymentMethodDetails : ModelObject() {
 
     abstract var type: String?
+
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     abstract var checkoutAttemptId: String?
+
+    abstract var sdkData: String?
 
     companion object {
         const val TYPE = "type"
         const val CHECKOUT_ATTEMPT_ID = "checkoutAttemptId"
+        const val SDK_DATA = "sdkData"
 
         @JvmField
         val SERIALIZER: Serializer<PaymentMethodDetails> = object : Serializer<PaymentMethodDetails> {

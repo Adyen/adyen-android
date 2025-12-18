@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -60,11 +61,13 @@ internal class DefaultEContextDelegateTest(
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultEContextDelegate<TestEContextPaymentMethod, TestEContextComponentState>
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createEContextDelegate()
     }
 
@@ -305,6 +308,23 @@ internal class DefaultEContextDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    firstName = "firstName"
+                    lastName = "lastName"
+                    mobileNumber = "12345678"
+                    countryCode = "+31"
+                    emailAddress = "abc@mail.com"
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
@@ -343,6 +363,7 @@ internal class DefaultEContextDelegateTest(
                 isReady = isReady,
             )
         },
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

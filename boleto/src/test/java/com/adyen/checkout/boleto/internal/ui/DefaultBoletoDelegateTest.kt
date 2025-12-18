@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -63,12 +64,14 @@ internal class DefaultBoletoDelegateTest(
 
     private lateinit var addressRepository: TestAddressRepository
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultBoletoDelegate
 
     @BeforeEach
     fun beforeEach() {
         addressRepository = TestAddressRepository()
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createBoletoDelegate()
     }
 
@@ -558,6 +561,19 @@ internal class DefaultBoletoDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    firstName = "Test"
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
@@ -582,6 +598,7 @@ internal class DefaultBoletoDelegateTest(
         componentParams = BoletoComponentParamsMapper(CommonComponentParamsMapper())
             .mapToParams(configuration, Locale.US, null, null),
         addressRepository = addressRepository,
+        sdkDataProvider = sdkDataProvider,
     )
 
     @Suppress("LongParameterList")

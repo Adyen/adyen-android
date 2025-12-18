@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -61,11 +62,13 @@ internal class DefaultIssuerListDelegateTest(
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultIssuerListDelegate<TestIssuerPaymentMethod, TestIssuerComponentState>
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createIssuerListDelegate()
     }
 
@@ -196,6 +199,7 @@ internal class DefaultIssuerListDelegateTest(
                     isReady = isReady,
                 )
             },
+            sdkDataProvider = sdkDataProvider,
         )
 
         delegate.viewFlow.test {
@@ -231,6 +235,7 @@ internal class DefaultIssuerListDelegateTest(
                     isReady = isReady,
                 )
             },
+            sdkDataProvider = sdkDataProvider,
         )
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SpinnerView, expectMostRecentItem())
@@ -352,6 +357,19 @@ internal class DefaultIssuerListDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    selectedIssuer = IssuerModel(id = "id", name = "test", environment = Environment.TEST)
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
@@ -383,6 +401,7 @@ internal class DefaultIssuerListDelegateTest(
                 isReady,
             )
         },
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

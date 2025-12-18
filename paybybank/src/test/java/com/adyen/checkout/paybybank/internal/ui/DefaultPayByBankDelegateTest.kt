@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -60,11 +61,13 @@ internal class DefaultPayByBankDelegateTest(
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultPayByBankDelegate
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createPayByBankDelegate(
             issuers = listOf(
                 Issuer(id = "issuer-id", name = "issuer-name"),
@@ -294,6 +297,19 @@ internal class DefaultPayByBankDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    selectedIssuer = IssuerModel(id = "id", name = "test", environment = Environment.TEST)
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
@@ -328,6 +344,7 @@ internal class DefaultPayByBankDelegateTest(
             order = order,
             analyticsManager = analyticsManager,
             submitHandler = submitHandler,
+            sdkDataProvider = sdkDataProvider,
         )
     }
 

@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -72,6 +73,7 @@ internal class DefaultGiftCardDelegateTest(
     private lateinit var cardEncryptor: TestCardEncryptor
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultGiftCardDelegate
 
     @BeforeEach
@@ -79,6 +81,7 @@ internal class DefaultGiftCardDelegateTest(
         cardEncryptor = TestCardEncryptor()
         publicKeyRepository = TestPublicKeyRepository()
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createGiftCardDelegate()
     }
 
@@ -410,6 +413,20 @@ internal class DefaultGiftCardDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = "5555444433330000"
+                    pin = "737"
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
         fun `when fetching the public key fails, then an error event is tracked`() = runTest {
             publicKeyRepository.shouldReturnError = true
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -460,6 +477,7 @@ internal class DefaultGiftCardDelegateTest(
         submitHandler = submitHandler,
         validator = DefaultGiftCardValidator(),
         protocol = DefaultGiftCardProtocol(),
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

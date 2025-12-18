@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -64,6 +65,7 @@ internal class DefaultOnlineBankingDelegateTest(
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultOnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
         TestOnlineBankingComponentState,
@@ -72,6 +74,7 @@ internal class DefaultOnlineBankingDelegateTest(
     @BeforeEach
     fun setup() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createOnlineBankingDelegate()
     }
 
@@ -281,6 +284,19 @@ internal class DefaultOnlineBankingDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    selectedIssuer = OnlineBankingModel(id = "id", name = "test")
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
@@ -315,6 +331,7 @@ internal class DefaultOnlineBankingDelegateTest(
                 isReady = isReady,
             )
         },
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

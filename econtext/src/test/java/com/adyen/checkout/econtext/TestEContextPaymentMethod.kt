@@ -11,9 +11,12 @@ package com.adyen.checkout.econtext
 import android.os.Parcel
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 
+@Suppress("LongParameterList")
 internal class TestEContextPaymentMethod(
     override var firstName: String? = "firstName",
+    @Deprecated("This property is deprecated.")
     override var checkoutAttemptId: String? = "checkoutAttemptId",
+    override var sdkData: String? = "sdkData",
     override var lastName: String? = "lastName",
     override var telephoneNumber: String? = "telephoneNumber",
     override var shopperEmail: String? = "shopperEmail",

@@ -7,6 +7,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -25,19 +26,20 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, LoggingExtension::class)
+@ExtendWith(LoggingExtension::class)
 internal class DefaultIdealDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultIdealDelegate
 
     @BeforeEach
     fun before() {
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
         delegate = createIdealDelegate()
     }
 
@@ -107,6 +109,14 @@ internal class DefaultIdealDelegateTest {
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate = createIdealDelegate()
+            val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+
+            assertEquals(TestSdkDataProvider.TEST_SDK_DATA, componentStateFlow.latestValue.data.paymentMethod?.sdkData)
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
@@ -133,6 +143,7 @@ internal class DefaultIdealDelegateTest {
             componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
             analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
         )
     }
 

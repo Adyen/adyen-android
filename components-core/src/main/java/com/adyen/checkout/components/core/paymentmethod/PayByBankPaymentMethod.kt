@@ -18,7 +18,9 @@ import org.json.JSONObject
 @Parcelize
 class PayByBankPaymentMethod(
     override var type: String? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String? = null,
+    override var sdkData: String? = null,
     override var issuer: String? = null,
 ) : IssuerListPaymentMethod() {
 
@@ -32,6 +34,7 @@ class PayByBankPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(ISSUER, modelObject.issuer)
                     }
                 } catch (e: JSONException) {
@@ -43,6 +46,7 @@ class PayByBankPaymentMethod(
                 return PayByBankPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     issuer = jsonObject.getStringOrNull(ISSUER)
                 )
             }

@@ -52,6 +52,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.TestSdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -121,6 +122,7 @@ internal class DefaultCardDelegateTest(
     private lateinit var addressRepository: TestAddressRepository
     private lateinit var detectCardTypeRepository: TestDetectCardTypeRepository
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var sdkDataProvider: TestSdkDataProvider
     private lateinit var delegate: DefaultCardDelegate
 
     @BeforeEach
@@ -131,6 +133,7 @@ internal class DefaultCardDelegateTest(
         addressRepository = TestAddressRepository()
         detectCardTypeRepository = TestDetectCardTypeRepository()
         analyticsManager = TestAnalyticsManager()
+        sdkDataProvider = TestSdkDataProvider()
 
         whenever(addressLookupDelegate.addressLookupSubmitFlow).thenReturn(MutableStateFlow(AddressInputModel()))
         whenever(cardConfigDataGenerator.generate(any(), any())) doReturn emptyMap()
@@ -1126,6 +1129,37 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
+        fun `when component state is valid then PaymentMethodDetails should contain sdkData`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    securityCode = TEST_SECURITY_CODE
+                    expiryDate = TEST_EXPIRY_DATE
+                }
+
+                assertEquals(TestSdkDataProvider.TEST_SDK_DATA, expectMostRecentItem().data.paymentMethod?.sdkData)
+            }
+        }
+
+        @Test
+        fun `when component state is valid then sdkDataProvider should be called with threeDS2SdkVersion`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    securityCode = TEST_SECURITY_CODE
+                    expiryDate = TEST_EXPIRY_DATE
+                }
+
+                expectMostRecentItem()
+                sdkDataProvider.assertThreeDS2SdkVersionEquals(ThreeDS2Service.INSTANCE.sdkVersion)
+            }
+        }
+
+        @Test
         fun `when fetching the public key fails, then an error event is tracked`() = runTest {
             publicKeyRepository.shouldReturnError = true
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -1410,7 +1444,8 @@ internal class DefaultCardDelegateTest(
         analyticsManager: AnalyticsManager = this.analyticsManager,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
-        addressLookupDelegate: AddressLookupDelegate = this.addressLookupDelegate
+        addressLookupDelegate: AddressLookupDelegate = this.addressLookupDelegate,
+        sdkDataProvider: TestSdkDataProvider = this.sdkDataProvider,
     ): DefaultCardDelegate {
         val componentParams = CardComponentParamsMapper(
             commonComponentParamsMapper = CommonComponentParamsMapper(),
@@ -1439,6 +1474,7 @@ internal class DefaultCardDelegateTest(
             addressLookupDelegate = addressLookupDelegate,
             cardConfigDataGenerator = cardConfigDataGenerator,
             dualBrandedCardHandler = DualBrandedCardHandler(componentParams.environment),
+            sdkDataProvider = sdkDataProvider,
         )
     }
 
