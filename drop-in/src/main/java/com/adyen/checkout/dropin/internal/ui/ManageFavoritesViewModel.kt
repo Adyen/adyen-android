@@ -62,6 +62,7 @@ internal class ManageFavoritesViewModel(
         }
 
         return FavoriteListItem(
+            id = id.orEmpty(),
             icon = icon,
             title = title,
             subtitle = subtitle,
