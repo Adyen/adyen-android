@@ -8,14 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,10 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,8 +29,7 @@ import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 internal fun DropInScaffold(
     navigationIcon: @Composable () -> Unit,
     title: String,
-    description: String? = null,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
@@ -54,49 +43,13 @@ internal fun DropInScaffold(
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            Spacer(Modifier.size(Dimensions.ExtraSmall))
-
-            description?.let {
-                Body(
-                    text = description,
-                    color = CheckoutThemeProvider.colors.textSecondary,
-                    modifier = Modifier.padding(horizontal = Dimensions.Large),
-                )
-            }
-
-            content()
-        }
+        content(innerPadding)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun DropInScaffoldPreview() {
-    InternalCheckoutTheme {
-        DropInScaffold(
-            navigationIcon = {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                }
-            },
-            title = "Title",
-            description = LoremIpsum(words = 15).values.first(),
-            content = {},
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DropInScaffoldNoDescriptionPreview() {
     InternalCheckoutTheme {
         DropInScaffold(
             navigationIcon = {

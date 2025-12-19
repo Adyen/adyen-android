@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -36,6 +39,7 @@ import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.element.ListItem
+import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -65,21 +69,37 @@ private fun PaymentMethodListContent(
             }
         },
         title = viewState.amount,
-        description = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
-    ) {
-        Spacer(Modifier.size(Dimensions.Medium))
-
-        viewState.favoritesSection?.let {
-            FavoritesSection(
-                favoritesSection = it,
-                onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Body(
+                text = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
+                color = CheckoutThemeProvider.colors.textSecondary,
+                modifier = Modifier
+                    .padding(
+                        start = Dimensions.Large,
+                        top = Dimensions.ExtraSmall,
+                        end = Dimensions.Large,
+                        bottom = Dimensions.Medium,
+                    ),
             )
 
-            Spacer(Modifier.size(Dimensions.Small))
-        }
+            viewState.favoritesSection?.let {
+                FavoritesSection(
+                    favoritesSection = it,
+                    onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
+                )
 
-        viewState.paymentOptionsSection?.let {
-            PaymentOptionsSection(it)
+                Spacer(Modifier.size(Dimensions.Small))
+            }
+
+            viewState.paymentOptionsSection?.let {
+                PaymentOptionsSection(it)
+            }
         }
     }
 }
