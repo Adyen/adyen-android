@@ -90,14 +90,14 @@ private fun ManageFavoritesContent(
         }
 
         selectedItem?.let { item ->
-            // TODO - string resources
             ConfirmationDialog(
-                confirmationText = "Remove ${item.title}",
+                // TODO - Pass item title as parameter after we resolve parameterized strings
+                confirmationText = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE_CONFIRMATION),
                 onConfirmationClick = {
                     onRemoveItem(item)
                     selectedItem = null
                 },
-                cancellationText = "Cancel",
+                cancellationText = resolveString(CheckoutLocalizationKey.GENERAL_CANCEL),
                 onDismissRequest = { selectedItem = null },
             )
         }
@@ -122,23 +122,41 @@ private fun LazyListScope.section(
         }
 
         item(key = item.id) {
-            ListItem(
-                leadingIcon = {
-                    CheckoutNetworkLogo(
-                        txVariant = item.icon,
-                        modifier = Modifier.size(Dimensions.LogoSize.medium),
-                    )
-                },
-                title = item.title,
-                subtitle = item.subtitle,
-                trailingIcon = { Body(text = "Remove", color = CheckoutThemeProvider.colors.destructive) },
-                onClick = { onItemClick(item) },
+            FavoriteListItem(
+                item = item,
+                onClick = onItemClick,
                 modifier = Modifier
                     .padding(horizontal = Dimensions.Spacing.ExtraSmall)
                     .animateItem(),
             )
         }
     }
+}
+
+@Composable
+private fun FavoriteListItem(
+    item: FavoriteListItem,
+    onClick: (FavoriteListItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    ListItem(
+        leadingIcon = {
+            CheckoutNetworkLogo(
+                txVariant = item.icon,
+                modifier = Modifier.size(Dimensions.LogoSize.medium),
+            )
+        },
+        title = item.title,
+        subtitle = item.subtitle,
+        trailingIcon = {
+            Body(
+                text = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE),
+                color = CheckoutThemeProvider.colors.destructive,
+            )
+        },
+        onClick = { onClick(item) },
+        modifier = modifier,
+    )
 }
 
 @Preview(showBackground = true)
