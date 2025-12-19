@@ -109,18 +109,18 @@ private fun LazyListScope.section(
     favorites: List<FavoriteListItem>,
     onItemClick: (FavoriteListItem) -> Unit,
 ) {
-    favorites.forEachIndexed { index, item ->
-        if (index == 0) {
-            item(key = title) {
-                SubHeadlineEmphasized(
-                    text = resolveString(title),
-                    modifier = Modifier
-                        .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small)
-                        .animateItem(),
-                )
-            }
+    if (favorites.isNotEmpty()) {
+        item(key = title) {
+            SubHeadlineEmphasized(
+                text = resolveString(title),
+                modifier = Modifier
+                    .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small)
+                    .animateItem(),
+            )
         }
+    }
 
+    favorites.forEach { item ->
         item(key = item.id) {
             FavoriteListItem(
                 item = item,
