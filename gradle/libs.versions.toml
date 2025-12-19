@@ -13,7 +13,6 @@ kotlin = "2.1.21"
 ksp = "2.1.21-2.0.1"
 dokka = "2.0.0"
 hilt = "2.56.2"
-javapoet = "1.13.0"
 
 # Code quality
 detekt = "1.23.8"
@@ -173,7 +172,6 @@ detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitla
 dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 sonarqube-gradle-plugin = { group = "org.sonarqube", name = "org.sonarqube.gradle.plugin", version.ref = "sonarqube" }
-javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
 
 [bundles]
 
@@ -194,24 +192,29 @@ mockito = ["mockito-junit-jupiter", "mockito-kotlin"]
 mockito-android = ["mockito-android-main", "mockito-kotlin"]
 
 [plugins]
-android-application = { id = "com.android.application" }
-android-library = { id = "com.android.library" }
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlin = { id = "org.jetbrains.kotlin.jvm" }
-kotlin-android = { id = "org.jetbrains.kotlin.android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-ktlint-convention = { id = "ktlint-convention" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-detekt = { id = "io.gitlab.arturbosch.detekt" }
-detekt-convention = { id = "detekt-convention" }
-dokka = { id = "org.jetbrains.dokka" }
-dokka-convention = { id = "dokka-convention" }
-sonarqube = { id = "org.sonarqube" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
-resolve-dependencies = { id = "resolve-dependencies" }
-generate-dependency-list = { id = "generate-dependency-list" }
-aggregate-dependency-lists = { id = "aggregate-dependency-lists" }
-checkout-library = { id = "checkout-library" }
+
+# Plugins defined by this project
+checkout-android-library = { id = "checkout.android.library" }
+checkout-detekt = { id = "checkout.detekt" }
+checkout-dokka = { id = "checkout.dokka" }
+checkout-jacoco = { id = "checkout.jacoco" }
+checkout-ktlint = { id = "checkout.ktlint" }
+checkout-publish = { id = "checkout.publish" }
+checkout-sonar = { id = "checkout.sonar" }
+dependency-list-aggregate = { id = "checkout.dependency.list.aggregate" }
+dependency-list-generate = { id = "checkout.dependency.list.generate" }
+dependency-resolve = { id = "checkout.dependency.resolve" }

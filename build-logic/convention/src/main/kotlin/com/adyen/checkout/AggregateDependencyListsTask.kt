@@ -3,20 +3,32 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 2/10/2025.
+ * Created by oscars on 3/12/2025.
  */
+
+package com.adyen.checkout
+
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
 
 abstract class AggregateDependencyListsTask : DefaultTask() {
 
     @get:InputFiles
     abstract val dependencyLists: ConfigurableFileCollection
 
-    @get:OutputFile
-    abstract val outputFile: RegularFileProperty
-
     @get:Input
     @get:Optional
     abstract val includeModules: Property<Boolean>
+
+    @get:OutputFile
+    abstract val outputFile: RegularFileProperty
 
     @TaskAction
     fun aggregate() {
@@ -51,23 +63,3 @@ abstract class AggregateDependencyListsTask : DefaultTask() {
 }
 
 private data class DependencyUsage(val dependency: String, val module: String)
-
-// Example call from command line: ./gradlew aggregateDependencyLists -PoutputFileName=deps.txt -PincludeModules=true
-val aggregateDependencyLists = tasks.register<AggregateDependencyListsTask>("aggregateDependencyLists") {
-    val filteredSubProjects = subprojects.filter { it.plugins.hasPlugin("generate-dependency-list") }
-
-    filteredSubProjects.forEach {
-        dependsOn(it.tasks.named("generateDependencyList"))
-    }
-
-    dependencyLists.from(
-        filteredSubProjects.map {
-            it.layout.buildDirectory.file("outputs/dependency_list/${it.name}.txt")
-        },
-    )
-
-    val outputFileName = project.providers.gradleProperty("outputFileName").getOrElse("dependency_list.txt")
-    outputFile.set(project.layout.buildDirectory.file("outputs/dependency_list/$outputFileName"))
-
-    includeModules.set(project.providers.gradleProperty("includeModules").map { it.toBoolean() })
-}
