@@ -73,13 +73,13 @@ private fun ManageFavoritesContent(
             Spacer(Modifier.size(Dimensions.ExtraLarge))
 
             Section(
-                title = "Cards",
+                title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE),
                 favorites = viewState.cards,
                 onItemClick = {},
             )
 
             Section(
-                title = "Others",
+                title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE),
                 favorites = viewState.others,
                 onItemClick = {},
             )
