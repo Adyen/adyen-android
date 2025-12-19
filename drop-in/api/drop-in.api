@@ -133,8 +133,9 @@ public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$Dr
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$ManageFavoritesScreenKt {
 	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$ManageFavoritesScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$-1095481080$drop_in_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-256664689$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-437074430$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1981097805$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$77751844$drop_in_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$PaymentMethodListScreenKt {

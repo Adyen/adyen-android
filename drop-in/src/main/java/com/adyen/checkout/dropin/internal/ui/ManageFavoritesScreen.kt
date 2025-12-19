@@ -8,9 +8,13 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -59,20 +63,27 @@ private fun ManageFavoritesContent(
             }
         },
         title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
-    ) {
-        Spacer(Modifier.size(Dimensions.ExtraLarge))
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Spacer(Modifier.size(Dimensions.ExtraLarge))
 
-        Section(
-            title = "Cards",
-            favorites = viewState.cards,
-            onItemClick = {},
-        )
+            Section(
+                title = "Cards",
+                favorites = viewState.cards,
+                onItemClick = {},
+            )
 
-        Section(
-            title = "Others",
-            favorites = viewState.others,
-            onItemClick = {},
-        )
+            Section(
+                title = "Others",
+                favorites = viewState.others,
+                onItemClick = {},
+            )
+        }
     }
 }
 
