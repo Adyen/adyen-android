@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2025 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -32,7 +31,8 @@
     <string name="checkout_card_dual_brand_selector_description" translatable="false">Select the card brand you prefer to pay with. This is optional.</string>
     <string name="checkout_drop_in_other_payment_methods" translatable="false">Other payment methods</string>
     <string name="checkout_drop_in_payment_method_list_description" translatable="false">Select your preferred payment option and complete your payment</string>
-    <string name="checkout_drop_in_payment_options" translatable="false">Payment options</string>
+    <string name="checkout_drop_in_payment_method_list_payment_options_title" translatable="false">Payment options</string>
+    <string name="checkout_drop_in_payment_method_list_payment_options_title_with_favorites" translatable="false">Others</string>
     <string name="checkout_general_close" translatable="false">Close</string>
     <string name="checkout_general_search_hint" translatable="false">Search..</string>
 </resources>
