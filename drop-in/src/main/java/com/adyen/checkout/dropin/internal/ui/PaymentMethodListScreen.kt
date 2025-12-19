@@ -67,7 +67,6 @@ private fun PaymentMethodListContent(
         title = viewState.amount,
         description = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
     ) {
-
         Spacer(Modifier.size(Dimensions.Medium))
 
         viewState.favoritesSection?.let {
