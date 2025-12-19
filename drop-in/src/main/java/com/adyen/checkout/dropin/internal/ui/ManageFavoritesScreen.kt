@@ -8,13 +8,12 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -69,71 +68,76 @@ private fun ManageFavoritesContent(
         },
         title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
     ) { innerPadding ->
-        Column(
+        var selectedItem by rememberSaveable { mutableStateOf<FavoriteListItem?>(null) }
+
+        LazyColumn(
+            contentPadding = PaddingValues(top = Dimensions.Spacing.ExtraLarge),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
+                .padding(innerPadding),
         ) {
-            Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
-
-            var selectedItem by rememberSaveable { mutableStateOf<FavoriteListItem?>(null) }
-
-            Section(
-                title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE),
+            section(
+                title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE,
                 favorites = viewState.cards,
                 onItemClick = { selectedItem = it },
             )
 
-            Section(
-                title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE),
+            section(
+                title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE,
                 favorites = viewState.others,
                 onItemClick = { selectedItem = it },
             )
+        }
 
-            selectedItem?.let { item ->
-                // TODO - string resources
-                ConfirmationDialog(
-                    confirmationText = "Remove ${item.title}",
-                    onConfirmationClick = {
-                        onRemoveItem(item)
-                        selectedItem = null
-                    },
-                    cancellationText = "Cancel",
-                    onDismissRequest = { selectedItem = null },
-                )
-            }
+        selectedItem?.let { item ->
+            // TODO - string resources
+            ConfirmationDialog(
+                confirmationText = "Remove ${item.title}",
+                onConfirmationClick = {
+                    onRemoveItem(item)
+                    selectedItem = null
+                },
+                cancellationText = "Cancel",
+                onDismissRequest = { selectedItem = null },
+            )
         }
     }
 }
 
-@Composable
-private fun Section(
-    title: String,
+private fun LazyListScope.section(
+    title: CheckoutLocalizationKey,
     favorites: List<FavoriteListItem>,
     onItemClick: (FavoriteListItem) -> Unit,
 ) {
     favorites.forEachIndexed { index, item ->
         if (index == 0) {
-            SubHeadlineEmphasized(
-                text = title,
-                modifier = Modifier.padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small),
-            )
+            item(key = title) {
+                SubHeadlineEmphasized(
+                    text = resolveString(title),
+                    modifier = Modifier
+                        .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small)
+                        .animateItem(),
+                )
+            }
         }
 
-        ListItem(
-            leadingIcon = {
-                CheckoutNetworkLogo(
-                    txVariant = item.icon,
-                    modifier = Modifier.size(Dimensions.LogoSize.medium),
-                )
-            },
-            title = item.title,
-            subtitle = item.subtitle,
-            trailingIcon = { Body(text = "Remove", color = CheckoutThemeProvider.colors.destructive) },
-            onClick = { onItemClick(item) },
-            modifier = Modifier.padding(horizontal = Dimensions.Spacing.ExtraSmall),
-        )
+        item(key = item.id) {
+            ListItem(
+                leadingIcon = {
+                    CheckoutNetworkLogo(
+                        txVariant = item.icon,
+                        modifier = Modifier.size(Dimensions.LogoSize.medium),
+                    )
+                },
+                title = item.title,
+                subtitle = item.subtitle,
+                trailingIcon = { Body(text = "Remove", color = CheckoutThemeProvider.colors.destructive) },
+                onClick = { onItemClick(item) },
+                modifier = Modifier
+                    .padding(horizontal = Dimensions.Spacing.ExtraSmall)
+                    .animateItem(),
+            )
+        }
     }
 }
 
