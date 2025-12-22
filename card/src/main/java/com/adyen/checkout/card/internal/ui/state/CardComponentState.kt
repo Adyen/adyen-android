@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
@@ -31,3 +32,17 @@ internal data class CardComponentState(
     val detectedCardTypes: List<DetectedCardType>,
     val selectedCardBrand: CardBrand?,
 ) : ComponentState
+
+internal val CardComponentState.binValue: String
+    get() = if (cardNumber.isValid && cardNumber.text.length >= EXTENDED_CARD_NUMBER_LENGTH) {
+        cardNumber.text.take(BIN_VALUE_EXTENDED_LENGTH)
+    } else {
+        cardNumber.text.take(BIN_VALUE_LENGTH)
+    }
+
+@VisibleForTesting
+internal const val BIN_VALUE_LENGTH = 6
+
+@VisibleForTesting
+internal const val BIN_VALUE_EXTENDED_LENGTH = 8
+private const val EXTENDED_CARD_NUMBER_LENGTH = 16

@@ -46,6 +46,7 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -88,6 +89,7 @@ internal class CardComponent(
 
     init {
         subscribeToDetectedCardTypes()
+        subscribeToBinChanges()
     }
 
     fun setOnBinValueCallback(onBinValueCallback: OnBinValueCallback?) {
@@ -148,12 +150,7 @@ internal class CardComponent(
             coroutineScope = coroutineScope,
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
         )
-
-        val oldBinValue = viewState.value.binValue
         onIntent(CardIntent.UpdateCardNumber(newCardNumber))
-        val newBinValue = viewState.value.binValue
-
-        onBinValueChange(oldBin = oldBinValue, newBin = newBinValue)
     }
 
     private fun subscribeToDetectedCardTypes() {
@@ -172,6 +169,15 @@ internal class CardComponent(
             .launchIn(coroutineScope)
     }
 
+    private fun subscribeToBinChanges() {
+        componentState
+            .map { it.binValue }
+            .distinctUntilChanged()
+            .drop(1)
+            .onEach { newBinValue -> onBinValueCallback?.onBinValue(newBinValue) }
+            .launchIn(coroutineScope)
+    }
+
     private fun onDetectedCardTypes(detectedCardTypes: List<DetectedCardType>) {
         adyenLog(AdyenLogLevel.DEBUG) {
             "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
@@ -184,12 +190,6 @@ internal class CardComponent(
             )
         }
         onIntent(CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-    }
-
-    private fun onBinValueChange(oldBin: String, newBin: String) {
-        if (oldBin != newBin) {
-            onBinValueCallback?.onBinValue(newBin)
-        }
     }
 
     @Suppress("UnusedParameter")
