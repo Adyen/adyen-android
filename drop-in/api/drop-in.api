@@ -271,7 +271,7 @@ public final class com/adyen/checkout/dropin/old/DropInConfiguration$Builder : c
 	public final fun addAchDirectDebitConfiguration (Lcom/adyen/checkout/ach/ACHDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addBacsDirectDebitConfiguration (Lcom/adyen/checkout/bacs/BacsDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addBcmcConfiguration (Lcom/adyen/checkout/bcmc/BcmcConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
-	public final fun addBlikConfiguration (Lcom/adyen/checkout/blik/BlikConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addBlikConfiguration (Lcom/adyen/checkout/blik/old/BlikConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addBoletoConfiguration (Lcom/adyen/checkout/boleto/BoletoConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addCardConfiguration (Lcom/adyen/checkout/card/old/CardConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addCashAppPayConfiguration (Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
