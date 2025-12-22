@@ -53,9 +53,16 @@ internal class DefaultLocalizationSource {
                 R.string.checkout_card_dual_brand_selector_description
 
             // Drop-in
+            CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION ->
                 R.string.checkout_drop_in_payment_method_list_description
+
+            CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION ->
+                R.string.checkout_drop_in_payment_method_list_favorites_section_action
+
+            CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE ->
+                R.string.checkout_drop_in_payment_method_list_favorites_section_title
 
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE ->
                 R.string.checkout_drop_in_payment_method_list_payment_options_title
@@ -64,6 +71,7 @@ internal class DefaultLocalizationSource {
                 R.string.checkout_drop_in_payment_method_list_payment_options_title_with_favorites
 
             // General
+            CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close
             CheckoutLocalizationKey.GENERAL_SEARCH_HINT -> R.string.checkout_general_search_hint
 

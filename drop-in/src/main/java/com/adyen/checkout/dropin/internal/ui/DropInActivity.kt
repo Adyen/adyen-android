@@ -36,6 +36,7 @@ class DropInActivity : ComponentActivity() {
 
     private val viewModel: DropInViewModel by viewModels { DropInViewModel.Factory { input } }
 
+    @Suppress("LongMethod")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +96,13 @@ class DropInActivity : ComponentActivity() {
                                 )
                             }
 
-                            entry<ManageFavoritesNavKey> {}
+                            entry<ManageFavoritesNavKey>(
+                                metadata = DropInTransitions.slideInAndOutHorizontally(),
+                            ) {
+                                ManageFavoritesScreen(
+                                    navigator = viewModel.navigator,
+                                )
+                            }
 
                             entry<PaymentMethodNavKey> {}
                         },
