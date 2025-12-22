@@ -67,6 +67,14 @@ internal class CardComponentStateReducer : ComponentStateReducer<CardComponentSt
     }
 
     private fun highlightValidationErrors(state: CardComponentState): CardComponentState {
+        var isFocusConsumed = false
+
+        fun shouldFocus(hasError: Boolean): Boolean {
+            return (hasError && !isFocusConsumed).also { shouldFocus ->
+                if (shouldFocus) isFocusConsumed = true
+            }
+        }
+
         val hasCardNumberError = state.cardNumber.errorMessage != null
         val hasExpiryDateError = state.expiryDate.errorMessage != null
         val hasSecurityCodeError = state.securityCode.errorMessage != null
@@ -75,19 +83,19 @@ internal class CardComponentStateReducer : ComponentStateReducer<CardComponentSt
         return state.copy(
             cardNumber = state.cardNumber.copy(
                 showError = hasCardNumberError,
-                isFocused = hasCardNumberError,
+                isFocused = shouldFocus(hasCardNumberError),
             ),
             expiryDate = state.expiryDate.copy(
                 showError = hasExpiryDateError,
-                isFocused = hasExpiryDateError && !hasCardNumberError,
+                isFocused = shouldFocus(hasExpiryDateError),
             ),
             securityCode = state.securityCode.copy(
                 showError = hasSecurityCodeError,
-                isFocused = hasSecurityCodeError && !hasCardNumberError && !hasExpiryDateError,
+                isFocused = shouldFocus(hasSecurityCodeError),
             ),
             holderName = state.holderName.copy(
                 showError = hasHolderNameError,
-                isFocused = hasHolderNameError && !hasCardNumberError && !hasExpiryDateError && !hasSecurityCodeError,
+                isFocused = shouldFocus(hasHolderNameError),
             ),
         )
     }
