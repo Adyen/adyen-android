@@ -6,6 +6,8 @@
  * Created by ozgur on 17/12/2025.
  */
 
+@file:Suppress("Filename", "ktlint:standard:filename", "MatchingDeclarationName")
+
 package com.adyen.checkout.blik.internal.ui
 
 import androidx.navigation3.runtime.NavKey
