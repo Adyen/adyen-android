@@ -13,7 +13,6 @@ import com.adyen.checkout.blik.old.BlikComponentState
 import com.adyen.checkout.blik.old.BlikConfiguration
 import com.adyen.checkout.blik.old.blik
 import com.adyen.checkout.blik.old.getBlikConfiguration
-import com.adyen.checkout.blik.old.internal.ui.StoredBlikDelegate
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
