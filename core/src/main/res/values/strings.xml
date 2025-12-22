@@ -30,6 +30,8 @@
     <string name="checkout_card_dual_brand_selector_title" translatable="false">Card Brand</string>
     <string name="checkout_card_dual_brand_selector_description" translatable="false">Select the card brand you prefer to pay with. This is optional.</string>
     <string name="checkout_drop_in_manage_favorites_title" translatable="false">Manage your favorite payment options</string>
+    <string name="checkout_drop_in_manage_favorites_cards_section_title" translatable="false">Cards</string>
+    <string name="checkout_drop_in_manage_favorites_others_section_title" translatable="false">Others</string>
     <string name="checkout_drop_in_other_payment_methods" translatable="false">Other payment methods</string>
     <string name="checkout_drop_in_payment_method_list_description" translatable="false">Select your preferred payment option and complete your payment</string>
     <string name="checkout_drop_in_payment_method_list_favorites_section_action" translatable="false">Manage</string>

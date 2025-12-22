@@ -57,10 +57,6 @@ public final class com/adyen/checkout/ui/internal/element/button/ComposableSingl
 	public final fun getLambda$1133665625$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/element/button/PayButtonKt {
-	public static final fun PayButton (Lkotlin/jvm/functions/Function0;ZLandroidx/compose/runtime/Composer;II)V
-}
-
 public final class com/adyen/checkout/ui/internal/element/input/ComposableSingletons$CheckoutTextFieldKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/input/ComposableSingletons$CheckoutTextFieldKt;
 	public fun <init> ()V

@@ -38,6 +38,9 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalPr
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.FavoritesSection
+import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
+import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentOptionsSection
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized

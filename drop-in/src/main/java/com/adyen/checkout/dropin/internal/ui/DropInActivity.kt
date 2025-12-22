@@ -101,6 +101,11 @@ class DropInActivity : ComponentActivity() {
                             ) {
                                 ManageFavoritesScreen(
                                     navigator = viewModel.navigator,
+                                    viewModel = viewModel(
+                                        factory = ManageFavoritesViewModel.Factory(
+                                            paymentMethodsApiResponse = viewModel.paymentMethods,
+                                        ),
+                                    ),
                                 )
                             }
 

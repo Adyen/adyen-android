@@ -752,6 +752,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_SECURITY_CODE_HINT_4_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_STORE_PAYMENT_METHOD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_OTHER_PAYMENT_METHODS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

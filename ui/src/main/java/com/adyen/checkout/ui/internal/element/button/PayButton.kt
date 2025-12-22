@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.ui.internal.element.button
 
+import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun PayButton(
     onClick: () -> Unit,
