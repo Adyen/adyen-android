@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 1/7/2022.
+ * Created by ozgur on 17/12/2025.
  */
 
-package com.adyen.checkout.blik.internal.ui
+package com.adyen.checkout.blik.old.internal.ui
 
-import com.adyen.checkout.blik.BlikComponentState
-import com.adyen.checkout.blik.internal.ui.model.BlikInputData
-import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
+import com.adyen.checkout.blik.old.BlikComponentState
+import com.adyen.checkout.blik.old.internal.ui.model.BlikInputData
+import com.adyen.checkout.blik.old.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.old.internal.ui.UIStateDelegate

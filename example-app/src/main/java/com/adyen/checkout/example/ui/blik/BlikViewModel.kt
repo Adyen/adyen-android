@@ -11,8 +11,8 @@ package com.adyen.checkout.example.ui.blik
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.blik.BlikComponentState
+import com.adyen.checkout.blik.old.BlikComponent
+import com.adyen.checkout.blik.old.BlikComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.ComponentCallback

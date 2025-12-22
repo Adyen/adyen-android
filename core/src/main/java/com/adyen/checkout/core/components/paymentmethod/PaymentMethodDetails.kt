@@ -65,7 +65,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 // TODO - Uncomment payment methods as we support new ones
 //                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
 //                BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
-//                BlikPaymentMethod.PAYMENT_METHOD_TYPE -> BlikPaymentMethod.SERIALIZER
+                BlikPaymentMethod.PAYMENT_METHOD_TYPE -> BlikPaymentMethod.SERIALIZER
                 CardPaymentMethod.PAYMENT_METHOD_TYPE -> CardPaymentMethod.SERIALIZER
 //                CashAppPayPaymentMethod.PAYMENT_METHOD_TYPE -> CashAppPayPaymentMethod.SERIALIZER
 //                ConvenienceStoresJPPaymentMethod.PAYMENT_METHOD_TYPE -> ConvenienceStoresJPPaymentMethod.SERIALIZER

@@ -85,6 +85,12 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> R.string.checkout_mbway_phone_number
             CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER -> R.string.checkout_mbway_invalid_phone_number
             CheckoutLocalizationKey.MBWAY_COUNTRY_CODE -> R.string.checkout_mbway_country_code
+
+            // Blik
+            CheckoutLocalizationKey.BLIK_CODE -> R.string.checkout_blik_code
+            CheckoutLocalizationKey.BLIK_CODE_HINT -> R.string.checkout_blik_code_hint
+            CheckoutLocalizationKey.BLIK_CODE_INVALID -> R.string.checkout_blik_code_not_valid
+            CheckoutLocalizationKey.BLIK_HELPER_TEXT -> R.string.checkout_blik_helper_text
         }
 
         return context.getString(resId)
