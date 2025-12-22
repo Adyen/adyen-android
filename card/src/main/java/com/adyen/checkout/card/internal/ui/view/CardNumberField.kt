@@ -177,9 +177,9 @@ private fun CardNumberFieldIcon(
     detectedBrands: List<CardBrand>,
     modifier: Modifier = Modifier,
 ) {
-    val state = state.trailingIcon as? CardNumberTrailingIcon
-    AnimatedContent(targetState = state, modifier = modifier) { state ->
-        when (state) {
+    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon
+    AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
+        when (trailingIcon) {
             CardNumberTrailingIcon.Warning -> Icon(
                 modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
                 imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
