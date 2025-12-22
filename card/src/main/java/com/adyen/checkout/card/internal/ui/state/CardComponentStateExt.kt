@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.model.selectedBrand
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.ui.model.ExpiryDate
@@ -22,7 +21,7 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 
 @Suppress("ReturnCount")
-internal fun CardViewState.toPaymentComponentState(
+internal fun CardComponentState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
     checkoutAttemptId: String,
@@ -55,7 +54,7 @@ internal fun CardViewState.toPaymentComponentState(
 }
 
 @Suppress("LongParameterList")
-private fun CardViewState.encryptCard(
+private fun CardComponentState.encryptCard(
     cardEncryptor: BaseCardEncryptor,
     publicKey: String,
     onEncryptionFailed: (EncryptionException) -> Unit,
@@ -125,16 +124,23 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
     isValid = false,
 )
 
-private fun CardViewState.cardBrand() = dualBrandData?.selectedBrand ?: detectedCardBrands.firstOrNull()
+private fun CardComponentState.cardBrand(): CardBrand? {
+    val supportedDetectedCardTypes = detectedCardTypes.filter { it.isSupported && it.isReliable }
+    return if (supportedDetectedCardTypes.size > 1) {
+        selectedCardBrand ?: supportedDetectedCardTypes.firstOrNull()?.cardBrand
+    } else {
+        supportedDetectedCardTypes.firstOrNull()?.cardBrand
+    }
+}
 
-private fun CardViewState.holderName(componentParams: CardComponentParams) =
+private fun CardComponentState.holderName(componentParams: CardComponentParams) =
     if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
         holderName.text
     } else {
         null
     }
 
-private fun CardViewState.storePaymentMethod(componentParams: CardComponentParams) =
+private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams) =
     if (componentParams.isStorePaymentFieldVisible) {
         storePaymentMethod
     } else {

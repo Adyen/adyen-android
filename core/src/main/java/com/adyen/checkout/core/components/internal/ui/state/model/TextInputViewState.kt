@@ -19,15 +19,17 @@ data class TextInputViewState(
     val supportingText: CheckoutLocalizationKey? = null,
     val isFocused: Boolean = false,
     val isError: Boolean = false,
+    val trailingIcon: TrailingIcon? = null,
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun TextInputComponentState.toViewState(): TextInputViewState {
+fun TextInputComponentState.toViewState(trailingIcon: TrailingIcon? = null): TextInputViewState {
     val isError = showError && errorMessage != null
     return TextInputViewState(
         text = text,
         supportingText = if (isError) errorMessage else description,
         isFocused = isFocused,
         isError = isError,
+        trailingIcon = trailingIcon,
     )
 }

@@ -23,9 +23,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
+import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
@@ -34,38 +36,32 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun SecurityCodeField(
-    securityCodeState: TextInputComponentState,
-    onSecurityCodeChanged: (String) -> Unit,
-    onSecurityCodeFocusChanged: (Boolean) -> Unit,
+    securityCodeState: TextInputViewState,
     isAmex: Boolean?,
+    onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val showSecurityCodeError =
-        securityCodeState.errorMessage != null && securityCodeState.showError
-    val supportingTextSecurityCode = if (showSecurityCodeError) {
-        securityCodeState.errorMessage?.let { resolveString(it) }
-    } else {
-        resolveString(
+    val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
+        ?: resolveString(
             if (isAmex == null || !isAmex) {
                 CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
             } else {
                 CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
             },
         )
-    }
 
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onSecurityCodeFocusChanged(focusState.isFocused)
+                onIntent(CardIntent.UpdateSecurityCodeFocus(focusState.isFocused))
             },
         label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
         initialValue = securityCodeState.text,
-        isError = showSecurityCodeError,
+        isError = securityCodeState.isError,
         supportingText = supportingTextSecurityCode,
         onValueChange = { value ->
-            onSecurityCodeChanged(value)
+            onIntent(CardIntent.UpdateSecurityCode(value))
         },
         inputTransformation = DigitOnlyInputTransformation().maxLength(
             if (isAmex == false) {
@@ -77,23 +73,21 @@ internal fun SecurityCodeField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
-            SecurityCodeIcon(state = securityCodeState, isAmex = isAmex)
+            SecurityCodeIcon(state = securityCodeState)
         },
     )
 }
 
 @Composable
 private fun SecurityCodeIcon(
-    state: TextInputComponentState,
-    isAmex: Boolean?,
+    state: TextInputViewState,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = state.errorMessage == null
-    val isInvalid = state.errorMessage != null && state.showError
-    val resourceId = when {
-        isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
-        isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
-        isAmex == true -> getThemedIcon(
+    val isInvalid = state.trailingIcon == SecurityCodeTrailingIcon.Warning
+    val resourceId = when (state.trailingIcon as? SecurityCodeTrailingIcon) {
+        SecurityCodeTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
+        SecurityCodeTrailingIcon.Checkmark -> com.adyen.checkout.test.R.drawable.ic_checkmark
+        SecurityCodeTrailingIcon.PlaceholderAmex -> getThemedIcon(
             backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
             lightDrawableId = R.drawable.ic_card_cvc_front_light,
             darkDrawableId = R.drawable.ic_card_cvc_front_dark,
