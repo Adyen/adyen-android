@@ -13,5 +13,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class TestPaymentMethod(
     override var type: String? = "test",
-    override var checkoutAttemptId: String? = null
+    override var checkoutAttemptId: String? = null,
+    override var sdkData: String? = null,
 ) : PaymentMethodDetails()

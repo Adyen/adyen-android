@@ -23,10 +23,12 @@ abstract class PaymentMethodDetails : ModelObject() {
 
     abstract val type: String?
     abstract val checkoutAttemptId: String?
+    abstract var sdkData: String?
 
     companion object {
         const val TYPE = "type"
         const val CHECKOUT_ATTEMPT_ID = "checkoutAttemptId"
+        const val SDK_DATA = "sdkData"
 
         @Suppress("TooGenericExceptionThrown")
         @JvmField
