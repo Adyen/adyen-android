@@ -47,6 +47,7 @@ enum class CheckoutLocalizationKey {
     MBWAY_INVALID_PHONE_NUMBER,
     MBWAY_PHONE_NUMBER,
     BLIK_CODE,
+    BLIK_CODE_HINT,
     BLIK_CODE_INVALID,
     BLIK_HELPER_TEXT,
 }
