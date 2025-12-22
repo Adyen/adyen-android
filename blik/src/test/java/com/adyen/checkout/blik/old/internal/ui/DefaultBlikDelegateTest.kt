@@ -178,7 +178,7 @@ internal class DefaultBlikDelegateTest(
         }
 
         @ParameterizedTest
-        @MethodSource("com.adyen.checkout.blik.internal.ui.DefaultBlikDelegateTest#amountSource")
+        @MethodSource("com.adyen.checkout.blik.old.internal.ui.DefaultBlikDelegateTest#amountSource")
         fun `when input data is valid then amount is propagated in component state if set`(
             configurationValue: Amount?,
             expectedComponentStateValue: Amount?,
