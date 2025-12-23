@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.adyen.checkout.card.internal.ui.state.StoredCardChangeListener
+import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.card.internal.ui.state.isAmex
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
@@ -23,7 +23,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @Composable
 internal fun StoredCardComponent(
     viewState: StoredCardViewState,
-    changeListener: StoredCardChangeListener,
+    onIntent: (StoredCardIntent) -> Unit,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -37,10 +37,9 @@ internal fun StoredCardComponent(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraLarge),
         ) {
-            SecurityCodeField(
+            StoredCardSecurityCodeField(
                 securityCodeState = viewState.securityCode,
-                onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
-                onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
+                onIntent = onIntent,
                 isAmex = viewState.isAmex,
             )
         }

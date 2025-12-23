@@ -19,7 +19,7 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 
 @Suppress("ReturnCount", "LongParameterList")
-internal fun StoredCardViewState.toPaymentComponentState(
+internal fun StoredCardComponentState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
     checkoutAttemptId: String,
@@ -48,7 +48,7 @@ internal fun StoredCardViewState.toPaymentComponentState(
 }
 
 @Suppress("LongParameterList")
-private fun StoredCardViewState.encryptCard(
+private fun StoredCardComponentState.encryptCard(
     cardEncryptor: BaseCardEncryptor,
     publicKey: String,
     onEncryptionFailed: (EncryptionException) -> Unit,

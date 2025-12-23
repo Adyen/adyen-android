@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -41,6 +42,39 @@ internal fun SecurityCodeField(
     onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    SecurityCodeFieldInternal(
+        securityCodeState = securityCodeState,
+        isAmex = isAmex,
+        onSecurityCodeChanged = { onIntent(CardIntent.UpdateSecurityCode(it)) },
+        onSecurityCodeFocusChanged = { onIntent(CardIntent.UpdateSecurityCodeFocus(it)) },
+        modifier = modifier,
+    )
+}
+
+@Composable
+internal fun StoredCardSecurityCodeField(
+    securityCodeState: TextInputViewState,
+    isAmex: Boolean?,
+    onIntent: (StoredCardIntent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SecurityCodeFieldInternal(
+        securityCodeState = securityCodeState,
+        isAmex = isAmex,
+        onSecurityCodeChanged = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
+        onSecurityCodeFocusChanged = { onIntent(StoredCardIntent.UpdateSecurityCodeFocus(it)) },
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun SecurityCodeFieldInternal(
+    securityCodeState: TextInputViewState,
+    isAmex: Boolean?,
+    onSecurityCodeChanged: (String) -> Unit,
+    onSecurityCodeFocusChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
         ?: resolveString(
             if (isAmex == null || !isAmex) {
@@ -54,14 +88,14 @@ internal fun SecurityCodeField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onIntent(CardIntent.UpdateSecurityCodeFocus(focusState.isFocused))
+                onSecurityCodeFocusChanged(focusState.isFocused)
             },
         label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
         initialValue = securityCodeState.text,
         isError = securityCodeState.isError,
         supportingText = supportingTextSecurityCode,
         onValueChange = { value ->
-            onIntent(CardIntent.UpdateSecurityCode(value))
+            onSecurityCodeChanged(value)
         },
         inputTransformation = DigitOnlyInputTransformation().maxLength(
             if (isAmex == false) {

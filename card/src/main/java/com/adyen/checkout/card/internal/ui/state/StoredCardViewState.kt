@@ -11,10 +11,10 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 internal data class StoredCardViewState(
-    val securityCode: TextInputComponentState,
+    val securityCode: TextInputViewState,
     val brand: CardBrand?,
     val isLoading: Boolean,
 ) : ViewState

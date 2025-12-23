@@ -19,9 +19,11 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
-import com.adyen.checkout.card.internal.ui.state.StoredCardChangeListener
-import com.adyen.checkout.card.internal.ui.state.StoredCardComponentState
-import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
+import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
+import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
+import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
+import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
+import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.StoredCardComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -34,24 +36,40 @@ import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.components.internal.ui.state.StateManager
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
+import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+@Suppress("LongParameterList")
 internal class StoredCardComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsManager: AnalyticsManager,
-    private val stateManager: StateManager<StoredCardViewState, StoredCardComponentState>,
     private val cardEncryptor: BaseCardEncryptor,
     private val componentParams: CardComponentParams,
-) : PaymentComponent<CardPaymentComponentState>, StoredCardChangeListener {
+    private val componentStateValidator: StoredCardComponentStateValidator,
+    componentStateFactory: StoredCardComponentStateFactory,
+    componentStateReducer: StoredCardComponentStateReducer,
+    viewStateProducer: StoredCardViewStateProducer,
+    coroutineScope: CoroutineScope,
+) : PaymentComponent<CardPaymentComponentState> {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> =
         eventChannel.receiveAsFlow()
+
+    private val componentState = ComponentStateFlow(
+        initialState = componentStateFactory.createInitialState(),
+        reducer = componentStateReducer,
+        validator = componentStateValidator,
+        coroutineScope = coroutineScope,
+    )
+
+    private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
         StoredCardNavKey to CheckoutNavEntry(StoredCardNavKey, StoredCardNavigationKey) { backStack ->
@@ -80,14 +98,12 @@ internal class StoredCardComponent(
             localizedBrand = null,
         )
 
-        stateManager.updateComponentState {
-            copy(detectedCardType = storedDetectedCardType)
-        }
+        onIntent(StoredCardIntent.UpdateDetectedCardType(storedDetectedCardType))
     }
 
     override fun submit() {
-        if (stateManager.isValid) {
-            val paymentComponentState = stateManager.viewState.value.toPaymentComponentState(
+        if (componentStateValidator.isValid(componentState.value)) {
+            val paymentComponentState = componentState.value.toPaymentComponentState(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
@@ -98,14 +114,16 @@ internal class StoredCardComponent(
             val event = PaymentComponentEvent.Submit(paymentComponentState)
             eventChannel.trySend(event)
         } else {
-            stateManager.highlightAllValidationErrors()
+            onIntent(StoredCardIntent.HighlightValidationErrors)
         }
     }
 
     override fun setLoading(isLoading: Boolean) {
-        stateManager.updateViewState {
-            copy(isLoading = isLoading)
-        }
+        onIntent(StoredCardIntent.UpdateLoading(isLoading))
+    }
+
+    private fun onIntent(intent: StoredCardIntent) {
+        componentState.handleIntent(intent)
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -123,28 +141,12 @@ internal class StoredCardComponent(
 
     @Composable
     private fun MainScreen(@Suppress("UNUSED_PARAMETER") backStack: NavBackStack<NavKey>) {
-        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
+        val viewState by viewState.collectAsStateWithLifecycle()
         StoredCardComponent(
             viewState = viewState,
-            changeListener = this,
+            onIntent = ::onIntent,
             onSubmitClick = ::submit,
         )
-    }
-
-    override fun onSecurityCodeChanged(newSecurityCode: String) {
-        stateManager.updateViewStateAndValidate {
-            copy(
-                securityCode = securityCode.updateText(newSecurityCode),
-            )
-        }
-    }
-
-    override fun onSecurityCodeFocusChanged(hasFocus: Boolean) {
-        stateManager.updateViewState {
-            copy(
-                securityCode = securityCode.updateFocus(hasFocus),
-            )
-        }
     }
 
     companion object {
