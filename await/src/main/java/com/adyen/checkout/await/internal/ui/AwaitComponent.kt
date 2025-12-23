@@ -20,9 +20,9 @@ import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusRepository
 import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
@@ -174,7 +174,9 @@ internal class AwaitComponent(
     // TODO - Error propagation
     private fun emitError(e: RuntimeException) {
         eventChannel.trySend(
-            ActionComponentEvent.Error(ComponentError(e)),
+            ActionComponentEvent.Error(
+                ComponentError(message = e.message.orEmpty(), cause = e),
+            ),
         )
         statusPollingJob?.cancel()
     }

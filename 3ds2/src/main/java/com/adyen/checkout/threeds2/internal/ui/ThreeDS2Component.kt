@@ -25,11 +25,11 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.SavedStateHandleContainer
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.old.exception.CheckoutException
@@ -662,7 +662,9 @@ internal class ThreeDS2Component(
 
     internal fun emitError(e: RuntimeException) {
         eventChannel.trySend(
-            ActionComponentEvent.Error(ComponentError(e)),
+            ActionComponentEvent.Error(
+                ComponentError(message = e.message.orEmpty(), cause = e),
+            ),
         )
     }
 

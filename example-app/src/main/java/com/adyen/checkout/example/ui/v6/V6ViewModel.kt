@@ -23,12 +23,13 @@ import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.exception.CheckoutError
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.example.BuildConfig
@@ -143,7 +144,7 @@ internal class V6ViewModel @Inject constructor(
 
     private fun handleResponse(json: JSONObject?): CheckoutResult {
         return when {
-            json == null -> CheckoutResult.Error(ComponentError(RuntimeException("Network error")))
+            json == null -> CheckoutResult.Error(ComponentError(message = "Network error"))
             json.has("action") -> {
                 val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                 CheckoutResult.Action(action)
@@ -157,8 +158,8 @@ internal class V6ViewModel @Inject constructor(
         }
     }
 
-    private fun onError(componentError: ComponentError) {
-        uiState = V6UiState.Error(UIText.String(componentError.errorMessage))
+    private fun onError(error: CheckoutError) {
+        uiState = V6UiState.Error(UIText.String(error.message.orEmpty()))
     }
 
     fun handleIntent(intent: Intent) {

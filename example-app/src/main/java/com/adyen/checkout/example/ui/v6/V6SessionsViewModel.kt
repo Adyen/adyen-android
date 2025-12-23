@@ -17,11 +17,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -92,8 +92,8 @@ internal class V6SessionsViewModel @Inject constructor(
         }
     }
 
-    private fun onError(componentError: ComponentError) {
-        Log.d(TAG, "onError: ${componentError.errorMessage}")
+    private fun onError(error: CheckoutError) {
+        Log.d(TAG, "onError: ${error.message}")
     }
 
     fun handleIntent(intent: Intent) {

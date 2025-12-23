@@ -22,12 +22,12 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -153,8 +153,9 @@ internal class PaymentFacilitator(
             coroutineScope.launch {
                 componentEventHandler.onActionComponentEvent(
                     event = ActionComponentEvent.Error(
+                        // TODO - Error propagation. Should this be an implementation error?
                         error = ComponentError(
-                            RuntimeException("Action component does not implement IntentHandlingComponent"),
+                            message = "Action component does not implement IntentHandlingComponent",
                         ),
                     ),
                 )
