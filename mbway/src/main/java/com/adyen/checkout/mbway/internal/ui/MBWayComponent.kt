@@ -13,9 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
@@ -40,7 +40,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Suppress("LongParameterList")
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
-    private val analyticsManager: AnalyticsManager,
+    private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: MBWayComponentStateValidator,
     componentStateFactory: MBWayComponentStateFactory,
     componentStateReducer: MBWayComponentStateReducer,
@@ -76,8 +76,8 @@ internal class MBWayComponent(
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
-                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 amount = componentParams.amount,
+                sdkDataProvider = sdkDataProvider,
             )
             eventChannel.trySend(
                 PaymentComponentEvent.Submit(paymentComponentState),

@@ -16,7 +16,6 @@ import org.json.JSONObject
 @Parcelize
 data class CardPaymentMethod(
     override val type: String?,
-    override val checkoutAttemptId: String?,
     override var sdkData: String? = null,
     val encryptedCardNumber: String? = null,
     val encryptedExpiryMonth: String? = null,
@@ -27,7 +26,6 @@ data class CardPaymentMethod(
     val storedPaymentMethodId: String? = null,
     val taxNumber: String? = null,
     val brand: String? = null,
-    val threeDS2SdkVersion: String? = null,
     val fundingSource: String? = null,
 ) : PaymentMethodDetails() {
 
@@ -42,7 +40,6 @@ data class CardPaymentMethod(
         private const val ENCRYPTED_PASSWORD = "encryptedPassword"
         private const val TAX_NUMBER = "taxNumber"
         private const val BRAND = "brand"
-        private const val THREEDS2_SDK_VERSION = "threeDS2SdkVersion"
         private const val FUNDING_SOURCE = "fundingSource"
 
         @JvmField
@@ -51,7 +48,6 @@ data class CardPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
-                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
                         putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
@@ -62,7 +58,6 @@ data class CardPaymentMethod(
                         putOpt(ENCRYPTED_PASSWORD, modelObject.encryptedPassword)
                         putOpt(TAX_NUMBER, modelObject.taxNumber)
                         putOpt(BRAND, modelObject.brand)
-                        putOpt(THREEDS2_SDK_VERSION, modelObject.threeDS2SdkVersion)
                         putOpt(FUNDING_SOURCE, modelObject.fundingSource)
                     }
                 } catch (e: JSONException) {
@@ -73,7 +68,6 @@ data class CardPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): CardPaymentMethod {
                 return CardPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
-                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedExpiryMonth = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_MONTH),
@@ -84,7 +78,6 @@ data class CardPaymentMethod(
                     storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),
                     taxNumber = jsonObject.getStringOrNull(TAX_NUMBER),
                     brand = jsonObject.getStringOrNull(BRAND),
-                    threeDS2SdkVersion = jsonObject.getStringOrNull(THREEDS2_SDK_VERSION),
                     fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE)
                 )
             }

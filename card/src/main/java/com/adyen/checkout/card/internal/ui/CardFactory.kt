@@ -26,6 +26,7 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
+import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -68,6 +69,7 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
             componentStateReducer = componentStateReducer,
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
+            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
         ).apply {
             setOnBinValueCallback(checkoutCallbacks.getCallback(OnBinValueCallback::class))
             setOnBinLookupCallback(checkoutCallbacks.getCallback(OnBinLookupCallback::class))
