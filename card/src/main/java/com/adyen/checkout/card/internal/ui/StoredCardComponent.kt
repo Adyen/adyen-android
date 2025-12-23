@@ -34,6 +34,7 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
@@ -56,6 +57,7 @@ internal class StoredCardComponent(
     componentStateReducer: StoredCardComponentStateReducer,
     viewStateProducer: StoredCardViewStateProducer,
     coroutineScope: CoroutineScope,
+    private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent<CardPaymentComponentState> {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
@@ -106,7 +108,7 @@ internal class StoredCardComponent(
             val paymentComponentState = componentState.value.toPaymentComponentState(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
-                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkDataProvider = sdkDataProvider,
                 storedPaymentMethodId = storedPaymentMethod.id,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,

@@ -13,6 +13,7 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.ui.model.ExpiryDate
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -24,7 +25,7 @@ import com.adyen.threeds2.ThreeDS2Service
 internal fun CardComponentState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
-    checkoutAttemptId: String,
+    sdkDataProvider: SdkDataProvider,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (RuntimeException) -> Unit,
 ): CardPaymentComponentState {
@@ -41,7 +42,7 @@ internal fun CardComponentState.toPaymentComponentState(
         encryptedCard = encryptedCard,
         holderName = holderName(componentParams),
         cardBrand = cardBrand(),
-        checkoutAttemptId = checkoutAttemptId,
+        sdkDataProvider = sdkDataProvider,
     )
 
     val paymentComponentData = createPaymentComponentData(
@@ -82,19 +83,20 @@ private fun CardComponentState.encryptCard(
 
 private fun createPaymentMethod(
     encryptedCard: EncryptedCard,
+    sdkDataProvider: SdkDataProvider,
     holderName: String?,
     cardBrand: CardBrand?,
-    checkoutAttemptId: String,
 ) = CardPaymentMethod(
     type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
-    checkoutAttemptId = checkoutAttemptId,
+    sdkData = sdkDataProvider.createEncodedSdkData(
+        threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+    ),
     encryptedCardNumber = encryptedCard.encryptedCardNumber,
     encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
     encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
     // TODO - Card. Add isCvcHidden check
     encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
     holderName = holderName,
-    threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
     brand = cardBrand?.txVariant,
 )
 
