@@ -17,6 +17,11 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 data object CardMainNavigationKey : CheckoutNavigationKey
 
 /**
+ * Represent the stored form of the [PaymentMethodTypes.SCHEME] payment method.
+ */
+data object StoredCardNavigationKey : CheckoutNavigationKey
+
+/**
  * Represent the address form opened from the [CardMainNavigationKey]'s content.
  */
 @Suppress("unused")

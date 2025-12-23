@@ -101,7 +101,7 @@ private fun createPaymentMethod(
 private fun createPaymentComponentData(
     cardPaymentMethod: CardPaymentMethod,
     storePaymentMethod: Boolean?,
-    componentParams: CardComponentParams
+    componentParams: CardComponentParams,
 ) = PaymentComponentData(
     paymentMethod = cardPaymentMethod,
     storePaymentMethod = storePaymentMethod,
