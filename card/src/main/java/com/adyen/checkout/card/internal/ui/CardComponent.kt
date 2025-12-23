@@ -36,6 +36,7 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
@@ -63,6 +64,7 @@ internal class CardComponent(
     componentStateReducer: CardComponentStateReducer,
     viewStateProducer: CardViewStateProducer,
     private val coroutineScope: CoroutineScope,
+    private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent<CardPaymentComponentState> {
 
     private var onBinValueCallback: OnBinValueCallback? = null
@@ -105,7 +107,7 @@ internal class CardComponent(
             val paymentComponentState = componentState.value.toPaymentComponentState(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
-                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkDataProvider = sdkDataProvider,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,
             )
