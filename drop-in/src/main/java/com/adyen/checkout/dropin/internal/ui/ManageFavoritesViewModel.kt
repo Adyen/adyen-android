@@ -23,12 +23,16 @@ internal class ManageFavoritesViewModel(
     private val paymentMethodsApiResponse: PaymentMethodsApiResponse,
 ) : ViewModel() {
 
-    private val _viewState = MutableStateFlow(createInitialViewState())
+    // TODO - move payment methods into a repository
+    private var favorites: MutableList<StoredPaymentMethod> =
+        paymentMethodsApiResponse.storedPaymentMethods.orEmpty().toMutableList()
+
+    private val _viewState = MutableStateFlow(createViewState(favorites))
     val viewState: StateFlow<ManageFavoritesViewState> = _viewState.asStateFlow()
 
-    private fun createInitialViewState(): ManageFavoritesViewState {
+    private fun createViewState(favorites: List<StoredPaymentMethod>?): ManageFavoritesViewState {
         // TODO - check if we need to filter out unsupported payment methods
-        val (cards, others) = paymentMethodsApiResponse.storedPaymentMethods.orEmpty()
+        val (cards, others) = favorites.orEmpty()
             .partition { it.type == PaymentMethodTypes.SCHEME }
 
         return ManageFavoritesViewState(
@@ -44,12 +48,12 @@ internal class ManageFavoritesViewModel(
         }
 
         val title: String = when (type) {
-            PaymentMethodTypes.ACH -> "•••• ${bankAccountNumber?.takeLast(LAST_FOUR_LENGTH)}"
+            PaymentMethodTypes.ACH -> "•••• ${bankAccountNumber?.takeLast(LAST_FOUR_LENGTH).orEmpty()}"
             PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
             PaymentMethodTypes.PAY_BY_BANK_US,
             PaymentMethodTypes.PAY_TO -> label.orEmpty()
 
-            PaymentMethodTypes.SCHEME -> "•••• $lastFour"
+            PaymentMethodTypes.SCHEME -> "•••• ${lastFour.orEmpty()}"
             else -> name.orEmpty()
         }
 
@@ -62,10 +66,16 @@ internal class ManageFavoritesViewModel(
         }
 
         return FavoriteListItem(
+            id = id.orEmpty(),
             icon = icon,
             title = title,
             subtitle = subtitle,
         )
+    }
+
+    fun removeFavorite(id: String) {
+        favorites.removeAll { it.id == id }
+        _viewState.value = createViewState(favorites)
     }
 
     companion object {
