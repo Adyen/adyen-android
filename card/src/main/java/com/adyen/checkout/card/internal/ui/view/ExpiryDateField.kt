@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.helper.label
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -48,7 +49,9 @@ internal fun ExpiryDateField(
             .onFocusChanged { focusState ->
                 onIntent(CardIntent.UpdateExpiryDateFocus(focusState.isFocused))
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE),
+        label = resolveString(
+            key = expiryDateState.requirementPolicy.label(fallback = CheckoutLocalizationKey.CARD_EXPIRY_DATE),
+        ),
         initialValue = expiryDateState.text,
         isError = expiryDateState.isError,
         supportingText = supportingTextExpiryDate,

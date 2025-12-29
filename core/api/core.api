@@ -798,6 +798,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_EXPIRY_DATE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID_TOO_OLD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_EXPIRY_DATE_OPTIONAL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_HOLDER_NAME Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_HOLDER_NAME_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -807,6 +808,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_SECURITY_CODE_HINT_3_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_HINT_4_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_SECURITY_CODE_OPTIONAL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_STORE_PAYMENT_METHOD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -1628,6 +1630,38 @@ public final class com/adyen/checkout/core/components/internal/data/model/Status
 }
 
 public final class com/adyen/checkout/core/components/internal/data/provider/DefaultSdkDataProvider$Companion {
+}
+
+public final class com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Hidden : com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Hidden;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Optional : com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy {
+	public static final field $stable I
+	public fun <init> (Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public final fun copy (Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Optional;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Optional;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Optional;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLabel ()Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Required : com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy {
+	public static final field $stable I
+	public fun <init> (Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public final fun copy (Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Required;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Required;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Required;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLabel ()Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy : java/lang/Enum {

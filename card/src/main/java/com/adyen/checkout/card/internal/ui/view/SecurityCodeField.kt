@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.helper.label
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
@@ -90,7 +91,9 @@ private fun SecurityCodeFieldInternal(
             .onFocusChanged { focusState ->
                 onSecurityCodeFocusChanged(focusState.isFocused)
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
+        label = resolveString(
+            key = securityCodeState.requirementPolicy.label(fallback = CheckoutLocalizationKey.CARD_SECURITY_CODE),
+        ),
         initialValue = securityCodeState.text,
         isError = securityCodeState.isError,
         supportingText = supportingTextSecurityCode,

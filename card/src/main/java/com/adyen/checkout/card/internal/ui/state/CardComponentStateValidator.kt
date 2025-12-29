@@ -9,9 +9,10 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.internal.ui.helper.requiredSecurityCode
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class CardComponentStateValidator(
@@ -26,7 +27,11 @@ internal class CardComponentStateValidator(
         val cardNumberError = validateCardNumber(state.cardNumber, firstSupportedDetectedCardType, isReliable)
         val expiryDateError = validateExpiryDate(state.expiryDate, firstSupportedDetectedCardType)
         val securityCodeError =
-            validateSecurityCode(state.securityCode, firstSupportedDetectedCardType, InputFieldUIState.REQUIRED)
+            validateSecurityCode(
+                state.securityCode,
+                firstSupportedDetectedCardType,
+                state.securityCode.requirementPolicy ?: requiredSecurityCode(),
+            )
         val holderNameError = validateHolderName(state.holderName, state.isHolderNameRequired)
 
         return state.copy(
@@ -76,7 +81,7 @@ internal class CardComponentStateValidator(
     private fun validateSecurityCode(
         securityCode: TextInputComponentState,
         selectedOrFirstCardType: DetectedCardType?,
-        uiState: InputFieldUIState,
+        uiState: RequirementPolicy,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapSecurityCodeValidation(
             validation = CardValidationUtils.validateSecurityCode(

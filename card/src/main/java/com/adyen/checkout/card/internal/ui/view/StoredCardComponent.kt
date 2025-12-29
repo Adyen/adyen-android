@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.card.internal.ui.helper.shouldDisplay
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.card.internal.ui.state.isAmex
@@ -33,15 +34,17 @@ internal fun StoredCardComponent(
             PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
         },
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
-        ) {
-            StoredCardSecurityCodeField(
-                securityCodeState = viewState.securityCode,
-                onIntent = onIntent,
-                isAmex = viewState.isAmex,
-            )
+        if (viewState.securityCode.requirementPolicy.shouldDisplay()) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
+            ) {
+                StoredCardSecurityCodeField(
+                    securityCodeState = viewState.securityCode,
+                    onIntent = onIntent,
+                    isAmex = viewState.isAmex,
+                )
+            }
         }
     }
 }

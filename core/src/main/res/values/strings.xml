@@ -16,11 +16,13 @@
     <string name="checkout_card_number_invalid" translatable="false">Invalid card number</string>
     <string name="checkout_card_number_invalid_unsupported_brand" translatable="false">The entered card brand isn\'t supported</string>
     <string name="checkout_card_expiry_date" translatable="false">Expiry Date</string>
+    <string name="checkout_card_expiry_date_optional" translatable="false">Expiry Date (Optional)</string>
     <string name="checkout_card_expiry_date_invalid" translatable="false">Invalid Expiry Date</string>
     <string name="checkout_card_expiry_date_invalid_too_old" translatable="false">Card too old</string>
     <string name="checkout_card_expiry_date_invalid_too_far_in_the_future" translatable="false">Expiry date too far in the future</string>
     <string name="checkout_card_expiry_date_hint" translatable="false">Front of card, MM/YY format</string>
     <string name="checkout_card_security_code" translatable="false">Security Code</string>
+    <string name="checkout_card_security_code_optional" translatable="false">Security Code (Optional)</string>
     <string name="checkout_card_security_code_invalid" translatable="false">Invalid security code</string>
     <string name="checkout_card_security_code_hint_3_digits" translatable="false">3 digits on back of card</string>
     <string name="checkout_card_security_code_hint_4_digits" translatable="false">4 digits on front of card</string>

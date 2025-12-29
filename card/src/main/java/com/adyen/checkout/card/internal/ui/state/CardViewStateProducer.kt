@@ -9,6 +9,9 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
+import com.adyen.checkout.card.internal.ui.helper.expiryDateRequirementPolicy
+import com.adyen.checkout.card.internal.ui.helper.securityCodeRequirementPolicy
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
@@ -21,6 +24,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class CardViewStateProducer(
     private val dualBrandedCardHandler: DualBrandedCardHandler,
+    private val componentParams: CardComponentParams,
 ) : ViewStateProducer<CardComponentState, CardViewState> {
 
     override fun produce(state: CardComponentState): CardViewState {
@@ -39,9 +43,11 @@ internal class CardViewStateProducer(
             ),
             expiryDate = state.expiryDate.toViewState(
                 trailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
+                requirementPolicy = firstSupportedDetectedCardType.expiryDateRequirementPolicy()
             ),
             securityCode = state.securityCode.toViewState(
                 trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, detectedCardBrands),
+                requirementPolicy = firstSupportedDetectedCardType.securityCodeRequirementPolicy(componentParams),
             ),
             holderName = state.holderName.toViewState(),
             isHolderNameRequired = state.isHolderNameRequired,
