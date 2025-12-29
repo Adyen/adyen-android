@@ -10,13 +10,16 @@ package com.adyen.checkout.core.common.exception
 
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 
+// TODO - Platform alignment: Review error name and structure after iOS alignment.
 /**
- * Indicates that an internal API call has failed.
+ * Indicates that an HTTP API call has failed.
+ *
+ * @param code The HTTP status code of the failed request.
+ * @param message A human-readable description of the error.
+ * @param errorBody The parsed error response body from the server, if available.
  */
-class HttpException(
+class HttpError(
     val code: Int,
     message: String,
     val errorBody: ErrorResponseBody?,
-    // TODO - Errors
-// ) : CheckoutException(message)
-) : RuntimeException(message)
+) : NetworkError(message)

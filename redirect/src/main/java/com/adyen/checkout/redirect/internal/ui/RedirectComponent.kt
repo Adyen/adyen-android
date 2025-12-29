@@ -21,7 +21,7 @@ import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.exception.ComponentError
-import com.adyen.checkout.core.common.exception.HttpException
+import com.adyen.checkout.core.common.exception.HttpError
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -157,7 +157,7 @@ internal class RedirectComponent(
                 val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)
                 val detailsJson = NativeRedirectResponse.Companion.SERIALIZER.serialize(response)
                 emitDetails(detailsJson)
-            } catch (e: HttpException) {
+            } catch (e: HttpError) {
                 trackNativeRedirectError("Network error")
                 emitError(e)
             } catch (e: ModelSerializationException) {
