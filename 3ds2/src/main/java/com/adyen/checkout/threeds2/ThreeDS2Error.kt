@@ -6,11 +6,13 @@
  * Created by ararat on 29/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.threeds2
+
+import com.adyen.checkout.core.common.exception.InternalError
 
 // TODO - Platform alignment: Review error name and structure after iOS alignment.
 /**
- * Errors related to 3D Secure 2 authentication flow.
+ * Errors related to 3DS2 authentication flow.
  *
  * These errors occur during the 3DS2 fingerprint or challenge process.
  *
@@ -28,6 +30,9 @@ class ThreeDS2Error(
      * Error codes for 3DS2 errors.
      */
     object ErrorCode {
+        /** The action type is not a valid 3DS2 action. */
+        const val INVALID_ACTION = "invalidAction"
+
         /** The 3DS2 token is missing from the action. */
         const val TOKEN_MISSING = "tokenMissing"
 

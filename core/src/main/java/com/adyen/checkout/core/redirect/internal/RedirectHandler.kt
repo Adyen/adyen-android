@@ -10,6 +10,7 @@ package com.adyen.checkout.core.redirect.internal
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.exception.RedirectError
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -22,11 +23,10 @@ interface RedirectHandler {
      * @param data The returned Uri
      * @return The parsed value to be passed on the payments/details call, on the details parameter.
      */
-    // TODO - Error Propagation
-//    @Throws(CheckoutException::class)
-    @Throws(RuntimeException::class)
+    @Throws(RedirectError::class)
     fun parseRedirectResult(data: Uri?): JSONObject
 
+    @Throws(RedirectError::class)
     fun launchUriRedirect(context: Context, url: String)
 
     fun setOnRedirectListener(listener: () -> Unit)

@@ -14,6 +14,12 @@ public final class com/adyen/checkout/await/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/await/StatusPollingError : com/adyen/checkout/core/common/exception/InternalError {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
 public final class com/adyen/checkout/await/old/AwaitComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/await/old/AwaitComponent$Companion;

@@ -20,6 +20,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.exception.HttpError
 import com.adyen.checkout.core.common.exception.ModelSerializationException
@@ -87,7 +88,6 @@ internal class RedirectComponent(
         launchAction(action.url)
     }
 
-    @Suppress("TooGenericExceptionCaught")
     override fun handleIntent(intent: Intent) {
         adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
         try {
@@ -102,15 +102,14 @@ internal class RedirectComponent(
                     emitDetails(details)
                 }
             }
-        } catch (ex: RuntimeException) {
-            // TODO - Error propagation
+        } catch (e: CheckoutError) {
             val event = GenericEvents.error(
                 component = action.paymentMethodType.orEmpty(),
                 event = ErrorEvent.REDIRECT_PARSE_FAILED,
             )
             analyticsManager.trackEvent(event)
 
-            emitError(ex)
+            emitError(e)
         }
     }
 
@@ -126,24 +125,14 @@ internal class RedirectComponent(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun launchAction(url: String?) {
-        try {
-            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
-            // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
-            //  status when the app resumes. Currently we have no way of doing that but we can create something like
-            //  PaymentComponentState for actions.
-            redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
-        } catch (ex: RuntimeException) {
-            // TODO - Error propagation
-            val event = GenericEvents.error(
-                component = action.paymentMethodType.orEmpty(),
-                event = ErrorEvent.REDIRECT_FAILED,
-            )
-            analyticsManager.trackEvent(event)
+        adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+        // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
+        //  status when the app resumes. Currently we have no way of doing that but we can create something like
+        //  PaymentComponentState for actions.
+        redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
 
-            emitError(ex)
-        }
+        // TODO - Analytics, track REDIRECT_FAILED event when redirect is failed
     }
 
     private fun handleNativeRedirect(nativeRedirectData: String?, details: JSONObject) {
@@ -155,14 +144,15 @@ internal class RedirectComponent(
             )
             try {
                 val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)
-                val detailsJson = NativeRedirectResponse.Companion.SERIALIZER.serialize(response)
+                val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
                 emitDetails(detailsJson)
             } catch (e: HttpError) {
                 trackNativeRedirectError("Network error")
                 emitError(e)
             } catch (e: ModelSerializationException) {
                 trackNativeRedirectError("Serialization error")
-                emitError(e)
+                // TODO - Error propagation. Fix after ModelSerializationException extends from CheckoutError
+                emitError(ComponentError("Serialization error", e))
             }
         }
     }
@@ -173,10 +163,9 @@ internal class RedirectComponent(
         )
     }
 
-    // TODO - Error propagation
-    private fun emitError(e: RuntimeException) {
+    private fun emitError(error: CheckoutError) {
         eventChannel.trySend(
-            ActionComponentEvent.Error(ComponentError(message = e.message.orEmpty(), cause = e)),
+            ActionComponentEvent.Error(error),
         )
     }
 
