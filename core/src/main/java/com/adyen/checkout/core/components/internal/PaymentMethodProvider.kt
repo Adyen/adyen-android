@@ -26,28 +26,24 @@ import java.util.concurrent.ConcurrentHashMap
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object PaymentMethodProvider {
 
-    private val factories = ConcurrentHashMap<String, PaymentMethodFactory<*, *>>()
-    private val storedFactories = ConcurrentHashMap<String, StoredPaymentMethodFactory<*, *>>()
+    private val factories = ConcurrentHashMap<String, PaymentComponentFactory<*, *>>()
+    private val storedFactories = ConcurrentHashMap<String, StoredPaymentComponentFactory<*, *>>()
 
     fun register(
         txVariant: String,
-        factory: PaymentMethodFactory<*, *>,
+        factory: ComponentFactory,
     ) {
-        factories[txVariant] = factory
+        if (factory is PaymentComponentFactory<*, *>) {
+            factories[txVariant] = factory
+        }
+
+        if (factory is StoredPaymentComponentFactory<*, *>) {
+            storedFactories[txVariant] = factory
+        }
     }
 
     /**
-     * Registers a [StoredPaymentMethodFactory] for a specific payment method type.
-     */
-    fun register(
-        txVariant: String,
-        factory: StoredPaymentMethodFactory<*, *>,
-    ) {
-        storedFactories[txVariant] = factory
-    }
-
-    /**
-     * Create a [PaymentComponent] via a [PaymentMethodFactory].
+     * Create a [PaymentComponent] via a [PaymentComponentFactory].
      *
      * @param paymentMethod The payment method to create a component for.
      * @param coroutineScope The [CoroutineScope] to be used by the component.
