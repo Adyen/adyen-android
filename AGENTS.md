@@ -310,6 +310,12 @@ if (checkCompileOnly("com.external.sdk.SomeClass")) {
 
 ## Commit Guidelines
 
+### Staging Files for Commit
+**NEVER use `git add -A` or `git add .`**
+- Only stage the specific files that were modified and are necessary for the commit
+- Use `git add <file1> <file2> ...` to add individual files
+- This prevents accidentally committing unrelated changes or generated files that shouldn't be included
+
 ### Commit Message Format
 All commits must follow this format:
 ```
