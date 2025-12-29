@@ -63,6 +63,7 @@ com.adyen.checkout.components.core.internal
 com.adyen.checkout.components.core.internal.analytics
 com.adyen.checkout.components.core.internal.data.api
 com.adyen.checkout.components.core.internal.data.model
+com.adyen.checkout.components.core.internal.data.model.sdkData
 com.adyen.checkout.components.core.internal.provider
 com.adyen.checkout.components.core.internal.ui
 com.adyen.checkout.components.core.internal.ui.model

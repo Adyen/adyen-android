@@ -62,7 +62,7 @@
   <div class="breadcrumbs"><a href="../../../index.html">googlepay</a><span class="delimiter">/</span><a href="../../index.html">com.adyen.checkout.googlepay</a><span class="delimiter">/</span><a href="../index.html">GooglePayConfiguration</a><span class="delimiter">/</span><span class="current">Builder</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Builder</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">Builder</a> : <a href="../../../../action-core/com.adyen.checkout.action.core.internal/-action-handling-payment-method-configuration-builder/index.html">ActionHandlingPaymentMethodConfigurationBuilder</a><span class="token operator">&lt;</span><a href="../index.html">GooglePayConfiguration</a><span class="token punctuation">, </span><a href="index.html">GooglePayConfiguration.Builder</a><span class="token operator">&gt; </span>, <a href="../../../../components-core/com.adyen.checkout.components.core.internal/-button-configuration-builder/index.html">ButtonConfigurationBuilder</a></div><p class="paragraph">Builder to create a <a href="../index.html">GooglePayConfiguration</a>.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html"><strike>Builder</strike></a> : <a href="../../../../action-core/com.adyen.checkout.action.core.internal/-action-handling-payment-method-configuration-builder/index.html">ActionHandlingPaymentMethodConfigurationBuilder</a><span class="token operator">&lt;</span><a href="../index.html">GooglePayConfiguration</a><span class="token punctuation">, </span><a href="index.html">GooglePayConfiguration.Builder</a><span class="token operator">&gt; </span>, <a href="../../../../components-core/com.adyen.checkout.components.core.internal/-button-configuration-builder/index.html">ButtonConfigurationBuilder</a></div><div class="deprecation-content"><h3 class="">Deprecated</h3><p class="paragraph">Configuration classes are deprecated, use CheckoutConfiguration instead.</p></div><p class="paragraph">Builder to create a <a href="../index.html">GooglePayConfiguration</a>.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -79,7 +79,326 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Alternative constructor that uses the <a href="../../../../googlepay/com.adyen.checkout.googlepay/-google-pay-configuration/-builder/[60]init[62].html">context</a> to fetch the user locale and use it as a shopper locale.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Locale.html">Locale</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields and a shopper locale.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Alternative constructor that uses the <a href="../../../../googlepay/com.adyen.checkout.googlepay/-google-pay-configuration/-builder/[60]init[62].html">context</a> to fetch the user locale and use it as a shopper locale.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html">Locale</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields and a shopper locale.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="2105644716%2FProperties%2F-734318346" anchor-label="allowedAuthMethods" id="2105644716%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="allowed-auth-methods.html"><span>allowed</span><wbr><span>Auth</span><wbr><span><span>Methods</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2105644716%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="allowed-auth-methods.html">allowedAuthMethods</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-921255761%2FProperties%2F-734318346" anchor-label="allowedCardNetworks" id="-921255761%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="allowed-card-networks.html"><span>allowed</span><wbr><span>Card</span><wbr><span><span>Networks</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-921255761%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="allowed-card-networks.html">allowedCardNetworks</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-125734501%2FProperties%2F-734318346" anchor-label="allowedIssuerCountryCodes" id="-125734501%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="allowed-issuer-country-codes.html"><span>allowed</span><wbr><span>Issuer</span><wbr><span>Country</span><wbr><span><span>Codes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-125734501%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="allowed-issuer-country-codes.html">allowedIssuerCountryCodes</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-923797%2FProperties%2F-734318346" anchor-label="billingAddressParameters" id="-923797%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="billing-address-parameters.html"><span>billing</span><wbr><span>Address</span><wbr><span><span>Parameters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-923797%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="billing-address-parameters.html">billingAddressParameters</a><span class="token operator">: </span><a href="../../-billing-address-parameters/index.html">BillingAddressParameters</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1681297111%2FProperties%2F-734318346" anchor-label="blockedIssuerCountryCodes" id="1681297111%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="blocked-issuer-country-codes.html"><span>blocked</span><wbr><span>Issuer</span><wbr><span>Country</span><wbr><span><span>Codes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1681297111%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="blocked-issuer-country-codes.html">blockedIssuerCountryCodes</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1886665235%2FProperties%2F-734318346" anchor-label="checkoutOption" id="1886665235%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="checkout-option.html"><span>checkout</span><wbr><span><span>Option</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1886665235%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="checkout-option.html">checkoutOption</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1273732297%2FProperties%2F-734318346" anchor-label="countryCode" id="1273732297%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="country-code.html"><span>country</span><wbr><span><span>Code</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1273732297%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="country-code.html">countryCode</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="851515265%2FProperties%2F-734318346" anchor-label="googlePayButtonStyling" id="851515265%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="google-pay-button-styling.html"><span>google</span><wbr><span>Pay</span><wbr><span>Button</span><wbr><span><span>Styling</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="851515265%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="google-pay-button-styling.html">googlePayButtonStyling</a><span class="token operator">: </span><a href="../../-google-pay-button-styling/index.html">GooglePayButtonStyling</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1709246442%2FProperties%2F-734318346" anchor-label="googlePayEnvironment" id="1709246442%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="google-pay-environment.html"><span>google</span><wbr><span>Pay</span><wbr><span><span>Environment</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1709246442%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="google-pay-environment.html">googlePayEnvironment</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1383129405%2FProperties%2F-734318346" anchor-label="isAllowCreditCards" id="-1383129405%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-allow-credit-cards.html"><span>is</span><wbr><span>Allow</span><wbr><span>Credit</span><wbr><span><span>Cards</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1383129405%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-allow-credit-cards.html">isAllowCreditCards</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="621290457%2FProperties%2F-734318346" anchor-label="isAllowPrepaidCards" id="621290457%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-allow-prepaid-cards.html"><span>is</span><wbr><span>Allow</span><wbr><span>Prepaid</span><wbr><span><span>Cards</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="621290457%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-allow-prepaid-cards.html">isAllowPrepaidCards</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1139729680%2FProperties%2F-734318346" anchor-label="isAssuranceDetailsRequired" id="-1139729680%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-assurance-details-required.html"><span>is</span><wbr><span>Assurance</span><wbr><span>Details</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1139729680%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-assurance-details-required.html">isAssuranceDetailsRequired</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1422204276%2FProperties%2F-734318346" anchor-label="isBillingAddressRequired" id="-1422204276%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-billing-address-required.html"><span>is</span><wbr><span>Billing</span><wbr><span>Address</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1422204276%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-billing-address-required.html">isBillingAddressRequired</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-273799845%2FProperties%2F-734318346" anchor-label="isEmailRequired" id="-273799845%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-email-required.html"><span>is</span><wbr><span>Email</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-273799845%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-email-required.html">isEmailRequired</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1403493435%2FProperties%2F-734318346" anchor-label="isExistingPaymentMethodRequired" id="1403493435%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-existing-payment-method-required.html"><span>is</span><wbr><span>Existing</span><wbr><span>Payment</span><wbr><span>Method</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1403493435%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-existing-payment-method-required.html">isExistingPaymentMethodRequired</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-814935919%2FProperties%2F-734318346" anchor-label="isShippingAddressRequired" id="-814935919%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-shipping-address-required.html"><span>is</span><wbr><span>Shipping</span><wbr><span>Address</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-814935919%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-shipping-address-required.html">isShippingAddressRequired</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1082487534%2FProperties%2F-734318346" anchor-label="isSubmitButtonVisible" id="1082487534%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-submit-button-visible.html"><span>is</span><wbr><span>Submit</span><wbr><span>Button</span><wbr><span><span>Visible</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1082487534%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-submit-button-visible.html"><strike>isSubmitButtonVisible</strike></a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1627647719%2FProperties%2F-734318346" anchor-label="merchantAccount" id="1627647719%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="merchant-account.html"><span>merchant</span><wbr><span><span>Account</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1627647719%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="merchant-account.html">merchantAccount</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1241065096%2FProperties%2F-734318346" anchor-label="merchantInfo" id="-1241065096%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="merchant-info.html"><span>merchant</span><wbr><span><span>Info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1241065096%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="merchant-info.html">merchantInfo</a><span class="token operator">: </span><a href="../../-merchant-info/index.html">MerchantInfo</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1520248612%2FProperties%2F-734318346" anchor-label="shippingAddressParameters" id="-1520248612%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="shipping-address-parameters.html"><span>shipping</span><wbr><span>Address</span><wbr><span><span>Parameters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1520248612%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="shipping-address-parameters.html">shippingAddressParameters</a><span class="token operator">: </span><a href="../../-shipping-address-parameters/index.html">ShippingAddressParameters</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-586927625%2FProperties%2F-734318346" anchor-label="totalPriceStatus" id="-586927625%2FProperties%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="total-price-status.html"><span>total</span><wbr><span>Price</span><wbr><span><span>Status</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-586927625%2FProperties%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="total-price-status.html">totalPriceStatus</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -98,7 +417,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#241905999%2FFunctions%2F-734318346"><span class="token function">add3ds2ActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../3ds2/com.adyen.checkout.adyen3ds2/-adyen3-d-s2-configuration/index.html">Adyen3DS2Configuration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#241905999%2FFunctions%2F-734318346"><span class="token function"><strike>add3ds2ActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../3ds2/com.adyen.checkout.adyen3ds2/-adyen3-d-s2-configuration/index.html">Adyen3DS2Configuration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -113,7 +432,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1749787135%2FFunctions%2F-734318346"><span class="token function">addAwaitActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../await/com.adyen.checkout.await/-await-configuration/index.html">AwaitConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1749787135%2FFunctions%2F-734318346"><span class="token function"><strike>addAwaitActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../await/com.adyen.checkout.await/-await-configuration/index.html">AwaitConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -128,7 +447,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-882291569%2FFunctions%2F-734318346"><span class="token function">addQRCodeActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../qr-code/com.adyen.checkout.qrcode/-q-r-code-configuration/index.html">QRCodeConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-882291569%2FFunctions%2F-734318346"><span class="token function"><strike>addQRCodeActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../qr-code/com.adyen.checkout.qrcode/-q-r-code-configuration/index.html">QRCodeConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -143,7 +462,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-744342335%2FFunctions%2F-734318346"><span class="token function">addRedirectActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../redirect/com.adyen.checkout.redirect/-redirect-configuration/index.html">RedirectConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-744342335%2FFunctions%2F-734318346"><span class="token function"><strike>addRedirectActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../redirect/com.adyen.checkout.redirect/-redirect-configuration/index.html">RedirectConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -158,7 +477,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1306462007%2FFunctions%2F-734318346"><span class="token function">addTwintActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../twint-action/com.adyen.checkout.twint.action/-twint-action-configuration/index.html">TwintActionConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1306462007%2FFunctions%2F-734318346"><span class="token function"><strike>addTwintActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../twint-action/com.adyen.checkout.twint.action/-twint-action-configuration/index.html">TwintActionConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -173,7 +492,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#689772119%2FFunctions%2F-734318346"><span class="token function">addVoucherActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../voucher/com.adyen.checkout.voucher/-voucher-configuration/index.html">VoucherConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#689772119%2FFunctions%2F-734318346"><span class="token function"><strike>addVoucherActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../voucher/com.adyen.checkout.voucher/-voucher-configuration/index.html">VoucherConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -188,7 +507,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1800668351%2FFunctions%2F-734318346"><span class="token function">addWeChatPayActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../wechatpay/com.adyen.checkout.wechatpay/-we-chat-pay-action-configuration/index.html">WeChatPayActionConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1800668351%2FFunctions%2F-734318346"><span class="token function"><strike>addWeChatPayActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../wechatpay/com.adyen.checkout.wechatpay/-we-chat-pay-action-configuration/index.html">WeChatPayActionConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -218,7 +537,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allow-credit-cards.html"><span class="token function">setAllowCreditCards</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isAllowCreditCards<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set if you support credit cards.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allow-credit-cards.html"><span class="token function"><strike>setAllowCreditCards</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isAllowCreditCards<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set if you support credit cards.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -233,7 +552,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allowed-auth-methods.html"><span class="token function">setAllowedAuthMethods</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">allowedAuthMethods<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the supported authentication methods. Check <a href="../../-allowed-auth-methods/index.html">AllowedAuthMethods</a> for all the possible values.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allowed-auth-methods.html"><span class="token function"><strike>setAllowedAuthMethods</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">allowedAuthMethods<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the supported authentication methods. Check <a href="../../-allowed-auth-methods/index.html">AllowedAuthMethods</a> for all the possible values.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -248,7 +567,22 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allowed-card-networks.html"><span class="token function">setAllowedCardNetworks</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">allowedCardNetworks<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the allowed card networks. The allowed networks are automatically configured based on your account settings, but you can override them here. Check <a href="../../-allowed-card-networks/index.html">AllowedCardNetworks</a> for all the possible values.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allowed-card-networks.html"><span class="token function"><strike>setAllowedCardNetworks</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">allowedCardNetworks<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the allowed card networks. The allowed networks are automatically configured based on your account settings, but you can override them here. Check <a href="../../-allowed-card-networks/index.html">AllowedCardNetworks</a> for all the possible values.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1502307241%2FFunctions%2F-734318346" anchor-label="setAllowedIssuerCountryCodes" id="1502307241%2FFunctions%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-allowed-issuer-country-codes.html"><span>set</span><wbr><span>Allowed</span><wbr><span>Issuer</span><wbr><span>Country</span><wbr><span><span>Codes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1502307241%2FFunctions%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allowed-issuer-country-codes.html"><span class="token function"><strike>setAllowedIssuerCountryCodes</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">allowedIssuerCountryCodes<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the allowed issuer country codes. This list should contain ISO 3166-1 alpha-2 country codes. When set the shopper will only be able to select payment methods issued in the provided countries.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -263,7 +597,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allow-prepaid-cards.html"><span class="token function">setAllowPrepaidCards</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isAllowPrepaidCards<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set if you support prepaid cards.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-allow-prepaid-cards.html"><span class="token function"><strike>setAllowPrepaidCards</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isAllowPrepaidCards<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set if you support prepaid cards.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -278,7 +612,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-amount.html"><span class="token function">setAmount</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">amount<span class="token operator">: </span><a href="../../../../components-core/com.adyen.checkout.components.core/-amount/index.html">Amount</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the amount of the transaction.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-amount.html"><span class="token function"><strike>setAmount</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">amount<span class="token operator">: </span><a href="../../../../components-core/com.adyen.checkout.components.core/-amount/index.html">Amount</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the amount of the transaction.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -308,7 +642,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-assurance-details-required.html"><span class="token function">setAssuranceDetailsRequired</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isAssuranceDetailsRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true to request assurance details.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-assurance-details-required.html"><span class="token function"><strike>setAssuranceDetailsRequired</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isAssuranceDetailsRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true to request assurance details.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -323,7 +657,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-billing-address-parameters.html"><span class="token function">setBillingAddressParameters</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">billingAddressParameters<span class="token operator">: </span><a href="../../-billing-address-parameters/index.html">BillingAddressParameters</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the required billing address details.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-billing-address-parameters.html"><span class="token function"><strike>setBillingAddressParameters</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">billingAddressParameters<span class="token operator">: </span><a href="../../-billing-address-parameters/index.html">BillingAddressParameters</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the required billing address details.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -338,7 +672,22 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-billing-address-required.html"><span class="token function">setBillingAddressRequired</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isBillingAddressRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true if you require a billing address.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-billing-address-required.html"><span class="token function"><strike>setBillingAddressRequired</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isBillingAddressRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true if you require a billing address.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1917013019%2FFunctions%2F-734318346" anchor-label="setBlockedIssuerCountryCodes" id="-1917013019%2FFunctions%2F-734318346" data-filterable-set=":googlepay:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":googlepay:dokkaHtmlPartial/release" data-filterable-set=":googlepay:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-blocked-issuer-country-codes.html"><span>set</span><wbr><span>Blocked</span><wbr><span>Issuer</span><wbr><span>Country</span><wbr><span><span>Codes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1917013019%2FFunctions%2F-734318346"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-blocked-issuer-country-codes.html"><span class="token function"><strike>setBlockedIssuerCountryCodes</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">blockedIssuerCountryCodes<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the blocked issuer country codes. This list should contain ISO 3166-1 alpha-2 country codes. When set the shopper will not be able to select payment methods issued in the provided countries.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -353,7 +702,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-checkout-option.html"><span class="token function">setCheckoutOption</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">checkoutOption<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the checkout option. This affects the submit button text displayed in the Google Pay sheet.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-checkout-option.html"><span class="token function"><strike>setCheckoutOption</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">checkoutOption<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the checkout option. This affects the submit button text displayed in the Google Pay sheet.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -368,7 +717,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-country-code.html"><span class="token function">setCountryCode</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">countryCode<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the ISO 3166-1 alpha-2 country code where the transaction is processed.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-country-code.html"><span class="token function"><strike>setCountryCode</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">countryCode<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the ISO 3166-1 alpha-2 country code where the transaction is processed.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -383,7 +732,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-email-required.html"><span class="token function">setEmailRequired</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isEmailRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true if you require an email address.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-email-required.html"><span class="token function"><strike>setEmailRequired</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isEmailRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true if you require an email address.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -398,7 +747,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-existing-payment-method-required.html"><span class="token function">setExistingPaymentMethodRequired</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isExistingPaymentMethodRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Default is false.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-existing-payment-method-required.html"><span class="token function"><strike>setExistingPaymentMethodRequired</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isExistingPaymentMethodRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Default is false.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -413,7 +762,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-google-pay-button-styling.html"><span class="token function">setGooglePayButtonStyling</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">googlePayButtonStyling<span class="token operator">: </span><a href="../../-google-pay-button-styling/index.html">GooglePayButtonStyling</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set a <a href="../../-google-pay-button-styling/index.html">GooglePayButtonStyling</a> object for customization of the Google Pay button.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-google-pay-button-styling.html"><span class="token function"><strike>setGooglePayButtonStyling</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">googlePayButtonStyling<span class="token operator">: </span><a href="../../-google-pay-button-styling/index.html">GooglePayButtonStyling</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set a <a href="../../-google-pay-button-styling/index.html">GooglePayButtonStyling</a> object for customization of the Google Pay button.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -428,7 +777,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-google-pay-environment.html"><span class="token function">setGooglePayEnvironment</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">googlePayEnvironment<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the environment to be used by GooglePay. Should be either <span data-unresolved-link="com.google.android.gms.wallet/WalletConstants/ENVIRONMENT_TEST/#/PointingToDeclaration/">WalletConstants.ENVIRONMENT_TEST</span> or <span data-unresolved-link="com.google.android.gms.wallet/WalletConstants/ENVIRONMENT_PRODUCTION/#/PointingToDeclaration/">WalletConstants.ENVIRONMENT_PRODUCTION</span>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-google-pay-environment.html"><span class="token function"><strike>setGooglePayEnvironment</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">googlePayEnvironment<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the environment to be used by GooglePay. Should be either <span data-unresolved-link="com.google.android.gms.wallet/WalletConstants/ENVIRONMENT_TEST/#/PointingToDeclaration/">WalletConstants.ENVIRONMENT_TEST</span> or <span data-unresolved-link="com.google.android.gms.wallet/WalletConstants/ENVIRONMENT_PRODUCTION/#/PointingToDeclaration/">WalletConstants.ENVIRONMENT_PRODUCTION</span>.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -443,7 +792,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-merchant-account.html"><span class="token function">setMerchantAccount</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">merchantAccount<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set the merchant account to be put in the payment token from Google to Adyen.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-merchant-account.html"><span class="token function"><strike>setMerchantAccount</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">merchantAccount<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set the merchant account to be put in the payment token from Google to Adyen.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -458,7 +807,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-merchant-info.html"><span class="token function">setMerchantInfo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">merchantInfo<span class="token operator">: </span><a href="../../-merchant-info/index.html">MerchantInfo</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the information about the merchant requesting the payment.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-merchant-info.html"><span class="token function"><strike>setMerchantInfo</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">merchantInfo<span class="token operator">: </span><a href="../../-merchant-info/index.html">MerchantInfo</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the information about the merchant requesting the payment.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -473,7 +822,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-shipping-address-parameters.html"><span class="token function">setShippingAddressParameters</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shippingAddressParameters<span class="token operator">: </span><a href="../../-shipping-address-parameters/index.html">ShippingAddressParameters</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the required shipping address details.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-shipping-address-parameters.html"><span class="token function"><strike>setShippingAddressParameters</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shippingAddressParameters<span class="token operator">: </span><a href="../../-shipping-address-parameters/index.html">ShippingAddressParameters</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the required shipping address details.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -488,7 +837,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-shipping-address-required.html"><span class="token function">setShippingAddressRequired</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isShippingAddressRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true if you require a shipping address.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-shipping-address-required.html"><span class="token function"><strike>setShippingAddressRequired</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isShippingAddressRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Set to true if you require a shipping address.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -503,7 +852,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html#1796914586%2FFunctions%2F-734318346"><span class="token function">setShopperLocale</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Locale.html">Locale</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html#1796914586%2FFunctions%2F-734318346"><span class="token function">setShopperLocale</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html">Locale</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -518,7 +867,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-submit-button-visible.html"><span class="token function">setSubmitButtonVisible</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isSubmitButtonVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets if submit button will be visible or not.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-submit-button-visible.html"><span class="token function"><strike>setSubmitButtonVisible</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isSubmitButtonVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets if submit button will be visible or not.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -533,7 +882,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-total-price-status.html"><span class="token function">setTotalPriceStatus</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">totalPriceStatus<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the status of the total price used.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":googlepay:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-total-price-status.html"><span class="token function"><strike>setTotalPriceStatus</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">totalPriceStatus<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">GooglePayConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets the status of the total price used.</p></div></div></div>
                 </div>
               </div>
             </div>
