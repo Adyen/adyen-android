@@ -9,9 +9,10 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.old.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -22,7 +23,7 @@ import com.adyen.threeds2.ThreeDS2Service
 internal fun StoredCardComponentState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
-    checkoutAttemptId: String,
+    sdkDataProvider: SdkDataProvider,
     storedPaymentMethodId: String?,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (RuntimeException) -> Unit,
@@ -39,7 +40,7 @@ internal fun StoredCardComponentState.toPaymentComponentState(
     val cardPaymentMethod = createPaymentMethod(
         storedCardId = storedPaymentMethodId,
         encryptedCard = encryptedCard,
-        checkoutAttemptId = checkoutAttemptId,
+        sdkDataProvider = sdkDataProvider,
     )
 
     val paymentComponentData = createPaymentComponentData(cardPaymentMethod, componentParams)
@@ -100,13 +101,14 @@ private fun CardComponentParams.publicKey(onPublicKeyNotFound: (RuntimeException
 private fun createPaymentMethod(
     storedCardId: String?,
     encryptedCard: EncryptedCard,
-    checkoutAttemptId: String,
+    sdkDataProvider: SdkDataProvider,
 ) = CardPaymentMethod(
     type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
-    checkoutAttemptId = checkoutAttemptId,
+    sdkData = sdkDataProvider.createEncodedSdkData(
+        threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+    ),
     storedPaymentMethodId = storedPaymentMethodId(storedCardId),
     encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
-    threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
 )
 
 private fun storedPaymentMethodId(storedPaymentMethodId: String?): String {
