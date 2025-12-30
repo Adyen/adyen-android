@@ -16,7 +16,7 @@ import org.json.JSONObject
 @Parcelize
 data class CardPaymentMethod(
     override val type: String?,
-    override var sdkData: String? = null,
+    override val sdkData: String? = null,
     val encryptedCardNumber: String? = null,
     val encryptedExpiryMonth: String? = null,
     val encryptedExpiryYear: String? = null,

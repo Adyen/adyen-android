@@ -22,7 +22,7 @@ import org.json.JSONObject
 abstract class PaymentMethodDetails : ModelObject() {
 
     abstract val type: String?
-    abstract var sdkData: String?
+    abstract val sdkData: String?
 
     companion object {
         const val TYPE = "type"

@@ -17,7 +17,7 @@ import org.json.JSONObject
 @Parcelize
 data class MBWayPaymentMethod(
     override val type: String?,
-    override var sdkData: String? = null,
+    override val sdkData: String? = null,
     val telephoneNumber: String?,
 ) : PaymentMethodDetails() {
 

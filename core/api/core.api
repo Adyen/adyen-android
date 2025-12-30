@@ -1651,7 +1651,6 @@ public final class com/adyen/checkout/core/components/paymentmethod/CardPaymentM
 	public final fun getTaxNumber ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public fun setSdkData (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1684,7 +1683,6 @@ public final class com/adyen/checkout/core/components/paymentmethod/GenericPayme
 	public final fun getSubtype ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public fun setSdkData (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1718,7 +1716,6 @@ public final class com/adyen/checkout/core/components/paymentmethod/MBWayPayment
 	public final fun getTelephoneNumber ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public fun setSdkData (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1748,7 +1745,6 @@ public abstract class com/adyen/checkout/core/components/paymentmethod/PaymentMe
 	public fun <init> ()V
 	public abstract fun getSdkData ()Ljava/lang/String;
 	public abstract fun getType ()Ljava/lang/String;
-	public abstract fun setSdkData (Ljava/lang/String;)V
 }
 
 public final class com/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails$Companion {
