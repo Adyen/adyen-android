@@ -131,8 +131,6 @@ internal class RedirectComponent(
         //  status when the app resumes. Currently we have no way of doing that but we can create something like
         //  PaymentComponentState for actions.
         redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
-
-        // TODO - Analytics, track REDIRECT_FAILED event when redirect is failed
     }
 
     private fun handleNativeRedirect(nativeRedirectData: String?, details: JSONObject) {
@@ -164,6 +162,12 @@ internal class RedirectComponent(
     }
 
     private fun emitError(error: CheckoutError) {
+        val event = GenericEvents.error(
+            component = action.paymentMethodType.orEmpty(),
+            event = ErrorEvent.REDIRECT_FAILED,
+        )
+        analyticsManager.trackEvent(event)
+
         eventChannel.trySend(
             ActionComponentEvent.Error(error),
         )
