@@ -18,41 +18,25 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.action.data.Action
-import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.action.internal.ActionComponentEvent
-import com.adyen.checkout.core.action.internal.ActionProvider
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
-import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
-import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.toNavEntry
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 internal class PaymentFacilitator(
-    private val paymentComponent: PaymentComponent<BasePaymentComponentState>,
+    private val paymentFlowStrategy: PaymentFlowStrategy,
     private val coroutineScope: CoroutineScope,
-    private val componentEventHandler: ComponentEventHandler<BasePaymentComponentState>,
-    private val actionProvider: ActionProvider,
     private val checkoutController: CheckoutController,
     private val commonComponentParams: CommonComponentParams,
 ) {
 
-    private var actionComponent: ActionComponent? = null
-    private var actionObservationJob: Job? = null
-
-    private val backStack = NavBackStack(mutableStateListOf(paymentComponent.navigationStartingPoint))
+    private val backStack = NavBackStack(mutableStateListOf(paymentFlowStrategy.navigationStartingPoint))
 
     @Composable
     fun ViewFactory(
@@ -69,8 +53,8 @@ internal class PaymentFacilitator(
                 backStack = backStack,
                 sceneStrategy = DialogSceneStrategy(),
             ) { key ->
-                val entries = paymentComponent.navigation + actionComponent?.navigation.orEmpty()
-                val entry = entries[key] ?: error("Unknown key: $key")
+                // TODO - Should we propagate an error to the merchant instead of throwing?
+                val entry = paymentFlowStrategy.navigationEntries[key] ?: error("Unknown key: $key")
                 val properties = navigationProvider?.provide(entry.publicKey)
                 entry.toNavEntry(modifier, backStack, properties)
             }
@@ -78,15 +62,13 @@ internal class PaymentFacilitator(
     }
 
     fun observe(lifecycle: Lifecycle) {
-        paymentComponent.eventFlow
-            .flowWithLifecycle(lifecycle)
-            .filterNotNull()
-            .onEach { event ->
-                paymentComponent.setLoading(true)
-                val result = componentEventHandler.onPaymentComponentEvent(event)
-                paymentComponent.setLoading(false)
+        paymentFlowStrategy.observe(
+            lifecycle = lifecycle,
+            coroutineScope = coroutineScope,
+            onResult = { result ->
                 handleResult(result, lifecycle)
-            }.launchIn(coroutineScope)
+            },
+        )
 
         checkoutController.events
             .flowWithLifecycle(lifecycle)
@@ -99,8 +81,6 @@ internal class PaymentFacilitator(
             }
             .launchIn(coroutineScope)
     }
-
-    fun onCleared() = paymentComponent.onCleared()
 
     private fun handleResult(checkoutResult: CheckoutResult, lifecycle: Lifecycle) {
         when (checkoutResult) {
@@ -116,54 +96,27 @@ internal class PaymentFacilitator(
     }
 
     private fun submit() {
-        // TODO - what if we are handling an action?
-        paymentComponent.submit()
+        paymentFlowStrategy.submit()
     }
 
     private fun handleAction(action: Action, lifecycle: Lifecycle) {
-        // In case handleAction() is called twice, we cancel the old observation job
-        actionObservationJob?.cancel()
-
-        val actionComponent = actionProvider.get(
+        paymentFlowStrategy.handleAction(
             action = action,
+            lifecycle = lifecycle,
             coroutineScope = coroutineScope,
-        )
-        this.actionComponent = actionComponent
-
-        backStack.clear()
-        backStack.add(actionComponent.navigationStartingPoint)
-
-        actionObservationJob = actionComponent.eventFlow
-            .flowWithLifecycle(lifecycle)
-            .filterNotNull()
-            .onEach { event ->
-                val result = componentEventHandler.onActionComponentEvent(event)
+            onActionComponentCreated = { navKey ->
+                backStack.clear()
+                backStack.add(navKey)
+            },
+            onResult = { result ->
                 handleResult(result, lifecycle)
-            }.launchIn(coroutineScope)
-
-        actionComponent.handleAction()
-
-        adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
+            },
+        )
     }
 
     private fun handleIntent(intent: Intent) {
-        val actionComponent = actionComponent
-        if (actionComponent !is IntentHandlingComponent) {
-            adyenLog(AdyenLogLevel.DEBUG) {
-                "Action component ${actionComponent?.javaClass?.simpleName} is not type of IntentHandlingComponent"
-            }
-            coroutineScope.launch {
-                componentEventHandler.onActionComponentEvent(
-                    event = ActionComponentEvent.Error(
-                        // TODO - Error propagation. Should this be an implementation error?
-                        error = ComponentError(
-                            message = "Action component does not implement IntentHandlingComponent",
-                        ),
-                    ),
-                )
-            }
-            return
-        }
-        actionComponent.handleIntent(intent)
+        paymentFlowStrategy.handleIntent(intent, coroutineScope)
     }
+
+    fun onCleared() = paymentFlowStrategy.onCleared()
 }

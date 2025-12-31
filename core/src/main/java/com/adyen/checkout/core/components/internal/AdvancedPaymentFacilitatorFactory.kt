@@ -10,14 +10,14 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.internal.helper.getLocale
+import com.adyen.checkout.core.components.AdyenPaymentFlowKey
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import kotlinx.coroutines.CoroutineScope
 
@@ -30,9 +30,13 @@ internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutController: CheckoutController,
     private val publicKey: String?,
     private val checkoutAttemptId: String?,
+    private val paymentMethodsApiResponse: PaymentMethodsApiResponse,
 ) : PaymentFacilitatorFactory {
 
-    override fun create(paymentMethod: PaymentMethodResponse, coroutineScope: CoroutineScope): PaymentFacilitator {
+    override fun create(
+        key: AdyenPaymentFlowKey,
+        coroutineScope: CoroutineScope,
+    ): PaymentFacilitator {
         val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = applicationContext.getLocale(),
@@ -50,31 +54,25 @@ internal class AdvancedPaymentFacilitatorFactory(
             checkoutAttemptId = checkoutAttemptId,
         )
 
-        val paymentComponent = PaymentMethodProvider.get(
-            paymentMethod = paymentMethod,
+        val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
+            componentCallbacks = checkoutCallbacks.toAdvancedComponentCallbacks(),
+        )
+
+        val paymentFlowStrategy = PaymentFlowStrategyProvider().get(
+            key = key,
+            paymentMethodsApiResponse = paymentMethodsApiResponse,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
             checkoutCallbacks = checkoutCallbacks,
-        )
-
-        val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
-            componentCallbacks = checkoutCallbacks.toAdvancedComponentCallbacks(),
-        )
-
-        val actionProvider = ActionProvider(
-            analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
-            commonComponentParams = componentParamsBundle.commonComponentParams,
+            componentEventHandler = componentEventHandler,
         )
 
         return PaymentFacilitator(
-            paymentComponent = paymentComponent,
+            paymentFlowStrategy = paymentFlowStrategy,
             coroutineScope = coroutineScope,
-            componentEventHandler = componentEventHandler,
-            actionProvider = actionProvider,
             checkoutController = checkoutController,
             commonComponentParams = componentParamsBundle.commonComponentParams,
         )
