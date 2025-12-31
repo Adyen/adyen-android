@@ -17,13 +17,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.components.AdyenPaymentFlowKey
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 
 internal class AdyenComponent(
-    paymentMethod: PaymentMethodResponse,
+    key: AdyenPaymentFlowKey,
     checkoutContext: CheckoutContext,
     checkoutCallbacks: CheckoutCallbacks,
     checkoutController: CheckoutController,
@@ -33,7 +33,7 @@ internal class AdyenComponent(
 
     private val paymentFacilitator: PaymentFacilitator =
         PaymentFacilitatorProvider().provide(
-            paymentMethod = paymentMethod,
+            key = key,
             checkoutContext = checkoutContext,
             checkoutCallbacks = checkoutCallbacks,
             checkoutController = checkoutController,

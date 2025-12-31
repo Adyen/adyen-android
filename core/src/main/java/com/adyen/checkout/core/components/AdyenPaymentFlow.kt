@@ -16,7 +16,6 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
@@ -24,7 +23,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 fun AdyenPaymentFlow(
-    paymentMethod: PaymentMethodResponse,
+    key: AdyenPaymentFlowKey,
     checkoutContext: CheckoutContext,
     checkoutCallbacks: CheckoutCallbacks,
     modifier: Modifier = Modifier,
@@ -35,9 +34,9 @@ fun AdyenPaymentFlow(
 ) {
     val applicationContext = LocalContext.current.applicationContext
     // TODO - Verify that this does not keep observing the previous values and adds extra observables
-    val adyenComponent = viewModel(key = paymentMethod.hashCode().toString()) {
+    val adyenComponent = viewModel(key = key.hashCode().toString()) {
         AdyenComponent(
-            paymentMethod = paymentMethod,
+            key = key,
             checkoutContext = checkoutContext,
             checkoutCallbacks = checkoutCallbacks,
             checkoutController = checkoutController,
@@ -49,4 +48,10 @@ fun AdyenPaymentFlow(
     InternalCheckoutTheme(theme) {
         adyenComponent.ViewFactory(modifier, localizationProvider, navigationProvider)
     }
+}
+
+interface AdyenPaymentFlowKey {
+    data class PaymentMethod(val txVariant: String) : AdyenPaymentFlowKey
+    data class StoredPaymentMethod(val id: String) : AdyenPaymentFlowKey
+    data class Action(val action: com.adyen.checkout.core.action.data.Action) : AdyenPaymentFlowKey
 }

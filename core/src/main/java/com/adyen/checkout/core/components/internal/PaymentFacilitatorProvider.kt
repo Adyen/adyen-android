@@ -11,9 +11,9 @@ package com.adyen.checkout.core.components.internal
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.AdyenPaymentFlowKey
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
 import kotlinx.coroutines.CoroutineScope
 
@@ -21,7 +21,7 @@ internal class PaymentFacilitatorProvider {
 
     @Suppress("LongParameterList")
     fun provide(
-        paymentMethod: PaymentMethodResponse,
+        key: AdyenPaymentFlowKey,
         checkoutContext: CheckoutContext,
         checkoutCallbacks: CheckoutCallbacks,
         checkoutController: CheckoutController,
@@ -38,6 +38,7 @@ internal class PaymentFacilitatorProvider {
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
                     publicKey = checkoutContext.publicKey,
+                    paymentMethodsApiResponse = checkoutContext.paymentMethodsApiResponse,
                 )
             }
 
@@ -50,9 +51,12 @@ internal class PaymentFacilitatorProvider {
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
                     publicKey = checkoutContext.publicKey,
+                    paymentMethodsApiResponse =
+                        checkoutContext.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
+                            ?: error("PaymentMethodsApiResponse cannot be null."),
                 )
             }
         }
-        return paymentFacilitatorFactory.create(paymentMethod, coroutineScope)
+        return paymentFacilitatorFactory.create(key, coroutineScope)
     }
 }

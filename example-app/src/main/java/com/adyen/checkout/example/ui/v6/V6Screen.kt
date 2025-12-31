@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.core.components.AdyenPaymentFlow
+import com.adyen.checkout.core.components.AdyenPaymentFlowKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultContent
@@ -120,7 +121,7 @@ private fun Component(
         }
 
         AdyenPaymentFlow(
-            paymentMethod = selectedPaymentMethod,
+            key = AdyenPaymentFlowKey.PaymentMethod(selectedPaymentMethod.type.orEmpty()),
             checkoutContext = uiState.checkoutContext,
             checkoutCallbacks = uiState.checkoutCallbacks,
             theme = theme,
