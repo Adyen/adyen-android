@@ -55,7 +55,7 @@ jobs:
       # Update Github release with the updated release notes
       - name: Update Github release notes
         id: update_github_release_notes
-        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b
+        uses: ncipollo/release-action@5f55df31e10e67a2ef62ea8f3fa1b926cee6f8b1
         env:
           github-token: ${{ secrets.github-token }}
           VERSION_NAME: ${{ inputs.version-name }}
