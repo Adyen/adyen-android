@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.helper.requiredSecurityCode
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -30,7 +29,7 @@ internal class CardComponentStateValidator(
             validateSecurityCode(
                 state.securityCode,
                 firstSupportedDetectedCardType,
-                state.securityCode.requirementPolicy ?: requiredSecurityCode(),
+                state.securityCode.requirementPolicy ?: RequirementPolicy.Required,
             )
         val holderNameError = validateHolderName(state.holderName, state.isHolderNameRequired)
 

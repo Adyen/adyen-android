@@ -23,11 +23,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.internal.ui.helper.label
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
@@ -43,15 +43,19 @@ internal fun ExpiryDateField(
     val supportingTextExpiryDate = expiryDateState.supportingText?.let { resolveString(it) }
         ?: resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
 
+    val labelSuffix = if (expiryDateState.requirementPolicy is RequirementPolicy.Optional) {
+        " ${resolveString(CheckoutLocalizationKey.GENERAL_OPTIONAL)}"
+    } else {
+        ""
+    }
+
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
                 onIntent(CardIntent.UpdateExpiryDateFocus(focusState.isFocused))
             },
-        label = resolveString(
-            key = expiryDateState.requirementPolicy.label(fallback = CheckoutLocalizationKey.CARD_EXPIRY_DATE),
-        ),
+        label = resolveString(key = CheckoutLocalizationKey.CARD_EXPIRY_DATE) + labelSuffix,
         initialValue = expiryDateState.text,
         isError = expiryDateState.isError,
         supportingText = supportingTextExpiryDate,
