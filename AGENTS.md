@@ -34,6 +34,7 @@ This document outlines important patterns, practices, and rules to follow when w
 - Mark checkboxes as completed
 - Add notes about any deviations or discoveries
 - This helps if work needs to be continued later or by someone else
+- **Do not commit plan files to the repository** as they are temporary working documents. They should only be committed manually if specifically needed.
 
 **Commit workflow - CRITICAL:**
 - **Complete one phase fully before moving to the next**
