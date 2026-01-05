@@ -39,7 +39,7 @@ jobs:
         # This step will only run on pull_request events.
         # PR information is only available when workflow gets triggered with pull_request event.
         if: github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
         with:
           file-path: "${{ github.workspace }}/api_changes.md"
           comment-tag: api_changes
