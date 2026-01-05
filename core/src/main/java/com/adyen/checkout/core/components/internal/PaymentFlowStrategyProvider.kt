@@ -24,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 // TODO - error propagation
 internal class PaymentFlowStrategyProvider {
 
+    @Suppress("LongParameterList")
     fun get(
         key: AdyenPaymentFlowKey,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
@@ -94,6 +95,7 @@ internal class PaymentFlowStrategyProvider {
             .find { it.id == key.id } ?: error("Cannot find stored payment method with id: ${key.id}")
     }
 
+    @Suppress("LongParameterList")
     private fun getDefaultStrategy(
         paymentMethod: PaymentMethodResponse,
         coroutineScope: CoroutineScope,
@@ -127,6 +129,7 @@ internal class PaymentFlowStrategyProvider {
         )
     }
 
+    @Suppress("LongParameterList")
     private fun getActionStrategy(
         action: Action,
         coroutineScope: CoroutineScope,
