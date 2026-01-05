@@ -27,7 +27,6 @@ internal class DefaultLocalizationSource {
                 R.string.checkout_card_number_invalid_unsupported_brand
 
             CheckoutLocalizationKey.CARD_EXPIRY_DATE -> R.string.checkout_card_expiry_date
-            CheckoutLocalizationKey.CARD_EXPIRY_DATE_OPTIONAL -> R.string.checkout_card_expiry_date_optional
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID -> R.string.checkout_card_expiry_date_invalid
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_OLD ->
                 R.string.checkout_card_expiry_date_invalid_too_old
@@ -37,7 +36,6 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT -> R.string.checkout_card_expiry_date_hint
             CheckoutLocalizationKey.CARD_SECURITY_CODE -> R.string.checkout_card_security_code
-            CheckoutLocalizationKey.CARD_SECURITY_CODE_OPTIONAL -> R.string.checkout_card_security_code_optional
             CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID -> R.string.checkout_card_security_code_invalid
             CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS ->
                 R.string.checkout_card_security_code_hint_3_digits
@@ -88,6 +86,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CANCEL -> R.string.checkout_general_cancel
             CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close
+            CheckoutLocalizationKey.GENERAL_OPTIONAL -> R.string.checkout_general_optional
             CheckoutLocalizationKey.GENERAL_SEARCH_HINT -> R.string.checkout_general_search_hint
 
             // MBWay
