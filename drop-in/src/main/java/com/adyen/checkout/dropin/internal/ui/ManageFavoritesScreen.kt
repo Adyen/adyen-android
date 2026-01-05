@@ -148,7 +148,7 @@ private fun FavoriteListItem(
         },
         title = item.title,
         subtitle = item.subtitle,
-        trailingIcon = {
+        trailingContent = {
             Body(
                 text = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE),
                 color = CheckoutThemeProvider.colors.destructive,
