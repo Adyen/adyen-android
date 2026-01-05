@@ -15,7 +15,7 @@ import com.adyen.checkout.core.sessions.SessionModel
 
 object Checkout {
 
-    suspend fun initialize(
+    suspend fun setup(
         sessionModel: SessionModel,
         checkoutConfiguration: CheckoutConfiguration,
     ): Result<CheckoutContext.Sessions> {
@@ -39,7 +39,7 @@ object Checkout {
         }
     }
 
-    suspend fun initialize(
+    suspend fun setup(
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         checkoutConfiguration: CheckoutConfiguration,
     ): Result<CheckoutContext.Advanced> {

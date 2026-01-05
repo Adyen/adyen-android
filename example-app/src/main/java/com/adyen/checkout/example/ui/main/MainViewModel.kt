@@ -193,7 +193,7 @@ internal class MainViewModel @Inject constructor(
             )
 
             val result = paymentMethods?.let {
-                Checkout.initialize(
+                Checkout.setup(
                     paymentMethods,
                     checkoutConfiguration,
                 )
@@ -224,7 +224,7 @@ internal class MainViewModel @Inject constructor(
             val sessionModel = paymentsRepository.createSession(createSessionRequest())
 
             val result = sessionModel?.let {
-                Checkout.initialize(
+                Checkout.setup(
                     sessionModel,
                     checkoutConfiguration,
                 )
