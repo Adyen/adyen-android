@@ -16,7 +16,9 @@ This template outlines the implementation plan for migrating a payment method mo
   - Add `api project(':core')` dependency
   - Add `libs.androidx.startup` dependency
 
-**Reference**: `mbway/build.gradle`
+**Reference**: 
+- `mbway/build.gradle`
+- `card/build.gradle`
 
 **Verification**:
 ```bash
@@ -45,6 +47,7 @@ This template outlines the implementation plan for migrating a payment method mo
 
 **Reference**: 
 - `core/.../MBWayPaymentMethod.kt` (new pattern)
+- `core/.../CardPaymentMethod.kt` (new pattern)
 - `components-core/.../{Module}PaymentMethod.kt` (old implementation for field reference)
 
 **Verification**:
@@ -68,7 +71,9 @@ This template outlines the implementation plan for migrating a payment method mo
   - `CheckoutConfiguration.{module}()` extension function
   - `CheckoutConfiguration.get{Module}Configuration()` internal function
 
-**Reference**: `card/src/main/java/com/adyen/checkout/card/CardConfiguration.kt`
+**Reference**: 
+- `mbway/src/main/java/com/adyen/checkout/mbway/MBWayConfiguration.kt`
+- `card/src/main/java/com/adyen/checkout/card/CardConfiguration.kt`
 
 **Verification**:
 ```bash
@@ -88,7 +93,9 @@ This template outlines the implementation plan for migrating a payment method mo
 - [ ] `{module}/src/main/java/com/adyen/checkout/{module}/{Module}NavigationKeys.kt`
   - `{Module}MainNavigationKey` data object implementing `CheckoutNavigationKey`
 
-**Reference**: `mbway/src/main/java/com/adyen/checkout/mbway/MBWayNavigationKeys.kt`
+**Reference**: 
+- `mbway/src/main/java/com/adyen/checkout/mbway/MBWayNavigationKeys.kt`
+- `card/src/main/java/com/adyen/checkout/card/CardNavigationKeys.kt`
 
 **Verification**:
 ```bash
@@ -121,7 +128,15 @@ This template outlines the implementation plan for migrating a payment method mo
   - Data class implementing `PaymentComponentState<{Module}PaymentMethod>`
   - Properties: `data: PaymentComponentData<{Module}PaymentMethod>`, `isValid: Boolean`
 
-**Reference**: MBWay state classes
+**Reference**: 
+- `mbway/internal/ui/state/MBWayIntent.kt`
+- `mbway/internal/ui/state/MBWayComponentState.kt`
+- `mbway/internal/ui/state/MBWayViewState.kt`
+- `mbway/internal/ui/state/MBWayPaymentComponentState.kt`
+- `card/internal/ui/state/CardIntent.kt`
+- `card/internal/ui/state/CardComponentState.kt`
+- `card/internal/ui/state/CardViewState.kt`
+- `card/internal/ui/state/CardPaymentComponentState.kt`
 
 **Verification**:
 ```bash
@@ -161,7 +176,14 @@ This template outlines the implementation plan for migrating a payment method mo
 - [ ] `core/src/main/res/values/strings.xml` - Add string resource (copy from module if exists)
 
 **Reference**: 
-- MBWay state infrastructure classes
+- `mbway/internal/ui/state/MBWayComponentStateFactory.kt`
+- `mbway/internal/ui/state/MBWayComponentStateReducer.kt`
+- `mbway/internal/ui/state/MBWayComponentStateValidator.kt`
+- `mbway/internal/ui/state/MBWayViewStateProducer.kt`
+- `card/internal/ui/state/CardComponentStateFactory.kt`
+- `card/internal/ui/state/CardComponentStateReducer.kt`
+- `card/internal/ui/state/CardComponentStateValidator.kt`
+- `card/internal/ui/state/CardViewStateProducer.kt`
 - `old/internal/ui/model/{Module}OutputData.kt` for validation logic
 
 **Verification**:
@@ -185,7 +207,9 @@ This template outlines the implementation plan for migrating a payment method mo
   - `{Module}ComponentState.toPaymentComponentState()` extension function
   - **Migrate state conversion logic from old implementation** (e.g., `old/internal/ui/Default{Module}Delegate.kt` - `createComponentState()`)
 
-**Reference**: `mbway/.../MBWayComponentStateExt.kt`
+**Reference**: 
+- `mbway/internal/ui/state/MBWayComponentStateExt.kt`
+- `card/internal/ui/state/CardComponentStateExt.kt`
 
 **Verification**:
 ```bash
@@ -205,7 +229,9 @@ This template outlines the implementation plan for migrating a payment method mo
 - [ ] `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/{Module}NavKeys.kt`
   - `{Module}NavKey` data object implementing `NavKey`
 
-**Reference**: `mbway/internal/ui/MBWayNavKeys.kt`
+**Reference**: 
+- `mbway/internal/ui/MBWayNavKeys.kt`
+- `card/internal/ui/CardNavKeys.kt`
 
 **Verification**:
 ```bash
@@ -234,7 +260,11 @@ This template outlines the implementation plan for migrating a payment method mo
   - Add parameters: `viewState: {Module}ViewState`, `onSubmitClick: () -> Unit`, `onIntent: ({Module}Intent) -> Unit`
   - Leave implementation as TODO placeholder
 
-**Reference**: `mbway/internal/ui/MBWayComponent.kt`
+**Reference**: 
+- `mbway/internal/ui/MBWayComponent.kt`
+- `mbway/internal/ui/view/MbWayComponent.kt` (composable)
+- `card/internal/ui/CardComponent.kt`
+- `card/internal/ui/view/CardComponent.kt` (composable)
 
 **Verification**:
 ```bash
@@ -259,7 +289,9 @@ This template outlines the implementation plan for migrating a payment method mo
 - Access `componentParams` from `componentParamsBundle.commonComponentParams`
 - Do NOT add `supportedPaymentMethods` property (not part of `PaymentMethodFactory` interface)
 
-**Reference**: `mbway/internal/ui/MBWayFactory.kt`
+**Reference**: 
+- `mbway/internal/ui/MBWayFactory.kt`
+- `card/internal/ui/CardFactory.kt`
 
 **Verification**:
 ```bash
@@ -286,7 +318,11 @@ This template outlines the implementation plan for migrating a payment method mo
 - [ ] `{module}/src/main/AndroidManifest.xml`
   - Add startup provider entry for `{Module}Initializer`
 
-**Reference**: `mbway/internal/MBWayInitializer.kt` and `mbway/src/main/AndroidManifest.xml`
+**Reference**: 
+- `mbway/internal/MBWayInitializer.kt`
+- `mbway/src/main/AndroidManifest.xml`
+- `card/internal/CardInitializer.kt`
+- `card/src/main/AndroidManifest.xml`
 
 **Verification**:
 ```bash
@@ -370,3 +406,11 @@ This template outlines the implementation plan for migrating a payment method mo
 - Run verification commands after each phase before committing
 - Follow existing code style and patterns from MBWay
 - UI implementation is handled separately (see UI_MIGRATION_PLAN template)
+
+---
+
+## Improvement Points
+
+- **Scaffold file creation**: Currently needs to be done manually. This could be included as a preparation step in the future. A script that creates the scaffold could be created with the help of AI agents.
+
+- **Reference expansion**: Adding a step at the end of a module migration to update the references in this file to include as many references as possible will be useful for AI agents to have more context on the changes. For example, after completing a card module migration, the card module file paths could be added alongside the existing mbway references.
