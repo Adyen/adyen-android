@@ -46,9 +46,9 @@ This template outlines the implementation plan for migrating a payment method mo
   - Add {Module}PaymentMethod to `getChildSerializer` when block
 
 **Reference**: 
-- `core/.../MBWayPaymentMethod.kt` (new pattern)
-- `core/.../CardPaymentMethod.kt` (new pattern)
-- `components-core/.../{Module}PaymentMethod.kt` (old implementation for field reference)
+- `core/src/main/java/com/adyen/checkout/core/components/paymentmethod/MBWayPaymentMethod.kt` (new pattern)
+- `core/src/main/java/com/adyen/checkout/core/components/paymentmethod/CardPaymentMethod.kt` (new pattern)
+- `components-core/src/main/java/com/adyen/checkout/components/core/paymentmethod/{Module}PaymentMethod.kt` (old implementation for field reference)
 
 **Verification**:
 ```bash
@@ -129,14 +129,14 @@ This template outlines the implementation plan for migrating a payment method mo
   - Properties: `data: PaymentComponentData<{Module}PaymentMethod>`, `isValid: Boolean`
 
 **Reference**: 
-- `mbway/internal/ui/state/MBWayIntent.kt`
-- `mbway/internal/ui/state/MBWayComponentState.kt`
-- `mbway/internal/ui/state/MBWayViewState.kt`
-- `mbway/internal/ui/state/MBWayPaymentComponentState.kt`
-- `card/internal/ui/state/CardIntent.kt`
-- `card/internal/ui/state/CardComponentState.kt`
-- `card/internal/ui/state/CardViewState.kt`
-- `card/internal/ui/state/CardPaymentComponentState.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayIntent.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentState.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayViewState.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayPaymentComponentState.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardIntent.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardComponentState.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardViewState.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardPaymentComponentState.kt`
 
 **Verification**:
 ```bash
@@ -171,20 +171,20 @@ This template outlines the implementation plan for migrating a payment method mo
   - `produce()` method
 
 **Core module changes for localization** (if validation errors need new keys):
-- [ ] `core/.../CheckoutLocalizationKey.kt` - Add new localization key
-- [ ] `core/.../DefaultLocalizationSource.kt` - Add mapping to string resource
+- [ ] `core/src/main/java/com/adyen/checkout/core/common/localization/CheckoutLocalizationKey.kt` - Add new localization key
+- [ ] `core/src/main/java/com/adyen/checkout/core/common/localization/internal/DefaultLocalizationSource.kt` - Add mapping to string resource
 - [ ] `core/src/main/res/values/strings.xml` - Add string resource (copy from module if exists)
 
 **Reference**: 
-- `mbway/internal/ui/state/MBWayComponentStateFactory.kt`
-- `mbway/internal/ui/state/MBWayComponentStateReducer.kt`
-- `mbway/internal/ui/state/MBWayComponentStateValidator.kt`
-- `mbway/internal/ui/state/MBWayViewStateProducer.kt`
-- `card/internal/ui/state/CardComponentStateFactory.kt`
-- `card/internal/ui/state/CardComponentStateReducer.kt`
-- `card/internal/ui/state/CardComponentStateValidator.kt`
-- `card/internal/ui/state/CardViewStateProducer.kt`
-- `old/internal/ui/model/{Module}OutputData.kt` for validation logic
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateFactory.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateReducer.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateValidator.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayViewStateProducer.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardComponentStateFactory.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardComponentStateReducer.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardComponentStateValidator.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardViewStateProducer.kt`
+- `{module}/src/main/java/com/adyen/checkout/{module}/old/internal/ui/model/{Module}OutputData.kt` for validation logic
 
 **Verification**:
 ```bash
@@ -208,8 +208,8 @@ This template outlines the implementation plan for migrating a payment method mo
   - **Migrate state conversion logic from old implementation** (e.g., `old/internal/ui/Default{Module}Delegate.kt` - `createComponentState()`)
 
 **Reference**: 
-- `mbway/internal/ui/state/MBWayComponentStateExt.kt`
-- `card/internal/ui/state/CardComponentStateExt.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateExt.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/state/CardComponentStateExt.kt`
 
 **Verification**:
 ```bash
@@ -230,8 +230,8 @@ This template outlines the implementation plan for migrating a payment method mo
   - `{Module}NavKey` data object implementing `NavKey`
 
 **Reference**: 
-- `mbway/internal/ui/MBWayNavKeys.kt`
-- `card/internal/ui/CardNavKeys.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/MBWayNavKeys.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/CardNavKeys.kt`
 
 **Verification**:
 ```bash
@@ -261,10 +261,10 @@ This template outlines the implementation plan for migrating a payment method mo
   - Leave implementation as TODO placeholder
 
 **Reference**: 
-- `mbway/internal/ui/MBWayComponent.kt`
-- `mbway/internal/ui/view/MbWayComponent.kt` (composable)
-- `card/internal/ui/CardComponent.kt`
-- `card/internal/ui/view/CardComponent.kt` (composable)
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/MBWayComponent.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/view/MbWayComponent.kt` (composable)
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/CardComponent.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/view/CardComponent.kt` (composable)
 
 **Verification**:
 ```bash
@@ -290,8 +290,8 @@ This template outlines the implementation plan for migrating a payment method mo
 - Do NOT add `supportedPaymentMethods` property (not part of `PaymentMethodFactory` interface)
 
 **Reference**: 
-- `mbway/internal/ui/MBWayFactory.kt`
-- `card/internal/ui/CardFactory.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/MBWayFactory.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/ui/CardFactory.kt`
 
 **Verification**:
 ```bash
@@ -319,9 +319,9 @@ This template outlines the implementation plan for migrating a payment method mo
   - Add startup provider entry for `{Module}Initializer`
 
 **Reference**: 
-- `mbway/internal/MBWayInitializer.kt`
+- `mbway/src/main/java/com/adyen/checkout/mbway/internal/MBWayInitializer.kt`
 - `mbway/src/main/AndroidManifest.xml`
-- `card/internal/CardInitializer.kt`
+- `card/src/main/java/com/adyen/checkout/card/internal/CardInitializer.kt`
 - `card/src/main/AndroidManifest.xml`
 
 **Verification**:
@@ -352,36 +352,36 @@ This template outlines the implementation plan for migrating a payment method mo
 ### Core Module
 | File | Action |
 |------|--------|
-| `core/.../paymentmethod/{Module}PaymentMethod.kt` | Create |
-| `core/.../paymentmethod/PaymentMethodDetails.kt` | Modify (add to serializer) |
-| `core/.../CheckoutLocalizationKey.kt` | Modify (add keys if needed) |
-| `core/.../DefaultLocalizationSource.kt` | Modify (add mappings if needed) |
+| `core/src/main/java/com/adyen/checkout/core/components/paymentmethod/{Module}PaymentMethod.kt` | Create |
+| `core/src/main/java/com/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails.kt` | Modify (add to serializer) |
+| `core/src/main/java/com/adyen/checkout/core/common/localization/CheckoutLocalizationKey.kt` | Modify (add keys if needed) |
+| `core/src/main/java/com/adyen/checkout/core/common/localization/internal/DefaultLocalizationSource.kt` | Modify (add mappings if needed) |
 | `core/src/main/res/values/strings.xml` | Modify (add strings if needed) |
 
 ### Module (Public API)
 | File | Action |
 |------|--------|
 | `{module}/build.gradle` | Modify |
-| `{module}/{Module}Configuration.kt` | Create |
-| `{module}/{Module}NavigationKeys.kt` | Create |
+| `{module}/src/main/java/com/adyen/checkout/{module}/{Module}Configuration.kt` | Create |
+| `{module}/src/main/java/com/adyen/checkout/{module}/{Module}NavigationKeys.kt` | Create |
 
 ### Module (Internal)
 | File | Action |
 |------|--------|
-| `{module}/internal/{Module}Initializer.kt` | Implement |
-| `{module}/internal/ui/{Module}Component.kt` | Implement |
-| `{module}/internal/ui/{Module}Factory.kt` | Implement |
-| `{module}/internal/ui/{Module}NavKeys.kt` | Create |
-| `{module}/internal/ui/state/{Module}Intent.kt` | Implement |
-| `{module}/internal/ui/state/{Module}ComponentState.kt` | Implement |
-| `{module}/internal/ui/state/{Module}ViewState.kt` | Implement |
-| `{module}/internal/ui/state/{Module}PaymentComponentState.kt` | Implement |
-| `{module}/internal/ui/state/{Module}ComponentStateFactory.kt` | Implement |
-| `{module}/internal/ui/state/{Module}ComponentStateReducer.kt` | Implement |
-| `{module}/internal/ui/state/{Module}ComponentStateValidator.kt` | Implement |
-| `{module}/internal/ui/state/{Module}ViewStateProducer.kt` | Implement |
-| `{module}/internal/ui/state/{Module}ComponentStateExt.kt` | Create |
-| `{module}/internal/ui/view/{Module}Component.kt` | Implement (placeholder) |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/{Module}Initializer.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/{Module}Component.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/{Module}Factory.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/{Module}NavKeys.kt` | Create |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}Intent.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentState.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ViewState.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}PaymentComponentState.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateFactory.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateReducer.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateValidator.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ViewStateProducer.kt` | Implement |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateExt.kt` | Create |
+| `{module}/src/main/java/com/adyen/checkout/{module}/internal/ui/view/{Module}Component.kt` | Implement (placeholder) |
 | `{module}/src/main/AndroidManifest.xml` | Modify |
 
 ---
