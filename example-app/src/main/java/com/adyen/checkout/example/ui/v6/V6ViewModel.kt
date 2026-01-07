@@ -89,7 +89,7 @@ internal class V6ViewModel @Inject constructor(
 
         val result = Checkout.setup(
             paymentMethodsApiResponse = paymentMethodResponse,
-            checkoutConfiguration = configuration,
+            configuration = configuration,
         )
 
         uiState = when (result) {
