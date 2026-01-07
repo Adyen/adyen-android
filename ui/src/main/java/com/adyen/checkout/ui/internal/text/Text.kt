@@ -143,10 +143,10 @@ private fun TextPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
             modifier = Modifier
                 .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             Title("Title")
             Subtitle("Subtitle")

@@ -70,7 +70,7 @@ private fun ManageFavoritesContent(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Spacer(Modifier.size(Dimensions.ExtraLarge))
+            Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
 
             Section(
                 title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE),
@@ -97,7 +97,7 @@ private fun Section(
         if (index == 0) {
             SubHeadlineEmphasized(
                 text = title,
-                modifier = Modifier.padding(horizontal = Dimensions.Large, vertical = Dimensions.Small),
+                modifier = Modifier.padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small),
             )
         }
 
@@ -112,7 +112,7 @@ private fun Section(
             subtitle = item.subtitle,
             trailingIcon = { Body(text = "Remove", color = CheckoutThemeProvider.colors.destructive) },
             onClick = { onItemClick(item) },
-            modifier = Modifier.padding(horizontal = Dimensions.ExtraSmall),
+            modifier = Modifier.padding(horizontal = Dimensions.Spacing.ExtraSmall),
         )
     }
 }

@@ -33,7 +33,7 @@ internal fun DualBrandSelector(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
     ) {
         TitleSection()
         BrandsListSection(
@@ -49,7 +49,7 @@ private fun TitleSection(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
     ) {
         BodyEmphasized(resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_TITLE))
         Body(resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION))
@@ -64,7 +64,7 @@ private fun BrandsListSection(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
     ) {
         BrandOption(dualBrandData.brandOptionFirst, onBrandSelected)
         BrandOption(dualBrandData.brandOptionSecond, onBrandSelected)

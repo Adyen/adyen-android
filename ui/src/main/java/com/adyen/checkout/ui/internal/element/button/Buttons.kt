@@ -58,10 +58,10 @@ private fun PrimaryButtonPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             PrimaryButton(
                 onClick = {},
@@ -103,10 +103,10 @@ private fun SecondaryButtonPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             SecondaryButton(
                 onClick = {},
@@ -148,10 +148,10 @@ private fun TertiaryButtonPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             TertiaryButton(
                 onClick = {},
@@ -193,10 +193,10 @@ private fun DestructiveButtonPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             DestructiveButton(
                 onClick = {},
@@ -246,7 +246,10 @@ private fun CheckoutButton(
 
             BodyEmphasized(text, color = contentColor)
         },
-        contentPadding = PaddingValues(horizontal = Dimensions.ExtraLarge, vertical = Dimensions.Medium),
+        contentPadding = PaddingValues(
+            horizontal = Dimensions.Spacing.ExtraLarge,
+            vertical = Dimensions.Spacing.Medium,
+        ),
         modifier = modifier,
     )
 }

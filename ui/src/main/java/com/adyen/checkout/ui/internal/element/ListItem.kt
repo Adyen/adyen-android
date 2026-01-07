@@ -46,7 +46,7 @@ fun ListItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.Medium),
+        horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Medium),
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
@@ -55,7 +55,7 @@ fun ListItem(
                 indication = ripple(),
                 onClick = onClick,
             )
-            .padding(Dimensions.Medium),
+            .padding(Dimensions.Spacing.Medium),
     ) {
         leadingIcon?.let { icon ->
             icon()

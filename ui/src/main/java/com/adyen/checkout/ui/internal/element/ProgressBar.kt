@@ -45,10 +45,10 @@ private fun ProgressBarPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             ProgressBar()
         }

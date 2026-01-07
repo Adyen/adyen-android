@@ -49,7 +49,7 @@ fun Stepper(
                 color = CheckoutThemeProvider.colors.container,
                 shape = RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp),
             )
-            .padding(Dimensions.Large),
+            .padding(Dimensions.Spacing.Large),
     ) {
         steps.forEachIndexed { index, step ->
             Step(
@@ -85,14 +85,14 @@ private fun Step(
         )
 
         // Divide by 2, because top and bottom together should be equal to medium dimension
-        val margin = Dimensions.Medium.div(2)
+        val margin = Dimensions.Spacing.Medium.div(2)
         val topMargin = if (isFirstStep) 0.dp else margin
         val bottomMargin = if (isLastStep) 0.dp else margin
         Body(
             text = label,
             modifier = Modifier
                 .constrainAs(body) {
-                    start.linkTo(icon.end, Dimensions.Large)
+                    start.linkTo(icon.end, Dimensions.Spacing.Large)
                     top.linkTo(parent.top, topMargin)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom, bottomMargin)
@@ -156,7 +156,7 @@ private fun StepperPreview(
                 "Step 4: Fusce pretium orci ut nibh rutrum mattis. In condimentum augue id justo cursus facilisis.",
                 "Step 5",
             )
-            Stepper(steps, Modifier.padding(Dimensions.Large))
+            Stepper(steps, Modifier.padding(Dimensions.Spacing.Large))
         }
     }
 }

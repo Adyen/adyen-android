@@ -54,7 +54,7 @@ private fun PreselectedPaymentMethodContent(
             Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
         }
 
-        Spacer(Modifier.size(Dimensions.ExtraLarge))
+        Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
 
         CheckoutNetworkLogo(
             txVariant = viewState.logoTxVariant,
@@ -64,37 +64,37 @@ private fun PreselectedPaymentMethodContent(
                 .align(Alignment.CenterHorizontally),
         )
 
-        Spacer(Modifier.size(Dimensions.ExtraLarge))
+        Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
 
         Title(
             text = viewState.title,
             modifier = Modifier
-                .padding(horizontal = Dimensions.Large)
+                .padding(horizontal = Dimensions.Spacing.Large)
                 .align(Alignment.CenterHorizontally),
         )
 
-        Spacer(Modifier.size(Dimensions.Small))
+        Spacer(Modifier.size(Dimensions.Spacing.Small))
 
         Body(
             text = viewState.subtitle,
             color = CheckoutThemeProvider.colors.textSecondary,
             modifier = Modifier
-                .padding(horizontal = Dimensions.Large)
+                .padding(horizontal = Dimensions.Spacing.Large)
                 .align(Alignment.CenterHorizontally),
         )
 
-        Spacer(Modifier.size(Dimensions.Large))
-        Spacer(Modifier.size(Dimensions.ExtraLarge))
+        Spacer(Modifier.size(Dimensions.Spacing.Large))
+        Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
 
         PrimaryButton(
             onClick = {},
             text = viewState.payButtonText,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = Dimensions.Large),
+                .padding(horizontal = Dimensions.Spacing.Large),
         )
 
-        Spacer(Modifier.size(Dimensions.Large))
+        Spacer(Modifier.size(Dimensions.Spacing.Large))
 
         SecondaryButton(
             onClick = {
@@ -103,7 +103,7 @@ private fun PreselectedPaymentMethodContent(
             text = resolveString(CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = Dimensions.Large),
+                .padding(horizontal = Dimensions.Spacing.Large),
         )
     }
 }

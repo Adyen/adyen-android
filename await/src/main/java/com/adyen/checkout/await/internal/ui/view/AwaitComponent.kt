@@ -31,7 +31,7 @@ internal fun AwaitComponent(
         modifier = modifier.fillMaxWidth(),
     ) {
         ProgressBar()
-        Spacer(Modifier.size(Dimensions.Large))
+        Spacer(Modifier.size(Dimensions.Spacing.Large))
         Body(resolveString(CheckoutLocalizationKey.AWAIT_LOADING))
     }
 }

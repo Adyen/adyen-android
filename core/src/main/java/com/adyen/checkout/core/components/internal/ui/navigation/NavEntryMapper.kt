@@ -84,7 +84,7 @@ private fun FullScreenDialog(
         Column(
             modifier = Modifier
                 .systemBarsPadding()
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             content()
         }

@@ -50,12 +50,12 @@ fun SwitchContainer(
                 color = CheckoutThemeProvider.colors.container,
                 shape = RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp),
             )
-            .padding(horizontal = Dimensions.Medium, vertical = Dimensions.Small),
+            .padding(horizontal = Dimensions.Spacing.Medium, vertical = Dimensions.Spacing.Small),
     ) {
         Box(Modifier.weight(1f)) {
             content()
         }
-        Spacer(Modifier.size(Dimensions.Small))
+        Spacer(Modifier.size(Dimensions.Spacing.Small))
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -91,10 +91,10 @@ private fun SwitchContainerPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             val description = "A very long and detailed description that covers multiple lines"
             SwitchContainer(
