@@ -1943,6 +1943,12 @@ public final class com/adyen/checkout/core/sessions/CheckoutSessionResult$Succes
 	public final fun getCheckoutSession ()Lcom/adyen/checkout/core/sessions/CheckoutSession;
 }
 
+public final class com/adyen/checkout/core/sessions/SessionError : com/adyen/checkout/core/common/exception/InternalError {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
 public final class com/adyen/checkout/core/sessions/SessionModel : com/adyen/checkout/core/common/internal/model/ModelObject {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
