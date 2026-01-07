@@ -13,6 +13,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import com.adyen.checkout.core.common.exception.CheckoutError
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooGenericExceptionCaught")
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 internal fun threeDsEvent(
     handleAction: (Context) -> Unit,
     viewEventFlow: Flow<ThreeDS2Event>,
-    onError: (RuntimeException) -> Unit,
+    onError: (CheckoutError) -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(handleAction, viewEventFlow, onError) {

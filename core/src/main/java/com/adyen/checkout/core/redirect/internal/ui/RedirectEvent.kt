@@ -14,18 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import kotlinx.coroutines.flow.Flow
 
-@Suppress("TooGenericExceptionCaught")
 @SuppressLint("ComposableNaming")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun redirectEvent(
     redirectHandler: RedirectHandler,
     viewEventFlow: Flow<RedirectViewEvent>,
-    onError: (RuntimeException) -> Unit
+    onError: (CheckoutError) -> Unit
 ) {
     val context = LocalContext.current
     LaunchedEffect(redirectHandler, viewEventFlow, onError) {
@@ -35,8 +35,7 @@ fun redirectEvent(
                     try {
                         adyenLog(AdyenLogLevel.DEBUG) { "Attempting to launch redirect." }
                         redirectHandler.launchUriRedirect(context, event.url)
-                    } catch (e: RuntimeException) {
-                        // TODO - Error propagation
+                    } catch (e: CheckoutError) {
                         adyenLog(AdyenLogLevel.ERROR, e) { "Redirect failed." }
                         onError(e)
                     }

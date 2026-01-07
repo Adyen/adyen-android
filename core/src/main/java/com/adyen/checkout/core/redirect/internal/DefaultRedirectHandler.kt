@@ -16,13 +16,13 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.core.net.toUri
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.exception.RedirectError
 import com.adyen.checkout.core.common.internal.helper.CustomTabsLauncher
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
-@Suppress("TooGenericExceptionThrown")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultRedirectHandler : RedirectHandler {
 
@@ -31,9 +31,10 @@ class DefaultRedirectHandler : RedirectHandler {
     override fun parseRedirectResult(data: Uri?): JSONObject {
         adyenLog(AdyenLogLevel.DEBUG) { "parseRedirectResult - $data" }
 
-        // TODO - Error Propagation
-//        data ?: throw CheckoutException("Received a null redirect Uri")
-        data ?: throw RuntimeException("Received a null redirect Uri")
+        data ?: throw RedirectError(
+            errorCode = RedirectError.ErrorCode.REDIRECT_PARSE_FAILED,
+            message = "Received a null redirect Uri",
+        )
 
         val extractedParams = HashMap<String, String>().apply {
             data.getQueryParameter(PAYLOAD_PARAMETER)?.let { put(PAYLOAD_PARAMETER, it) }
@@ -51,9 +52,10 @@ class DefaultRedirectHandler : RedirectHandler {
         }
 
         if (extractedParams.isEmpty()) {
-            // TODO - Error Propagation
-//            throw CheckoutException("Error parsing redirect result, could not find any query parameters")
-            throw RuntimeException("Error parsing redirect result, could not find any query parameters")
+            throw RedirectError(
+                errorCode = RedirectError.ErrorCode.REDIRECT_PARSE_FAILED,
+                message = "Error parsing redirect result, could not find any query parameters",
+            )
         }
 
         try {
@@ -61,17 +63,22 @@ class DefaultRedirectHandler : RedirectHandler {
                 extractedParams.forEach { put(it.key, it.value) }
             }
         } catch (e: JSONException) {
-            // TODO - Error Propagation
-//            throw CheckoutException("Error creating redirect result.", e)
-            throw RuntimeException("Error creating redirect result.", e)
+            throw RedirectError(
+                errorCode = RedirectError.ErrorCode.REDIRECT_PARSE_FAILED,
+                message = "Error creating redirect result.",
+                cause = e,
+            )
         }
     }
 
     @Suppress("ReturnCount")
     override fun launchUriRedirect(context: Context, url: String) {
-        // TODO - Error Propagation
-        // if (url.isEmpty()) throw ComponentException("Redirect URL is empty.")
-        if (url.isEmpty()) throw RuntimeException("Redirect URL is empty.")
+        if (url.isEmpty()) {
+            throw RedirectError(
+                errorCode = RedirectError.ErrorCode.REDIRECT_FAILED,
+                message = "Redirect URL is empty.",
+            )
+        }
         val uri = url.toUri()
 
         if (
@@ -85,9 +92,10 @@ class DefaultRedirectHandler : RedirectHandler {
 
         adyenLog(AdyenLogLevel.ERROR) { "Could not launch url" }
 
-        // TODO - Error Propagation
-//        throw ComponentException("Launching redirect failed.")
-        throw RuntimeException("Launching redirect failed.")
+        throw RedirectError(
+            errorCode = RedirectError.ErrorCode.REDIRECT_FAILED,
+            message = "Launching redirect failed.",
+        )
     }
 
     private fun launchNative(context: Context, uri: Uri): Boolean {

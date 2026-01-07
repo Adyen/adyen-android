@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.await.AwaitMainNavigationKey
+import com.adyen.checkout.await.StatusPollingError
 import com.adyen.checkout.await.internal.ui.view.AwaitComponent
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.AwaitAction
@@ -20,7 +21,7 @@ import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.ComponentError
+import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
@@ -87,19 +88,15 @@ internal class AwaitComponent(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown")
     private fun makeRedirect(redirectUrl: String) {
         redirectEventChannel.trySend(RedirectViewEvent.Redirect(redirectUrl))
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $redirectUrl" }
             val paymentData = paymentDataRepository.paymentData
-                // TODO - Error Propagation
-                // ?: throw CheckoutException("Payment data should not be null")
-                ?: throw RuntimeException("Payment data should not be null")
+                ?: throw StatusPollingError(message = "Payment data should not be null")
             startStatusPolling(paymentData)
-            // TODO - Error Propagation
-        } catch (exception: RuntimeException) {
-            emitError(exception)
+        } catch (e: CheckoutError) {
+            emitError(e)
         }
     }
 
@@ -146,9 +143,11 @@ internal class AwaitComponent(
         if (statusResponse.isFinalResult() && !payload.isNullOrEmpty()) {
             emitDetails(payload)
         } else {
-            // TODO - Error propagation
-//            emitError(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
-            emitError(RuntimeException("Payment was not completed. - " + statusResponse.resultCode))
+            emitError(
+                StatusPollingError(
+                    message = "Payment was not completed. - ${statusResponse.resultCode}",
+                ),
+            )
         }
     }
 
@@ -159,9 +158,12 @@ internal class AwaitComponent(
             }
             emitDetails(jsonObject)
         } catch (e: JSONException) {
-            // TODO - Error propagation
-//            emitError(ComponentException("Failed to create details.", e))
-            emitError(RuntimeException("Failed to create details.", e))
+            emitError(
+                StatusPollingError(
+                    message = "Failed to create details.",
+                    cause = e,
+                ),
+            )
         }
     }
 
@@ -171,12 +173,9 @@ internal class AwaitComponent(
         )
     }
 
-    // TODO - Error propagation
-    private fun emitError(e: RuntimeException) {
+    private fun emitError(error: CheckoutError) {
         eventChannel.trySend(
-            ActionComponentEvent.Error(
-                ComponentError(message = e.message.orEmpty(), cause = e),
-            ),
+            ActionComponentEvent.Error(error),
         )
         statusPollingJob?.cancel()
     }

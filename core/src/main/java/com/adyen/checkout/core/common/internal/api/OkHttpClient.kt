@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.common.internal.api
 
-import com.adyen.checkout.core.common.exception.HttpException
+import com.adyen.checkout.core.common.exception.HttpError
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 import okhttp3.Headers.Companion.toHeaders
@@ -90,9 +90,9 @@ internal class OkHttpClient(
                     body = String(bytes, Charsets.UTF_8),
                 )
             } else {
-                val exception = response.getHttpException()
+                val error = response.getHttpError()
                 response.body?.close()
-                throw exception
+                throw error
             }
         } catch (e: CancellationException) {
             call.cancel()
@@ -104,7 +104,7 @@ internal class OkHttpClient(
         (defaultHeaders + this).toHeaders()
 
     @Suppress("SwallowedException")
-    private fun Response.getHttpException(): HttpException {
+    private fun Response.getHttpError(): HttpError {
         val stringBody = try {
             body?.string()
         } catch (e: IOException) {
@@ -121,7 +121,7 @@ internal class OkHttpClient(
             null
         }
 
-        return HttpException(
+        return HttpError(
             code = parsedErrorResponseBody?.status ?: code,
             message = parsedErrorResponseBody?.message ?: stringBody?.takeIf { it.isNotBlank() } ?: message,
             errorBody = parsedErrorResponseBody,
