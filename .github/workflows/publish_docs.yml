@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  deployments: write
+  contents: write
 
 jobs:
 
