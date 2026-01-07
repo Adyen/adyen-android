@@ -194,7 +194,7 @@ internal class MainViewModel @Inject constructor(
 
             val result = paymentMethods?.let {
                 Checkout.setup(
-                    paymentMethods,
+                    paymentMethodsApiResponse = paymentMethods,
                     configuration = configuration,
                 )
             }
