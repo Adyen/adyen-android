@@ -17,10 +17,10 @@ object Checkout {
 
     suspend fun setup(
         sessionModel: SessionModel,
-        checkoutConfiguration: CheckoutConfiguration,
+        configuration: CheckoutConfiguration,
     ): Result<CheckoutContext.Sessions> {
         val initializationData = CheckoutInitializer.initialize(
-            checkoutConfiguration = checkoutConfiguration,
+            checkoutConfiguration = configuration,
             sessionModel = sessionModel,
         )
 
@@ -32,7 +32,7 @@ object Checkout {
             else -> Result.Success(
                 checkoutContext = CheckoutContext.Sessions(
                     checkoutSession = initializationData.checkoutSession,
-                    checkoutConfiguration = checkoutConfiguration,
+                    checkoutConfiguration = configuration,
                     publicKey = initializationData.publicKey,
                 ),
             )
@@ -41,17 +41,17 @@ object Checkout {
 
     suspend fun setup(
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        checkoutConfiguration: CheckoutConfiguration,
+        configuration: CheckoutConfiguration,
     ): Result<CheckoutContext.Advanced> {
         val initializationData = CheckoutInitializer.initialize(
-            checkoutConfiguration = checkoutConfiguration,
+            checkoutConfiguration = configuration,
             sessionModel = null,
         )
 
         return Result.Success(
             CheckoutContext.Advanced(
                 paymentMethodsApiResponse = paymentMethodsApiResponse,
-                checkoutConfiguration = checkoutConfiguration,
+                checkoutConfiguration = configuration,
                 publicKey = initializationData.publicKey,
             ),
         )

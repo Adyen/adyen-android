@@ -77,7 +77,7 @@ internal class V6SessionsViewModel @Inject constructor(
 
         val result = Checkout.setup(
             sessionModel = session,
-            checkoutConfiguration = configuration,
+            configuration = configuration,
         )
 
         uiState = when (result) {

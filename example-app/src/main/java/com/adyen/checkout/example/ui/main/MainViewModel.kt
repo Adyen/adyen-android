@@ -186,7 +186,7 @@ internal class MainViewModel @Inject constructor(
 
             // TODO - Get config from provider
             @Suppress("MagicNumber")
-            val checkoutConfiguration = CheckoutConfiguration(
+            val configuration = CheckoutConfiguration(
                 environment = Environment.TEST,
                 clientKey = BuildConfig.CLIENT_KEY,
                 amount = Amount("USD", 1337),
@@ -195,7 +195,7 @@ internal class MainViewModel @Inject constructor(
             val result = paymentMethods?.let {
                 Checkout.setup(
                     paymentMethods,
-                    checkoutConfiguration,
+                    configuration = configuration,
                 )
             }
 
@@ -215,7 +215,7 @@ internal class MainViewModel @Inject constructor(
 
             // TODO - Get config from provider
             @Suppress("MagicNumber")
-            val checkoutConfiguration = CheckoutConfiguration(
+            val configuration = CheckoutConfiguration(
                 environment = Environment.TEST,
                 clientKey = BuildConfig.CLIENT_KEY,
                 amount = Amount("USD", 1337),
@@ -226,7 +226,7 @@ internal class MainViewModel @Inject constructor(
             val result = sessionModel?.let {
                 Checkout.setup(
                     sessionModel,
-                    checkoutConfiguration,
+                    configuration = configuration,
                 )
             }
 
