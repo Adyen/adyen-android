@@ -13,7 +13,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.sessions.CheckoutSession
-import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.SessionSetupConfiguration
 import kotlinx.parcelize.Parcelize
 
@@ -47,8 +47,8 @@ fun CheckoutSession.mapToDetails(): SessionDetails {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun SessionDetails.mapToModel(): SessionModel {
-    return SessionModel(
+fun SessionDetails.mapToModel(): SessionResponse {
+    return SessionResponse(
         id = id,
         sessionData = sessionData,
     )
