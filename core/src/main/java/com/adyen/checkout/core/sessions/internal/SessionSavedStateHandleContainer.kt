@@ -15,7 +15,7 @@ import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetails
 import com.adyen.checkout.core.sessions.internal.data.model.mapToDetails
-import com.adyen.checkout.core.sessions.internal.data.model.mapToModel
+import com.adyen.checkout.core.sessions.internal.data.model.mapToSessionResponse
 
 internal class SessionSavedStateHandleContainer(
     override val savedStateHandle: SavedStateHandle,
@@ -38,8 +38,8 @@ internal class SessionSavedStateHandleContainer(
         sessionDetails = sessionDetails?.copy(sessionData = sessionData)
     }
 
-    fun getSessionModel(): SessionResponse {
-        return requireNotNull(sessionDetails).mapToModel()
+    fun getSessionResponse(): SessionResponse {
+        return requireNotNull(sessionDetails).mapToSessionResponse()
     }
 
     companion object {
