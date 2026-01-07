@@ -225,7 +225,7 @@ internal class MainViewModel @Inject constructor(
 
             val result = sessionModel?.let {
                 Checkout.setup(
-                    sessionModel,
+                    sessionModel = sessionModel,
                     configuration = configuration,
                 )
             }
