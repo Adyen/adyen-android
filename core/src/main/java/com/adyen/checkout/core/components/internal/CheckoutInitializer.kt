@@ -17,7 +17,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
-import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -25,10 +25,10 @@ object CheckoutInitializer {
 
     suspend fun initialize(
         checkoutConfiguration: CheckoutConfiguration,
-        sessionModel: SessionModel?,
+        sessionResponse: SessionResponse?,
     ): InitializationData {
         // TODO - Fetch checkoutAttemptId
-        val checkoutSession = sessionModel?.let { getCheckoutSession(sessionModel, checkoutConfiguration) }
+        val checkoutSession = sessionResponse?.let { getCheckoutSession(sessionResponse, checkoutConfiguration) }
         val publicKey = fetchPublicKey(checkoutConfiguration)
         return InitializationData(
             checkoutSession = checkoutSession,
@@ -37,11 +37,11 @@ object CheckoutInitializer {
     }
 
     private suspend fun getCheckoutSession(
-        sessionModel: SessionModel,
+        sessionResponse: SessionResponse,
         checkoutConfiguration: CheckoutConfiguration,
     ): CheckoutSession? {
         return when (
-            val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)
+            val result = CheckoutSessionProvider.createSession(sessionResponse, checkoutConfiguration)
         ) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
