@@ -87,7 +87,7 @@ internal class SessionsPaymentFacilitatorFactory(
             ),
             sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             analyticsManager = analyticsManager,
-            sessionResponse = sessionSavedStateHandleContainer.getSessionModel(),
+            sessionResponse = sessionSavedStateHandleContainer.getSessionResponse(),
             isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
         )
 

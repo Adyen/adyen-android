@@ -47,7 +47,7 @@ fun CheckoutSession.mapToDetails(): SessionDetails {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun SessionDetails.mapToModel(): SessionResponse {
+fun SessionDetails.mapToSessionResponse(): SessionResponse {
     return SessionResponse(
         id = id,
         sessionData = sessionData,
