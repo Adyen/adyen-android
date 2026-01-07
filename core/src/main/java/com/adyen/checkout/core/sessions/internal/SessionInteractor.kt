@@ -15,7 +15,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.SessionPaymentResult
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsResponse
@@ -28,22 +28,22 @@ internal class SessionInteractor(
     private val sessionRepository: SessionRepository,
     private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
     private val analyticsManager: AnalyticsManager,
-    sessionModel: SessionModel,
+    sessionResponse: SessionResponse,
 
     // TODO - Taken Over Flow
     @Suppress("UnusedPrivateProperty")
     isFlowTakenOver: Boolean,
 ) {
 
-    private val _sessionFlow = MutableStateFlow(sessionModel)
-    val sessionFlow: Flow<SessionModel> = _sessionFlow
+    private val _sessionFlow = MutableStateFlow(sessionResponse)
+    val sessionFlow: Flow<SessionResponse> = _sessionFlow
 
-    private val sessionModel: SessionModel get() = _sessionFlow.value
+    private val sessionResponse: SessionResponse get() = _sessionFlow.value
 
     suspend fun submitPayment(
         paymentComponentState: PaymentComponentState<*>,
     ) = sessionRepository.submitPayment(
-        sessionModel = sessionModel,
+        sessionResponse = sessionResponse,
         paymentComponentData = paymentComponentState.data,
     ).fold(
         onSuccess = { response ->
@@ -68,7 +68,7 @@ internal class SessionInteractor(
     )
 
     suspend fun submitDetails(actionComponentData: ActionComponentData) =
-        sessionRepository.submitDetails(sessionModel, actionComponentData)
+        sessionRepository.submitDetails(sessionResponse, actionComponentData)
             .fold(
                 onSuccess = { response ->
                     updateSessionData(response.sessionData)
@@ -89,7 +89,7 @@ internal class SessionInteractor(
     }
 
     private fun SessionPaymentsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
-        sessionId = sessionModel.id,
+        sessionId = sessionResponse.id,
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,
@@ -97,7 +97,7 @@ internal class SessionInteractor(
     )
 
     private fun SessionDetailsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
-        sessionId = sessionModel.id,
+        sessionId = sessionResponse.id,
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,

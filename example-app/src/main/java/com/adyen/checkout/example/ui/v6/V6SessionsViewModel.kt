@@ -57,7 +57,7 @@ internal class V6SessionsViewModel @Inject constructor(
     }
 
     private suspend fun createSession() {
-        val session = paymentsRepository.createSession(
+        val sessionResponse = paymentsRepository.createSession(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -76,7 +76,7 @@ internal class V6SessionsViewModel @Inject constructor(
         ) ?: return
 
         val result = Checkout.setup(
-            sessionModel = session,
+            sessionResponse = sessionResponse,
             configuration = configuration,
         )
 

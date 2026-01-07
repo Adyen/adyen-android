@@ -15,14 +15,14 @@ import com.adyen.checkout.core.components.data.Order
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
-import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 internal class CheckoutSessionInitializer(
-    private val sessionModel: SessionModel,
+    private val sessionResponse: SessionResponse,
     private val environment: Environment,
     private val clientKey: String,
     private val order: Order?,
@@ -37,7 +37,7 @@ internal class CheckoutSessionInitializer(
     //  override Amount
     suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(coroutineDispatcher) {
         sessionRepository.setupSession(
-            sessionModel = sessionModel,
+            sessionResponse = sessionResponse,
             order = order,
         ).fold(
             onSuccess = { sessionSetupResponse ->

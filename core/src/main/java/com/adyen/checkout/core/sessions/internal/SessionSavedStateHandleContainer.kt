@@ -12,7 +12,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.internal.SavedStateHandleContainer
 import com.adyen.checkout.core.common.internal.SavedStateHandleProperty
 import com.adyen.checkout.core.sessions.CheckoutSession
-import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetails
 import com.adyen.checkout.core.sessions.internal.data.model.mapToDetails
 import com.adyen.checkout.core.sessions.internal.data.model.mapToModel
@@ -38,7 +38,7 @@ internal class SessionSavedStateHandleContainer(
         sessionDetails = sessionDetails?.copy(sessionData = sessionData)
     }
 
-    fun getSessionModel(): SessionModel {
+    fun getSessionModel(): SessionResponse {
         return requireNotNull(sessionDetails).mapToModel()
     }
 

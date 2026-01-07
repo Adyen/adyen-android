@@ -19,7 +19,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
-import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.supervisorScope
@@ -29,10 +29,10 @@ object CheckoutInitializer {
 
     suspend fun initialize(
         checkoutConfiguration: CheckoutConfiguration,
-        sessionModel: SessionModel?,
+        sessionResponse: SessionResponse?,
     ): InitializationData = supervisorScope {
         val checkoutSessionDeferred = async {
-            sessionModel?.let { getCheckoutSession(it, checkoutConfiguration) }
+            sessionResponse?.let { getCheckoutSession(it, checkoutConfiguration) }
         }
         val publicKeyDeferred = async { fetchPublicKey(checkoutConfiguration) }
         val checkoutAttemptIdDeferred = async { fetchCheckoutAttemptId(checkoutConfiguration) }
@@ -45,11 +45,11 @@ object CheckoutInitializer {
     }
 
     private suspend fun getCheckoutSession(
-        sessionModel: SessionModel,
+        sessionResponse: SessionResponse,
         checkoutConfiguration: CheckoutConfiguration,
     ): CheckoutSession? {
         return when (
-            val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)
+            val result = CheckoutSessionProvider.createSession(sessionResponse, checkoutConfiguration)
         ) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
