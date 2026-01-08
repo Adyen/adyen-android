@@ -13,12 +13,10 @@ import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.paymentmethod.BlikPaymentMethod
 
 internal fun BlikComponentState.toPaymentComponentState(
-    checkoutAttemptId: String,
     amount: Amount?,
 ): BlikPaymentComponentState {
     val paymentMethod = BlikPaymentMethod(
         type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
-        checkoutAttemptId = checkoutAttemptId,
         blikCode = blikCode.text,
         storedPaymentMethodId = null,
     )

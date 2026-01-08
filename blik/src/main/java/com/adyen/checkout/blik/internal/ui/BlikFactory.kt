@@ -17,11 +17,11 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
-import com.adyen.checkout.core.components.internal.PaymentMethodFactory
+import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 
-internal class BlikFactory : PaymentMethodFactory<BlikPaymentComponentState, BlikComponent> {
+internal class BlikFactory : PaymentComponentFactory<BlikPaymentComponentState, BlikComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,
