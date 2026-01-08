@@ -99,6 +99,17 @@ internal class SessionsComponentEventHandlerTest(
     }
 
     @Test
+    fun `when event is error, then onError is called and error result is returned`() = runTest {
+        val error = SessionError(message = "test_error")
+        val event = PaymentComponentEvent.Error<TestPaymentComponentState>(error)
+
+        val result = sessionsComponentEventHandler.onPaymentComponentEvent(event)
+
+        verify(componentCallbacks).onError(error)
+        assertEquals(CheckoutResult.Error(error), result)
+    }
+
+    @Test
     fun `when event is action details and callback is null, then session interactor is used`() = runTest {
         whenever(sessionInteractor.submitDetails(any())) doReturn SessionCallResult.Details.Finished(mock())
         sessionsComponentEventHandler = SessionsComponentEventHandler(

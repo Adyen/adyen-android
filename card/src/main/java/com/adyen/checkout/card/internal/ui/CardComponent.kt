@@ -33,6 +33,8 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.exception.CheckoutError
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -194,16 +196,23 @@ internal class CardComponent(
         onIntent(CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
     }
 
-    @Suppress("UnusedParameter")
     private fun onEncryptionError(e: EncryptionException) {
         val event = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
-        // exceptionChannel.trySend(e)
+
+        // TODO - Error propagation. Change after EncryptionException extends from CheckoutError
+        emitError(ComponentError("Encryption error", e))
     }
 
-    @Suppress("UnusedParameter")
-    private fun onPublicKeyNotFound(e: RuntimeException) {
+    private fun emitError(error: CheckoutError) {
+        eventChannel.trySend(
+            PaymentComponentEvent.Error(error),
+        )
+    }
+
+    // TODO - Error propagation. Change after implementation of specific error for this case
+    private fun onPublicKeyNotFound(e: ComponentError) {
         // TODO - Analytics.
-        // exceptionChannel.trySend(e)
+        emitError(e)
     }
 }

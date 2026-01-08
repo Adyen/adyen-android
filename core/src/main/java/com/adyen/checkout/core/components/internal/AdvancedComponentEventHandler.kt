@@ -21,6 +21,11 @@ internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
                 componentCallbacks.beforeSubmit(event.state)
                 componentCallbacks.onSubmit(event.state)
             }
+
+            is PaymentComponentEvent.Error -> {
+                componentCallbacks.onError(event.error)
+                CheckoutResult.Error(event.error)
+            }
         }
     }
 

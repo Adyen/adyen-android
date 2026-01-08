@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.ui.model.ExpiryDate
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -27,7 +28,7 @@ internal fun CardComponentState.toPaymentComponentState(
     cardEncryptor: BaseCardEncryptor,
     sdkDataProvider: SdkDataProvider,
     onEncryptionFailed: (EncryptionException) -> Unit,
-    onPublicKeyNotFound: (RuntimeException) -> Unit,
+    onPublicKeyNotFound: (ComponentError) -> Unit,
 ): CardPaymentComponentState {
     val publicKey = componentParams.publicKey(onPublicKeyNotFound = onPublicKeyNotFound)
         ?: return invalidCardPaymentComponentState()
@@ -149,9 +150,9 @@ private fun CardComponentState.storePaymentMethod(componentParams: CardComponent
         null
     }
 
-private fun CardComponentParams.publicKey(onPublicKeyNotFound: (RuntimeException) -> Unit): String? {
+private fun CardComponentParams.publicKey(onPublicKeyNotFound: (ComponentError) -> Unit): String? {
     return publicKey ?: run {
-        onPublicKeyNotFound(RuntimeException("Public key is missing."))
+        onPublicKeyNotFound(ComponentError("Public key is missing."))
         null
     }
 }
