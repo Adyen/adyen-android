@@ -15,3 +15,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data object BlikNavKey : NavKey
+
+@Serializable
+internal data object StoredBlikNavKey : NavKey
