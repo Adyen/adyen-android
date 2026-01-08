@@ -19,6 +19,7 @@ public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$L
 	public final fun getLambda$-1886469908$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1350618897$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$344524977$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$810396436$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$84242163$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 

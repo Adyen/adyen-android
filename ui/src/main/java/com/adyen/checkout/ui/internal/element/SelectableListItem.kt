@@ -48,7 +48,7 @@ fun SelectableListItem(
                 },
             ),
         leadingIcon = leadingIcon,
-        trailingIcon = {
+        trailingContent = {
             if (isSelected) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
