@@ -67,7 +67,6 @@ internal class BlikComponent(
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
-                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 amount = componentParams.amount,
             )
             eventChannel.trySend(

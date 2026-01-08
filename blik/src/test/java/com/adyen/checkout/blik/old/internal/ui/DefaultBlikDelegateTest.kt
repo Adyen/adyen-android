@@ -281,21 +281,6 @@ internal class DefaultBlikDelegateTest(
         }
 
         @Test
-        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
-
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            delegate.componentStateFlow.test {
-                delegate.updateInputData {
-                    blikCode = "545897"
-                }
-
-                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
-            }
-        }
-
-        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
