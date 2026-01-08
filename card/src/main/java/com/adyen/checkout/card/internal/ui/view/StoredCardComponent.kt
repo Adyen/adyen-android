@@ -35,7 +35,7 @@ internal fun StoredCardComponent(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraLarge),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
         ) {
             StoredCardSecurityCodeField(
                 securityCodeState = viewState.securityCode,

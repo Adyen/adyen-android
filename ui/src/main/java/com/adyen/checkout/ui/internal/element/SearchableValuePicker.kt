@@ -31,7 +31,7 @@ fun SearchableValuePicker(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         modifier = modifier,
     ) {
         var query by remember { mutableStateOf("") }

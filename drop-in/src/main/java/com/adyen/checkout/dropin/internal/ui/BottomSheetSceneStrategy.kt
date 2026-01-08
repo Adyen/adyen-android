@@ -70,9 +70,9 @@ private class BottomSheetScene<T : Any>(
             containerColor = CheckoutThemeProvider.colors.background,
             dragHandle = null,
         ) {
-            Spacer(Modifier.size(Dimensions.Small))
+            Spacer(Modifier.size(Dimensions.Spacing.Small))
             entry.Content()
-            Spacer(Modifier.size(Dimensions.Large))
+            Spacer(Modifier.size(Dimensions.Spacing.Large))
         }
     }
 }

@@ -117,7 +117,7 @@ private fun CheckoutButtonGroupPreview(
         Column(
             Modifier
                 .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             CheckoutButtonGroup(
                 items = listOf("Item 1", "Item 2", "Item 3"),

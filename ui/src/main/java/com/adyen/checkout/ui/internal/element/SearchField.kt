@@ -92,7 +92,7 @@ private fun TrailingSearchIcon(
         modifier = if (!isQueryEmpty) {
             Modifier.clickable(
                 interactionSource = null,
-                indication = ripple(color = rippleColor, radius = Dimensions.Medium),
+                indication = ripple(color = rippleColor, radius = Dimensions.Spacing.Medium),
                 role = Role.Button,
                 onClick = onDeleteClick,
             )
@@ -109,10 +109,10 @@ private fun SearchFieldPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             SearchField(
                 hint = "Search..",

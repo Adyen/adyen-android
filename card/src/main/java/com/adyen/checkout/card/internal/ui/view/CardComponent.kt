@@ -43,7 +43,7 @@ internal fun CardComponent(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraLarge),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
         ) {
             CardDetailsSection(
                 viewState = viewState,
@@ -68,7 +68,7 @@ private fun CardDetailsSection(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
     ) {
         CardNumberField(
             cardNumberState = viewState.cardNumber,

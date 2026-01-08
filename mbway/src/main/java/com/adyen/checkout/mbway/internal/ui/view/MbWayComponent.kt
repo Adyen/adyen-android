@@ -46,7 +46,7 @@ internal fun MbWayComponent(
         },
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         ) {
             // CountryCode
             val country = viewState.selectedCountryCode

@@ -82,7 +82,7 @@ internal fun CheckoutTextFieldDecorationBox(
     val isFocused = interactionSource.collectIsFocusedAsState().value
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
         modifier = modifier,
     ) {
         label?.let {
@@ -90,7 +90,7 @@ internal fun CheckoutTextFieldDecorationBox(
         }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.Small),
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .clip(RoundedCornerShape(style.cornerRadius.dp))
@@ -98,7 +98,7 @@ internal fun CheckoutTextFieldDecorationBox(
                 .styledBackground(style, isFocused, isError)
                 .fillMaxWidth()
                 .heightIn(Dimensions.MinTouchTarget)
-                .padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
+                .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Medium),
         ) {
             prefix?.let {
                 Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
