@@ -17,3 +17,8 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
  * Represent the main form of the [PaymentMethodTypes.BLIK] payment method.
  */
 data object BlikMainNavigationKey : CheckoutNavigationKey
+
+/**
+ * Represent the stored form of the [PaymentMethodTypes.BLIK] payment method.
+ */
+data object StoredBlikNavigationKey : CheckoutNavigationKey
