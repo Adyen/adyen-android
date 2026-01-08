@@ -21,6 +21,7 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
@@ -32,6 +33,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val componentParams: ComponentParams,
+    private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent<BlikPaymentComponentState> {
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
@@ -46,7 +48,7 @@ internal class StoredBlikComponent(
     override val eventFlow: Flow<PaymentComponentEvent<BlikPaymentComponentState>> =
         eventChannel.receiveAsFlow()
 
-    private val _isLoading = MutableStateFlow(false)
+    private val isLoading = MutableStateFlow(false)
 
     override fun submit() {
         val paymentComponentState = createPaymentComponentState()
@@ -54,7 +56,7 @@ internal class StoredBlikComponent(
     }
 
     override fun setLoading(isLoading: Boolean) {
-        _isLoading.value = isLoading
+        this.isLoading.value = isLoading
     }
 
     private fun createPaymentComponentState(): BlikPaymentComponentState {
@@ -62,6 +64,7 @@ internal class StoredBlikComponent(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             blikCode = null,
             storedPaymentMethodId = storedPaymentMethod.id,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -79,7 +82,7 @@ internal class StoredBlikComponent(
     @Composable
     @Suppress("UNUSED_PARAMETER")
     private fun MainScreen(backStack: NavBackStack<NavKey>) {
-        val isLoading by _isLoading.collectAsStateWithLifecycle()
+        val isLoading by this.isLoading.collectAsStateWithLifecycle()
 
         StoredBlikComponent(
             viewState = StoredBlikViewState(isLoading = isLoading),
