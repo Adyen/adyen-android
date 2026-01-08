@@ -112,7 +112,7 @@ object PaymentMethodProvider {
             componentParamsBundle = componentParamsBundle,
             checkoutCallbacks = checkoutCallbacks,
         ) as? PaymentComponent<BasePaymentComponentState> ?: run {
-            // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
+            // TODO - Errors Propagation [COSDK-85]. Do we want to use onError() here or throw an exception?
             error("Factory for payment method type: $txVariant is not registered.")
         }
     }
