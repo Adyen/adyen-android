@@ -16,10 +16,9 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 
 internal data class CardViewState(
     val cardNumber: TextInputViewState,
-    val expiryDate: TextInputViewState,
-    val securityCode: TextInputViewState,
-    val holderName: TextInputViewState,
-    val isHolderNameRequired: Boolean,
+    val expiryDate: TextInputViewState?,
+    val securityCode: TextInputViewState?,
+    val holderName: TextInputViewState?,
     val storePaymentMethod: Boolean,
     val isStorePaymentFieldVisible: Boolean,
     val supportedCardBrands: List<CardBrand>,

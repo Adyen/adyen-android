@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
@@ -20,7 +21,7 @@ internal class StoredCardViewStateProducer : ViewStateProducer<StoredCardCompone
         val isAmex = state.detectedCardType?.cardBrand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant
 
         return StoredCardViewState(
-            securityCode = state.securityCode.toViewState(
+            securityCode = state.securityCode.takeIf { it.requirementPolicy !is RequirementPolicy.Hidden }?.toViewState(
                 trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, isAmex),
             ),
             brand = state.detectedCardType?.cardBrand,
