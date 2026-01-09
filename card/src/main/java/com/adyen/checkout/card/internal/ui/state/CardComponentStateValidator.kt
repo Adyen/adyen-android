@@ -31,7 +31,7 @@ internal class CardComponentStateValidator(
                 firstSupportedDetectedCardType,
                 state.securityCode.requirementPolicy ?: RequirementPolicy.Required,
             )
-        val holderNameError = validateHolderName(state.holderName, state.isHolderNameRequired)
+        val holderNameError = validateHolderName(state.holderName)
 
         return state.copy(
             cardNumber = state.cardNumber.copy(errorMessage = cardNumberError),
@@ -93,12 +93,11 @@ internal class CardComponentStateValidator(
 
     private fun validateHolderName(
         holderName: TextInputComponentState,
-        isRequired: Boolean,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapHolderNameValidation(
             validation = CardValidationUtils.validateHolderName(
                 holderName = holderName.text,
-                isRequired = isRequired,
+                isRequired = holderName.requirementPolicy is RequirementPolicy.Required,
             ),
         )
     }

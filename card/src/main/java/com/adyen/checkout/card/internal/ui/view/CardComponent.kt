@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.adyen.checkout.card.internal.ui.helper.shouldDisplay
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.isAmex
@@ -79,20 +78,20 @@ private fun CardDetailsSection(
             isAmex = viewState.isAmex,
             onIntent = onIntent,
         )
-        if (viewState.expiryDate.requirementPolicy.shouldDisplay()) {
+        if (viewState.expiryDate != null) {
             ExpiryDateField(
                 expiryDateState = viewState.expiryDate,
                 onIntent = onIntent,
             )
         }
-        if (viewState.securityCode.requirementPolicy.shouldDisplay()) {
+        if (viewState.securityCode != null) {
             SecurityCodeField(
                 securityCodeState = viewState.securityCode,
                 isAmex = viewState.isAmex,
                 onIntent = onIntent,
             )
         }
-        if (viewState.isHolderNameRequired) {
+        if (viewState.holderName != null) {
             HolderNameField(
                 holderNameState = viewState.holderName,
                 onIntent = onIntent,
@@ -126,7 +125,6 @@ private fun CardComponentPreview() {
             holderName = TextInputViewState(
                 text = "J. Smith",
             ),
-            isHolderNameRequired = true,
             storePaymentMethod = false,
             isStorePaymentFieldVisible = true,
             supportedCardBrands = emptyList(),

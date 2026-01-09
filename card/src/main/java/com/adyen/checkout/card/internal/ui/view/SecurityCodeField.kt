@@ -28,7 +28,6 @@ import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
@@ -85,7 +84,7 @@ private fun SecurityCodeFieldInternal(
             },
         )
 
-    val labelSuffix = if (securityCodeState.requirementPolicy is RequirementPolicy.Optional) {
+    val labelSuffix = if (securityCodeState.isOptional) {
         " ${resolveString(CheckoutLocalizationKey.GENERAL_OPTIONAL)}"
     } else {
         ""
