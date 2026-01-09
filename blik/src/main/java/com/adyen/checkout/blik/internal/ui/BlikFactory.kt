@@ -17,11 +17,15 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
+import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 
-internal class BlikFactory : PaymentComponentFactory<BlikPaymentComponentState, BlikComponent> {
+internal class BlikFactory :
+    PaymentComponentFactory<BlikPaymentComponentState, BlikComponent>,
+    StoredPaymentComponentFactory<BlikPaymentComponentState, StoredBlikComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,
@@ -40,6 +44,21 @@ internal class BlikFactory : PaymentComponentFactory<BlikPaymentComponentState, 
             componentStateValidator = BlikComponentStateValidator(),
             viewStateProducer = BlikViewStateProducer(),
             coroutineScope = coroutineScope,
+        )
+    }
+
+    override fun create(
+        storedPaymentMethod: StoredPaymentMethod,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutConfiguration: CheckoutConfiguration,
+        componentParamsBundle: ComponentParamsBundle,
+        @Suppress("UNUSED_PARAMETER") checkoutCallbacks: CheckoutCallbacks,
+    ): StoredBlikComponent {
+        val componentParams = componentParamsBundle.commonComponentParams
+        return StoredBlikComponent(
+            storedPaymentMethod = storedPaymentMethod,
+            componentParams = componentParams,
         )
     }
 }
