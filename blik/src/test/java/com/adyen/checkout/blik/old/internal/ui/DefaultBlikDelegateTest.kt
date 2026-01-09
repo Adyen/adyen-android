@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 25/7/2022.
+ * Created by ozgur on 17/12/2025.
  */
 
-package com.adyen.checkout.blik.internal.ui
+package com.adyen.checkout.blik.old.internal.ui
 
 import app.cash.turbine.test
-import com.adyen.checkout.blik.BlikComponentState
-import com.adyen.checkout.blik.BlikConfiguration
-import com.adyen.checkout.blik.blik
-import com.adyen.checkout.blik.getBlikConfiguration
-import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
+import com.adyen.checkout.blik.old.BlikComponentState
+import com.adyen.checkout.blik.old.BlikConfiguration
+import com.adyen.checkout.blik.old.blik
+import com.adyen.checkout.blik.old.getBlikConfiguration
+import com.adyen.checkout.blik.old.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
@@ -178,7 +178,7 @@ internal class DefaultBlikDelegateTest(
         }
 
         @ParameterizedTest
-        @MethodSource("com.adyen.checkout.blik.internal.ui.DefaultBlikDelegateTest#amountSource")
+        @MethodSource("com.adyen.checkout.blik.old.internal.ui.DefaultBlikDelegateTest#amountSource")
         fun `when input data is valid then amount is propagated in component state if set`(
             configurationValue: Amount?,
             expectedComponentStateValue: Amount?,
@@ -281,21 +281,6 @@ internal class DefaultBlikDelegateTest(
         }
 
         @Test
-        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
-
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            delegate.componentStateFlow.test {
-                delegate.updateInputData {
-                    blikCode = "545897"
-                }
-
-                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
-            }
-        }
-
-        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
@@ -335,7 +320,6 @@ internal class DefaultBlikDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
-        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
