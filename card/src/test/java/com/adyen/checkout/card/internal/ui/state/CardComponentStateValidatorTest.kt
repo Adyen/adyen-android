@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -81,8 +82,7 @@ internal class CardComponentStateValidatorTest {
     @Test
     fun `when holder name is required and empty, then isValid returns false`() {
         val state = createValidState().copy(
-            holderName = TextInputComponentState(text = ""),
-            isHolderNameRequired = true,
+            holderName = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Required),
         )
 
         val validatedState = validator.validate(state)
@@ -95,8 +95,7 @@ internal class CardComponentStateValidatorTest {
     @Test
     fun `when holder name is not required and empty, then isValid returns true`() {
         val state = createValidState().copy(
-            holderName = TextInputComponentState(text = ""),
-            isHolderNameRequired = false,
+            holderName = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Hidden),
         )
 
         val validatedState = validator.validate(state)
@@ -123,8 +122,7 @@ internal class CardComponentStateValidatorTest {
         cardNumber = TextInputComponentState(text = "4111111111111111"),
         expiryDate = TextInputComponentState(text = "12/30"),
         securityCode = TextInputComponentState(text = "123"),
-        holderName = TextInputComponentState(text = "John Doe"),
-        isHolderNameRequired = false,
+        holderName = TextInputComponentState(text = "John Doe", requirementPolicy = RequirementPolicy.Hidden),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

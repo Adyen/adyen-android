@@ -40,5 +40,6 @@
     <string name="checkout_drop_in_payment_method_list_payment_options_title_with_favorites" translatable="false">Others</string>
     <string name="checkout_general_back" translatable="false">Back</string>
     <string name="checkout_general_close" translatable="false">Close</string>
+    <string name="checkout_general_optional" translatable="false">(Optional)</string>
     <string name="checkout_general_search_hint" translatable="false">Search..</string>
 </resources>

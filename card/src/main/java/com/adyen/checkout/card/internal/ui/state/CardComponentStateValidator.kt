@@ -9,9 +9,9 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class CardComponentStateValidator(
@@ -26,8 +26,12 @@ internal class CardComponentStateValidator(
         val cardNumberError = validateCardNumber(state.cardNumber, firstSupportedDetectedCardType, isReliable)
         val expiryDateError = validateExpiryDate(state.expiryDate, firstSupportedDetectedCardType)
         val securityCodeError =
-            validateSecurityCode(state.securityCode, firstSupportedDetectedCardType, InputFieldUIState.REQUIRED)
-        val holderNameError = validateHolderName(state.holderName, state.isHolderNameRequired)
+            validateSecurityCode(
+                state.securityCode,
+                firstSupportedDetectedCardType,
+                state.securityCode.requirementPolicy ?: RequirementPolicy.Required,
+            )
+        val holderNameError = validateHolderName(state.holderName)
 
         return state.copy(
             cardNumber = state.cardNumber.copy(errorMessage = cardNumberError),
@@ -76,7 +80,7 @@ internal class CardComponentStateValidator(
     private fun validateSecurityCode(
         securityCode: TextInputComponentState,
         selectedOrFirstCardType: DetectedCardType?,
-        uiState: InputFieldUIState,
+        uiState: RequirementPolicy,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapSecurityCodeValidation(
             validation = CardValidationUtils.validateSecurityCode(
@@ -89,12 +93,11 @@ internal class CardComponentStateValidator(
 
     private fun validateHolderName(
         holderName: TextInputComponentState,
-        isRequired: Boolean,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapHolderNameValidation(
             validation = CardValidationUtils.validateHolderName(
                 holderName = holderName.text,
-                isRequired = isRequired,
+                isRequired = holderName.requirementPolicy is RequirementPolicy.Required,
             ),
         )
     }

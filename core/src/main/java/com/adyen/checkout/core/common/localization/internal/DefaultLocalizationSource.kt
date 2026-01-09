@@ -79,6 +79,7 @@ internal class DefaultLocalizationSource {
             // General
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close
+            CheckoutLocalizationKey.GENERAL_OPTIONAL -> R.string.checkout_general_optional
             CheckoutLocalizationKey.GENERAL_SEARCH_HINT -> R.string.checkout_general_search_hint
 
             // MBWay

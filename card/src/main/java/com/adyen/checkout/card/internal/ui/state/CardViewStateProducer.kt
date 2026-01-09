@@ -16,6 +16,7 @@ import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
@@ -37,14 +38,15 @@ internal class CardViewStateProducer(
             cardNumber = state.cardNumber.toViewState(
                 trailingIcon = getCardNumberTrailingIcon(state.cardNumber),
             ),
-            expiryDate = state.expiryDate.toViewState(
+            expiryDate = state.expiryDate.takeIf { it.requirementPolicy !is RequirementPolicy.Hidden }?.toViewState(
                 trailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
             ),
-            securityCode = state.securityCode.toViewState(
+            securityCode = state.securityCode.takeIf { it.requirementPolicy !is RequirementPolicy.Hidden }?.toViewState(
                 trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, detectedCardBrands),
             ),
-            holderName = state.holderName.toViewState(),
-            isHolderNameRequired = state.isHolderNameRequired,
+            holderName = state.takeIf {
+                it.holderName.requirementPolicy !is RequirementPolicy.Hidden
+            }?.holderName?.toViewState(),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
             supportedCardBrands = state.supportedCardBrands,
