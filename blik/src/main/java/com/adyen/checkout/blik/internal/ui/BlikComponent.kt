@@ -34,7 +34,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-@Suppress("LongParameterList")
+// TODO - Remove UnusedPrivateProperty suppression once analytics are done
+@Suppress("LongParameterList", "UnusedPrivateProperty")
 internal class BlikComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
