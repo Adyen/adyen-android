@@ -27,11 +27,11 @@ internal class ManageFavoritesViewModel(
 
     val viewState: StateFlow<ManageFavoritesViewState> = paymentMethodRepository.favorites.map { favorites ->
         createViewState(favorites)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createViewState(null))
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createViewState(emptyList()))
 
-    private fun createViewState(favorites: List<StoredPaymentMethod>?): ManageFavoritesViewState {
+    private fun createViewState(favorites: List<StoredPaymentMethod>): ManageFavoritesViewState {
         // TODO - check if we need to filter out unsupported payment methods
-        val (cards, others) = favorites.orEmpty()
+        val (cards, others) = favorites
             .partition { it.type == PaymentMethodTypes.SCHEME }
 
         return ManageFavoritesViewState(

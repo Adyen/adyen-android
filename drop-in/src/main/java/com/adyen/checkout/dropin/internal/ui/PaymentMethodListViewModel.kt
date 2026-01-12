@@ -33,12 +33,12 @@ internal class PaymentMethodListViewModel(
 
     val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.favorites.map { favorites ->
         createInitialViewState(favorites)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(null))
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(emptyList()))
 
-    private fun createInitialViewState(favorites: List<StoredPaymentMethod>?): PaymentMethodListViewState {
+    private fun createInitialViewState(favorites: List<StoredPaymentMethod>): PaymentMethodListViewState {
         val favoritesSection = favorites
-            ?.filter { it.isSupported() }
-            .takeUnless { it.isNullOrEmpty() }
+            .filter { it.isSupported() }
+            .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
                 FavoritesSection(
@@ -46,18 +46,19 @@ internal class PaymentMethodListViewModel(
                 )
             }
 
-        val paymentOptionsSection =
-            paymentMethodRepository.regulars.takeUnless { it.isEmpty() }?.let { paymentMethods ->
+        val paymentOptionsSection = paymentMethodRepository.regulars
+            // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
+            .filter { it.isSupported() }
+            .takeIf { it.isNotEmpty() }
+            ?.map { it.toPaymentMethodItem() }
+            ?.let { paymentMethods ->
                 PaymentOptionsSection(
                     title = if (favoritesSection == null) {
                         CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE
                     } else {
                         CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES
                     },
-                    options = paymentMethods
-                        // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
-                        .filter { it.isSupported() }
-                        .map { it.toPaymentMethodItem() },
+                    options = paymentMethods,
                 )
             }
 

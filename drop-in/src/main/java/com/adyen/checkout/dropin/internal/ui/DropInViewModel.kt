@@ -15,7 +15,6 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
@@ -28,14 +27,11 @@ internal class DropInViewModel(
     input: DropInResultContract.Input?,
 ) : ViewModel() {
 
-    // TODO - remove
-    lateinit var paymentMethods: PaymentMethodsApiResponse
-
     lateinit var dropInParams: DropInParams
 
-    val navigator: DropInNavigator = DropInNavigator()
-
     lateinit var paymentMethodRepository: PaymentMethodRepository
+
+    val navigator: DropInNavigator = DropInNavigator()
 
     init {
         if (verifyInput(input)) {
@@ -72,7 +68,6 @@ internal class DropInViewModel(
         }
 
         paymentMethodRepository = DefaultPaymentMethodRepository(paymentMethods)
-        this.paymentMethods = paymentMethods
     }
 
     private fun initializeDropInParams(input: DropInResultContract.Input) {
@@ -91,8 +86,8 @@ internal class DropInViewModel(
     }
 
     private fun initializeBackStack() {
-        val storedPaymentMethods = paymentMethods.storedPaymentMethods
-        val startingPoint = if (storedPaymentMethods.isNullOrEmpty()) {
+        val storedPaymentMethods = paymentMethodRepository.favorites.value
+        val startingPoint = if (storedPaymentMethods.isEmpty()) {
             PaymentMethodListNavKey
         } else {
             PreselectedPaymentMethodNavKey(storedPaymentMethods.first())
