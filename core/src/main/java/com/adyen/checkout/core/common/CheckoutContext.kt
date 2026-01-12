@@ -21,6 +21,7 @@ sealed interface CheckoutContext : Parcelable {
     data class Sessions internal constructor(
         val checkoutSession: CheckoutSession,
         val checkoutConfiguration: CheckoutConfiguration,
+        internal val checkoutAttemptId: String?,
         internal val publicKey: String?,
     ) : CheckoutContext
 
@@ -28,6 +29,7 @@ sealed interface CheckoutContext : Parcelable {
     data class Advanced internal constructor(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val checkoutConfiguration: CheckoutConfiguration,
+        internal val checkoutAttemptId: String?,
         internal val publicKey: String?,
     ) : CheckoutContext
 }

@@ -9,6 +9,8 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.common.internal.data.api.DefaultPublicKeyRepository
@@ -27,12 +29,16 @@ object CheckoutInitializer {
         checkoutConfiguration: CheckoutConfiguration,
         sessionModel: SessionModel?,
     ): InitializationData {
-        // TODO - Fetch checkoutAttemptId
         val checkoutSession = sessionModel?.let { getCheckoutSession(sessionModel, checkoutConfiguration) }
         val publicKey = fetchPublicKey(checkoutConfiguration)
+        val checkoutAttemptId = fetchCheckoutAttemptId(
+            checkoutConfiguration = checkoutConfiguration,
+        )
+
         return InitializationData(
             checkoutSession = checkoutSession,
             publicKey = publicKey,
+            checkoutAttemptId = checkoutAttemptId,
         )
     }
 
@@ -69,10 +75,23 @@ object CheckoutInitializer {
             },
         )
     }
+
+    private suspend fun fetchCheckoutAttemptId(
+        checkoutConfiguration: CheckoutConfiguration,
+    ): String? {
+        val httpClient = HttpClientFactory.getAnalyticsHttpClient(checkoutConfiguration.environment)
+        val analyticsService = AnalyticsService(httpClient)
+
+        return analyticsService.setupAnalytics(
+            request = AnalyticsSetupRequest(),
+            clientKey = checkoutConfiguration.clientKey,
+        ).checkoutAttemptId
+    }
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class InitializationData(
     val checkoutSession: CheckoutSession?,
     val publicKey: String?,
+    val checkoutAttemptId: String?,
 )

@@ -39,7 +39,28 @@ internal data class AnalyticsSetupRequest(
     val paymentMethods: List<String>?,
     val amount: Amount?,
     val sessionId: String?,
+    val checkoutAttemptId: String?,
 ) : ModelObject() {
+
+    constructor() : this(
+        version = null,
+        channel = null,
+        platform = null,
+        locale = null,
+        component = null,
+        flavor = null,
+        level = null,
+        deviceBrand = null,
+        deviceModel = null,
+        referrer = null,
+        systemVersion = null,
+        containerWidth = null,
+        screenWidth = null,
+        paymentMethods = null,
+        amount = null,
+        sessionId = null,
+        checkoutAttemptId = null,
+    )
 
     companion object {
         private const val VERSION = "version"
@@ -58,6 +79,7 @@ internal data class AnalyticsSetupRequest(
         private const val PAYMENT_METHODS = "paymentMethods"
         private const val AMOUNT = "amount"
         private const val SESSION_ID = "sessionId"
+        private const val CHECKOUT_ATTEMPT_ID = "checkoutAttemptId"
 
         @JvmField
         val SERIALIZER: Serializer<AnalyticsSetupRequest> = object :
@@ -90,6 +112,7 @@ internal data class AnalyticsSetupRequest(
                             ),
                         )
                         putOpt(SESSION_ID, modelObject.sessionId)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AnalyticsSetupRequest::class.java, e)
@@ -116,6 +139,7 @@ internal data class AnalyticsSetupRequest(
                             paymentMethods = optStringList(PAYMENT_METHODS),
                             amount = ModelUtils.deserializeOpt(optJSONObject(AMOUNT), Amount.SERIALIZER),
                             sessionId = getStringOrNull(SESSION_ID),
+                            checkoutAttemptId = getStringOrNull(CHECKOUT_ATTEMPT_ID),
                         )
                     }
                 } catch (e: JSONException) {

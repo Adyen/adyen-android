@@ -35,6 +35,7 @@ internal class AnalyticsSetupRequestTest {
             paymentMethods = listOf("ideal", "scheme"),
             amount = Amount("EUR", 1337),
             sessionId = "session",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val actual = AnalyticsSetupRequest.SERIALIZER.serialize(request)
@@ -56,6 +57,7 @@ internal class AnalyticsSetupRequestTest {
             .put("paymentMethods", JSONArray(listOf("ideal", "scheme")))
             .put("amount", JSONObject().put("currency", "EUR").put("value", 1337))
             .put("sessionId", "session")
+            .put("checkoutAttemptId", "checkoutAttemptId")
 
         assertEquals(expected.toString(), actual.toString())
     }
@@ -79,6 +81,7 @@ internal class AnalyticsSetupRequestTest {
             .put("paymentMethods", JSONArray(listOf("ideal", "scheme")))
             .put("amount", JSONObject().put("currency", "EUR").put("value", 1337))
             .put("sessionId", "session")
+            .put("checkoutAttemptId", "checkoutAttemptId")
 
         val actual = AnalyticsSetupRequest.SERIALIZER.deserialize(response)
 
@@ -99,6 +102,7 @@ internal class AnalyticsSetupRequestTest {
             paymentMethods = listOf("ideal", "scheme"),
             amount = Amount("EUR", 1337),
             sessionId = "session",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         assertEquals(expected, actual)
