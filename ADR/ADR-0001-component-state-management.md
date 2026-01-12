@@ -10,7 +10,7 @@
 
 This ADR addresses the challenge of managing component state in a consistent and predictable way across all payment 
 and action components in the SDK. After evaluating three different approaches (Delegate State Manager Pattern, 
-Simplified State Manager, and MVI + Reducer Pattern),we chose the MVI + Reducer Pattern. This solution provides 
+Simplified State Manager, and MVI + Reducer Pattern), we chose the MVI + Reducer Pattern. This solution provides 
 unidirectional data flow, pure reducer functions for testability, and declarative intents that explicitly document 
 all possible state transitions.
 
@@ -97,12 +97,12 @@ Simplified State Manager regarding state transition predictability and testabili
 
 We arrived at this decision through an iterative process, implementing each solution in sequence. At each stage, 
 the chosen approach seemed like the best solution given our understanding at the time. Only after implementation 
-did the shortcomings of Delegate State Manager Pattern and Simplified State Manager.
+did the shortcomings of the Delegate State Manager Pattern and Simplified State Manager become apparent.
 
 The **Delegate State Manager Pattern** introduced a solid foundation with a single source of truth, but the use of 
 generics and field IDs led to type erasure issues that could cause runtime crashes. The **Simplified State Manager** 
 addressed the type safety concern but still relied on imperative state updates through change listener interfaces, 
-making state transitions less predictable and harder to test in isolation. It again uses two separate state, 
+making state transitions less predictable and harder to test in isolation. It again uses two separate states, 
 `ViewState` and `ComponentState`, which could lead to synchronization issues.
 
 The **MVI + Reducer Pattern** solves all our problems:
