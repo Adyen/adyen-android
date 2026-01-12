@@ -18,6 +18,8 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.internal.DropInResultContract
+import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
+import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KClass
@@ -26,11 +28,14 @@ internal class DropInViewModel(
     input: DropInResultContract.Input?,
 ) : ViewModel() {
 
+    // TODO - remove
     lateinit var paymentMethods: PaymentMethodsApiResponse
 
     lateinit var dropInParams: DropInParams
 
     val navigator: DropInNavigator = DropInNavigator()
+
+    lateinit var paymentMethodRepository: PaymentMethodRepository
 
     init {
         if (verifyInput(input)) {
@@ -59,13 +64,14 @@ internal class DropInViewModel(
         val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
-            else -> null
         }
 
         if (paymentMethods == null) {
             // TODO - Return DropInResult.Failed and close drop-in
             return
         }
+
+        paymentMethodRepository = DefaultPaymentMethodRepository(paymentMethods)
         this.paymentMethods = paymentMethods
     }
 

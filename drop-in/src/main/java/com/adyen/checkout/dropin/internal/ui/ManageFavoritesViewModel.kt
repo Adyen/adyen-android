@@ -10,25 +10,24 @@ package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.ui.ManageFavoritesViewState.FavoriteListItem
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 internal class ManageFavoritesViewModel(
-    private val paymentMethodsApiResponse: PaymentMethodsApiResponse,
+    private val paymentMethodRepository: PaymentMethodRepository,
 ) : ViewModel() {
 
-    // TODO - move payment methods into a repository
-    private var favorites: MutableList<StoredPaymentMethod> =
-        paymentMethodsApiResponse.storedPaymentMethods.orEmpty().toMutableList()
-
-    private val _viewState = MutableStateFlow(createViewState(favorites))
-    val viewState: StateFlow<ManageFavoritesViewState> = _viewState.asStateFlow()
+    val viewState: StateFlow<ManageFavoritesViewState> = paymentMethodRepository.favorites.map { favorites ->
+        createViewState(favorites)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createViewState(null))
 
     private fun createViewState(favorites: List<StoredPaymentMethod>?): ManageFavoritesViewState {
         // TODO - check if we need to filter out unsupported payment methods
@@ -74,8 +73,7 @@ internal class ManageFavoritesViewModel(
     }
 
     fun removeFavorite(id: String) {
-        favorites.removeAll { it.id == id }
-        _viewState.value = createViewState(favorites)
+        paymentMethodRepository.removeFavorite(id)
     }
 
     companion object {
@@ -83,13 +81,13 @@ internal class ManageFavoritesViewModel(
     }
 
     class Factory(
-        private val paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        private val paymentMethodRepository: PaymentMethodRepository,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             return ManageFavoritesViewModel(
-                paymentMethodsApiResponse = paymentMethodsApiResponse,
+                paymentMethodRepository = paymentMethodRepository,
             ) as T
         }
     }

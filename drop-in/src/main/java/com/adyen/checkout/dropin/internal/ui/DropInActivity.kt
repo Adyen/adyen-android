@@ -90,7 +90,7 @@ class DropInActivity : ComponentActivity() {
                                     viewModel(
                                         factory = PaymentMethodListViewModel.Factory(
                                             dropInParams = viewModel.dropInParams,
-                                            paymentMethodsApiResponse = viewModel.paymentMethods,
+                                            paymentMethodRepository = viewModel.paymentMethodRepository,
                                         ),
                                     ),
                                 )
@@ -103,7 +103,7 @@ class DropInActivity : ComponentActivity() {
                                     navigator = viewModel.navigator,
                                     viewModel = viewModel(
                                         factory = ManageFavoritesViewModel.Factory(
-                                            paymentMethodsApiResponse = viewModel.paymentMethods,
+                                            paymentMethodRepository = viewModel.paymentMethodRepository,
                                         ),
                                     ),
                                 )

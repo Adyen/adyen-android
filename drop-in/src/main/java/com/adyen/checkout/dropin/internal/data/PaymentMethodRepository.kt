@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-interface PaymentMethodRepository {
+internal interface PaymentMethodRepository {
 
     val regulars: List<PaymentMethod>
 
