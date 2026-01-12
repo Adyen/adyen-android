@@ -26,6 +26,7 @@ internal class DefaultAnalyticsSetupProvider(
     private val amount: Amount?,
     private val source: AnalyticsSource,
     private val sessionId: String?,
+    private val checkoutAttemptId: String?,
 ) : AnalyticsSetupProvider {
 
     override fun provide(): AnalyticsSetupRequest {
@@ -47,6 +48,7 @@ internal class DefaultAnalyticsSetupProvider(
             // unused for Android
             containerWidth = null,
             sessionId = sessionId,
+            checkoutAttemptId = checkoutAttemptId,
         )
     }
 

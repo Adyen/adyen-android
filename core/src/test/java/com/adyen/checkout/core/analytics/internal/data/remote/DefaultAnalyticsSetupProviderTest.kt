@@ -38,6 +38,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val result = analyticsSetupProvider.provide()
@@ -59,6 +60,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             paymentMethods = listOf("scheme"),
             amount = Amount("USD", 123),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
         assertEquals(expected, result)
     }
@@ -73,6 +75,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val result = analyticsSetupProvider.provide()
@@ -90,6 +93,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val result = analyticsSetupProvider.provide()
@@ -107,6 +111,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             amount = Amount("USD", 123),
             source = AnalyticsSource.DropIn(listOf()),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val result = analyticsSetupProvider.provide()
@@ -124,6 +129,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val result = analyticsSetupProvider.provide()
@@ -141,6 +147,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val result = analyticsSetupProvider.provide()
@@ -158,6 +165,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
+            checkoutAttemptId = "checkoutAttemptId",
         )
 
         val result = analyticsSetupProvider.provide()

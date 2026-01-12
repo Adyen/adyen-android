@@ -32,7 +32,8 @@ class AnalyticsManagerFactory {
         componentParams: ComponentParams,
         applicationContext: Context,
         source: AnalyticsSource,
-        sessionId: String?
+        sessionId: String?,
+        checkoutAttemptId: String?,
     ): AnalyticsManager = provide(
         shopperLocale = componentParams.shopperLocale,
         environment = componentParams.environment,
@@ -43,6 +44,7 @@ class AnalyticsManagerFactory {
         applicationContext = applicationContext,
         source = source,
         sessionId = sessionId,
+        checkoutAttemptId = checkoutAttemptId,
     )
 
     @Suppress("LongParameterList")
@@ -55,7 +57,8 @@ class AnalyticsManagerFactory {
         amount: Amount?,
         applicationContext: Context,
         source: AnalyticsSource,
-        sessionId: String?
+        sessionId: String?,
+        checkoutAttemptId: String?,
     ): AnalyticsManager = DefaultAnalyticsManager(
         analyticsRepository = DefaultAnalyticsRepository(
             localInfoDataStore = InfoAnalyticsLocalDataStore(),
@@ -78,6 +81,7 @@ class AnalyticsManagerFactory {
                 amount = amount,
                 source = source,
                 sessionId = sessionId,
+                checkoutAttemptId = checkoutAttemptId,
             ),
             analyticsTrackRequestProvider = AnalyticsTrackRequestProvider(),
         ),

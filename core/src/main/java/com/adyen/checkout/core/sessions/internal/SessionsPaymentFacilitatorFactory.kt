@@ -40,6 +40,7 @@ internal class SessionsPaymentFacilitatorFactory(
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
     private val publicKey: String?,
+    private val checkoutAttemptId: String?,
 ) : PaymentFacilitatorFactory {
 
     override fun create(
@@ -65,6 +66,7 @@ internal class SessionsPaymentFacilitatorFactory(
             // TODO - Analytics. Provide payment method type to source
             source = AnalyticsSource.PaymentComponent("AwaitAction"),
             sessionId = checkoutSession.sessionSetupResponse.id,
+            checkoutAttemptId = checkoutAttemptId,
         )
 
         val paymentComponent = PaymentMethodProvider.get(
