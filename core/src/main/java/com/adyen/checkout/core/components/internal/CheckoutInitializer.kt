@@ -61,10 +61,6 @@ object CheckoutInitializer {
             },
             onFailure = { e ->
                 adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
-
-                // TODO - Public Key. Analytics.
-//                val event = GenericEvents.error(paymentMethod.type.orEmpty(), ErrorEvent.API_PUBLIC_KEY)
-//                analyticsManager.trackEvent(event)
                 return null
             },
         )

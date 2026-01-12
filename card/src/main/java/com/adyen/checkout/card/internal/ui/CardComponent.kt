@@ -212,7 +212,8 @@ internal class CardComponent(
 
     // TODO - Error propagation. Change after implementation of specific error for this case
     private fun onPublicKeyNotFound(e: ComponentError) {
-        // TODO - Analytics.
+        val event = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+        analyticsManager.trackEvent(event)
         emitError(e)
     }
 }
