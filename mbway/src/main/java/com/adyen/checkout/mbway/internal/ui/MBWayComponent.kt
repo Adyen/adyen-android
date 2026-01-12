@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -40,6 +41,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Suppress("LongParameterList")
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
+    private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: MBWayComponentStateValidator,
     componentStateFactory: MBWayComponentStateFactory,
@@ -72,6 +74,14 @@ internal class MBWayComponent(
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
+
+    init {
+        initializeAnalytics(coroutineScope)
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        analyticsManager.initialize(this, coroutineScope)
+    }
 
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {

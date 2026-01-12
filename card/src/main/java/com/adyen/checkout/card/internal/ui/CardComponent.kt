@@ -92,8 +92,13 @@ internal class CardComponent(
     override val navigationStartingPoint: NavKey = CardNavKey
 
     init {
+        initializeAnalytics()
         subscribeToDetectedCardTypes()
         subscribeToBinChanges()
+    }
+
+    private fun initializeAnalytics() {
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     fun setOnBinValueCallback(onBinValueCallback: OnBinValueCallback?) {
