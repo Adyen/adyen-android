@@ -82,7 +82,7 @@ object CheckoutInitializer {
         val httpClient = HttpClientFactory.getAnalyticsHttpClient(checkoutConfiguration.environment)
         val analyticsService = AnalyticsService(httpClient)
 
-        return analyticsService.setupAnalytics(
+        return analyticsService.fetchCheckoutAttemptId(
             request = AnalyticsSetupRequest(),
             clientKey = checkoutConfiguration.clientKey,
         ).checkoutAttemptId

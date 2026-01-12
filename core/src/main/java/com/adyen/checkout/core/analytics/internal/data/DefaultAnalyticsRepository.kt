@@ -27,7 +27,7 @@ internal class DefaultAnalyticsRepository(
 
     override suspend fun fetchCheckoutAttemptId(): String? {
         val request = analyticsSetupProvider.provide()
-        return remoteDataStore.fetchCheckoutAttemptId(request).checkoutAttemptId
+        return remoteDataStore.setup(request).checkoutAttemptId
     }
 
     override suspend fun storeEvent(event: AnalyticsEvent) {

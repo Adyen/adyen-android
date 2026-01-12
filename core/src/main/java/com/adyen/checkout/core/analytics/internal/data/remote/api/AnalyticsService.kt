@@ -25,7 +25,20 @@ class AnalyticsService(
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
-    internal suspend fun setupAnalytics(
+    internal suspend fun fetchCheckoutAttemptId(
+        request: AnalyticsSetupRequest,
+        clientKey: String,
+    ): AnalyticsSetupResponse = withContext(coroutineDispatcher) {
+        httpClient.post(
+            path = "v3/analytics",
+            queryParameters = mapOf("clientKey" to clientKey),
+            body = request,
+            requestSerializer = AnalyticsSetupRequest.SERIALIZER,
+            responseSerializer = AnalyticsSetupResponse.SERIALIZER,
+        )
+    }
+
+    internal suspend fun setup(
         request: AnalyticsSetupRequest,
         clientKey: String,
     ): AnalyticsSetupResponse = withContext(coroutineDispatcher) {
