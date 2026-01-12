@@ -84,10 +84,10 @@ private fun PaymentMethodListContent(
                 color = CheckoutThemeProvider.colors.textSecondary,
                 modifier = Modifier
                     .padding(
-                        start = Dimensions.Large,
-                        top = Dimensions.ExtraSmall,
-                        end = Dimensions.Large,
-                        bottom = Dimensions.Medium,
+                        start = Dimensions.Spacing.Large,
+                        top = Dimensions.Spacing.ExtraSmall,
+                        end = Dimensions.Spacing.Large,
+                        bottom = Dimensions.Spacing.Medium,
                     ),
             )
 
@@ -97,7 +97,7 @@ private fun PaymentMethodListContent(
                     onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
                 )
 
-                Spacer(Modifier.size(Dimensions.Small))
+                Spacer(Modifier.size(Dimensions.Spacing.Small))
             }
 
             viewState.paymentOptionsSection?.let {
@@ -154,7 +154,7 @@ private fun SectionHeader(
     ) {
         SubHeadlineEmphasized(
             text = title,
-            modifier = Modifier.padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
+            modifier = Modifier.padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Medium),
         )
 
         actionText?.let {
@@ -183,7 +183,7 @@ private fun TextButton(
                 role = Role.Button,
                 onClick = onClick,
             )
-            .padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
+            .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Medium),
     )
 }
 
@@ -204,7 +204,7 @@ private fun PaymentMethodItemList(
                 title = item.title,
                 subtitle = item.subtitle,
                 onClick = { onItemClick(item) },
-                modifier = Modifier.padding(horizontal = Dimensions.ExtraSmall),
+                modifier = Modifier.padding(horizontal = Dimensions.Spacing.ExtraSmall),
             )
         }
     }

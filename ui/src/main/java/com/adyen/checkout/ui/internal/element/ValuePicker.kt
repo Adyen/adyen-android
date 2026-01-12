@@ -24,7 +24,7 @@ internal fun ValuePicker(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
         modifier = modifier,
     ) {
         items(

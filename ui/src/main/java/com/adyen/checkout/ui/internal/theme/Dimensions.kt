@@ -15,24 +15,26 @@ import androidx.compose.ui.unit.dp
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object Dimensions {
 
-    // TODO - Dimensions: Move all spacing dimensions inside Spacing object
-    val ExtraSmall = 4.dp
-
-    val Small = 8.dp
-
-    val Medium = 12.dp
-
-    val Large = 16.dp
-
-    val ExtraLarge = 24.dp
-
-    val DoubleExtraLarge = 32.dp
-
-    val TripleExtraLarge = 48.dp
-
     val MinTouchTarget = 48.dp
 
     val CornerRadius = 4.dp
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    object Spacing {
+        val ExtraSmall = 4.dp
+
+        val Small = 8.dp
+
+        val Medium = 12.dp
+
+        val Large = 16.dp
+
+        val ExtraLarge = 24.dp
+
+        val DoubleExtraLarge = 32.dp
+
+        val TripleExtraLarge = 48.dp
+    }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     object LogoSize {

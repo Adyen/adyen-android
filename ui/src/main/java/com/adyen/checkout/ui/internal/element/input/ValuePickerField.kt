@@ -91,10 +91,10 @@ private fun ValuePickerFieldPreview(
 ) {
     InternalCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             ValuePickerField(
                 value = "Value",

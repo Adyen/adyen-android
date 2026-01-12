@@ -118,7 +118,7 @@ private fun DetectedBrandsList(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
+        horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
     ) {
         if (detectedCardBrands.isEmpty()) {
             BrandLogo(txVariant = null)
@@ -160,9 +160,9 @@ private fun CardBrandsList(
         visible = visible,
     ) {
         FlowRow(
-            modifier = Modifier.padding(top = Dimensions.ExtraSmall),
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
+            modifier = Modifier.padding(top = Dimensions.Spacing.ExtraSmall),
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
         ) {
             for (cardBrand in cardBrands) {
                 BrandLogo(cardBrand.txVariant)
