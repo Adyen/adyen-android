@@ -63,8 +63,7 @@ internal class SessionsPaymentFacilitatorFactory(
         val analyticsManager = AnalyticsManagerFactory().provide(
             componentParams = componentParamsBundle.commonComponentParams,
             applicationContext = applicationContext,
-            // TODO - Analytics. Provide payment method type to source
-            source = AnalyticsSource.PaymentComponent("AwaitAction"),
+            source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
             sessionId = checkoutSession.sessionSetupResponse.id,
             checkoutAttemptId = checkoutAttemptId,
         )

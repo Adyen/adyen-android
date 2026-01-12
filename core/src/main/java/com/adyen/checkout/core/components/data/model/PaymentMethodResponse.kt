@@ -8,7 +8,12 @@
 
 package com.adyen.checkout.core.components.data.model
 
+import com.adyen.checkout.core.common.internal.model.ModelObject
+
 /**
- * Marker interface for [PaymentMethod] and [StoredPaymentMethod].
+ * Parent class for [PaymentMethod] and [StoredPaymentMethod].
  */
-interface PaymentMethodResponse
+abstract class PaymentMethodResponse : ModelObject() {
+
+    abstract val type: String?
+}
