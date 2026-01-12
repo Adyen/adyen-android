@@ -32,6 +32,11 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
                     componentCallbacks.onSubmit(event.state)
                 }
             }
+
+            is PaymentComponentEvent.Error -> {
+                componentCallbacks.onError(event.error)
+                CheckoutResult.Error(event.error)
+            }
         }
     }
 
