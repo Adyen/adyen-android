@@ -52,7 +52,7 @@ internal fun ConfirmationDialog(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
-                .padding(Dimensions.Large),
+                .padding(Dimensions.Spacing.Large),
         ) {
             DestructiveButton(
                 text = confirmationText,
@@ -60,7 +60,7 @@ internal fun ConfirmationDialog(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            Spacer(Modifier.size(Dimensions.Large))
+            Spacer(Modifier.size(Dimensions.Spacing.Large))
 
             SecondaryButton(
                 text = cancellationText,
