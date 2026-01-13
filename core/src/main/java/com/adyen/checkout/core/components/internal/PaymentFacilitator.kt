@@ -100,6 +100,8 @@ internal class PaymentFacilitator(
             .launchIn(coroutineScope)
     }
 
+    fun onCleared() = paymentComponent.onCleared()
+
     private fun handleResult(checkoutResult: CheckoutResult, lifecycle: Lifecycle) {
         when (checkoutResult) {
             is CheckoutResult.Action -> handleAction(checkoutResult.action, lifecycle)

@@ -55,5 +55,8 @@ internal class AdyenComponent(
         paymentFacilitator.observe(lifecycle)
     }
 
-    // TODO - Implement onCleared() function
+    override fun onCleared() {
+        super.onCleared()
+        paymentFacilitator.onCleared()
+    }
 }

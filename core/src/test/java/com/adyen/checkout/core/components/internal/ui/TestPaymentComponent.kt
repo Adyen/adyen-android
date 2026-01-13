@@ -22,12 +22,12 @@ internal class TestPaymentComponent : PaymentComponent<BasePaymentComponentState
     override val navigationStartingPoint: NavKey
         get() = error("Not implemented for testing")
 
-    override fun submit() {
-        // No-op
-    }
+    override fun submit() = Unit
 
     override val eventFlow: Flow<PaymentComponentEvent<BasePaymentComponentState>>
         get() = flowOf()
 
     override fun setLoading(isLoading: Boolean) = Unit
+
+    override fun onCleared() = Unit
 }

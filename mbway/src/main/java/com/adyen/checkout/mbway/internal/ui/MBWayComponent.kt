@@ -101,6 +101,10 @@ internal class MBWayComponent(
         componentState.handleIntent(MBWayIntent.UpdateLoading(isLoading))
     }
 
+    override fun onCleared() {
+        analyticsManager.clear(this)
+    }
+
     private fun onIntent(intent: MBWayIntent) {
         componentState.handleIntent(intent)
     }

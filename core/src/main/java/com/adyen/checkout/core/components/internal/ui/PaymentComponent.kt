@@ -22,4 +22,6 @@ interface PaymentComponent<T : BasePaymentComponentState> :
     fun submit()
 
     fun setLoading(isLoading: Boolean)
+
+    fun onCleared()
 }

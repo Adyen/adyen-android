@@ -129,6 +129,10 @@ internal class CardComponent(
         onIntent(CardIntent.UpdateLoading(isLoading))
     }
 
+    override fun onCleared() {
+        analyticsManager.clear(this)
+    }
+
     private fun onIntent(intent: CardIntent) {
         componentState.handleIntent(intent)
     }
