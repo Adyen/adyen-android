@@ -21,6 +21,8 @@ import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
+import kotlinx.coroutines.async
+import kotlinx.coroutines.supervisorScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CheckoutInitializer {
@@ -28,17 +30,17 @@ object CheckoutInitializer {
     suspend fun initialize(
         checkoutConfiguration: CheckoutConfiguration,
         sessionModel: SessionModel?,
-    ): InitializationData {
-        val checkoutSession = sessionModel?.let { getCheckoutSession(sessionModel, checkoutConfiguration) }
-        val publicKey = fetchPublicKey(checkoutConfiguration)
-        val checkoutAttemptId = fetchCheckoutAttemptId(
-            checkoutConfiguration = checkoutConfiguration,
-        )
+    ): InitializationData = supervisorScope {
+        val checkoutSessionDeferred = async {
+            sessionModel?.let { getCheckoutSession(it, checkoutConfiguration) }
+        }
+        val publicKeyDeferred = async { fetchPublicKey(checkoutConfiguration) }
+        val checkoutAttemptIdDeferred = async { fetchCheckoutAttemptId(checkoutConfiguration) }
 
-        return InitializationData(
-            checkoutSession = checkoutSession,
-            publicKey = publicKey,
-            checkoutAttemptId = checkoutAttemptId,
+        InitializationData(
+            checkoutSession = checkoutSessionDeferred.await(),
+            publicKey = publicKeyDeferred.await(),
+            checkoutAttemptId = checkoutAttemptIdDeferred.await(),
         )
     }
 
