@@ -33,15 +33,17 @@ internal fun StoredCardComponent(
             PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
         },
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
-        ) {
-            StoredCardSecurityCodeField(
-                securityCodeState = viewState.securityCode,
-                onIntent = onIntent,
-                isAmex = viewState.isAmex,
-            )
+        if (viewState.securityCode != null) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
+            ) {
+                StoredCardSecurityCodeField(
+                    securityCodeState = viewState.securityCode,
+                    onIntent = onIntent,
+                    isAmex = viewState.isAmex,
+                )
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -42,6 +43,7 @@ internal fun StoredCardComponentState.toPaymentComponentState(
         storedCardId = storedPaymentMethodId,
         encryptedCard = encryptedCard,
         sdkDataProvider = sdkDataProvider,
+        isCvcHidden = securityCode.requirementPolicy is RequirementPolicy.Hidden,
     )
 
     val paymentComponentData = createPaymentComponentData(cardPaymentMethod, componentParams)
@@ -57,7 +59,6 @@ private fun StoredCardComponentState.encryptCard(
 ): EncryptedCard? {
     val unencryptedCardBuilder = UnencryptedCard.Builder()
     return try {
-        // TODO - Card. Add isCvcHidden check
         val cvc = securityCode.text
         if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
         cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
@@ -103,13 +104,14 @@ private fun createPaymentMethod(
     storedCardId: String?,
     encryptedCard: EncryptedCard,
     sdkDataProvider: SdkDataProvider,
+    isCvcHidden: Boolean,
 ) = CardPaymentMethod(
     type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
     sdkData = sdkDataProvider.createEncodedSdkData(
         threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
     ),
     storedPaymentMethodId = storedPaymentMethodId(storedCardId),
-    encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+    encryptedSecurityCode = if (!isCvcHidden) encryptedCard.encryptedSecurityCode else null,
 )
 
 private fun storedPaymentMethodId(storedPaymentMethodId: String?): String {

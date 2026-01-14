@@ -20,10 +20,13 @@ data class TextInputViewState(
     val isFocused: Boolean = false,
     val isError: Boolean = false,
     val trailingIcon: TrailingIcon? = null,
+    val isOptional: Boolean = false,
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun TextInputComponentState.toViewState(trailingIcon: TrailingIcon? = null): TextInputViewState {
+fun TextInputComponentState.toViewState(
+    trailingIcon: TrailingIcon? = null,
+): TextInputViewState {
     val isError = showError && errorMessage != null
     return TextInputViewState(
         text = text,
@@ -31,5 +34,6 @@ fun TextInputComponentState.toViewState(trailingIcon: TrailingIcon? = null): Tex
         isFocused = isFocused,
         isError = isError,
         trailingIcon = trailingIcon,
+        isOptional = requirementPolicy is RequirementPolicy.Optional,
     )
 }

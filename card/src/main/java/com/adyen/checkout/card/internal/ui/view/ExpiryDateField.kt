@@ -42,13 +42,19 @@ internal fun ExpiryDateField(
     val supportingTextExpiryDate = expiryDateState.supportingText?.let { resolveString(it) }
         ?: resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
 
+    val labelSuffix = if (expiryDateState.isOptional) {
+        " ${resolveString(CheckoutLocalizationKey.GENERAL_OPTIONAL)}"
+    } else {
+        ""
+    }
+
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
                 onIntent(CardIntent.UpdateExpiryDateFocus(focusState.isFocused))
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE),
+        label = resolveString(key = CheckoutLocalizationKey.CARD_EXPIRY_DATE) + labelSuffix,
         initialValue = expiryDateState.text,
         isError = expiryDateState.isError,
         supportingText = supportingTextExpiryDate,

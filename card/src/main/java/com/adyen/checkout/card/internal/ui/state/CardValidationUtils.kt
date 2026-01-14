@@ -12,7 +12,6 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidator
 import com.adyen.checkout.core.common.helper.CardNumberValidationResult
@@ -20,6 +19,7 @@ import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.StringUtil
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal object CardValidationUtils {
 
@@ -127,7 +127,7 @@ internal object CardValidationUtils {
     internal fun validateSecurityCode(
         securityCode: String,
         detectedCardType: DetectedCardType?,
-        uiState: InputFieldUIState
+        uiState: RequirementPolicy,
     ): CardSecurityCodeValidation {
         val result = CardSecurityCodeValidator.validateSecurityCode(securityCode, detectedCardType?.cardBrand)
         return validateSecurityCode(securityCode, uiState, result)
@@ -136,15 +136,15 @@ internal object CardValidationUtils {
     @VisibleForTesting
     internal fun validateSecurityCode(
         securityCode: String,
-        uiState: InputFieldUIState,
+        uiState: RequirementPolicy,
         validationResult: CardSecurityCodeValidationResult,
     ): CardSecurityCodeValidation {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
         val length = normalizedSecurityCode.length
 
         return when {
-            uiState == InputFieldUIState.HIDDEN -> CardSecurityCodeValidation.VALID_HIDDEN
-            uiState == InputFieldUIState.OPTIONAL && length == 0 -> CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY
+            uiState is RequirementPolicy.Hidden -> CardSecurityCodeValidation.VALID_HIDDEN
+            uiState is RequirementPolicy.Optional && length == 0 -> CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY
             else -> {
                 when (validationResult) {
                     is CardSecurityCodeValidationResult.Invalid -> CardSecurityCodeValidation.INVALID

@@ -822,6 +822,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field GENERAL_BACK Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CANCEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CLOSE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field GENERAL_OPTIONAL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_SEARCH_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_INVALID_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -1628,6 +1629,30 @@ public final class com/adyen/checkout/core/components/internal/data/model/Status
 }
 
 public final class com/adyen/checkout/core/components/internal/data/provider/DefaultSdkDataProvider$Companion {
+}
+
+public final class com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Hidden : com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Hidden;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Optional : com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Optional;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Required : com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Required;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy : java/lang/Enum {

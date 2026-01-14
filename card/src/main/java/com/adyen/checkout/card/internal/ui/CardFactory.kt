@@ -58,7 +58,7 @@ internal class CardFactory :
         val cardValidationMapper = CardValidationMapper()
         val dualBrandedCardHandler = DualBrandedCardHandler()
         val componentStateFactory = CardComponentStateFactory(cardComponentParams)
-        val componentStateReducer = CardComponentStateReducer()
+        val componentStateReducer = CardComponentStateReducer(cardComponentParams)
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = CardViewStateProducer(dualBrandedCardHandler)
 
@@ -99,7 +99,7 @@ internal class CardFactory :
         )
 
         val cardValidationMapper = CardValidationMapper()
-        val componentStateFactory = StoredCardComponentStateFactory()
+        val componentStateFactory = StoredCardComponentStateFactory(cardComponentParams)
         val componentStateReducer = StoredCardComponentStateReducer()
         val componentStateValidator = StoredCardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = StoredCardViewStateProducer()

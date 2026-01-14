@@ -22,7 +22,6 @@ internal data class CardComponentState(
     val holderName: TextInputComponentState,
 
     // UI configuration
-    val isHolderNameRequired: Boolean,
     val storePaymentMethod: Boolean,
     val isStorePaymentFieldVisible: Boolean,
     val supportedCardBrands: List<CardBrand>,

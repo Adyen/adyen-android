@@ -15,6 +15,7 @@ import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.ui.model.ExpiryDate
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -44,6 +45,7 @@ internal fun CardComponentState.toPaymentComponentState(
         holderName = holderName(componentParams),
         cardBrand = cardBrand(),
         sdkDataProvider = sdkDataProvider,
+        isCvcHidden = securityCode.requirementPolicy is RequirementPolicy.Hidden,
     )
 
     val paymentComponentData = createPaymentComponentData(
@@ -87,6 +89,7 @@ private fun createPaymentMethod(
     sdkDataProvider: SdkDataProvider,
     holderName: String?,
     cardBrand: CardBrand?,
+    isCvcHidden: Boolean,
 ) = CardPaymentMethod(
     type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
     sdkData = sdkDataProvider.createEncodedSdkData(
@@ -95,8 +98,7 @@ private fun createPaymentMethod(
     encryptedCardNumber = encryptedCard.encryptedCardNumber,
     encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
     encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
-    // TODO - Card. Add isCvcHidden check
-    encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+    encryptedSecurityCode = if (!isCvcHidden) encryptedCard.encryptedSecurityCode else null,
     holderName = holderName,
     brand = cardBrand?.txVariant,
 )

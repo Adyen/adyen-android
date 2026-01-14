@@ -84,13 +84,19 @@ private fun SecurityCodeFieldInternal(
             },
         )
 
+    val labelSuffix = if (securityCodeState.isOptional) {
+        " ${resolveString(CheckoutLocalizationKey.GENERAL_OPTIONAL)}"
+    } else {
+        ""
+    }
+
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
                 onSecurityCodeFocusChanged(focusState.isFocused)
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
+        label = resolveString(key = CheckoutLocalizationKey.CARD_SECURITY_CODE) + labelSuffix,
         initialValue = securityCodeState.text,
         isError = securityCodeState.isError,
         supportingText = supportingTextSecurityCode,
