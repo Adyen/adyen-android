@@ -67,7 +67,7 @@ This template outlines the implementation plan for migrating a payment method mo
 **Files to create**:
 - [ ] `{module}/src/main/java/com/adyen/checkout/{module}/{Module}Configuration.kt`
   - `{Module}Configuration` data class implementing `Configuration`
-  - `{Module}ConfigurationBuilder` class (internal constructor)
+  - `{Module}ConfigurationBuilder` class (internal constructor, annotated with `@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)`)
   - `CheckoutConfiguration.{module}()` extension function
   - `CheckoutConfiguration.get{Module}Configuration()` internal function
 

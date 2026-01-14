@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.blik
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
@@ -17,6 +18,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class BlikConfiguration : Configuration
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BlikConfigurationBuilder internal constructor() {
 
     internal fun build() = BlikConfiguration()
