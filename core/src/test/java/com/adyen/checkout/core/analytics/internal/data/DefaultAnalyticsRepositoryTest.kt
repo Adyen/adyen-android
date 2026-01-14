@@ -64,7 +64,7 @@ internal class DefaultAnalyticsRepositoryTest(
     fun `when fetching attempt id, then it should be extracted from the response`() = runTest {
         whenever(analyticsSetupProvider.provide()) doReturn mock()
         val checkoutAttemptId = "some id"
-        whenever(remoteDataStore.fetchCheckoutAttemptId(any())) doReturn AnalyticsSetupResponse(checkoutAttemptId)
+        whenever(remoteDataStore.setup(any())) doReturn AnalyticsSetupResponse(checkoutAttemptId)
 
         val result = analyticsRepository.fetchCheckoutAttemptId()
 

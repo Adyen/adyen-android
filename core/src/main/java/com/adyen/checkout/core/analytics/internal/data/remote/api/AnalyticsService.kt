@@ -8,24 +8,36 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.api
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupResponse
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackRequest
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClient
 import com.adyen.checkout.core.common.internal.api.post
+import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.common.internal.model.EmptyResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class AnalyticsService(
+internal class AnalyticsService(
     private val httpClient: HttpClient,
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
-    internal suspend fun setupAnalytics(
+    internal suspend fun fetchCheckoutAttemptId(
+        request: AnalyticsSetupRequest,
+        clientKey: String,
+    ): Result<AnalyticsSetupResponse> = runSuspendCatching {
+        httpClient.post(
+            path = "v3/analytics",
+            queryParameters = mapOf("clientKey" to clientKey),
+            body = request,
+            requestSerializer = AnalyticsSetupRequest.SERIALIZER,
+            responseSerializer = AnalyticsSetupResponse.SERIALIZER,
+        )
+    }
+
+    internal suspend fun setup(
         request: AnalyticsSetupRequest,
         clientKey: String,
     ): AnalyticsSetupResponse = withContext(coroutineDispatcher) {

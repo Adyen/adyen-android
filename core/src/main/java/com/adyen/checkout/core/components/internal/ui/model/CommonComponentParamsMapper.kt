@@ -31,7 +31,6 @@ class CommonComponentParamsMapper {
             clientKey = sessionParams?.clientKey ?: checkoutConfiguration.clientKey,
             analyticsParams = AnalyticsParams(
                 analyticsConfiguration = checkoutConfiguration.analyticsConfiguration,
-                clientKey = checkoutConfiguration.clientKey,
             ),
             isCreatedByDropIn = dropInOverrideParams != null,
             amount = sessionParams?.amount

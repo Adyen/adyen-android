@@ -33,6 +33,7 @@ object Checkout {
                 checkoutContext = CheckoutContext.Sessions(
                     checkoutSession = initializationData.checkoutSession,
                     checkoutConfiguration = configuration,
+                    checkoutAttemptId = initializationData.checkoutAttemptId,
                     publicKey = initializationData.publicKey,
                 ),
             )
@@ -52,6 +53,7 @@ object Checkout {
             CheckoutContext.Advanced(
                 paymentMethodsApiResponse = paymentMethodsApiResponse,
                 checkoutConfiguration = configuration,
+                checkoutAttemptId = initializationData.checkoutAttemptId,
                 publicKey = initializationData.publicKey,
             ),
         )

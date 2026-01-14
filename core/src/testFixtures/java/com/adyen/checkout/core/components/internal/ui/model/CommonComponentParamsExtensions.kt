@@ -21,10 +21,7 @@ fun generateComponentParamsBundle(
     shopperLocale: Locale = Locale("nl", "NL"),
     environment: Environment = Environment.TEST,
     clientKey: String = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
-    analyticsParams: AnalyticsParams = AnalyticsParams(
-        AnalyticsParamsLevel.ALL,
-        "test_qwertyuiopasdfghjklzxcvbnmqwerty",
-    ),
+    analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
     isCreatedByDropIn: Boolean = false,
     amount: Amount? = null,
     isSubmitButtonVisible: Boolean = true,
@@ -47,10 +44,7 @@ fun generateCommonComponentParams(
     shopperLocale: Locale = Locale("nl", "NL"),
     environment: Environment = Environment.TEST,
     clientKey: String = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
-    analyticsParams: AnalyticsParams = AnalyticsParams(
-        AnalyticsParamsLevel.ALL,
-        "test_qwertyuiopasdfghjklzxcvbnmqwerty",
-    ),
+    analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
     isCreatedByDropIn: Boolean = false,
     amount: Amount? = null,
     isSubmitButtonVisible: Boolean = true,

@@ -15,13 +15,11 @@ import com.adyen.checkout.core.components.AnalyticsLevel
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsParams(
     val level: AnalyticsParamsLevel,
-    val clientKey: String,
 ) {
 
     constructor(
         analyticsConfiguration: AnalyticsConfiguration?,
-        clientKey: String,
-    ) : this(level = getLevel(analyticsConfiguration), clientKey = clientKey)
+    ) : this(level = getLevel(analyticsConfiguration))
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -213,7 +213,7 @@ internal class DefaultAnalyticsManagerTest(
         coroutineDispatcher: CoroutineDispatcher = UnconfinedTestDispatcher(),
     ) = DefaultAnalyticsManager(
         analyticsRepository = analyticsRepository,
-        analyticsParams = AnalyticsParams(analyticsParamsLevel, ""),
+        analyticsParams = AnalyticsParams(analyticsParamsLevel),
         coroutineDispatcher = coroutineDispatcher,
     )
 }

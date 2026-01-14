@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.analytics.internal
 
 import android.content.Context
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepository
 import com.adyen.checkout.core.analytics.internal.data.local.ErrorAnalyticsLocalDataStore
 import com.adyen.checkout.core.analytics.internal.data.local.InfoAnalyticsLocalDataStore
@@ -25,14 +24,14 @@ import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import java.util.Locale
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class AnalyticsManagerFactory {
+internal class AnalyticsManagerFactory {
 
     fun provide(
         componentParams: ComponentParams,
         applicationContext: Context,
         source: AnalyticsSource,
-        sessionId: String?
+        sessionId: String?,
+        checkoutAttemptId: String?,
     ): AnalyticsManager = provide(
         shopperLocale = componentParams.shopperLocale,
         environment = componentParams.environment,
@@ -43,6 +42,7 @@ class AnalyticsManagerFactory {
         applicationContext = applicationContext,
         source = source,
         sessionId = sessionId,
+        checkoutAttemptId = checkoutAttemptId,
     )
 
     @Suppress("LongParameterList")
@@ -55,7 +55,8 @@ class AnalyticsManagerFactory {
         amount: Amount?,
         applicationContext: Context,
         source: AnalyticsSource,
-        sessionId: String?
+        sessionId: String?,
+        checkoutAttemptId: String?,
     ): AnalyticsManager = DefaultAnalyticsManager(
         analyticsRepository = DefaultAnalyticsRepository(
             localInfoDataStore = InfoAnalyticsLocalDataStore(),
@@ -78,6 +79,7 @@ class AnalyticsManagerFactory {
                 amount = amount,
                 source = source,
                 sessionId = sessionId,
+                checkoutAttemptId = checkoutAttemptId,
             ),
             analyticsTrackRequestProvider = AnalyticsTrackRequestProvider(),
         ),

@@ -9,6 +9,8 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.common.internal.data.api.DefaultPublicKeyRepository
@@ -19,6 +21,8 @@ import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
+import kotlinx.coroutines.async
+import kotlinx.coroutines.supervisorScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CheckoutInitializer {
@@ -26,13 +30,17 @@ object CheckoutInitializer {
     suspend fun initialize(
         checkoutConfiguration: CheckoutConfiguration,
         sessionModel: SessionModel?,
-    ): InitializationData {
-        // TODO - Fetch checkoutAttemptId
-        val checkoutSession = sessionModel?.let { getCheckoutSession(sessionModel, checkoutConfiguration) }
-        val publicKey = fetchPublicKey(checkoutConfiguration)
-        return InitializationData(
-            checkoutSession = checkoutSession,
-            publicKey = publicKey,
+    ): InitializationData = supervisorScope {
+        val checkoutSessionDeferred = async {
+            sessionModel?.let { getCheckoutSession(it, checkoutConfiguration) }
+        }
+        val publicKeyDeferred = async { fetchPublicKey(checkoutConfiguration) }
+        val checkoutAttemptIdDeferred = async { fetchCheckoutAttemptId(checkoutConfiguration) }
+
+        InitializationData(
+            checkoutSession = checkoutSessionDeferred.await(),
+            publicKey = publicKeyDeferred.await(),
+            checkoutAttemptId = checkoutAttemptIdDeferred.await(),
         )
     }
 
@@ -59,12 +67,33 @@ object CheckoutInitializer {
                 adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
                 return key
             },
-            onFailure = { e ->
+            onFailure = {
                 adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
 
                 // TODO - Public Key. Analytics.
 //                val event = GenericEvents.error(paymentMethod.type.orEmpty(), ErrorEvent.API_PUBLIC_KEY)
 //                analyticsManager.trackEvent(event)
+                return null
+            },
+        )
+    }
+
+    private suspend fun fetchCheckoutAttemptId(
+        checkoutConfiguration: CheckoutConfiguration,
+    ): String? {
+        val httpClient = HttpClientFactory.getAnalyticsHttpClient(checkoutConfiguration.environment)
+        val analyticsService = AnalyticsService(httpClient)
+
+        analyticsService.fetchCheckoutAttemptId(
+            request = AnalyticsSetupRequest(),
+            clientKey = checkoutConfiguration.clientKey,
+        ).fold(
+            onSuccess = { response ->
+                adyenLog(AdyenLogLevel.DEBUG) { "Checkout attempt ID fetched" }
+                return response.checkoutAttemptId
+            },
+            onFailure = {
+                adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch checkout attempt ID" }
                 return null
             },
         )
@@ -75,4 +104,5 @@ object CheckoutInitializer {
 data class InitializationData(
     val checkoutSession: CheckoutSession?,
     val publicKey: String?,
+    val checkoutAttemptId: String?,
 )

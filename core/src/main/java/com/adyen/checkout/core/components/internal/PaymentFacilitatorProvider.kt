@@ -38,6 +38,7 @@ internal class PaymentFacilitatorProvider {
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
                     publicKey = checkoutContext.publicKey,
+                    checkoutAttemptId = checkoutContext.checkoutAttemptId,
                 )
             }
 
@@ -50,6 +51,7 @@ internal class PaymentFacilitatorProvider {
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
                     publicKey = checkoutContext.publicKey,
+                    checkoutAttemptId = checkoutContext.checkoutAttemptId,
                 )
             }
         }
