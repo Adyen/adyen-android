@@ -14,6 +14,7 @@ internal data class ManageFavoritesViewState(
 ) {
 
     internal data class FavoriteListItem(
+        val id: String,
         val icon: String,
         val title: String,
         val subtitle: String?,

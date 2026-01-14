@@ -8,19 +8,21 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,6 +48,7 @@ internal fun ManageFavoritesScreen(
     ManageFavoritesContent(
         navigator = navigator,
         viewState = viewState,
+        onRemoveItem = { viewModel.removeFavorite(it.id) },
     )
 }
 
@@ -53,6 +56,7 @@ internal fun ManageFavoritesScreen(
 private fun ManageFavoritesContent(
     navigator: DropInNavigator,
     viewState: ManageFavoritesViewState,
+    onRemoveItem: (FavoriteListItem) -> Unit,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -64,57 +68,95 @@ private fun ManageFavoritesContent(
         },
         title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
     ) { innerPadding ->
-        Column(
+        var selectedItem by rememberSaveable { mutableStateOf<FavoriteListItem?>(null) }
+
+        LazyColumn(
+            contentPadding = PaddingValues(top = Dimensions.Spacing.ExtraLarge),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
+                .padding(innerPadding),
         ) {
-            Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
-
-            Section(
-                title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE),
+            section(
+                title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE,
                 favorites = viewState.cards,
-                onItemClick = {},
+                onItemClick = { selectedItem = it },
             )
 
-            Section(
-                title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE),
+            section(
+                title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE,
                 favorites = viewState.others,
-                onItemClick = {},
+                onItemClick = { selectedItem = it },
+            )
+        }
+
+        selectedItem?.let { item ->
+            ConfirmationDialog(
+                // TODO - Pass item title as parameter after we resolve parameterized strings
+                confirmationText = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE_CONFIRMATION),
+                onConfirmationClick = {
+                    onRemoveItem(item)
+                    selectedItem = null
+                },
+                cancellationText = resolveString(CheckoutLocalizationKey.GENERAL_CANCEL),
+                onDismissRequest = { selectedItem = null },
+            )
+        }
+    }
+}
+
+private fun LazyListScope.section(
+    title: CheckoutLocalizationKey,
+    favorites: List<FavoriteListItem>,
+    onItemClick: (FavoriteListItem) -> Unit,
+) {
+    if (favorites.isNotEmpty()) {
+        item(key = title) {
+            SubHeadlineEmphasized(
+                text = resolveString(title),
+                modifier = Modifier
+                    .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small)
+                    .animateItem(),
+            )
+        }
+    }
+
+    favorites.forEach { item ->
+        item(key = item.id) {
+            FavoriteListItem(
+                item = item,
+                onClick = onItemClick,
+                modifier = Modifier
+                    .padding(horizontal = Dimensions.Spacing.ExtraSmall)
+                    .animateItem(),
             )
         }
     }
 }
 
 @Composable
-private fun Section(
-    title: String,
-    favorites: List<FavoriteListItem>,
-    onItemClick: (FavoriteListItem) -> Unit,
+private fun FavoriteListItem(
+    item: FavoriteListItem,
+    onClick: (FavoriteListItem) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    favorites.forEachIndexed { index, item ->
-        if (index == 0) {
-            SubHeadlineEmphasized(
-                text = title,
-                modifier = Modifier.padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small),
+    ListItem(
+        leadingIcon = {
+            CheckoutNetworkLogo(
+                txVariant = item.icon,
+                modifier = Modifier.size(Dimensions.LogoSize.medium),
             )
-        }
-
-        ListItem(
-            leadingIcon = {
-                CheckoutNetworkLogo(
-                    txVariant = item.icon,
-                    modifier = Modifier.size(Dimensions.LogoSize.medium),
-                )
-            },
-            title = item.title,
-            subtitle = item.subtitle,
-            trailingIcon = { Body(text = "Remove", color = CheckoutThemeProvider.colors.destructive) },
-            onClick = { onItemClick(item) },
-            modifier = Modifier.padding(horizontal = Dimensions.Spacing.ExtraSmall),
-        )
-    }
+        },
+        title = item.title,
+        subtitle = item.subtitle,
+        trailingContent = {
+            Body(
+                text = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE),
+                color = CheckoutThemeProvider.colors.destructive,
+            )
+        },
+        onClick = { onClick(item) },
+        modifier = modifier,
+    )
 }
 
 @Preview(showBackground = true)
@@ -128,11 +170,13 @@ private fun ManageFavoritesContentPreview() {
         val viewState = ManageFavoritesViewState(
             cards = listOf(
                 FavoriteListItem(
+                    id = "1",
                     icon = "mc",
                     title = "•••• 1234",
                     subtitle = "Mastercard",
                 ),
                 FavoriteListItem(
+                    id = "2",
                     icon = "visa",
                     title = "•••• 2567",
                     subtitle = "Visa",
@@ -140,11 +184,13 @@ private fun ManageFavoritesContentPreview() {
             ),
             others = listOf(
                 FavoriteListItem(
+                    id = "3",
                     icon = "paybybank",
                     title = "•••• 1234",
                     subtitle = "WELLS FARGO",
                 ),
                 FavoriteListItem(
+                    id = "4",
                     icon = "wechatpay",
                     title = "@someName",
                     subtitle = "WeChat Pay",
@@ -155,6 +201,7 @@ private fun ManageFavoritesContentPreview() {
         ManageFavoritesContent(
             navigator = DropInNavigator(),
             viewState = viewState,
+            onRemoveItem = {},
         )
     }
 }
