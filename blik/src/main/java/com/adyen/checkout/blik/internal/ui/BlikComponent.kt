@@ -25,6 +25,7 @@ import com.adyen.checkout.blik.internal.ui.view.BlikComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
@@ -39,6 +40,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class BlikComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
+    private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: BlikComponentStateValidator,
     componentStateFactory: BlikComponentStateFactory,
     componentStateReducer: BlikComponentStateReducer,
@@ -69,6 +71,7 @@ internal class BlikComponent(
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
                 amount = componentParams.amount,
+                sdkDataProvider = sdkDataProvider,
             )
             eventChannel.trySend(
                 PaymentComponentEvent.Submit(paymentComponentState),

@@ -17,7 +17,7 @@ import org.json.JSONObject
 @Parcelize
 data class BlikPaymentMethod(
     override val type: String?,
-    override var sdkData: String? = null,
+    override val sdkData: String?,
     val blikCode: String?,
     val storedPaymentMethodId: String?,
 ) : PaymentMethodDetails() {

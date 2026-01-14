@@ -10,13 +10,22 @@ package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.paymentmethod.BlikPaymentMethod
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class BlikComponentStateExtTest {
+
+    private lateinit var sdkDataProvider: TestSdkDataProvider
+
+    @BeforeEach
+    fun beforeEach() {
+        sdkDataProvider = TestSdkDataProvider()
+    }
 
     @Test
     fun `when toPaymentComponentState is called, then a valid component state is created`() {
@@ -30,10 +39,12 @@ internal class BlikComponentStateExtTest {
 
         val paymentComponentState = componentState.toPaymentComponentState(
             amount = amount,
+            sdkDataProvider = sdkDataProvider,
         )
 
         val expectedPaymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
+            sdkData = TestSdkDataProvider.TEST_SDK_DATA,
             blikCode = "123456",
             storedPaymentMethodId = null,
         )

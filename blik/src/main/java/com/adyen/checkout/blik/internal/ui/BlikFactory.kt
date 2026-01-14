@@ -18,6 +18,7 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
+import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 
@@ -35,6 +36,7 @@ internal class BlikFactory : PaymentComponentFactory<BlikPaymentComponentState, 
         return BlikComponent(
             componentParams = componentParams,
             analyticsManager = analyticsManager,
+            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             componentStateFactory = BlikComponentStateFactory(),
             componentStateReducer = BlikComponentStateReducer(),
             componentStateValidator = BlikComponentStateValidator(),

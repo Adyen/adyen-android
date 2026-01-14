@@ -306,6 +306,7 @@ This template outlines the implementation plan for migrating a payment method mo
 **⚠️ IMPORTANT**: Follow `MBWayFactory` pattern exactly:
 - Access `componentParams` from `componentParamsBundle.commonComponentParams`
 - Do NOT add `supportedPaymentMethods` property (not part of `PaymentMethodFactory` interface)
+- Create `DefaultSdkDataProvider(analyticsManager)` and pass it to the component
 
 **Reference**: 
 - `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/MBWayFactory.kt`
