@@ -15,9 +15,10 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.internal.DropInResultContract
+import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
+import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KClass
@@ -26,9 +27,9 @@ internal class DropInViewModel(
     input: DropInResultContract.Input?,
 ) : ViewModel() {
 
-    lateinit var paymentMethods: PaymentMethodsApiResponse
-
     lateinit var dropInParams: DropInParams
+
+    lateinit var paymentMethodRepository: PaymentMethodRepository
 
     val navigator: DropInNavigator = DropInNavigator()
 
@@ -59,14 +60,14 @@ internal class DropInViewModel(
         val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
-            else -> null
         }
 
         if (paymentMethods == null) {
             // TODO - Return DropInResult.Failed and close drop-in
             return
         }
-        this.paymentMethods = paymentMethods
+
+        paymentMethodRepository = DefaultPaymentMethodRepository(paymentMethods)
     }
 
     private fun initializeDropInParams(input: DropInResultContract.Input) {
@@ -85,8 +86,8 @@ internal class DropInViewModel(
     }
 
     private fun initializeBackStack() {
-        val storedPaymentMethods = paymentMethods.storedPaymentMethods
-        val startingPoint = if (storedPaymentMethods.isNullOrEmpty()) {
+        val storedPaymentMethods = paymentMethodRepository.favorites.value
+        val startingPoint = if (storedPaymentMethods.isEmpty()) {
             PaymentMethodListNavKey
         } else {
             PreselectedPaymentMethodNavKey(storedPaymentMethods.first())
