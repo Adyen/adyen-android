@@ -14,6 +14,7 @@ import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTra
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClient
 import com.adyen.checkout.core.common.internal.api.post
+import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.common.internal.model.EmptyResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -26,7 +27,7 @@ internal class AnalyticsService(
     internal suspend fun fetchCheckoutAttemptId(
         request: AnalyticsSetupRequest,
         clientKey: String,
-    ): AnalyticsSetupResponse = withContext(coroutineDispatcher) {
+    ): Result<AnalyticsSetupResponse> = runSuspendCatching {
         httpClient.post(
             path = "v3/analytics",
             queryParameters = mapOf("clientKey" to clientKey),

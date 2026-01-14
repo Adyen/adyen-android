@@ -65,7 +65,7 @@ object CheckoutInitializer {
                 adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
                 return key
             },
-            onFailure = { e ->
+            onFailure = {
                 adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
 
                 // TODO - Public Key. Analytics.
@@ -82,10 +82,19 @@ object CheckoutInitializer {
         val httpClient = HttpClientFactory.getAnalyticsHttpClient(checkoutConfiguration.environment)
         val analyticsService = AnalyticsService(httpClient)
 
-        return analyticsService.fetchCheckoutAttemptId(
+        analyticsService.fetchCheckoutAttemptId(
             request = AnalyticsSetupRequest(),
             clientKey = checkoutConfiguration.clientKey,
-        ).checkoutAttemptId
+        ).fold(
+            onSuccess = { response ->
+                adyenLog(AdyenLogLevel.DEBUG) { "Checkout attempt ID fetched" }
+                return response.checkoutAttemptId
+            },
+            onFailure = {
+                adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch checkout attempt ID" }
+                return null
+            },
+        )
     }
 }
 
