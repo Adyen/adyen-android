@@ -137,7 +137,8 @@ internal class StoredCardComponent(
 
     @Suppress("UNUSED_PARAMETER")
     private fun onPublicKeyNotFound(e: RuntimeException) {
-        // TODO - Analytics.
+        val event = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+        analyticsManager.trackEvent(event)
         // exceptionChannel.trySend(e)
     }
 
