@@ -29,12 +29,7 @@ internal class BlikComponentStateValidator : ComponentStateValidator<BlikCompone
     }
 
     private fun isBlikCodeValid(blikCode: String): Boolean {
-        try {
-            if (blikCode.isNotEmpty()) blikCode.toInt()
-        } catch (e: NumberFormatException) {
-            return false
-        }
-        return blikCode.length == BLIK_CODE_LENGTH
+        return blikCode.length == BLIK_CODE_LENGTH && blikCode.all { it.isDigit() }
     }
 
     companion object {
