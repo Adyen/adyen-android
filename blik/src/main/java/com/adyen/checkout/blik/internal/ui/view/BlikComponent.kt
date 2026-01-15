@@ -44,7 +44,7 @@ internal fun BlikComponent(
         },
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         ) {
             // Helper text
             Body(text = resolveString(CheckoutLocalizationKey.BLIK_HELPER_TEXT))

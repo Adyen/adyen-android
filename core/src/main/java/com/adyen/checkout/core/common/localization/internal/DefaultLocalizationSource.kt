@@ -15,7 +15,7 @@ import java.util.Locale
 
 internal class DefaultLocalizationSource {
 
-    @Suppress("CyclomaticComplexMethod", "UnusedParameter")
+    @Suppress("CyclomaticComplexMethod", "UnusedParameter", "LongMethod")
     fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
             // Await
