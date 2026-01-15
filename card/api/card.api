@@ -60,21 +60,21 @@ public final class com/adyen/checkout/card/CardConfiguration$Creator : android/o
 
 public final class com/adyen/checkout/card/CardConfigurationBuilder {
 	public static final field $stable I
-	public final fun getHolderNameRequired ()Ljava/lang/Boolean;
-	public final fun getKcpAuthVisibility ()Lcom/adyen/checkout/card/FieldMode;
+	public final fun getHideSecurityCode ()Ljava/lang/Boolean;
+	public final fun getHideStoredSecurityCode ()Ljava/lang/Boolean;
+	public final fun getKoreanAuthenticationMode ()Lcom/adyen/checkout/card/FieldMode;
 	public final fun getShopperReference ()Ljava/lang/String;
-	public final fun getSocialSecurityNumberVisibility ()Lcom/adyen/checkout/card/FieldMode;
+	public final fun getShowHolderName ()Ljava/lang/Boolean;
+	public final fun getShowStorePayment ()Ljava/lang/Boolean;
+	public final fun getSocialSecurityNumberMode ()Lcom/adyen/checkout/card/FieldMode;
 	public final fun getSupportedCardBrands ()Ljava/util/List;
-	public final fun isHideCvc ()Ljava/lang/Boolean;
-	public final fun isHideCvcStoredCard ()Ljava/lang/Boolean;
-	public final fun isStorePaymentFieldVisible ()Ljava/lang/Boolean;
-	public final fun setHideCvc (Ljava/lang/Boolean;)V
-	public final fun setHideCvcStoredCard (Ljava/lang/Boolean;)V
-	public final fun setHolderNameRequired (Ljava/lang/Boolean;)V
-	public final fun setKcpAuthVisibility (Lcom/adyen/checkout/card/FieldMode;)V
+	public final fun setHideSecurityCode (Ljava/lang/Boolean;)V
+	public final fun setHideStoredSecurityCode (Ljava/lang/Boolean;)V
+	public final fun setKoreanAuthenticationMode (Lcom/adyen/checkout/card/FieldMode;)V
 	public final fun setShopperReference (Ljava/lang/String;)V
-	public final fun setSocialSecurityNumberVisibility (Lcom/adyen/checkout/card/FieldMode;)V
-	public final fun setStorePaymentFieldVisible (Ljava/lang/Boolean;)V
+	public final fun setShowHolderName (Ljava/lang/Boolean;)V
+	public final fun setShowStorePayment (Ljava/lang/Boolean;)V
+	public final fun setSocialSecurityNumberMode (Lcom/adyen/checkout/card/FieldMode;)V
 	public final fun setSupportedCardBrands (Ljava/util/List;)V
 }
 
