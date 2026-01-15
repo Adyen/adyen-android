@@ -60,8 +60,10 @@ internal class BlikFactory :
         val componentParams = componentParamsBundle.commonComponentParams
         return StoredBlikComponent(
             storedPaymentMethod = storedPaymentMethod,
+            analyticsManager = analyticsManager,
             componentParams = componentParams,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            coroutineScope = coroutineScope,
         )
     }
 }
