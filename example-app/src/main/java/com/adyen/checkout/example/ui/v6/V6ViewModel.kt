@@ -23,6 +23,7 @@ import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.components.Checkout
@@ -100,6 +101,7 @@ internal class V6ViewModel @Inject constructor(
                     onSubmit = ::onSubmit,
                     onAdditionalDetails = ::onAdditionalDetails,
                     onError = ::onError,
+                    onFinished = ::onFinished,
                 ) {
                     card {
                         onBinValue(::onBinValue)
@@ -151,15 +153,26 @@ internal class V6ViewModel @Inject constructor(
             }
 
             else -> {
-                // TODO - move to onFinished callback after it's introduced
-                uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                CheckoutResult.Finished()
+                val resultCode = json.optString("resultCode")
+                CheckoutResult.Finished(
+                    PaymentResult(
+                        resultCode = resultCode,
+                        sessionId = null,
+                        sessionResult = null,
+                        sessionData = null,
+                        order = null
+                    )
+                )
             }
         }
     }
 
     private fun onError(error: CheckoutError) {
         uiState = V6UiState.Error(UIText.String(error.message.orEmpty()))
+    }
+
+    private fun onFinished(paymentResult: PaymentResult) {
+        uiState = V6UiState.Final(ResultState.get(paymentResult.resultCode))
     }
 
     fun handleIntent(intent: Intent) {
