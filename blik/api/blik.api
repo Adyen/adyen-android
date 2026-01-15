@@ -35,6 +35,20 @@ public final class com/adyen/checkout/blik/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/blik/StoredBlikNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/blik/StoredBlikNavigationKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/blik/internal/ui/view/ComposableSingletons$StoredBlikComponentKt {
+	public static final field INSTANCE Lcom/adyen/checkout/blik/internal/ui/view/ComposableSingletons$StoredBlikComponentKt;
+	public fun <init> ()V
+	public final fun getLambda$-81443464$blik_release ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/adyen/checkout/blik/old/BlikComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/blik/old/BlikComponent$Companion;
