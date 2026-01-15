@@ -9,8 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.KCPAuthVisibility
-import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.FieldMode
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -31,19 +30,19 @@ internal class CardComponentParamsMapper {
         val (commonComponentParams, sessionParams) = componentParamsBundle
         return CardComponentParams(
             commonComponentParams = commonComponentParams,
-            isHolderNameRequired = cardConfiguration?.isHolderNameRequired ?: false,
+            isHolderNameRequired = cardConfiguration?.showHolderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
             shopperReference = cardConfiguration?.shopperReference,
             isStorePaymentFieldVisible = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
-            socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberVisibility
-                ?: SocialSecurityNumberVisibility.HIDE,
-            kcpAuthVisibility = cardConfiguration?.kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
-            cvcVisibility = if (cardConfiguration?.isHideCvc == true) {
+            socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberMode
+                ?: FieldMode.HIDE,
+            kcpAuthVisibility = cardConfiguration?.koreanAuthenticationMode ?: FieldMode.HIDE,
+            cvcVisibility = if (cardConfiguration?.hideSecurityCode == true) {
                 CVCVisibility.ALWAYS_HIDE
             } else {
                 CVCVisibility.ALWAYS_SHOW
             },
-            storedCVCVisibility = if (cardConfiguration?.isHideCvcStoredCard == true) {
+            storedCVCVisibility = if (cardConfiguration?.hideStoredSecurityCode == true) {
                 StoredCVCVisibility.HIDE
             } else {
                 StoredCVCVisibility.SHOW
@@ -89,7 +88,7 @@ internal class CardComponentParamsMapper {
         sessionParams: SessionParams?,
         cardConfiguration: CardConfiguration?,
     ): Boolean {
-        return sessionParams?.enableStoreDetails ?: cardConfiguration?.isStorePaymentFieldVisible ?: true
+        return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePayment ?: true
     }
 
     companion object {
