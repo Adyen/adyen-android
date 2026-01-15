@@ -32,23 +32,23 @@ class CardConfiguration(
 class CardConfigurationBuilder internal constructor() {
 
     var supportedCardBrands: List<CardBrand>? = null
-    var holderNameRequired: Boolean? = null
-    var isStorePaymentFieldVisible: Boolean? = null
+    var showHolderName: Boolean? = null
+    var showStorePayment: Boolean? = null
     var shopperReference: String? = null
-    var isHideCvc: Boolean? = null
-    var isHideCvcStoredCard: Boolean? = null
-    var socialSecurityNumberVisibility: FieldMode? = null
-    var kcpAuthVisibility: FieldMode? = null
+    var hideSecurityCode: Boolean? = null
+    var hideStoredSecurityCode: Boolean? = null
+    var socialSecurityNumberMode: FieldMode? = null
+    var koreanAuthenticationMode: FieldMode? = null
 
     internal fun build() = CardConfiguration(
         supportedCardBrands = supportedCardBrands,
-        showHolderName = holderNameRequired,
+        showHolderName = showHolderName,
         shopperReference = shopperReference,
-        showStorePayment = isStorePaymentFieldVisible,
-        hideSecurityCode = isHideCvc,
-        hideStoredSecurityCode = isHideCvcStoredCard,
-        socialSecurityNumberMode = socialSecurityNumberVisibility,
-        koreanAuthenticationMode = kcpAuthVisibility,
+        showStorePayment = showStorePayment,
+        hideSecurityCode = hideSecurityCode,
+        hideStoredSecurityCode = hideStoredSecurityCode,
+        socialSecurityNumberMode = socialSecurityNumberMode,
+        koreanAuthenticationMode = koreanAuthenticationMode,
     )
 }
 
