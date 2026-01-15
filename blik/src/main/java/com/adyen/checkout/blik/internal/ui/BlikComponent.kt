@@ -67,6 +67,14 @@ internal class BlikComponent(
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
+    init {
+        initializeAnalytics(coroutineScope)
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        analyticsManager.initialize(this, coroutineScope)
+    }
+
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
@@ -83,6 +91,10 @@ internal class BlikComponent(
 
     override fun setLoading(isLoading: Boolean) {
         componentState.handleIntent(BlikIntent.UpdateLoading(isLoading))
+    }
+
+    override fun onCleared() {
+        analyticsManager.clear(this)
     }
 
     private fun onIntent(intent: BlikIntent) {

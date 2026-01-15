@@ -17,6 +17,7 @@ import com.adyen.checkout.blik.StoredBlikNavigationKey
 import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
 import com.adyen.checkout.blik.internal.ui.view.StoredBlikComponent
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
@@ -26,14 +27,17 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.paymentmethod.BlikPaymentMethod
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
+    private val analyticsManager: AnalyticsManager,
     private val componentParams: ComponentParams,
     private val sdkDataProvider: SdkDataProvider,
+    coroutineScope: CoroutineScope,
 ) : PaymentComponent<BlikPaymentComponentState> {
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
@@ -50,6 +54,14 @@ internal class StoredBlikComponent(
 
     private val isLoading = MutableStateFlow(false)
 
+    init {
+        initializeAnalytics(coroutineScope)
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        analyticsManager.initialize(this, coroutineScope)
+    }
+
     override fun submit() {
         val paymentComponentState = createPaymentComponentState()
         eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
@@ -57,6 +69,10 @@ internal class StoredBlikComponent(
 
     override fun setLoading(isLoading: Boolean) {
         this.isLoading.value = isLoading
+    }
+
+    override fun onCleared() {
+        analyticsManager.clear(this)
     }
 
     private fun createPaymentComponentState(): BlikPaymentComponentState {

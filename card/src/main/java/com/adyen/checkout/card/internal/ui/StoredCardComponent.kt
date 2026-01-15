@@ -100,7 +100,12 @@ internal class StoredCardComponent(
             localizedBrand = null,
         )
 
+        initializeAnalytics(coroutineScope)
         onIntent(StoredCardIntent.UpdateDetectedCardType(storedDetectedCardType))
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     override fun submit() {
@@ -122,6 +127,10 @@ internal class StoredCardComponent(
 
     override fun setLoading(isLoading: Boolean) {
         onIntent(StoredCardIntent.UpdateLoading(isLoading))
+    }
+
+    override fun onCleared() {
+        analyticsManager.clear(this)
     }
 
     private fun onIntent(intent: StoredCardIntent) {
