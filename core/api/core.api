@@ -953,7 +953,7 @@ public final class com/adyen/checkout/core/components/CheckoutConfiguration : an
 	public final fun getClientKey ()Ljava/lang/String;
 	public final fun getEnvironment ()Lcom/adyen/checkout/core/common/Environment;
 	public final fun getShopperLocale ()Ljava/util/Locale;
-	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public final fun getShowSubmitButton ()Ljava/lang/Boolean;
 	public fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
