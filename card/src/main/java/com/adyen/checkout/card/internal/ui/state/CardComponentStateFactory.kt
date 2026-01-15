@@ -30,13 +30,13 @@ internal class CardComponentStateFactory(
                 },
             ),
             holderName = TextInputComponentState(
-                requirementPolicy = when (componentParams.isHolderNameRequired) {
+                requirementPolicy = when (componentParams.showHolderName) {
                     true -> RequirementPolicy.Required
                     false -> RequirementPolicy.Hidden
                 },
             ),
             storePaymentMethod = false,
-            isStorePaymentFieldVisible = componentParams.isStorePaymentFieldVisible,
+            isStorePaymentFieldVisible = componentParams.showStorePayment,
             supportedCardBrands = componentParams.supportedCardBrands,
             isLoading = false,
             detectedCardTypes = emptyList(),

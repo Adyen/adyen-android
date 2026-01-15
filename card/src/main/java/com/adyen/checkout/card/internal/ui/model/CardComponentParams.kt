@@ -17,12 +17,12 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardComponentParams(
     private val commonComponentParams: CommonComponentParams,
-    val isHolderNameRequired: Boolean,
+    val showHolderName: Boolean,
     val supportedCardBrands: List<CardBrand>,
     val shopperReference: String?,
-    val isStorePaymentFieldVisible: Boolean,
-    val socialSecurityNumberVisibility: FieldMode,
-    val kcpAuthVisibility: FieldMode,
+    val showStorePayment: Boolean,
+    val socialSecurityNumberMode: FieldMode,
+    val koreanAuthenticationMode: FieldMode,
     val cvcVisibility: CVCVisibility,
     val storedCVCVisibility: StoredCVCVisibility,
 ) : ComponentParams by commonComponentParams

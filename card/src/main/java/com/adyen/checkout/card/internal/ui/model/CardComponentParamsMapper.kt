@@ -30,13 +30,13 @@ internal class CardComponentParamsMapper {
         val (commonComponentParams, sessionParams) = componentParamsBundle
         return CardComponentParams(
             commonComponentParams = commonComponentParams,
-            isHolderNameRequired = cardConfiguration?.showHolderName ?: false,
+            showHolderName = cardConfiguration?.showHolderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
             shopperReference = cardConfiguration?.shopperReference,
-            isStorePaymentFieldVisible = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
-            socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberMode
+            showStorePayment = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
+            socialSecurityNumberMode = cardConfiguration?.socialSecurityNumberMode
                 ?: FieldMode.HIDE,
-            kcpAuthVisibility = cardConfiguration?.koreanAuthenticationMode ?: FieldMode.HIDE,
+            koreanAuthenticationMode = cardConfiguration?.koreanAuthenticationMode ?: FieldMode.HIDE,
             cvcVisibility = if (cardConfiguration?.hideSecurityCode == true) {
                 CVCVisibility.ALWAYS_HIDE
             } else {
