@@ -56,7 +56,7 @@ fun generateCommonComponentParams(
     analyticsParams = analyticsParams,
     isCreatedByDropIn = isCreatedByDropIn,
     amount = amount,
-    isSubmitButtonVisible = isSubmitButtonVisible,
+    showSubmitButton = isSubmitButtonVisible,
     publicKey = publicKey,
 )
 

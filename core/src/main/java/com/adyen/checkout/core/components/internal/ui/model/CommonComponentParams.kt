@@ -22,6 +22,6 @@ data class CommonComponentParams(
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount?,
-    override val isSubmitButtonVisible: Boolean,
+    override val showSubmitButton: Boolean,
     override val publicKey: String?,
 ) : ComponentParams
