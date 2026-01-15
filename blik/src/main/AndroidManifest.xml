@@ -1,9 +1,15 @@
-<!--
-  ~ Copyright (c) 2020 Adyen N.V.
-  ~
-  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
-  ~
-  ~ Created by josephj on 4/12/2020.
-  -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-<manifest />
+    <application>
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.adyen.checkout.blik.internal.BlikInitializer"
+                android:value="androidx.startup" />
+        </provider>
+    </application>
+</manifest>

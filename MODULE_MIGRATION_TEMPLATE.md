@@ -67,7 +67,7 @@ This template outlines the implementation plan for migrating a payment method mo
 **Files to create**:
 - [ ] `{module}/src/main/java/com/adyen/checkout/{module}/{Module}Configuration.kt`
   - `{Module}Configuration` data class implementing `Configuration`
-  - `{Module}ConfigurationBuilder` class (internal constructor)
+  - `{Module}ConfigurationBuilder` class (internal constructor, annotated with `@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)`)
   - `CheckoutConfiguration.{module}()` extension function
   - `CheckoutConfiguration.get{Module}Configuration()` internal function
 
@@ -195,6 +195,18 @@ This template outlines the implementation plan for migrating a payment method mo
 ./gradlew apiDump
 ```
 
+**Tests to create**:
+- [ ] `{module}/src/test/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateFactoryTest.kt`
+- [ ] `{module}/src/test/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateReducerTest.kt`
+- [ ] `{module}/src/test/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateValidatorTest.kt`
+- [ ] `{module}/src/test/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ViewStateProducerTest.kt`
+
+**Test Reference**:
+- `mbway/src/test/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateFactoryTest.kt`
+- `mbway/src/test/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateReducerTest.kt`
+- `mbway/src/test/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateValidatorTest.kt`
+- `mbway/src/test/java/com/adyen/checkout/mbway/internal/ui/state/MBWayViewStateProducerTest.kt`
+
 **Commit**: "Implement {Module} state infrastructure with validation. COSDK-XXX"
 
 ---
@@ -217,6 +229,12 @@ This template outlines the implementation plan for migrating a payment method mo
 ./gradlew :{module}:check
 ./gradlew apiDump
 ```
+
+**Tests to create**:
+- [ ] `{module}/src/test/java/com/adyen/checkout/{module}/internal/ui/state/{Module}ComponentStateExtTest.kt`
+
+**Test Reference**:
+- `mbway/src/test/java/com/adyen/checkout/mbway/internal/ui/state/MBWayComponentStateExtTest.kt`
 
 **Commit**: "Add {Module}ComponentState extension for payment state conversion. COSDK-XXX"
 
@@ -288,6 +306,7 @@ This template outlines the implementation plan for migrating a payment method mo
 **⚠️ IMPORTANT**: Follow `MBWayFactory` pattern exactly:
 - Access `componentParams` from `componentParamsBundle.commonComponentParams`
 - Do NOT add `supportedPaymentMethods` property (not part of `PaymentMethodFactory` interface)
+- Create `DefaultSdkDataProvider(analyticsManager)` and pass it to the component
 
 **Reference**: 
 - `mbway/src/main/java/com/adyen/checkout/mbway/internal/ui/MBWayFactory.kt`

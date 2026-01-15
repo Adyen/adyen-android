@@ -1,21 +1,20 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 29/9/2022.
+ * Created by ozgur on 17/12/2025.
  */
-package com.adyen.checkout.blik.internal.ui.view
+package com.adyen.checkout.blik.old.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.blik.R
 import com.adyen.checkout.blik.databinding.BlikViewBinding
-import com.adyen.checkout.blik.internal.ui.BlikDelegate
+import com.adyen.checkout.blik.old.internal.ui.BlikDelegate
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.AdyenLogLevel

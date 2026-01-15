@@ -6,7 +6,7 @@
  * Created by ozgur on 20/2/2023.
  */
 
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.old
 
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
