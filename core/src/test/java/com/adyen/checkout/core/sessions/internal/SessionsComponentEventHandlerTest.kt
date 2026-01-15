@@ -12,6 +12,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
 import com.adyen.checkout.core.sessions.SessionError
 import com.adyen.checkout.core.sessions.SessionPaymentResult
+import com.adyen.checkout.core.sessions.toPaymentResult
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -96,6 +97,26 @@ internal class SessionsComponentEventHandlerTest(
         } else {
             assertEquals(expectedResult, result)
         }
+    }
+
+    @Test
+    fun `when session interactor submits payment and payment is finished, then onFinished is called`() = runTest {
+        val sessionPaymentResult = SessionPaymentResult(
+            sessionId = "test_session_id",
+            sessionResult = "test_session_result",
+            sessionData = "test_session_data",
+            resultCode = "Authorised",
+            order = null,
+        )
+        whenever(componentCallbacks.beforeSubmit(any())) doReturn false
+        whenever(
+            sessionInteractor.submitPayment(any())
+        ) doReturn SessionCallResult.Payments.Finished(sessionPaymentResult,)
+
+        val state = TestPaymentComponentState()
+        sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
+
+        verify(componentCallbacks).onFinished(sessionPaymentResult.toPaymentResult())
     }
 
     @Test

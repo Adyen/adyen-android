@@ -16,6 +16,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.SessionError
+import com.adyen.checkout.core.sessions.toPaymentResult
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
@@ -25,7 +26,6 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     override suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult {
         return when (event) {
             is PaymentComponentEvent.Submit -> {
-                // TODO - Sessions Flow. If not taken over make call
                 if (componentCallbacks.onSubmit == null) {
                     makePaymentsCall(event.state)
                 } else {
@@ -50,7 +50,11 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
                 ),
             )
             // TODO - Implement Finished case
-            is SessionCallResult.Payments.Finished -> CheckoutResult.Finished()
+            is SessionCallResult.Payments.Finished -> {
+                val paymentResult = sessionResult.result.toPaymentResult()
+                componentCallbacks.onFinished(paymentResult)
+                CheckoutResult.Finished()
+            }
         }
     }
 
@@ -81,7 +85,11 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
                 ),
             )
             // TODO - Propagate session result to CheckoutResult.Finished once its data class is updated.
-            is SessionCallResult.Details.Finished -> CheckoutResult.Finished()
+            is SessionCallResult.Details.Finished -> {
+                val paymentResult = sessionResult.result.toPaymentResult()
+                componentCallbacks.onFinished(paymentResult)
+                CheckoutResult.Finished()
+            }
         }
     }
 }

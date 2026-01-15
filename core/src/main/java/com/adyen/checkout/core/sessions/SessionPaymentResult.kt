@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.sessions
 
 import android.os.Parcelable
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.components.data.OrderResponse
 import kotlinx.parcelize.Parcelize
 
@@ -30,3 +31,13 @@ data class SessionPaymentResult(
     val resultCode: String?,
     val order: OrderResponse?,
 ) : Parcelable
+
+internal fun SessionPaymentResult.toPaymentResult(): PaymentResult {
+    return PaymentResult(
+        sessionId = sessionId,
+        sessionResult = sessionResult,
+        sessionData = sessionData,
+        resultCode = resultCode.orEmpty(),
+        order = order,
+    )
+}
