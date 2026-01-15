@@ -37,16 +37,16 @@ public final class com/adyen/checkout/card/CardCallbackExtKt {
 public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkout/core/components/internal/Configuration {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/Boolean;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;Lcom/adyen/checkout/card/KCPAuthVisibility;)V
+	public fun <init> (Ljava/lang/Boolean;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldMode;Lcom/adyen/checkout/card/FieldMode;)V
 	public final fun describeContents ()I
-	public final fun getKcpAuthVisibility ()Lcom/adyen/checkout/card/KCPAuthVisibility;
+	public final fun getHideSecurityCode ()Ljava/lang/Boolean;
+	public final fun getHideStoredSecurityCode ()Ljava/lang/Boolean;
+	public final fun getKoreanAuthenticationMode ()Lcom/adyen/checkout/card/FieldMode;
 	public final fun getShopperReference ()Ljava/lang/String;
-	public final fun getSocialSecurityNumberVisibility ()Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
+	public final fun getShowHolderName ()Ljava/lang/Boolean;
+	public final fun getShowStorePayment ()Ljava/lang/Boolean;
+	public final fun getSocialSecurityNumberMode ()Lcom/adyen/checkout/card/FieldMode;
 	public final fun getSupportedCardBrands ()Ljava/util/List;
-	public final fun isHideCvc ()Ljava/lang/Boolean;
-	public final fun isHideCvcStoredCard ()Ljava/lang/Boolean;
-	public final fun isHolderNameRequired ()Ljava/lang/Boolean;
-	public final fun isStorePaymentFieldVisible ()Ljava/lang/Boolean;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
@@ -61,9 +61,9 @@ public final class com/adyen/checkout/card/CardConfiguration$Creator : android/o
 public final class com/adyen/checkout/card/CardConfigurationBuilder {
 	public static final field $stable I
 	public final fun getHolderNameRequired ()Ljava/lang/Boolean;
-	public final fun getKcpAuthVisibility ()Lcom/adyen/checkout/card/KCPAuthVisibility;
+	public final fun getKcpAuthVisibility ()Lcom/adyen/checkout/card/FieldMode;
 	public final fun getShopperReference ()Ljava/lang/String;
-	public final fun getSocialSecurityNumberVisibility ()Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
+	public final fun getSocialSecurityNumberVisibility ()Lcom/adyen/checkout/card/FieldMode;
 	public final fun getSupportedCardBrands ()Ljava/util/List;
 	public final fun isHideCvc ()Ljava/lang/Boolean;
 	public final fun isHideCvcStoredCard ()Ljava/lang/Boolean;
@@ -71,9 +71,9 @@ public final class com/adyen/checkout/card/CardConfigurationBuilder {
 	public final fun setHideCvc (Ljava/lang/Boolean;)V
 	public final fun setHideCvcStoredCard (Ljava/lang/Boolean;)V
 	public final fun setHolderNameRequired (Ljava/lang/Boolean;)V
-	public final fun setKcpAuthVisibility (Lcom/adyen/checkout/card/KCPAuthVisibility;)V
+	public final fun setKcpAuthVisibility (Lcom/adyen/checkout/card/FieldMode;)V
 	public final fun setShopperReference (Ljava/lang/String;)V
-	public final fun setSocialSecurityNumberVisibility (Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;)V
+	public final fun setSocialSecurityNumberVisibility (Lcom/adyen/checkout/card/FieldMode;)V
 	public final fun setStorePaymentFieldVisible (Ljava/lang/Boolean;)V
 	public final fun setSupportedCardBrands (Ljava/util/List;)V
 }
@@ -91,12 +91,12 @@ public final class com/adyen/checkout/card/CardMainNavigationKey : com/adyen/che
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/card/KCPAuthVisibility : java/lang/Enum {
-	public static final field HIDE Lcom/adyen/checkout/card/KCPAuthVisibility;
-	public static final field SHOW Lcom/adyen/checkout/card/KCPAuthVisibility;
+public final class com/adyen/checkout/card/FieldMode : java/lang/Enum {
+	public static final field HIDE Lcom/adyen/checkout/card/FieldMode;
+	public static final field SHOW Lcom/adyen/checkout/card/FieldMode;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/card/KCPAuthVisibility;
-	public static fun values ()[Lcom/adyen/checkout/card/KCPAuthVisibility;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/card/FieldMode;
+	public static fun values ()[Lcom/adyen/checkout/card/FieldMode;
 }
 
 public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : com/adyen/checkout/core/components/CheckoutCallback {
@@ -105,14 +105,6 @@ public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : co
 
 public abstract interface class com/adyen/checkout/card/OnBinValueCallback : com/adyen/checkout/core/components/CheckoutCallback {
 	public abstract fun onBinValue (Ljava/lang/String;)V
-}
-
-public final class com/adyen/checkout/card/SocialSecurityNumberVisibility : java/lang/Enum {
-	public static final field HIDE Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
-	public static final field SHOW Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
-	public static fun values ()[Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
 }
 
 public final class com/adyen/checkout/card/StoredCardNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
