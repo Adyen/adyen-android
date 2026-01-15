@@ -140,7 +140,7 @@ internal class AdvancedComponentCallbacksTest(
         fun callbacksSource() = listOf(
             arguments(
                 CheckoutCallbacks(
-                    onAdditionalDetails = { CheckoutResult.Finished() },
+                    onAdditionalDetails = { CheckoutResult.Finished(PaymentResult("", null, null, null, null)) },
                     beforeSubmit = { false },
                     onError = {},
                     onFinished = {},
@@ -149,7 +149,7 @@ internal class AdvancedComponentCallbacksTest(
             ),
             arguments(
                 CheckoutCallbacks(
-                    onSubmit = { CheckoutResult.Finished() },
+                    onSubmit = { CheckoutResult.Finished(PaymentResult("", null, null, null, null)) },
                     beforeSubmit = { false },
                     onError = {},
                     onFinished = {},
@@ -158,8 +158,8 @@ internal class AdvancedComponentCallbacksTest(
             ),
             arguments(
                 CheckoutCallbacks(
-                    onSubmit = { CheckoutResult.Finished() },
-                    onAdditionalDetails = { CheckoutResult.Finished() },
+                    onSubmit = { CheckoutResult.Finished(PaymentResult("", null, null, null, null)) },
+                    onAdditionalDetails = { CheckoutResult.Finished(PaymentResult("", null, null, null, null)) },
                     beforeSubmit = { false },
                     onFinished = {},
                 ),

@@ -49,11 +49,10 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
                     cause = sessionResult.throwable,
                 ),
             )
-            // TODO - Implement Finished case
             is SessionCallResult.Payments.Finished -> {
                 val paymentResult = sessionResult.result.toPaymentResult()
                 componentCallbacks.onFinished(paymentResult)
-                CheckoutResult.Finished()
+                CheckoutResult.Finished(paymentResult)
             }
         }
     }
@@ -84,11 +83,10 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
                     cause = sessionResult.throwable,
                 ),
             )
-            // TODO - Propagate session result to CheckoutResult.Finished once its data class is updated.
             is SessionCallResult.Details.Finished -> {
                 val paymentResult = sessionResult.result.toPaymentResult()
                 componentCallbacks.onFinished(paymentResult)
-                CheckoutResult.Finished()
+                CheckoutResult.Finished(paymentResult)
             }
         }
     }

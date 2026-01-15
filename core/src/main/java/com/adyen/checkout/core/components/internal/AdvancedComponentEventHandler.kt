@@ -19,7 +19,11 @@ internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
         return when (event) {
             is PaymentComponentEvent.Submit -> {
                 componentCallbacks.beforeSubmit(event.state)
-                componentCallbacks.onSubmit(event.state)
+                val result = componentCallbacks.onSubmit(event.state)
+                if (result is CheckoutResult.Finished) {
+                    componentCallbacks.onFinished(result.paymentResult)
+                }
+                result
             }
 
             is PaymentComponentEvent.Error -> {
@@ -31,7 +35,14 @@ internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
 
     override suspend fun onActionComponentEvent(event: ActionComponentEvent): CheckoutResult {
         return when (event) {
-            is ActionComponentEvent.ActionDetails -> componentCallbacks.onAdditionalDetails(event.data)
+            is ActionComponentEvent.ActionDetails -> {
+                val result = componentCallbacks.onAdditionalDetails(event.data)
+                if (result is CheckoutResult.Finished) {
+                    componentCallbacks.onFinished(result.paymentResult)
+                }
+                result
+            }
+
             is ActionComponentEvent.Error -> {
                 componentCallbacks.onError(event.error)
                 CheckoutResult.Error(event.error)

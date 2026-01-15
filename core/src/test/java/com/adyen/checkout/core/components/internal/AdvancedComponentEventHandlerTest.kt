@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
 import com.adyen.checkout.core.sessions.SessionError
@@ -47,7 +48,7 @@ internal class AdvancedComponentEventHandlerTest(
 
         @Test
         fun `with Submit event, then beforeSubmit and onSubmit are called and result is returned`() = runTest {
-            val expectedResult = CheckoutResult.Finished()
+            val expectedResult = CheckoutResult.Finished(PaymentResult("", null, null, null, null))
             whenever(componentCallbacks.beforeSubmit(any())) doReturn true
             whenever(componentCallbacks.onSubmit(any())) doReturn expectedResult
 
@@ -77,7 +78,7 @@ internal class AdvancedComponentEventHandlerTest(
 
         @Test
         fun `with ActionDetails event, then onAdditionalDetails is called and result is returned`() = runTest {
-            val expectedResult = CheckoutResult.Finished()
+            val expectedResult = CheckoutResult.Finished(PaymentResult("", null, null, null, null))
             whenever(componentCallbacks.onAdditionalDetails(any())) doReturn expectedResult
 
             val data = ActionComponentData(paymentData = "test")
