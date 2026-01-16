@@ -15,8 +15,8 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.SessionPaymentResult
+import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsResponse
