@@ -139,14 +139,14 @@ private fun CardComponentState.cardBrand(): CardBrand? {
 }
 
 private fun CardComponentState.holderName(componentParams: CardComponentParams) =
-    if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
+    if (componentParams.showHolderName && holderName.text.isNotBlank()) {
         holderName.text
     } else {
         null
     }
 
 private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams) =
-    if (componentParams.isStorePaymentFieldVisible) {
+    if (componentParams.showStorePayment) {
         storePaymentMethod
     } else {
         null
