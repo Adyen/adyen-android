@@ -22,7 +22,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class PaymentMethod(
-    override val type: String? = null,
+    override val type: String,
     val name: String? = null,
     val brands: List<String>? = null,
     val brand: String? = null,
@@ -55,7 +55,7 @@ data class PaymentMethod(
             override fun serialize(modelObject: PaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
+                        put(TYPE, modelObject.type)
                         putOpt(NAME, modelObject.name)
                         putOpt(BRANDS, serializeOptStringList(modelObject.brands))
                         putOpt(BRAND, modelObject.brand)
@@ -72,7 +72,7 @@ data class PaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethod {
                 return PaymentMethod(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     name = jsonObject.getStringOrNull(NAME),
                     brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)),
                     brand = jsonObject.getStringOrNull(BRAND),

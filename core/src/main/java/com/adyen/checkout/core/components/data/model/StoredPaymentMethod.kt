@@ -20,7 +20,7 @@ import org.json.JSONObject
 @Serializable
 @Parcelize
 data class StoredPaymentMethod(
-    override val type: String? = null,
+    override val type: String,
     val name: String? = null,
     val brand: String? = null,
     val expiryMonth: String? = null,
@@ -59,7 +59,7 @@ data class StoredPaymentMethod(
             override fun serialize(modelObject: StoredPaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
+                        put(TYPE, modelObject.type)
                         putOpt(NAME, modelObject.name)
                         putOpt(BRAND, modelObject.brand)
                         putOpt(EXPIRY_MONTH, modelObject.expiryMonth)
@@ -83,7 +83,7 @@ data class StoredPaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): StoredPaymentMethod {
                 return StoredPaymentMethod(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     name = jsonObject.getStringOrNull(NAME),
                     brand = jsonObject.getStringOrNull(BRAND),
                     expiryMonth = jsonObject.getStringOrNull(EXPIRY_MONTH),

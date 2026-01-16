@@ -15,5 +15,5 @@ import com.adyen.checkout.core.common.internal.model.ModelObject
  */
 abstract class PaymentMethodResponse : ModelObject() {
 
-    abstract val type: String?
+    abstract val type: String
 }
