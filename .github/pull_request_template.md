@@ -9,6 +9,7 @@
 - [ ] Changes are tested manually
 - [ ] Related issues are linked
 
+## Ticket Number
 COSDK-XXX
 
 ## Release notes
