@@ -19,19 +19,19 @@ This document outlines how to handle review comments on Pull Requests in the Ady
 
 ### List PR Comments
 ```bash
-gh pr view 2503 --comments
+gh pr view <number> --comments
 ```
 
 ### Get Comment Details via API
 ```bash
-gh api repos/Adyen/adyen-android/pulls/2503/comments --jq '.[] | "\(.id) - \(.path): \(.body)"'
+gh api repos/Adyen/adyen-android/pulls/<number>/comments --jq '.[] | "\(.id) - \(.path): \(.body)"'
 ```
 
 ## Implementing Fixes
 
 **Best practices:**
-- Address all review comments in a single commit when possible
-- Separate commits for different changes if they tackle different issues
+- Group related fixes from review comments into a single commit
+- Create separate commits for logically distinct changes
 - Use a descriptive commit message that references the fixes
 - Include the ticket number
 
@@ -63,7 +63,7 @@ After implementing fixes, mark review threads as resolved.
 ```bash
 gh api graphql -f query='query {
   repository(owner: "Adyen", name: "adyen-android") {
-    pullRequest(number: 2503) {
+    pullRequest(number: <number>) {
       reviewThreads(first: 20) {
         nodes {
           id
@@ -84,7 +84,7 @@ gh api graphql -f query='query {
 ### Resolve a Thread
 ```bash
 gh api graphql -f query='mutation {
-  resolveReviewThread(input: {threadId: "PRRT_kwDOBW4ll85xxxxx"}) {
+  resolveReviewThread(input: {threadId: "<thread-id>"}) {
     thread { isResolved }
   }
 }'
