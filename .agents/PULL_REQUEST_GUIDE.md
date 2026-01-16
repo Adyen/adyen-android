@@ -69,7 +69,7 @@ The ticket number should match the one used in commits. If unknown, ask the deve
   - `supportNativeRedirect` in `PaymentComponentData`
 ```
 
-**Allowed labels:** `Breaking changes`, `New`, `Fixed`, `Improved`, `Changed`, `Removed`, `Deprecated`
+**Allowed section headers:** `Breaking changes`, `New`, `Fixed`, `Improved`, `Changed`, `Removed`, `Deprecated`
 
 **Important:** Remove template comments when adding actual release notes to keep the PR clean.
 

@@ -73,7 +73,9 @@ gh pr edit 2424 --body "New body content"
 gh pr edit 2424 --add-label "Breaking change"
 ```
 
-### Mark PR Ready for Review - Should not be done 
+### Mark PR Ready for Review
+> ⚠️ **Note:** This should only be done by developers, not agents. We manually review the PR before taking it out of draft.
+
 ```bash
 gh pr ready 2424
 ```
