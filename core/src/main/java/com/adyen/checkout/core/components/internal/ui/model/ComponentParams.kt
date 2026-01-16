@@ -22,6 +22,6 @@ interface ComponentParams {
     val analyticsParams: AnalyticsParams
     val isCreatedByDropIn: Boolean
     val amount: Amount?
-    val isSubmitButtonVisible: Boolean
+    val showSubmitButton: Boolean
     val publicKey: String?
 }
