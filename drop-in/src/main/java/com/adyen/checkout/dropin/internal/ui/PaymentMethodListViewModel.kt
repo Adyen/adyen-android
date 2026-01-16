@@ -70,8 +70,7 @@ internal class PaymentMethodListViewModel(
     }
 
     private fun StoredPaymentMethod.isSupported(): Boolean {
-        return !type.isNullOrEmpty() &&
-            !id.isNullOrEmpty() &&
+        return !id.isNullOrEmpty() &&
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) &&
             isEcommerce
     }
@@ -79,7 +78,7 @@ internal class PaymentMethodListViewModel(
     private fun StoredPaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
         val icon = when (type) {
             PaymentMethodTypes.SCHEME -> brand.orEmpty()
-            else -> type.orEmpty()
+            else -> type
         }
 
         val title: String = when (type) {
@@ -115,7 +114,7 @@ internal class PaymentMethodListViewModel(
         val icon = when (type) {
             PaymentMethodTypes.SCHEME -> CARD_LOGO
             PaymentMethodTypes.GIFTCARD -> brand.orEmpty()
-            else -> type.orEmpty()
+            else -> type
         }
 
         return PaymentMethodItem(

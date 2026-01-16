@@ -39,7 +39,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with stored payment methods, then favorites are set`() = runTest {
-        val storedPaymentMethods = listOf(StoredPaymentMethod(id = "123"))
+        val storedPaymentMethods = listOf(StoredPaymentMethod(type = "scheme", id = "123"))
         val response = PaymentMethodsApiResponse(storedPaymentMethods = storedPaymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
@@ -58,10 +58,10 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when removeFavorite is called, then item is removed from favorites`() = runTest {
-        val storedPaymentMethod1 = StoredPaymentMethod(id = "1")
-        val storedPaymentMethod2 = StoredPaymentMethod(id = "2")
+        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1")
+        val storedPaymentMethod2 = StoredPaymentMethod(type = "scheme", id = "2")
         val response = PaymentMethodsApiResponse(
-            storedPaymentMethods = listOf(storedPaymentMethod1, storedPaymentMethod2)
+            storedPaymentMethods = listOf(storedPaymentMethod1, storedPaymentMethod2),
         )
         val repository = DefaultPaymentMethodRepository(response)
 
@@ -73,9 +73,9 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when removeFavorite is called with unknown id, then favorites remain unchanged`() = runTest {
-        val storedPaymentMethod1 = StoredPaymentMethod(id = "1")
+        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1")
         val response = PaymentMethodsApiResponse(
-            storedPaymentMethods = listOf(storedPaymentMethod1)
+            storedPaymentMethods = listOf(storedPaymentMethod1),
         )
         val repository = DefaultPaymentMethodRepository(response)
 

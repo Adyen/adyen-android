@@ -99,9 +99,7 @@ object PaymentMethodProvider {
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
     ): PaymentComponent<BasePaymentComponentState> {
-        val txVariant = requireNotNull(paymentMethod.type) {
-            "PaymentMethod type cannot be null. Received: $paymentMethod"
-        }
+        val txVariant = paymentMethod.type
 
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
@@ -126,9 +124,7 @@ object PaymentMethodProvider {
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
     ): PaymentComponent<BasePaymentComponentState> {
-        val txVariant = requireNotNull(storedPaymentMethod.type) {
-            "StoredPaymentMethod type cannot be null. Received: $storedPaymentMethod"
-        }
+        val txVariant = storedPaymentMethod.type
 
         @Suppress("UNCHECKED_CAST")
         return storedFactories[txVariant]?.create(

@@ -195,7 +195,7 @@ private fun PaymentMethodOptionsDialog(
                         (Body(paymentMethod.name.orEmpty()))
                         @Suppress("RestrictedApi")
                         SubHeadline(
-                            paymentMethod.type.orEmpty(),
+                            paymentMethod.type,
                             color = Color(theme.colors.textSecondary.value),
                         )
                     }

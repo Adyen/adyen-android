@@ -31,7 +31,7 @@ internal class PreselectedPaymentMethodViewModel(
         val logoTxVariant = if (storedPaymentMethod.type == PaymentMethodTypes.SCHEME) {
             storedPaymentMethod.brand.orEmpty()
         } else {
-            storedPaymentMethod.type.orEmpty()
+            storedPaymentMethod.type
         }
 
         val title = if (storedPaymentMethod.lastFour != null) {

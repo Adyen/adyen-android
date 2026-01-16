@@ -11,7 +11,6 @@ package com.adyen.checkout.core.components.data.model
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeOptStringList
-import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOpt
@@ -23,7 +22,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class PaymentMethod(
-    val type: String? = null,
+    override val type: String,
     val name: String? = null,
     val brands: List<String>? = null,
     val brand: String? = null,
@@ -32,7 +31,7 @@ data class PaymentMethod(
     val configuration: Configuration? = null,
     val details: List<InputDetail>? = null,
     val apps: List<AppData>? = null,
-) : ModelObject(), PaymentMethodResponse {
+) : PaymentMethodResponse() {
 
     companion object {
         private const val TYPE = "type"
@@ -56,7 +55,7 @@ data class PaymentMethod(
             override fun serialize(modelObject: PaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
+                        put(TYPE, modelObject.type)
                         putOpt(NAME, modelObject.name)
                         putOpt(BRANDS, serializeOptStringList(modelObject.brands))
                         putOpt(BRAND, modelObject.brand)
@@ -73,7 +72,7 @@ data class PaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethod {
                 return PaymentMethod(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     name = jsonObject.getStringOrNull(NAME),
                     brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)),
                     brand = jsonObject.getStringOrNull(BRAND),

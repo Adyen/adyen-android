@@ -11,7 +11,6 @@ package com.adyen.checkout.core.components.data.model
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeOptStringList
-import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -21,7 +20,7 @@ import org.json.JSONObject
 @Serializable
 @Parcelize
 data class StoredPaymentMethod(
-    val type: String? = null,
+    override val type: String,
     val name: String? = null,
     val brand: String? = null,
     val expiryMonth: String? = null,
@@ -34,7 +33,7 @@ data class StoredPaymentMethod(
     val bankAccountNumber: String? = null,
     val cashtag: String? = null,
     val label: String? = null,
-) : ModelObject(), PaymentMethodResponse {
+) : PaymentMethodResponse() {
 
     val isEcommerce: Boolean
         get() = supportedShopperInteractions.orEmpty().contains(ECOMMERCE)
@@ -60,7 +59,7 @@ data class StoredPaymentMethod(
             override fun serialize(modelObject: StoredPaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
+                        put(TYPE, modelObject.type)
                         putOpt(NAME, modelObject.name)
                         putOpt(BRAND, modelObject.brand)
                         putOpt(EXPIRY_MONTH, modelObject.expiryMonth)
@@ -84,7 +83,7 @@ data class StoredPaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): StoredPaymentMethod {
                 return StoredPaymentMethod(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     name = jsonObject.getStringOrNull(NAME),
                     brand = jsonObject.getStringOrNull(BRAND),
                     expiryMonth = jsonObject.getStringOrNull(EXPIRY_MONTH),
