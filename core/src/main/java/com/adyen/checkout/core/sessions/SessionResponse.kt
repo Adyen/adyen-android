@@ -20,7 +20,7 @@ import org.json.JSONObject
  * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
  */
 @Parcelize
-data class SessionModel(
+data class SessionResponse(
     val id: String,
     val sessionData: String?
 ) : ModelObject() {
@@ -30,20 +30,20 @@ data class SessionModel(
         private const val SESSION_DATA = "sessionData"
 
         @JvmField
-        val SERIALIZER: Serializer<SessionModel> = object : Serializer<SessionModel> {
-            override fun serialize(modelObject: SessionModel): JSONObject {
+        val SERIALIZER: Serializer<SessionResponse> = object : Serializer<SessionResponse> {
+            override fun serialize(modelObject: SessionResponse): JSONObject {
                 return JSONObject().apply {
                     try {
                         putOpt(ID, modelObject.id)
                         putOpt(SESSION_DATA, modelObject.sessionData)
                     } catch (e: JSONException) {
-                        throw ModelSerializationException(SessionModel::class.java, e)
+                        throw ModelSerializationException(SessionResponse::class.java, e)
                     }
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): SessionModel {
-                return SessionModel(
+            override fun deserialize(jsonObject: JSONObject): SessionResponse {
+                return SessionResponse(
                     id = jsonObject.getStringOrNull(ID).orEmpty(),
                     sessionData = jsonObject.getStringOrNull(SESSION_DATA)
                 )

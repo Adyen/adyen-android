@@ -11,17 +11,17 @@ package com.adyen.checkout.core.components
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
-import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionResponse
 
 object Checkout {
 
     suspend fun setup(
-        sessionModel: SessionModel,
+        sessionResponse: SessionResponse,
         configuration: CheckoutConfiguration,
     ): Result<CheckoutContext.Sessions> {
         val initializationData = CheckoutInitializer.initialize(
             checkoutConfiguration = configuration,
-            sessionModel = sessionModel,
+            sessionResponse = sessionResponse,
         )
 
         return when {
@@ -46,7 +46,7 @@ object Checkout {
     ): Result<CheckoutContext.Advanced> {
         val initializationData = CheckoutInitializer.initialize(
             checkoutConfiguration = configuration,
-            sessionModel = null,
+            sessionResponse = null,
         )
 
         return Result.Success(

@@ -221,11 +221,11 @@ internal class MainViewModel @Inject constructor(
                 amount = Amount("USD", 1337),
             )
 
-            val sessionModel = paymentsRepository.createSession(createSessionRequest())
+            val sessionResponse = paymentsRepository.createSession(createSessionRequest())
 
-            val result = sessionModel?.let {
+            val result = sessionResponse?.let {
                 Checkout.setup(
-                    sessionModel = sessionModel,
+                    sessionResponse = sessionResponse,
                     configuration = configuration,
                 )
             }
