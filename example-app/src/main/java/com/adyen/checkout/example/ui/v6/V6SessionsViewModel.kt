@@ -17,6 +17,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -28,6 +29,7 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
+import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -86,6 +88,7 @@ internal class V6SessionsViewModel @Inject constructor(
                 checkoutContext = result.checkoutContext,
                 checkoutCallbacks = CheckoutCallbacks(
                     onError = ::onError,
+                    onFinished = ::onFinished,
                 ),
                 paymentMethods = result.checkoutContext.getPaymentMethods(),
             )
@@ -94,6 +97,10 @@ internal class V6SessionsViewModel @Inject constructor(
 
     private fun onError(error: CheckoutError) {
         Log.d(TAG, "onError: ${error.message}")
+    }
+
+    private fun onFinished(paymentResult: PaymentResult) {
+        uiState = V6UiState.Final(ResultState.get(paymentResult.resultCode))
     }
 
     fun handleIntent(intent: Intent) {

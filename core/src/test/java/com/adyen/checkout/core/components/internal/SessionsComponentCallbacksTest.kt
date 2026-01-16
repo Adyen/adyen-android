@@ -28,6 +28,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -78,7 +79,7 @@ class SessionsComponentCallbacksTest(
                 onError = onErrorCallback,
             )
 
-            whenever(onSubmitCallback.onSubmit(any())) doReturn CheckoutResult.Finished()
+            whenever(onSubmitCallback.onSubmit(any())) doReturn CheckoutResult.Finished(mock())
 
             val actualSessionsComponentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks()
 
@@ -95,7 +96,7 @@ class SessionsComponentCallbacksTest(
                 onError = onErrorCallback,
             )
 
-            whenever(onAdditionalDetailsCallback.onAdditionalDetails(any())) doReturn CheckoutResult.Finished()
+            whenever(onAdditionalDetailsCallback.onAdditionalDetails(any())) doReturn CheckoutResult.Finished(mock())
 
             val actualSessionsComponentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks()
 

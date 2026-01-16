@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components
 
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.action.data.Action as ActionResponse
 
@@ -18,8 +19,7 @@ import com.adyen.checkout.core.action.data.Action as ActionResponse
 sealed interface CheckoutResult {
 
     /** Indicates the payment process has finished successfully. */
-    // TODO - Replace temp parameter with actual value
-    data class Finished(val temp: String? = null) : CheckoutResult
+    data class Finished(val paymentResult: PaymentResult) : CheckoutResult
 
     /** Indicates that an additional action is required from the shopper. */
     data class Action(val action: ActionResponse) : CheckoutResult
