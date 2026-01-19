@@ -372,6 +372,7 @@ For specific workflows, refer to these detailed guides in the `.agents/` directo
 - **[Branch Naming](.agents/BRANCH_NAMING.md)** - Branch prefixes, base branches (`main` vs `v5`), branch chaining conventions
 - **[Pull Request Guide](.agents/PULL_REQUEST_GUIDE.md)** - PR creation, templates, release notes format
 - **[GitHub CLI Commands](.agents/GH_CLI_COMMANDS.md)** - `gh` command reference for PR operations
+- **[PR Reviews](.agents/PR_REVIEWS.md)** - Addressing review comments, resolving conversations
 
 ---
 
