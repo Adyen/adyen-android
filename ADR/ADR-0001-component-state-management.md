@@ -113,6 +113,9 @@ The **MVI + Reducer Pattern** solves all our problems:
 - **Reusable infrastructure** in `core` module can be easily adopted by all components
 - **Automatic validation** after every reduction ensures state is always valid
 
+## Concerns and follow-up actions
+There are no concerns or follow-up actions.
+
 ## Details
 
 ### Delegate State Manager Pattern
