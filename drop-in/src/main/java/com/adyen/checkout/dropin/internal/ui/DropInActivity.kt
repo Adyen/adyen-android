@@ -37,9 +37,7 @@ import kotlinx.coroutines.flow.onEach
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DropInActivity : ComponentActivity() {
 
-    private val input: DropInResultContract.Input? by lazy {
-        DropInResultContract.Input.from(intent)
-    }
+    private lateinit var input: DropInResultContract.Input
 
     private val viewModel: DropInViewModel by viewModels { DropInViewModel.Factory { input } }
 
@@ -67,6 +65,15 @@ class DropInActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val parsedInput = DropInResultContract.Input.from(intent)
+        if (parsedInput == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Input is null. Closing drop-in." }
+            // TODO - Return DropInResult.Failed and close drop-in
+            finish()
+            return
+        }
+        input = parsedInput
 
         startDropInService()
         bindDropInService()
@@ -153,42 +160,29 @@ class DropInActivity : ComponentActivity() {
     }
 
     private fun startDropInService() {
-        val serviceClass = input?.serviceClass
-        if (serviceClass == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Service class is null. Cannot start DropInService." }
-            return
-        }
-
-        val intent = Intent(this, serviceClass)
+        val intent = Intent(this, input.serviceClass)
         startService(intent)
-        adyenLog(AdyenLogLevel.DEBUG) { "Started ${serviceClass.simpleName}" }
+        adyenLog(AdyenLogLevel.DEBUG) { "Started ${input.serviceClass.simpleName}" }
     }
 
     private fun bindDropInService() {
-        val serviceClass = input?.serviceClass
-        if (serviceClass == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Service class is null. Cannot bind to DropInService." }
-            return
-        }
-
-        val intent = Intent(this, serviceClass)
+        val intent = Intent(this, input.serviceClass)
         val bound = bindService(intent, serviceConnection, BIND_AUTO_CREATE)
         if (bound) {
             serviceBound = true
-            adyenLog(AdyenLogLevel.DEBUG) { "Bound to ${serviceClass.simpleName}" }
+            adyenLog(AdyenLogLevel.DEBUG) { "Bound to ${input.serviceClass.simpleName}" }
         } else {
             adyenLog(AdyenLogLevel.ERROR) {
-                "Error binding to ${serviceClass.simpleName}. " +
+                "Error binding to ${input.serviceClass.simpleName}. " +
                     "The system couldn't find the service or your client doesn't have permission to bind to it"
             }
         }
     }
 
     private fun stopDropInService() {
-        val serviceClass = input?.serviceClass ?: return
-        val intent = Intent(this, serviceClass)
+        val intent = Intent(this, input.serviceClass)
         stopService(intent)
-        adyenLog(AdyenLogLevel.DEBUG) { "Stopped ${serviceClass.simpleName}" }
+        adyenLog(AdyenLogLevel.DEBUG) { "Stopped ${input.serviceClass.simpleName}" }
     }
 
     private fun unbindDropInService() {
