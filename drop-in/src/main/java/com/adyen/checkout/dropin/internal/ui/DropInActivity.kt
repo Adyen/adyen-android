@@ -190,7 +190,7 @@ class DropInActivity : ComponentActivity() {
             viewModel.onServiceDisconnected()
             unbindService(serviceConnection)
             serviceBound = false
-            adyenLog(AdyenLogLevel.DEBUG) { "Unbound from DropInService" }
+            adyenLog(AdyenLogLevel.DEBUG) { "Unbound from ${input.serviceClass.simpleName}" }
         }
     }
 }
