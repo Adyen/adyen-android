@@ -43,7 +43,7 @@ internal class ManageFavoritesViewModel(
     private fun StoredPaymentMethod.toFavoriteListItem(): FavoriteListItem {
         val icon = when (type) {
             PaymentMethodTypes.SCHEME -> brand.orEmpty()
-            else -> type.orEmpty()
+            else -> type
         }
 
         val title: String = when (type) {

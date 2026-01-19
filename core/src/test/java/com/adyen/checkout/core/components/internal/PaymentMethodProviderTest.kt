@@ -21,10 +21,10 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundl
 import com.adyen.checkout.core.components.internal.ui.model.generateComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotSame
+import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -69,7 +69,7 @@ internal class PaymentMethodProviderTest {
         executor.shutdown()
         // Giving it a generous timeout to finish all tasks
         val completed = executor.awaitTermination(5, TimeUnit.SECONDS)
-        assertTrue("Executor tasks did not complete in time.", completed)
+        assertTrue(completed, "Executor tasks did not complete in time.")
         assertEquals(totalRegistrations, PaymentMethodProvider.getFactoriesCount())
     }
 
@@ -91,7 +91,7 @@ internal class PaymentMethodProviderTest {
         executor.shutdown()
         // Giving it a generous timeout to finish all tasks
         val completed = executor.awaitTermination(5, TimeUnit.SECONDS)
-        assertTrue("Executor tasks did not complete in time.", completed)
+        assertTrue(completed, "Executor tasks did not complete in time.")
         assertEquals(totalRegistrations, PaymentMethodProvider.getStoredFactoriesCount())
     }
 
@@ -173,7 +173,7 @@ internal class PaymentMethodProviderTest {
                 checkoutCallbacks = CheckoutCallbacks(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
-            Assert.assertSame(component, actualComponent)
+            assertSame(component, actualComponent)
         }
 
     @Test
@@ -190,7 +190,7 @@ internal class PaymentMethodProviderTest {
                 checkoutCallbacks = CheckoutCallbacks(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
-            Assert.assertSame(component, actualComponent)
+            assertSame(component, actualComponent)
         }
 
     @Test
