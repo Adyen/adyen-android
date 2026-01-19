@@ -36,11 +36,15 @@
 
 **Cons:**
 
--
+
+## Proposed solution
+
+[//]: # (Write down the initially proposed solution and explain why.)
 
 ## Final decision
 
-[//]: # (Write down what solution is chosen and why.)
+[//]: # (After receiving feedback on the proposed solution, write down the final decision and 
+explain why.)
 
 ## Concerns and follow-up actions
 
