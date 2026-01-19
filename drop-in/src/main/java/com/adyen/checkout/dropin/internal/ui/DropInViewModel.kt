@@ -19,6 +19,7 @@ import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.service.DropInInteractor
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KClass
@@ -33,6 +34,16 @@ internal class DropInViewModel(
 
     val navigator: DropInNavigator = DropInNavigator()
 
+    private var dropInInteractor: DropInInteractor? = null
+
+    fun onServiceConnected(interactor: DropInInteractor) {
+        dropInInteractor = interactor
+    }
+
+    fun onServiceDisconnected() {
+        dropInInteractor = null
+    }
+
     init {
         if (verifyInput(input)) {
             initializePaymentMethods(input)
@@ -41,6 +52,7 @@ internal class DropInViewModel(
         }
     }
 
+    // TODO - Move the nullability check to DropInActivity, where we parse the input
     @OptIn(ExperimentalContracts::class)
     private fun verifyInput(input: DropInResultContract.Input?): Boolean {
         contract {

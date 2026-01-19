@@ -8,7 +8,11 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,7 +25,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
+import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import kotlinx.coroutines.flow.launchIn
@@ -36,16 +43,39 @@ class DropInActivity : ComponentActivity() {
 
     private val viewModel: DropInViewModel by viewModels { DropInViewModel.Factory { input } }
 
+    private var serviceBound: Boolean = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+            adyenLog(AdyenLogLevel.DEBUG) { "onServiceConnected" }
+            val dropInBinder = binder as? DropInService.DropInBinder ?: return
+            val service = dropInBinder.getService() ?: return
+            viewModel.onServiceConnected(service)
+
+            // TODO - Implement queues and improve the queue handling if possible.
+        }
+
+        override fun onServiceDisconnected(className: ComponentName) {
+            adyenLog(AdyenLogLevel.DEBUG) { "onServiceDisconnected" }
+            serviceBound = false
+            viewModel.onServiceDisconnected()
+        }
+    }
+
     @Suppress("LongMethod")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        startDropInService()
+        bindDropInService()
+
         viewModel.navigator.finishFlow
             .flowWithLifecycle(lifecycle)
             .onEach { shouldFinish ->
                 if (shouldFinish) {
+                    stopDropInService()
                     finish()
                 }
             }
@@ -114,6 +144,59 @@ class DropInActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        unbindDropInService()
+        super.onDestroy()
+    }
+
+    private fun startDropInService() {
+        val serviceClass = input?.serviceClass
+        if (serviceClass == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Service class is null. Cannot start DropInService." }
+            return
+        }
+
+        val intent = Intent(this, serviceClass)
+        startService(intent)
+        adyenLog(AdyenLogLevel.DEBUG) { "Started ${serviceClass.simpleName}" }
+    }
+
+    private fun bindDropInService() {
+        val serviceClass = input?.serviceClass
+        if (serviceClass == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Service class is null. Cannot bind to DropInService." }
+            return
+        }
+
+        val intent = Intent(this, serviceClass)
+        val bound = bindService(intent, serviceConnection, BIND_AUTO_CREATE)
+        if (bound) {
+            serviceBound = true
+            adyenLog(AdyenLogLevel.DEBUG) { "Bound to ${serviceClass.simpleName}" }
+        } else {
+            adyenLog(AdyenLogLevel.ERROR) {
+                "Error binding to ${serviceClass.simpleName}. " +
+                    "The system couldn't find the service or your client doesn't have permission to bind to it"
+            }
+        }
+    }
+
+    private fun stopDropInService() {
+        val serviceClass = input?.serviceClass ?: return
+        val intent = Intent(this, serviceClass)
+        stopService(intent)
+        adyenLog(AdyenLogLevel.DEBUG) { "Stopped ${serviceClass.simpleName}" }
+    }
+
+    private fun unbindDropInService() {
+        if (serviceBound) {
+            viewModel.onServiceDisconnected()
+            unbindService(serviceConnection)
+            serviceBound = false
+            adyenLog(AdyenLogLevel.DEBUG) { "Unbound from DropInService" }
         }
     }
 }

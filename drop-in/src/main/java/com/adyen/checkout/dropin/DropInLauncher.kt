@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Service
 import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract

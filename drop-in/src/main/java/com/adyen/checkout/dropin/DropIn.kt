@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Service
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.compose.runtime.Composable
