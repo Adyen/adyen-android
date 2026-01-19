@@ -90,6 +90,12 @@ public abstract interface class com/adyen/checkout/dropin/DropInResultCallback {
 	public abstract fun onDropInResult (Lcom/adyen/checkout/dropin/DropInResult;)V
 }
 
+public abstract class com/adyen/checkout/dropin/DropInService : androidx/lifecycle/LifecycleService {
+	public static final field $stable I
+	public fun <init> ()V
+	public abstract fun onSubmit (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class com/adyen/checkout/dropin/internal/DropInResultContract$Input$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/internal/DropInResultContract$Input;

@@ -20,8 +20,7 @@ class DropInLauncher internal constructor(
 
     internal fun launch(
         dropInContext: CheckoutContext,
-        // TODO - define drop in service
-        serviceClass: Class<out Service>,
+        serviceClass: Class<out DropInService>,
     ) {
         val input = DropInResultContract.Input(
             checkoutContext = dropInContext,
