@@ -18,37 +18,37 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Suppress("LongParameterList")
 class CardConfiguration(
-    val isHolderNameRequired: Boolean?,
+    val showHolderName: Boolean?,
     val supportedCardBrands: List<CardBrand>?,
     val shopperReference: String?,
-    val isStorePaymentFieldVisible: Boolean?,
-    val isHideCvc: Boolean?,
-    val isHideCvcStoredCard: Boolean?,
-    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
-    val kcpAuthVisibility: KCPAuthVisibility?,
+    val showStorePayment: Boolean?,
+    val hideSecurityCode: Boolean?,
+    val hideStoredSecurityCode: Boolean?,
+    val socialSecurityNumberMode: FieldMode?,
+    val koreanAuthenticationMode: FieldMode?,
     // TODO - Card. Installments & Address
 ) : Configuration
 
 class CardConfigurationBuilder internal constructor() {
 
     var supportedCardBrands: List<CardBrand>? = null
-    var holderNameRequired: Boolean? = null
-    var isStorePaymentFieldVisible: Boolean? = null
+    var showHolderName: Boolean? = null
+    var showStorePayment: Boolean? = null
     var shopperReference: String? = null
-    var isHideCvc: Boolean? = null
-    var isHideCvcStoredCard: Boolean? = null
-    var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = null
-    var kcpAuthVisibility: KCPAuthVisibility? = null
+    var hideSecurityCode: Boolean? = null
+    var hideStoredSecurityCode: Boolean? = null
+    var socialSecurityNumberMode: FieldMode? = null
+    var koreanAuthenticationMode: FieldMode? = null
 
     internal fun build() = CardConfiguration(
         supportedCardBrands = supportedCardBrands,
-        isHolderNameRequired = holderNameRequired,
+        showHolderName = showHolderName,
         shopperReference = shopperReference,
-        isStorePaymentFieldVisible = isStorePaymentFieldVisible,
-        isHideCvc = isHideCvc,
-        isHideCvcStoredCard = isHideCvcStoredCard,
-        socialSecurityNumberVisibility = socialSecurityNumberVisibility,
-        kcpAuthVisibility = kcpAuthVisibility,
+        showStorePayment = showStorePayment,
+        hideSecurityCode = hideSecurityCode,
+        hideStoredSecurityCode = hideStoredSecurityCode,
+        socialSecurityNumberMode = socialSecurityNumberMode,
+        koreanAuthenticationMode = koreanAuthenticationMode,
     )
 }
 
