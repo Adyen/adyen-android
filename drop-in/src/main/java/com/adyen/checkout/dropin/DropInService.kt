@@ -13,10 +13,9 @@ import android.os.Binder
 import android.os.IBinder
 import androidx.lifecycle.LifecycleService
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.dropin.internal.service.DropInInteractor
 import java.lang.ref.WeakReference
 
-abstract class DropInService : LifecycleService(), DropInInteractor {
+abstract class DropInService : LifecycleService() {
 
     private val binder by lazy { DropInBinder(this) }
 
@@ -30,12 +29,12 @@ abstract class DropInService : LifecycleService(), DropInInteractor {
         return binder
     }
 
-    abstract override suspend fun onSubmit(): CheckoutResult
+    protected abstract suspend fun onSubmit(): CheckoutResult
 
     internal class DropInBinder(service: DropInService) : Binder() {
 
         private val serviceRef: WeakReference<DropInService> = WeakReference(service)
 
-        fun getService(): DropInInteractor? = serviceRef.get()
+        fun getService(): DropInService? = serviceRef.get()
     }
 }
