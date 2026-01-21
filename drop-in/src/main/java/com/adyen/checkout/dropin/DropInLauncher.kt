@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Service
 import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract
@@ -20,8 +19,7 @@ class DropInLauncher internal constructor(
 
     internal fun launch(
         dropInContext: CheckoutContext,
-        // TODO - define drop in service
-        serviceClass: Class<out Service>,
+        serviceClass: Class<out DropInService>,
     ) {
         val input = DropInResultContract.Input(
             checkoutContext = dropInContext,

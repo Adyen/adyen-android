@@ -15,6 +15,7 @@
 "androidx.lifecycle:lifecycle-runtime-ktx" = "[AndroidX Lifecycle Runtime](https://developer.android.com/jetpack/androidx/releases/lifecycle#{})"
 "androidx.lifecycle:lifecycle-viewmodel-compose" = "[AndroidX Lifecycle ViewModel Compose](https://developer.android.com/jetpack/androidx/releases/lifecycle#{})"
 "androidx.lifecycle:lifecycle-viewmodel-ktx" = "[AndroidX Lifecycle ViewModel](https://developer.android.com/jetpack/androidx/releases/lifecycle#{})"
+"androidx.lifecycle:lifecycle-service" = "[AndroidX Lifecycle Service](https://developer.android.com/jetpack/androidx/releases/lifecycle#{})"
 "androidx.navigation3:navigation3-runtime" = "[AndroidX Navigation3](https://developer.android.com/jetpack/androidx/releases/navigation3#{})"
 "androidx.recyclerview:recyclerview" = "[AndroidX RecyclerView](https://developer.android.com/jetpack/androidx/releases/recyclerview#{})"
 "androidx.startup:startup-runtime" = "[AndroidX Startup](https://developer.android.com/jetpack/androidx/releases/startup#{})"

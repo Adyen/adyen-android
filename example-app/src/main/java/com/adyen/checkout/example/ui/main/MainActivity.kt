@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.main
 
-import android.app.Service
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.dropin.DropIn
+import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.old.DropInCallback
 import com.adyen.checkout.dropin.old.SessionDropInCallback
 import com.adyen.checkout.example.R
@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                 DropIn.start(
                     launcher = dropInLauncher,
                     dropInContext = navigation.dropInContext,
-                    serviceClass = Service::class.java,
+                    serviceClass = DropInService::class.java,
                 )
             }
 
@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                 DropIn.start(
                     launcher = dropInLauncher,
                     dropInContext = navigation.dropInContext,
-                    serviceClass = Service::class.java,
+                    serviceClass = DropInService::class.java,
                 )
             }
 

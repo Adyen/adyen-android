@@ -19,12 +19,11 @@ import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
+import com.adyen.checkout.dropin.internal.service.DropInInteractor
 import kotlin.reflect.KClass
 
 internal class DropInViewModel(
-    input: DropInResultContract.Input?,
+    private val input: DropInResultContract.Input,
 ) : ViewModel() {
 
     lateinit var dropInParams: DropInParams
@@ -33,30 +32,23 @@ internal class DropInViewModel(
 
     val navigator: DropInNavigator = DropInNavigator()
 
+    private var dropInInteractor: DropInInteractor? = null
+
+    fun onServiceConnected(interactor: DropInInteractor) {
+        dropInInteractor = interactor
+    }
+
+    fun onServiceDisconnected() {
+        dropInInteractor = null
+    }
+
     init {
-        if (verifyInput(input)) {
-            initializePaymentMethods(input)
-            initializeDropInParams(input)
-            initializeBackStack()
-        }
+        initializePaymentMethods()
+        initializeDropInParams()
+        initializeBackStack()
     }
 
-    @OptIn(ExperimentalContracts::class)
-    private fun verifyInput(input: DropInResultContract.Input?): Boolean {
-        contract {
-            returns(true) implies (input != null)
-        }
-
-        return if (input == null) {
-            // TODO - Return DropInResult.Failed and close drop-in
-            adyenLog(AdyenLogLevel.ERROR) { "Input is null. Closing drop-in with failed result." }
-            false
-        } else {
-            true
-        }
-    }
-
-    private fun initializePaymentMethods(input: DropInResultContract.Input) {
+    private fun initializePaymentMethods() {
         val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
@@ -70,7 +62,7 @@ internal class DropInViewModel(
         paymentMethodRepository = DefaultPaymentMethodRepository(paymentMethods)
     }
 
-    private fun initializeDropInParams(input: DropInResultContract.Input) {
+    private fun initializeDropInParams() {
         try {
             val sessionParams = (input.checkoutContext as? CheckoutContext.Sessions?)?.checkoutSession?.let {
                 SessionParamsFactory.create(it)
@@ -103,7 +95,7 @@ internal class DropInViewModel(
     }
 
     class Factory(
-        private val inputProvider: () -> DropInResultContract.Input?,
+        private val inputProvider: () -> DropInResultContract.Input,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Service
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import androidx.compose.runtime.remember
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract
 
+// TODO - Discuss the current Drop-in approach. Do we need DropIn object and can we make improvement?
 // TODO - KDocs
 object DropIn {
 
@@ -31,7 +31,7 @@ object DropIn {
         launcher: DropInLauncher,
         dropInContext: CheckoutContext.Sessions,
         // TODO - define drop in session service
-        serviceClass: Class<out Service> = Service::class.java,
+        serviceClass: Class<out DropInService> = DropInService::class.java,
     ) {
         launcher.launch(dropInContext, serviceClass)
     }
@@ -39,8 +39,7 @@ object DropIn {
     fun start(
         launcher: DropInLauncher,
         dropInContext: CheckoutContext.Advanced,
-        // TODO - define drop in service
-        serviceClass: Class<out Service>,
+        serviceClass: Class<out DropInService>,
     ) {
         launcher.launch(dropInContext, serviceClass)
     }

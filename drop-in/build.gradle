@@ -81,6 +81,7 @@ dependencies {
     implementation libs.compose.material.icons
     implementation libs.compose.viewmodel
     implementation libs.material
+    implementation libs.androidx.lifecycle.service
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
