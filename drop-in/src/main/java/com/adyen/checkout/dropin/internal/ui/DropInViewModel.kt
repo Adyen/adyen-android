@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -17,7 +16,7 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
-import com.adyen.checkout.dropin.DropInService
+import com.adyen.checkout.dropin.DropInBinder
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
@@ -33,15 +32,14 @@ internal class DropInViewModel(
 
     val navigator: DropInNavigator = DropInNavigator()
 
-    @SuppressLint("StaticFieldLeak")
-    private var dropInService: DropInService? = null
+    private var dropInBinder: DropInBinder? = null
 
-    fun onServiceConnected(service: DropInService) {
-        dropInService = service
+    fun onServiceConnected(binder: DropInBinder) {
+        dropInBinder = binder
     }
 
     fun onServiceDisconnected() {
-        dropInService = null
+        dropInBinder = null
     }
 
     init {

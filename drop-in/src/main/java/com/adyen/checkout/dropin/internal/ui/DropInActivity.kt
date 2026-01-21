@@ -28,7 +28,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.dropin.DropInService
+import com.adyen.checkout.dropin.DropInBinder
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import kotlinx.coroutines.flow.launchIn
@@ -46,9 +46,8 @@ class DropInActivity : ComponentActivity() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
             adyenLog(AdyenLogLevel.DEBUG) { "onServiceConnected" }
-            val dropInBinder = binder as? DropInService.DropInBinder ?: return
-            val service = dropInBinder.getService() ?: return
-            viewModel.onServiceConnected(service)
+            val dropInBinder = binder as? DropInBinder ?: return
+            viewModel.onServiceConnected(dropInBinder)
 
             // TODO - Implement queues and improve the queue handling if possible.
         }
