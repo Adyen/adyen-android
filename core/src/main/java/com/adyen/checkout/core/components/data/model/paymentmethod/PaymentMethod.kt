@@ -8,10 +8,58 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
+import com.adyen.checkout.core.common.internal.model.getStringOrNull
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import org.json.JSONObject
+
 /**
  * Abstract class representing a payment method from the /paymentMethods API response.
  *
  * Specific payment method types extend this class with their own fields.
  * Unknown payment methods are deserialized as [InstantPaymentMethod].
  */
-abstract class PaymentMethod : PaymentMethodResponse()
+abstract class PaymentMethod : PaymentMethodResponse() {
+
+    companion object {
+        @Suppress("TooGenericExceptionThrown")
+        @JvmField
+        val SERIALIZER: Serializer<PaymentMethod> = object : Serializer<PaymentMethod> {
+            override fun serialize(modelObject: PaymentMethod): JSONObject {
+                val paymentMethodType = with(modelObject.type) {
+                    if (isNullOrEmpty()) {
+                        // TODO - Error Propagation
+                        // throw CheckoutException("PaymentMethod type not found")
+                        throw RuntimeException("PaymentMethod type not found")
+                    } else {
+                        this
+                    }
+                }
+                val serializer = getChildSerializer(paymentMethodType)
+                return serializer.serialize(modelObject)
+            }
+
+            override fun deserialize(jsonObject: JSONObject): PaymentMethod {
+                val type = jsonObject.getStringOrNull(TYPE)
+                if (type.isNullOrEmpty()) {
+                    // TODO - Error Propagation
+                    // throw CheckoutException("PaymentMethod type not found")
+                    throw RuntimeException("PaymentMethod type not found")
+                }
+                val serializer = getChildSerializer(type)
+                return serializer.deserialize(jsonObject)
+            }
+        }
+
+        @Suppress("CyclomaticComplexMethod")
+        fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethod> {
+            // TODO - Decide if we want to use a different serializer for unsupported payment methods
+            val serializer = when (paymentMethodType) {
+                PaymentMethodTypes.SCHEME -> CardPaymentMethod.SERIALIZER
+                else -> InstantPaymentMethod.SERIALIZER
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            return serializer as Serializer<PaymentMethod>
+        }
+    }
+}
