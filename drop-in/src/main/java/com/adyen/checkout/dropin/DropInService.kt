@@ -9,10 +9,10 @@
 package com.adyen.checkout.dropin
 
 import android.content.Intent
-import android.os.Binder
 import android.os.IBinder
 import androidx.lifecycle.LifecycleService
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.dropin.internal.service.DropInBinder
 
 abstract class DropInService : LifecycleService() {
 
@@ -33,9 +33,4 @@ abstract class DropInService : LifecycleService() {
     }
 
     protected abstract suspend fun onSubmit(): CheckoutResult
-}
-
-internal abstract class DropInBinder : Binder() {
-
-    abstract suspend fun requestOnSubmit(): CheckoutResult
 }

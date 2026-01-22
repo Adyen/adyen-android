@@ -13,7 +13,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.adyen.checkout.dropin.DropInBinder
 import com.adyen.checkout.dropin.DropInService
 
 internal class DropInServiceManager(
