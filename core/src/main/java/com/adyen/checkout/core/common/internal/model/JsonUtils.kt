@@ -49,6 +49,11 @@ fun JSONObject.toStringPretty(): String {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.getStringList(key: String): List<String> {
+    return JsonUtils.parseStringList(getJSONArray(key))
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.optStringList(key: String): List<String>? {
     return JsonUtils.parseOptStringList(optJSONArray(key))
 }
@@ -108,6 +113,22 @@ object JsonUtils {
      * Parses a [JSONArray] to a list of Strings.
      *
      * @param jsonArray The JSONArray to be read.
+     * @return A [List] of strings.
+     */
+    @JvmStatic
+    fun parseStringList(jsonArray: JSONArray): List<String> {
+        val list: MutableList<String> = ArrayList()
+        for (i in 0 until jsonArray.length()) {
+            val item = jsonArray.getString(i)
+            list.add(item)
+        }
+        return Collections.unmodifiableList(list)
+    }
+
+    /**
+     * Parses a [JSONArray] to a list of Strings.
+     *
+     * @param jsonArray The JSONArray to be read.
      * @return A [List] of strings, or null if the jsonArray was null.
      */
     @JvmStatic
@@ -123,6 +144,19 @@ object JsonUtils {
             }
         }
         return Collections.unmodifiableList(list)
+    }
+
+    /**
+     * Serializes a List of String to a [JSONArray].
+     *
+     * @param stringList The [List] of Strings to be serialized.
+     * @return The populated [JSONArray].
+     */
+    @JvmStatic
+    fun serializeStringList(stringList: List<String>) = JSONArray().apply {
+        stringList.forEach {
+            put(it)
+        }
     }
 
     /**
