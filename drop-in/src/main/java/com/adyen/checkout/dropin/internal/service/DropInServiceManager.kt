@@ -13,6 +13,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.dropin.DropInService
 
 internal class DropInServiceManager(
@@ -41,7 +43,11 @@ internal class DropInServiceManager(
     }
 
     fun unbind(context: Context) {
-        context.unbindService(connection)
+        try {
+            context.unbindService(connection)
+        } catch (e: IllegalArgumentException) {
+            adyenLog(AdyenLogLevel.WARN, e) { "Failed to unbind service" }
+        }
         binder = null
     }
 
@@ -50,6 +56,7 @@ internal class DropInServiceManager(
         context.stopService(intent)
     }
 
+    // TODO - Communicate back to drop-in. Should we use a flow or just returning a result?
     suspend fun requestOnSubmit() {
         binder?.requestOnSubmit()
     }
