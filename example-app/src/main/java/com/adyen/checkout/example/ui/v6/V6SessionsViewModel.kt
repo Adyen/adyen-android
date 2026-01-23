@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -29,14 +30,20 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.UIText
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
+import com.adyen.checkout.threeds2.internal.ui.mapToUiCustomization
+import com.adyen.checkout.threeds2.threeDS2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class V6SessionsViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
+    private val uiThemeRepository: UIThemeRepository,
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
 
@@ -44,6 +51,12 @@ internal class V6SessionsViewModel @Inject constructor(
     private val configuration = CheckoutConfiguration(
         Environment.TEST,
         BuildConfig.CLIENT_KEY,
+        configurationBlock = {
+            threeDS2 {
+                val checkoutTheme = uiThemeRepository.getCheckoutTheme(context)
+                uiCustomization = checkoutTheme.mapToUiCustomization()
+            }
+        },
     )
 
     val checkoutController = CheckoutController()

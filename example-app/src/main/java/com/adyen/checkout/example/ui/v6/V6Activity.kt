@@ -17,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import com.adyen.checkout.redirect.old.RedirectComponent
-import com.adyen.checkout.ui.theme.CheckoutColors
-import com.adyen.checkout.ui.theme.CheckoutTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,18 +36,10 @@ class V6Activity : AppCompatActivity() {
         val returnUrl = RedirectComponent.getReturnUrl(applicationContext) + "/v6"
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
 
-        val theme = CheckoutTheme(
-            colors = if (uiThemeRepository.isDarkTheme(this)) {
-                CheckoutColors.dark()
-            } else {
-                CheckoutColors.light()
-            },
-        )
-
         setContent {
             ExampleTheme(uiThemeRepository.isDarkTheme()) {
                 V6Screen(
-                    theme = theme,
+                    theme = uiThemeRepository.getCheckoutTheme(this),
                     uiState = viewModel.uiState,
                     checkoutController = viewModel.checkoutController,
                 )

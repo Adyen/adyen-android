@@ -29,6 +29,7 @@ android {
 dependencies {
     // Checkout
     api project(':ui-core')
+    api project(':ui')
     api project(':core')
 
     // Dependencies

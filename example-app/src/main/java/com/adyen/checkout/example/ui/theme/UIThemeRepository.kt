@@ -16,6 +16,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry
 import com.adyen.checkout.example.data.storage.SharedPreferencesManager
+import com.adyen.checkout.ui.theme.CheckoutColors
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,6 +31,8 @@ internal interface UIThemeRepository {
     fun isDarkTheme(): Boolean
 
     fun isDarkTheme(context: Context): Boolean
+
+    fun getCheckoutTheme(context: Context): CheckoutTheme
 }
 
 @Singleton
@@ -73,6 +77,16 @@ internal class DefaultUIThemeRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun getCheckoutTheme(context: Context): CheckoutTheme {
+        return CheckoutTheme(
+            colors = if (isDarkTheme(context)) {
+                CheckoutColors.dark()
+            } else {
+                CheckoutColors.light()
+            },
+        )
     }
 }
 
