@@ -29,6 +29,7 @@ internal class CardViewStateProducerTest {
         )
     }
 
+    // UC5: Brand Detection Hides Placeholder (No Error)
     @Test
     fun `when no card brand is detected, then supported card brands should be shown`() {
         // GIVEN
@@ -43,6 +44,7 @@ internal class CardViewStateProducerTest {
         assertTrue(viewState.isSupportedCardBrandsShown)
     }
 
+    // UC5: Brand Detection Hides Placeholder (No Error)
     @Test
     fun `when supported card brand is detected, then supported card brands should be hidden`() {
         // GIVEN
@@ -60,6 +62,26 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertFalse(viewState.isSupportedCardBrandsShown)
+    }
+
+    // UC5: Brand Detection Hides Placeholder (No Error)
+    @Test
+    fun `when unsupported card brand is detected, then supported card brands should be shown`() {
+        // GIVEN
+        val componentState = createComponentState(
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("unknown"),
+                    isSupported = false,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertTrue(viewState.isSupportedCardBrandsShown)
     }
 
     private fun createComponentState(
