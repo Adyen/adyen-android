@@ -27,4 +27,6 @@ internal data object PaymentMethodListNavKey : NavKey
 internal data object ManageFavoritesNavKey : NavKey
 
 @Serializable
-internal data object PaymentMethodNavKey : NavKey
+internal data class PaymentMethodNavKey(
+    val paymentFlowType: DropInPaymentFlowType,
+) : NavKey

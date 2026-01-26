@@ -33,6 +33,8 @@ internal class DropInViewModel(
 
     val navigator: DropInNavigator = DropInNavigator()
 
+    val checkoutContext = input.checkoutContext
+
     private val dropInServiceManager = DropInServiceManager(input.serviceClass)
 
     init {
