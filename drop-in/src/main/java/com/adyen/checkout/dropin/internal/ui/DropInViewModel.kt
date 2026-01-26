@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -19,7 +20,7 @@ import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
-import com.adyen.checkout.dropin.internal.service.DropInInteractor
+import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlin.reflect.KClass
 
 internal class DropInViewModel(
@@ -32,15 +33,7 @@ internal class DropInViewModel(
 
     val navigator: DropInNavigator = DropInNavigator()
 
-    private var dropInInteractor: DropInInteractor? = null
-
-    fun onServiceConnected(interactor: DropInInteractor) {
-        dropInInteractor = interactor
-    }
-
-    fun onServiceDisconnected() {
-        dropInInteractor = null
-    }
+    private val dropInServiceManager = DropInServiceManager(input.serviceClass)
 
     init {
         initializePaymentMethods()
@@ -92,6 +85,18 @@ internal class DropInViewModel(
             is CheckoutContext.Sessions -> checkoutConfiguration
             is CheckoutContext.Advanced -> checkoutConfiguration
         }
+    }
+
+    fun startDropInService(context: Context) {
+        dropInServiceManager.startAndBind(context)
+    }
+
+    fun unbindDropInService(context: Context) {
+        dropInServiceManager.unbind(context)
+    }
+
+    fun stopDropInService(context: Context) {
+        dropInServiceManager.stop(context)
     }
 
     class Factory(

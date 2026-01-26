@@ -9,16 +9,18 @@
 package com.adyen.checkout.dropin
 
 import android.content.Intent
-import android.os.Binder
 import android.os.IBinder
 import androidx.lifecycle.LifecycleService
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.dropin.internal.service.DropInInteractor
-import java.lang.ref.WeakReference
+import com.adyen.checkout.dropin.internal.service.DropInBinder
 
-abstract class DropInService : LifecycleService(), DropInInteractor {
+abstract class DropInService : LifecycleService() {
 
-    private val binder by lazy { DropInBinder(this) }
+    private val binder = object : DropInBinder() {
+        override suspend fun requestOnSubmit(): CheckoutResult {
+            return onSubmit()
+        }
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
@@ -30,12 +32,5 @@ abstract class DropInService : LifecycleService(), DropInInteractor {
         return binder
     }
 
-    abstract override suspend fun onSubmit(): CheckoutResult
-
-    internal class DropInBinder(service: DropInService) : Binder() {
-
-        private val serviceRef: WeakReference<DropInService> = WeakReference(service)
-
-        fun getService(): DropInInteractor? = serviceRef.get()
-    }
+    protected abstract suspend fun onSubmit(): CheckoutResult
 }

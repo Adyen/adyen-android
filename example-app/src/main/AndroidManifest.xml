@@ -273,6 +273,9 @@
         <service
             android:name=".service.ExampleSessionsDropInService"
             android:exported="false" />
+        <service
+            android:name=".service.ExampleV6DropInService"
+            android:exported="false" />
     </application>
 
 </manifest>

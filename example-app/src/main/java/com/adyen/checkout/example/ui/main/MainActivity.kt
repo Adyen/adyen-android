@@ -29,6 +29,7 @@ import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.service.ExampleAdvancedDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
+import com.adyen.checkout.example.service.ExampleV6DropInService
 import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
@@ -184,7 +185,7 @@ class MainActivity : AppCompatActivity() {
                 DropIn.start(
                     launcher = dropInLauncher,
                     dropInContext = navigation.dropInContext,
-                    serviceClass = DropInService::class.java,
+                    serviceClass = ExampleV6DropInService::class.java,
                 )
             }
 
