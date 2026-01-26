@@ -25,6 +25,7 @@ internal data class PaymentMethodListViewState(
     )
 
     internal data class PaymentMethodItem(
+        val id: String,
         val icon: String,
         val title: String,
         val subtitle: String? = null,
