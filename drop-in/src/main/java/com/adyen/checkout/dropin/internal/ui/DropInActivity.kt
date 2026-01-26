@@ -131,6 +131,7 @@ class DropInActivity : ComponentActivity() {
                                             paymentMethodRepository = viewModel.paymentMethodRepository,
                                             checkoutContext = viewModel.checkoutContext,
                                         ),
+                                        key = key.paymentFlowType.hashCode().toString(),
                                     )
                                 )
                             }
