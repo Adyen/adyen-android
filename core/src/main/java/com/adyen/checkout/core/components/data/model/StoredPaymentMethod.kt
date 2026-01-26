@@ -21,7 +21,7 @@ import org.json.JSONObject
 @Parcelize
 data class StoredPaymentMethod(
     override val type: String,
-    val name: String? = null,
+    override val name: String,
     val brand: String? = null,
     val expiryMonth: String? = null,
     val expiryYear: String? = null,
@@ -84,7 +84,7 @@ data class StoredPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): StoredPaymentMethod {
                 return StoredPaymentMethod(
                     type = jsonObject.getString(TYPE),
-                    name = jsonObject.getStringOrNull(NAME),
+                    name = jsonObject.getString(NAME),
                     brand = jsonObject.getStringOrNull(BRAND),
                     expiryMonth = jsonObject.getStringOrNull(EXPIRY_MONTH),
                     expiryYear = jsonObject.getStringOrNull(EXPIRY_YEAR),
