@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
+@Suppress("UnusedParameter")
 @Composable
 internal fun PaymentMethodScreen(
     navigator: DropInNavigator,
@@ -21,6 +22,7 @@ internal fun PaymentMethodScreen(
     PaymentMethodScreenContent(viewState)
 }
 
+@Suppress("UnusedParameter")
 @Composable
 private fun PaymentMethodScreenContent(viewState: PaymentMethodViewState) {
     // TODO - Implement PaymentMethodScreenContent
