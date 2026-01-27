@@ -35,7 +35,7 @@ internal class DropInViewModel(
 
     val checkoutContext = input.checkoutContext
 
-    private val dropInServiceManager = DropInServiceManager(input.serviceClass)
+    val dropInServiceManager = DropInServiceManager(input.serviceClass)
 
     init {
         initializePaymentMethods()

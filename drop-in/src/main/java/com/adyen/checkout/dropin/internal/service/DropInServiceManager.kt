@@ -15,6 +15,8 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.dropin.DropInService
 
 internal class DropInServiceManager(
@@ -57,7 +59,7 @@ internal class DropInServiceManager(
     }
 
     // TODO - Communicate back to drop-in. Should we use a flow or just returning a result?
-    suspend fun requestOnSubmit() {
-        binder?.requestOnSubmit()
+    suspend fun requestOnSubmit(state: PaymentComponentState<*>): CheckoutResult {
+        return binder?.requestOnSubmit(state) ?: error("Service is not bound")
     }
 }
