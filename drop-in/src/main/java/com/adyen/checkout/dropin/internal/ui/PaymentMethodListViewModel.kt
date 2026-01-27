@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.stateIn
 
 internal class PaymentMethodListViewModel(
     private val dropInParams: DropInParams,
-    private val paymentMethodRepository: PaymentMethodRepository
+    private val paymentMethodRepository: PaymentMethodRepository,
 ) : ViewModel() {
 
     val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.favorites.map { favorites ->
@@ -100,6 +100,7 @@ internal class PaymentMethodListViewModel(
         }
 
         return PaymentMethodItem(
+            id = id.orEmpty(),
             icon = icon,
             title = title,
             subtitle = subtitle,
@@ -118,6 +119,7 @@ internal class PaymentMethodListViewModel(
         }
 
         return PaymentMethodItem(
+            id = type,
             icon = icon,
             title = name.orEmpty(),
         )

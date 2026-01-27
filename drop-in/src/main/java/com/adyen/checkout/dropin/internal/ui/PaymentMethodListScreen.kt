@@ -55,13 +55,14 @@ internal fun PaymentMethodListScreen(
     viewModel: PaymentMethodListViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PaymentMethodListContent(navigator, viewState)
+    PaymentMethodListContent(navigator, viewState, navigator::navigateTo)
 }
 
 @Composable
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
+    onPaymentMethodClick: (PaymentMethodNavKey) -> Unit,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -95,13 +96,21 @@ private fun PaymentMethodListContent(
                 FavoritesSection(
                     favoritesSection = it,
                     onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
+                    onPaymentMethodClick = {
+                        onPaymentMethodClick(PaymentMethodNavKey(DropInPaymentFlowType.StoredPaymentMethod(it.id)))
+                    },
                 )
 
                 Spacer(Modifier.size(Dimensions.Spacing.Small))
             }
 
             viewState.paymentOptionsSection?.let {
-                PaymentOptionsSection(it)
+                PaymentOptionsSection(
+                    paymentOptionsSection = it,
+                    onPaymentMethodClick = {
+                        onPaymentMethodClick(PaymentMethodNavKey(DropInPaymentFlowType.RegularPaymentMethod(it.id)))
+                    },
+                )
             }
         }
     }
@@ -111,6 +120,7 @@ private fun PaymentMethodListContent(
 private fun FavoritesSection(
     favoritesSection: FavoritesSection,
     onActionClick: (() -> Unit),
+    onPaymentMethodClick: (PaymentMethodItem) -> Unit,
 ) {
     Column {
         SectionHeader(
@@ -121,7 +131,7 @@ private fun FavoritesSection(
 
         PaymentMethodItemList(
             paymentMethodItems = favoritesSection.options,
-            onItemClick = {},
+            onItemClick = onPaymentMethodClick,
         )
     }
 }
@@ -129,13 +139,14 @@ private fun FavoritesSection(
 @Composable
 private fun PaymentOptionsSection(
     paymentOptionsSection: PaymentOptionsSection,
+    onPaymentMethodClick: (PaymentMethodItem) -> Unit,
 ) {
     Column {
         SectionHeader(title = resolveString(paymentOptionsSection.title))
 
         PaymentMethodItemList(
             paymentMethodItems = paymentOptionsSection.options,
-            onItemClick = {},
+            onItemClick = onPaymentMethodClick,
         )
     }
 }
@@ -220,11 +231,13 @@ private fun PaymentMethodListContentPreview() {
     ) {
         val storedPaymentMethods = listOf(
             PaymentMethodItem(
+                id = "advantage",
                 icon = "mc",
                 title = "Mastercard •••• 0023",
                 subtitle = "AAdvantage card",
             ),
             PaymentMethodItem(
+                id = "wechat",
                 icon = "wechat",
                 title = "@someName",
                 subtitle = "WeChat Pay",
@@ -233,14 +246,17 @@ private fun PaymentMethodListContentPreview() {
 
         val paymentMethods = listOf(
             PaymentMethodItem(
+                id = "scheme",
                 icon = "card",
                 title = "Cards",
             ),
             PaymentMethodItem(
+                id = "klarna",
                 icon = "klarna",
                 title = "Klarna pay in 30 days",
             ),
             PaymentMethodItem(
+                id = "ideal",
                 icon = "ideal",
                 title = "iDEAL",
             ),
@@ -260,6 +276,7 @@ private fun PaymentMethodListContentPreview() {
                     options = paymentMethods,
                 ),
             ),
+            onPaymentMethodClick = {},
         )
     }
 }

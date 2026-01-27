@@ -120,7 +120,21 @@ class DropInActivity : ComponentActivity() {
                                 )
                             }
 
-                            entry<PaymentMethodNavKey> {}
+                            entry<PaymentMethodNavKey>(
+                                metadata = DropInTransitions.slideInAndOutHorizontally(),
+                            ) { key ->
+                                PaymentMethodScreen(
+                                    navigator = viewModel.navigator,
+                                    viewModel = viewModel(
+                                        factory = PaymentMethodViewModel.Factory(
+                                            paymentFlowType = key.paymentFlowType,
+                                            paymentMethodRepository = viewModel.paymentMethodRepository,
+                                            checkoutContext = viewModel.checkoutContext,
+                                        ),
+                                        key = key.paymentFlowType.hashCode().toString(),
+                                    )
+                                )
+                            }
                         },
                     )
                 }
