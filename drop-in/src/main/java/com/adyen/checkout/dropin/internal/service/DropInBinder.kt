@@ -10,8 +10,9 @@ package com.adyen.checkout.dropin.internal.service
 
 import android.os.Binder
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 internal abstract class DropInBinder : Binder() {
 
-    abstract suspend fun requestOnSubmit(): CheckoutResult
+    abstract suspend fun requestOnSubmit(state: PaymentComponentState<*>): CheckoutResult
 }

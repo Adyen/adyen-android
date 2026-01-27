@@ -12,10 +12,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,10 +30,17 @@ internal class PaymentMethodViewModel(
     private val paymentFlowType: DropInPaymentFlowType,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val checkoutContext: CheckoutContext,
+    private val dropInServiceManager: DropInServiceManager,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(createViewState())
     val viewState: StateFlow<PaymentMethodViewState> = _viewState.asStateFlow()
+
+    val checkoutCallbacks = CheckoutCallbacks(
+        onSubmit = ::onSubmit,
+        onAdditionalDetails = ::onAdditionalDetails,
+        onError = ::onError,
+    )
 
     private fun createViewState(): PaymentMethodViewState {
         val paymentMethod = when (paymentFlowType) {
@@ -56,10 +69,25 @@ internal class PaymentMethodViewModel(
         }
     }
 
+    private suspend fun onSubmit(state: PaymentComponentState<*>): CheckoutResult {
+        return dropInServiceManager.requestOnSubmit(state)
+    }
+
+    @Suppress("UnusedParameter")
+    private fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+        return CheckoutResult.Finished()
+    }
+
+    @Suppress("UnusedParameter")
+    private fun onError(error: CheckoutError) {
+        // TODO - trigger onError once added
+    }
+
     class Factory(
         private val paymentFlowType: DropInPaymentFlowType,
         private val paymentMethodRepository: PaymentMethodRepository,
         private val checkoutContext: CheckoutContext,
+        private val dropInServiceManager: DropInServiceManager,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -67,6 +95,7 @@ internal class PaymentMethodViewModel(
                 paymentFlowType = paymentFlowType,
                 paymentMethodRepository = paymentMethodRepository,
                 checkoutContext = checkoutContext,
+                dropInServiceManager = dropInServiceManager,
             ) as T
         }
     }

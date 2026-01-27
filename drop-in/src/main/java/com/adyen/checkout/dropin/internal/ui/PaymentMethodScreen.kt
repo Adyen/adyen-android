@@ -25,7 +25,6 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.AdyenPaymentFlow
 import com.adyen.checkout.core.components.CheckoutCallbacks
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -36,13 +35,14 @@ internal fun PaymentMethodScreen(
     viewModel: PaymentMethodViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PaymentMethodScreenContent(navigator, viewState)
+    PaymentMethodScreenContent(navigator, viewState, viewModel.checkoutCallbacks)
 }
 
 @Composable
 private fun PaymentMethodScreenContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodViewState,
+    checkoutCallbacks: CheckoutCallbacks,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -77,12 +77,7 @@ private fun PaymentMethodScreenContent(
             AdyenPaymentFlow(
                 paymentMethod = viewState.paymentMethod,
                 checkoutContext = viewState.checkoutContext,
-                // TODO - Add callbacks implementation
-                checkoutCallbacks = CheckoutCallbacks(
-                    onSubmit = { CheckoutResult.Finished() },
-                    onAdditionalDetails = { CheckoutResult.Finished() },
-                    onError = {},
-                ),
+                checkoutCallbacks = checkoutCallbacks,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.Spacing.Large),
