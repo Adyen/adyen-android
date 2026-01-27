@@ -73,12 +73,14 @@ internal class PaymentMethodViewModel(
         return dropInServiceManager.requestOnSubmit(state)
     }
 
+    @Suppress("UnusedParameter")
     private fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
         return CheckoutResult.Finished()
     }
 
+    @Suppress("UnusedParameter")
     private fun onError(error: CheckoutError) {
-
+        // TODO - trigger onError once added
     }
 
     class Factory(
