@@ -91,8 +91,10 @@ private fun ManageFavoritesContent(
 
         selectedItem?.let { item ->
             ConfirmationDialog(
-                // TODO - Pass item title as parameter after we resolve parameterized strings
-                confirmationText = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE_CONFIRMATION),
+                confirmationText = resolveString(
+                    CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE_CONFIRMATION,
+                    item.title,
+                ),
                 onConfirmationClick = {
                     onRemoveItem(item)
                     selectedItem = null
