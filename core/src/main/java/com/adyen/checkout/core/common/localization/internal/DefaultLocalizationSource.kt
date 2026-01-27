@@ -11,12 +11,11 @@ package com.adyen.checkout.core.common.localization.internal
 import android.content.Context
 import com.adyen.checkout.core.R
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import java.util.Locale
 
 internal class DefaultLocalizationSource {
 
-    @Suppress("CyclomaticComplexMethod", "UnusedParameter", "LongMethod")
-    fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
+    fun getString(context: Context, key: CheckoutLocalizationKey, vararg formatArgs: Any): String {
         val resId = when (key) {
             // Await
             CheckoutLocalizationKey.AWAIT_LOADING -> R.string.checkout_await_loading
@@ -103,6 +102,6 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.BLIK_HELPER_TEXT -> R.string.checkout_blik_helper_text
         }
 
-        return context.getString(resId)
+        return context.getString(resId, *formatArgs)
     }
 }
