@@ -14,3 +14,18 @@ import java.util.Locale
 interface CheckoutLocalizationProvider {
     fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String?
 }
+
+class XmlLocalizationProvider(
+    private val localizations: Map<CheckoutLocalizationKey, Int>,
+) : CheckoutLocalizationProvider {
+    override fun getString(
+        context: Context,
+        locale: Locale,
+        key: CheckoutLocalizationKey,
+    ): String? {
+        val resourceId = localizations[key]
+        return resourceId?.let {
+            context.getString(resourceId)
+        }
+    }
+}
