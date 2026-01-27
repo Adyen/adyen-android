@@ -13,6 +13,7 @@ import com.adyen.checkout.core.common.internal.model.ModelObject
 /**
  * Parent class for [PaymentMethod] and [StoredPaymentMethod].
  */
+// TODO - Payment method models - Remove when newly created models are used.
 abstract class PaymentMethodResponse : ModelObject() {
 
     abstract val type: String
