@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 
-class PaymentMethodViewState(
+internal data class PaymentMethodViewState(
     val paymentMethod: PaymentMethodResponse,
     val checkoutContext: CheckoutContext,
 )
