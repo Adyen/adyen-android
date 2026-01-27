@@ -20,6 +20,7 @@ import org.json.JSONObject
  * Object that parses and holds the response data from the /paymentMethods endpoint.
  * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
  */
+// TODO - Payment method models - Remove when newly created models are used.
 @Parcelize
 data class PaymentMethodsApiResponse(
     val storedPaymentMethods: List<StoredPaymentMethod>? = null,
