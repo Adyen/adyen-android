@@ -36,8 +36,8 @@ class CommonComponentParamsMapper {
             amount = sessionParams?.amount
                 ?: dropInOverrideParams?.amount
                 ?: checkoutConfiguration.amount,
-            isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: checkoutConfiguration.isSubmitButtonVisible ?: true,
+            showSubmitButton = dropInOverrideParams?.showSubmitButton
+                ?: checkoutConfiguration.showSubmitButton ?: true,
             publicKey = publicKey,
         )
         return ComponentParamsBundle(commonComponentParams, sessionParams)
