@@ -1322,7 +1322,6 @@ public abstract class com/adyen/checkout/core/components/data/model/paymentmetho
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
-	public fun <init> ()V
 }
 
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod$Companion {
@@ -1334,7 +1333,6 @@ public abstract class com/adyen/checkout/core/components/data/model/paymentmetho
 	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodResponse$Companion;
 	public static final field NAME Ljava/lang/String;
 	public static final field TYPE Ljava/lang/String;
-	public fun <init> ()V
 	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getType ()Ljava/lang/String;
 }
@@ -1363,14 +1361,6 @@ public final class com/adyen/checkout/core/components/data/model/paymentmethod/P
 }
 
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodsApiResponse$Companion {
-}
-
-public final class com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodsApiResponse$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodsApiResponse;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodsApiResponse;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredCardPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
@@ -1442,7 +1432,6 @@ public abstract class com/adyen/checkout/core/components/data/model/paymentmetho
 	public static final field ID Ljava/lang/String;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
 	public static final field SUPPORTED_SHOPPER_INTERACTIONS Ljava/lang/String;
-	public fun <init> ()V
 	public abstract fun getId ()Ljava/lang/String;
 	public abstract fun getSupportedShopperInteractions ()Ljava/util/List;
 	public final fun isEcommerce ()Z
@@ -1450,6 +1439,52 @@ public abstract class com/adyen/checkout/core/components/data/model/paymentmetho
 
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod$Companion {
 	public final fun getChildSerializer (Ljava/lang/String;)Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredUnsupportedPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredUnsupportedPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredUnsupportedPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredUnsupportedPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredUnsupportedPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getSupportedShopperInteractions ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredUnsupportedPaymentMethod$Companion {
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/UnsupportedPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/UnsupportedPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/UnsupportedPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/UnsupportedPaymentMethod;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/UnsupportedPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/UnsupportedPaymentMethod$Companion {
 }
 
 public final class com/adyen/checkout/core/components/internal/PaymentDataRepository$Companion {
