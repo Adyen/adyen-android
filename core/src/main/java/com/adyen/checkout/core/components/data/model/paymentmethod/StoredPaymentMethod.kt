@@ -19,7 +19,9 @@ import org.json.JSONObject
  * Specific stored payment method types extend this class with their own fields.
  * Unknown stored payment methods are deserialized as [StoredInstantPaymentMethod].
  */
-abstract class StoredPaymentMethod : PaymentMethodResponse() {
+abstract class StoredPaymentMethod
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor() : PaymentMethodResponse() {
     abstract val id: String
     abstract val supportedShopperInteractions: List<String>
 

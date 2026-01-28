@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.json.JSONObject
@@ -18,7 +19,9 @@ import org.json.JSONObject
  * Specific payment method types extend this class with their own fields.
  * Unknown payment methods are deserialized as [InstantPaymentMethod].
  */
-abstract class PaymentMethod : PaymentMethodResponse() {
+abstract class PaymentMethod
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor() : PaymentMethodResponse() {
 
     companion object {
         @Suppress("TooGenericExceptionThrown")
