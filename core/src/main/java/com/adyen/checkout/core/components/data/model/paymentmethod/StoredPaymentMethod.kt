@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.json.JSONObject
@@ -62,9 +63,9 @@ abstract class StoredPaymentMethod : PaymentMethodResponse() {
 
         @Suppress("CyclomaticComplexMethod")
         fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethod> {
-            // TODO - Decide if we want to use a different serializer for unsupported payment methods
             val serializer = when (paymentMethodType) {
                 PaymentMethodTypes.SCHEME -> StoredCardPaymentMethod.SERIALIZER
+                in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> StoredUnsupportedPaymentMethod.SERIALIZER
                 else -> StoredInstantPaymentMethod.SERIALIZER
             }
 

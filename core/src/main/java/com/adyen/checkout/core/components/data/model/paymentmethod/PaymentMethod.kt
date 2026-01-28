@@ -52,9 +52,9 @@ abstract class PaymentMethod : PaymentMethodResponse() {
 
         @Suppress("CyclomaticComplexMethod")
         fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethod> {
-            // TODO - Decide if we want to use a different serializer for unsupported payment methods
             val serializer = when (paymentMethodType) {
                 PaymentMethodTypes.SCHEME -> CardPaymentMethod.SERIALIZER
+                in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> UnsupportedPaymentMethod.SERIALIZER
                 else -> InstantPaymentMethod.SERIALIZER
             }
 
