@@ -107,7 +107,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = PaymentMethod(type = "txVariant"),
+                paymentMethod = PaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -131,7 +131,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = StoredPaymentMethod(type = "txVariant"),
+                paymentMethod = StoredPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -165,7 +165,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", factory)
 
             val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = PaymentMethod(type = "txVariant"),
+                paymentMethod = PaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -182,7 +182,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", storedFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = StoredPaymentMethod(type = "txVariant"),
+                paymentMethod = StoredPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -197,7 +197,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
-                paymentMethod = PaymentMethod(type = "unregistered_txVariant"),
+                paymentMethod = PaymentMethod(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -211,7 +211,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered stored factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
-                paymentMethod = StoredPaymentMethod(type = "unregistered_txVariant"),
+                paymentMethod = StoredPaymentMethod(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),

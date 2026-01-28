@@ -82,6 +82,8 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES ->
                 R.string.checkout_drop_in_payment_method_list_payment_options_title_with_favorites
 
+            CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION ->
+                R.string.checkout_drop_in_payment_method_screen_card_description
             // General
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CANCEL -> R.string.checkout_general_cancel

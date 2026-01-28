@@ -20,7 +20,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with payment methods, then regulars are set`() {
-        val paymentMethods = listOf(PaymentMethod(type = "scheme"))
+        val paymentMethods = listOf(PaymentMethod(type = "scheme", name = "Cards"))
         val response = PaymentMethodsApiResponse(paymentMethods = paymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
@@ -39,7 +39,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with stored payment methods, then favorites are set`() = runTest {
-        val storedPaymentMethods = listOf(StoredPaymentMethod(type = "scheme", id = "123"))
+        val storedPaymentMethods = listOf(StoredPaymentMethod(type = "scheme", id = "123", name = "MasterCard"))
         val response = PaymentMethodsApiResponse(storedPaymentMethods = storedPaymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
@@ -58,8 +58,8 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when removeFavorite is called, then item is removed from favorites`() = runTest {
-        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1")
-        val storedPaymentMethod2 = StoredPaymentMethod(type = "scheme", id = "2")
+        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1", name = "MasterCard")
+        val storedPaymentMethod2 = StoredPaymentMethod(type = "scheme", id = "2", name = "MasterCard")
         val response = PaymentMethodsApiResponse(
             storedPaymentMethods = listOf(storedPaymentMethod1, storedPaymentMethod2),
         )
@@ -73,7 +73,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when removeFavorite is called with unknown id, then favorites remain unchanged`() = runTest {
-        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1")
+        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1", name = "MasterCard")
         val response = PaymentMethodsApiResponse(
             storedPaymentMethods = listOf(storedPaymentMethod1),
         )

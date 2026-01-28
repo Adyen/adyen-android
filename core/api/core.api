@@ -815,6 +815,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field DROP_IN_MANAGE_FAVORITES_REMOVE_CONFIRMATION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_OTHER_PAYMENT_METHODS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -1484,7 +1485,7 @@ public final class com/adyen/checkout/core/components/data/model/PaymentMethod :
 	public final fun getDetails ()Ljava/util/List;
 	public final fun getFundingSource ()Ljava/lang/String;
 	public final fun getIssuers ()Ljava/util/List;
-	public final fun getName ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1505,6 +1506,7 @@ public final class com/adyen/checkout/core/components/data/model/PaymentMethod$C
 public abstract class com/adyen/checkout/core/components/data/model/PaymentMethodResponse : com/adyen/checkout/core/common/internal/model/ModelObject {
 	public static final field $stable I
 	public fun <init> ()V
+	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getType ()Ljava/lang/String;
 }
 
@@ -1571,7 +1573,7 @@ public final class com/adyen/checkout/core/components/data/model/StoredPaymentMe
 	public final fun getId ()Ljava/lang/String;
 	public final fun getLabel ()Ljava/lang/String;
 	public final fun getLastFour ()Ljava/lang/String;
-	public final fun getName ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
 	public final fun getShopperEmail ()Ljava/lang/String;
 	public final fun getSupportedShopperInteractions ()Ljava/util/List;
 	public fun getType ()Ljava/lang/String;

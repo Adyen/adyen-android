@@ -11,7 +11,9 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +30,7 @@ internal class PaymentMethodViewModel(
     val viewState: StateFlow<PaymentMethodViewState> = _viewState.asStateFlow()
 
     private fun createViewState(): PaymentMethodViewState {
-        val paymentMethod: PaymentMethodResponse = when (paymentFlowType) {
+        val paymentMethod = when (paymentFlowType) {
             is DropInPaymentFlowType.RegularPaymentMethod -> {
                 paymentMethodRepository.regulars.first { it.type == paymentFlowType.txVariant }
             }
@@ -41,7 +43,17 @@ internal class PaymentMethodViewModel(
         return PaymentMethodViewState(
             paymentMethod = paymentMethod,
             checkoutContext = checkoutContext,
+            description = paymentMethod.getDescription(),
         )
+    }
+
+    // TODO - Update this method once payment method refactor is done.
+    //  Verify the localization for stored payment methods.
+    private fun PaymentMethodResponse.getDescription(): CheckoutLocalizationKey? {
+        return when (type) {
+            PaymentMethodTypes.SCHEME -> CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION
+            else -> null
+        }
     }
 
     class Factory(
