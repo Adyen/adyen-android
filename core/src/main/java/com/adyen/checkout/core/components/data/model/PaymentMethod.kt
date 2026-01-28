@@ -20,6 +20,7 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+// TODO - Payment method models - Remove when newly created models are used.
 @Parcelize
 data class PaymentMethod(
     override val type: String,
