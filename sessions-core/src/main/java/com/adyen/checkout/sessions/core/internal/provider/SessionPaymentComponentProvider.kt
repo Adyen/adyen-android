@@ -99,6 +99,7 @@ interface SessionPaymentComponentProvider<
             paymentMethod = paymentMethod,
             checkoutConfiguration = checkoutSession.getConfiguration(),
             componentCallback = componentCallback,
+            key = key,
         )
     }
 
@@ -169,6 +170,7 @@ interface SessionPaymentComponentProvider<
             paymentMethod = paymentMethod,
             checkoutConfiguration = checkoutSession.getConfiguration(),
             componentCallback = componentCallback,
+            key = key,
         )
     }
 
