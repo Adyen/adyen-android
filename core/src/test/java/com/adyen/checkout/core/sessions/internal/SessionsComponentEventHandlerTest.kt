@@ -3,6 +3,7 @@ package com.adyen.checkout.core.sessions.internal
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.OnAdditionalDetailsCallback
 import com.adyen.checkout.core.components.OnSubmitCallback
@@ -12,6 +13,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
 import com.adyen.checkout.core.sessions.SessionError
 import com.adyen.checkout.core.sessions.SessionPaymentResult
+import com.adyen.checkout.core.sessions.toPaymentResult
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -62,7 +64,7 @@ internal class SessionsComponentEventHandlerTest(
     @Test
     fun `when event is submit and onSubmit is overridden and returns a result, then that result is returned`() =
         runTest {
-            val expectedResult = CheckoutResult.Finished()
+            val expectedResult = CheckoutResult.Finished(mock())
             whenever(componentCallbacks.onSubmit) doReturn object : OnSubmitCallback {
                 override suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
                     return expectedResult
@@ -99,6 +101,26 @@ internal class SessionsComponentEventHandlerTest(
     }
 
     @Test
+    fun `when session interactor submits payment and payment is finished, then onFinished is called`() = runTest {
+        val sessionPaymentResult = SessionPaymentResult(
+            sessionId = "test_session_id",
+            sessionResult = "test_session_result",
+            sessionData = "test_session_data",
+            resultCode = "Authorised",
+            order = null,
+        )
+        whenever(componentCallbacks.beforeSubmit(any())) doReturn false
+        whenever(
+            sessionInteractor.submitPayment(any())
+        ) doReturn SessionCallResult.Payments.Finished(sessionPaymentResult,)
+
+        val state = TestPaymentComponentState()
+        sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
+
+        verify(componentCallbacks).onFinished(sessionPaymentResult.toPaymentResult())
+    }
+
+    @Test
     fun `when event is error, then onError is called and error result is returned`() = runTest {
         val error = SessionError(message = "test_error")
         val event = PaymentComponentEvent.Error<TestPaymentComponentState>(error)
@@ -126,7 +148,7 @@ internal class SessionsComponentEventHandlerTest(
     @Test
     fun `when event is action details and onAdditionalDetails is overridden and returns a result, then that result is returned`() =
         runTest {
-            val expectedResult = CheckoutResult.Finished()
+            val expectedResult = CheckoutResult.Finished(mock())
             whenever(componentCallbacks.onAdditionalDetails) doReturn object : OnAdditionalDetailsCallback {
                 override suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
                     return expectedResult
@@ -166,6 +188,25 @@ internal class SessionsComponentEventHandlerTest(
     }
 
     @Test
+    fun `when session interactor submits details and payment is finished, then onFinished is called`() = runTest {
+        val sessionPaymentResult = SessionPaymentResult(
+            sessionId = "test_session_id",
+            sessionResult = "test_session_result",
+            sessionData = "test_session_data",
+            resultCode = "Authorised",
+            order = null,
+        )
+        whenever(
+            sessionInteractor.submitDetails(any())
+        ) doReturn SessionCallResult.Details.Finished(sessionPaymentResult)
+
+        val data = ActionComponentData(paymentData = "test")
+        sessionsComponentEventHandler.onActionComponentEvent(ActionComponentEvent.ActionDetails(data))
+
+        verify(componentCallbacks).onFinished(sessionPaymentResult.toPaymentResult())
+    }
+
+    @Test
     fun `when onActionComponentEvent is called with error, then onError is called and error result is returned`() =
         runTest {
             val error = SessionError(message = "test_error")
@@ -191,7 +232,7 @@ internal class SessionsComponentEventHandlerTest(
             ),
             arguments(
                 SessionCallResult.Payments.Finished(SessionPaymentResult(null, null, null, null, null)),
-                CheckoutResult.Finished(),
+                CheckoutResult.Finished(PaymentResult("", null, null, null, null)),
             ),
         )
 
@@ -205,7 +246,7 @@ internal class SessionsComponentEventHandlerTest(
             ),
             arguments(
                 SessionCallResult.Details.Finished(SessionPaymentResult(null, null, null, null, null)),
-                CheckoutResult.Finished(),
+                CheckoutResult.Finished(PaymentResult("", null, null, null, null)),
             ),
         )
     }
