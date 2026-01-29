@@ -58,7 +58,8 @@ internal class DropInServiceManager(
         context.stopService(intent)
     }
 
-    // TODO - Communicate back to drop-in. Should we use a flow or just returning a result?
+    // TODO - Binder could be null when service is not connected yet.
+    //  Implement a queue similar in functionality to one in v5 DropInActivity.
     suspend fun requestOnSubmit(state: PaymentComponentState<*>): CheckoutResult {
         return binder?.requestOnSubmit(state) ?: error("Service is not bound")
     }
