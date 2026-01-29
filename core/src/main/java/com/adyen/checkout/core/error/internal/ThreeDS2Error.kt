@@ -30,6 +30,7 @@ class ThreeDS2Error(
     /**
      * Error codes for 3DS2 errors.
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     object ErrorCode {
         /** The action type is not a valid 3DS2 action. */
         const val INVALID_ACTION = "invalidAction"

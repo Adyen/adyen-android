@@ -1912,26 +1912,6 @@ public final class com/adyen/checkout/core/error/CheckoutError$ErrorCode {
 	public static final field SESSION_SETUP_FAILURE Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/error/internal/RedirectError$ErrorCode {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/core/error/internal/RedirectError$ErrorCode;
-	public static final field REDIRECT_FAILED Ljava/lang/String;
-	public static final field REDIRECT_PARSE_FAILED Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/core/error/internal/ThreeDS2Error$ErrorCode {
-	public static final field $stable I
-	public static final field CHALLENGE_HANDLING Ljava/lang/String;
-	public static final field FINGERPRINT_CREATION Ljava/lang/String;
-	public static final field FINGERPRINT_HANDLING Ljava/lang/String;
-	public static final field INSTANCE Lcom/adyen/checkout/core/error/internal/ThreeDS2Error$ErrorCode;
-	public static final field INVALID_ACTION Ljava/lang/String;
-	public static final field TOKEN_DECODING Ljava/lang/String;
-	public static final field TOKEN_MISSING Ljava/lang/String;
-	public static final field TRANSACTION_CREATION Ljava/lang/String;
-	public static final field TRANSACTION_MISSING Ljava/lang/String;
-}
-
 public final class com/adyen/checkout/core/redirect/internal/DefaultRedirectHandler$Companion {
 }
 
