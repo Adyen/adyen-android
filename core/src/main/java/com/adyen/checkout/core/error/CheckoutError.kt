@@ -18,7 +18,7 @@ package com.adyen.checkout.core.error
 data class CheckoutError(
     val code: String,
     val message: String?,
-    val cause: Exception? = null,
+    val cause: Throwable? = null,
 ) {
 
     /**
