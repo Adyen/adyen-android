@@ -24,7 +24,7 @@ internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
 
             is PaymentComponentEvent.Error -> {
                 componentCallbacks.onError(event.error)
-                CheckoutResult.Error(event.error)
+                CheckoutResult.Error(event.error.message.orEmpty())
             }
         }
     }
@@ -34,7 +34,7 @@ internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
             is ActionComponentEvent.ActionDetails -> componentCallbacks.onAdditionalDetails(event.data)
             is ActionComponentEvent.Error -> {
                 componentCallbacks.onError(event.error)
-                CheckoutResult.Error(event.error)
+                CheckoutResult.Error(event.error.message.orEmpty())
             }
         }
     }

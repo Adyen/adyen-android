@@ -10,9 +10,9 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
-import com.adyen.checkout.core.sessions.SessionError
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -61,13 +61,13 @@ internal class AdvancedComponentEventHandlerTest(
 
         @Test
         fun `with Error event, then onError is called and error result is returned`() = runTest {
-            val error = SessionError(message = "test_error")
+            val error = ComponentError(message = "test_error")
             val event = PaymentComponentEvent.Error<TestPaymentComponentState>(error)
 
             val result = advancedComponentEventHandler.onPaymentComponentEvent(event)
 
             verify(componentCallbacks).onError(error)
-            assertEquals(CheckoutResult.Error(error), result)
+            assertEquals(CheckoutResult.Error("test_error"), result)
         }
     }
 
@@ -89,13 +89,13 @@ internal class AdvancedComponentEventHandlerTest(
 
         @Test
         fun `with Error event, then onError is called and error result is returned`() = runTest {
-            val error = SessionError(message = "test_error")
+            val error = ComponentError(message = "test_error")
             val event = ActionComponentEvent.Error(error)
 
             val result = advancedComponentEventHandler.onActionComponentEvent(event)
 
             verify(componentCallbacks).onError(error)
-            assertEquals(CheckoutResult.Error(error), result)
+            assertEquals(CheckoutResult.Error("test_error"), result)
         }
     }
 }

@@ -24,7 +24,6 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.exception.CheckoutError
-import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
@@ -144,7 +143,7 @@ internal class V6ViewModel @Inject constructor(
 
     private fun handleResponse(json: JSONObject?): CheckoutResult {
         return when {
-            json == null -> CheckoutResult.Error(ComponentError(message = "Network error"))
+            json == null -> CheckoutResult.Error("Network error")
             json.has("action") -> {
                 val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                 CheckoutResult.Action(action)

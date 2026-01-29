@@ -15,7 +15,6 @@ import com.adyen.checkout.core.components.internal.ComponentEventHandler
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.sessions.SessionError
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
@@ -35,7 +34,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
 
             is PaymentComponentEvent.Error -> {
                 componentCallbacks.onError(event.error)
-                CheckoutResult.Error(event.error)
+                CheckoutResult.Error(event.error.message.orEmpty())
             }
         }
     }
@@ -44,10 +43,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
         return when (val sessionResult = sessionInteractor.submitPayment(paymentComponentState)) {
             is SessionCallResult.Payments.Action -> CheckoutResult.Action(sessionResult.action)
             is SessionCallResult.Payments.Error -> CheckoutResult.Error(
-                SessionError(
-                    message = sessionResult.throwable.message.orEmpty(),
-                    cause = sessionResult.throwable,
-                ),
+                sessionResult.throwable.message.orEmpty(),
             )
             // TODO - Implement Finished case
             is SessionCallResult.Payments.Finished -> CheckoutResult.Finished()
@@ -66,7 +62,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
 
             is ActionComponentEvent.Error -> {
                 componentCallbacks.onError(event.error)
-                CheckoutResult.Error(event.error)
+                CheckoutResult.Error(event.error.message.orEmpty())
             }
         }
     }
@@ -75,10 +71,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
         return when (val sessionResult = sessionInteractor.submitDetails(actionComponentData)) {
             is SessionCallResult.Details.Action -> CheckoutResult.Action(sessionResult.action)
             is SessionCallResult.Details.Error -> CheckoutResult.Error(
-                SessionError(
-                    message = sessionResult.throwable.message.orEmpty(),
-                    cause = sessionResult.throwable,
-                ),
+                sessionResult.throwable.message.orEmpty(),
             )
             // TODO - Propagate session result to CheckoutResult.Finished once its data class is updated.
             is SessionCallResult.Details.Finished -> CheckoutResult.Finished()
