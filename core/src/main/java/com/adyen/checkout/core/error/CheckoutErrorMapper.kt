@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.error
 
-typealias InternalCheckoutError = com.adyen.checkout.core.error.internal.CheckoutError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 
 // Maps internal error hierarchy to public CheckoutError.
 // Add new mappings here as new error types are introduced.

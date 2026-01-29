@@ -42,8 +42,8 @@ import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntr
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.error.internal.CheckoutError
 import com.adyen.checkout.core.error.internal.ComponentError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope
@@ -213,7 +213,7 @@ internal class CardComponent(
         emitError(ComponentError("Encryption error", e))
     }
 
-    private fun emitError(error: CheckoutError) {
+    private fun emitError(error: InternalCheckoutError) {
         eventChannel.trySend(
             PaymentComponentEvent.Error(error),
         )
