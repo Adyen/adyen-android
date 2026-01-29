@@ -6,7 +6,7 @@
  * Created by ararat on 29/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
 
 // TODO - Platform alignment: Review error name and structure after iOS alignment.
 /**

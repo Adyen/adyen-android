@@ -6,7 +6,7 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
 
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 

@@ -6,7 +6,7 @@
  * Created by ararat on 16/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
 
 // TODO - Remove this class once specific error types (ApiError, EncryptionError, etc.) are implemented.
 //  This is a temporary catch-all error class used during the error framework migration.

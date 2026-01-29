@@ -6,18 +6,18 @@
  * Created by ararat on 16/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
 
 /**
- * Errors caused by internal SDK operations.
+ * Errors caused by explicit user actions.
  *
- * These errors occur during internal SDK operations such as encryption,
- * serialization, payment method availability checks, or authentication flows.
+ * These errors occur when the user intentionally interrupts or cancels the payment flow,
+ * such as pressing a back button, denying permissions, or declining a payment.
  *
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
-abstract class InternalError(
+abstract class UserError(
     message: String,
     cause: Throwable? = null,
 ) : CheckoutError(message, cause)

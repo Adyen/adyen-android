@@ -20,9 +20,6 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.CheckoutError
-import com.adyen.checkout.core.common.exception.ComponentError
-import com.adyen.checkout.core.common.exception.HttpError
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -31,6 +28,9 @@ import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
+import com.adyen.checkout.core.error.internal.CheckoutError
+import com.adyen.checkout.core.error.internal.ComponentError
+import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent

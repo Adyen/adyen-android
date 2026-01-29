@@ -33,8 +33,6 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.CheckoutError
-import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -44,6 +42,8 @@ import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntr
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.error.internal.CheckoutError
+import com.adyen.checkout.core.error.internal.ComponentError
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope

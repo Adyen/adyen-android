@@ -6,9 +6,7 @@
  * Created by ararat on 31/12/2025.
  */
 
-package com.adyen.checkout.core.sessions
-
-import com.adyen.checkout.core.common.exception.InternalError
+package com.adyen.checkout.core.error.internal
 
 /**
  * An error that occurred during a session API call.

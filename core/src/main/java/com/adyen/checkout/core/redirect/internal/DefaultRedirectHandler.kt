@@ -16,9 +16,9 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.core.net.toUri
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.RedirectError
 import com.adyen.checkout.core.common.internal.helper.CustomTabsLauncher
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.error.internal.RedirectError
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.ref.WeakReference

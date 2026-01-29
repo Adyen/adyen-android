@@ -13,7 +13,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import com.adyen.checkout.core.common.exception.CheckoutError
+import com.adyen.checkout.core.error.internal.CheckoutError
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooGenericExceptionCaught")

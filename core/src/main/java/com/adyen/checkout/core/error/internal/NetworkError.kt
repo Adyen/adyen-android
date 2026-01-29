@@ -6,7 +6,7 @@
  * Created by ararat on 16/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
 
 /**
  * Errors related to network operations and API calls.
