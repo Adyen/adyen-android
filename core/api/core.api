@@ -1023,7 +1023,7 @@ public abstract interface class com/adyen/checkout/core/components/OnAdditionalD
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnErrorCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onError (Lcom/adyen/checkout/core/common/exception/CheckoutError;)V
+	public abstract fun onError (Lcom/adyen/checkout/core/error/CheckoutError;)V
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnFinishedCallback : com/adyen/checkout/core/components/CheckoutCallback {
@@ -1947,6 +1947,32 @@ public final class com/adyen/checkout/core/components/paymentmethod/PaymentMetho
 	public final fun getSUPPORTED_ACTION_ONLY_PAYMENT_METHODS ()Ljava/util/List;
 	public final fun getSUPPORTED_PAYMENT_METHODS ()Ljava/util/List;
 	public final fun getUNSUPPORTED_PAYMENT_METHODS ()Ljava/util/List;
+}
+
+public final class com/adyen/checkout/core/error/CheckoutError {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Exception;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Exception;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Exception;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Exception;)Lcom/adyen/checkout/core/error/CheckoutError;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/error/CheckoutError;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Exception;ILjava/lang/Object;)Lcom/adyen/checkout/core/error/CheckoutError;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCause ()Ljava/lang/Exception;
+	public final fun getCode ()Ljava/lang/String;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/error/CheckoutError$ErrorCode {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/error/CheckoutError$ErrorCode;
+	public static final field INVALID_CLIENT_KEY Ljava/lang/String;
+	public static final field INVALID_CURRENCY_CODE Ljava/lang/String;
+	public static final field INVALID_LOCALE Ljava/lang/String;
+	public static final field SESSION_SETUP_FAILURE Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/redirect/internal/DefaultRedirectHandler$Companion {
