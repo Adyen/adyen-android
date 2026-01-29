@@ -6,18 +6,21 @@
  * Created by ararat on 16/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
+
+import androidx.annotation.RestrictTo
 
 /**
- * Errors related to network operations and API calls.
+ * Errors caused by internal SDK operations.
  *
- * These errors occur when there are issues with network connectivity,
- * API responses, or communication with Adyen servers.
+ * These errors occur during internal SDK operations such as encryption,
+ * serialization, payment method availability checks, or authentication flows.
  *
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
-abstract class NetworkError(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+abstract class InternalError(
     message: String,
     cause: Throwable? = null,
 ) : CheckoutError(message, cause)

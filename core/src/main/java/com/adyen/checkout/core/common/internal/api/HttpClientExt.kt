@@ -10,11 +10,11 @@ package com.adyen.checkout.core.common.internal.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.HttpError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.toStringPretty
+import com.adyen.checkout.core.error.internal.HttpError
 import org.json.JSONArray
 import org.json.JSONObject
 

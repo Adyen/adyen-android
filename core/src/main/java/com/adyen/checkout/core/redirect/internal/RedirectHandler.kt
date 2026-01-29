@@ -10,7 +10,7 @@ package com.adyen.checkout.core.redirect.internal
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.exception.RedirectError
+import com.adyen.checkout.core.error.internal.RedirectError
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

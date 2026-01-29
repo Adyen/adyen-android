@@ -6,9 +6,9 @@
  * Created by ararat on 31/12/2025.
  */
 
-package com.adyen.checkout.core.sessions
+package com.adyen.checkout.core.error.internal
 
-import com.adyen.checkout.core.common.exception.InternalError
+import androidx.annotation.RestrictTo
 
 /**
  * An error that occurred during a session API call.
@@ -19,6 +19,7 @@ import com.adyen.checkout.core.common.exception.InternalError
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SessionError(
     message: String,
     cause: Throwable? = null,

@@ -14,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.error.internal.CheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import kotlinx.coroutines.flow.Flow
 

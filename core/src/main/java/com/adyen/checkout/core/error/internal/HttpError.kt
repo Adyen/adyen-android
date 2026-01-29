@@ -6,8 +6,9 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 
 // TODO - Platform alignment: Review error name and structure after iOS alignment.
@@ -18,6 +19,7 @@ import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
  * @param message A human-readable description of the error.
  * @param errorBody The parsed error response body from the server, if available.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class HttpError(
     val code: Int,
     message: String,
