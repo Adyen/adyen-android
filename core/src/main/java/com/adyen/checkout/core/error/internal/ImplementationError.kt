@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.error.internal
 
+import androidx.annotation.RestrictTo
+
 /**
  * Errors caused by incorrect SDK integration or configuration.
  *
@@ -18,6 +20,7 @@ package com.adyen.checkout.core.error.internal
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class ImplementationError(
     message: String,
     cause: Throwable? = null,

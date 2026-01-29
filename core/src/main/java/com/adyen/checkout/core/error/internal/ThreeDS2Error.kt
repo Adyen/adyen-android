@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.error.internal
 
+import androidx.annotation.RestrictTo
+
 // TODO - Platform alignment: Review error name and structure after iOS alignment.
 /**
  * Errors related to 3DS2 authentication flow.
@@ -18,6 +20,7 @@ package com.adyen.checkout.core.error.internal
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ThreeDS2Error(
     val errorCode: String,
     message: String,
