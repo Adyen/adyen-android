@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.error.internal
 
+import androidx.annotation.RestrictTo
+
 // TODO - Remove this class once specific error types (ApiError, EncryptionError, etc.) are implemented.
 //  This is a temporary catch-all error class used during the error framework migration.
 /**
@@ -18,6 +20,7 @@ package com.adyen.checkout.core.error.internal
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ComponentError(
     message: String,
     cause: Throwable? = null,

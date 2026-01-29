@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.error.internal
 
+import androidx.annotation.RestrictTo
+
 /**
  * Base class for internal SDK errors.
  *
@@ -39,7 +41,7 @@ package com.adyen.checkout.core.error.internal
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
-// TODO - Error propagation [COSDK-981] - Make this InternalCheckoutError
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class CheckoutError(
     message: String,
     cause: Throwable? = null,
