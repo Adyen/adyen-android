@@ -30,6 +30,7 @@ class RedirectError(
     /**
      * Error codes for redirect errors.
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     object ErrorCode {
         /** The redirect action failed to launch. */
         const val REDIRECT_FAILED = "redirectFailed"
