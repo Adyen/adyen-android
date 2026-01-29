@@ -23,7 +23,6 @@ import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
@@ -31,6 +30,7 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag

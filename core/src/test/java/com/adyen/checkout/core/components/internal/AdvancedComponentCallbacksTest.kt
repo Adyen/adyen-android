@@ -10,7 +10,6 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.PaymentResult
-import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.components.BeforeSubmitCallback
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
@@ -19,6 +18,7 @@ import com.adyen.checkout.core.components.OnErrorCallback
 import com.adyen.checkout.core.components.OnFinishedCallback
 import com.adyen.checkout.core.components.OnSubmitCallback
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
+import com.adyen.checkout.core.error.CheckoutError
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -105,8 +105,8 @@ internal class AdvancedComponentCallbacksTest(
 
         val actualAdvancedComponentCallbacks = checkoutCallbacks.toAdvancedComponentCallbacks()
 
-        actualAdvancedComponentCallbacks.onError(TEST_COMPONENT_ERROR)
-        verify(checkoutCallbacks.onError)?.onError(TEST_COMPONENT_ERROR)
+        actualAdvancedComponentCallbacks.onError(TEST_CHECKOUT_ERROR)
+        verify(checkoutCallbacks.onError)?.onError(TEST_CHECKOUT_ERROR)
     }
 
     @Test
@@ -127,7 +127,10 @@ internal class AdvancedComponentCallbacksTest(
     companion object {
         private val TEST_PAYMENT_COMPONENT_STATE = TestPaymentComponentState()
         private val TEST_ACTION_COMPONENT_DATA = ActionComponentData()
-        private val TEST_COMPONENT_ERROR = ComponentError(message = "Test error")
+        private val TEST_CHECKOUT_ERROR = CheckoutError(
+            code = CheckoutError.ErrorCode.UNKNOWN,
+            message = "Test error",
+        )
         private val TEST_PAYMENT_RESULT = PaymentResult(
             resultCode = "authorised",
             sessionId = null,
