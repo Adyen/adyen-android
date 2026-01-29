@@ -12,9 +12,10 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 
+// TODO - Check whether we should keep it or remove it
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class DropInOverrideParams(
     val amount: Amount?,
     val sessionParams: SessionParams?,
-    val isSubmitButtonVisible: Boolean = true
+    val showSubmitButton: Boolean = true
 )

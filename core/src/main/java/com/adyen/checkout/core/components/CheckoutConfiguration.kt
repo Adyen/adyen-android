@@ -51,7 +51,7 @@ import java.util.Locale
  * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set this
  * value.
  * @param analyticsConfiguration A configuration for the internal analytics of the library.
- * @param isSubmitButtonVisible Determines if the submit button should be visible or not. For drop-in this will be
+ * @param showSubmitButton Determines if the submit button should be visible or not. For drop-in this will be
  * ignored.
  * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */
@@ -63,7 +63,7 @@ class CheckoutConfiguration(
     val shopperLocale: Locale? = null,
     val amount: Amount? = null,
     val analyticsConfiguration: AnalyticsConfiguration? = null,
-    val isSubmitButtonVisible: Boolean? = null,
+    val showSubmitButton: Boolean? = null,
     @IgnoredOnParcel
     private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
 ) : Parcelable {
@@ -96,7 +96,7 @@ class CheckoutConfiguration(
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
-        isSubmitButtonVisible = parcel.readValue(null) as? Boolean?,
+        showSubmitButton = parcel.readValue(null) as? Boolean?,
     ) {
         val size = parcel.readInt()
 
@@ -138,7 +138,7 @@ class CheckoutConfiguration(
         dest.writeString(clientKey)
         dest.writeParcelable(amount, flags)
         dest.writeParcelable(analyticsConfiguration, flags)
-        dest.writeValue(isSubmitButtonVisible)
+        dest.writeValue(showSubmitButton)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
             dest.writeString(it.key)
