@@ -40,6 +40,7 @@
     <string name="checkout_drop_in_payment_method_list_favorites_section_title" translatable="false">Favorites</string>
     <string name="checkout_drop_in_payment_method_list_payment_options_title" translatable="false">Payment options</string>
     <string name="checkout_drop_in_payment_method_list_payment_options_title_with_favorites" translatable="false">Others</string>
+    <string name="checkout_drop_in_payment_method_screen_card_description" translatable="false">Use your credit or debit card to complete the payment of %s.</string>
     <string name="checkout_general_back" translatable="false">Back</string>
     <string name="checkout_general_cancel" translatable="false">Cancel</string>
     <string name="checkout_general_close" translatable="false">Close</string>
