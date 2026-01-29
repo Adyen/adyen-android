@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +26,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import kotlinx.coroutines.flow.launchIn
@@ -59,6 +62,20 @@ class DropInActivity : ComponentActivity() {
                 if (shouldFinish) {
                     finish()
                 }
+            }
+            .launchIn(lifecycleScope)
+
+        viewModel.dropInServiceManager.paymentResultFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { paymentResult ->
+                sendResult(DropInResult.Completed(paymentResult))
+            }
+            .launchIn(lifecycleScope)
+
+        viewModel.dropInServiceManager.errorFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { error ->
+                sendResult(DropInResult.Failed(error.message ?: "Unknown error"))
             }
             .launchIn(lifecycleScope)
 
@@ -141,6 +158,27 @@ class DropInActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun sendResult(dropInResult: DropInResult) {
+        adyenLog(AdyenLogLevel.DEBUG) { "sendResult: $dropInResult" }
+        val resultIntent = Intent().putExtra(
+            DropInResultContract.EXTRA_RESULT,
+            DropInResultContract.Result(dropInResult),
+        )
+        setResult(RESULT_OK, resultIntent)
+        terminateSuccessfully()
+    }
+
+    private fun terminateSuccessfully() {
+        adyenLog(AdyenLogLevel.DEBUG) { "terminateSuccessfully" }
+        terminate()
+    }
+
+    private fun terminate() {
+        adyenLog(AdyenLogLevel.DEBUG) { "terminate" }
+        viewModel.stopDropInService(this)
+        finish()
     }
 
     override fun onDestroy() {
