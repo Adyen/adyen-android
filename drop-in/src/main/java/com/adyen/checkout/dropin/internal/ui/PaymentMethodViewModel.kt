@@ -77,9 +77,8 @@ internal class PaymentMethodViewModel(
         return dropInServiceManager.requestOnSubmit(state)
     }
 
-    @Suppress("UnusedParameter")
-    private fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
-        return CheckoutResult.Finished()
+    private suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+        return dropInServiceManager.requestOnAdditionalDetails(data)
     }
 
     private fun onError(error: CheckoutError) {

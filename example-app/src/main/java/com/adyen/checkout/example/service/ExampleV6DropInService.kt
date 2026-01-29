@@ -10,6 +10,7 @@ package com.adyen.checkout.example.service
 
 import android.util.Log
 import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.exception.HttpError
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -50,6 +51,14 @@ class ExampleV6DropInService : DropInService() {
 
         Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
         val response = paymentsRepository.makePaymentsRequest(paymentRequest)
+        return handleResponse(response)
+    }
+
+    override suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+        Log.d(TAG, "onAdditionalDetails")
+        val actionComponentJson = ActionComponentData.SERIALIZER.serialize(data)
+        Log.v(TAG, "actionComponentJson - ${actionComponentJson.toStringPretty()}")
+        val response = paymentsRepository.makeDetailsRequest(actionComponentJson)
         return handleResponse(response)
     }
 
