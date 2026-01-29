@@ -6,19 +6,18 @@
  * Created by ararat on 16/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
 
 /**
- * Errors caused by incorrect SDK integration or configuration.
+ * Errors caused by internal SDK operations.
  *
- * These errors indicate that the merchant has misconfigured the SDK,
- * passed invalid parameters, or failed to implement required callbacks.
- * These typically require code changes to fix.
+ * These errors occur during internal SDK operations such as encryption,
+ * serialization, payment method availability checks, or authentication flows.
  *
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
-abstract class ImplementationError(
+abstract class InternalError(
     message: String,
     cause: Throwable? = null,
 ) : CheckoutError(message, cause)
