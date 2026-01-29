@@ -23,4 +23,4 @@ import androidx.annotation.RestrictTo
 abstract class NetworkError(
     message: String,
     cause: Throwable? = null,
-) : CheckoutError(message, cause)
+) : InternalCheckoutError(message, cause)

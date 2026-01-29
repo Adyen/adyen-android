@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.error.internal.CheckoutError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentEvent<ComponentStateT : BasePaymentComponentState> {
@@ -21,6 +21,6 @@ sealed class PaymentComponentEvent<ComponentStateT : BasePaymentComponentState> 
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class Error<ComponentStateT : BasePaymentComponentState>(
-        val error: CheckoutError
+        val error: InternalCheckoutError
     ) : PaymentComponentEvent<ComponentStateT>()
 }
