@@ -65,9 +65,7 @@ class MainActivity : AppCompatActivity() {
         SessionDropInCallback { sessionDropInResult -> viewModel.onDropInResult(sessionDropInResult) },
     )
 
-    private val dropInLauncher = DropIn.registerForResult(this) { result ->
-        Log.d(TAG, "Drop-in result: $result")
-    }
+    private val dropInLauncher = DropIn.registerForResult(this, viewModel::onDropInResult)
 
     private var componentItemAdapter: ComponentItemAdapter? = null
 

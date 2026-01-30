@@ -16,7 +16,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.dropin.old.DropInResult
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.old.SessionDropInResult
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.IntegrationFlow
@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
+import com.adyen.checkout.dropin.old.DropInResult as OldDropInResult
 
 @Suppress("TooManyFunctions")
 @HiltViewModel
@@ -336,10 +337,21 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun onDropInResult(dropInResult: DropInResult?) {
+        Log.d(TAG, "Drop-in result: $dropInResult")
         val message = when (dropInResult) {
-            is DropInResult.CancelledByUser -> "Canceled by user"
-            is DropInResult.Error -> dropInResult.reason ?: "DropInResult is error without reason"
-            is DropInResult.Finished -> dropInResult.result
+            is DropInResult.Cancelled -> "Canceled by user"
+            is DropInResult.Failed -> dropInResult.error
+            is DropInResult.Completed -> dropInResult.result.resultCode
+            null -> "DropInResult is null"
+        }
+        _eventFlow.tryEmit(MainEvent.Toast(message))
+    }
+
+    fun onDropInResult(dropInResult: OldDropInResult?) {
+        val message = when (dropInResult) {
+            is OldDropInResult.CancelledByUser -> "Canceled by user"
+            is OldDropInResult.Error -> dropInResult.reason ?: "DropInResult is error without reason"
+            is OldDropInResult.Finished -> dropInResult.result
             null -> "DropInResult is null"
         }
         _eventFlow.tryEmit(MainEvent.Toast(message))
