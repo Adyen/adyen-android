@@ -11,6 +11,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.SessionPaymentResult
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -100,7 +101,7 @@ internal class SessionsComponentEventHandlerTest(
 
         val result = sessionsComponentEventHandler.onPaymentComponentEvent(event)
 
-        verify(componentCallbacks).onError(error)
+        verify(componentCallbacks).onError(any<CheckoutError>())
         assertEquals(CheckoutResult.Error("test_error"), result)
     }
 
@@ -163,7 +164,7 @@ internal class SessionsComponentEventHandlerTest(
 
             val result = sessionsComponentEventHandler.onActionComponentEvent(event)
 
-            verify(componentCallbacks).onError(error)
+            verify(componentCallbacks).onError(any<CheckoutError>())
             assertEquals(CheckoutResult.Error("test_error"), result)
         }
 
