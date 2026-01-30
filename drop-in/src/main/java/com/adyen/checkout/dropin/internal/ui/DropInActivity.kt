@@ -55,27 +55,9 @@ class DropInActivity : ComponentActivity() {
 
         viewModel.startDropInService(this)
 
-        viewModel.navigator.finishFlow
+        viewModel.resultFlow
             .flowWithLifecycle(lifecycle)
-            .onEach { shouldFinish ->
-                if (shouldFinish) {
-                    finish()
-                }
-            }
-            .launchIn(lifecycleScope)
-
-        viewModel.dropInServiceManager.paymentResultFlow
-            .flowWithLifecycle(lifecycle)
-            .onEach { paymentResult ->
-                sendResult(DropInResult.Completed(paymentResult))
-            }
-            .launchIn(lifecycleScope)
-
-        viewModel.dropInServiceManager.errorFlow
-            .flowWithLifecycle(lifecycle)
-            .onEach { error ->
-                sendResult(DropInResult.Failed(error.message ?: "Unknown error"))
-            }
+            .onEach { result -> sendResult(result) }
             .launchIn(lifecycleScope)
 
         setContent {
