@@ -11,7 +11,6 @@ package com.adyen.checkout.example.service
 import android.util.Log
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.common.exception.HttpError
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
@@ -67,7 +66,7 @@ class ExampleV6DropInService : DropInService() {
             jsonResponse == null -> {
                 Log.e(TAG, "FAILED")
                 // TODO - Replace with appropriate error type once error structure PRs are merged
-                CheckoutResult.Error(HttpError(code = 200, message = "IOException", errorBody = null))
+                CheckoutResult.Error(errorMessage = "IOException")
             }
 
             isAction(jsonResponse) -> {
