@@ -12,13 +12,14 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.lifecycle.LifecycleService
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.dropin.internal.service.DropInBinder
 
 abstract class DropInService : LifecycleService() {
 
     private val binder = object : DropInBinder() {
-        override suspend fun requestOnSubmit(): CheckoutResult {
-            return onSubmit()
+        override suspend fun requestOnSubmit(state: PaymentComponentState<*>): CheckoutResult {
+            return onSubmit(state)
         }
     }
 
@@ -32,5 +33,5 @@ abstract class DropInService : LifecycleService() {
         return binder
     }
 
-    protected abstract suspend fun onSubmit(): CheckoutResult
+    protected abstract suspend fun onSubmit(state: PaymentComponentState<*>): CheckoutResult
 }
