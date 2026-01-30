@@ -66,6 +66,7 @@ class ExampleV6DropInService : DropInService() {
         return when {
             jsonResponse == null -> {
                 Log.e(TAG, "FAILED")
+                // TODO - Replace with appropriate error type once error structure PRs are merged
                 CheckoutResult.Error(HttpError(code = 200, message = "IOException", errorBody = null))
             }
 

@@ -148,11 +148,6 @@ class DropInActivity : ComponentActivity() {
             DropInResultContract.Result(dropInResult),
         )
         setResult(RESULT_OK, resultIntent)
-        terminateSuccessfully()
-    }
-
-    private fun terminateSuccessfully() {
-        adyenLog(AdyenLogLevel.DEBUG) { "terminateSuccessfully" }
         terminate()
     }
 
