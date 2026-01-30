@@ -59,6 +59,6 @@ internal class DropInResultContract : ActivityResultContract<DropInResultContrac
     companion object {
         private const val EXTRA_INPUT = "com.adyen.checkout.dropin.internal.DropInResultContract.EXTRA_INPUT"
 
-        private const val EXTRA_RESULT = "com.adyen.checkout.dropin.internal.DropInResultContract.EXTRA_RESULT"
+        internal const val EXTRA_RESULT = "com.adyen.checkout.dropin.internal.DropInResultContract.EXTRA_RESULT"
     }
 }

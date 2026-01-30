@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import kotlinx.coroutines.flow.launchIn
@@ -53,13 +55,9 @@ class DropInActivity : ComponentActivity() {
 
         viewModel.startDropInService(this)
 
-        viewModel.navigator.finishFlow
+        viewModel.resultFlow
             .flowWithLifecycle(lifecycle)
-            .onEach { shouldFinish ->
-                if (shouldFinish) {
-                    finish()
-                }
-            }
+            .onEach { result -> sendResult(result) }
             .launchIn(lifecycleScope)
 
         setContent {
@@ -141,6 +139,22 @@ class DropInActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun sendResult(dropInResult: DropInResult) {
+        adyenLog(AdyenLogLevel.DEBUG) { "sendResult: $dropInResult" }
+        val resultIntent = Intent().putExtra(
+            DropInResultContract.EXTRA_RESULT,
+            DropInResultContract.Result(dropInResult),
+        )
+        setResult(RESULT_OK, resultIntent)
+        terminate()
+    }
+
+    private fun terminate() {
+        adyenLog(AdyenLogLevel.DEBUG) { "terminate" }
+        viewModel.stopDropInService(this)
+        finish()
     }
 
     override fun onDestroy() {
