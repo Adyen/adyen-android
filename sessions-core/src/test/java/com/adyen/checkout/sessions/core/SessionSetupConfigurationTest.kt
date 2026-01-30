@@ -8,78 +8,68 @@
 
 package com.adyen.checkout.sessions.core
 
+import com.adyen.checkout.core.internal.data.model.optIntList
+import com.adyen.checkout.core.internal.data.model.optStringList
 import org.json.JSONObject
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertNull
 
-@RunWith(RobolectricTestRunner::class)
 internal class SessionSetupConfigurationTest {
 
     @Test
-    fun `when serializing deserialized configuration, then all fields should be serialized`() {
-        val json = """
-            {
-              "showInstallmentAmount": true,
-              "installmentOptions": {
-                "card": {
-                  "plans": ["with_interest"],
-                  "values": [1, 2, 3, 6],
-                  "preselectedValue": 2
-                },
-                "visa": {
-                  "plans": ["regular", "revolving"],
-                  "values": [1, 2, 3, 4, 5, 12]
-                }
-              },
-              "showRemovePaymentMethodButton": true
-            }
-        """.trimIndent()
-        val deserialized: SessionSetupConfiguration = SessionSetupConfiguration.SERIALIZER.deserialize(JSONObject(json))
+    fun `when serializing configuration, then all fields should be serialized`() {
+        val sessionSetupConfiguration = SessionSetupConfiguration(
+            showInstallmentAmount = true,
+            installmentOptions = mapOf(
+                "card" to SessionSetupInstallmentOptions(
+                    plans = listOf("with_interest"),
+                    values = listOf(1, 2, 3, 6),
+                    preselectedValue = 2,
+                ),
+                "visa" to SessionSetupInstallmentOptions(
+                    plans = listOf("regular", "revolving"),
+                    values = listOf(1, 2, 3, 4, 5, 12),
+                    preselectedValue = null,
+                ),
+            ),
+            showRemovePaymentMethodButton = true,
+        )
 
-        val serialized = SessionSetupConfiguration.SERIALIZER.serialize(deserialized)
-        println("*************")
-        println(serialized["installmentOptions"]) // The value is {"card":null,"visa":null}
-        println("*************")
+        val actual = SessionSetupConfiguration.SERIALIZER.serialize(sessionSetupConfiguration)
 
-        assertEquals(true, serialized.optBoolean("showInstallmentAmount"))
-        assertEquals(true, serialized.optBoolean("showRemovePaymentMethodButton"))
-        assertTrue(serialized.has("installmentOptions"))
-        val installmentOptions = serialized.optJSONObject("installmentOptions")
-        assertTrue("installmentOptions should not be null", installmentOptions != null)
-        val cardOptions = installmentOptions!!.optJSONObject("card")
-        assertTrue("card options should not be null", cardOptions != null)
+        assertEquals(true, actual.optBoolean("showInstallmentAmount"))
+        assertEquals(true, actual.optBoolean("showRemovePaymentMethodButton"))
+
+        val installmentOptions = actual.optJSONObject("installmentOptions")
+        assertNotNull(installmentOptions)
+
+        val cardOptions = installmentOptions.optJSONObject("card")
+        assertNotNull(cardOptions)
+
         assertEquals(
             listOf("with_interest"),
-            cardOptions!!.optJSONArray("plans")?.let { arr ->
-                (0 until arr.length()).map { arr.getString(it) }
-            },
+            cardOptions.optStringList("plans"),
         )
         assertEquals(
             listOf(1, 2, 3, 6),
-            cardOptions.optJSONArray("values")?.let { arr ->
-                (0 until arr.length()).map { arr.getInt(it) }
-            },
+            cardOptions.optIntList("values"),
         )
-        assertTrue("card preselectedValue should be null", cardOptions.isNull("preselectedValue"))
+        assertEquals(2, cardOptions.getInt("preselectedValue"), "card preselectedValue should be null")
+
         val visaOptions = installmentOptions.optJSONObject("visa")
-        assertTrue("visa options should not be null", visaOptions != null)
+        assertNotNull(visaOptions)
         assertEquals(
             listOf("regular", "revolving"),
-            visaOptions!!.optJSONArray("plans")?.let { arr ->
-                (0 until arr.length()).map { arr.getString(it) }
-            },
+            visaOptions.optStringList("plans"),
         )
         assertEquals(
             listOf(1, 2, 3, 4, 5, 12),
-            visaOptions.optJSONArray("values")?.let { arr ->
-                (0 until arr.length()).map { arr.getInt(it) }
-            },
+            visaOptions.optIntList("values"),
         )
-        assertTrue("visa preselectedValue should be null", visaOptions.isNull("preselectedValue"))
+        assertTrue(visaOptions.isNull("preselectedValue"), "visa preselectedValue should be null")
     }
 
     @Test
