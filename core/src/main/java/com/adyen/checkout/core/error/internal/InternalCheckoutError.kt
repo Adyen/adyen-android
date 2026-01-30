@@ -42,7 +42,7 @@ import androidx.annotation.RestrictTo
  * @param cause The underlying cause of this error, if any.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-abstract class CheckoutError(
+abstract class InternalCheckoutError(
     message: String,
     cause: Throwable? = null,
-) : RuntimeException(message, cause)
+) : Exception(message, cause)

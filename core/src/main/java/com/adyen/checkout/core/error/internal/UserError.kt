@@ -23,4 +23,4 @@ import androidx.annotation.RestrictTo
 abstract class UserError(
     message: String,
     cause: Throwable? = null,
-) : CheckoutError(message, cause)
+) : InternalCheckoutError(message, cause)

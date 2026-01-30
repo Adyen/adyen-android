@@ -40,6 +40,7 @@ import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntr
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.error.internal.ComponentError
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope
@@ -145,7 +146,7 @@ internal class StoredCardComponent(
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun onPublicKeyNotFound(e: RuntimeException) {
+    private fun onPublicKeyNotFound(e: ComponentError) {
         val event = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         // exceptionChannel.trySend(e)

@@ -10,7 +10,7 @@ package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.error.internal.CheckoutError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class ActionComponentEvent {
@@ -22,6 +22,6 @@ sealed class ActionComponentEvent {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class Error(
-        val error: CheckoutError
+        val error: InternalCheckoutError
     ) : ActionComponentEvent()
 }

@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.redirect.internal
 
 import android.net.Uri
+import com.adyen.checkout.core.error.internal.RedirectError
 import com.google.common.collect.Iterators
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -95,13 +96,13 @@ class DefaultRedirectHandlerTest {
         assertEquals(response.getString("returnUrlQueryString"), "p1=abc&p2=3")
     }
 
-    @Test(expected = RuntimeException::class)
+    @Test(expected = RedirectError::class)
     fun parseRedirectResult_NoQuery_ExpectException() {
         val uri = Uri.parse("http://www.example.com/payment#invoice")
         handler.parseRedirectResult(uri)
     }
 
-    @Test(expected = RuntimeException::class)
+    @Test(expected = RedirectError::class)
     fun parseRedirectResult_NullUri_ExpectException() {
         handler.parseRedirectResult(null)
     }
