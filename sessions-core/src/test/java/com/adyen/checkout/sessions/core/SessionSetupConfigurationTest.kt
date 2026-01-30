@@ -57,7 +57,7 @@ internal class SessionSetupConfigurationTest {
             listOf(1, 2, 3, 6),
             cardOptions.optIntList("values"),
         )
-        assertEquals(2, cardOptions.getInt("preselectedValue"), "card preselectedValue should be null")
+        assertEquals(2, cardOptions.getInt("preselectedValue"))
 
         val visaOptions = installmentOptions.optJSONObject("visa")
         assertNotNull(visaOptions)

@@ -110,9 +110,9 @@ object ModelUtils {
             return null
         }
         val json = JSONObject()
-        map.entries.forEach { entry ->
-            entry.value?.let {
-                json.put(entry.key, serializer.serialize(it))
+        map.entries.forEach { (key, value) ->
+            value?.let {
+                json.put(key, serializer.serialize(it))
             }
         }
         return json
