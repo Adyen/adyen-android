@@ -37,20 +37,20 @@ jobs:
     needs: [ get_head_dependency_list, get_base_dependency_list ]
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           sparse-checkout: |
             scripts/check_dependency_changes.py
           sparse-checkout-cone-mode: false
 
       - name: Download base dependency list artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           name: "DEPENDENCY_LIST_BASE"
           path: dependency-lists/base
 
       - name: Download head dependency list artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           name: "DEPENDENCY_LIST_HEAD"
           path: dependency-lists/head
