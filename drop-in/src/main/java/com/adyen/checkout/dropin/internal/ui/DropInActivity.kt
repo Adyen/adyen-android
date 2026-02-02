@@ -130,7 +130,16 @@ class DropInActivity : ComponentActivity() {
                                 }
 
                                 is PaymentMethodNavKey -> {
-                                    NavEntry(key) {
+                                    val transitions = if (viewModel.navigator.isEmptyAfter(key)) {
+                                        DropInTransitions.slideInAndOutVertically()
+                                    } else {
+                                        DropInTransitions.slideInAndOutHorizontally()
+                                    }
+
+                                    NavEntry(
+                                        key = key,
+                                        metadata = transitions,
+                                    ) {
                                         PaymentMethodScreen(
                                             navigator = viewModel.navigator,
                                             viewModel = viewModel(
