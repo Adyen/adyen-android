@@ -81,11 +81,11 @@ class DropInActivity : ComponentActivity() {
                                 metadata = BottomSheetSceneStrategy.bottomSheet(),
                             ) { key ->
                                 PreselectedPaymentMethodScreen(
-                                    viewModel.navigator,
                                     viewModel(
                                         factory = PreselectedPaymentMethodViewModel.Factory(
                                             dropInParams = viewModel.dropInParams,
                                             storedPaymentMethod = key.storedPaymentMethod,
+                                            navigator = viewModel.navigator,
                                         ),
                                     ),
                                 )
@@ -131,7 +131,7 @@ class DropInActivity : ComponentActivity() {
                                             dropInServiceManager = viewModel.dropInServiceManager,
                                         ),
                                         key = key.paymentFlowType.hashCode().toString(),
-                                    )
+                                    ),
                                 )
                             }
                         },

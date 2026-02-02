@@ -22,6 +22,7 @@ import kotlin.reflect.KClass
 internal class PreselectedPaymentMethodViewModel(
     private val dropInParams: DropInParams,
     private val storedPaymentMethod: StoredPaymentMethod,
+    private val navigator: DropInNavigator,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(createInitialViewState())
@@ -51,9 +52,22 @@ internal class PreselectedPaymentMethodViewModel(
         )
     }
 
+    fun onBackClicked() {
+        navigator.back()
+    }
+
+    fun onPayClicked() {
+        // TODO
+    }
+
+    fun onOtherPaymentMethodClicked() {
+        navigator.clearAndNavigateTo(PaymentMethodListNavKey)
+    }
+
     class Factory(
         private val dropInParams: DropInParams,
         private val storedPaymentMethod: StoredPaymentMethod,
+        private val navigator: DropInNavigator,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -61,6 +75,7 @@ internal class PreselectedPaymentMethodViewModel(
             return PreselectedPaymentMethodViewModel(
                 dropInParams = dropInParams,
                 storedPaymentMethod = storedPaymentMethod,
+                navigator = navigator,
             ) as T
         }
     }
