@@ -38,7 +38,7 @@ internal class PreselectedPaymentMethodViewModel(
         val title = if (storedPaymentMethod.lastFour != null) {
             "${storedPaymentMethod.name} •••• ${storedPaymentMethod.lastFour}"
         } else {
-            storedPaymentMethod.name.orEmpty()
+            storedPaymentMethod.name
         }
 
         val formattedAmount = dropInParams.amount.format(dropInParams.shopperLocale)
@@ -57,7 +57,8 @@ internal class PreselectedPaymentMethodViewModel(
     }
 
     fun onPayClicked() {
-        // TODO
+        val type = DropInPaymentFlowType.StoredPaymentMethod(storedPaymentMethod.id.orEmpty())
+        navigator.clearAndNavigateTo(PaymentMethodNavKey(type))
     }
 
     fun onOtherPaymentMethodClicked() {
