@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.error.CheckoutError
 import java.util.IllformedLocaleException
 import java.util.Locale
 
@@ -19,21 +20,30 @@ import java.util.Locale
 object LocaleUtil {
 
     /**
-     * Checks if a locale is valid.
+     * Validates a locale and returns a result containing either the valid locale or an error.
      *
-     * @param locale The locale.
-     * @return Whether locale is valid or not.
+     * We use [Locale.Builder.setLocale] because the [Locale] constructor does not perform any
+     * validation, allowing invalid locales like `Locale("español")` or `Locale("de", "HANS")`.
+     * The builder throws [IllformedLocaleException] for such cases, giving us reliable validation.
+     *
+     * @param locale The locale to validate.
+     * @return [LocaleValidationResult.Valid] if the locale is valid, [LocaleValidationResult.Invalid] otherwise.
      */
     @JvmStatic
-    fun isValidLocale(locale: Locale): Boolean {
-        @Suppress("SwallowedException")
-        return try {
-            Locale.Builder().setLocale(locale).build()
-            true
-        } catch (ex: IllformedLocaleException) {
-            false
-        }
-    }
+    fun validateLocale(locale: Locale): LocaleValidationResult = runCatching {
+        Locale.Builder().setLocale(locale).build()
+    }.fold(
+        onSuccess = { LocaleValidationResult.Valid(it) },
+        onFailure = { cause ->
+            LocaleValidationResult.Invalid(
+                CheckoutError(
+                    code = CheckoutError.ErrorCode.INVALID_LOCALE,
+                    message = "Invalid shopper locale: $locale",
+                    cause = cause,
+                ),
+            )
+        },
+    )
 
     /**
      * Creates a Locale instance for a specific language tag.
@@ -45,4 +55,13 @@ object LocaleUtil {
     fun fromLanguageTag(tag: String): Locale {
         return Locale.forLanguageTag(tag)
     }
+}
+
+/**
+ * Result of locale validation.
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+sealed class LocaleValidationResult {
+    data class Valid(val locale: Locale) : LocaleValidationResult()
+    data class Invalid(val error: CheckoutError) : LocaleValidationResult()
 }
