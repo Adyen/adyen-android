@@ -50,7 +50,7 @@ private fun PaymentMethodScreenContent(
             IconButton(
                 onClick = { navigator.back() },
             ) {
-                if (navigator.isEmptyAfter(navigator.backStack.last())) {
+                if (navigator.isEmptyAfterCurrent()) {
                     Icon(Icons.Filled.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
                 } else {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, resolveString(CheckoutLocalizationKey.GENERAL_BACK))

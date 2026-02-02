@@ -41,9 +41,7 @@ internal class DropInNavigator {
         }
     }
 
-    fun isEmptyAfter(key: NavKey): Boolean {
-        return _backStack.none {
-            it !is EmptyNavKey && it != key
-        }
+    fun isEmptyAfterCurrent(): Boolean {
+        return _backStack.filterNot { it is EmptyNavKey }.size <= 1
     }
 }
