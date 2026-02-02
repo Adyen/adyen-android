@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.SessionResponse
 
 object Checkout {
@@ -25,9 +26,12 @@ object Checkout {
         )
 
         return when {
-            initializationData.checkoutSession == null -> {
-                Result.Error("Failed to initialize sessions.")
-            }
+            initializationData.checkoutSession == null -> Result.Error(
+                CheckoutError(
+                    code = CheckoutError.ErrorCode.SESSION_SETUP_FAILURE,
+                    message = "Failed to initialize sessions.",
+                ),
+            )
 
             else -> Result.Success(
                 checkoutContext = CheckoutContext.Sessions(
@@ -61,6 +65,6 @@ object Checkout {
 
     sealed interface Result<T : CheckoutContext> {
         data class Success<T : CheckoutContext>(val checkoutContext: T) : Result<T>
-        data class Error<T : CheckoutContext>(val errorReason: String) : Result<T>
+        data class Error<T : CheckoutContext>(val error: CheckoutError) : Result<T>
     }
 }

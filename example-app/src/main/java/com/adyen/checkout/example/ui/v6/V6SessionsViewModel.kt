@@ -81,7 +81,7 @@ internal class V6SessionsViewModel @Inject constructor(
         )
 
         uiState = when (result) {
-            is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.errorReason))
+            is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.error.message.orEmpty()))
             is Checkout.Result.Success -> V6UiState.Component(
                 checkoutContext = result.checkoutContext,
                 checkoutCallbacks = CheckoutCallbacks(
