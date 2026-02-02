@@ -157,6 +157,6 @@ internal class ActionComponentProviderTest {
     private fun generateCheckoutConfiguration() = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
-        clientKey = "test_key_12345",
+        clientKey = "test_qwertyuiopasdfgh",
     )
 }
