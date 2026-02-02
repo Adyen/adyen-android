@@ -17,10 +17,15 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlin.reflect.KClass
 
 internal class DropInViewModel(
@@ -36,6 +41,12 @@ internal class DropInViewModel(
     val checkoutContext = input.checkoutContext
 
     val dropInServiceManager = DropInServiceManager(input.serviceClass)
+
+    val resultFlow: Flow<DropInResult> = merge(
+        dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
+        dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },
+        navigator.finishFlow.filter { it }.map { DropInResult.Cancelled() },
+    )
 
     init {
         initializePaymentMethods()

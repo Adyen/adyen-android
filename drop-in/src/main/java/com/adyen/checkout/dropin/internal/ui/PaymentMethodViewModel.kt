@@ -10,10 +10,12 @@ package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -25,6 +27,7 @@ import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 internal class PaymentMethodViewModel(
     private val paymentFlowType: DropInPaymentFlowType,
@@ -40,6 +43,7 @@ internal class PaymentMethodViewModel(
         onSubmit = ::onSubmit,
         onAdditionalDetails = ::onAdditionalDetails,
         onError = ::onError,
+        onFinished = ::onFinished,
     )
 
     private fun createViewState(): PaymentMethodViewState {
@@ -73,14 +77,20 @@ internal class PaymentMethodViewModel(
         return dropInServiceManager.requestOnSubmit(state)
     }
 
-    @Suppress("UnusedParameter")
-    private fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
-        return CheckoutResult.Finished()
+    private suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+        return dropInServiceManager.requestOnAdditionalDetails(data)
     }
 
-    @Suppress("UnusedParameter")
     private fun onError(error: CheckoutError) {
-        // TODO - trigger onError once added
+        viewModelScope.launch {
+            dropInServiceManager.onError(error)
+        }
+    }
+
+    private fun onFinished(paymentResult: PaymentResult) {
+        viewModelScope.launch {
+            dropInServiceManager.onPaymentFinished(paymentResult)
+        }
     }
 
     class Factory(
