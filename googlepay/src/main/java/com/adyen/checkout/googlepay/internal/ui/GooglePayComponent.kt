@@ -12,6 +12,7 @@ import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayPaymentComponentState
 import kotlinx.coroutines.flow.Flow
 
@@ -35,4 +36,9 @@ internal class GooglePayComponent : PaymentComponent<GooglePayPaymentComponentSt
         get() = TODO("Not yet implemented")
     override val navigationStartingPoint: NavKey
         get() = TODO("Not yet implemented")
+
+    companion object {
+        @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY)
+    }
 }
