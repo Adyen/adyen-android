@@ -8,7 +8,7 @@ min-sdk = "23"
 version-code = "1"
 
 # Build script
-android-gradle-plugin = "8.10.1"
+android-gradle-plugin = "8.13.2"
 kotlin = "2.1.21"
 ksp = "2.1.21-2.0.1"
 dokka = "2.1.0"
