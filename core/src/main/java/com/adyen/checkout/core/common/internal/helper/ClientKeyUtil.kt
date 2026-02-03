@@ -18,7 +18,7 @@ import com.adyen.checkout.core.error.CheckoutError
 object ClientKeyUtil {
 
     private const val MIN_LENGTH = 13
-    private const val MAX_LENGTH = 140
+    private const val MAX_LENGTH = 137
 
     // Pattern: 4-8 lowercase letters, underscore, 8-128 alphanumeric characters
     private val CLIENT_KEY_REGEX = Regex("^[a-z]{4,8}_[a-zA-Z0-9]{8,128}$")
@@ -27,7 +27,7 @@ object ClientKeyUtil {
      * Validates a client key and returns a result containing either the valid key or an error.
      *
      * A valid client key must:
-     * - Be between 13 and 140 characters long
+     * - Be between 13 and 137 characters long
      * - Match the pattern: 4-8 lowercase letters, underscore, 8-128 alphanumeric characters
      *
      * @param clientKey The client key to validate.

@@ -51,8 +51,8 @@ internal class ClientKeyUtilTest {
 
     @Test
     fun `when client key is too long then return Invalid result`() {
-        // 141 chars total exceeds MAX_LENGTH of 140
-        val longKey = "testtest_" + "a".repeat(132)
+        // 138 chars total exceeds MAX_LENGTH of 137
+        val longKey = "testtest_" + "a".repeat(129)
         val result = ClientKeyUtil.validateClientKey(longKey)
 
         assertTrue(result is ClientKeyValidationResult.Invalid)
