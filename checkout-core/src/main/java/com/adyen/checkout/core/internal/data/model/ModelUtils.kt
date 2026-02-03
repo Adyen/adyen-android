@@ -95,7 +95,7 @@ object ModelUtils {
      */
     @JvmStatic
     fun <T : ModelObject> serializeOptList(modelList: List<T>?, serializer: ModelObject.Serializer<T>): JSONArray? {
-        if (modelList == null || modelList.isEmpty()) {
+        if (modelList.isNullOrEmpty()) {
             return null
         }
         val jsonArray = JSONArray()
@@ -103,6 +103,19 @@ object ModelUtils {
             jsonArray.put(serializer.serialize(model))
         }
         return jsonArray
+    }
+
+    fun <T : ModelObject> serializeOptMap(map: Map<String, T?>?, serializer: ModelObject.Serializer<T>): JSONObject? {
+        if (map.isNullOrEmpty()) {
+            return null
+        }
+        val json = JSONObject()
+        map.entries.forEach { (key, value) ->
+            value?.let {
+                json.put(key, serializer.serialize(it))
+            }
+        }
+        return json
     }
 
     @Suppress("ThrowsCount")

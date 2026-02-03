@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import com.adyen.checkout.core.internal.data.model.jsonToMap
 import kotlinx.parcelize.Parcelize
@@ -39,7 +40,10 @@ data class SessionSetupConfiguration(
                         putOpt(SHOW_INSTALLMENT_AMOUNT, modelObject.showInstallmentAmount)
                         putOpt(
                             INSTALLMENT_OPTIONS,
-                            modelObject.installmentOptions?.let { JSONObject(it) },
+                            ModelUtils.serializeOptMap(
+                                modelObject.installmentOptions,
+                                SessionSetupInstallmentOptions.SERIALIZER,
+                            ),
                         )
                         putOpt(SHOW_REMOVE_PAYMENT_METHOD_BUTTON, modelObject.showRemovePaymentMethodButton)
                     }
