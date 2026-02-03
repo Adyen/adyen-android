@@ -24,7 +24,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4
 
       - name: Fetch dependency list
         env:
@@ -34,7 +34,7 @@ jobs:
           ./gradlew aggregateDependencyLists -q -PoutputFileName=$DEPENDENCY_LIST_FILE_NAME
 
       - name: Upload dependency list artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: "${{ inputs.artifact-name }}"
           path: |
