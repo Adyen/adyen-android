@@ -6,9 +6,9 @@
  * Created by ararat on 29/12/2025.
  */
 
-package com.adyen.checkout.threeds2
+package com.adyen.checkout.core.error.internal
 
-import com.adyen.checkout.core.common.exception.InternalError
+import androidx.annotation.RestrictTo
 
 // TODO - Platform alignment: Review error name and structure after iOS alignment.
 /**
@@ -20,6 +20,7 @@ import com.adyen.checkout.core.common.exception.InternalError
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ThreeDS2Error(
     val errorCode: String,
     message: String,
@@ -29,6 +30,7 @@ class ThreeDS2Error(
     /**
      * Error codes for 3DS2 errors.
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     object ErrorCode {
         /** The action type is not a valid 3DS2 action. */
         const val INVALID_ACTION = "invalidAction"

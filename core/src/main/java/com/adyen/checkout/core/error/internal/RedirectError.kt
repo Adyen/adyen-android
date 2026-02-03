@@ -6,7 +6,9 @@
  * Created by ararat on 29/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
+
+import androidx.annotation.RestrictTo
 
 // TODO - Platform alignment: Review error name and structure after iOS alignment.
 /**
@@ -18,6 +20,7 @@ package com.adyen.checkout.core.common.exception
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class RedirectError(
     val errorCode: String,
     message: String,
@@ -27,6 +30,7 @@ class RedirectError(
     /**
      * Error codes for redirect errors.
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     object ErrorCode {
         /** The redirect action failed to launch. */
         const val REDIRECT_FAILED = "redirectFailed"

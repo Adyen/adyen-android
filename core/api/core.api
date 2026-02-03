@@ -585,72 +585,9 @@ public final class com/adyen/checkout/core/common/PaymentResult$Creator : androi
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public abstract class com/adyen/checkout/core/common/exception/CheckoutError : java/lang/RuntimeException {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public final class com/adyen/checkout/core/common/exception/ComponentError : com/adyen/checkout/core/common/exception/InternalError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public final class com/adyen/checkout/core/common/exception/EncryptionError : com/adyen/checkout/core/common/exception/InternalError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public final class com/adyen/checkout/core/common/exception/HttpError : com/adyen/checkout/core/common/exception/NetworkError {
-	public static final field $stable I
-	public fun <init> (ILjava/lang/String;Lcom/adyen/checkout/core/common/internal/model/ErrorResponseBody;)V
-	public final fun getCode ()I
-	public final fun getErrorBody ()Lcom/adyen/checkout/core/common/internal/model/ErrorResponseBody;
-}
-
-public abstract class com/adyen/checkout/core/common/exception/ImplementationError : com/adyen/checkout/core/common/exception/CheckoutError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public abstract class com/adyen/checkout/core/common/exception/InternalError : com/adyen/checkout/core/common/exception/CheckoutError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
 public final class com/adyen/checkout/core/common/exception/ModelSerializationException : java/lang/RuntimeException {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/Class;Lorg/json/JSONException;)V
-}
-
-public abstract class com/adyen/checkout/core/common/exception/NetworkError : com/adyen/checkout/core/common/exception/CheckoutError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public final class com/adyen/checkout/core/common/exception/RedirectError : com/adyen/checkout/core/common/exception/InternalError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getErrorCode ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/core/common/exception/RedirectError$ErrorCode {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/core/common/exception/RedirectError$ErrorCode;
-	public static final field REDIRECT_FAILED Ljava/lang/String;
-	public static final field REDIRECT_PARSE_FAILED Ljava/lang/String;
-}
-
-public abstract class com/adyen/checkout/core/common/exception/UserError : com/adyen/checkout/core/common/exception/CheckoutError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public abstract interface class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult {
@@ -2033,12 +1970,6 @@ public final class com/adyen/checkout/core/sessions/CheckoutSessionResult$Succes
 	public static final field $stable I
 	public fun <init> (Lcom/adyen/checkout/core/sessions/CheckoutSession;)V
 	public final fun getCheckoutSession ()Lcom/adyen/checkout/core/sessions/CheckoutSession;
-}
-
-public final class com/adyen/checkout/core/sessions/SessionError : com/adyen/checkout/core/common/exception/InternalError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adyen/checkout/core/sessions/SessionPaymentResult : android/os/Parcelable {

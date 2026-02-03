@@ -6,7 +6,9 @@
  * Created by ararat on 16/12/2025.
  */
 
-package com.adyen.checkout.core.common.exception
+package com.adyen.checkout.core.error.internal
+
+import androidx.annotation.RestrictTo
 
 /**
  * Errors caused by explicit user actions.
@@ -17,6 +19,7 @@ package com.adyen.checkout.core.common.exception
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class UserError(
     message: String,
     cause: Throwable? = null,

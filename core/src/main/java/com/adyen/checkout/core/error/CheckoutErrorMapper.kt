@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.core.error
 
-typealias InternalCheckoutError = com.adyen.checkout.core.common.exception.CheckoutError
+typealias InternalCheckoutError = com.adyen.checkout.core.error.internal.CheckoutError
 
 // Maps internal error hierarchy to public CheckoutError.
 // Add new mappings here as new error types are introduced.
+// TODO - Error propagation - Add mappings for error types
 internal fun InternalCheckoutError.toCheckoutError(): CheckoutError {
     return CheckoutError(
         code = CheckoutError.ErrorCode.UNKNOWN,
