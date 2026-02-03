@@ -31,7 +31,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.error.internal.CheckoutError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.error.internal.ThreeDS2Error
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
@@ -763,7 +763,7 @@ internal class ThreeDS2Component(
         }
     }
 
-    internal fun emitError(error: CheckoutError) {
+    internal fun emitError(error: InternalCheckoutError) {
         eventChannel.trySend(
             ActionComponentEvent.Error(error),
         )

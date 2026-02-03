@@ -28,7 +28,7 @@ import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.error.internal.CheckoutError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.error.internal.StatusPollingError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
@@ -95,7 +95,7 @@ internal class AwaitComponent(
             val paymentData = paymentDataRepository.paymentData
                 ?: throw StatusPollingError(message = "Payment data should not be null")
             startStatusPolling(paymentData)
-        } catch (e: CheckoutError) {
+        } catch (e: InternalCheckoutError) {
             emitError(e)
         }
     }
@@ -173,7 +173,7 @@ internal class AwaitComponent(
         )
     }
 
-    private fun emitError(error: CheckoutError) {
+    private fun emitError(error: InternalCheckoutError) {
         eventChannel.trySend(
             ActionComponentEvent.Error(error),
         )

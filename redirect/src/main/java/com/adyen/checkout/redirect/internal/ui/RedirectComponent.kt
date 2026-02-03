@@ -28,9 +28,9 @@ import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.error.internal.CheckoutError
 import com.adyen.checkout.core.error.internal.ComponentError
 import com.adyen.checkout.core.error.internal.HttpError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
@@ -102,7 +102,7 @@ internal class RedirectComponent(
                     emitDetails(details)
                 }
             }
-        } catch (e: CheckoutError) {
+        } catch (e: InternalCheckoutError) {
             val event = GenericEvents.error(
                 component = action.paymentMethodType.orEmpty(),
                 event = ErrorEvent.REDIRECT_PARSE_FAILED,
@@ -161,7 +161,7 @@ internal class RedirectComponent(
         )
     }
 
-    private fun emitError(error: CheckoutError) {
+    private fun emitError(error: InternalCheckoutError) {
         val event = GenericEvents.error(
             component = action.paymentMethodType.orEmpty(),
             event = ErrorEvent.REDIRECT_FAILED,

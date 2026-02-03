@@ -24,4 +24,4 @@ import androidx.annotation.RestrictTo
 abstract class ImplementationError(
     message: String,
     cause: Throwable? = null,
-) : CheckoutError(message, cause)
+) : InternalCheckoutError(message, cause)
