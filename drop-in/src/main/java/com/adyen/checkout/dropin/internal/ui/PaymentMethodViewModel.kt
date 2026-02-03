@@ -16,12 +16,12 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.PaymentResult
-import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -15,6 +15,7 @@ import com.adyen.checkout.core.components.internal.ComponentEventHandler
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.error.toCheckoutError
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
@@ -33,7 +34,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
             }
 
             is PaymentComponentEvent.Error -> {
-                componentCallbacks.onError(event.error)
+                componentCallbacks.onError(event.error.toCheckoutError())
                 CheckoutResult.Error(event.error.message.orEmpty())
             }
         }
@@ -61,7 +62,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
             }
 
             is ActionComponentEvent.Error -> {
-                componentCallbacks.onError(event.error)
+                componentCallbacks.onError(event.error.toCheckoutError())
                 CheckoutResult.Error(event.error.message.orEmpty())
             }
         }

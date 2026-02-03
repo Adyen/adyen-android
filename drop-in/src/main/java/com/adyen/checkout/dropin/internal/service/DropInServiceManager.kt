@@ -16,10 +16,10 @@ import android.os.IBinder
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.PaymentResult
-import com.adyen.checkout.core.common.exception.CheckoutError
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.DropInService
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

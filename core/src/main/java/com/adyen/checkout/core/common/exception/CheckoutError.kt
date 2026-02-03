@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.common.exception
 
 /**
- * Base class for all checkout errors in the Adyen SDK.
+ * Base class for internal SDK errors.
  *
  * This is the root of the error hierarchy that merchants receive through callbacks.
  * Use specific subclasses to handle different error scenarios.
@@ -39,6 +39,7 @@ package com.adyen.checkout.core.common.exception
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
+// TODO - Error propagation [COSDK-981] - Make this InternalCheckoutError
 abstract class CheckoutError(
     message: String,
     cause: Throwable? = null,
