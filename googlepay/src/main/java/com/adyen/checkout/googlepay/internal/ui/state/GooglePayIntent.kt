@@ -8,5 +8,16 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayIntent
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateIntent
+import com.google.android.gms.wallet.PaymentData
+
+internal sealed interface GooglePayIntent : ComponentStateIntent {
+
+    data class UpdateLoading(val isLoading: Boolean) : GooglePayIntent
+
+    data class UpdateButtonVisible(val isButtonVisible: Boolean) : GooglePayIntent
+
+    data class UpdatePaymentData(val paymentData: PaymentData?) : GooglePayIntent
+
+    data class UpdateAvailability(val isAvailable: Boolean) : GooglePayIntent
+}
