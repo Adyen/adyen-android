@@ -6,6 +6,14 @@ public final class com/adyen/checkout/googlepay/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/googlepay/GooglePayConfiguration {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/googlepay/GooglePayNavigationKeys {
+	public fun <init> ()V
+}
+
 public final class com/adyen/checkout/googlepay/old/AllowedAuthMethods {
 	public static final field CRYPTOGRAM_3DS Ljava/lang/String;
 	public static final field INSTANCE Lcom/adyen/checkout/googlepay/old/AllowedAuthMethods;
