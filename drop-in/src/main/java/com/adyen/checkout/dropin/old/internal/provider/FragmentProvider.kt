@@ -20,7 +20,7 @@ import com.adyen.checkout.dropin.old.internal.ui.GiftCardComponentDialogFragment
 import com.adyen.checkout.dropin.old.internal.ui.GooglePayComponentDialogFragment
 import com.adyen.checkout.dropin.old.internal.util.checkCompileOnly
 import com.adyen.checkout.giftcard.GiftCardComponent
-import com.adyen.checkout.googlepay.GooglePayComponent
+import com.adyen.checkout.googlepay.old.GooglePayComponent
 import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponent
 
 internal fun getFragmentForStoredPaymentMethod(

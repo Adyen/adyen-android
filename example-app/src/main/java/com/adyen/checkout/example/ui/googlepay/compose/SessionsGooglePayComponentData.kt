@@ -10,7 +10,7 @@ package com.adyen.checkout.example.ui.googlepay.compose
 
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.old.GooglePayComponentState
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 

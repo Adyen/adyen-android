@@ -33,7 +33,7 @@ import com.adyen.checkout.dropin.old.internal.ui.model.DropInPaymentMethodInform
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.giftcard.GiftCardConfiguration
-import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.old.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.instant.GLOBAL_INSTANT_CONFIG_KEY
 import com.adyen.checkout.instant.InstantPaymentConfiguration

@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
-import com.adyen.checkout.googlepay.GooglePayComponent
+import com.adyen.checkout.googlepay.old.GooglePayComponent
 
 @Composable
 internal fun SessionsGooglePayScreen(

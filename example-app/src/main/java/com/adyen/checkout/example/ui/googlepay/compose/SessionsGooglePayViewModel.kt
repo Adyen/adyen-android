@@ -26,8 +26,8 @@ import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.googlepay.GooglePayComponentState
-import com.adyen.checkout.googlepay.GooglePayUnavailableException
+import com.adyen.checkout.googlepay.old.GooglePayComponentState
+import com.adyen.checkout.googlepay.old.GooglePayUnavailableException
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 import com.adyen.checkout.sessions.core.CheckoutSessionResult

@@ -55,9 +55,9 @@ import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.internal.provider.GiftCardComponentProvider
-import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayComponentState
-import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
+import com.adyen.checkout.googlepay.old.GooglePayComponent
+import com.adyen.checkout.googlepay.old.GooglePayComponentState
+import com.adyen.checkout.googlepay.old.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealComponentState
 import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider

@@ -15,8 +15,8 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.old.GooglePayComponent
+import com.adyen.checkout.googlepay.old.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.redirect.old.RedirectConfiguration
 import com.adyen.checkout.threeds2.old.Adyen3DS2Configuration

@@ -21,7 +21,7 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runCompileOnly
-import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
+import com.adyen.checkout.googlepay.old.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 @Suppress("LongParameterList")
