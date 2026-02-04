@@ -691,6 +691,30 @@ public final class com/adyen/checkout/core/common/internal/data/model/PublicKeyR
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public final class com/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Invalid : com/adyen/checkout/core/common/internal/helper/LocaleValidationResult {
+	public static final field $stable I
+	public fun <init> (Lcom/adyen/checkout/core/error/CheckoutError;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/error/CheckoutError;
+	public final fun copy (Lcom/adyen/checkout/core/error/CheckoutError;)Lcom/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Invalid;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Invalid;Lcom/adyen/checkout/core/error/CheckoutError;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Invalid;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Lcom/adyen/checkout/core/error/CheckoutError;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Valid : com/adyen/checkout/core/common/internal/helper/LocaleValidationResult {
+	public static final field $stable I
+	public fun <init> (Ljava/util/Locale;)V
+	public final fun component1 ()Ljava/util/Locale;
+	public final fun copy (Ljava/util/Locale;)Lcom/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Valid;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Valid;Ljava/util/Locale;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/internal/helper/LocaleValidationResult$Valid;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLocale ()Ljava/util/Locale;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/core/common/internal/model/EmptyResponse$Companion {
 }
 
@@ -1910,6 +1934,12 @@ public final class com/adyen/checkout/core/error/CheckoutError$ErrorCode {
 	public static final field INVALID_CURRENCY_CODE Ljava/lang/String;
 	public static final field INVALID_LOCALE Ljava/lang/String;
 	public static final field SESSION_SETUP_FAILURE Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/error/CheckoutException : java/lang/Exception {
+	public static final field $stable I
+	public fun <init> (Lcom/adyen/checkout/core/error/CheckoutError;)V
+	public final fun getError ()Lcom/adyen/checkout/core/error/CheckoutError;
 }
 
 public final class com/adyen/checkout/core/redirect/internal/DefaultRedirectHandler$Companion {

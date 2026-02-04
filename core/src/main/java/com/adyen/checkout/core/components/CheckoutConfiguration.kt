@@ -16,8 +16,10 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
+import com.adyen.checkout.core.common.internal.helper.LocaleValidationResult
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.Configuration
+import com.adyen.checkout.core.error.CheckoutException
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 
@@ -75,12 +77,11 @@ class CheckoutConfiguration(
         validateContents()
     }
 
-    @Suppress("TooGenericExceptionThrown")
     private fun validateContents() {
-        shopperLocale?.let {
-            if (!LocaleUtil.isValidLocale(it)) {
-                // TODO - Error propagation
-                throw Exception("Invalid shopper locale: $shopperLocale.")
+        shopperLocale?.let { locale ->
+            when (val result = LocaleUtil.validateLocale(locale)) {
+                is LocaleValidationResult.Valid -> { /* no ops */ }
+                is LocaleValidationResult.Invalid -> throw CheckoutException(result.error)
             }
         }
     }
