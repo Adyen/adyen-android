@@ -12,8 +12,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CheckoutCurrency
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
-import com.adyen.checkout.core.error.CheckoutError
-import com.adyen.checkout.core.error.CheckoutException
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -27,21 +25,6 @@ data class Amount(
     val currency: String,
     val value: Long = 0L,
 ) : ModelObject() {
-
-    init {
-        validateCurrency()
-    }
-
-    private fun validateCurrency() {
-        if (!CheckoutCurrency.isSupported(currency)) {
-            throw CheckoutException(
-                CheckoutError(
-                    code = CheckoutError.ErrorCode.INVALID_CURRENCY_CODE,
-                    message = "Invalid currency code: $currency",
-                ),
-            )
-        }
-    }
 
     companion object {
         private const val CURRENCY = "currency"
