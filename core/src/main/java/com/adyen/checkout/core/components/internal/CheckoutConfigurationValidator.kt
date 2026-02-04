@@ -8,10 +8,8 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.common.internal.helper.ClientKeyValidationResult
 import com.adyen.checkout.core.common.internal.helper.ClientKeyValidator
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
-import com.adyen.checkout.core.common.internal.helper.LocaleValidationResult
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.error.CheckoutError
 
@@ -22,16 +20,10 @@ import com.adyen.checkout.core.error.CheckoutError
  */
 @Suppress("ReturnCount")
 internal fun CheckoutConfiguration.validate(): CheckoutError? {
-    when (val result = ClientKeyValidator.validateClientKey(clientKey)) {
-        is ClientKeyValidationResult.Valid -> { /* valid */ }
-        is ClientKeyValidationResult.Invalid -> return result.error
-    }
+    ClientKeyValidator.validateClientKey(clientKey)?.let { return it }
 
     shopperLocale?.let { locale ->
-        when (val result = LocaleUtil.validateLocale(locale)) {
-            is LocaleValidationResult.Valid -> { /* valid */ }
-            is LocaleValidationResult.Invalid -> return result.error
-        }
+        LocaleUtil.validateLocale(locale)?.let { return it }
     }
 
     return null

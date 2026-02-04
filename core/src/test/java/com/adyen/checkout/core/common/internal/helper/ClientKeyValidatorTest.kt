@@ -10,6 +10,8 @@ package com.adyen.checkout.core.common.internal.helper
 
 import com.adyen.checkout.core.error.CheckoutError
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -20,44 +22,38 @@ internal class ClientKeyValidatorTest {
 
     @ParameterizedTest
     @MethodSource("validClientKeysSource")
-    fun `when client key is valid then return Valid result`(clientKey: String) {
+    fun `when client key is valid then return null`(clientKey: String) {
         val result = ClientKeyValidator.validateClientKey(clientKey)
 
-        assertTrue(result is ClientKeyValidationResult.Valid)
-        assertEquals(clientKey, (result as ClientKeyValidationResult.Valid).clientKey)
+        assertNull(result)
     }
 
     @ParameterizedTest
     @MethodSource("invalidClientKeysSource")
-    fun `when client key is invalid then return Invalid result`(clientKey: String) {
+    fun `when client key is invalid then return error`(clientKey: String) {
         val result = ClientKeyValidator.validateClientKey(clientKey)
 
-        assertTrue(result is ClientKeyValidationResult.Invalid)
-        assertEquals(
-            CheckoutError.ErrorCode.INVALID_CLIENT_KEY,
-            (result as ClientKeyValidationResult.Invalid).error.code,
-        )
+        assertNotNull(result)
+        assertEquals(CheckoutError.ErrorCode.INVALID_CLIENT_KEY, result?.code)
     }
 
     @Test
-    fun `when client key is too short then return Invalid result with length error`() {
+    fun `when client key is too short then return error with length message`() {
         val result = ClientKeyValidator.validateClientKey("test_1234567")
 
-        assertTrue(result is ClientKeyValidationResult.Invalid)
-        val error = (result as ClientKeyValidationResult.Invalid).error
-        assertEquals(CheckoutError.ErrorCode.INVALID_CLIENT_KEY, error.code)
-        assertTrue(error.message?.contains("length") == true)
+        assertNotNull(result)
+        assertEquals(CheckoutError.ErrorCode.INVALID_CLIENT_KEY, result?.code)
+        assertTrue(result?.message?.contains("length") == true)
     }
 
     @Test
-    fun `when client key is too long then return Invalid result`() {
+    fun `when client key is too long then return error`() {
         // 138 chars total exceeds MAX_LENGTH of 137
         val longKey = "testtest_" + "a".repeat(129)
         val result = ClientKeyValidator.validateClientKey(longKey)
 
-        assertTrue(result is ClientKeyValidationResult.Invalid)
-        val error = (result as ClientKeyValidationResult.Invalid).error
-        assertEquals(CheckoutError.ErrorCode.INVALID_CLIENT_KEY, error.code)
+        assertNotNull(result)
+        assertEquals(CheckoutError.ErrorCode.INVALID_CLIENT_KEY, result?.code)
     }
 
     companion object {
