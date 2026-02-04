@@ -17,7 +17,6 @@ import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.wallet.Wallet
-import java.lang.ref.WeakReference
 
 internal class GooglePayAvailabilityCheck(
     private val application: Application,
@@ -35,21 +34,19 @@ internal class GooglePayAvailabilityCheck(
             return
         }
 
-        val callbackWeakReference = WeakReference(callback)
-
         val paymentsClient = Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
         val readyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(componentParams)
         val readyToPayTask = paymentsClient.isReadyToPay(readyToPayRequest)
         readyToPayTask.addOnSuccessListener { result ->
-            callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod)
+            callback.onAvailabilityResult(result == true, paymentMethod)
         }
         readyToPayTask.addOnCanceledListener {
             adyenLog(AdyenLogLevel.ERROR) { "GooglePay readyToPay task is cancelled." }
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
+            callback.onAvailabilityResult(false, paymentMethod)
         }
         readyToPayTask.addOnFailureListener {
             adyenLog(AdyenLogLevel.ERROR, it) { "GooglePay readyToPay task is failed." }
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
+            callback.onAvailabilityResult(false, paymentMethod)
         }
     }
 }
