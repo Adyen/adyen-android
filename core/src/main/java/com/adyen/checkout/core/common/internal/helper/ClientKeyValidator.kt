@@ -8,14 +8,12 @@
 
 package com.adyen.checkout.core.common.internal.helper
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.error.CheckoutError
 
 /**
- * Utility class for client key validation.
+ * Validator for client keys.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object ClientKeyUtil {
+internal object ClientKeyValidator {
 
     private const val MIN_LENGTH = 13
     private const val MAX_LENGTH = 137
@@ -33,7 +31,6 @@ object ClientKeyUtil {
      * @param clientKey The client key to validate.
      * @return [ClientKeyValidationResult.Valid] if the key is valid, [ClientKeyValidationResult.Invalid] otherwise.
      */
-    @JvmStatic
     fun validateClientKey(clientKey: String): ClientKeyValidationResult = when {
         clientKey.length !in MIN_LENGTH..MAX_LENGTH -> {
             ClientKeyValidationResult.Invalid(
@@ -60,8 +57,7 @@ object ClientKeyUtil {
 /**
  * Result of client key validation.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-sealed class ClientKeyValidationResult {
+internal sealed class ClientKeyValidationResult {
     data class Valid(val clientKey: String) : ClientKeyValidationResult()
     data class Invalid(val error: CheckoutError) : ClientKeyValidationResult()
 }

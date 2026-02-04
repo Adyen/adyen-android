@@ -16,12 +16,12 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 
-internal class ClientKeyUtilTest {
+internal class ClientKeyValidatorTest {
 
     @ParameterizedTest
     @MethodSource("validClientKeysSource")
     fun `when client key is valid then return Valid result`(clientKey: String) {
-        val result = ClientKeyUtil.validateClientKey(clientKey)
+        val result = ClientKeyValidator.validateClientKey(clientKey)
 
         assertTrue(result is ClientKeyValidationResult.Valid)
         assertEquals(clientKey, (result as ClientKeyValidationResult.Valid).clientKey)
@@ -30,7 +30,7 @@ internal class ClientKeyUtilTest {
     @ParameterizedTest
     @MethodSource("invalidClientKeysSource")
     fun `when client key is invalid then return Invalid result`(clientKey: String) {
-        val result = ClientKeyUtil.validateClientKey(clientKey)
+        val result = ClientKeyValidator.validateClientKey(clientKey)
 
         assertTrue(result is ClientKeyValidationResult.Invalid)
         assertEquals(
@@ -41,7 +41,7 @@ internal class ClientKeyUtilTest {
 
     @Test
     fun `when client key is too short then return Invalid result with length error`() {
-        val result = ClientKeyUtil.validateClientKey("test_1234567")
+        val result = ClientKeyValidator.validateClientKey("test_1234567")
 
         assertTrue(result is ClientKeyValidationResult.Invalid)
         val error = (result as ClientKeyValidationResult.Invalid).error
@@ -53,7 +53,7 @@ internal class ClientKeyUtilTest {
     fun `when client key is too long then return Invalid result`() {
         // 138 chars total exceeds MAX_LENGTH of 137
         val longKey = "testtest_" + "a".repeat(129)
-        val result = ClientKeyUtil.validateClientKey(longKey)
+        val result = ClientKeyValidator.validateClientKey(longKey)
 
         assertTrue(result is ClientKeyValidationResult.Invalid)
         val error = (result as ClientKeyValidationResult.Invalid).error

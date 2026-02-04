@@ -15,8 +15,8 @@ import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
-import com.adyen.checkout.core.common.internal.helper.ClientKeyUtil
 import com.adyen.checkout.core.common.internal.helper.ClientKeyValidationResult
+import com.adyen.checkout.core.common.internal.helper.ClientKeyValidator
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.common.internal.helper.LocaleValidationResult
 import com.adyen.checkout.core.components.data.model.Amount
@@ -80,7 +80,7 @@ class CheckoutConfiguration(
     }
 
     private fun validateContents() {
-        when (val result = ClientKeyUtil.validateClientKey(clientKey)) {
+        when (val result = ClientKeyValidator.validateClientKey(clientKey)) {
             is ClientKeyValidationResult.Valid -> { /* no ops */ }
             is ClientKeyValidationResult.Invalid -> throw CheckoutException(result.error)
         }
