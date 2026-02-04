@@ -15,7 +15,7 @@ class TestPaymentComponentState(
     override val data: PaymentComponentData<TestPaymentMethod> = PaymentComponentData(
         paymentMethod = TestPaymentMethod(),
         order = null,
-        amount = Amount(),
+        amount = Amount(currency = "EUR"),
     ),
     override val isValid: Boolean = true,
 ) : PaymentComponentState<TestPaymentMethod>

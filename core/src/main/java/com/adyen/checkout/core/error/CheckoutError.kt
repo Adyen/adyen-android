@@ -29,6 +29,7 @@ data class CheckoutError(
         const val INVALID_CLIENT_KEY = "InvalidClientKey"
         const val INVALID_LOCALE = "InvalidLocale"
         const val INVALID_CURRENCY_CODE = "InvalidCurrencyCode"
+        const val INVALID_AMOUNT_VALUE = "InvalidAmountValue"
 
         // Session Setup Errors
         const val SESSION_SETUP_FAILURE = "SessionSetupFailure"
