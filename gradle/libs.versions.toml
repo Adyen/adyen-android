@@ -36,7 +36,7 @@ navigation3 = "1.0.0"
 recyclerview = "1.4.0"
 startup = "1.2.0"
 constraintlayout = "2.2.1"
-constraintlayout-compose = "1.0.1"
+constraintlayout-compose = "1.1.1"
 
 # Compose dependencies
 compose-activity = "1.10.1"
