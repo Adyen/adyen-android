@@ -871,12 +871,12 @@ public abstract interface class com/adyen/checkout/core/components/Checkout$Resu
 
 public final class com/adyen/checkout/core/components/Checkout$Result$Error : com/adyen/checkout/core/components/Checkout$Result {
 	public static final field $stable I
-	public fun <init> (Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/components/Checkout$Result$Error;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/Checkout$Result$Error;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/Checkout$Result$Error;
+	public fun <init> (Lcom/adyen/checkout/core/error/CheckoutError;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/error/CheckoutError;
+	public final fun copy (Lcom/adyen/checkout/core/error/CheckoutError;)Lcom/adyen/checkout/core/components/Checkout$Result$Error;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/Checkout$Result$Error;Lcom/adyen/checkout/core/error/CheckoutError;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/Checkout$Result$Error;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getErrorReason ()Ljava/lang/String;
+	public final fun getError ()Lcom/adyen/checkout/core/error/CheckoutError;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
