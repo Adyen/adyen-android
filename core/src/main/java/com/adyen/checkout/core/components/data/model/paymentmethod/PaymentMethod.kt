@@ -17,7 +17,8 @@ import org.json.JSONObject
  * Abstract class representing a payment method from the /paymentMethods API response.
  *
  * Specific payment method types extend this class with their own fields.
- * Unknown payment methods are deserialized as [InstantPaymentMethod].
+ * Explicitly unsupported payment methods are deserialized as [UnsupportedPaymentMethod],
+ * while other unknown types fall back to [InstantPaymentMethod].
  */
 abstract class PaymentMethod
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
