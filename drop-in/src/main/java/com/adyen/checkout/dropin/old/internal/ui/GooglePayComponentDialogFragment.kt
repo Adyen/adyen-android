@@ -24,8 +24,8 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentGooglePayComponentBinding
 import com.adyen.checkout.dropin.old.internal.provider.getComponentFor
-import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.old.GooglePayComponent
+import com.adyen.checkout.googlepay.old.GooglePayComponentState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

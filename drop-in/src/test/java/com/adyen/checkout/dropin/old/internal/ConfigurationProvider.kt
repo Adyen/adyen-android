@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.dropin.old.dropIn
-import com.adyen.checkout.googlepay.googlePay
+import com.adyen.checkout.googlepay.old.googlePay
 import java.util.Locale
 
 internal object ConfigurationProvider {

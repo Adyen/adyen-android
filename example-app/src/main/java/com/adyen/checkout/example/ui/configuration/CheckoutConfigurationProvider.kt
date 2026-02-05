@@ -23,7 +23,7 @@ import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
-import com.adyen.checkout.googlepay.googlePay
+import com.adyen.checkout.googlepay.old.googlePay
 import com.adyen.checkout.instant.instantPayment
 import com.adyen.checkout.mealvoucherfr.mealVoucherFR
 import com.adyen.checkout.threeds2.old.adyen3DS2

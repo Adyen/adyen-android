@@ -294,7 +294,7 @@ public final class com/adyen/checkout/dropin/old/DropInConfiguration$Builder : c
 	public final fun addEntercashConfiguration (Lcom/adyen/checkout/entercash/EntercashConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addEpsConfiguration (Lcom/adyen/checkout/eps/EPSConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addGiftCardConfiguration (Lcom/adyen/checkout/giftcard/GiftCardConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
-	public final fun addGooglePayConfiguration (Lcom/adyen/checkout/googlepay/GooglePayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addGooglePayConfiguration (Lcom/adyen/checkout/googlepay/old/GooglePayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addIdealConfiguration (Lcom/adyen/checkout/ideal/IdealConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
