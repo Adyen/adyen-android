@@ -11,7 +11,7 @@ version-code = "1"
 android-gradle-plugin = "8.10.1"
 kotlin = "2.1.21"
 ksp = "2.1.21-2.0.1"
-dokka = "2.0.0"
+dokka = "2.1.0"
 hilt = "2.56.2"
 
 # Code quality
