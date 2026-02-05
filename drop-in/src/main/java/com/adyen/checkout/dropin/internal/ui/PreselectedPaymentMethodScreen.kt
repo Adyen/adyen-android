@@ -35,21 +35,27 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun PreselectedPaymentMethodScreen(
-    navigator: DropInNavigator,
     viewModel: PreselectedPaymentMethodViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PreselectedPaymentMethodContent(navigator, viewState)
+    PreselectedPaymentMethodContent(
+        viewState,
+        onBackClicked = { viewModel.onBackClicked() },
+        onPayClicked = { viewModel.onPayClicked() },
+        onOtherPaymentMethodClicked = { viewModel.onOtherPaymentMethodClicked() },
+    )
 }
 
 @Composable
 private fun PreselectedPaymentMethodContent(
-    navigator: DropInNavigator,
     viewState: PreselectedPaymentMethodViewState,
+    onBackClicked: () -> Unit,
+    onPayClicked: () -> Unit,
+    onOtherPaymentMethodClicked: () -> Unit,
 ) {
     Column(Modifier.fillMaxWidth()) {
         IconButton(
-            onClick = { navigator.back() },
+            onClick = onBackClicked,
         ) {
             Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
         }
@@ -87,7 +93,7 @@ private fun PreselectedPaymentMethodContent(
         Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
 
         PrimaryButton(
-            onClick = {},
+            onClick = onPayClicked,
             text = viewState.payButtonText,
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,9 +103,7 @@ private fun PreselectedPaymentMethodContent(
         Spacer(Modifier.size(Dimensions.Spacing.Large))
 
         SecondaryButton(
-            onClick = {
-                navigator.clearAndNavigateTo(PaymentMethodListNavKey)
-            },
+            onClick = onOtherPaymentMethodClicked,
             text = resolveString(CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS),
             modifier = Modifier
                 .fillMaxWidth()
@@ -119,7 +123,9 @@ private fun PreselectedPaymentMethodScreenPreview() {
         payButtonText = "Use $title",
     )
     PreselectedPaymentMethodContent(
-        navigator = DropInNavigator(),
         viewState = viewState,
+        onBackClicked = {},
+        onPayClicked = {},
+        onOtherPaymentMethodClicked = {},
     )
 }

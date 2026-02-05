@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 internal class DropInNavigator {
 
+    // Initialized with an empty key to make the preselected bottom sheet possible
     private val _backStack: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
     val backStack: List<NavKey> get() = _backStack
 
@@ -38,5 +39,9 @@ internal class DropInNavigator {
         if (_backStack.singleOrNull() == EmptyNavKey) {
             _finishFlow.tryEmit(true)
         }
+    }
+
+    fun isEmptyAfterCurrent(): Boolean {
+        return _backStack.filterNot { it is EmptyNavKey }.size <= 1
     }
 }

@@ -124,7 +124,7 @@ public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$Co
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$DropInActivityKt {
 	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$DropInActivityKt;
 	public fun <init> ()V
-	public final fun getLambda$-909878075$drop_in_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$881403345$drop_in_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$DropInScaffoldKt {
@@ -159,16 +159,10 @@ public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$Pa
 	public final fun getLambda$-663209118$drop_in_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$PaymentMethodScreenKt {
-	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$PaymentMethodScreenKt;
-	public fun <init> ()V
-	public final fun getLambda$260416999$drop_in_release ()Lkotlin/jvm/functions/Function2;
-}
-
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$PreselectedPaymentMethodScreenKt {
 	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$PreselectedPaymentMethodScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$884166580$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1302184927$drop_in_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public abstract class com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult : com/adyen/checkout/dropin/old/BaseDropInServiceResult {

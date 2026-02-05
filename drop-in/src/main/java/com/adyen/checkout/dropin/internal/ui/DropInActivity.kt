@@ -20,7 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
@@ -72,67 +72,90 @@ class DropInActivity : ComponentActivity() {
                         backStack = viewModel.navigator.backStack,
                         sceneStrategy = remember { BottomSheetSceneStrategy() },
                         onBack = { viewModel.navigator.back() },
-                        entryProvider = entryProvider {
-                            entry<EmptyNavKey> {
-                                // This empty entry makes sure a bottom sheet can be rendered on top of nothing
-                            }
+                        entryProvider = { key ->
+                            when (key) {
+                                is EmptyNavKey -> {
+                                    // This empty entry makes sure a bottom sheet can be rendered on top of nothing
+                                    NavEntry(key) {}
+                                }
 
-                            entry<PreselectedPaymentMethodNavKey>(
-                                metadata = BottomSheetSceneStrategy.bottomSheet(),
-                            ) { key ->
-                                PreselectedPaymentMethodScreen(
-                                    viewModel.navigator,
-                                    viewModel(
-                                        factory = PreselectedPaymentMethodViewModel.Factory(
-                                            dropInParams = viewModel.dropInParams,
-                                            storedPaymentMethod = key.storedPaymentMethod,
-                                        ),
-                                    ),
-                                )
-                            }
+                                is PreselectedPaymentMethodNavKey -> {
+                                    NavEntry(
+                                        key = key,
+                                        metadata = BottomSheetSceneStrategy.bottomSheet(),
+                                    ) {
+                                        PreselectedPaymentMethodScreen(
+                                            viewModel(
+                                                factory = PreselectedPaymentMethodViewModel.Factory(
+                                                    dropInParams = viewModel.dropInParams,
+                                                    storedPaymentMethod = key.storedPaymentMethod,
+                                                    navigator = viewModel.navigator,
+                                                ),
+                                            ),
+                                        )
+                                    }
+                                }
 
-                            entry<PaymentMethodListNavKey>(
-                                metadata = DropInTransitions.slideInAndOutVertically(),
-                            ) {
-                                PaymentMethodListScreen(
-                                    viewModel.navigator,
-                                    viewModel(
-                                        factory = PaymentMethodListViewModel.Factory(
-                                            dropInParams = viewModel.dropInParams,
-                                            paymentMethodRepository = viewModel.paymentMethodRepository,
-                                        ),
-                                    ),
-                                )
-                            }
+                                is PaymentMethodListNavKey -> {
+                                    NavEntry(
+                                        key = key,
+                                        metadata = DropInTransitions.slideInAndOutVertically(),
+                                    ) {
+                                        PaymentMethodListScreen(
+                                            viewModel.navigator,
+                                            viewModel(
+                                                factory = PaymentMethodListViewModel.Factory(
+                                                    dropInParams = viewModel.dropInParams,
+                                                    paymentMethodRepository = viewModel.paymentMethodRepository,
+                                                ),
+                                            ),
+                                        )
+                                    }
+                                }
 
-                            entry<ManageFavoritesNavKey>(
-                                metadata = DropInTransitions.slideInAndOutHorizontally(),
-                            ) {
-                                ManageFavoritesScreen(
-                                    navigator = viewModel.navigator,
-                                    viewModel = viewModel(
-                                        factory = ManageFavoritesViewModel.Factory(
-                                            paymentMethodRepository = viewModel.paymentMethodRepository,
-                                        ),
-                                    ),
-                                )
-                            }
+                                is ManageFavoritesNavKey -> {
+                                    NavEntry(
+                                        key = key,
+                                        metadata = DropInTransitions.slideInAndOutHorizontally(),
+                                    ) {
+                                        ManageFavoritesScreen(
+                                            navigator = viewModel.navigator,
+                                            viewModel = viewModel(
+                                                factory = ManageFavoritesViewModel.Factory(
+                                                    paymentMethodRepository = viewModel.paymentMethodRepository,
+                                                ),
+                                            ),
+                                        )
+                                    }
+                                }
 
-                            entry<PaymentMethodNavKey>(
-                                metadata = DropInTransitions.slideInAndOutHorizontally(),
-                            ) { key ->
-                                PaymentMethodScreen(
-                                    navigator = viewModel.navigator,
-                                    viewModel = viewModel(
-                                        factory = PaymentMethodViewModel.Factory(
-                                            paymentFlowType = key.paymentFlowType,
-                                            paymentMethodRepository = viewModel.paymentMethodRepository,
-                                            checkoutContext = viewModel.checkoutContext,
-                                            dropInServiceManager = viewModel.dropInServiceManager,
-                                        ),
-                                        key = key.paymentFlowType.hashCode().toString(),
-                                    )
-                                )
+                                is PaymentMethodNavKey -> {
+                                    val transitions = if (viewModel.navigator.isEmptyAfterCurrent()) {
+                                        DropInTransitions.slideInAndOutVertically()
+                                    } else {
+                                        DropInTransitions.slideInAndOutHorizontally()
+                                    }
+
+                                    NavEntry(
+                                        key = key,
+                                        metadata = transitions,
+                                    ) {
+                                        PaymentMethodScreen(
+                                            navigator = viewModel.navigator,
+                                            viewModel = viewModel(
+                                                factory = PaymentMethodViewModel.Factory(
+                                                    paymentFlowType = key.paymentFlowType,
+                                                    paymentMethodRepository = viewModel.paymentMethodRepository,
+                                                    checkoutContext = viewModel.checkoutContext,
+                                                    dropInServiceManager = viewModel.dropInServiceManager,
+                                                ),
+                                                key = key.paymentFlowType.hashCode().toString(),
+                                            ),
+                                        )
+                                    }
+                                }
+
+                                else -> error("Unknown key: $key")
                             }
                         },
                     )
