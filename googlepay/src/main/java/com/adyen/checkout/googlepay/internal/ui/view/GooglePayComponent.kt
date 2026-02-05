@@ -8,5 +8,9 @@
 
 package com.adyen.checkout.googlepay.internal.ui.view
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayComponent
+import androidx.compose.runtime.Composable
+
+@Composable
+internal fun GooglePayComponent() {
+    TODO("Not yet implemented")
+}
