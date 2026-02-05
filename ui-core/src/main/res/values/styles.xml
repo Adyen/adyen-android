@@ -179,7 +179,6 @@
         <item name="android:layout_height">@dimen/primary_button_height</item>
         <item name="android:layout_marginStart">@dimen/standard_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_margin</item>
-        <item name="android:focusable">false</item>
         <item name="android:focusableInTouchMode">false</item>
     </style>
 
