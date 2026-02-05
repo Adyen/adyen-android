@@ -8,12 +8,15 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.model.ModelObject
 
 /**
  * Abstract parent class for [PaymentMethod] and [StoredPaymentMethod].
  */
-abstract class PaymentMethodResponse : ModelObject() {
+abstract class PaymentMethodResponse
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor() : ModelObject() {
 
     abstract val type: String
     abstract val name: String
