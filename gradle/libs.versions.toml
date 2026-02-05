@@ -65,7 +65,7 @@ retrofit2 = "2.11.0"
 # Tests
 arch-core-testing = "2.2.0"
 barista = "4.3.0"
-espresso = "3.6.1"
+espresso = "3.7.0"
 json = "20250107"
 jose4j = "0.9.6"
 junit-jupiter = "5.12.2"
