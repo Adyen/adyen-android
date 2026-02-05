@@ -180,7 +180,6 @@
         <item name="android:layout_marginStart">@dimen/standard_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_margin</item>
         <item name="android:focusable">false</item>
-        <item name="android:focusableInTouchMode">false</item>
     </style>
 
     <style name="AdyenCheckout.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
