@@ -12,7 +12,6 @@ import android.content.Context
 import androidx.annotation.Keep
 import androidx.startup.Initializer
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.googlepay.internal.ui.GooglePayComponent
 import com.adyen.checkout.googlepay.internal.ui.GooglePayFactory
 
