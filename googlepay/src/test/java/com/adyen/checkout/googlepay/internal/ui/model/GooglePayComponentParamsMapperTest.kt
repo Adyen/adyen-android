@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.googlepay.internal.ui.model
 
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.LoggingExtension
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.data.model.Configuration
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -46,7 +47,7 @@ internal class GooglePayComponentParamsMapperTest {
         val params = googlePayComponentParamsMapper.mapToParams(
             componentParamsBundle = componentParamsBundle,
             googlePayConfiguration = googlePayConfiguration,
-            paymentMethod = PaymentMethod(),
+            paymentMethod = createPaymentMethod(),
         )
 
         val expected = getGooglePayComponentParams()
@@ -99,7 +100,7 @@ internal class GooglePayComponentParamsMapperTest {
         val params = googlePayComponentParamsMapper.mapToParams(
             componentParamsBundle = componentParamsBundle,
             googlePayConfiguration = googlePayConfiguration,
-            paymentMethod = PaymentMethod(),
+            paymentMethod = createPaymentMethod(),
         )
 
         val expected = getGooglePayComponentParams(
@@ -138,8 +139,8 @@ internal class GooglePayComponentParamsMapperTest {
             merchantAccount = "GATEWAY_MERCHANT_ID_1",
         )
 
-        val paymentMethod = PaymentMethod(
-            configuration = com.adyen.checkout.components.core.Configuration(
+        val paymentMethod = createPaymentMethod(
+            configuration = Configuration(
                 gatewayMerchantId = "GATEWAY_MERCHANT_ID_2",
             ),
         )
@@ -164,8 +165,8 @@ internal class GooglePayComponentParamsMapperTest {
             merchantAccount = null,
         )
 
-        val paymentMethod = PaymentMethod(
-            configuration = com.adyen.checkout.components.core.Configuration(
+        val paymentMethod = createPaymentMethod(
+            configuration = Configuration(
                 gatewayMerchantId = "GATEWAY_MERCHANT_ID_2",
             ),
         )
@@ -194,7 +195,7 @@ internal class GooglePayComponentParamsMapperTest {
             googlePayComponentParamsMapper.mapToParams(
                 componentParamsBundle = componentParamsBundle,
                 googlePayConfiguration = googlePayConfiguration,
-                paymentMethod = PaymentMethod(),
+                paymentMethod = createPaymentMethod(),
             )
         }
     }
@@ -206,7 +207,7 @@ internal class GooglePayComponentParamsMapperTest {
             allowedCardNetworks = null,
         )
 
-        val paymentMethod = PaymentMethod(
+        val paymentMethod = createPaymentMethod(
             brands = listOf("mc", "amex", "maestro", "discover"),
         )
 
@@ -233,7 +234,7 @@ internal class GooglePayComponentParamsMapperTest {
         val params = googlePayComponentParamsMapper.mapToParams(
             componentParamsBundle = componentParamsBundle,
             googlePayConfiguration = googlePayConfiguration,
-            paymentMethod = PaymentMethod(),
+            paymentMethod = createPaymentMethod(),
         )
 
         val expected = getGooglePayComponentParams(
@@ -255,7 +256,7 @@ internal class GooglePayComponentParamsMapperTest {
         val params = googlePayComponentParamsMapper.mapToParams(
             componentParamsBundle = componentParamsBundle,
             googlePayConfiguration = googlePayConfiguration,
-            paymentMethod = PaymentMethod(),
+            paymentMethod = createPaymentMethod(),
         )
 
         val expected = getGooglePayComponentParams(
@@ -280,7 +281,7 @@ internal class GooglePayComponentParamsMapperTest {
         val params = googlePayComponentParamsMapper.mapToParams(
             componentParamsBundle = componentParamsBundle,
             googlePayConfiguration = googlePayConfiguration,
-            paymentMethod = PaymentMethod(),
+            paymentMethod = createPaymentMethod(),
         )
 
         val expected = getGooglePayComponentParams(
@@ -303,7 +304,7 @@ internal class GooglePayComponentParamsMapperTest {
         val params = googlePayComponentParamsMapper.mapToParams(
             componentParamsBundle = componentParamsBundle,
             googlePayConfiguration = googlePayConfiguration,
-            paymentMethod = PaymentMethod(),
+            paymentMethod = createPaymentMethod(),
         )
 
         val expected = getGooglePayComponentParams(
@@ -324,7 +325,7 @@ internal class GooglePayComponentParamsMapperTest {
         val params = googlePayComponentParamsMapper.mapToParams(
             componentParamsBundle = componentParamsBundle,
             googlePayConfiguration = googlePayConfiguration,
-            paymentMethod = PaymentMethod(),
+            paymentMethod = createPaymentMethod(),
         )
 
         val expected = getGooglePayComponentParams(
@@ -356,6 +357,18 @@ internal class GooglePayComponentParamsMapperTest {
             publicKey = publicKey,
         ),
         sessionParams = null,
+    )
+
+    private fun createPaymentMethod(
+        type: String = "googlepay",
+        name: String = "Google Pay",
+        brands: List<String>? = null,
+        configuration: Configuration? = null,
+    ) = PaymentMethod(
+        type = type,
+        name = name,
+        brands = brands,
+        configuration = configuration,
     )
 
     @Suppress("LongParameterList")

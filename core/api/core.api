@@ -416,6 +416,10 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency$Companion {
 	public final fun isSupported (Ljava/lang/String;)Z
 }
 
+public abstract interface class com/adyen/checkout/core/common/ComponentAvailableCallback {
+	public abstract fun onAvailabilityResult (ZLcom/adyen/checkout/core/components/data/model/PaymentMethod;)V
+}
+
 public final class com/adyen/checkout/core/common/Environment : android/os/Parcelable {
 	public static final field $stable I
 	public static final field APSE Lcom/adyen/checkout/core/common/Environment;

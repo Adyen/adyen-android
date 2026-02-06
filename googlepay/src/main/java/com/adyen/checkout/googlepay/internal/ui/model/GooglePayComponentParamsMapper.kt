@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.googlepay.internal.ui.model
 
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutCurrency
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.error.internal.ComponentError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
@@ -25,7 +25,7 @@ internal class GooglePayComponentParamsMapper {
 
     fun mapToParams(
         componentParamsBundle: ComponentParamsBundle,
-        googlePayConfiguration: GooglePayConfiguration,
+        googlePayConfiguration: GooglePayConfiguration?,
         paymentMethod: PaymentMethod,
     ): GooglePayComponentParams {
         // TODO - Pass isCreatedByDropIn
@@ -40,22 +40,22 @@ internal class GooglePayComponentParamsMapper {
                 commonComponentParams.environment,
                 googlePayConfiguration
             ),
-            totalPriceStatus = googlePayConfiguration.totalPriceStatus
+            totalPriceStatus = googlePayConfiguration?.totalPriceStatus
                 ?: DEFAULT_TOTAL_PRICE_STATUS,
-            countryCode = googlePayConfiguration.countryCode,
-            merchantInfo = googlePayConfiguration.merchantInfo,
-            isAllowPrepaidCards = googlePayConfiguration.isAllowPrepaidCards ?: false,
-            isAllowCreditCards = googlePayConfiguration.isAllowCreditCards,
-            isAssuranceDetailsRequired = googlePayConfiguration.isAssuranceDetailsRequired,
-            isEmailRequired = googlePayConfiguration.isEmailRequired ?: false,
-            isExistingPaymentMethodRequired = googlePayConfiguration.isExistingPaymentMethodRequired
+            countryCode = googlePayConfiguration?.countryCode,
+            merchantInfo = googlePayConfiguration?.merchantInfo,
+            isAllowPrepaidCards = googlePayConfiguration?.isAllowPrepaidCards ?: false,
+            isAllowCreditCards = googlePayConfiguration?.isAllowCreditCards,
+            isAssuranceDetailsRequired = googlePayConfiguration?.isAssuranceDetailsRequired,
+            isEmailRequired = googlePayConfiguration?.isEmailRequired ?: false,
+            isExistingPaymentMethodRequired = googlePayConfiguration?.isExistingPaymentMethodRequired
                 ?: false,
-            isShippingAddressRequired = googlePayConfiguration.isShippingAddressRequired ?: false,
-            shippingAddressParameters = googlePayConfiguration.shippingAddressParameters,
-            isBillingAddressRequired = googlePayConfiguration.isBillingAddressRequired ?: false,
-            billingAddressParameters = googlePayConfiguration.billingAddressParameters,
-            checkoutOption = googlePayConfiguration.checkoutOption,
-            googlePayButtonStyling = googlePayConfiguration.googlePayButtonStyling,
+            isShippingAddressRequired = googlePayConfiguration?.isShippingAddressRequired ?: false,
+            shippingAddressParameters = googlePayConfiguration?.shippingAddressParameters,
+            isBillingAddressRequired = googlePayConfiguration?.isBillingAddressRequired ?: false,
+            billingAddressParameters = googlePayConfiguration?.billingAddressParameters,
+            checkoutOption = googlePayConfiguration?.checkoutOption,
+            googlePayButtonStyling = googlePayConfiguration?.googlePayButtonStyling,
         )
     }
 
@@ -109,10 +109,10 @@ internal class GooglePayComponentParamsMapper {
 
     private fun getGooglePayEnvironment(
         environment: Environment,
-        googlePayConfiguration: GooglePayConfiguration,
+        googlePayConfiguration: GooglePayConfiguration?,
     ): Int {
         return when {
-            googlePayConfiguration.googlePayEnvironment != null -> googlePayConfiguration.googlePayEnvironment
+            googlePayConfiguration?.googlePayEnvironment != null -> googlePayConfiguration.googlePayEnvironment
             environment == Environment.TEST -> WalletConstants.ENVIRONMENT_TEST
             else -> WalletConstants.ENVIRONMENT_PRODUCTION
         }
