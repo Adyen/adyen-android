@@ -11,6 +11,7 @@ package com.adyen.checkout.core.common.internal.helper
 import com.adyen.checkout.core.error.CheckoutError
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -23,22 +24,19 @@ internal class LocaleUtilTest {
 
     @ParameterizedTest
     @MethodSource("validLocalesSource")
-    fun `when locale is valid then return Valid result`(locale: Locale) {
+    fun `when locale is valid then return null`(locale: Locale) {
         val result = LocaleUtil.validateLocale(locale)
 
-        assertTrue(result is LocaleValidationResult.Valid)
+        assertNull(result)
     }
 
     @ParameterizedTest
     @MethodSource("invalidLocalesSource")
-    fun `when locale is invalid then return Invalid result`(locale: Locale) {
+    fun `when locale is invalid then return error`(locale: Locale) {
         val result = LocaleUtil.validateLocale(locale)
 
-        assertTrue(result is LocaleValidationResult.Invalid)
-        assertEquals(
-            CheckoutError.ErrorCode.INVALID_LOCALE,
-            (result as LocaleValidationResult.Invalid).error.code,
-        )
+        assertNotNull(result)
+        assertEquals(CheckoutError.ErrorCode.INVALID_LOCALE, result?.code)
     }
 
     @Test
@@ -47,9 +45,8 @@ internal class LocaleUtilTest {
 
         val result = LocaleUtil.validateLocale(invalidLocale)
 
-        assertTrue(result is LocaleValidationResult.Invalid)
-        val error = (result as LocaleValidationResult.Invalid).error
-        assertNotNull(error.cause)
+        assertNotNull(result)
+        assertNotNull(result?.cause)
     }
 
     @Test
@@ -58,9 +55,8 @@ internal class LocaleUtilTest {
 
         val result = LocaleUtil.validateLocale(invalidLocale)
 
-        assertTrue(result is LocaleValidationResult.Invalid)
-        val error = (result as LocaleValidationResult.Invalid).error
-        assertTrue(error.message?.contains("español") == true)
+        assertNotNull(result)
+        assertTrue(result?.message?.contains("español") == true)
     }
 
     @Test

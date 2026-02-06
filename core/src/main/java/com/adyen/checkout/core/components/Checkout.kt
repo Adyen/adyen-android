@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
+import com.adyen.checkout.core.components.internal.validate
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.SessionResponse
 
@@ -20,6 +21,10 @@ object Checkout {
         sessionResponse: SessionResponse,
         configuration: CheckoutConfiguration,
     ): Result<CheckoutContext.Sessions> {
+        configuration.validate()?.let { error ->
+            return Result.Error(error)
+        }
+
         val initializationData = CheckoutInitializer.initialize(
             checkoutConfiguration = configuration,
             sessionResponse = sessionResponse,
@@ -48,6 +53,10 @@ object Checkout {
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         configuration: CheckoutConfiguration,
     ): Result<CheckoutContext.Advanced> {
+        configuration.validate()?.let { error ->
+            return Result.Error(error)
+        }
+
         val initializationData = CheckoutInitializer.initialize(
             checkoutConfiguration = configuration,
             sessionResponse = null,
