@@ -17,6 +17,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.googlepay.getGooglePayConfiguration
+import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
@@ -55,13 +56,16 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayPaymentCompon
             GooglePayUtils.createWalletOptions(googlePayComponentParams),
         )
 
+        val googlePayAvailabilityCheck = GooglePayAvailabilityCheck(application)
+
         return GooglePayComponent(
             componentParams = googlePayComponentParams,
             analyticsManager = analyticsManager,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             paymentsClient = paymentsClient,
             coroutineScope = coroutineScope,
-            paymentMethodType = paymentMethod.type,
+            paymentMethod = paymentMethod,
+            googlePayAvailabilityCheck = googlePayAvailabilityCheck,
             componentStateValidator = componentStateValidator,
             componentStateFactory = componentStateFactory,
             componentStateReducer = componentStateReducer,

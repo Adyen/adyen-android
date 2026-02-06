@@ -17,6 +17,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -25,6 +26,7 @@ import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.googlepay.GooglePayMainNavigationKey
+import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.helper.awaitTask
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
@@ -55,7 +57,8 @@ internal class GooglePayComponent(
     private val sdkDataProvider: SdkDataProvider,
     private val paymentsClient: PaymentsClient,
     private val coroutineScope: CoroutineScope,
-    private val paymentMethodType: String?,
+    private val paymentMethod: PaymentMethod,
+    private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
     private val componentStateValidator: GooglePayComponentStateValidator,
     componentStateFactory: GooglePayComponentStateFactory,
     componentStateReducer: GooglePayComponentStateReducer,
@@ -88,10 +91,21 @@ internal class GooglePayComponent(
 
     init {
         initializeAnalytics()
+        checkAvailability()
     }
 
     private fun initializeAnalytics() {
         analyticsManager.initialize(this, coroutineScope)
+    }
+
+    private fun checkAvailability() {
+        googlePayAvailabilityCheck.isAvailable(
+            paymentMethod = paymentMethod,
+            componentParams = componentParams,
+        ) { isAvailable, _ ->
+            onIntent(GooglePayIntent.UpdateAvailability(isAvailable))
+            onIntent(GooglePayIntent.UpdateButtonVisible(isAvailable))
+        }
     }
 
     override fun submit() {
@@ -146,7 +160,7 @@ internal class GooglePayComponent(
 
         val paymentComponentState = componentState.value.toPaymentComponentState(
             amount = componentParams.amount,
-            paymentMethodType = paymentMethodType,
+            paymentMethodType = paymentMethod.type,
             sdkDataProvider = sdkDataProvider,
         )
 

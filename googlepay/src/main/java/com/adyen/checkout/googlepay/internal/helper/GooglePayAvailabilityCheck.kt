@@ -6,14 +6,13 @@
  * Created by ozgur on 3/2/2026.
  */
 
-package com.adyen.checkout.googlepay.internal.util
+package com.adyen.checkout.googlepay.internal.helper
 
 import android.app.Application
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.ComponentAvailableCallback
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.PaymentMethod
-import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
