@@ -8,5 +8,8 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayNavKeys
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
+
+@Serializable
+internal data object GooglePayNavKey : NavKey
