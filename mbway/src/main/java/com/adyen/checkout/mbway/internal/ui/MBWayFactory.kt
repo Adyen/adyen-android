@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
+import android.app.Application
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
@@ -24,7 +25,9 @@ import kotlinx.coroutines.CoroutineScope
 
 internal class MBWayFactory : PaymentComponentFactory<MBWayPaymentComponentState, MBWayComponent> {
 
+    @Suppress("UNUSED_PARAMETER")
     override fun create(
+        application: Application,
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,

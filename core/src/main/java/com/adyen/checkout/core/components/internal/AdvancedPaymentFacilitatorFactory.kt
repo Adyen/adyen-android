@@ -50,6 +50,7 @@ internal class AdvancedPaymentFacilitatorFactory(
         )
 
         val paymentComponent = PaymentMethodProvider.get(
+            application = applicationContext.applicationContext as android.app.Application,
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,

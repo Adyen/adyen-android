@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import android.app.Application
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.getCardConfiguration
@@ -41,7 +42,9 @@ internal class CardFactory :
     PaymentComponentFactory<CardPaymentComponentState, CardComponent>,
     StoredPaymentComponentFactory<CardPaymentComponentState, StoredCardComponent> {
 
+    @Suppress("UNUSED_PARAMETER")
     override fun create(
+        application: Application,
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -84,13 +87,15 @@ internal class CardFactory :
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     override fun create(
+        application: Application,
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        @Suppress("UNUSED_PARAMETER") checkoutCallbacks: CheckoutCallbacks,
+        checkoutCallbacks: CheckoutCallbacks,
     ): StoredCardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,

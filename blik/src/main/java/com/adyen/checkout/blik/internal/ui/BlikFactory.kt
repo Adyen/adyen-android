@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.blik.internal.ui
 
+import android.app.Application
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateFactory
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateReducer
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
@@ -28,7 +29,9 @@ internal class BlikFactory :
     PaymentComponentFactory<BlikPaymentComponentState, BlikComponent>,
     StoredPaymentComponentFactory<BlikPaymentComponentState, StoredBlikComponent> {
 
+    @Suppress("UNUSED_PARAMETER")
     override fun create(
+        application: Application,
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -49,13 +52,15 @@ internal class BlikFactory :
         )
     }
 
+    @Suppress("UNUSED_PARAMETER")
     override fun create(
+        application: Application,
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        @Suppress("UNUSED_PARAMETER") checkoutCallbacks: CheckoutCallbacks,
+        checkoutCallbacks: CheckoutCallbacks,
     ): StoredBlikComponent {
         val componentParams = componentParamsBundle.commonComponentParams
         return StoredBlikComponent(
