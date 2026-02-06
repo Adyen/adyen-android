@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
+import android.app.Application
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
@@ -18,7 +19,10 @@ import com.adyen.checkout.googlepay.internal.ui.state.GooglePayPaymentComponentS
 import kotlinx.coroutines.CoroutineScope
 
 internal class GooglePayFactory : PaymentComponentFactory<GooglePayPaymentComponentState, GooglePayComponent> {
+
+    @Suppress("UNUSED_PARAMETER")
     override fun create(
+        application: Application,
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -26,6 +30,7 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayPaymentCompon
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks
     ): GooglePayComponent {
+        // TODO - Implement GooglePayComponent creation
         return GooglePayComponent()
     }
 }
