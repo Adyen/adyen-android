@@ -42,7 +42,7 @@ constraintlayout-compose = "1.1.1"
 compose-activity = "1.12.2"
 compose-bom = "2025.05.01"
 compose-hilt = "1.3.0"
-compose-viewmodel = "2.9.3"
+compose-viewmodel = "2.10.0"
 
 # Adyen dependencies
 adyen3ds2 = "2.2.25"
