@@ -21,12 +21,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -41,12 +44,14 @@ fun PrimaryButton(
     text: String,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
+        leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.primary,
     )
 }
@@ -71,6 +76,15 @@ private fun PrimaryButtonPreview(
             )
             PrimaryButton(
                 onClick = {},
+                text = "Primary",
+                isLoading = false,
+                leadingIcon = {
+                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            PrimaryButton(
+                onClick = {},
                 text = "Loading",
                 isLoading = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -86,12 +100,14 @@ fun SecondaryButton(
     text: String,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
+        leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.secondary,
     )
 }
@@ -116,6 +132,15 @@ private fun SecondaryButtonPreview(
             )
             SecondaryButton(
                 onClick = {},
+                text = "Secondary",
+                isLoading = false,
+                leadingIcon = {
+                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            SecondaryButton(
+                onClick = {},
                 text = "Loading",
                 isLoading = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -131,12 +156,14 @@ fun TertiaryButton(
     text: String,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
+        leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.tertiary,
     )
 }
@@ -161,6 +188,15 @@ private fun TertiaryButtonPreview(
             )
             TertiaryButton(
                 onClick = {},
+                text = "Tertiary",
+                isLoading = false,
+                leadingIcon = {
+                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            TertiaryButton(
+                onClick = {},
                 text = "Loading",
                 isLoading = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -176,12 +212,14 @@ fun DestructiveButton(
     text: String,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
+        leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.destructive,
     )
 }
@@ -206,6 +244,15 @@ private fun DestructiveButtonPreview(
             )
             DestructiveButton(
                 onClick = {},
+                text = "Destructive",
+                isLoading = false,
+                leadingIcon = {
+                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            DestructiveButton(
+                onClick = {},
                 text = "Loading",
                 isLoading = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -220,6 +267,7 @@ private fun CheckoutButton(
     text: String,
     modifier: Modifier,
     isLoading: Boolean,
+    leadingIcon: @Composable (() -> Unit)?,
     style: InternalButtonStyle,
 ) {
     Button(
@@ -242,6 +290,11 @@ private fun CheckoutButton(
                     modifier = Modifier.size(size.dp),
                 )
                 Spacer(Modifier.size(8.dp))
+            } else {
+                leadingIcon?.let {
+                    it()
+                    Spacer(Modifier.size(8.dp))
+                }
             }
 
             BodyEmphasized(text, color = contentColor)
