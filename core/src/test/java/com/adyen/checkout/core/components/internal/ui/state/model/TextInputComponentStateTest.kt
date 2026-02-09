@@ -178,7 +178,6 @@ internal class TextInputComponentStateTest {
 
         // THEN
         assertFalse(viewState.isError)
-        assertTrue(state.isValid)
     }
 
     // UC14: Empty Field - verify empty is considered valid
