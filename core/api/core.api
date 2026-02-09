@@ -1207,7 +1207,6 @@ public final class com/adyen/checkout/core/components/data/model/Amount : com/ad
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/core/components/data/model/Amount$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
-	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;J)V
 	public synthetic fun <init> (Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -1906,6 +1905,7 @@ public final class com/adyen/checkout/core/error/CheckoutError {
 public final class com/adyen/checkout/core/error/CheckoutError$ErrorCode {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/adyen/checkout/core/error/CheckoutError$ErrorCode;
+	public static final field INVALID_AMOUNT_VALUE Ljava/lang/String;
 	public static final field INVALID_CLIENT_KEY Ljava/lang/String;
 	public static final field INVALID_CURRENCY_CODE Ljava/lang/String;
 	public static final field INVALID_LOCALE Ljava/lang/String;
