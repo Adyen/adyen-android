@@ -11,8 +11,11 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
+import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -84,10 +87,246 @@ internal class CardViewStateProducerTest {
         assertTrue(viewState.isSupportedCardBrandsShown)
     }
 
+    // UC6: Error Hides Brand Logos
+    @Test
+    fun `when card number has error and showError is true, then trailing icon should be warning`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111",
+                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                showError = true,
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(
+            CardNumberTrailingIcon.Warning,
+            viewState.cardNumber.trailingIcon
+        )
+    }
+
+    // UC6: Error Hides Brand Logos - verify brand logos still hidden by detection
+    @Test
+    fun `when card number has error with detected brand, then supported card brands should be hidden`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111",
+                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                showError = true,
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+    }
+
+    // UC7: Re-entering Field Clears Error - brand detected scenario
+    @Test
+    fun `when field with error gains focus and brand is detected, then error is cleared and logos stay hidden`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111",
+                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                isFocused = true,
+                showError = false, // Focus gain clears showError
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.cardNumber.isError)
+        assertFalse(viewState.isSupportedCardBrandsShown)
+    }
+
+    // UC7: Re-entering Field Clears Error - no brand detected scenario
+    @Test
+    fun `when field with error gains focus and no brand is detected, then error is cleared and logos reappear`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "123",
+                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                isFocused = true,
+                showError = false, // Focus gain clears showError
+            ),
+            detectedCardTypes = emptyList(),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.cardNumber.isError)
+        assertTrue(viewState.isSupportedCardBrandsShown)
+    }
+
+    // UC8: Valid Input Hides Logos
+    @Test
+    fun `when card number is valid with detected brand, then supported card brands should be hidden`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111111111111111",
+                errorMessage = null,
+                showError = false,
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.cardNumber.isError)
+    }
+
+    // UC8: Valid Input Hides Logos - verify trailing icon shows brand logos
+    @Test
+    fun `when card number is valid, then trailing icon should be brand logos`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111111111111111",
+                errorMessage = null,
+                showError = false,
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(
+            CardNumberTrailingIcon.BrandLogos,
+            viewState.cardNumber.trailingIcon
+        )
+    }
+
+    // UC9: Partial Input While Typing (No Validation)
+    @Test
+    fun `when user is typing with partial input, then no error should be shown`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111",
+                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                isFocused = true,
+                showError = false, // Text change sets showError to false
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.cardNumber.isError)
+    }
+
+    // UC9: Partial Input While Typing - verify brand logos hidden when brand detected
+    @Test
+    fun `when user is typing with partial input and brand is detected, then supported card brands should be hidden`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111",
+                isFocused = true,
+                showError = false,
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+    }
+
+    // UC9: Partial Input While Typing - verify trailing icon is brand logos (not warning)
+    @Test
+    fun `when user is typing with partial input, then trailing icon should be brand logos`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "4111",
+                isFocused = true,
+                showError = false,
+            ),
+            detectedCardTypes = listOf(
+                createDetectedCardType(
+                    cardBrand = CardBrand("visa"),
+                    isSupported = true,
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(
+            CardNumberTrailingIcon.BrandLogos,
+            viewState.cardNumber.trailingIcon
+        )
+    }
+
     private fun createComponentState(
+        cardNumber: TextInputComponentState = TextInputComponentState(),
         detectedCardTypes: List<DetectedCardType> = emptyList(),
     ) = CardComponentState(
-        cardNumber = TextInputComponentState(),
+        cardNumber = cardNumber,
         expiryDate = TextInputComponentState(),
         securityCode = TextInputComponentState(),
         holderName = TextInputComponentState(),
