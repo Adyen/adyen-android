@@ -8,15 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
@@ -26,7 +23,6 @@ import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
@@ -70,17 +66,12 @@ internal class StoredCardView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!BuildUtils.isDebugBuild(context)) {
-            // Prevent taking screenshot and screen on recents.
-            getActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        }
+        setFlagSecureOnRootView(true)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (!BuildUtils.isDebugBuild(context)) {
-            getActivity(context)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        }
+        setFlagSecureOnRootView(false)
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
@@ -167,12 +158,4 @@ internal class StoredCardView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    private fun getActivity(context: Context): Activity? {
-        return when (context) {
-            is Activity -> context
-            is ContextWrapper -> getActivity(context.baseContext)
-            else -> null
-        }
-    }
 }
