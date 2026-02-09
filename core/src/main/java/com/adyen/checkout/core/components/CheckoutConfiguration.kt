@@ -15,13 +15,8 @@ import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
-import com.adyen.checkout.core.common.internal.helper.ClientKeyValidationResult
-import com.adyen.checkout.core.common.internal.helper.ClientKeyValidator
-import com.adyen.checkout.core.common.internal.helper.LocaleUtil
-import com.adyen.checkout.core.common.internal.helper.LocaleValidationResult
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.Configuration
-import com.adyen.checkout.core.error.CheckoutException
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 
@@ -76,21 +71,6 @@ class CheckoutConfiguration(
 
     init {
         apply(configurationBlock)
-        validateContents()
-    }
-
-    private fun validateContents() {
-        when (val result = ClientKeyValidator.validateClientKey(clientKey)) {
-            is ClientKeyValidationResult.Valid -> { /* no ops */ }
-            is ClientKeyValidationResult.Invalid -> throw CheckoutException(result.error)
-        }
-
-        shopperLocale?.let { locale ->
-            when (val result = LocaleUtil.validateLocale(locale)) {
-                is LocaleValidationResult.Valid -> { /* no ops */ }
-                is LocaleValidationResult.Invalid -> throw CheckoutException(result.error)
-            }
-        }
     }
 
     // We need custom parcelization for this class to parcelize availableConfigurations.
