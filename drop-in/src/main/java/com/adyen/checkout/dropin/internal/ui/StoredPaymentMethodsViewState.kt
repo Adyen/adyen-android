@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-internal data class ManageFavoritesViewState(
-    val cards: List<FavoriteListItem>,
-    val others: List<FavoriteListItem>,
+internal data class StoredPaymentMethodsViewState(
+    val cards: List<StoredPaymentMethodsListItem>,
+    val others: List<StoredPaymentMethodsListItem>,
 ) {
 
-    internal data class FavoriteListItem(
+    internal data class StoredPaymentMethodsListItem(
         val id: String,
         val icon: String,
         val title: String,

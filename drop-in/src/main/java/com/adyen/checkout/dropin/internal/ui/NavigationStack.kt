@@ -29,7 +29,7 @@ internal fun NavigationStack(
                 is EmptyNavKey -> emptyNavEntry(key)
                 is PreselectedPaymentMethodNavKey -> preselectedPaymentMethodNavEntry(key, viewModel)
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
-                is ManageFavoritesNavKey -> manageFavoritesNavEntry(key, viewModel)
+                is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
                 is PaymentMethodNavKey -> paymentMethodNavEntry(key, viewModel)
                 else -> error("Unknown key: $key")
             }
@@ -77,17 +77,17 @@ private fun paymentMethodListNavEntry(
     )
 }
 
-private fun manageFavoritesNavEntry(
-    key: ManageFavoritesNavKey,
+private fun storedPaymentMethodsNavEntry(
+    key: StoredPaymentMethodsNavKey,
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
     metadata = DropInTransitions.slideInAndOutHorizontally(),
 ) {
-    ManageFavoritesScreen(
+    StoredPaymentMethodsScreen(
         navigator = viewModel.navigator,
         viewModel = viewModel(
-            factory = ManageFavoritesViewModel.Factory(
+            factory = StoredPaymentMethodsViewModel.Factory(
                 paymentMethodRepository = viewModel.paymentMethodRepository,
             ),
         ),

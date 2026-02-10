@@ -31,7 +31,7 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalPr
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.dropin.internal.ui.ManageFavoritesViewState.FavoriteListItem
+import com.adyen.checkout.dropin.internal.ui.StoredPaymentMethodsViewState.StoredPaymentMethodsListItem
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
@@ -40,23 +40,23 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 import java.util.Locale
 
 @Composable
-internal fun ManageFavoritesScreen(
+internal fun StoredPaymentMethodsScreen(
     navigator: DropInNavigator,
-    viewModel: ManageFavoritesViewModel,
+    viewModel: StoredPaymentMethodsViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    ManageFavoritesContent(
+    StoredPaymentMethodsContent(
         navigator = navigator,
         viewState = viewState,
-        onRemoveItem = { viewModel.removeFavorite(it.id) },
+        onRemoveItem = { viewModel.removeStoredPaymentMethod(it.id) },
     )
 }
 
 @Composable
-private fun ManageFavoritesContent(
+private fun StoredPaymentMethodsContent(
     navigator: DropInNavigator,
-    viewState: ManageFavoritesViewState,
-    onRemoveItem: (FavoriteListItem) -> Unit,
+    viewState: StoredPaymentMethodsViewState,
+    onRemoveItem: (StoredPaymentMethodsListItem) -> Unit,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -68,7 +68,7 @@ private fun ManageFavoritesContent(
         },
         title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
     ) { innerPadding ->
-        var selectedItem by rememberSaveable { mutableStateOf<FavoriteListItem?>(null) }
+        var selectedItem by rememberSaveable { mutableStateOf<StoredPaymentMethodsListItem?>(null) }
 
         LazyColumn(
             contentPadding = PaddingValues(top = Dimensions.Spacing.ExtraLarge),
@@ -78,13 +78,13 @@ private fun ManageFavoritesContent(
         ) {
             section(
                 title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE,
-                favorites = viewState.cards,
+                storedPaymentMethods = viewState.cards,
                 onItemClick = { selectedItem = it },
             )
 
             section(
                 title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE,
-                favorites = viewState.others,
+                storedPaymentMethods = viewState.others,
                 onItemClick = { selectedItem = it },
             )
         }
@@ -106,10 +106,10 @@ private fun ManageFavoritesContent(
 
 private fun LazyListScope.section(
     title: CheckoutLocalizationKey,
-    favorites: List<FavoriteListItem>,
-    onItemClick: (FavoriteListItem) -> Unit,
+    storedPaymentMethods: List<StoredPaymentMethodsListItem>,
+    onItemClick: (StoredPaymentMethodsListItem) -> Unit,
 ) {
-    if (favorites.isNotEmpty()) {
+    if (storedPaymentMethods.isNotEmpty()) {
         item(key = title) {
             SubHeadlineEmphasized(
                 text = resolveString(title),
@@ -120,9 +120,9 @@ private fun LazyListScope.section(
         }
     }
 
-    favorites.forEach { item ->
+    storedPaymentMethods.forEach { item ->
         item(key = item.id) {
-            FavoriteListItem(
+            StoredPaymentMethodListItem(
                 item = item,
                 onClick = onItemClick,
                 modifier = Modifier
@@ -134,9 +134,9 @@ private fun LazyListScope.section(
 }
 
 @Composable
-private fun FavoriteListItem(
-    item: FavoriteListItem,
-    onClick: (FavoriteListItem) -> Unit,
+private fun StoredPaymentMethodListItem(
+    item: StoredPaymentMethodsListItem,
+    onClick: (StoredPaymentMethodsListItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ListItem(
@@ -161,21 +161,21 @@ private fun FavoriteListItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun ManageFavoritesContentPreview() {
+private fun StoredPaymentMethodsContentPreview() {
     CheckoutCompositionLocalProvider(
         locale = Locale.getDefault(),
         localizationProvider = null,
         environment = Environment.TEST,
     ) {
-        val viewState = ManageFavoritesViewState(
+        val viewState = StoredPaymentMethodsViewState(
             cards = listOf(
-                FavoriteListItem(
+                StoredPaymentMethodsListItem(
                     id = "1",
                     icon = "mc",
                     title = "•••• 1234",
                     subtitle = "Mastercard",
                 ),
-                FavoriteListItem(
+                StoredPaymentMethodsListItem(
                     id = "2",
                     icon = "visa",
                     title = "•••• 2567",
@@ -183,13 +183,13 @@ private fun ManageFavoritesContentPreview() {
                 ),
             ),
             others = listOf(
-                FavoriteListItem(
+                StoredPaymentMethodsListItem(
                     id = "3",
                     icon = "paybybank",
                     title = "•••• 1234",
                     subtitle = "WELLS FARGO",
                 ),
-                FavoriteListItem(
+                StoredPaymentMethodsListItem(
                     id = "4",
                     icon = "wechatpay",
                     title = "@someName",
@@ -198,7 +198,7 @@ private fun ManageFavoritesContentPreview() {
             ),
         )
 
-        ManageFavoritesContent(
+        StoredPaymentMethodsContent(
             navigator = DropInNavigator(),
             viewState = viewState,
             onRemoveItem = {},
