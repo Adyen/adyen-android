@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.data.model.format
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,33 +29,15 @@ internal class PreselectedPaymentMethodViewModel(
     val viewState: StateFlow<PreselectedPaymentMethodViewState> = _viewState.asStateFlow()
 
     private fun createInitialViewState(): PreselectedPaymentMethodViewState {
-        val logoTxVariant = if (storedPaymentMethod.type == PaymentMethodTypes.SCHEME) {
-            storedPaymentMethod.brand.orEmpty()
-        } else {
-            storedPaymentMethod.type
-        }
-
         val formattedAmount = dropInParams.amount.format(dropInParams.shopperLocale)
 
         return PreselectedPaymentMethodViewState(
-            logoTxVariant = logoTxVariant,
-            title = storedPaymentMethod.getTitle(),
+            logoTxVariant = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod),
+            title = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod),
             // TODO - Move to string resources after we support arguments
             subtitle = "Use ${storedPaymentMethod.name} to pay $formattedAmount",
             payButtonText = "Pay $formattedAmount",
         )
-    }
-
-    private fun StoredPaymentMethod.getTitle(): String {
-        return when {
-            lastFour != null -> "•••• $lastFour"
-            else -> when (type) {
-                PaymentMethodTypes.BLIK -> label.orEmpty()
-                PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
-                PaymentMethodTypes.PAYPAL -> shopperEmail.orEmpty()
-                else -> name
-            }
-        }
     }
 
     fun onBackClicked() {
