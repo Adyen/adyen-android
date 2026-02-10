@@ -20,8 +20,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
-import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentOptionsSection
-import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.StoredPaymentMethodSection
+import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodListSection
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -42,7 +41,9 @@ internal class PaymentMethodListViewModel(
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
-                StoredPaymentMethodSection(
+                PaymentMethodListSection(
+                    title = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE,
+                    action = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION,
                     options = paymentMethods,
                 )
             }
@@ -53,12 +54,13 @@ internal class PaymentMethodListViewModel(
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
-                PaymentOptionsSection(
+                PaymentMethodListSection(
                     title = if (storedPaymentMethodSection == null) {
                         CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE
                     } else {
                         CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES
                     },
+                    action = null,
                     options = paymentMethods,
                 )
             }
