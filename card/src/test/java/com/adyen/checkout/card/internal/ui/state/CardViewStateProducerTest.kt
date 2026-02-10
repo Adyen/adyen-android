@@ -195,11 +195,11 @@ internal class CardViewStateProducerTest {
         )
     }
 
-    // UC9: Partial Input While Typing (No Validation)
+    // UC9: Partial Input While Typing
     @Test
-    fun `when user is typing with partial input, then no error should be shown`() {
+    fun `when user is typing with partial input and brand is detected, then view is updated correctly`() {
         // GIVEN
-        val componentState = createComponentState(
+        val componentStateWithHiddenError = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
                 errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
@@ -213,19 +213,7 @@ internal class CardViewStateProducerTest {
                 ),
             ),
         )
-
-        // WHEN
-        val viewState = producer.produce(componentState)
-
-        // THEN
-        assertFalse(viewState.cardNumber.isError)
-    }
-
-    // UC9: Partial Input While Typing - verify brand logos hidden when brand detected
-    @Test
-    fun `when user is typing with partial input and brand is detected, then supported brands are hidden and trailing icon is brand logos`() {
-        // GIVEN
-        val componentState = createComponentState(
+        val componentStateWithoutError = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
                 isFocused = true,
@@ -239,15 +227,18 @@ internal class CardViewStateProducerTest {
             ),
         )
 
-        // WHEN
-        val viewState = producer.produce(componentState)
+        listOf(componentStateWithHiddenError, componentStateWithoutError).forEach { componentState ->
+            // WHEN
+            val viewState = producer.produce(componentState)
 
-        // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
-        assertEquals(
-            CardNumberTrailingIcon.BrandLogos,
-            viewState.cardNumber.trailingIcon
-        )
+            // THEN
+            assertFalse(viewState.cardNumber.isError)
+            assertFalse(viewState.isSupportedCardBrandsShown)
+            assertEquals(
+                CardNumberTrailingIcon.BrandLogos,
+                viewState.cardNumber.trailingIcon
+            )
+        }
     }
 
     private fun createComponentState(
