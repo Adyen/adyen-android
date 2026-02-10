@@ -17,24 +17,24 @@ import kotlinx.coroutines.flow.asStateFlow
 
 internal interface PaymentMethodRepository {
 
-    val regulars: List<PaymentMethod>
+    val paymentMethods: List<PaymentMethod>
 
-    val favorites: StateFlow<List<StoredPaymentMethod>>
+    val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>>
 
-    fun removeFavorite(id: String)
+    fun removeStoredPaymentMethod(id: String)
 }
 
 internal class DefaultPaymentMethodRepository(
     paymentMethodsApiResponse: PaymentMethodsApiResponse,
 ) : PaymentMethodRepository {
 
-    override val regulars: List<PaymentMethod> = paymentMethodsApiResponse.paymentMethods.orEmpty()
+    override val paymentMethods: List<PaymentMethod> = paymentMethodsApiResponse.paymentMethods.orEmpty()
 
-    private val _favorites = MutableStateFlow(paymentMethodsApiResponse.storedPaymentMethods.orEmpty())
-    override val favorites: StateFlow<List<StoredPaymentMethod>> = _favorites.asStateFlow()
+    private val _storedPaymentMethods = MutableStateFlow(paymentMethodsApiResponse.storedPaymentMethods.orEmpty())
+    override val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>> = _storedPaymentMethods.asStateFlow()
 
-    override fun removeFavorite(id: String) {
+    override fun removeStoredPaymentMethod(id: String) {
         // TODO - Implement network call and only remove locally if successful
-        _favorites.value = _favorites.value.filterNot { it.id == id }
+        _storedPaymentMethods.value = _storedPaymentMethods.value.filterNot { it.id == id }
     }
 }

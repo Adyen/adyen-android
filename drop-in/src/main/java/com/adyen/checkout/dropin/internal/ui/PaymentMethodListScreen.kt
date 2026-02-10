@@ -38,9 +38,9 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalPr
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.FavoritesSection
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentOptionsSection
+import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.StoredPaymentMethodSection
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
@@ -92,10 +92,10 @@ private fun PaymentMethodListContent(
                     ),
             )
 
-            viewState.favoritesSection?.let {
-                FavoritesSection(
-                    favoritesSection = it,
-                    onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
+            viewState.storedPaymentMethodSection?.let {
+                StoredPaymentMethodSection(
+                    storedPaymentMethodSection = it,
+                    onActionClick = { navigator.navigateTo(StoredPaymentMethodsNavKey) },
                     onPaymentMethodClick = {
                         onPaymentMethodClick(PaymentMethodNavKey(DropInPaymentFlowType.StoredPaymentMethod(it.id)))
                     },
@@ -117,8 +117,8 @@ private fun PaymentMethodListContent(
 }
 
 @Composable
-private fun FavoritesSection(
-    favoritesSection: FavoritesSection,
+private fun StoredPaymentMethodSection(
+    storedPaymentMethodSection: StoredPaymentMethodSection,
     onActionClick: (() -> Unit),
     onPaymentMethodClick: (PaymentMethodItem) -> Unit,
 ) {
@@ -130,7 +130,7 @@ private fun FavoritesSection(
         )
 
         PaymentMethodItemList(
-            paymentMethodItems = favoritesSection.options,
+            paymentMethodItems = storedPaymentMethodSection.options,
             onItemClick = onPaymentMethodClick,
         )
     }
@@ -268,7 +268,7 @@ private fun PaymentMethodListContentPreview() {
             navigator = DropInNavigator(),
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
-                favoritesSection = FavoritesSection(
+                storedPaymentMethodSection = StoredPaymentMethodSection(
                     options = storedPaymentMethods,
                 ),
                 paymentOptionsSection = PaymentOptionsSection(

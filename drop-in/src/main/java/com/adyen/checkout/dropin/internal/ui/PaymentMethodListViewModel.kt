@@ -19,9 +19,9 @@ import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
-import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.FavoritesSection
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentOptionsSection
+import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.StoredPaymentMethodSection
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -32,29 +32,29 @@ internal class PaymentMethodListViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
 ) : ViewModel() {
 
-    val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.favorites.map { favorites ->
-        createInitialViewState(favorites)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(emptyList()))
+    val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.storedPaymentMethods
+        .map { createInitialViewState(it) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(emptyList()))
 
-    private fun createInitialViewState(favorites: List<StoredPaymentMethod>): PaymentMethodListViewState {
-        val favoritesSection = favorites
+    private fun createInitialViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
+        val storedPaymentMethodSection = storedPaymentMethods
             .filter { it.isSupported() }
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
-                FavoritesSection(
+                StoredPaymentMethodSection(
                     options = paymentMethods,
                 )
             }
 
-        val paymentOptionsSection = paymentMethodRepository.regulars
+        val paymentOptionsSection = paymentMethodRepository.paymentMethods
             // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
             .filter { it.isSupported() }
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
                 PaymentOptionsSection(
-                    title = if (favoritesSection == null) {
+                    title = if (storedPaymentMethodSection == null) {
                         CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE
                     } else {
                         CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES
@@ -65,7 +65,7 @@ internal class PaymentMethodListViewModel(
 
         return PaymentMethodListViewState(
             amount = dropInParams.amount.format(dropInParams.shopperLocale),
-            favoritesSection = favoritesSection,
+            storedPaymentMethodSection = storedPaymentMethodSection,
             paymentOptionsSection = paymentOptionsSection,
         )
     }
