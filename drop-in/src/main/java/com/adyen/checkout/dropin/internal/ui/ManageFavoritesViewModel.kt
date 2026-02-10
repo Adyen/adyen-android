@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.ManageFavoritesViewState.FavoriteListItem
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -41,28 +42,9 @@ internal class ManageFavoritesViewModel(
     }
 
     private fun StoredPaymentMethod.toFavoriteListItem(): FavoriteListItem {
-        val icon = when (type) {
-            PaymentMethodTypes.SCHEME -> brand.orEmpty()
-            else -> type
-        }
-
-        val title: String = when (type) {
-            PaymentMethodTypes.ACH -> "•••• ${bankAccountNumber?.takeLast(LAST_FOUR_LENGTH).orEmpty()}"
-            PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
-            PaymentMethodTypes.PAY_BY_BANK_US,
-            PaymentMethodTypes.PAY_TO -> label.orEmpty()
-
-            PaymentMethodTypes.SCHEME -> "•••• ${lastFour.orEmpty()}"
-            else -> name.orEmpty()
-        }
-
-        val subtitle = when (type) {
-            PaymentMethodTypes.PAY_BY_BANK_US,
-            PaymentMethodTypes.PAY_TO,
-            PaymentMethodTypes.SCHEME -> name
-
-            else -> null
-        }
+        val icon = StoredPaymentMethodFormatter.getIcon(this)
+        val title = StoredPaymentMethodFormatter.getTitle(this)
+        val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
 
         return FavoriteListItem(
             id = id.orEmpty(),
@@ -74,10 +56,6 @@ internal class ManageFavoritesViewModel(
 
     fun removeFavorite(id: String) {
         paymentMethodRepository.removeFavorite(id)
-    }
-
-    companion object {
-        private const val LAST_FOUR_LENGTH = 4
     }
 
     class Factory(

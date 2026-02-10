@@ -18,6 +18,7 @@ import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.FavoritesSection
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentOptionsSection
@@ -76,28 +77,9 @@ internal class PaymentMethodListViewModel(
     }
 
     private fun StoredPaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
-        val icon = when (type) {
-            PaymentMethodTypes.SCHEME -> brand.orEmpty()
-            else -> type
-        }
-
-        val title: String = when (type) {
-            PaymentMethodTypes.ACH -> "•••• ${bankAccountNumber?.takeLast(LAST_FOUR_LENGTH).orEmpty()}"
-            PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
-            PaymentMethodTypes.PAY_BY_BANK_US,
-            PaymentMethodTypes.PAY_TO -> label.orEmpty()
-
-            PaymentMethodTypes.SCHEME -> "•••• ${lastFour.orEmpty()}"
-            else -> name.orEmpty()
-        }
-
-        val subtitle = when (type) {
-            PaymentMethodTypes.PAY_BY_BANK_US,
-            PaymentMethodTypes.PAY_TO,
-            PaymentMethodTypes.SCHEME -> name
-
-            else -> null
-        }
+        val icon = StoredPaymentMethodFormatter.getIcon(this)
+        val title = StoredPaymentMethodFormatter.getTitle(this)
+        val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
 
         return PaymentMethodItem(
             id = id.orEmpty(),
@@ -121,13 +103,12 @@ internal class PaymentMethodListViewModel(
         return PaymentMethodItem(
             id = type,
             icon = icon,
-            title = name.orEmpty(),
+            title = name,
         )
     }
 
     companion object {
         private const val CARD_LOGO = "card"
-        private const val LAST_FOUR_LENGTH = 4
     }
 
     class Factory(
