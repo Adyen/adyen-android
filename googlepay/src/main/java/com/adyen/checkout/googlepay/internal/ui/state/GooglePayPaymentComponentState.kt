@@ -8,5 +8,11 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayPaymentComponentState
+import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+
+internal class GooglePayPaymentComponentState(
+    override val data: PaymentComponentData<GooglePayPaymentMethod>,
+    override val isValid: Boolean,
+) : PaymentComponentState<GooglePayPaymentMethod>
