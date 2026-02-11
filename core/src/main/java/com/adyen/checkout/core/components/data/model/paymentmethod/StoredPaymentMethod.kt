@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.json.JSONObject
@@ -16,9 +17,12 @@ import org.json.JSONObject
  * Abstract class representing a stored payment method from the /paymentMethods API response.
  *
  * Specific stored payment method types extend this class with their own fields.
- * Unknown stored payment methods are deserialized as [StoredInstantPaymentMethod].
+ * Explicitly unsupported stored payment methods are deserialized as [StoredUnsupportedPaymentMethod],
+ * while other unknown types fall back to [StoredInstantPaymentMethod].
  */
-abstract class StoredPaymentMethod : PaymentMethodResponse() {
+abstract class StoredPaymentMethod
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor() : PaymentMethodResponse() {
     abstract val id: String
     abstract val supportedShopperInteractions: List<String>
 
@@ -62,9 +66,9 @@ abstract class StoredPaymentMethod : PaymentMethodResponse() {
 
         @Suppress("CyclomaticComplexMethod")
         fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethod> {
-            // TODO - Decide if we want to use a different serializer for unsupported payment methods
             val serializer = when (paymentMethodType) {
                 PaymentMethodTypes.SCHEME -> StoredCardPaymentMethod.SERIALIZER
+                in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> StoredUnsupportedPaymentMethod.SERIALIZER
                 else -> StoredInstantPaymentMethod.SERIALIZER
             }
 

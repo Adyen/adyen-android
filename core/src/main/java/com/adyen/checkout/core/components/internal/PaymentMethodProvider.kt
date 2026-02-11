@@ -111,6 +111,8 @@ object PaymentMethodProvider {
             checkoutCallbacks = checkoutCallbacks,
         ) as? PaymentComponent<BasePaymentComponentState> ?: run {
             // TODO - Errors Propagation [COSDK-85]. Do we want to use onError() here or throw an exception?
+            // TODO - We could check if a factory is not registered for a supported payment method type then throw a
+            //  different exception, since that means that the module is probably not imported.
             error("Factory for payment method type: $txVariant is not registered.")
         }
     }
