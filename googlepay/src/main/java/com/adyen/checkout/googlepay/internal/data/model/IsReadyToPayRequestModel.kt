@@ -18,10 +18,10 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class IsReadyToPayRequestModel(
-    var apiVersion: Int = 0,
-    var apiVersionMinor: Int = 0,
-    var allowedPaymentMethods: List<GooglePayPaymentMethodModel>? = null,
-    var isExistingPaymentMethodRequired: Boolean = false,
+    val apiVersion: Int = 0,
+    val apiVersionMinor: Int = 0,
+    val allowedPaymentMethods: List<GooglePayPaymentMethodModel>? = null,
+    val isExistingPaymentMethodRequired: Boolean = false,
 ) : ModelObject() {
 
     companion object {

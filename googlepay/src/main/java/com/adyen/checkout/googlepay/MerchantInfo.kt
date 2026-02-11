@@ -24,9 +24,9 @@ import org.json.JSONObject
  */
 @Parcelize
 data class MerchantInfo(
-    var merchantName: String? = null,
-    var merchantId: String? = null,
-    var softwareInfo: SoftwareInfo? = null,
+    val merchantName: String? = null,
+    val merchantId: String? = null,
+    val softwareInfo: SoftwareInfo? = null,
 ) : ModelObject() {
 
     companion object {

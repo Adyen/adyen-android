@@ -17,9 +17,9 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class GooglePayPaymentMethodModel(
-    var type: String? = null,
-    var parameters: CardParameters? = null,
-    var tokenizationSpecification: PaymentMethodTokenizationSpecification? = null,
+    val type: String? = null,
+    val parameters: CardParameters? = null,
+    val tokenizationSpecification: PaymentMethodTokenizationSpecification? = null,
 ) : ModelObject() {
 
     companion object {
@@ -39,8 +39,8 @@ internal data class GooglePayPaymentMethodModel(
                             TOKENIZATION_SPECIFICATION,
                             ModelUtils.serializeOpt(
                                 modelObject.tokenizationSpecification,
-                                PaymentMethodTokenizationSpecification.SERIALIZER
-                            )
+                                PaymentMethodTokenizationSpecification.SERIALIZER,
+                            ),
                         )
                     }
                 } catch (e: JSONException) {
@@ -51,15 +51,16 @@ internal data class GooglePayPaymentMethodModel(
             }
 
             override fun deserialize(jsonObject: JSONObject): GooglePayPaymentMethodModel {
-                val googlePayPaymentMethodModel = GooglePayPaymentMethodModel()
-                googlePayPaymentMethodModel.type = jsonObject.getStringOrNull(TYPE)
-                googlePayPaymentMethodModel.parameters = deserializeOpt(
-                    jsonObject.optJSONObject(PARAMETERS),
-                    CardParameters.SERIALIZER
-                )
-                googlePayPaymentMethodModel.tokenizationSpecification = deserializeOpt(
-                    jsonObject.optJSONObject(TOKENIZATION_SPECIFICATION),
-                    PaymentMethodTokenizationSpecification.SERIALIZER
+                val googlePayPaymentMethodModel = GooglePayPaymentMethodModel(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    parameters = deserializeOpt(
+                        jsonObject.optJSONObject(PARAMETERS),
+                        CardParameters.SERIALIZER,
+                    ),
+                    tokenizationSpecification = deserializeOpt(
+                        jsonObject.optJSONObject(TOKENIZATION_SPECIFICATION),
+                        PaymentMethodTokenizationSpecification.SERIALIZER,
+                    ),
                 )
                 return googlePayPaymentMethodModel
             }

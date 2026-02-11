@@ -16,8 +16,8 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class PaymentMethodTokenizationSpecification(
-    var type: String? = null,
-    var parameters: TokenizationParameters? = null,
+    val type: String? = null,
+    val parameters: TokenizationParameters? = null,
 ) : ModelObject() {
 
     companion object {

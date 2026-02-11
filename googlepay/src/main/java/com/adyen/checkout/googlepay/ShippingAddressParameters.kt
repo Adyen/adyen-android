@@ -27,8 +27,8 @@ import org.json.JSONObject
 @Suppress("MaxLineLength")
 @Parcelize
 data class ShippingAddressParameters(
-    var allowedCountryCodes: List<String?>? = null,
-    var isPhoneNumberRequired: Boolean = false,
+    val allowedCountryCodes: List<String?>? = null,
+    val isPhoneNumberRequired: Boolean = false,
 ) : ModelObject() {
 
     companion object {

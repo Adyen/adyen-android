@@ -29,8 +29,6 @@ public final class com/adyen/checkout/googlepay/BillingAddressParameters : com/a
 	public final fun getFormat ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isPhoneNumberRequired ()Z
-	public final fun setFormat (Ljava/lang/String;)V
-	public final fun setPhoneNumberRequired (Z)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -115,9 +113,6 @@ public final class com/adyen/checkout/googlepay/MerchantInfo : com/adyen/checkou
 	public final fun getMerchantName ()Ljava/lang/String;
 	public final fun getSoftwareInfo ()Lcom/adyen/checkout/googlepay/SoftwareInfo;
 	public fun hashCode ()I
-	public final fun setMerchantId (Ljava/lang/String;)V
-	public final fun setMerchantName (Ljava/lang/String;)V
-	public final fun setSoftwareInfo (Lcom/adyen/checkout/googlepay/SoftwareInfo;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -140,8 +135,6 @@ public final class com/adyen/checkout/googlepay/ShippingAddressParameters : com/
 	public final fun getAllowedCountryCodes ()Ljava/util/List;
 	public fun hashCode ()I
 	public final fun isPhoneNumberRequired ()Z
-	public final fun setAllowedCountryCodes (Ljava/util/List;)V
-	public final fun setPhoneNumberRequired (Z)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }

@@ -15,8 +15,8 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class TokenizationParameters(
-    var gateway: String? = null,
-    var gatewayMerchantId: String? = null,
+    val gateway: String? = null,
+    val gatewayMerchantId: String? = null,
 ) : ModelObject() {
 
     companion object {

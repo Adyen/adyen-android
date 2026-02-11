@@ -22,14 +22,14 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class PaymentDataRequestModel(
-    var apiVersion: Int = 0,
-    var apiVersionMinor: Int = 0,
-    var merchantInfo: MerchantInfo? = null,
-    var allowedPaymentMethods: List<GooglePayPaymentMethodModel>? = null,
-    var transactionInfo: TransactionInfoModel? = null,
-    var isEmailRequired: Boolean = false,
-    var isShippingAddressRequired: Boolean = false,
-    var shippingAddressParameters: ShippingAddressParameters? = null,
+    val apiVersion: Int = 0,
+    val apiVersionMinor: Int = 0,
+    val merchantInfo: MerchantInfo? = null,
+    val allowedPaymentMethods: List<GooglePayPaymentMethodModel>? = null,
+    val transactionInfo: TransactionInfoModel? = null,
+    val isEmailRequired: Boolean = false,
+    val isShippingAddressRequired: Boolean = false,
+    val shippingAddressParameters: ShippingAddressParameters? = null,
 ) : ModelObject() {
 
     companion object {
@@ -74,27 +74,27 @@ internal data class PaymentDataRequestModel(
             }
 
             override fun deserialize(jsonObject: JSONObject): PaymentDataRequestModel {
-                val paymentDataRequestModel = PaymentDataRequestModel()
-                paymentDataRequestModel.apiVersion = jsonObject.getIntOrNull(API_VERSION) ?: 0
-                paymentDataRequestModel.apiVersionMinor = jsonObject.getIntOrNull(API_VERSION_MINOR) ?: 0
-                paymentDataRequestModel.merchantInfo = deserializeOpt(
-                    jsonObject.optJSONObject(MERCHANT_INFO),
-                    MerchantInfo.SERIALIZER,
-                )
-                paymentDataRequestModel.allowedPaymentMethods = deserializeOptList(
-                    jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS),
-                    GooglePayPaymentMethodModel.SERIALIZER,
-                )
-                paymentDataRequestModel.transactionInfo = deserializeOpt(
-                    jsonObject.optJSONObject(TRANSACTION_INFO),
-                    TransactionInfoModel.SERIALIZER,
-                )
-                paymentDataRequestModel.isEmailRequired = jsonObject.getBooleanOrNull(EMAIL_REQUIRED) ?: false
-                paymentDataRequestModel.isShippingAddressRequired =
-                    jsonObject.getBooleanOrNull(SHIPPING_ADDRESS_REQUIRED) ?: false
-                paymentDataRequestModel.shippingAddressParameters = deserializeOpt(
-                    jsonObject.optJSONObject(SHIPPING_ADDRESS_PARAMETERS),
-                    ShippingAddressParameters.SERIALIZER,
+                val paymentDataRequestModel = PaymentDataRequestModel(
+                    apiVersion = jsonObject.getIntOrNull(API_VERSION) ?: 0,
+                    apiVersionMinor = jsonObject.getIntOrNull(API_VERSION_MINOR) ?: 0,
+                    merchantInfo = deserializeOpt(
+                        jsonObject.optJSONObject(MERCHANT_INFO),
+                        MerchantInfo.SERIALIZER,
+                    ),
+                    allowedPaymentMethods = deserializeOptList(
+                        jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS),
+                        GooglePayPaymentMethodModel.SERIALIZER,
+                    ),
+                    transactionInfo = deserializeOpt(
+                        jsonObject.optJSONObject(TRANSACTION_INFO),
+                        TransactionInfoModel.SERIALIZER,
+                    ),
+                    isEmailRequired = jsonObject.getBooleanOrNull(EMAIL_REQUIRED) ?: false,
+                    isShippingAddressRequired = jsonObject.getBooleanOrNull(SHIPPING_ADDRESS_REQUIRED) ?: false,
+                    shippingAddressParameters = deserializeOpt(
+                        jsonObject.optJSONObject(SHIPPING_ADDRESS_PARAMETERS),
+                        ShippingAddressParameters.SERIALIZER,
+                    ),
                 )
                 return paymentDataRequestModel
             }
