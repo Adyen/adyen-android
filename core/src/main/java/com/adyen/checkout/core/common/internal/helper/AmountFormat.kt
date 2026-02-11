@@ -41,21 +41,10 @@ object AmountFormat {
         return BigDecimal.valueOf(value, fractionDigits)
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun getFractionDigits(currencyCode: String): Int {
         val normalizedCurrencyCode = currencyCode.replace("[^A-Z]".toRegex(), "").uppercase(Locale.ROOT)
-        try {
-            val checkoutCurrency = CheckoutCurrency.find(normalizedCurrencyCode)
-            return checkoutCurrency.fractionDigits
-        } catch (e: RuntimeException) {
-            // TODO - Change RuntimeException into a clearer error once we update CheckoutCurrency.
-            //  Also remove the suppresion.
-//        } catch (e: CheckoutException) {
-            adyenLog(AdyenLogLevel.ERROR, e) {
-                "$normalizedCurrencyCode is an unsupported currency. Falling back to information from " +
-                    "java.util.Currency."
-            }
-        }
+        val checkoutCurrency = CheckoutCurrency.find(normalizedCurrencyCode)
+        checkoutCurrency?.fractionDigits?.let { return it }
         return try {
             val currency = Currency.getInstance(normalizedCurrencyCode)
             currency.defaultFractionDigits.coerceAtLeast(0)
