@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.adyen.checkout.dropin.databinding.BottomSheetToolbarBinding
 import com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbarMode.BACK_BUTTON
@@ -28,6 +29,7 @@ internal class DropInBottomSheetToolbar @JvmOverloads constructor(
 
     init {
         setMode(NO_BUTTON)
+        ViewCompat.setAccessibilityHeading(binding.textViewTitle, true)
     }
 
     fun setTitle(title: String?) {
