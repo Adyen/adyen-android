@@ -60,7 +60,7 @@ moshi-adapters = "1.15.2"
 moshi-kotlin-adapter = "1.15.2"
 okhttp-logging = "4.12.0"
 preference = "1.2.1"
-retrofit2 = "2.11.0"
+retrofit2 = "2.12.0"
 
 # Tests
 arch-core-testing = "2.2.0"
