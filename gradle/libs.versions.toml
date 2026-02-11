@@ -9,8 +9,8 @@ version-code = "1"
 
 # Build script
 android-gradle-plugin = "8.13.2"
-kotlin = "2.1.21"
-ksp = "2.1.21-2.0.1"
+kotlin = "2.3.0"
+ksp = "2.3.5"
 dokka = "2.1.0"
 hilt = "2.56.2"
 
@@ -19,7 +19,7 @@ detekt = "1.23.8"
 jacoco = "0.8.12"
 ktlint = "1.5.0"
 sonarqube = "7.2.2.6593"
-binary-compatibility-validator = "0.17.0"
+binary-compatibility-validator = "0.18.1"
 
 # Android dependencies
 activity = "1.12.2"
