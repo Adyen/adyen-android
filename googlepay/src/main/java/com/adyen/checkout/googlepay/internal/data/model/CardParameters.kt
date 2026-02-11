@@ -20,13 +20,13 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class CardParameters(
-    var allowedAuthMethods: List<String?>?,
-    var allowedCardNetworks: List<String?>?,
-    var isAllowPrepaidCards: Boolean,
-    var isAllowCreditCards: Boolean?,
-    var isAssuranceDetailsRequired: Boolean?,
-    var isBillingAddressRequired: Boolean,
-    var billingAddressParameters: BillingAddressParameters?,
+    val allowedAuthMethods: List<String?>?,
+    val allowedCardNetworks: List<String?>?,
+    val isAllowPrepaidCards: Boolean,
+    val isAllowCreditCards: Boolean?,
+    val isAssuranceDetailsRequired: Boolean?,
+    val isBillingAddressRequired: Boolean,
+    val billingAddressParameters: BillingAddressParameters?,
 ) : ModelObject() {
 
     companion object {

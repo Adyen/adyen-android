@@ -26,8 +26,8 @@ import org.json.JSONObject
 @Suppress("MaxLineLength")
 @Parcelize
 data class BillingAddressParameters(
-    var format: String? = null,
-    var isPhoneNumberRequired: Boolean = false,
+    val format: String? = null,
+    val isPhoneNumberRequired: Boolean = false,
 ) : ModelObject() {
 
     companion object {

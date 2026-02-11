@@ -15,13 +15,13 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class TransactionInfoModel(
-    var currencyCode: String? = null,
-    var countryCode: String? = null,
-    var transactionId: String? = null,
-    var totalPriceStatus: String? = null,
-    var totalPrice: String? = null,
-    var totalPriceLabel: String? = null,
-    var checkoutOption: String? = null,
+    val currencyCode: String? = null,
+    val countryCode: String? = null,
+    val transactionId: String? = null,
+    val totalPriceStatus: String? = null,
+    val totalPrice: String? = null,
+    val totalPriceLabel: String? = null,
+    val checkoutOption: String? = null,
 ) : ModelObject() {
 
     companion object {

@@ -247,19 +247,20 @@ internal object GooglePayUtils {
     }
 
     private fun createTransactionInfo(params: GooglePayComponentParams): TransactionInfoModel {
+        val displayAmount = if (params.totalPriceStatus == NOT_CURRENTLY_KNOWN) {
+            null
+        } else {
+            val bigDecimalAmount = AmountFormat.toBigDecimal(params.amount)
+                .setScale(GOOGLE_PAY_DECIMAL_SCALE, RoundingMode.HALF_UP)
+            GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimalAmount)
+        }
         return TransactionInfoModel(
             countryCode = params.countryCode,
             totalPriceStatus = params.totalPriceStatus,
             currencyCode = params.amount.currency,
             checkoutOption = params.checkoutOption,
-        ).apply {
-            // Google requires to not pass the price when the price status is NOT_CURRENTLY_KNOWN
-            if (params.totalPriceStatus == NOT_CURRENTLY_KNOWN) return@apply
-            val bigDecimalAmount = AmountFormat.toBigDecimal(params.amount)
-                .setScale(GOOGLE_PAY_DECIMAL_SCALE, RoundingMode.HALF_UP)
-            val displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimalAmount)
-            totalPrice = displayAmount
-        }
+            totalPrice = displayAmount,
+        )
     }
 
     private enum class IntegrationType(val value: String) {
