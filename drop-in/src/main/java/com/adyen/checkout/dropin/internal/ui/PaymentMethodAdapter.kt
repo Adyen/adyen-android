@@ -93,6 +93,18 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
         }
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+
+        when (holder) {
+            is StoredPaymentMethodVH -> holder.unbind()
+            is PaymentMethodVH -> holder.unbind()
+            is GiftCardPaymentMethodVH -> holder.unbind()
+            is HeaderVH -> holder.unbind()
+            is NoteVH -> holder.unbind()
+        }
+    }
+
     override fun getItemCount(): Int = currentList.size
 
     private class StoredPaymentMethodVH(
@@ -153,10 +165,18 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
                     dialog.dismiss()
                 }
                 .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
-                    (binding.root as? AdyenSwipeToRevealLayout)?.collapseUnderlay()
+                    binding.root.collapseUnderlay()
                     dialog.dismiss()
                 }
                 .show()
+        }
+
+        fun unbind() {
+            binding.paymentMethodItemUnderlayButton.setOnClickListener(null)
+            binding.swipeToRevealLayout.apply {
+                removeUnderlayListener()
+                setOnMainClickListener(null)
+            }
         }
     }
 
@@ -187,6 +207,10 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             val adapter = LogoTextAdapter(binding.root.context)
             recyclerViewBrandList.adapter = adapter
             adapter.submitList(model.brandList)
+        }
+
+        fun unbind() {
+            itemView.setOnClickListener(null)
         }
     }
 
@@ -227,6 +251,10 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             }
             itemView.setOnClickListener(null)
         }
+
+        fun unbind() {
+            itemView.setOnClickListener(null)
+        }
     }
 
     private class HeaderVH(private val binding: PaymentMethodsListHeaderBinding) :
@@ -248,12 +276,18 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
                 }
             }
         }
+
+        fun unbind() {
+            binding.paymentMethodHeaderAction.setOnClickListener(null)
+        }
     }
 
     private class NoteVH(private val binding: PaymentMethodsListNoteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: PaymentMethodNote) = with(binding) {
             paymentMethodNote.text = model.note
         }
+
+        fun unbind() = Unit
     }
 
     interface OnPaymentMethodSelectedCallback {
