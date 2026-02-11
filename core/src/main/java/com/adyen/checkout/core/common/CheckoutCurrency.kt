@@ -169,7 +169,7 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
          */
         @JvmStatic
         fun isSupported(currency: String?): Boolean {
-            return currency != null && currency.isNotEmpty() && CURRENCIES_HASHMAP.containsKey(currency)
+            return find(currency.orEmpty()) != null
         }
 
         /**
@@ -178,11 +178,9 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
          * @param currency The currency code.
          * @return The CheckoutCurrency instance, or null if the currency is not available.
          */
-        @Suppress("TooGenericExceptionThrown")
         @JvmStatic
-        fun find(currency: String): CheckoutCurrency {
-            // TODO - Check if we should leave this function to return a nullable
-            return CURRENCIES_HASHMAP[currency] ?: throw RuntimeException("Currency not found.")
+        fun find(currency: String): CheckoutCurrency? {
+            return CURRENCIES_HASHMAP[currency]
         }
     }
 }
