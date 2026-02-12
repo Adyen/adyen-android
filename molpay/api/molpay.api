@@ -54,14 +54,6 @@ public final class com/adyen/checkout/molpay/MolpayConfiguration$Builder : com/a
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 }
 
-public final class com/adyen/checkout/molpay/MolpayConfiguration$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/molpay/MolpayConfiguration;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/molpay/MolpayConfiguration;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/molpay/MolpayConfigurationKt {
 	public static final fun molpay (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public static synthetic fun molpay$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;

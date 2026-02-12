@@ -6,14 +6,6 @@ public final class com/adyen/checkout/adyen3ds2/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/threeds2/ThreeDS2Configuration$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/ThreeDS2Configuration;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/ThreeDS2Configuration;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/threeds2/ThreeDS2ConfigurationKt {
 	public static final fun threeDS2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 	public static synthetic fun threeDS2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
@@ -25,38 +17,6 @@ public final class com/adyen/checkout/threeds2/ThreeDS2MainNavigationKey : com/a
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/threeds2/internal/data/model/ChallengeToken$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/internal/data/model/ChallengeToken;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/internal/data/model/ChallengeToken;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/threeds2/internal/data/model/FingerprintToken$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/internal/data/model/FingerprintToken;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/internal/data/model/FingerprintToken;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/threeds2/internal/data/model/SubmitFingerprintRequest$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/internal/data/model/SubmitFingerprintRequest;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/internal/data/model/SubmitFingerprintRequest;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/threeds2/internal/data/model/SubmitFingerprintResponse$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/internal/data/model/SubmitFingerprintResponse;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/internal/data/model/SubmitFingerprintResponse;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/threeds2/old/Adyen3DS2Component : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
@@ -100,14 +60,6 @@ public final class com/adyen/checkout/threeds2/old/Adyen3DS2Configuration$Builde
 	public final fun setUiCustomization (Lcom/adyen/threeds2/customization/UiCustomization;)Lcom/adyen/checkout/threeds2/old/Adyen3DS2Configuration$Builder;
 }
 
-public final class com/adyen/checkout/threeds2/old/Adyen3DS2Configuration$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/old/Adyen3DS2Configuration;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/old/Adyen3DS2Configuration;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/threeds2/old/Adyen3DS2ConfigurationKt {
 	public static final fun adyen3DS2 (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public static synthetic fun adyen3DS2$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
@@ -129,38 +81,6 @@ public final class com/adyen/checkout/threeds2/old/Cancelled3DS2Exception : com/
 }
 
 public final class com/adyen/checkout/threeds2/old/Cancelled3DS2Exception$Companion {
-}
-
-public final class com/adyen/checkout/threeds2/old/internal/data/model/ChallengeToken$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/old/internal/data/model/ChallengeToken;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/old/internal/data/model/ChallengeToken;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/threeds2/old/internal/data/model/FingerprintToken$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/old/internal/data/model/FingerprintToken;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/old/internal/data/model/FingerprintToken;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/threeds2/old/internal/data/model/SubmitFingerprintRequest$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/old/internal/data/model/SubmitFingerprintRequest;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/old/internal/data/model/SubmitFingerprintRequest;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/threeds2/old/internal/data/model/SubmitFingerprintResponse$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/threeds2/old/internal/data/model/SubmitFingerprintResponse;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/threeds2/old/internal/data/model/SubmitFingerprintResponse;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/threeds2/old/internal/provider/Adyen3DS2ComponentProvider : com/adyen/checkout/components/core/internal/provider/ActionComponentProvider {

@@ -70,14 +70,6 @@ public final class com/adyen/checkout/ideal/IdealConfiguration$Builder : com/ady
 	public synthetic fun setViewType (Lcom/adyen/checkout/issuerlist/IssuerListViewType;)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
 }
 
-public final class com/adyen/checkout/ideal/IdealConfiguration$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/ideal/IdealConfiguration;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/ideal/IdealConfiguration;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/ideal/IdealConfigurationKt {
 	public static final fun ideal (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public static synthetic fun ideal$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;

@@ -52,14 +52,6 @@ public final class com/adyen/checkout/onlinebankingjp/OnlineBankingJPConfigurati
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 }
 
-public final class com/adyen/checkout/onlinebankingjp/OnlineBankingJPConfiguration$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/onlinebankingjp/OnlineBankingJPConfiguration;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/onlinebankingjp/OnlineBankingJPConfiguration;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/onlinebankingjp/OnlineBankingJPConfigurationKt {
 	public static final fun onlineBankingJP (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public static synthetic fun onlineBankingJP$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
