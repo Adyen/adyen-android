@@ -12,7 +12,7 @@ android-gradle-plugin = "8.13.2"
 kotlin = "2.3.0"
 ksp = "2.3.5"
 dokka = "2.1.0"
-hilt = "2.58"
+hilt = "2.59"
 
 # Code quality
 detekt = "1.23.8"
