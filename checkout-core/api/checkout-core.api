@@ -55,14 +55,6 @@ public final class com/adyen/checkout/core/old/CardBrand$Companion {
 	public final fun estimate (Ljava/lang/String;)Ljava/util/List;
 }
 
-public final class com/adyen/checkout/core/old/CardBrand$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/old/CardBrand;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/core/old/CardBrand;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/core/old/CardType : java/lang/Enum {
 	public static final field AMERICAN_EXPRESS Lcom/adyen/checkout/core/old/CardType;
 	public static final field ARGENCARD Lcom/adyen/checkout/core/old/CardType;
@@ -133,14 +125,6 @@ public final class com/adyen/checkout/core/old/Environment : android/os/Parcelab
 public final class com/adyen/checkout/core/old/Environment$Companion {
 }
 
-public final class com/adyen/checkout/core/old/Environment$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/old/Environment;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/core/old/Environment;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public abstract interface class com/adyen/checkout/core/old/PermissionHandlerCallback {
 	public abstract fun onPermissionDenied (Ljava/lang/String;)V
 	public abstract fun onPermissionGranted (Ljava/lang/String;)V
@@ -189,23 +173,7 @@ public final class com/adyen/checkout/core/old/exception/PermissionException : c
 public final class com/adyen/checkout/core/old/internal/data/model/EmptyResponse$Companion {
 }
 
-public final class com/adyen/checkout/core/old/internal/data/model/EmptyResponse$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/old/internal/data/model/EmptyResponse;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/core/old/internal/data/model/EmptyResponse;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/core/old/internal/data/model/ErrorResponseBody$Companion {
-}
-
-public final class com/adyen/checkout/core/old/internal/data/model/ErrorResponseBody$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/old/internal/data/model/ErrorResponseBody;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/core/old/internal/data/model/ErrorResponseBody;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
 public abstract class com/adyen/checkout/core/old/internal/data/model/ModelObject : android/os/Parcelable {
