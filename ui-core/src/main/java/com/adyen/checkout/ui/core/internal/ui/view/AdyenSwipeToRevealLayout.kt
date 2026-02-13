@@ -431,7 +431,7 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
      *
      * @param onMainClickListener the click listener
      */
-    fun setOnMainClickListener(onMainClickListener: OnMainClickListener) {
+    fun setOnMainClickListener(onMainClickListener: OnMainClickListener?) {
         this.onMainClickListener = onMainClickListener
     }
 
