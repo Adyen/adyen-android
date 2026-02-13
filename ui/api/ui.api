@@ -52,10 +52,14 @@ public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$S
 public final class com/adyen/checkout/ui/internal/element/button/ComposableSingletons$ButtonsKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/button/ComposableSingletons$ButtonsKt;
 	public fun <init> ()V
+	public final fun getLambda$-1289173369$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-1717950517$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-1986302639$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-229667129$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1074164167$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1095715801$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$1133665625$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$122634163$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/element/input/ComposableSingletons$CheckoutTextFieldKt {
