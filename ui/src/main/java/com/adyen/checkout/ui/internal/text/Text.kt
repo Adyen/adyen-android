@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -35,8 +36,9 @@ fun Title(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.title, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.title, color, modifier, maxLines, textAlign)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -46,8 +48,9 @@ fun Subtitle(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.subtitle, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.subtitle, color, modifier, maxLines, textAlign)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -57,8 +60,9 @@ fun Body(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.body, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.body, color, modifier, maxLines, textAlign)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -68,8 +72,9 @@ fun BodyEmphasized(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.bodyEmphasized, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.bodyEmphasized, color, modifier, maxLines, textAlign)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -79,8 +84,9 @@ fun SubHeadline(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.subHeadline, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.subHeadline, color, modifier, maxLines, textAlign)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -90,8 +96,9 @@ fun SubHeadlineEmphasized(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.subHeadlineEmphasized, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.subHeadlineEmphasized, color, modifier, maxLines, textAlign)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -101,8 +108,9 @@ fun Footnote(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.footnote, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.footnote, color, modifier, maxLines, textAlign)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -112,8 +120,9 @@ fun FootnoteEmphasized(
     modifier: Modifier = Modifier,
     color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
 ) {
-    CheckoutText(text, CheckoutThemeProvider.textStyles.footnoteEmphasized, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.footnoteEmphasized, color, modifier, maxLines, textAlign)
 }
 
 @Composable
@@ -121,8 +130,9 @@ private fun CheckoutText(
     text: String,
     style: InternalTextStyle,
     color: Color,
-    modifier: Modifier = Modifier,
-    maxLines: Int = Int.MAX_VALUE,
+    modifier: Modifier,
+    maxLines: Int,
+    textAlign: TextAlign?,
 ) {
     Text(
         text = text,
@@ -132,6 +142,7 @@ private fun CheckoutText(
         lineHeight = style.lineHeight.sp,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
+        textAlign = textAlign,
         modifier = modifier,
     )
 }
