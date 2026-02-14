@@ -28,13 +28,15 @@ internal class AnalyticsService(
         request: AnalyticsSetupRequest,
         clientKey: String,
     ): Result<AnalyticsSetupResponse> = runSuspendCatching {
-        httpClient.post(
-            path = "v3/analytics",
-            queryParameters = mapOf("clientKey" to clientKey),
-            body = request,
-            requestSerializer = AnalyticsSetupRequest.SERIALIZER,
-            responseSerializer = AnalyticsSetupResponse.SERIALIZER,
-        )
+        withContext(coroutineDispatcher) {
+            httpClient.post(
+                path = "v3/analytics",
+                queryParameters = mapOf("clientKey" to clientKey),
+                body = request,
+                requestSerializer = AnalyticsSetupRequest.SERIALIZER,
+                responseSerializer = AnalyticsSetupResponse.SERIALIZER,
+            )
+        }
     }
 
     internal suspend fun setup(

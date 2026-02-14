@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.core.components.data.model
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.common.internal.model.ModelObject
 
 /**
  * Parent class for [PaymentMethod] and [StoredPaymentMethod].
  */
+@Immutable
 abstract class PaymentMethodResponse : ModelObject() {
 
     abstract val type: String
