@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.common.Environment
@@ -27,7 +28,10 @@ fun CheckoutCompositionLocalProvider(
     environment: Environment,
     content: @Composable () -> Unit,
 ) {
-    val localizedContext = LocalContext.current.createLocalizedContext(locale)
+    val context = LocalContext.current
+    val localizedContext = remember(context, locale) {
+        context.createLocalizedContext(locale)
+    }
     CompositionLocalProvider(
         LocalLocalizationResolver provides LocalizationResolver(localizationProvider),
         LocalLocalizedContext provides localizedContext,
@@ -38,13 +42,15 @@ fun CheckoutCompositionLocalProvider(
     }
 }
 
-internal val LocalEnvironment = staticCompositionLocalOf<Environment> {
-    error("No environment provided")
-}
+internal val LocalEnvironment = staticCompositionLocalOf { Environment.TEST }
 
-internal val LocalLocale = staticCompositionLocalOf<Locale> { error("No locale provided") }
+internal val LocalLocale = staticCompositionLocalOf<Locale> { Locale.getDefault() }
 
-internal val LocalLocalizationResolver =
-    staticCompositionLocalOf<LocalizationResolver> { error("No localizationProvider provided") }
+internal val LocalLocalizationResolver = staticCompositionLocalOf { LocalizationResolver(null) }
 
-internal val LocalLocalizedContext = staticCompositionLocalOf<Context> { error("No default Localized Context.") }
+internal val LocalLocalizedContext = staticCompositionLocalOf<Context?> { null }
+
+// Workaround to make sure a context is available for previews
+internal val currentLocalizedContext: Context
+    @Composable
+    get() = LocalLocalizedContext.current ?: LocalContext.current

@@ -106,7 +106,7 @@ private fun Component(
         DropDownButton(
             theme = theme,
             onClick = { shouldShowDialog = !shouldShowDialog },
-            text = selectedPaymentMethod.name.orEmpty(),
+            text = selectedPaymentMethod.name,
             isExpanded = shouldShowDialog,
         )
 
@@ -192,7 +192,7 @@ private fun PaymentMethodOptionsDialog(
                             ),
                     ) {
                         @Suppress("RestrictedApi")
-                        (Body(paymentMethod.name.orEmpty()))
+                        (Body(paymentMethod.name))
                         @Suppress("RestrictedApi")
                         SubHeadline(
                             paymentMethod.type,
