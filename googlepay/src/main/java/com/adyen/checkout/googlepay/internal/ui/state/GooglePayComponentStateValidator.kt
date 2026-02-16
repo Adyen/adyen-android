@@ -8,5 +8,17 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayComponentStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
+import com.adyen.checkout.googlepay.old.internal.util.GooglePayUtils
+
+internal class GooglePayComponentStateValidator : ComponentStateValidator<GooglePayComponentState> {
+
+    override fun validate(state: GooglePayComponentState): GooglePayComponentState {
+        return state
+    }
+
+    override fun isValid(state: GooglePayComponentState): Boolean {
+        val paymentData = state.paymentData ?: return false
+        return GooglePayUtils.findToken(paymentData).isNotEmpty()
+    }
+}
