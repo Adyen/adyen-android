@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 30/7/2019.
+ */
+package com.adyen.checkout.googlepay
+
+import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.ModelUtils
+import com.adyen.checkout.core.common.internal.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
+import org.json.JSONException
+import org.json.JSONObject
+
+/**
+ * Pass this object to [GooglePayConfiguration.merchantInfo] to set information about the merchant requesting the
+ * payment.
+ *
+ * @param merchantName The name of the merchant.
+ * @param merchantId The id of the merchant.
+ * @param softwareInfo Information associated with the caller of the request.
+ */
+@Parcelize
+data class MerchantInfo(
+    val merchantName: String? = null,
+    val merchantId: String? = null,
+    val softwareInfo: SoftwareInfo? = null,
+) : ModelObject() {
+
+    companion object {
+        private const val MERCHANT_NAME = "merchantName"
+        private const val MERCHANT_ID = "merchantId"
+        private const val SOFTWARE_INFO = "softwareInfo"
+
+        @JvmField
+        val SERIALIZER: Serializer<MerchantInfo> = object : Serializer<MerchantInfo> {
+            @Suppress("TooGenericExceptionThrown")
+            override fun serialize(modelObject: MerchantInfo): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(MERCHANT_NAME, modelObject.merchantName)
+                        putOpt(MERCHANT_ID, modelObject.merchantId)
+                        putOpt(
+                            SOFTWARE_INFO,
+                            ModelUtils.serializeOpt(modelObject.softwareInfo, SoftwareInfo.SERIALIZER),
+                        )
+                    }
+                } catch (e: JSONException) {
+                    // TODO - Change RuntimeException into a clearer error. Also remove the suppresion.
+//                    throw ModelSerializationException(MerchantInfo::class.java, e)
+                    throw RuntimeException(e)
+                }
+            }
+
+            override fun deserialize(jsonObject: JSONObject) = MerchantInfo(
+                merchantName = jsonObject.getStringOrNull(MERCHANT_NAME),
+                merchantId = jsonObject.getStringOrNull(MERCHANT_ID),
+                softwareInfo = ModelUtils.deserializeOpt(
+                    jsonObject.optJSONObject(SOFTWARE_INFO),
+                    SoftwareInfo.SERIALIZER,
+                ),
+            )
+        }
+    }
+}
