@@ -35,7 +35,7 @@
     <string name="checkout_drop_in_manage_favorites_remove" translatable="false">Remove</string>
     <string name="checkout_drop_in_manage_favorites_remove_confirmation" translatable="false">Remove %s</string>
     <string name="checkout_drop_in_other_payment_methods" translatable="false">Other payment methods</string>
-    <string name="checkout_drop_in_payment_method_list_description" translatable="false">Select your preferred payment option and complete your payment</string>
+    <string name="checkout_drop_in_payment_method_list_description" translatable="false">Select your preferred payment option to complete the payment</string>
     <string name="checkout_drop_in_payment_method_list_favorites_section_action" translatable="false">Manage</string>
     <string name="checkout_drop_in_payment_method_list_favorites_section_title" translatable="false">Favorites</string>
     <string name="checkout_drop_in_payment_method_list_payment_options_title" translatable="false">Payment options</string>
