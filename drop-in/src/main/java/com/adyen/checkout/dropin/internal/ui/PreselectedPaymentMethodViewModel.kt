@@ -35,21 +35,27 @@ internal class PreselectedPaymentMethodViewModel(
             storedPaymentMethod.type
         }
 
-        val title = if (storedPaymentMethod.lastFour != null) {
-            "${storedPaymentMethod.name} •••• ${storedPaymentMethod.lastFour}"
-        } else {
-            storedPaymentMethod.name
-        }
-
         val formattedAmount = dropInParams.amount.format(dropInParams.shopperLocale)
 
         return PreselectedPaymentMethodViewState(
             logoTxVariant = logoTxVariant,
-            title = title,
+            title = storedPaymentMethod.getTitle(),
             // TODO - Move to string resources after we support arguments
-            subtitle = "Use your ${storedPaymentMethod.name} to pay $formattedAmount",
-            payButtonText = "Use $title",
+            subtitle = "Use ${storedPaymentMethod.name} to pay $formattedAmount",
+            payButtonText = "Pay $formattedAmount",
         )
+    }
+
+    private fun StoredPaymentMethod.getTitle(): String {
+        return when {
+            lastFour != null -> "•••• $lastFour"
+            else -> when (type) {
+                PaymentMethodTypes.BLIK -> label.orEmpty()
+                PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
+                PaymentMethodTypes.PAYPAL -> shopperEmail.orEmpty()
+                else -> name
+            }
+        }
     }
 
     fun onBackClicked() {

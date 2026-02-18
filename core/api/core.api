@@ -1570,6 +1570,7 @@ public final class com/adyen/checkout/core/components/paymentmethod/PaymentMetho
 	public static final field ONLINE_BANKING_SK Ljava/lang/String;
 	public static final field OPEN_BANKING Ljava/lang/String;
 	public static final field OXXO Ljava/lang/String;
+	public static final field PAYPAL Ljava/lang/String;
 	public static final field PAY_BY_BANK Ljava/lang/String;
 	public static final field PAY_BY_BANK_US Ljava/lang/String;
 	public static final field PAY_NOW Ljava/lang/String;

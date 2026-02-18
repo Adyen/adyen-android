@@ -21,11 +21,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.dropin.R
 import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.element.button.SecondaryButton
 import com.adyen.checkout.ui.internal.text.Body
@@ -74,7 +77,9 @@ private fun PreselectedPaymentMethodContent(
 
         Title(
             text = viewState.title,
+            textAlign = TextAlign.Center,
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = Dimensions.Spacing.Large)
                 .align(Alignment.CenterHorizontally),
         )
@@ -95,6 +100,9 @@ private fun PreselectedPaymentMethodContent(
         PrimaryButton(
             onClick = onPayClicked,
             text = viewState.payButtonText,
+            leadingIcon = {
+                Icon(painter = painterResource(id = R.drawable.ic_lock), contentDescription = null)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimensions.Spacing.Large),
@@ -115,12 +123,11 @@ private fun PreselectedPaymentMethodContent(
 @Preview(showBackground = true)
 @Composable
 private fun PreselectedPaymentMethodScreenPreview() {
-    val title = "Visa •••• 1234"
     val viewState = PreselectedPaymentMethodViewState(
         logoTxVariant = "visa",
-        title = title,
-        subtitle = "Use your Visa card to pay $9.99",
-        payButtonText = "Use $title",
+        title = "•••• 1234",
+        subtitle = "Use Visa to pay $9.99",
+        payButtonText = "Pay $9.99",
     )
     PreselectedPaymentMethodContent(
         viewState = viewState,
