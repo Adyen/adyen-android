@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.upi.internal.ui
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.annotation.VisibleForTesting
+import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.components.core.OrderRequest
@@ -54,6 +57,7 @@ internal class DefaultUPIDelegate(
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
     private val sdkDataProvider: SdkDataProvider,
+    private val packageManager: PackageManager,
 ) : UPIDelegate {
 
     private val inputData = UPIInputData()
@@ -157,18 +161,23 @@ internal class DefaultUPIDelegate(
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
     ): List<UPIIntentItem> {
-        val paymentApps = upiApps.mapToPaymentApp(
-            environment = environment,
-            selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
-        )
+        val intent = Intent(Intent.ACTION_VIEW, "upi://pay".toUri())
+        val detectedApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
 
-        val genericApp = UPIIntentItem.GenericApp(
-            isSelected = selectedUPIIntentItem is UPIIntentItem.GenericApp,
-        )
+        val paymentApps = detectedApps
+            .map { AppData(it.resolvePackageName, it.loadLabel(packageManager).toString()) }
+            .mapToPaymentApp(
+                environment = environment,
+                selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
+            )
+
+//        val genericApp = UPIIntentItem.GenericApp(
+//            isSelected = selectedUPIIntentItem is UPIIntentItem.GenericApp,
+//        )
 
         return mutableListOf<UPIIntentItem>().apply {
             addAll(paymentApps)
-            add(genericApp)
+//            add(genericApp)
         }
     }
 
