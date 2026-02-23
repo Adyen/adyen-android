@@ -8,5 +8,24 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayFactory
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.internal.PaymentComponentFactory
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayPaymentComponentState
+import kotlinx.coroutines.CoroutineScope
+
+internal class GooglePayFactory : PaymentComponentFactory<GooglePayPaymentComponentState, GooglePayComponent> {
+    override fun create(
+        paymentMethod: PaymentMethod,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutConfiguration: CheckoutConfiguration,
+        componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks
+    ): GooglePayComponent {
+        return GooglePayComponent()
+    }
+}

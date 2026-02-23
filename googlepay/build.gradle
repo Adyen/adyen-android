@@ -8,7 +8,9 @@
 
 plugins {
     alias libs.plugins.checkout.android.library
+    alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.serialization
 }
 
 checkoutPublishing {
@@ -29,14 +31,17 @@ dependencies {
     // Checkout
     api project(':3ds2')
     api project(':action-core')
-    api project(':components-core')
+    api project(':core')
+    api project(':ui-core')
     api project(':sessions-core')
 
     // Dependencies
+    implementation libs.androidx.startup
     implementation libs.google.pay.play.services.coroutines
     api libs.google.pay.play.services.wallet
 
     //Tests
+    testImplementation testFixtures(project(':core'))
     testImplementation testFixtures(project(':test-core'))
     testImplementation testFixtures(project(':components-core'))
     testImplementation testFixtures(project(':action-core'))
