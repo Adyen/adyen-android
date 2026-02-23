@@ -15,6 +15,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.error.internal.ComponentError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -62,16 +63,15 @@ internal class GooglePayComponentParamsMapper {
      * Returns the [GooglePayConfiguration.merchantAccount] if set, or falls back to the
      * paymentMethod.configuration.gatewayMerchantId field returned by the API.
      */
-    @Suppress("TooGenericExceptionThrown")
     private fun GooglePayConfiguration?.getPreferredGatewayMerchantId(
         paymentMethod: PaymentMethod,
     ): String {
-        // TODO - Change RuntimeException into a clearer error. Also remove the suppresion.
+        // TODO - Error propagation - Update the code
         return this?.merchantAccount
             ?: paymentMethod.configuration?.gatewayMerchantId
-            ?: throw RuntimeException(
-                "GooglePay merchantAccount not found. Update your API version or pass it manually inside your " +
-                    "GooglePayConfiguration",
+            ?: throw ComponentError(
+                message = "GooglePay merchantAccount not found. Update your API version or pass it " +
+                    "manually inside your GooglePayConfiguration",
             )
     }
 
