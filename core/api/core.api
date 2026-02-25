@@ -1367,6 +1367,29 @@ public final class com/adyen/checkout/core/components/data/model/paymentmethod/I
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/IssuerListPaymentMethod$Companion {
 }
 
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/OnlineBankingPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/OnlineBankingPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/OnlineBankingPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/OnlineBankingPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/OnlineBankingPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIssuers ()Ljava/util/List;
+	public fun getName ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/OnlineBankingPaymentMethod$Companion {
+}
+
 public abstract class com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodResponse {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod$Companion;
