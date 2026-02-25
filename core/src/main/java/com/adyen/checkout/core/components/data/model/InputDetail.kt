@@ -15,6 +15,8 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+// TODO - Remove this model when PaymentMethod is removed.
+//  No need to have this, since it has been removed from the API level 68.
 @Parcelize
 data class InputDetail(
     val items: List<Item>? = null,
