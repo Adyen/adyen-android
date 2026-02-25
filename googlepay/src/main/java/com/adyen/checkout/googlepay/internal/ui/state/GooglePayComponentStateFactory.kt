@@ -8,5 +8,14 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+
+internal class GooglePayComponentStateFactory : ComponentStateFactory<GooglePayComponentState> {
+
+    override fun createInitialState() = GooglePayComponentState(
+        isButtonVisible = true,
+        isLoading = false,
+        isAvailable = false,
+        paymentData = null,
+    )
+}

@@ -8,5 +8,16 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-@Suppress("EmptyClassBlock", "NoEmptyClassBody")
-internal class GooglePayComponentStateReducer
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
+
+internal class GooglePayComponentStateReducer : ComponentStateReducer<GooglePayComponentState, GooglePayIntent> {
+
+    override fun reduce(state: GooglePayComponentState, intent: GooglePayIntent): GooglePayComponentState {
+        return when (intent) {
+            is GooglePayIntent.UpdateLoading -> state.copy(isLoading = intent.isLoading)
+            is GooglePayIntent.UpdateButtonVisible -> state.copy(isButtonVisible = intent.isButtonVisible)
+            is GooglePayIntent.UpdatePaymentData -> state.copy(paymentData = intent.paymentData)
+            is GooglePayIntent.UpdateAvailability -> state.copy(isAvailable = intent.isAvailable)
+        }
+    }
+}
