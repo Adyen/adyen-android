@@ -12,5 +12,20 @@ import android.content.Context
 import java.util.Locale
 
 interface CheckoutLocalizationProvider {
-    fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String?
+    fun getLocalizedString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String?
+}
+
+class XmlLocalizationProvider(
+    private val localizations: Map<CheckoutLocalizationKey, Int>,
+) : CheckoutLocalizationProvider {
+    override fun getLocalizedString(
+        context: Context,
+        locale: Locale,
+        key: CheckoutLocalizationKey,
+    ): String? {
+        val resourceId = localizations[key]
+        return resourceId?.let {
+            context.getString(resourceId)
+        }
+    }
 }

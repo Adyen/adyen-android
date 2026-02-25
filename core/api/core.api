@@ -628,7 +628,13 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 }
 
 public abstract interface class com/adyen/checkout/core/common/localization/CheckoutLocalizationProvider {
-	public abstract fun getString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
+	public abstract fun getLocalizedString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/common/localization/XmlLocalizationProvider : com/adyen/checkout/core/common/localization/CheckoutLocalizationProvider {
+	public static final field $stable I
+	public fun <init> (Ljava/util/Map;)V
+	public fun getLocalizedString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/common/ui/model/ExpiryDate {
