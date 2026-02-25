@@ -12,7 +12,6 @@ import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOptList
 import com.adyen.checkout.core.components.data.model.AppData
-import com.adyen.checkout.core.components.data.model.Issuer
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
