@@ -26,6 +26,10 @@ internal class LocalizationResolver(
     ): String {
         val string = localizationProvider?.getString(context, locale, key)
             ?: defaultLocalizationSource.getString(context, key)
-        return string.format(*formatArgs)
+        return if (formatArgs.isNotEmpty()) {
+            string.format(*formatArgs)
+        } else {
+            string
+        }
     }
 }
