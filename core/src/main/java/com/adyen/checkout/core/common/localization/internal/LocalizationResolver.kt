@@ -27,6 +27,7 @@ internal class LocalizationResolver(
         val string = localizationProvider?.getLocalizedString(context, locale, key)
             ?: defaultLocalizationSource.getString(context, key)
         return if (formatArgs.isNotEmpty()) {
+            @Suppress("SpreadOperator")
             string.format(*formatArgs)
         } else {
             string
