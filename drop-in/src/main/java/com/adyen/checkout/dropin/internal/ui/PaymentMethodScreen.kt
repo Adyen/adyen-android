@@ -67,6 +67,7 @@ private fun PaymentMethodScreenContent(
         ) {
             viewState.description?.let {
                 Body(
+                    // TODO - Pass amount as format arg
                     text = resolveString(it),
                     color = CheckoutThemeProvider.colors.textSecondary,
                     modifier = Modifier
