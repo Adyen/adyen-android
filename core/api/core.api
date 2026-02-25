@@ -1323,6 +1323,29 @@ public final class com/adyen/checkout/core/components/data/model/paymentmethod/C
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/CardPaymentMethod$Companion {
 }
 
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/GiftCardPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/GiftCardPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/GiftCardPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/GiftCardPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/GiftCardPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBrand ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/GiftCardPaymentMethod$Companion {
+}
+
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/InstantPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
