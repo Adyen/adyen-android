@@ -117,12 +117,9 @@ object JsonUtils {
      */
     @JvmStatic
     fun parseStringList(jsonArray: JSONArray): List<String> {
-        val list: MutableList<String> = ArrayList()
-        for (i in 0 until jsonArray.length()) {
-            val item = jsonArray.getString(i)
-            list.add(item)
+        return (0 until jsonArray.length()).map {
+            jsonArray.getString(it)
         }
-        return Collections.unmodifiableList(list)
     }
 
     /**
@@ -153,11 +150,7 @@ object JsonUtils {
      * @return The populated [JSONArray].
      */
     @JvmStatic
-    fun serializeStringList(stringList: List<String>) = JSONArray().apply {
-        stringList.forEach {
-            put(it)
-        }
-    }
+    fun serializeStringList(stringList: List<String>) = JSONArray(stringList)
 
     /**
      * Serializes a List of String to a [JSONArray].
