@@ -15,7 +15,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 internal class DefaultLocalizationSource {
 
     @Suppress("CyclomaticComplexMethod", "LongMethod")
-    fun getString(context: Context, key: CheckoutLocalizationKey, vararg formatArgs: Any): String {
+    fun getString(context: Context, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
             // Await
             CheckoutLocalizationKey.AWAIT_LOADING -> R.string.checkout_await_loading
@@ -102,6 +102,6 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.BLIK_HELPER_TEXT -> R.string.checkout_blik_helper_text
         }
 
-        return context.getString(resId, *formatArgs)
+        return context.getString(resId)
     }
 }
