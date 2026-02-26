@@ -25,7 +25,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         val repository = DefaultPaymentMethodRepository(response)
 
-        assertEquals(paymentMethods, repository.regulars)
+        assertEquals(paymentMethods, repository.paymentMethods)
     }
 
     @Test
@@ -34,7 +34,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         val repository = DefaultPaymentMethodRepository(response)
 
-        assertEquals(emptyList<PaymentMethod>(), repository.regulars)
+        assertEquals(emptyList<PaymentMethod>(), repository.paymentMethods)
     }
 
     @Test
@@ -44,7 +44,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         val repository = DefaultPaymentMethodRepository(response)
 
-        assertEquals(storedPaymentMethods, repository.favorites.first())
+        assertEquals(storedPaymentMethods, repository.storedPaymentMethods.first())
     }
 
     @Test
@@ -53,11 +53,11 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         val repository = DefaultPaymentMethodRepository(response)
 
-        assertEquals(emptyList<StoredPaymentMethod>(), repository.favorites.first())
+        assertEquals(emptyList<StoredPaymentMethod>(), repository.storedPaymentMethods.first())
     }
 
     @Test
-    fun `when removeFavorite is called, then item is removed from favorites`() = runTest {
+    fun `when removeStoredPaymentMethod is called, then item is removed from favorites`() = runTest {
         val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1", name = "MasterCard")
         val storedPaymentMethod2 = StoredPaymentMethod(type = "scheme", id = "2", name = "MasterCard")
         val response = PaymentMethodsApiResponse(
@@ -65,23 +65,23 @@ internal class DefaultPaymentMethodRepositoryTest {
         )
         val repository = DefaultPaymentMethodRepository(response)
 
-        repository.removeFavorite("1")
+        repository.removeStoredPaymentMethod("1")
 
-        val favorites = repository.favorites.first()
+        val favorites = repository.storedPaymentMethods.first()
         assertEquals(listOf(storedPaymentMethod2), favorites)
     }
 
     @Test
-    fun `when removeFavorite is called with unknown id, then favorites remain unchanged`() = runTest {
+    fun `when removeStoredPaymentMethod is called with unknown id, then favorites remain unchanged`() = runTest {
         val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1", name = "MasterCard")
         val response = PaymentMethodsApiResponse(
             storedPaymentMethods = listOf(storedPaymentMethod1),
         )
         val repository = DefaultPaymentMethodRepository(response)
 
-        repository.removeFavorite("999")
+        repository.removeStoredPaymentMethod("999")
 
-        val favorites = repository.favorites.first()
+        val favorites = repository.storedPaymentMethods.first()
         assertEquals(listOf(storedPaymentMethod1), favorites)
     }
 }

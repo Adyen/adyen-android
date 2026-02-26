@@ -24,7 +24,7 @@ internal data class PreselectedPaymentMethodNavKey(
 internal data object PaymentMethodListNavKey : NavKey
 
 @Serializable
-internal data object ManageFavoritesNavKey : NavKey
+internal data object StoredPaymentMethodsNavKey : NavKey
 
 @Serializable
 internal data class PaymentMethodNavKey(

@@ -84,7 +84,7 @@ internal class DropInViewModel(
     }
 
     private fun initializeBackStack() {
-        val storedPaymentMethods = paymentMethodRepository.favorites.value
+        val storedPaymentMethods = paymentMethodRepository.storedPaymentMethods.value
         val startingPoint = if (storedPaymentMethods.isEmpty()) {
             PaymentMethodListNavKey
         } else {

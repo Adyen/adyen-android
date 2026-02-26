@@ -49,11 +49,11 @@ internal class PaymentMethodViewModel(
     private fun createViewState(): PaymentMethodViewState {
         val paymentMethod = when (paymentFlowType) {
             is DropInPaymentFlowType.RegularPaymentMethod -> {
-                paymentMethodRepository.regulars.first { it.type == paymentFlowType.txVariant }
+                paymentMethodRepository.paymentMethods.first { it.type == paymentFlowType.txVariant }
             }
 
             is DropInPaymentFlowType.StoredPaymentMethod -> {
-                paymentMethodRepository.favorites.value.first { it.id == paymentFlowType.id }
+                paymentMethodRepository.storedPaymentMethods.value.first { it.id == paymentFlowType.id }
             }
         }
 
