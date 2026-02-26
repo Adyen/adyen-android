@@ -29,47 +29,48 @@ data class StoredBCMCPaymentMethod(
         private const val HOLDER_NAME = "holderName"
 
         @JvmField
-        val SERIALIZER: Serializer<StoredBCMCPaymentMethod> = object : Serializer<StoredBCMCPaymentMethod> {
-            override fun serialize(modelObject: StoredBCMCPaymentMethod): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(TYPE, modelObject.type)
-                        put(NAME, modelObject.name)
-                        put(ID, modelObject.id)
-                        putOpt(
-                            SUPPORTED_SHOPPER_INTERACTIONS,
-                            serializeOptStringList(modelObject.supportedShopperInteractions),
-                        )
-                        put(BRAND, modelObject.brand)
-                        put(LAST_FOUR, modelObject.lastFour)
-                        put(EXPIRY_MONTH, modelObject.expiryMonth)
-                        put(EXPIRY_YEAR, modelObject.expiryYear)
-                        putOpt(HOLDER_NAME, modelObject.holderName)
+        val SERIALIZER: Serializer<StoredBCMCPaymentMethod> =
+            object : Serializer<StoredBCMCPaymentMethod> {
+                override fun serialize(modelObject: StoredBCMCPaymentMethod): JSONObject {
+                    return try {
+                        JSONObject().apply {
+                            put(TYPE, modelObject.type)
+                            put(NAME, modelObject.name)
+                            put(ID, modelObject.id)
+                            putOpt(
+                                SUPPORTED_SHOPPER_INTERACTIONS,
+                                serializeOptStringList(modelObject.supportedShopperInteractions),
+                            )
+                            put(BRAND, modelObject.brand)
+                            put(LAST_FOUR, modelObject.lastFour)
+                            put(EXPIRY_MONTH, modelObject.expiryMonth)
+                            put(EXPIRY_YEAR, modelObject.expiryYear)
+                            putOpt(HOLDER_NAME, modelObject.holderName)
+                        }
+                    } catch (e: JSONException) {
+                        throw ModelSerializationException(StoredBCMCPaymentMethod::class.java, e)
                     }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(StoredBCMCPaymentMethod::class.java, e)
                 }
-            }
 
-            override fun deserialize(jsonObject: JSONObject): StoredBCMCPaymentMethod {
-                return try {
-                    StoredBCMCPaymentMethod(
-                        type = jsonObject.getString(TYPE),
-                        name = jsonObject.getString(NAME),
-                        id = jsonObject.getString(ID),
-                        supportedShopperInteractions = parseOptStringList(
-                            jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
-                        ) ?: emptyList(),
-                        brand = jsonObject.getString(BRAND),
-                        lastFour = jsonObject.getString(LAST_FOUR),
-                        expiryMonth = jsonObject.getString(EXPIRY_MONTH),
-                        expiryYear = jsonObject.getString(EXPIRY_YEAR),
-                        holderName = jsonObject.getStringOrNull(HOLDER_NAME),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(StoredBCMCPaymentMethod::class.java, e)
+                override fun deserialize(jsonObject: JSONObject): StoredBCMCPaymentMethod {
+                    return try {
+                        StoredBCMCPaymentMethod(
+                            type = jsonObject.getString(TYPE),
+                            name = jsonObject.getString(NAME),
+                            id = jsonObject.getString(ID),
+                            supportedShopperInteractions = parseOptStringList(
+                                jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
+                            ) ?: emptyList(),
+                            brand = jsonObject.getString(BRAND),
+                            lastFour = jsonObject.getString(LAST_FOUR),
+                            expiryMonth = jsonObject.getString(EXPIRY_MONTH),
+                            expiryYear = jsonObject.getString(EXPIRY_YEAR),
+                            holderName = jsonObject.getStringOrNull(HOLDER_NAME),
+                        )
+                    } catch (e: JSONException) {
+                        throw ModelSerializationException(StoredBCMCPaymentMethod::class.java, e)
+                    }
                 }
             }
-        }
     }
 }

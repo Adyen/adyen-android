@@ -20,39 +20,40 @@ data class StoredCashAppPayPaymentMethod(
         private const val CASHTAG = "cashtag"
 
         @JvmField
-        val SERIALIZER: Serializer<StoredCashAppPayPaymentMethod> = object : Serializer<StoredCashAppPayPaymentMethod> {
-            override fun serialize(modelObject: StoredCashAppPayPaymentMethod): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(TYPE, modelObject.type)
-                        put(NAME, modelObject.name)
-                        put(ID, modelObject.id)
-                        putOpt(
-                            SUPPORTED_SHOPPER_INTERACTIONS,
-                            serializeOptStringList(modelObject.supportedShopperInteractions),
-                        )
-                        put(CASHTAG, modelObject.cashtag)
+        val SERIALIZER: Serializer<StoredCashAppPayPaymentMethod> =
+            object : Serializer<StoredCashAppPayPaymentMethod> {
+                override fun serialize(modelObject: StoredCashAppPayPaymentMethod): JSONObject {
+                    return try {
+                        JSONObject().apply {
+                            put(TYPE, modelObject.type)
+                            put(NAME, modelObject.name)
+                            put(ID, modelObject.id)
+                            putOpt(
+                                SUPPORTED_SHOPPER_INTERACTIONS,
+                                serializeOptStringList(modelObject.supportedShopperInteractions),
+                            )
+                            put(CASHTAG, modelObject.cashtag)
+                        }
+                    } catch (e: JSONException) {
+                        throw ModelSerializationException(StoredCashAppPayPaymentMethod::class.java, e)
                     }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(StoredCashAppPayPaymentMethod::class.java, e)
                 }
-            }
 
-            override fun deserialize(jsonObject: JSONObject): StoredCashAppPayPaymentMethod {
-                return try {
-                    StoredCashAppPayPaymentMethod(
-                        type = jsonObject.getString(TYPE),
-                        name = jsonObject.getString(NAME),
-                        id = jsonObject.getString(ID),
-                        supportedShopperInteractions = parseOptStringList(
-                            jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
-                        ) ?: emptyList(),
-                        cashtag = jsonObject.getString(CASHTAG),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(StoredCashAppPayPaymentMethod::class.java, e)
+                override fun deserialize(jsonObject: JSONObject): StoredCashAppPayPaymentMethod {
+                    return try {
+                        StoredCashAppPayPaymentMethod(
+                            type = jsonObject.getString(TYPE),
+                            name = jsonObject.getString(NAME),
+                            id = jsonObject.getString(ID),
+                            supportedShopperInteractions = parseOptStringList(
+                                jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
+                            ) ?: emptyList(),
+                            cashtag = jsonObject.getString(CASHTAG),
+                        )
+                    } catch (e: JSONException) {
+                        throw ModelSerializationException(StoredCashAppPayPaymentMethod::class.java, e)
+                    }
                 }
             }
-        }
     }
 }
