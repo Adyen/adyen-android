@@ -22,7 +22,7 @@ sonarqube = "7.2.2.6593"
 binary-compatibility-validator = "0.18.1"
 
 # Android dependencies
-activity = "1.12.2"
+activity = "1.12.4"
 annotation = "1.9.1"
 appcompat = "1.7.1"
 autofill = "1.3.0"
