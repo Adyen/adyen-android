@@ -26,6 +26,7 @@ import java.util.Locale
     "UNCHECKED_CAST",
     "ktlint:standard:discouraged-comment-location",
     "ktlint:standard:type-parameter-list-spacing",
+    "ktlint:standard:kdoc",
 )
 abstract class ActionHandlingPaymentMethodConfigurationBuilder<
     ConfigurationT : Configuration,
