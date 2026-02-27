@@ -17,6 +17,7 @@ import kotlinx.serialization.Serializable
 import org.json.JSONException
 import org.json.JSONObject
 
+// TODO - Payment method models - Remove when newly created models are used.
 @Serializable
 @Parcelize
 data class StoredPaymentMethod(

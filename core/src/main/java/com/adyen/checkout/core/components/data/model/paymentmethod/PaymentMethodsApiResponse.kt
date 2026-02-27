@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 1/5/2025.
+ * Created by ararat on 22/1/2026.
  */
 
-package com.adyen.checkout.core.components.data.model
+package com.adyen.checkout.core.components.data.model.paymentmethod
 
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
@@ -20,7 +20,6 @@ import org.json.JSONObject
  * Object that parses and holds the response data from the /paymentMethods endpoint.
  * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
  */
-// TODO - Payment method models - Remove when newly created models are used.
 @Parcelize
 data class PaymentMethodsApiResponse(
     val storedPaymentMethods: List<StoredPaymentMethod>? = null,
@@ -54,16 +53,20 @@ data class PaymentMethodsApiResponse(
             }
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethodsApiResponse {
-                return PaymentMethodsApiResponse(
-                    storedPaymentMethods = deserializeOptList(
-                        jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
-                        StoredPaymentMethod.SERIALIZER,
-                    ),
-                    paymentMethods = deserializeOptList(
-                        jsonObject.optJSONArray(PAYMENT_METHODS),
-                        PaymentMethod.SERIALIZER,
-                    ),
-                )
+                return try {
+                    PaymentMethodsApiResponse(
+                        storedPaymentMethods = deserializeOptList(
+                            jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
+                            StoredPaymentMethod.SERIALIZER,
+                        ),
+                        paymentMethods = deserializeOptList(
+                            jsonObject.optJSONArray(PAYMENT_METHODS),
+                            PaymentMethod.SERIALIZER,
+                        ),
+                    )
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(PaymentMethodsApiResponse::class.java, e)
+                }
             }
         }
     }
