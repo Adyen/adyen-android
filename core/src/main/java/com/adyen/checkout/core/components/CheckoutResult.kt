@@ -23,7 +23,7 @@ sealed interface CheckoutResult {
     /** Indicates that an additional action is required from the shopper. */
     data class Action(val action: ActionResponse) : CheckoutResult
 
-    // TODO - Error propagation: Revisit error type.
     /** Indicates an error occurred during the payment process. */
+    // TODO - Error propagation: Revisit error type.
     data class Error(val errorMessage: String) : CheckoutResult
 }

@@ -10,7 +10,11 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.LocaleUtil
 import java.util.Locale
 
-@Suppress("ktlint:standard:discouraged-comment-location", "ktlint:standard:type-parameter-list-spacing")
+@Suppress(
+    "ktlint:standard:discouraged-comment-location",
+    "ktlint:standard:type-parameter-list-spacing",
+    "ktlint:standard:kdoc",
+)
 abstract class BaseConfigurationBuilder<
     ConfigurationT : Configuration,
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>

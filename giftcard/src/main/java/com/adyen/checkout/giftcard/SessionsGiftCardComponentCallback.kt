@@ -34,6 +34,7 @@ interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardC
     fun onPartialPayment(result: SessionPaymentResult)
 
     // API Events
+
     /**
      * Only applicable for partial payments flow.
      *
