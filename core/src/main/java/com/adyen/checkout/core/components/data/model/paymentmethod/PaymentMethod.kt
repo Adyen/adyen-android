@@ -58,6 +58,51 @@ constructor() : PaymentMethodResponse() {
         fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethod> {
             val serializer = when (paymentMethodType) {
                 PaymentMethodTypes.SCHEME -> CardPaymentMethod.SERIALIZER
+                PaymentMethodTypes.BCMC -> BCMCPaymentMethod.SERIALIZER
+                PaymentMethodTypes.IDEAL,
+                PaymentMethodTypes.DOTPAY,
+                PaymentMethodTypes.EPS,
+                PaymentMethodTypes.ENTERCASH,
+                PaymentMethodTypes.OPEN_BANKING,
+                PaymentMethodTypes.MOLPAY_MALAYSIA,
+                PaymentMethodTypes.MOLPAY_THAILAND,
+                PaymentMethodTypes.MOLPAY_VIETNAM,
+                PaymentMethodTypes.ONLINE_BANKING_PL -> IssuerListPaymentMethod.SERIALIZER
+                PaymentMethodTypes.ONLINE_BANKING_CZ,
+                PaymentMethodTypes.ONLINE_BANKING_SK -> OnlineBankingPaymentMethod.SERIALIZER
+                PaymentMethodTypes.SEPA -> SEPADirectDebitPaymentMethod.SERIALIZER
+                PaymentMethodTypes.BACS -> BACSDirectDebitPaymentMethod.SERIALIZER
+                PaymentMethodTypes.ACH -> ACHDirectDebitPaymentMethod.SERIALIZER
+                PaymentMethodTypes.GOOGLE_PAY,
+                PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayPaymentMethod.SERIALIZER
+                PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayPaymentMethod.SERIALIZER
+                PaymentMethodTypes.MB_WAY -> MBWayPaymentMethod.SERIALIZER
+                PaymentMethodTypes.BLIK -> BLIKPaymentMethod.SERIALIZER
+                PaymentMethodTypes.GIFTCARD -> GiftCardPaymentMethod.SERIALIZER
+                PaymentMethodTypes.MEAL_VOUCHER_FR,
+                PaymentMethodTypes.MEAL_VOUCHER_FR_SODEXO,
+                PaymentMethodTypes.MEAL_VOUCHER_FR_NATIXIS,
+                PaymentMethodTypes.MEAL_VOUCHER_FR_GROUPEUP -> MealVoucherPaymentMethod.SERIALIZER
+                PaymentMethodTypes.ECONTEXT_ATM,
+                PaymentMethodTypes.ECONTEXT_ONLINE,
+                PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN,
+                PaymentMethodTypes.ECONTEXT_STORES -> EContextPaymentMethod.SERIALIZER
+                PaymentMethodTypes.BOLETOBANCARIO,
+                PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL,
+                PaymentMethodTypes.BOLETOBANCARIO_BRADESCO,
+                PaymentMethodTypes.BOLETOBANCARIO_HSBC,
+                PaymentMethodTypes.BOLETOBANCARIO_ITAU,
+                PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
+                PaymentMethodTypes.BOLETO_PRIMEIRO_PAY -> BoletoPaymentMethod.SERIALIZER
+                PaymentMethodTypes.CASH_APP_PAY -> CashAppPayPaymentMethod.SERIALIZER
+                PaymentMethodTypes.TWINT -> TwintPaymentMethod.SERIALIZER
+                PaymentMethodTypes.PAY_BY_BANK -> PayByBankPaymentMethod.SERIALIZER
+                PaymentMethodTypes.PAY_BY_BANK_US -> PayByBankUSPaymentMethod.SERIALIZER
+                PaymentMethodTypes.PAY_TO -> PayToPaymentMethod.SERIALIZER
+                PaymentMethodTypes.UPI,
+                PaymentMethodTypes.UPI_INTENT,
+                PaymentMethodTypes.UPI_COLLECT,
+                PaymentMethodTypes.UPI_QR -> UPIPaymentMethod.SERIALIZER
                 in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> UnsupportedPaymentMethod.SERIALIZER
                 else -> InstantPaymentMethod.SERIALIZER
             }

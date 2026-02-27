@@ -68,6 +68,13 @@ constructor() : PaymentMethodResponse() {
         fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethod> {
             val serializer = when (paymentMethodType) {
                 PaymentMethodTypes.SCHEME -> StoredCardPaymentMethod.SERIALIZER
+                PaymentMethodTypes.BCMC -> StoredBCMCPaymentMethod.SERIALIZER
+                PaymentMethodTypes.BLIK -> StoredBLIKPaymentMethod.SERIALIZER
+                PaymentMethodTypes.ACH -> StoredACHDirectDebitPaymentMethod.SERIALIZER
+                PaymentMethodTypes.CASH_APP_PAY -> StoredCashAppPayPaymentMethod.SERIALIZER
+                PaymentMethodTypes.TWINT -> StoredTwintPaymentMethod.SERIALIZER
+                PaymentMethodTypes.PAY_BY_BANK_US -> StoredPayByBankUSPaymentMethod.SERIALIZER
+                PaymentMethodTypes.PAY_TO -> StoredPayToPaymentMethod.SERIALIZER
                 in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> StoredUnsupportedPaymentMethod.SERIALIZER
                 else -> StoredInstantPaymentMethod.SERIALIZER
             }
