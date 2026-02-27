@@ -10,15 +10,14 @@ package com.adyen.checkout.core.components.data.model
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
-import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
 data class Issuer(
-    val id: String? = null,
-    val name: String? = null,
+    val id: String,
+    val name: String,
     val isDisabled: Boolean = false,
 ) : ModelObject() {
 
@@ -32,8 +31,8 @@ data class Issuer(
             override fun serialize(modelObject: Issuer): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(ID, modelObject.id)
-                        putOpt(NAME, modelObject.name)
+                        put(ID, modelObject.id)
+                        put(NAME, modelObject.name)
                         putOpt(DISABLED, modelObject.isDisabled)
                     }
                 } catch (e: JSONException) {
@@ -43,8 +42,8 @@ data class Issuer(
 
             override fun deserialize(jsonObject: JSONObject): Issuer {
                 return Issuer(
-                    id = jsonObject.getStringOrNull(ID),
-                    name = jsonObject.getStringOrNull(NAME),
+                    id = jsonObject.getString(ID),
+                    name = jsonObject.getString(NAME),
                     isDisabled = jsonObject.getBooleanOrNull(DISABLED) ?: false,
                 )
             }
