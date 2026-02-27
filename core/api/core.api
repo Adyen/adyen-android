@@ -1363,6 +1363,69 @@ public final class com/adyen/checkout/core/components/data/model/paymentmethod/P
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodsApiResponse$Companion {
 }
 
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredACHDirectDebitPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredACHDirectDebitPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredACHDirectDebitPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredACHDirectDebitPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredACHDirectDebitPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBankAccountNumber ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getSupportedShopperInteractions ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredACHDirectDebitPaymentMethod$Companion {
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredBCMCPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredBCMCPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredBCMCPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredBCMCPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredBCMCPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBrand ()Ljava/lang/String;
+	public final fun getExpiryMonth ()Ljava/lang/String;
+	public final fun getExpiryYear ()Ljava/lang/String;
+	public final fun getHolderName ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public final fun getLastFour ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getSupportedShopperInteractions ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredBCMCPaymentMethod$Companion {
+}
+
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredCardPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -1401,6 +1464,33 @@ public final class com/adyen/checkout/core/components/data/model/paymentmethod/S
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredCardPaymentMethod$Companion {
 }
 
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredCashAppPayPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredCashAppPayPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredCashAppPayPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredCashAppPayPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredCashAppPayPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCashtag ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getSupportedShopperInteractions ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredCashAppPayPaymentMethod$Companion {
+}
+
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredInstantPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -1424,6 +1514,61 @@ public final class com/adyen/checkout/core/components/data/model/paymentmethod/S
 }
 
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredInstantPaymentMethod$Companion {
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredPayByBankUSPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayByBankUSPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayByBankUSPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayByBankUSPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayByBankUSPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getSupportedShopperInteractions ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredPayByBankUSPaymentMethod$Companion {
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredPayToPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayToPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayToPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayToPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/data/model/paymentmethod/StoredPayToPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getId ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getSupportedShopperInteractions ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredPayToPaymentMethod$Companion {
 }
 
 public abstract class com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod : com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodResponse {
