@@ -69,6 +69,7 @@ internal class SessionsPaymentFacilitatorFactory(
         )
 
         val paymentComponent = PaymentMethodProvider.get(
+            application = applicationContext.applicationContext as android.app.Application,
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
@@ -77,25 +78,7 @@ internal class SessionsPaymentFacilitatorFactory(
             checkoutCallbacks = checkoutCallbacks,
         )
 
-        val sessionInteractor = SessionInteractor(
-            sessionRepository = SessionRepository(
-                sessionService = SessionService(
-                    httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment),
-                ),
-                clientKey = checkoutConfiguration.clientKey,
-            ),
-            sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-            analyticsManager = analyticsManager,
-            sessionResponse = sessionSavedStateHandleContainer.getSessionResponse(),
-            isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
-        )
-
-        // TODO - Based on txVariant, needs to be abstracted away
-        val componentEventHandler =
-            SessionsComponentEventHandler<BasePaymentComponentState>(
-                sessionInteractor = sessionInteractor,
-                componentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks(),
-            )
+        val componentEventHandler = createComponentEventHandler(sessionSavedStateHandleContainer, analyticsManager)
 
         val actionProvider = ActionProvider(
             analyticsManager = analyticsManager,
@@ -111,6 +94,29 @@ internal class SessionsPaymentFacilitatorFactory(
             actionProvider = actionProvider,
             checkoutController = checkoutController,
             commonComponentParams = componentParamsBundle.commonComponentParams,
+        )
+    }
+
+    private fun createComponentEventHandler(
+        sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
+        analyticsManager: com.adyen.checkout.core.analytics.internal.AnalyticsManager,
+    ): SessionsComponentEventHandler<BasePaymentComponentState> {
+        val sessionInteractor = SessionInteractor(
+            sessionRepository = SessionRepository(
+                sessionService = SessionService(
+                    httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment),
+                ),
+                clientKey = checkoutConfiguration.clientKey,
+            ),
+            sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            analyticsManager = analyticsManager,
+            sessionResponse = sessionSavedStateHandleContainer.getSessionResponse(),
+            isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+        )
+
+        return SessionsComponentEventHandler(
+            sessionInteractor = sessionInteractor,
+            componentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks(),
         )
     }
 }
