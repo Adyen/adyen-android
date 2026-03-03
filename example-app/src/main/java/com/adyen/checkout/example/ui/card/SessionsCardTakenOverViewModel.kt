@@ -68,7 +68,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
 
-    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
+    private val checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig
 
     private var isFlowTakenOver: Boolean
         get() = savedStateHandle[IS_SESSIONS_FLOW_TAKEN_OVER_KEY] ?: false

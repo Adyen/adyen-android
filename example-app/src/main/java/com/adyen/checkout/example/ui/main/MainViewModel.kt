@@ -148,7 +148,7 @@ internal class MainViewModel @Inject constructor(
             showLoading(false)
 
             if (paymentMethods != null) {
-                val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
+                val checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.DropIn(paymentMethods, checkoutConfiguration)))
             } else {
                 onError("Something went wrong while fetching payment methods")
@@ -160,7 +160,7 @@ internal class MainViewModel @Inject constructor(
         viewModelScope.launch {
             showLoading(true)
 
-            val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
+            val checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig
 
             val session = getSessionOld(checkoutConfiguration)
 

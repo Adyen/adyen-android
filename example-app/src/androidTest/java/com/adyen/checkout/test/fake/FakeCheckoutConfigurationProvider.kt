@@ -33,7 +33,7 @@ internal class FakeCheckoutConfigurationProvider @Inject constructor() : Configu
 
     var configurationBlock: CheckoutConfiguration.() -> Unit = {}
 
-    override val checkoutConfig: CheckoutConfiguration
+    override val oldCheckoutConfig: CheckoutConfiguration
         get() = CheckoutConfiguration(
             environment = environment,
             clientKey = TEST_CLIENT_KEY,

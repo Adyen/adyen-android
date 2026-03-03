@@ -52,7 +52,7 @@ internal class GooglePayViewModel @Inject constructor(
     ComponentCallback<GooglePayComponentState>,
     ComponentAvailableCallback {
 
-    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
+    private val checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig
 
     private val _googleComponentDataFlow = MutableStateFlow<GooglePayComponentData?>(null)
     val googleComponentDataFlow: Flow<GooglePayComponentData> = _googleComponentDataFlow.filterNotNull()

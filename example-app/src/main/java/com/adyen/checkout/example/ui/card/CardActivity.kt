@@ -115,7 +115,7 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
         val cardComponent = CardComponent.PROVIDER.get(
             activity = this,
             paymentMethod = cardComponentData.paymentMethod,
-            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
+            checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig,
             callback = cardComponentData.callback,
         )
 

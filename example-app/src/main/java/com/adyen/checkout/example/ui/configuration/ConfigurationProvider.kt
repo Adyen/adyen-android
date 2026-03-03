@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.example.ui.configuration
 
-import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
 
 internal interface ConfigurationProvider {
 
-    val checkoutConfig: CheckoutConfiguration
+    val oldCheckoutConfig: OldCheckoutConfiguration
 }

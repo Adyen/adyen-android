@@ -53,7 +53,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 ) : ViewModel(),
     SessionComponentCallback<GooglePayComponentState> {
 
-    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
+    private val checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig
 
     private val _googlePayState = MutableStateFlow<SessionsGooglePayState>(SessionsGooglePayState.Loading)
     val googlePayState: StateFlow<SessionsGooglePayState> = _googlePayState.asStateFlow()

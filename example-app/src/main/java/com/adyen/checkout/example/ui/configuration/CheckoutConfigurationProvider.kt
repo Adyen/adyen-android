@@ -14,7 +14,6 @@ import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
-import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.dropin.old.dropIn
 import com.adyen.checkout.example.BuildConfig
@@ -31,6 +30,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
 
 @Suppress("TooManyFunctions")
 @Singleton
@@ -51,8 +51,8 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val environment = Environment.TEST
 
-    override val checkoutConfig: CheckoutConfiguration
-        get() = CheckoutConfiguration(
+    override val oldCheckoutConfig: OldCheckoutConfiguration
+        get() = OldCheckoutConfiguration(
             environment = environment,
             clientKey = clientKey,
             shopperLocale = shopperLocale,
