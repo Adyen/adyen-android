@@ -103,7 +103,7 @@ abstract class PaymentMethodDetails : ModelObject() {
 //
 //                SepaPaymentMethod.PAYMENT_METHOD_TYPE -> SepaPaymentMethod.SERIALIZER
 //                SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
-                else -> GenericPaymentMethod.SERIALIZER
+                else -> GenericDetails.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")
             return serializer as Serializer<PaymentMethodDetails>
