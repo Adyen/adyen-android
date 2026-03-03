@@ -11,7 +11,7 @@ package com.adyen.checkout.core.components.paymentmethod
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class TestPaymentMethod(
+class TestPaymentDetails(
     override var type: String? = "test",
     override var sdkData: String? = null,
 ) : PaymentMethodDetails()

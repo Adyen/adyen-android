@@ -12,10 +12,10 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.Amount
 
 class TestPaymentComponentState(
-    override val data: PaymentComponentData<TestPaymentMethod> = PaymentComponentData(
-        paymentMethod = TestPaymentMethod(),
+    override val data: PaymentComponentData<TestPaymentDetails> = PaymentComponentData(
+        paymentMethod = TestPaymentDetails(),
         order = null,
         amount = Amount(currency = "EUR"),
     ),
     override val isValid: Boolean = true,
-) : PaymentComponentState<TestPaymentMethod>
+) : PaymentComponentState<TestPaymentDetails>
