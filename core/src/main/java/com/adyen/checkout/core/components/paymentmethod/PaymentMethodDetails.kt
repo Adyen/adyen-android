@@ -77,7 +77,7 @@ abstract class PaymentMethodDetails : ModelObject() {
 //                PaymentMethodTypes.MEAL_VOUCHER_FR -> GiftCardPaymentMethod.SERIALIZER
 //
 //                IdealPaymentMethod.PAYMENT_METHOD_TYPE -> IdealPaymentMethod.SERIALIZER
-                MBWayPaymentMethod.PAYMENT_METHOD_TYPE -> MBWayPaymentMethod.SERIALIZER
+                MBWayDetails.PAYMENT_METHOD_TYPE -> MBWayDetails.SERIALIZER
 //                OnlineBankingCZPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingCZPaymentMethod.SERIALIZER
 //                OnlineBankingJPPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingJPPaymentMethod.SERIALIZER
 //                OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethod.SERIALIZER

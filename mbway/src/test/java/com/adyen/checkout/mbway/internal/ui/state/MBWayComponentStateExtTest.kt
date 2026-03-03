@@ -5,7 +5,7 @@ import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
-import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.MBWayDetails
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -37,13 +37,13 @@ internal class MBWayComponentStateExtTest {
             sdkDataProvider = sdkDataProvider,
         )
 
-        val expectedPaymentMethod = MBWayPaymentMethod(
-            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
+        val expectedMBWayDetails = MBWayDetails(
+            type = MBWayDetails.PAYMENT_METHOD_TYPE,
             sdkData = TestSdkDataProvider.TEST_SDK_DATA,
             telephoneNumber = "+351123456789",
         )
         val expectedPaymentComponentData = PaymentComponentData(
-            paymentMethod = expectedPaymentMethod,
+            paymentMethod = expectedMBWayDetails,
             order = null,
             amount = amount,
         )

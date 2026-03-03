@@ -9,7 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.MBWayDetails
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.MBWayComponent
 
@@ -18,6 +18,6 @@ import com.adyen.checkout.mbway.internal.ui.MBWayComponent
  */
 // TODO - check if we need to make this public
 internal data class MBWayPaymentComponentState(
-    override val data: PaymentComponentData<MBWayPaymentMethod>,
+    override val data: PaymentComponentData<MBWayDetails>,
     override val isValid: Boolean,
-) : PaymentComponentState<MBWayPaymentMethod>
+) : PaymentComponentState<MBWayDetails>
