@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 21/1/2025.
+ * Created by ararat on 25/2/2025.
  */
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
@@ -17,10 +17,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 /**
- * Payment method model for card (scheme) payments.
+ * Payment method model for Bancontact (BCMC).
  */
 @Parcelize
-data class CardPaymentMethod(
+data class BCMCPaymentMethod(
     override val type: String,
     override val name: String,
     val brands: List<String>,
@@ -32,8 +32,8 @@ data class CardPaymentMethod(
         private const val FUNDING_SOURCE = "fundingSource"
 
         @JvmField
-        val SERIALIZER: Serializer<CardPaymentMethod> = object : Serializer<CardPaymentMethod> {
-            override fun serialize(modelObject: CardPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<BCMCPaymentMethod> = object : Serializer<BCMCPaymentMethod> {
+            override fun serialize(modelObject: BCMCPaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
                         put(TYPE, modelObject.type)
@@ -42,20 +42,20 @@ data class CardPaymentMethod(
                         putOpt(FUNDING_SOURCE, modelObject.fundingSource)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(CardPaymentMethod::class.java, e)
+                    throw ModelSerializationException(BCMCPaymentMethod::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): CardPaymentMethod {
+            override fun deserialize(jsonObject: JSONObject): BCMCPaymentMethod {
                 return try {
-                    CardPaymentMethod(
+                    BCMCPaymentMethod(
                         type = jsonObject.getString(TYPE),
                         name = jsonObject.getString(NAME),
                         brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)) ?: emptyList(),
                         fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
                     )
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(CardPaymentMethod::class.java, e)
+                    throw ModelSerializationException(BCMCPaymentMethod::class.java, e)
                 }
             }
         }

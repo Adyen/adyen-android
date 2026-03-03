@@ -10,15 +10,14 @@ package com.adyen.checkout.core.components.data.model
 
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
-import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
 data class AppData(
-    val id: String? = null,
-    val name: String? = null,
+    val id: String,
+    val name: String,
 ) : ModelObject() {
 
     companion object {
@@ -30,8 +29,8 @@ data class AppData(
             override fun serialize(modelObject: AppData): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(ID, modelObject.id)
-                        putOpt(NAME, modelObject.name)
+                        put(ID, modelObject.id)
+                        put(NAME, modelObject.name)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AppData::class.java, e)
@@ -40,8 +39,8 @@ data class AppData(
 
             override fun deserialize(jsonObject: JSONObject): AppData {
                 return AppData(
-                    id = jsonObject.getStringOrNull(ID),
-                    name = jsonObject.getStringOrNull(NAME),
+                    id = jsonObject.getString(ID),
+                    name = jsonObject.getString(NAME),
                 )
             }
         }

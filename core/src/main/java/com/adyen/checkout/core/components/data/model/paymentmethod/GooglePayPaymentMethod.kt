@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 21/1/2025.
+ * Created by ararat on 25/2/2025.
  */
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
@@ -11,51 +11,56 @@ package com.adyen.checkout.core.components.data.model.paymentmethod
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeOptStringList
-import com.adyen.checkout.core.common.internal.model.getStringOrNull
+import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.components.data.model.Configuration
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
 /**
- * Payment method model for card (scheme) payments.
+ * Payment method model for Google Pay.
  */
 @Parcelize
-data class CardPaymentMethod(
+data class GooglePayPaymentMethod(
     override val type: String,
     override val name: String,
     val brands: List<String>,
-    val fundingSource: String?,
+    val configuration: Configuration?,
 ) : PaymentMethod() {
 
     companion object {
         private const val BRANDS = "brands"
-        private const val FUNDING_SOURCE = "fundingSource"
+        private const val CONFIGURATION = "configuration"
 
         @JvmField
-        val SERIALIZER: Serializer<CardPaymentMethod> = object : Serializer<CardPaymentMethod> {
-            override fun serialize(modelObject: CardPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<GooglePayPaymentMethod> = object : Serializer<GooglePayPaymentMethod> {
+            override fun serialize(modelObject: GooglePayPaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
                         put(TYPE, modelObject.type)
                         put(NAME, modelObject.name)
                         putOpt(BRANDS, serializeOptStringList(modelObject.brands))
-                        putOpt(FUNDING_SOURCE, modelObject.fundingSource)
+                        putOpt(CONFIGURATION, serializeOpt(modelObject.configuration, Configuration.SERIALIZER))
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(CardPaymentMethod::class.java, e)
+                    throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): CardPaymentMethod {
+            override fun deserialize(jsonObject: JSONObject): GooglePayPaymentMethod {
                 return try {
-                    CardPaymentMethod(
+                    GooglePayPaymentMethod(
                         type = jsonObject.getString(TYPE),
                         name = jsonObject.getString(NAME),
                         brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)) ?: emptyList(),
-                        fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
+                        configuration = deserializeOpt(
+                            jsonObject.optJSONObject(CONFIGURATION),
+                            Configuration.SERIALIZER,
+                        ),
                     )
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(CardPaymentMethod::class.java, e)
+                    throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
                 }
             }
         }
