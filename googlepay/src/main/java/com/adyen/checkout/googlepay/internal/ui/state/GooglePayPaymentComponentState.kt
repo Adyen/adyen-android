@@ -9,10 +9,10 @@
 package com.adyen.checkout.googlepay.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.GooglePayDetails
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 internal class GooglePayPaymentComponentState(
-    override val data: PaymentComponentData<GooglePayPaymentMethod>,
+    override val data: PaymentComponentData<GooglePayDetails>,
     override val isValid: Boolean,
-) : PaymentComponentState<GooglePayPaymentMethod>
+) : PaymentComponentState<GooglePayDetails>
