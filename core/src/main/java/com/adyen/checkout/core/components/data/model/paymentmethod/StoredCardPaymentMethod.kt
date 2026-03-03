@@ -29,8 +29,8 @@ data class StoredCardPaymentMethod(
     val lastFour: String,
     val expiryMonth: String,
     val expiryYear: String,
-    val holderName: String? = null,
-    val fundingSource: String? = null,
+    val holderName: String?,
+    val fundingSource: String?,
 ) : StoredPaymentMethod() {
 
     companion object {

@@ -24,7 +24,7 @@ data class CardPaymentMethod(
     override val type: String,
     override val name: String,
     val brands: List<String>,
-    val fundingSource: String? = null,
+    val fundingSource: String?,
 ) : PaymentMethod() {
 
     companion object {
