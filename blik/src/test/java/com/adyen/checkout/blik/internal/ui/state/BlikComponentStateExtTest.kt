@@ -12,7 +12,7 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
-import com.adyen.checkout.core.components.paymentmethod.BlikPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.BlikDetails
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -42,14 +42,14 @@ internal class BlikComponentStateExtTest {
             sdkDataProvider = sdkDataProvider,
         )
 
-        val expectedPaymentMethod = BlikPaymentMethod(
-            type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
+        val expectedBlikDetails = BlikDetails(
+            type = BlikDetails.PAYMENT_METHOD_TYPE,
             sdkData = TestSdkDataProvider.TEST_SDK_DATA,
             blikCode = "123456",
             storedPaymentMethodId = null,
         )
         val expectedPaymentComponentData = PaymentComponentData(
-            paymentMethod = expectedPaymentMethod,
+            paymentMethod = expectedBlikDetails,
             order = null,
             amount = amount,
         )

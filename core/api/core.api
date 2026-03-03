@@ -1560,10 +1560,10 @@ public abstract interface class com/adyen/checkout/core/components/navigation/Ch
 	public abstract fun provide (Lcom/adyen/checkout/core/components/navigation/CheckoutNavigationKey;)Lcom/adyen/checkout/core/components/navigation/CheckoutNavigationProperties;
 }
 
-public final class com/adyen/checkout/core/components/paymentmethod/BlikPaymentMethod : com/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails {
+public final class com/adyen/checkout/core/components/paymentmethod/BlikDetails : com/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public static final field Companion Lcom/adyen/checkout/core/components/paymentmethod/BlikPaymentMethod$Companion;
+	public static final field Companion Lcom/adyen/checkout/core/components/paymentmethod/BlikDetails$Companion;
 	public static final field PAYMENT_METHOD_TYPE Ljava/lang/String;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
@@ -1571,8 +1571,8 @@ public final class com/adyen/checkout/core/components/paymentmethod/BlikPaymentM
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/paymentmethod/BlikPaymentMethod;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/paymentmethod/BlikPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/paymentmethod/BlikPaymentMethod;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/paymentmethod/BlikDetails;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/paymentmethod/BlikDetails;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/paymentmethod/BlikDetails;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBlikCode ()Ljava/lang/String;
 	public fun getSdkData ()Ljava/lang/String;
@@ -1583,7 +1583,7 @@ public final class com/adyen/checkout/core/components/paymentmethod/BlikPaymentM
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/core/components/paymentmethod/BlikPaymentMethod$Companion {
+public final class com/adyen/checkout/core/components/paymentmethod/BlikDetails$Companion {
 }
 
 public final class com/adyen/checkout/core/components/paymentmethod/CardDetails : com/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails {
