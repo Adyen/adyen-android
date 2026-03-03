@@ -15,7 +15,7 @@ import com.adyen.checkout.core.common.ui.model.ExpiryDate
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
-import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.core.error.internal.ComponentError
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -40,7 +40,7 @@ internal fun CardComponentState.toPaymentComponentState(
         onEncryptionFailed = onEncryptionFailed,
     ) ?: return invalidCardPaymentComponentState()
 
-    val cardPaymentMethod = createPaymentMethod(
+    val cardDetails = createCardDetails(
         encryptedCard = encryptedCard,
         holderName = holderName(componentParams),
         cardBrand = cardBrand(),
@@ -49,7 +49,7 @@ internal fun CardComponentState.toPaymentComponentState(
     )
 
     val paymentComponentData = createPaymentComponentData(
-        cardPaymentMethod = cardPaymentMethod,
+        cardDetails = cardDetails,
         storePaymentMethod = storePaymentMethod(componentParams),
         componentParams = componentParams,
     )
@@ -84,14 +84,14 @@ private fun CardComponentState.encryptCard(
     }
 }
 
-private fun createPaymentMethod(
+private fun createCardDetails(
     encryptedCard: EncryptedCard,
     sdkDataProvider: SdkDataProvider,
     holderName: String?,
     cardBrand: CardBrand?,
     isCvcHidden: Boolean,
-) = CardPaymentMethod(
-    type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+) = CardDetails(
+    type = CardDetails.PAYMENT_METHOD_TYPE,
     sdkData = sdkDataProvider.createEncodedSdkData(
         threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
     ),
@@ -104,11 +104,11 @@ private fun createPaymentMethod(
 )
 
 private fun createPaymentComponentData(
-    cardPaymentMethod: CardPaymentMethod,
+    cardDetails: CardDetails,
     storePaymentMethod: Boolean?,
     componentParams: CardComponentParams,
 ) = PaymentComponentData(
-    paymentMethod = cardPaymentMethod,
+    paymentMethod = cardDetails,
     storePaymentMethod = storePaymentMethod,
     shopperReference = componentParams.shopperReference,
     order = null,
@@ -116,7 +116,7 @@ private fun createPaymentComponentData(
 )
 
 private fun createPaymentComponentState(
-    paymentComponentData: PaymentComponentData<CardPaymentMethod>,
+    paymentComponentData: PaymentComponentData<CardDetails>,
 ): CardPaymentComponentState {
     return CardPaymentComponentState(
         data = paymentComponentData,

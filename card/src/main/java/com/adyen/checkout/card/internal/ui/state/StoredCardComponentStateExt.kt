@@ -13,7 +13,7 @@ import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
-import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.core.error.internal.ComponentError
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -39,14 +39,14 @@ internal fun StoredCardComponentState.toPaymentComponentState(
         onEncryptionFailed = onEncryptionFailed,
     ) ?: return invalidCardPaymentComponentState()
 
-    val cardPaymentMethod = createPaymentMethod(
+    val cardDetails = createCardDetails(
         storedCardId = storedPaymentMethodId,
         encryptedCard = encryptedCard,
         sdkDataProvider = sdkDataProvider,
         isCvcHidden = securityCode.requirementPolicy is RequirementPolicy.Hidden,
     )
 
-    val paymentComponentData = createPaymentComponentData(cardPaymentMethod, componentParams)
+    val paymentComponentData = createPaymentComponentData(cardDetails, componentParams)
 
     return createPaymentComponentState(paymentComponentData)
 }
@@ -74,10 +74,10 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
 )
 
 private fun createPaymentComponentData(
-    cardPaymentMethod: CardPaymentMethod,
+    cardDetails: CardDetails,
     componentParams: CardComponentParams
 ) = PaymentComponentData(
-    paymentMethod = cardPaymentMethod,
+    paymentMethod = cardDetails,
     storePaymentMethod = null,
     shopperReference = componentParams.shopperReference,
     order = null,
@@ -85,7 +85,7 @@ private fun createPaymentComponentData(
 )
 
 private fun createPaymentComponentState(
-    paymentComponentData: PaymentComponentData<CardPaymentMethod>,
+    paymentComponentData: PaymentComponentData<CardDetails>,
 ): CardPaymentComponentState {
     return CardPaymentComponentState(
         data = paymentComponentData,
@@ -100,13 +100,13 @@ private fun CardComponentParams.publicKey(onPublicKeyNotFound: (ComponentError) 
     }
 }
 
-private fun createPaymentMethod(
+private fun createCardDetails(
     storedCardId: String?,
     encryptedCard: EncryptedCard,
     sdkDataProvider: SdkDataProvider,
     isCvcHidden: Boolean,
-) = CardPaymentMethod(
-    type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+) = CardDetails(
+    type = CardDetails.PAYMENT_METHOD_TYPE,
     sdkData = sdkDataProvider.createEncodedSdkData(
         threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
     ),
