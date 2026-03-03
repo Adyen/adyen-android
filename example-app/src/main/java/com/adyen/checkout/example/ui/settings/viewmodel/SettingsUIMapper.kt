@@ -95,7 +95,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.AMOUNT,
             titleResId = R.string.settings_title_amount,
-            subtitle = UIText.String(keyValueStorage.getAmount().value.toString()),
+            subtitle = UIText.String(keyValueStorage.getOldAmount().value.toString()),
         )
     }
 
@@ -269,7 +269,7 @@ internal class SettingsUIMapper @Inject constructor(
                 EditSettingDialogData.Text(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_amount,
-                    text = keyValueStorage.getAmount().value.toString(),
+                    text = keyValueStorage.getOldAmount().value.toString(),
                     inputType = EditSettingDialogData.Text.InputType.INTEGER,
                     placeholder = defaultValueText(SettingsDefaults.AMOUNT.toString()),
                 )

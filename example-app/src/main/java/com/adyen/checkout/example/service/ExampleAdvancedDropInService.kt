@@ -89,7 +89,7 @@ class ExampleAdvancedDropInService : DropInService() {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentJson,
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
@@ -209,7 +209,7 @@ class ExampleAdvancedDropInService : DropInService() {
             val paymentMethodRequest = getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
@@ -285,7 +285,7 @@ class ExampleAdvancedDropInService : DropInService() {
             Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
-                keyValueStorage.getAmount(),
+                keyValueStorage.getOldAmount(),
                 keyValueStorage.getMerchantAccount(),
             )
 

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.data.storage
 
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.AMOUNT
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.ANALYTICS_MODE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_ADDRESS_FORM_MODE
@@ -26,11 +26,13 @@ import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_RE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SPLIT_CARD_FUNDING_SOURCES
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.THREEDS_MODE
 import javax.inject.Inject
+import com.adyen.checkout.components.core.Amount as OldAmount
 
 @Suppress("TooManyFunctions")
 interface KeyValueStorage {
     fun getShopperReference(): String
     fun setShopperReference(shopperReference: String?)
+    fun getOldAmount(): OldAmount
     fun getAmount(): Amount
     fun setAmount(amount: Long?)
     fun setCurrency(currency: String?)
@@ -73,6 +75,13 @@ internal class DefaultKeyValueStorage @Inject constructor(
 
     override fun setShopperReference(shopperReference: String?) {
         sharedPreferencesManager.putString(SHOPPER_REFERENCE, shopperReference)
+    }
+
+    override fun getOldAmount(): OldAmount {
+        return OldAmount(
+            value = sharedPreferencesManager.getLong(AMOUNT),
+            currency = sharedPreferencesManager.getString(CURRENCY),
+        )
     }
 
     override fun getAmount(): Amount {

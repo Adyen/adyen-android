@@ -53,7 +53,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                 val paymentRequest = createPaymentRequest(
                     paymentComponentData = paymentComponentJson,
                     shopperReference = keyValueStorage.getShopperReference(),
-                    amount = keyValueStorage.getAmount(),
+                    amount = keyValueStorage.getOldAmount(),
                     countryCode = keyValueStorage.getCountry(),
                     merchantAccount = keyValueStorage.getMerchantAccount(),
                     redirectUrl = RedirectComponent.getReturnUrl(applicationContext),

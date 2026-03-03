@@ -12,13 +12,9 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
-import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.old.SessionDropInResult
-import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -185,13 +181,7 @@ internal class MainViewModel @Inject constructor(
 
             val paymentMethods = paymentsRepository.getPaymentMethods(createPaymentMethodRequest())
 
-            // TODO - Get config from provider
-            @Suppress("MagicNumber")
-            val configuration = CheckoutConfiguration(
-                environment = Environment.TEST,
-                clientKey = BuildConfig.CLIENT_KEY,
-                amount = Amount("USD", 1337),
-            )
+            val configuration = checkoutConfigurationProvider.checkoutConfig
 
             val result = paymentMethods?.let {
                 Checkout.setup(
@@ -214,13 +204,7 @@ internal class MainViewModel @Inject constructor(
         viewModelScope.launch {
             showLoading(true)
 
-            // TODO - Get config from provider
-            @Suppress("MagicNumber")
-            val configuration = CheckoutConfiguration(
-                environment = Environment.TEST,
-                clientKey = BuildConfig.CLIENT_KEY,
-                amount = Amount("USD", 1337),
-            )
+            val configuration = checkoutConfigurationProvider.checkoutConfig
 
             val sessionResponse = paymentsRepository.createSession(createSessionRequest())
 
@@ -245,7 +229,7 @@ internal class MainViewModel @Inject constructor(
     private fun createPaymentMethodRequest() = getPaymentMethodRequest(
         merchantAccount = keyValueStorage.getMerchantAccount(),
         shopperReference = keyValueStorage.getShopperReference(),
-        amount = keyValueStorage.getAmount(),
+        amount = keyValueStorage.getOldAmount(),
         countryCode = keyValueStorage.getCountry(),
         shopperLocale = keyValueStorage.getShopperLocale(),
         splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
@@ -254,7 +238,7 @@ internal class MainViewModel @Inject constructor(
     private fun createSessionRequest() = getSessionRequest(
         merchantAccount = keyValueStorage.getMerchantAccount(),
         shopperReference = keyValueStorage.getShopperReference(),
-        amount = keyValueStorage.getAmount(),
+        amount = keyValueStorage.getOldAmount(),
         countryCode = keyValueStorage.getCountry(),
         shopperLocale = keyValueStorage.getShopperLocale(),
         splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
