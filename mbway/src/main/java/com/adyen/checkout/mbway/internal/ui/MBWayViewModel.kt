@@ -21,7 +21,6 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -50,11 +49,11 @@ internal class MBWayViewModel(
     val viewState = componentState.viewState(viewStateProducer, viewModelScope)
 
     init {
-        initializeAnalytics(viewModelScope)
+        initializeAnalytics()
     }
 
-    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
-//        analyticsManager.initialize(this, coroutineScope)
+    private fun initializeAnalytics() {
+//        analyticsManager.initialize(this, viewModelScope)
     }
 
     fun submit() {

@@ -19,9 +19,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import com.adyen.checkout.core.action.data.Action as ActionResponse
 
 class NewCheckoutController(
-    val target: CheckoutTarget,
-    val context: CheckoutContext,
-    val callbacks: CheckoutCallbacks,
+    private val target: CheckoutTarget,
+    private val context: CheckoutContext,
+    @Suppress("unused")
+    private val callbacks: CheckoutCallbacks,
 ) {
 
     private val _state = MutableStateFlow(createInitialState())
