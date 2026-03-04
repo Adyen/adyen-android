@@ -51,7 +51,6 @@ class V6SessionsActivity : AppCompatActivity() {
                 V6Screen(
                     theme = theme,
                     uiState = viewModel.uiState,
-                    checkoutController = viewModel.checkoutController,
                 )
             }
         }
