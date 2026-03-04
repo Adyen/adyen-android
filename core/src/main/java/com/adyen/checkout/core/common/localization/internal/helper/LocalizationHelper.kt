@@ -17,11 +17,12 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-fun resolveString(key: CheckoutLocalizationKey): String {
+fun resolveString(key: CheckoutLocalizationKey, vararg formatArgs: Any): String {
     val localizationResolver = LocalLocalizationResolver.current
     return localizationResolver.getLocalizedStringFor(
         context = currentLocalizedContext,
         locale = LocalLocale.current,
         key = key,
+        formatArgs = formatArgs,
     )
 }

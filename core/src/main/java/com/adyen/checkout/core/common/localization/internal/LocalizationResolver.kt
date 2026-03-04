@@ -18,8 +18,19 @@ internal class LocalizationResolver(
 ) {
     private val defaultLocalizationSource = DefaultLocalizationSource()
 
-    fun getLocalizedStringFor(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
-        return localizationProvider?.getString(context, locale, key)
-            ?: defaultLocalizationSource.getString(context, locale, key)
+    fun getLocalizedStringFor(
+        context: Context,
+        locale: Locale,
+        key: CheckoutLocalizationKey,
+        formatArgs: Array<out Any>,
+    ): String {
+        val string = localizationProvider?.getLocalizedString(context, locale, key)
+            ?: defaultLocalizationSource.getString(context, key)
+        return if (formatArgs.isNotEmpty()) {
+            @Suppress("SpreadOperator")
+            string.format(*formatArgs)
+        } else {
+            string
+        }
     }
 }
