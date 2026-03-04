@@ -34,7 +34,7 @@ internal class MBWayComponentStateExtTest {
 
         val paymentComponentState = componentState.toPaymentComponentState(
             amount = amount,
-            sdkDataProvider = sdkDataProvider,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         val expectedMBWayDetails = MBWayDetails(
@@ -67,7 +67,7 @@ internal class MBWayComponentStateExtTest {
             isLoading = false,
         )
 
-        val paymentComponentState = componentState.toPaymentComponentState(null, sdkDataProvider)
+        val paymentComponentState = componentState.toPaymentComponentState(null, sdkDataProvider.createEncodedSdkData())
 
         assertEquals(
             "+351123456789",
