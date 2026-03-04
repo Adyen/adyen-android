@@ -37,6 +37,7 @@ dependencies {
 
     // Dependencies
     implementation libs.androidx.startup
+    implementation libs.compose.viewmodel
     implementation libs.material
 
     //Tests
