@@ -15,7 +15,7 @@ interface CheckoutLocalizationProvider {
     fun getLocalizedString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String?
 }
 
-class XmlLocalizationProvider(
+class StringResourceLocalizationProvider(
     private val localizations: Map<CheckoutLocalizationKey, Int>,
 ) : CheckoutLocalizationProvider {
     override fun getLocalizedString(

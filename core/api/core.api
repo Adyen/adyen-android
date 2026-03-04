@@ -631,7 +631,7 @@ public abstract interface class com/adyen/checkout/core/common/localization/Chec
 	public abstract fun getLocalizedString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/common/localization/XmlLocalizationProvider : com/adyen/checkout/core/common/localization/CheckoutLocalizationProvider {
+public final class com/adyen/checkout/core/common/localization/StringResourceLocalizationProvider : com/adyen/checkout/core/common/localization/CheckoutLocalizationProvider {
 	public static final field $stable I
 	public fun <init> (Ljava/util/Map;)V
 	public fun getLocalizedString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
