@@ -45,7 +45,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutPaymentFlow
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.NewCheckoutController

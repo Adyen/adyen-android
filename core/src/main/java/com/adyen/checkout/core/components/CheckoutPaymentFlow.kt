@@ -13,9 +13,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
+import java.util.Locale
 
 @Composable
 fun CheckoutPaymentFlow(
@@ -26,14 +30,21 @@ fun CheckoutPaymentFlow(
 ) {
     val state by controller.state.collectAsStateWithLifecycle()
 
-    when (val localState = state) {
-        is CheckoutControllerState.PaymentMethod -> {
-            val provider = remember { PaymentMethodProvider.get(localState.paymentMethod) }
-            provider?.PaymentComponent(modifier)
-        }
+    InternalCheckoutTheme(theme) {
+        // TODO - get params from controller
+        CheckoutCompositionLocalProvider(
+            locale = Locale.getDefault(),
+            localizationProvider = localizationProvider,
+            environment = Environment.TEST,
+        ) {
+            when (val localState = state) {
+                is CheckoutControllerState.PaymentMethod -> {
+                    val provider = remember { PaymentMethodProvider.get(localState.paymentMethod) }
+                    provider?.PaymentComponent(modifier)
+                }
 
-        is CheckoutControllerState.Action -> {
-
+                is CheckoutControllerState.Action -> TODO()
+            }
         }
     }
 }
