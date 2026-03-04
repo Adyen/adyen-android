@@ -1,8 +1,8 @@
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
 import com.adyen.checkout.core.common.exception.ModelSerializationException
-import com.adyen.checkout.core.common.internal.model.JsonUtils.parseOptStringList
-import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeOptStringList
+import com.adyen.checkout.core.common.internal.model.JsonUtils.parseStringList
+import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeStringList
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -28,9 +28,9 @@ data class StoredACHDirectDebitPaymentMethod(
                             put(TYPE, modelObject.type)
                             put(NAME, modelObject.name)
                             put(ID, modelObject.id)
-                            putOpt(
+                            put(
                                 SUPPORTED_SHOPPER_INTERACTIONS,
-                                serializeOptStringList(modelObject.supportedShopperInteractions),
+                                serializeStringList(modelObject.supportedShopperInteractions),
                             )
                             put(BANK_ACCOUNT_NUMBER, modelObject.bankAccountNumber)
                         }
@@ -45,9 +45,9 @@ data class StoredACHDirectDebitPaymentMethod(
                             type = jsonObject.getString(TYPE),
                             name = jsonObject.getString(NAME),
                             id = jsonObject.getString(ID),
-                            supportedShopperInteractions = parseOptStringList(
-                                jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
-                            ) ?: emptyList(),
+                            supportedShopperInteractions = parseStringList(
+                                jsonObject.getJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
+                            ),
                             bankAccountNumber = jsonObject.getString(BANK_ACCOUNT_NUMBER),
                         )
                     } catch (e: JSONException) {
