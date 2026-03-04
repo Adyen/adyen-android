@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class MBWayPaymentMethod(
+data class MBWayDetails(
     override val type: String?,
     override val sdkData: String? = null,
     val telephoneNumber: String?,
@@ -26,8 +26,8 @@ data class MBWayPaymentMethod(
         private const val TELEPHONE_NUMBER = "telephoneNumber"
 
         @JvmField
-        val SERIALIZER: Serializer<MBWayPaymentMethod> = object : Serializer<MBWayPaymentMethod> {
-            override fun serialize(modelObject: MBWayPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<MBWayDetails> = object : Serializer<MBWayDetails> {
+            override fun serialize(modelObject: MBWayDetails): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
@@ -35,12 +35,12 @@ data class MBWayPaymentMethod(
                         putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(MBWayPaymentMethod::class.java, e)
+                    throw ModelSerializationException(MBWayDetails::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): MBWayPaymentMethod {
-                return MBWayPaymentMethod(
+            override fun deserialize(jsonObject: JSONObject): MBWayDetails {
+                return MBWayDetails(
                     type = jsonObject.getStringOrNull(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     telephoneNumber = jsonObject.getStringOrNull(TELEPHONE_NUMBER),

@@ -14,7 +14,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class CardPaymentMethod(
+data class CardDetails(
     override val type: String?,
     override val sdkData: String? = null,
     val encryptedCardNumber: String? = null,
@@ -43,8 +43,8 @@ data class CardPaymentMethod(
         private const val FUNDING_SOURCE = "fundingSource"
 
         @JvmField
-        val SERIALIZER: Serializer<CardPaymentMethod> = object : Serializer<CardPaymentMethod> {
-            override fun serialize(modelObject: CardPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<CardDetails> = object : Serializer<CardDetails> {
+            override fun serialize(modelObject: CardDetails): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
@@ -61,12 +61,12 @@ data class CardPaymentMethod(
                         putOpt(FUNDING_SOURCE, modelObject.fundingSource)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(CardPaymentMethod::class.java, e)
+                    throw ModelSerializationException(CardDetails::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): CardPaymentMethod {
-                return CardPaymentMethod(
+            override fun deserialize(jsonObject: JSONObject): CardDetails {
+                return CardDetails(
                     type = jsonObject.getStringOrNull(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),

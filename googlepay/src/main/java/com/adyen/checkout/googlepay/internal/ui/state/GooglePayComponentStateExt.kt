@@ -18,14 +18,14 @@ internal fun GooglePayComponentState.toPaymentComponentState(
     paymentMethodType: String?,
     sdkDataProvider: SdkDataProvider,
 ): GooglePayPaymentComponentState {
-    val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(
+    val googlePayDetails = GooglePayUtils.createGooglePayDetails(
         paymentData = paymentData,
         paymentMethodType = paymentMethodType,
         sdkData = sdkDataProvider.createEncodedSdkData(),
     )
 
     val paymentComponentData = PaymentComponentData(
-        paymentMethod = paymentMethod,
+        paymentMethod = googlePayDetails,
         order = null,
         amount = amount,
     )

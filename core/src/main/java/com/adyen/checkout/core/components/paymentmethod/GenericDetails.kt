@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class GenericPaymentMethod(
+data class GenericDetails(
     override val type: String?,
     override val sdkData: String? = null,
     val subtype: String?,
@@ -26,8 +26,8 @@ data class GenericPaymentMethod(
         private const val SUBTYPE = "subtype"
 
         @JvmField
-        val SERIALIZER: Serializer<GenericPaymentMethod> = object : Serializer<GenericPaymentMethod> {
-            override fun serialize(modelObject: GenericPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<GenericDetails> = object : Serializer<GenericDetails> {
+            override fun serialize(modelObject: GenericDetails): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
@@ -35,12 +35,12 @@ data class GenericPaymentMethod(
                         putOpt(SUBTYPE, modelObject.subtype)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(GenericPaymentMethod::class.java, e)
+                    throw ModelSerializationException(GenericDetails::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): GenericPaymentMethod {
-                return GenericPaymentMethod(
+            override fun deserialize(jsonObject: JSONObject): GenericDetails {
+                return GenericDetails(
                     type = jsonObject.getStringOrNull(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     subtype = jsonObject.getStringOrNull(SUBTYPE),

@@ -9,10 +9,10 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 internal data class CardPaymentComponentState(
-    override val data: PaymentComponentData<CardPaymentMethod>,
+    override val data: PaymentComponentData<CardDetails>,
     override val isValid: Boolean,
-) : PaymentComponentState<CardPaymentMethod>
+) : PaymentComponentState<CardDetails>

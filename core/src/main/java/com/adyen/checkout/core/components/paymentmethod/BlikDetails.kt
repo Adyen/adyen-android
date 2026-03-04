@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class BlikPaymentMethod(
+data class BlikDetails(
     override val type: String?,
     override val sdkData: String?,
     val blikCode: String?,
@@ -28,8 +28,8 @@ data class BlikPaymentMethod(
         private const val STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId"
 
         @JvmField
-        val SERIALIZER: Serializer<BlikPaymentMethod> = object : Serializer<BlikPaymentMethod> {
-            override fun serialize(modelObject: BlikPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<BlikDetails> = object : Serializer<BlikDetails> {
+            override fun serialize(modelObject: BlikDetails): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
@@ -38,12 +38,12 @@ data class BlikPaymentMethod(
                         putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(BlikPaymentMethod::class.java, e)
+                    throw ModelSerializationException(BlikDetails::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): BlikPaymentMethod {
-                return BlikPaymentMethod(
+            override fun deserialize(jsonObject: JSONObject): BlikDetails {
+                return BlikDetails(
                     type = jsonObject.getStringOrNull(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     blikCode = jsonObject.getStringOrNull(BLIK_CODE),

@@ -63,8 +63,8 @@ abstract class PaymentMethodDetails : ModelObject() {
                 // TODO - Uncomment payment methods as we support new ones
 //                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
 //                BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
-                BlikPaymentMethod.PAYMENT_METHOD_TYPE -> BlikPaymentMethod.SERIALIZER
-                CardPaymentMethod.PAYMENT_METHOD_TYPE -> CardPaymentMethod.SERIALIZER
+                BlikDetails.PAYMENT_METHOD_TYPE -> BlikDetails.SERIALIZER
+                CardDetails.PAYMENT_METHOD_TYPE -> CardDetails.SERIALIZER
 //                CashAppPayPaymentMethod.PAYMENT_METHOD_TYPE -> CashAppPayPaymentMethod.SERIALIZER
 //                ConvenienceStoresJPPaymentMethod.PAYMENT_METHOD_TYPE -> ConvenienceStoresJPPaymentMethod.SERIALIZER
 //                DotpayPaymentMethod.PAYMENT_METHOD_TYPE -> DotpayPaymentMethod.SERIALIZER
@@ -77,7 +77,7 @@ abstract class PaymentMethodDetails : ModelObject() {
 //                PaymentMethodTypes.MEAL_VOUCHER_FR -> GiftCardPaymentMethod.SERIALIZER
 //
 //                IdealPaymentMethod.PAYMENT_METHOD_TYPE -> IdealPaymentMethod.SERIALIZER
-                MBWayPaymentMethod.PAYMENT_METHOD_TYPE -> MBWayPaymentMethod.SERIALIZER
+                MBWayDetails.PAYMENT_METHOD_TYPE -> MBWayDetails.SERIALIZER
 //                OnlineBankingCZPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingCZPaymentMethod.SERIALIZER
 //                OnlineBankingJPPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingJPPaymentMethod.SERIALIZER
 //                OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethod.SERIALIZER
@@ -103,7 +103,7 @@ abstract class PaymentMethodDetails : ModelObject() {
 //
 //                SepaPaymentMethod.PAYMENT_METHOD_TYPE -> SepaPaymentMethod.SERIALIZER
 //                SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
-                else -> GenericPaymentMethod.SERIALIZER
+                else -> GenericDetails.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")
             return serializer as Serializer<PaymentMethodDetails>

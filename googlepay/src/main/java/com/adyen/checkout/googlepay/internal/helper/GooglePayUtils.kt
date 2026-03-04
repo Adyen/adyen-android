@@ -13,7 +13,7 @@ import com.adyen.checkout.core.common.internal.helper.AmountFormat
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.components.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.GooglePayDetails
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.SoftwareInfo
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
@@ -130,11 +130,11 @@ internal object GooglePayUtils {
      * @param paymentMethodType the type of the payment method.
      * @return The object matching the data for the API call to Adyen.
      */
-    fun createGooglePayPaymentMethod(
+    fun createGooglePayDetails(
         paymentData: PaymentData?,
         paymentMethodType: String?,
         sdkData: String?,
-    ): GooglePayPaymentMethod? {
+    ): GooglePayDetails? {
         if (paymentData == null) {
             return null
         }
@@ -155,7 +155,7 @@ internal object GooglePayUtils {
             null to null
         }
 
-        return GooglePayPaymentMethod(
+        return GooglePayDetails(
             type = paymentMethodType,
             sdkData = sdkData,
             googlePayToken = googlePayToken,

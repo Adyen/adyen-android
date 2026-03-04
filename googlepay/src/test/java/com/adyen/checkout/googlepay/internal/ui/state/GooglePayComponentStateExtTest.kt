@@ -54,13 +54,13 @@ internal class GooglePayComponentStateExtTest {
             sdkDataProvider = sdkDataProvider,
         )
 
-        val expectedPaymentMethod = GooglePayUtils.createGooglePayPaymentMethod(
+        val expectedGooglePayDetails = GooglePayUtils.createGooglePayDetails(
             paymentData = paymentData,
             paymentMethodType = paymentMethodType,
             sdkData = TestSdkDataProvider.TEST_SDK_DATA,
         )
 
-        assertEquals(expectedPaymentMethod, paymentComponentState.data.paymentMethod)
+        assertEquals(expectedGooglePayDetails, paymentComponentState.data.paymentMethod)
         assertEquals(amount, paymentComponentState.data.amount)
         assertNull(paymentComponentState.data.order)
         assertTrue(paymentComponentState.isValid)
