@@ -9,7 +9,6 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,7 +16,7 @@ internal data object EmptyNavKey : NavKey
 
 @Serializable
 internal data class PreselectedPaymentMethodNavKey(
-    val storedPaymentMethod: StoredPaymentMethod,
+    val storedPaymentMethodId: String,
 ) : NavKey
 
 @Serializable

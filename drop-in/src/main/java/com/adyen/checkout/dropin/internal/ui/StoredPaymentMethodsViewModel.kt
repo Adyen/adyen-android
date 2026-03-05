@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
@@ -47,7 +47,7 @@ internal class StoredPaymentMethodsViewModel(
         val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
 
         return StoredPaymentMethodsListItem(
-            id = id.orEmpty(),
+            id = id,
             icon = icon,
             title = title,
             subtitle = subtitle,

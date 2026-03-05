@@ -11,8 +11,8 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.data.model.format
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,7 +45,7 @@ internal class PreselectedPaymentMethodViewModel(
     }
 
     fun onPayClicked() {
-        val type = DropInPaymentFlowType.StoredPaymentMethod(storedPaymentMethod.id.orEmpty())
+        val type = DropInPaymentFlowType.StoredPaymentMethod(storedPaymentMethod.id)
         navigator.clearAndNavigateTo(PaymentMethodNavKey(type))
     }
 

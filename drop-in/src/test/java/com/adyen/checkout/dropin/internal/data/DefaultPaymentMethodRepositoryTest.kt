@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.dropin.internal.data
 
-import com.adyen.checkout.core.components.data.model.PaymentMethod
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -20,7 +20,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with payment methods, then regulars are set`() {
-        val paymentMethods = listOf(PaymentMethod(type = "scheme", name = "Cards"))
+        val paymentMethods = listOf(InstantPaymentMethod(type = "scheme", name = "Cards"))
         val response = PaymentMethodsApiResponse(paymentMethods = paymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
@@ -34,12 +34,25 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         val repository = DefaultPaymentMethodRepository(response)
 
-        assertEquals(emptyList<PaymentMethod>(), repository.paymentMethods)
+        assertEquals(emptyList<InstantPaymentMethod>(), repository.paymentMethods)
     }
 
     @Test
     fun `when initialized with stored payment methods, then favorites are set`() = runTest {
-        val storedPaymentMethods = listOf(StoredPaymentMethod(type = "scheme", id = "123", name = "MasterCard"))
+        val storedPaymentMethods = listOf(
+            StoredCardPaymentMethod(
+                type = "scheme",
+                id = "123",
+                name = "MasterCard",
+                supportedShopperInteractions = emptyList(),
+                brand = "mc",
+                lastFour = "1234",
+                expiryMonth = "01",
+                expiryYear = "2030",
+                holderName = null,
+                fundingSource = null,
+            ),
+        )
         val response = PaymentMethodsApiResponse(storedPaymentMethods = storedPaymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
@@ -53,13 +66,35 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         val repository = DefaultPaymentMethodRepository(response)
 
-        assertEquals(emptyList<StoredPaymentMethod>(), repository.storedPaymentMethods.first())
+        assertEquals(emptyList<StoredCardPaymentMethod>(), repository.storedPaymentMethods.first())
     }
 
     @Test
     fun `when removeStoredPaymentMethod is called, then item is removed from favorites`() = runTest {
-        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1", name = "MasterCard")
-        val storedPaymentMethod2 = StoredPaymentMethod(type = "scheme", id = "2", name = "MasterCard")
+        val storedPaymentMethod1 = StoredCardPaymentMethod(
+            type = "scheme",
+            id = "1",
+            name = "MasterCard",
+            supportedShopperInteractions = emptyList(),
+            brand = "mc",
+            lastFour = "1234",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
+        )
+        val storedPaymentMethod2 = StoredCardPaymentMethod(
+            type = "scheme",
+            id = "2",
+            name = "MasterCard",
+            supportedShopperInteractions = emptyList(),
+            brand = "mc",
+            lastFour = "5678",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
+        )
         val response = PaymentMethodsApiResponse(
             storedPaymentMethods = listOf(storedPaymentMethod1, storedPaymentMethod2),
         )
@@ -73,7 +108,18 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when removeStoredPaymentMethod is called with unknown id, then favorites remain unchanged`() = runTest {
-        val storedPaymentMethod1 = StoredPaymentMethod(type = "scheme", id = "1", name = "MasterCard")
+        val storedPaymentMethod1 = StoredCardPaymentMethod(
+            type = "scheme",
+            id = "1",
+            name = "MasterCard",
+            supportedShopperInteractions = emptyList(),
+            brand = "mc",
+            lastFour = "1234",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
+        )
         val response = PaymentMethodsApiResponse(
             storedPaymentMethods = listOf(storedPaymentMethod1),
         )

@@ -48,11 +48,13 @@ private fun preselectedPaymentMethodNavEntry(
     key = key,
     metadata = BottomSheetSceneStrategy.bottomSheet(),
 ) {
+    val storedPaymentMethod = viewModel.paymentMethodRepository.storedPaymentMethods.value
+        .first { it.id == key.storedPaymentMethodId }
     PreselectedPaymentMethodScreen(
         viewModel(
             factory = PreselectedPaymentMethodViewModel.Factory(
                 dropInParams = viewModel.dropInParams,
-                storedPaymentMethod = key.storedPaymentMethod,
+                storedPaymentMethod = storedPaymentMethod,
                 navigator = viewModel.navigator,
             ),
         ),
