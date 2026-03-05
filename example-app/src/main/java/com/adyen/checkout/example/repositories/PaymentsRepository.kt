@@ -65,7 +65,7 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
         paymentMethodsRequest: PaymentMethodsRequest
     ): PaymentMethodsApiResponse? = safeApiCall {
         checkoutApiService.paymentMethodsAsync(paymentMethodsRequest)
-    }
+    }?.let { PaymentMethodsApiResponse.SERIALIZER.deserialize(it) }
 
     override suspend fun makePaymentsRequest(paymentsRequest: PaymentsRequest): JSONObject? = safeApiCall {
         checkoutApiService.paymentsAsync(paymentsRequest.combineToJSONObject())
