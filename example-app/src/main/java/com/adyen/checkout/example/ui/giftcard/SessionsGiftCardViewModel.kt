@@ -90,7 +90,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
@@ -115,7 +115,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         return when (
             val result = CheckoutSessionProvider.createSession(
                 sessionModel = sessionModel,
-                configuration = checkoutConfigurationProvider.checkoutConfig,
+                configuration = checkoutConfigurationProvider.oldCheckoutConfig,
                 order = order,
             )
         ) {
@@ -130,7 +130,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         return when (
             val result = CheckoutSessionProvider.createSession(
                 sessionPaymentResult = sessionPaymentResult,
-                configuration = checkoutConfigurationProvider.checkoutConfig,
+                configuration = checkoutConfigurationProvider.oldCheckoutConfig,
             )
         ) {
             is CheckoutSessionResult.Success -> result.checkoutSession

@@ -2,6 +2,7 @@ package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
 import com.adyen.checkout.bcmc.bcmc
+import com.adyen.checkout.card.card
 import com.adyen.checkout.card.old.AddressConfiguration
 import com.adyen.checkout.card.old.CardBrand
 import com.adyen.checkout.card.old.CardType
@@ -11,11 +12,10 @@ import com.adyen.checkout.card.old.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.components.core.ActionHandlingMethod
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
-import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.AnalyticsConfiguration
+import com.adyen.checkout.core.components.AnalyticsLevel
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.dropin.old.dropIn
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.AnalyticsMode
@@ -27,10 +27,15 @@ import com.adyen.checkout.googlepay.old.googlePay
 import com.adyen.checkout.instant.instantPayment
 import com.adyen.checkout.mealvoucherfr.mealVoucherFR
 import com.adyen.checkout.threeds2.old.adyen3DS2
+import com.adyen.checkout.threeds2.threeDS2
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.adyen.checkout.components.core.AnalyticsConfiguration as OldAnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel as OldAnalyticsLevel
+import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
+import com.adyen.checkout.core.old.Environment as OldEnvironment
 
 @Suppress("TooManyFunctions")
 @Singleton
@@ -45,19 +50,15 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             return shopperLocaleString?.let { Locale.forLanguageTag(it) }
         }
 
-    private val amount: Amount get() = keyValueStorage.getAmount()
-
     private val clientKey = BuildConfig.CLIENT_KEY
 
-    private val environment = Environment.TEST
-
-    override val checkoutConfig: CheckoutConfiguration
-        get() = CheckoutConfiguration(
-            environment = environment,
+    override val oldCheckoutConfig: OldCheckoutConfiguration
+        get() = OldCheckoutConfiguration(
+            environment = OldEnvironment.TEST,
             clientKey = clientKey,
             shopperLocale = shopperLocale,
-            amount = amount,
-            analyticsConfiguration = getAnalyticsConfiguration(),
+            amount = keyValueStorage.getOldAmount(),
+            analyticsConfiguration = getOldAnalyticsConfiguration(),
         ) {
             // Drop-in
             dropIn {
@@ -103,6 +104,32 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 setThreeDSRequestorAppURL("https://www.adyen.com")
             }
         }
+
+    override val checkoutConfig: CheckoutConfiguration
+        get() = CheckoutConfiguration(
+            environment = Environment.TEST,
+            clientKey = clientKey,
+            shopperLocale = shopperLocale,
+            amount = keyValueStorage.getAmount(),
+            analyticsConfiguration = getAnalyticsConfiguration(),
+        ) {
+            card {
+                // TODO - add address and installments
+                shopperReference = keyValueStorage.getShopperReference()
+            }
+
+            threeDS2 {
+                threeDSRequestorAppURL = "https://www.adyen.com"
+            }
+        }
+
+    private fun getOldAnalyticsConfiguration(): OldAnalyticsConfiguration {
+        val analyticsLevel = when (keyValueStorage.getAnalyticsMode()) {
+            AnalyticsMode.ALL -> OldAnalyticsLevel.ALL
+            AnalyticsMode.NONE -> OldAnalyticsLevel.NONE
+        }
+        return OldAnalyticsConfiguration(level = analyticsLevel)
+    }
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
         val analyticsLevel = when (keyValueStorage.getAnalyticsMode()) {

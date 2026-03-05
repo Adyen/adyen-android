@@ -105,7 +105,7 @@ class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback
             activity = this,
             checkoutSession = sessionsCardComponentData.checkoutSession,
             paymentMethod = sessionsCardComponentData.paymentMethod,
-            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
+            checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig,
             componentCallback = sessionsCardComponentData.callback,
         )
 

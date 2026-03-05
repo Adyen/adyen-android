@@ -73,7 +73,7 @@ internal class GiftCardViewModel @Inject constructor(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
@@ -180,7 +180,7 @@ internal class GiftCardViewModel @Inject constructor(
             Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
-                keyValueStorage.getAmount(),
+                keyValueStorage.getOldAmount(),
                 keyValueStorage.getMerchantAccount(),
             )
 
@@ -219,7 +219,7 @@ internal class GiftCardViewModel @Inject constructor(
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(GiftCardActivity.RETURN_URL_EXTRA)

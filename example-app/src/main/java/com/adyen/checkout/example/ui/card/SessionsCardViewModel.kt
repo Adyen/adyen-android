@@ -57,7 +57,7 @@ internal class SessionsCardViewModel @Inject constructor(
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(), SessionComponentCallback<CardComponentState>, AddressLookupCallback {
 
-    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
+    private val checkoutConfiguration = checkoutConfigurationProvider.oldCheckoutConfig
 
     private val _uiState = MutableStateFlow(SessionsCardUiState(checkoutConfiguration))
     val uiState: StateFlow<SessionsCardUiState> = _uiState.asStateFlow()
@@ -101,7 +101,7 @@ internal class SessionsCardViewModel @Inject constructor(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),

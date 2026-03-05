@@ -58,7 +58,7 @@ internal class BacsViewModel @Inject constructor(
     }
 
     private suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
-        val validationError = if (keyValueStorage.getAmount().currency != CheckoutCurrency.GBP.name) {
+        val validationError = if (keyValueStorage.getOldAmount().currency != CheckoutCurrency.GBP.name) {
             BacsViewState.Error(R.string.currency_code_error, CheckoutCurrency.GBP.name)
         } else if (keyValueStorage.getCountry() != Locale.UK.country) {
             BacsViewState.Error(R.string.country_code_error, Locale.UK.country)
@@ -75,7 +75,7 @@ internal class BacsViewModel @Inject constructor(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
@@ -149,7 +149,7 @@ internal class BacsViewModel @Inject constructor(
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = keyValueStorage.getOldAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(BacsFragment.RETURN_URL_EXTRA)

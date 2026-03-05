@@ -39,7 +39,7 @@ class ExampleV6DropInService : DropInService() {
         val paymentRequest = createPaymentRequest(
             paymentComponentData = paymentComponentJson,
             shopperReference = keyValueStorage.getShopperReference(),
-            amount = keyValueStorage.getAmount(),
+            amount = keyValueStorage.getOldAmount(),
             countryCode = keyValueStorage.getCountry(),
             merchantAccount = keyValueStorage.getMerchantAccount(),
             // TODO - Move return url creation to the new redirect component
