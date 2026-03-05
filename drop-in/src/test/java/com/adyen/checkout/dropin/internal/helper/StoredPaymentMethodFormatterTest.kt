@@ -101,6 +101,7 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("label", result)
     }
 
+    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
     fun `when type is paypal, then title is name`() {
         val storedPaymentMethod = StoredInstantPaymentMethod(
@@ -194,6 +195,7 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("name", result)
     }
 
+    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
     fun `when type is paypal, then subtitle is null`() {
         val storedPaymentMethod = StoredInstantPaymentMethod(
