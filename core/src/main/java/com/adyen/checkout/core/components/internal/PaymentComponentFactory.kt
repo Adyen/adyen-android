@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.app.Application
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -39,6 +40,7 @@ interface PaymentComponentFactory<CS : BasePaymentComponentState, T : PaymentCom
      */
     @Suppress("LongParameterList")
     fun create(
+        application: Application,
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,

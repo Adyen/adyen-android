@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.app.Application
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -54,6 +55,7 @@ object PaymentMethodProvider {
      */
     @Suppress("LongParameterList")
     fun get(
+        application: Application,
         paymentMethod: PaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -64,6 +66,7 @@ object PaymentMethodProvider {
         return when (paymentMethod) {
             is PaymentMethod -> {
                 getPaymentComponent(
+                    application = application,
                     paymentMethod = paymentMethod,
                     coroutineScope = coroutineScope,
                     analyticsManager = analyticsManager,
@@ -75,6 +78,7 @@ object PaymentMethodProvider {
 
             is StoredPaymentMethod -> {
                 getStoredPaymentComponent(
+                    application = application,
                     storedPaymentMethod = paymentMethod,
                     coroutineScope = coroutineScope,
                     analyticsManager = analyticsManager,
@@ -92,6 +96,7 @@ object PaymentMethodProvider {
 
     @Suppress("LongParameterList")
     private fun getPaymentComponent(
+        application: Application,
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -103,6 +108,7 @@ object PaymentMethodProvider {
 
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
+            application = application,
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
@@ -119,6 +125,7 @@ object PaymentMethodProvider {
 
     @Suppress("LongParameterList")
     private fun getStoredPaymentComponent(
+        application: Application,
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -130,6 +137,7 @@ object PaymentMethodProvider {
 
         @Suppress("UNCHECKED_CAST")
         return storedFactories[txVariant]?.create(
+            application = application,
             storedPaymentMethod = storedPaymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.app.Application
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
@@ -107,6 +108,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.get(
+                application = generateApplication(),
                 paymentMethod = PaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
@@ -131,6 +133,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.get(
+                application = generateApplication(),
                 paymentMethod = StoredPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
@@ -165,6 +168,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", factory)
 
             val actualComponent = PaymentMethodProvider.get(
+                application = generateApplication(),
                 paymentMethod = PaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
@@ -182,6 +186,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", storedFactory)
 
             val actualComponent = PaymentMethodProvider.get(
+                application = generateApplication(),
                 paymentMethod = StoredPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
@@ -197,6 +202,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
+                application = generateApplication(),
                 paymentMethod = PaymentMethod(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
@@ -211,6 +217,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered stored factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
+                application = generateApplication(),
                 paymentMethod = StoredPaymentMethod(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
@@ -239,6 +246,7 @@ internal class PaymentMethodProviderTest {
         object :
             PaymentComponentFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
             override fun create(
+                application: Application,
                 paymentMethod: PaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
@@ -252,6 +260,7 @@ internal class PaymentMethodProviderTest {
         object :
             StoredPaymentComponentFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
             override fun create(
+                application: Application,
                 storedPaymentMethod: StoredPaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
@@ -260,6 +269,10 @@ internal class PaymentMethodProviderTest {
                 checkoutCallbacks: CheckoutCallbacks,
             ) = paymentComponent
         }
+
+    private fun generateApplication(): Application {
+        return org.mockito.Mockito.mock(Application::class.java)
+    }
 
     private fun generateCheckoutConfiguration() = CheckoutConfiguration(
         shopperLocale = Locale.US,
