@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import kotlinx.coroutines.CoroutineScope
 
 internal interface PaymentFacilitatorFactory {
