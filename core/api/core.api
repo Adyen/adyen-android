@@ -819,19 +819,37 @@ public abstract interface class com/adyen/checkout/core/components/CheckoutTarge
 public final class com/adyen/checkout/core/components/CheckoutTarget$Action : com/adyen/checkout/core/components/CheckoutTarget {
 	public static final field $stable I
 	public fun <init> (Lcom/adyen/checkout/core/action/data/Action;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/action/data/Action;
+	public final fun copy (Lcom/adyen/checkout/core/action/data/Action;)Lcom/adyen/checkout/core/components/CheckoutTarget$Action;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/CheckoutTarget$Action;Lcom/adyen/checkout/core/action/data/Action;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutTarget$Action;
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAction ()Lcom/adyen/checkout/core/action/data/Action;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/components/CheckoutTarget$PaymentMethod : com/adyen/checkout/core/components/CheckoutTarget {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutTarget$PaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/CheckoutTarget$PaymentMethod;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutTarget$PaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getTxVariant ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/components/CheckoutTarget$StoredPaymentMethod : com/adyen/checkout/core/components/CheckoutTarget {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutTarget$StoredPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/CheckoutTarget$StoredPaymentMethod;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutTarget$StoredPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/components/NewCheckoutController {
