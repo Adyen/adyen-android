@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.components.internal.CheckoutControllerState
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme

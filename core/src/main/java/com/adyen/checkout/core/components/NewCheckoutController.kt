@@ -9,14 +9,13 @@
 package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.internal.CheckoutControllerState
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.CheckoutException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import com.adyen.checkout.core.action.data.Action as ActionResponse
 
 class NewCheckoutController(
     private val target: CheckoutTarget,
@@ -58,15 +57,4 @@ class NewCheckoutController(
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
         }
     }
-}
-
-internal sealed interface CheckoutControllerState {
-    data class PaymentMethod(val paymentMethod: PaymentMethodResponse?) : CheckoutControllerState
-    data class Action(val action: ActionResponse) : CheckoutControllerState
-}
-
-interface CheckoutTarget {
-    class PaymentMethod(val txVariant: String) : CheckoutTarget
-    class StoredPaymentMethod(val id: String) : CheckoutTarget
-    class Action(val action: ActionResponse) : CheckoutTarget
 }
