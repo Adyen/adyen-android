@@ -19,7 +19,7 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 
 internal class AdyenComponent(

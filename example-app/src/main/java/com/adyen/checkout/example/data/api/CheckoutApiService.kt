@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.data.api
 
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
@@ -36,7 +35,7 @@ internal interface CheckoutApiService {
     suspend fun paymentMethodsAsyncOld(@Body paymentMethodsRequest: PaymentMethodsRequest): OldPaymentMethodsApiResponse
 
     @POST("paymentMethods")
-    suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse
+    suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): JSONObject
 
     @POST("payments")
     fun payments(@Body paymentsRequest: JSONObject): Call<JSONObject>

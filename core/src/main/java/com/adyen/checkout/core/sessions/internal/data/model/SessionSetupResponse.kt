@@ -14,7 +14,7 @@ import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.SessionSetupConfiguration
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException

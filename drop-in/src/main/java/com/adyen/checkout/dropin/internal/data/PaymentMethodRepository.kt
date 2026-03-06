@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.dropin.internal.data
 
-import com.adyen.checkout.core.components.data.model.PaymentMethod
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.core.components.AdyenPaymentFlow
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.stringFromUIText

@@ -53,7 +53,7 @@ data class Configuration(
                         putOpt(SCOPE_ID, modelObject.scopeId)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(PaymentMethod::class.java, e)
+                    throw ModelSerializationException(Configuration::class.java, e)
                 }
             }
 

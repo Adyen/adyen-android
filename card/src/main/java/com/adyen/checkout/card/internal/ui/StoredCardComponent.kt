@@ -32,7 +32,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -49,7 +49,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("LongParameterList")
 internal class StoredCardComponent(
-    private val storedPaymentMethod: StoredPaymentMethod,
+    private val storedPaymentMethod: StoredCardPaymentMethod,
     private val analyticsManager: AnalyticsManager,
     private val cardEncryptor: BaseCardEncryptor,
     private val componentParams: CardComponentParams,
@@ -82,7 +82,7 @@ internal class StoredCardComponent(
     override val navigationStartingPoint: NavKey = StoredCardNavKey
 
     init {
-        val cardType = CardBrand(txVariant = storedPaymentMethod.brand.orEmpty())
+        val cardType = CardBrand(txVariant = storedPaymentMethod.brand)
 
         val storedDetectedCardType = DetectedCardType(
             cardBrand = cardType,

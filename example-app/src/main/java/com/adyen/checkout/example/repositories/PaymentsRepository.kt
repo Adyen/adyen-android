@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.BalanceRequest
@@ -65,7 +65,7 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
         paymentMethodsRequest: PaymentMethodsRequest
     ): PaymentMethodsApiResponse? = safeApiCall {
         checkoutApiService.paymentMethodsAsync(paymentMethodsRequest)
-    }
+    }?.let { PaymentMethodsApiResponse.SERIALIZER.deserialize(it) }
 
     override suspend fun makePaymentsRequest(paymentsRequest: PaymentsRequest): JSONObject? = safeApiCall {
         checkoutApiService.paymentsAsync(paymentsRequest.combineToJSONObject())

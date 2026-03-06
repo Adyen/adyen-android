@@ -13,9 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.data.model.PaymentMethod
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.data.model.format
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GiftCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
@@ -73,7 +75,7 @@ internal class PaymentMethodListViewModel(
     }
 
     private fun StoredPaymentMethod.isSupported(): Boolean {
-        return !id.isNullOrEmpty() &&
+        return id.isNotEmpty() &&
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) &&
             isEcommerce
     }
@@ -84,7 +86,7 @@ internal class PaymentMethodListViewModel(
         val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
 
         return PaymentMethodItem(
-            id = id.orEmpty(),
+            id = id,
             icon = icon,
             title = title,
             subtitle = subtitle,
@@ -96,9 +98,9 @@ internal class PaymentMethodListViewModel(
     }
 
     private fun PaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
-        val icon = when (type) {
-            PaymentMethodTypes.SCHEME -> CARD_LOGO
-            PaymentMethodTypes.GIFTCARD -> brand.orEmpty()
+        val icon = when (this) {
+            is CardPaymentMethod -> CARD_LOGO
+            is GiftCardPaymentMethod -> brand
             else -> type
         }
 

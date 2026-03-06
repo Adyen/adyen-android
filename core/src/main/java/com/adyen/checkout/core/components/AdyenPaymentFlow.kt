@@ -16,7 +16,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
-import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme

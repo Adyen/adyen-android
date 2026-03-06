@@ -8,7 +8,13 @@
 
 package com.adyen.checkout.dropin.internal.helper
 
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredInstantPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -18,10 +24,17 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is scheme, then icon is brand`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethod(
             type = PaymentMethodTypes.SCHEME,
             name = "name",
-            brand = "brand"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            brand = "brand",
+            lastFour = "1234",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
         )
 
         val result = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod)
@@ -30,24 +43,12 @@ internal class StoredPaymentMethodFormatterTest {
     }
 
     @Test
-    fun `when type is scheme and brand is null, then icon is empty`() {
-        val storedPaymentMethod = StoredPaymentMethod(
-            type = PaymentMethodTypes.SCHEME,
-            name = "name",
-            brand = null
-        )
-
-        val result = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod)
-
-        assertEquals("", result)
-    }
-
-    @Test
     fun `when type is not scheme, then icon is type`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredInstantPaymentMethod(
             type = PaymentMethodTypes.ACH,
             name = "name",
-            brand = "brand"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
         )
 
         val result = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod)
@@ -57,10 +58,12 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is cash app pay, then title is cashtag`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredCashAppPayPaymentMethod(
             type = PaymentMethodTypes.CASH_APP_PAY,
             name = "name",
-            cashtag = "cashtag"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            cashtag = "cashtag",
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
@@ -69,24 +72,13 @@ internal class StoredPaymentMethodFormatterTest {
     }
 
     @Test
-    fun `when type is cash app pay and cashtag is null, then title is empty`() {
-        val storedPaymentMethod = StoredPaymentMethod(
-            type = PaymentMethodTypes.CASH_APP_PAY,
-            name = "name",
-            cashtag = null
-        )
-
-        val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
-
-        assertEquals("", result)
-    }
-
-    @Test
     fun `when type is pay by bank us, then title is label`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredPayByBankUSPaymentMethod(
             type = PaymentMethodTypes.PAY_BY_BANK_US,
             name = "name",
-            label = "label"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            label = "label",
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
@@ -96,10 +88,12 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is pay to, then title is label`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredPayToPaymentMethod(
             type = PaymentMethodTypes.PAY_TO,
             name = "name",
-            label = "label"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            label = "label",
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
@@ -107,51 +101,49 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("label", result)
     }
 
+    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
-    fun `when type is paypal, then title is shopperEmail`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+    fun `when type is paypal, then title is name`() {
+        val storedPaymentMethod = StoredInstantPaymentMethod(
             type = PaymentMethodTypes.PAYPAL,
             name = "name",
-            shopperEmail = "shopperEmail"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
 
-        assertEquals("shopperEmail", result)
+        assertEquals("name", result)
     }
 
     @Test
-    fun `when type is ach, then title is lastFour`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+    fun `when type is ach, then title shows last four digits of account number`() {
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
             type = PaymentMethodTypes.ACH,
             name = "name",
-            lastFour = "1234"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            bankAccountNumber = "123456789",
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
 
-        assertEquals("•••• 1234", result)
-    }
-
-    @Test
-    fun `when type is ach and lastFour is null, then title is formatted correctly`() {
-        val storedPaymentMethod = StoredPaymentMethod(
-            type = PaymentMethodTypes.ACH,
-            name = "name",
-            lastFour = null
-        )
-
-        val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
-
-        assertEquals("•••• ", result)
+        assertEquals("•••• 6789", result)
     }
 
     @Test
     fun `when type is scheme, then title is lastFour`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethod(
             type = PaymentMethodTypes.SCHEME,
             name = "name",
-            lastFour = "1234"
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            brand = "mc",
+            lastFour = "1234",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
@@ -161,9 +153,11 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is other, then title is name`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredInstantPaymentMethod(
             type = "other",
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
@@ -173,9 +167,12 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is ach, then subtitle is name`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
             type = PaymentMethodTypes.ACH,
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            bankAccountNumber = "123456789",
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)
@@ -185,9 +182,12 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is cash app pay, then subtitle is name`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredCashAppPayPaymentMethod(
             type = PaymentMethodTypes.CASH_APP_PAY,
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            cashtag = "cashtag",
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)
@@ -195,23 +195,29 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("name", result)
     }
 
+    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
-    fun `when type is paypal, then subtitle is name`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+    fun `when type is paypal, then subtitle is null`() {
+        val storedPaymentMethod = StoredInstantPaymentMethod(
             type = PaymentMethodTypes.PAYPAL,
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)
 
-        assertEquals("name", result)
+        assertNull(result)
     }
 
     @Test
     fun `when type is pay by bank us, then subtitle is name`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredPayByBankUSPaymentMethod(
             type = PaymentMethodTypes.PAY_BY_BANK_US,
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            label = "label",
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)
@@ -221,9 +227,12 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is pay to, then subtitle is name`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredPayToPaymentMethod(
             type = PaymentMethodTypes.PAY_TO,
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            label = "label",
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)
@@ -233,9 +242,17 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is scheme, then subtitle is name`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethod(
             type = PaymentMethodTypes.SCHEME,
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            brand = "mc",
+            lastFour = "1234",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)
@@ -245,9 +262,11 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is other, then subtitle is null`() {
-        val storedPaymentMethod = StoredPaymentMethod(
+        val storedPaymentMethod = StoredBLIKPaymentMethod(
             type = "other",
-            name = "name"
+            name = "name",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)

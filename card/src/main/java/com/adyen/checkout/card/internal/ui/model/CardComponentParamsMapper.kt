@@ -14,7 +14,7 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlin.collections.isNullOrEmpty
@@ -25,7 +25,7 @@ internal class CardComponentParamsMapper {
     fun mapToParams(
         componentParamsBundle: ComponentParamsBundle,
         cardConfiguration: CardConfiguration?,
-        paymentMethod: PaymentMethod?,
+        paymentMethod: CardPaymentMethod?,
     ): CardComponentParams {
         val (commonComponentParams, sessionParams) = componentParamsBundle
         return CardComponentParams(
@@ -57,7 +57,7 @@ internal class CardComponentParamsMapper {
      */
     private fun getSupportedCardBrands(
         cardConfiguration: CardConfiguration?,
-        paymentMethod: PaymentMethod?
+        paymentMethod: CardPaymentMethod?
     ): List<CardBrand> {
         val supportedCardBrands = cardConfiguration?.supportedCardBrands
         return when {
@@ -66,9 +66,9 @@ internal class CardComponentParamsMapper {
                 supportedCardBrands
             }
 
-            paymentMethod?.brands.orEmpty().isNotEmpty() -> {
+            paymentMethod?.brands?.isNotEmpty() == true -> {
                 adyenLog(AdyenLogLevel.VERBOSE) { "Reading supportedCardTypes from API brands" }
-                paymentMethod?.brands.orEmpty().map {
+                paymentMethod.brands.map {
                     CardBrand(txVariant = it)
                 }
             }

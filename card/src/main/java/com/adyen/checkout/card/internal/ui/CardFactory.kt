@@ -28,8 +28,10 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.PaymentMethod
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
@@ -52,7 +54,7 @@ internal class CardFactory :
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
             cardConfiguration = checkoutConfiguration.getCardConfiguration(),
-            paymentMethod = paymentMethod,
+            paymentMethod = paymentMethod as? CardPaymentMethod,
         )
 
         val cardValidationMapper = CardValidationMapper()
@@ -107,7 +109,8 @@ internal class CardFactory :
         val cardEncryptor = CardEncryptorFactory.provide()
 
         return StoredCardComponent(
-            storedPaymentMethod = storedPaymentMethod,
+            // TODO - Remove casting when paymentMethod object is typed
+            storedPaymentMethod = storedPaymentMethod as? StoredCardPaymentMethod ?: error("Incorrect paymentMethod"),
             analyticsManager = analyticsManager,
             cardEncryptor = cardEncryptor,
             componentParams = cardComponentParams,

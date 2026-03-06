@@ -10,7 +10,7 @@ package com.adyen.checkout.core.common
 
 import android.os.Parcelable
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import kotlinx.parcelize.Parcelize
 

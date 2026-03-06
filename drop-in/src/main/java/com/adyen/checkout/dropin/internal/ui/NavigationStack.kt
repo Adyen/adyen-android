@@ -52,7 +52,8 @@ private fun preselectedPaymentMethodNavEntry(
         viewModel(
             factory = PreselectedPaymentMethodViewModel.Factory(
                 dropInParams = viewModel.dropInParams,
-                storedPaymentMethod = key.storedPaymentMethod,
+                storedPaymentMethodId = key.storedPaymentMethodId,
+                paymentMethodRepository = viewModel.paymentMethodRepository,
                 navigator = viewModel.navigator,
             ),
         ),

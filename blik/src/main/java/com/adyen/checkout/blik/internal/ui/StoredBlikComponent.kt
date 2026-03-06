@@ -20,7 +20,7 @@ import com.adyen.checkout.blik.internal.ui.view.StoredBlikComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent

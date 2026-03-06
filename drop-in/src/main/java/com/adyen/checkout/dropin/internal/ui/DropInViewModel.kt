@@ -88,7 +88,7 @@ internal class DropInViewModel(
         val startingPoint = if (storedPaymentMethods.isEmpty()) {
             PaymentMethodListNavKey
         } else {
-            PreselectedPaymentMethodNavKey(storedPaymentMethods.first())
+            PreselectedPaymentMethodNavKey(storedPaymentMethods.first().id)
         }
         navigator.navigateTo(startingPoint)
     }

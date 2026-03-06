@@ -8,49 +8,48 @@
 
 package com.adyen.checkout.dropin.internal.helper
 
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 
 internal object StoredPaymentMethodFormatter {
 
+    private const val LAST_DIGITS_COUNT = 4
+
     fun getIcon(storedPaymentMethod: StoredPaymentMethod): String {
-        return with(storedPaymentMethod) {
-            when (type) {
-                PaymentMethodTypes.SCHEME -> brand.orEmpty()
-                else -> type
-            }
+        return when (storedPaymentMethod) {
+            is StoredCardPaymentMethod -> storedPaymentMethod.brand
+            else -> storedPaymentMethod.type
         }
     }
 
     fun getTitle(storedPaymentMethod: StoredPaymentMethod): String {
-        return with(storedPaymentMethod) {
-            when (type) {
-                PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
-                PaymentMethodTypes.PAY_BY_BANK_US,
-                PaymentMethodTypes.PAY_TO -> label.orEmpty()
-
-                PaymentMethodTypes.PAYPAL -> shopperEmail.orEmpty()
-
-                PaymentMethodTypes.ACH,
-                PaymentMethodTypes.SCHEME -> "•••• ${lastFour.orEmpty()}"
-
-                else -> name
+        return when (storedPaymentMethod) {
+            is StoredCashAppPayPaymentMethod -> storedPaymentMethod.cashtag
+            is StoredPayByBankUSPaymentMethod -> storedPaymentMethod.label.orEmpty()
+            is StoredPayToPaymentMethod -> storedPaymentMethod.label
+            is StoredACHDirectDebitPaymentMethod -> {
+                "•••• ${storedPaymentMethod.bankAccountNumber.takeLast(LAST_DIGITS_COUNT)}"
             }
+            is StoredCardPaymentMethod -> "•••• ${storedPaymentMethod.lastFour}"
+            // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and handle it here
+            else -> storedPaymentMethod.name
         }
     }
 
     fun getSubtitle(storedPaymentMethod: StoredPaymentMethod): String? {
-        return with(storedPaymentMethod) {
-            when (type) {
-                PaymentMethodTypes.ACH,
-                PaymentMethodTypes.CASH_APP_PAY,
-                PaymentMethodTypes.PAYPAL,
-                PaymentMethodTypes.PAY_BY_BANK_US,
-                PaymentMethodTypes.PAY_TO,
-                PaymentMethodTypes.SCHEME -> name
+        return when (storedPaymentMethod) {
+            is StoredACHDirectDebitPaymentMethod,
+            is StoredCashAppPayPaymentMethod,
+            is StoredPayByBankUSPaymentMethod,
+            is StoredPayToPaymentMethod,
+            is StoredCardPaymentMethod -> storedPaymentMethod.name
 
-                else -> null
-            }
+            // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and return name here
+            else -> null
         }
     }
 }
