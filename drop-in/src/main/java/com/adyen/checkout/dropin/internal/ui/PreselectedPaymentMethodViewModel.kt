@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,14 +22,26 @@ import kotlin.reflect.KClass
 
 internal class PreselectedPaymentMethodViewModel(
     private val dropInParams: DropInParams,
-    private val storedPaymentMethod: StoredPaymentMethod,
+    private val paymentMethodRepository: PaymentMethodRepository,
+    private val storedPaymentMethodId: String,
     private val navigator: DropInNavigator,
 ) : ViewModel() {
 
-    private val _viewState = MutableStateFlow(createInitialViewState())
-    val viewState: StateFlow<PreselectedPaymentMethodViewState> = _viewState.asStateFlow()
+    private val _viewState = MutableStateFlow<PreselectedPaymentMethodViewState?>(null)
+    val viewState: StateFlow<PreselectedPaymentMethodViewState?> = _viewState.asStateFlow()
 
-    private fun createInitialViewState(): PreselectedPaymentMethodViewState {
+    init {
+        val storedPaymentMethod = paymentMethodRepository.storedPaymentMethods.value
+            .firstOrNull { it.id == storedPaymentMethodId }
+
+        if (storedPaymentMethod == null) {
+            clearAndNavigateToPaymentMethodList()
+        } else {
+            _viewState.value = createInitialViewState(storedPaymentMethod)
+        }
+    }
+
+    private fun createInitialViewState(storedPaymentMethod: StoredPaymentMethod): PreselectedPaymentMethodViewState {
         val formattedAmount = dropInParams.amount.format(dropInParams.shopperLocale)
 
         return PreselectedPaymentMethodViewState(
@@ -45,17 +58,22 @@ internal class PreselectedPaymentMethodViewModel(
     }
 
     fun onPayClicked() {
-        val type = DropInPaymentFlowType.StoredPaymentMethod(storedPaymentMethod.id)
+        val type = DropInPaymentFlowType.StoredPaymentMethod(storedPaymentMethodId)
         navigator.clearAndNavigateTo(PaymentMethodNavKey(type))
     }
 
     fun onOtherPaymentMethodClicked() {
+        clearAndNavigateToPaymentMethodList()
+    }
+
+    private fun clearAndNavigateToPaymentMethodList() {
         navigator.clearAndNavigateTo(PaymentMethodListNavKey)
     }
 
     class Factory(
         private val dropInParams: DropInParams,
-        private val storedPaymentMethod: StoredPaymentMethod,
+        private val storedPaymentMethodId: String,
+        private val paymentMethodRepository: PaymentMethodRepository,
         private val navigator: DropInNavigator,
     ) : ViewModelProvider.Factory {
 
@@ -63,7 +81,8 @@ internal class PreselectedPaymentMethodViewModel(
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return PreselectedPaymentMethodViewModel(
                 dropInParams = dropInParams,
-                storedPaymentMethod = storedPaymentMethod,
+                paymentMethodRepository = paymentMethodRepository,
+                storedPaymentMethodId = storedPaymentMethodId,
                 navigator = navigator,
             ) as T
         }

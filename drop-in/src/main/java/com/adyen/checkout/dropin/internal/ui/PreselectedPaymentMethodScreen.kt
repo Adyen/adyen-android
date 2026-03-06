@@ -41,12 +41,14 @@ internal fun PreselectedPaymentMethodScreen(
     viewModel: PreselectedPaymentMethodViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PreselectedPaymentMethodContent(
-        viewState,
-        onBackClicked = { viewModel.onBackClicked() },
-        onPayClicked = { viewModel.onPayClicked() },
-        onOtherPaymentMethodClicked = { viewModel.onOtherPaymentMethodClicked() },
-    )
+    viewState?.let {
+        PreselectedPaymentMethodContent(
+            it,
+            onBackClicked = { viewModel.onBackClicked() },
+            onPayClicked = { viewModel.onPayClicked() },
+            onOtherPaymentMethodClicked = { viewModel.onOtherPaymentMethodClicked() },
+        )
+    }
 }
 
 @Composable
