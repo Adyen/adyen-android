@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredInstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayPalPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -101,19 +102,19 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("label", result)
     }
 
-    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
-    fun `when type is paypal, then title is name`() {
-        val storedPaymentMethod = StoredInstantPaymentMethod(
+    fun `when type is paypal, then title is shopperEmail`() {
+        val storedPaymentMethod = StoredPayPalPaymentMethod(
             type = PaymentMethodTypes.PAYPAL,
             name = "name",
             id = "id",
             supportedShopperInteractions = emptyList(),
+            shopperEmail = "shopperEmail"
         )
 
         val result = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod)
 
-        assertEquals("name", result)
+        assertEquals("shopperEmail", result)
     }
 
     @Test
@@ -195,19 +196,19 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("name", result)
     }
 
-    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
-    fun `when type is paypal, then subtitle is null`() {
-        val storedPaymentMethod = StoredInstantPaymentMethod(
+    fun `when type is paypal, then subtitle is name`() {
+        val storedPaymentMethod = StoredPayPalPaymentMethod(
             type = PaymentMethodTypes.PAYPAL,
             name = "name",
             id = "id",
             supportedShopperInteractions = emptyList(),
+            shopperEmail = "shopperEmail",
         )
 
         val result = StoredPaymentMethodFormatter.getSubtitle(storedPaymentMethod)
 
-        assertNull(result)
+        assertEquals("name", result)
     }
 
     @Test

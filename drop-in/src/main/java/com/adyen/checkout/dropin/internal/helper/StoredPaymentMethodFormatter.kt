@@ -12,6 +12,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDire
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayPalPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 
@@ -35,7 +36,7 @@ internal object StoredPaymentMethodFormatter {
                 "•••• ${storedPaymentMethod.bankAccountNumber.takeLast(LAST_DIGITS_COUNT)}"
             }
             is StoredCardPaymentMethod -> "•••• ${storedPaymentMethod.lastFour}"
-            // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and handle it here
+            is StoredPayPalPaymentMethod -> storedPaymentMethod.shopperEmail
             else -> storedPaymentMethod.name
         }
     }
@@ -46,9 +47,9 @@ internal object StoredPaymentMethodFormatter {
             is StoredCashAppPayPaymentMethod,
             is StoredPayByBankUSPaymentMethod,
             is StoredPayToPaymentMethod,
+            is StoredPayPalPaymentMethod,
             is StoredCardPaymentMethod -> storedPaymentMethod.name
 
-            // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and return name here
             else -> null
         }
     }

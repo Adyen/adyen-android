@@ -95,6 +95,7 @@ constructor() : PaymentMethodResponse() {
                 PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
                 PaymentMethodTypes.BOLETO_PRIMEIRO_PAY -> BoletoPaymentMethod.SERIALIZER
                 PaymentMethodTypes.CASH_APP_PAY -> CashAppPayPaymentMethod.SERIALIZER
+                PaymentMethodTypes.PAYPAL -> PayPalPaymentMethod.SERIALIZER
                 PaymentMethodTypes.TWINT -> TwintPaymentMethod.SERIALIZER
                 PaymentMethodTypes.PAY_BY_BANK -> PayByBankPaymentMethod.SERIALIZER
                 PaymentMethodTypes.PAY_BY_BANK_US -> PayByBankUSPaymentMethod.SERIALIZER
