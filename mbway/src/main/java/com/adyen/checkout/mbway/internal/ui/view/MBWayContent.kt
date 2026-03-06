@@ -31,7 +31,7 @@ import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
-internal fun MbWayComponent(
+internal fun MBWayContent(
     viewState: MBWayViewState,
     onIntent: (MBWayIntent) -> Unit,
     onSubmitClick: () -> Unit,
@@ -84,12 +84,12 @@ internal fun MbWayComponent(
 
 @Preview(showBackground = true)
 @Composable
-private fun MbWayComponentPreview() {
+private fun MBWayContentPreview() {
     val countries = listOf(
         CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
         CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
     )
-    MbWayComponent(
+    MBWayContent(
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,

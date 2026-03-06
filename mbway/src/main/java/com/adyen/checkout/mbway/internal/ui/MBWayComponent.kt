@@ -33,7 +33,7 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
-import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
+import com.adyen.checkout.mbway.internal.ui.view.MBWayContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -87,7 +87,7 @@ internal class MBWayComponent(
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
                 amount = componentParams.amount,
-                sdkDataProvider = sdkDataProvider,
+                sdkData = sdkDataProvider.createEncodedSdkData(),
             )
             eventChannel.trySend(
                 PaymentComponentEvent.Submit(paymentComponentState),
@@ -113,7 +113,7 @@ internal class MBWayComponent(
     private fun MainScreen(backStack: NavBackStack<NavKey>) {
         val viewState by viewState.collectAsStateWithLifecycle()
 
-        MbWayComponent(
+        MBWayContent(
             viewState = viewState,
             onSubmitClick = ::submit,
             onCountryCodePickerClick = { backStack.add(MBWayCountryCodeNavKey) },
