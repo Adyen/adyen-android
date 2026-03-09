@@ -10,19 +10,18 @@ package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.paymentmethod.MBWayDetails
 
 internal fun MBWayComponentState.toPaymentComponentState(
     amount: Amount?,
-    sdkDataProvider: SdkDataProvider,
+    sdkData: String?,
 ): MBWayPaymentComponentState {
     val sanitizedPhoneNumber = phoneNumber.text.trimStart('0')
     val telephoneNumber = "${selectedCountryCode.callingCode}$sanitizedPhoneNumber"
 
     val mbWayDetails = MBWayDetails(
         type = MBWayDetails.PAYMENT_METHOD_TYPE,
-        sdkData = sdkDataProvider.createEncodedSdkData(),
+        sdkData = sdkData,
         telephoneNumber = telephoneNumber,
     )
 
