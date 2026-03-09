@@ -8,24 +8,34 @@
 
 package com.adyen.checkout.core.components
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.internal.CheckoutControllerState
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.CheckoutException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+// TODO - rename later
+interface CheckoutControllerInterface {
+    suspend fun submit()
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class NewCheckoutController(
     private val target: CheckoutTarget,
     private val context: CheckoutContext,
     @Suppress("unused")
     private val callbacks: CheckoutCallbacks,
-) {
+) : CheckoutControllerInterface {
 
     private val _state = MutableStateFlow(createInitialState())
     internal val state: StateFlow<CheckoutControllerState> = _state.asStateFlow()
+
+    private var componentStateFlow: StateFlow<PaymentComponentState<*>>? = null
 
     private fun createInitialState(): CheckoutControllerState {
         return when (target) {
@@ -55,6 +65,20 @@ class NewCheckoutController(
         return when (context) {
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
+        }
+    }
+
+    fun registerComponentState(flow: StateFlow<PaymentComponentState<*>>) {
+        componentStateFlow = flow
+    }
+
+    // TODO - Support sessions
+    override suspend fun submit() {
+        if (_state.value is CheckoutControllerState.PaymentMethod) {
+            componentStateFlow?.value?.let {
+                callbacks.beforeSubmit?.beforeSubmit(it)
+                callbacks.onSubmit?.onSubmit(it)
+            }
         }
     }
 }

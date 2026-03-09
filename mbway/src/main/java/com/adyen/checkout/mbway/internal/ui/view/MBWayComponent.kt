@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.NewCheckoutController
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -25,7 +26,10 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import java.util.Locale
 
 @Composable
-internal fun MBWayComponent(modifier: Modifier) {
+internal fun MBWayComponent(
+    modifier: Modifier,
+    controller: NewCheckoutController,
+) {
     val viewModel = viewModel {
         // TODO - Use actual component params
         val componentParams = CommonComponentParams(
@@ -39,6 +43,7 @@ internal fun MBWayComponent(modifier: Modifier) {
             publicKey = "",
         )
         MBWayViewModel(
+            controller = controller,
             componentStateFactory = MBWayComponentStateFactory(componentParams),
             componentStateReducer = MBWayComponentStateReducer(),
             componentStateValidator = MBWayComponentStateValidator(),

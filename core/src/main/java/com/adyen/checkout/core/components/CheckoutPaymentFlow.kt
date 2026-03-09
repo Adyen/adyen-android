@@ -41,7 +41,10 @@ fun CheckoutPaymentFlow(
             when (val localState = state) {
                 is CheckoutControllerState.PaymentMethod -> {
                     val provider = remember { PaymentMethodProvider.get(localState.paymentMethod) }
-                    provider?.PaymentComponent(modifier)
+                    provider?.PaymentComponent(
+                        modifier = modifier,
+                        controller = controller,
+                    )
                 }
 
                 is CheckoutControllerState.Action -> TODO()

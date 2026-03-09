@@ -10,13 +10,20 @@ package com.adyen.checkout.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.core.components.NewCheckoutController
 import com.adyen.checkout.core.components.internal.PaymentComponentProvider
 import com.adyen.checkout.mbway.internal.ui.view.MBWayComponent
 
 internal class MBWayProvider : PaymentComponentProvider {
 
     @Composable
-    override fun PaymentComponent(modifier: Modifier) {
-        MBWayComponent(modifier)
+    override fun PaymentComponent(
+        modifier: Modifier,
+        controller: NewCheckoutController,
+    ) {
+        MBWayComponent(
+            modifier = modifier,
+            controller = controller,
+        )
     }
 }
