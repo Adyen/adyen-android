@@ -26,14 +26,9 @@ constructor() : PaymentMethodResponse() {
     abstract val id: String
     abstract val supportedShopperInteractions: List<String>
 
-    // TODO - Should this be moved to the usage sight?
-    val isEcommerce: Boolean
-        get() = supportedShopperInteractions.contains(ECOMMERCE)
-
     companion object {
         const val ID = "id"
         const val SUPPORTED_SHOPPER_INTERACTIONS = "supportedShopperInteractions"
-        private const val ECOMMERCE = "Ecommerce"
 
         @Suppress("TooGenericExceptionThrown")
         @JvmField

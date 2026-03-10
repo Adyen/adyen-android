@@ -1902,7 +1902,6 @@ public abstract class com/adyen/checkout/core/components/data/model/paymentmetho
 	public static final field SUPPORTED_SHOPPER_INTERACTIONS Ljava/lang/String;
 	public abstract fun getId ()Ljava/lang/String;
 	public abstract fun getSupportedShopperInteractions ()Ljava/util/List;
-	public final fun isEcommerce ()Z
 }
 
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/StoredPaymentMethod$Companion {

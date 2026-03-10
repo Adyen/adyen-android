@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.StoredPaymentMethodsViewState.StoredPaymentMethodsListItem
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 
 internal class StoredPaymentMethodsViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
+    private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
 ) : ViewModel() {
 
     val viewState: StateFlow<StoredPaymentMethodsViewState> = paymentMethodRepository.storedPaymentMethods
@@ -31,8 +33,8 @@ internal class StoredPaymentMethodsViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createViewState(emptyList()))
 
     private fun createViewState(storedPaymentMethods: List<StoredPaymentMethod>): StoredPaymentMethodsViewState {
-        // TODO - check if we need to filter out unsupported payment methods
         val (cards, others) = storedPaymentMethods
+            .filter { paymentMethodSupportCheck.isSupported(it) }
             .partition { it.type == PaymentMethodTypes.SCHEME }
 
         return StoredPaymentMethodsViewState(
@@ -66,6 +68,7 @@ internal class StoredPaymentMethodsViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             return StoredPaymentMethodsViewModel(
                 paymentMethodRepository = paymentMethodRepository,
+                paymentMethodSupportCheck = PaymentMethodSupportCheck(),
             ) as T
         }
     }
