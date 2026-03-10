@@ -2339,12 +2339,14 @@ public final class com/adyen/checkout/core/error/CheckoutError {
 
 public final class com/adyen/checkout/core/error/CheckoutError$ErrorCode {
 	public static final field $stable I
+	public static final field HTTP Ljava/lang/String;
 	public static final field INSTANCE Lcom/adyen/checkout/core/error/CheckoutError$ErrorCode;
 	public static final field INVALID_AMOUNT_VALUE Ljava/lang/String;
 	public static final field INVALID_CLIENT_KEY Ljava/lang/String;
 	public static final field INVALID_CURRENCY_CODE Ljava/lang/String;
 	public static final field INVALID_LOCALE Ljava/lang/String;
 	public static final field SESSION_SETUP_FAILURE Ljava/lang/String;
+	public static final field UNKNOWN Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/error/CheckoutException : java/lang/Exception {

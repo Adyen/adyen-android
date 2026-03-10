@@ -34,8 +34,8 @@ data class CheckoutError(
         // Session Setup Errors
         const val SESSION_SETUP_FAILURE = "SessionSetupFailure"
 
-        // Unknown exceptions
-        // TODO - Error propagation - This should be removed after all error codes are implemented
-        internal const val UNKNOWN = "Unknown"
+        // General Errors
+        const val HTTP = "HttpError"
+        const val UNKNOWN = "Unknown"
     }
 }
