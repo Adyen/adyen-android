@@ -332,8 +332,10 @@ internal class ThreeDS2Component(
                 message = "Transaction creation failed because threeDSMessageVersion is missing",
             )
             emitError(
-                GeneralError("Failed to create 3DS2 Transaction. " +
-                        "Missing threeDSMessageVersion inside fingerprintToken.")
+                GeneralError(
+                    message = "Failed to create 3DS2 Transaction. " +
+                        "Missing threeDSMessageVersion inside fingerprintToken.",
+                ),
             )
             return null
         }
