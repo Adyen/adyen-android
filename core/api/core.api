@@ -2365,6 +2365,7 @@ public final class com/adyen/checkout/core/components/paymentmethod/PaymentMetho
 	public static final field WECHAT_PAY_WEB Ljava/lang/String;
 	public final fun getSUPPORTED_ACTION_ONLY_PAYMENT_METHODS ()Ljava/util/List;
 	public final fun getSUPPORTED_PAYMENT_METHODS ()Ljava/util/List;
+	public final fun getSUPPORTED_STORED_PAYMENT_METHODS ()Ljava/util/List;
 	public final fun getUNSUPPORTED_PAYMENT_METHODS ()Ljava/util/List;
 }
 
