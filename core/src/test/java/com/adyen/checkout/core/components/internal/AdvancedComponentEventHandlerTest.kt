@@ -13,7 +13,7 @@ import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
-import com.adyen.checkout.core.error.internal.ComponentError
+import com.adyen.checkout.core.error.internal.GeneralError
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -62,7 +62,7 @@ internal class AdvancedComponentEventHandlerTest(
 
         @Test
         fun `with Error event, then onError is called and error result is returned`() = runTest {
-            val error = ComponentError(message = "test_error")
+            val error = GeneralError(message = "test_error")
             val event = PaymentComponentEvent.Error<TestPaymentComponentState>(error)
 
             val result = advancedComponentEventHandler.onPaymentComponentEvent(event)
@@ -90,7 +90,7 @@ internal class AdvancedComponentEventHandlerTest(
 
         @Test
         fun `with Error event, then onError is called and error result is returned`() = runTest {
-            val error = ComponentError(message = "test_error")
+            val error = GeneralError(message = "test_error")
             val event = ActionComponentEvent.Error(error)
 
             val result = advancedComponentEventHandler.onActionComponentEvent(event)

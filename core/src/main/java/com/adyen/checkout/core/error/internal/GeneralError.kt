@@ -10,18 +10,14 @@ package com.adyen.checkout.core.error.internal
 
 import androidx.annotation.RestrictTo
 
-// TODO - Remove this class once specific error types (ApiError, EncryptionError, etc.) are implemented.
-//  This is a temporary catch-all error class used during the error framework migration.
 /**
- * A generic internal error that occurred within a component.
- *
- * This error is used for internal SDK errors that don't fit into more specific categories.
+ * General-purpose internal error for cases that don't warrant a specific error type.
  *
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ComponentError(
+class GeneralError(
     message: String,
     cause: Throwable? = null,
 ) : InternalCheckoutError(message, cause)
