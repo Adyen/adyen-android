@@ -23,4 +23,4 @@ import androidx.annotation.RestrictTo
 class StatusPollingError(
     message: String,
     cause: Throwable? = null,
-) : InternalError(message, cause)
+) : InternalCheckoutError(message, cause)

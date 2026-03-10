@@ -23,4 +23,4 @@ import androidx.annotation.RestrictTo
 class SessionError(
     message: String,
     cause: Throwable? = null,
-) : InternalError(message, cause)
+) : InternalCheckoutError(message, cause)

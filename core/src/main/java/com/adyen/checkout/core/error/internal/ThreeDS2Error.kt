@@ -25,7 +25,7 @@ class ThreeDS2Error(
     val errorCode: String,
     message: String,
     cause: Throwable? = null,
-) : InternalError(message, cause) {
+) : InternalCheckoutError(message, cause) {
 
     /**
      * Error codes for 3DS2 errors.

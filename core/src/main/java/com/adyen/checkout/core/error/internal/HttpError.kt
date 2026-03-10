@@ -24,4 +24,4 @@ class HttpError(
     val code: Int,
     message: String,
     val errorBody: ErrorResponseBody?,
-) : NetworkError(message)
+) : InternalCheckoutError(message)

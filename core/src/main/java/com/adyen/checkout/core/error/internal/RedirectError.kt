@@ -25,7 +25,7 @@ class RedirectError(
     val errorCode: String,
     message: String,
     cause: Throwable? = null,
-) : InternalError(message, cause) {
+) : InternalCheckoutError(message, cause) {
 
     /**
      * Error codes for redirect errors.
