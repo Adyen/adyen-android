@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.error
 
-import com.adyen.checkout.core.error.internal.GeneralError
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 
@@ -18,7 +18,7 @@ import com.adyen.checkout.core.error.internal.InternalCheckoutError
 internal fun InternalCheckoutError.toCheckoutError(): CheckoutError {
     val errorCode = when (this) {
         is HttpError -> CheckoutError.ErrorCode.HTTP
-        is GeneralError -> CheckoutError.ErrorCode.UNKNOWN
+        is GenericError -> CheckoutError.ErrorCode.UNKNOWN
     }
 
     return CheckoutError(

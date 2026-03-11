@@ -11,13 +11,13 @@ package com.adyen.checkout.core.error.internal
 import androidx.annotation.RestrictTo
 
 /**
- * General-purpose internal error for cases that don't warrant a specific error type.
+ * Generic internal error for cases that don't warrant a specific error type.
  *
  * @param message A human-readable description of the error.
  * @param cause The underlying cause of this error, if any.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class GeneralError(
+class GenericError(
     message: String,
     cause: Throwable? = null,
 ) : InternalCheckoutError(message, cause)

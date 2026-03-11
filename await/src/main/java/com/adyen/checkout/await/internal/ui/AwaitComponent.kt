@@ -28,7 +28,7 @@ import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.error.internal.GeneralError
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
@@ -93,7 +93,7 @@ internal class AwaitComponent(
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $redirectUrl" }
             val paymentData = paymentDataRepository.paymentData
-                ?: throw GeneralError("Payment data should not be null")
+                ?: throw GenericError("Payment data should not be null")
             startStatusPolling(paymentData)
         } catch (e: InternalCheckoutError) {
             emitError(e)
@@ -144,7 +144,7 @@ internal class AwaitComponent(
             emitDetails(payload)
         } else {
             emitError(
-                GeneralError("Payment was not completed. - ${statusResponse.resultCode}")
+                GenericError("Payment was not completed. - ${statusResponse.resultCode}")
             )
         }
     }
@@ -157,7 +157,7 @@ internal class AwaitComponent(
             emitDetails(jsonObject)
         } catch (e: JSONException) {
             emitError(
-                GeneralError(
+                GenericError(
                     message = "Failed to create details.",
                     cause = e,
                 ),

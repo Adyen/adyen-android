@@ -18,7 +18,7 @@ import androidx.core.net.toUri
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.CustomTabsLauncher
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.error.internal.GeneralError
+import com.adyen.checkout.core.error.internal.GenericError
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.ref.WeakReference
@@ -31,7 +31,7 @@ class DefaultRedirectHandler : RedirectHandler {
     override fun parseRedirectResult(data: Uri?): JSONObject {
         adyenLog(AdyenLogLevel.DEBUG) { "parseRedirectResult - $data" }
 
-        data ?: throw GeneralError("Received a null redirect Uri")
+        data ?: throw GenericError("Received a null redirect Uri")
 
         val extractedParams = HashMap<String, String>().apply {
             data.getQueryParameter(PAYLOAD_PARAMETER)?.let { put(PAYLOAD_PARAMETER, it) }
@@ -49,7 +49,7 @@ class DefaultRedirectHandler : RedirectHandler {
         }
 
         if (extractedParams.isEmpty()) {
-            throw GeneralError("Error parsing redirect result, could not find any query parameters")
+            throw GenericError("Error parsing redirect result, could not find any query parameters")
         }
 
         try {
@@ -57,7 +57,7 @@ class DefaultRedirectHandler : RedirectHandler {
                 extractedParams.forEach { put(it.key, it.value) }
             }
         } catch (e: JSONException) {
-            throw GeneralError(
+            throw GenericError(
                 message = "Error creating redirect result.",
                 cause = e,
             )
@@ -67,7 +67,7 @@ class DefaultRedirectHandler : RedirectHandler {
     @Suppress("ReturnCount")
     override fun launchUriRedirect(context: Context, url: String) {
         if (url.isEmpty()) {
-            throw GeneralError("Redirect URL is empty.")
+            throw GenericError("Redirect URL is empty.")
         }
         val uri = url.toUri()
 
@@ -82,7 +82,7 @@ class DefaultRedirectHandler : RedirectHandler {
 
         adyenLog(AdyenLogLevel.ERROR) { "Could not launch url" }
 
-        throw GeneralError("Launching redirect failed.")
+        throw GenericError("Launching redirect failed.")
     }
 
     private fun launchNative(context: Context, uri: Uri): Boolean {

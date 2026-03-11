@@ -11,7 +11,7 @@ import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
-import com.adyen.checkout.core.error.internal.GeneralError
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.sessions.SessionPaymentResult
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -96,7 +96,7 @@ internal class SessionsComponentEventHandlerTest(
 
     @Test
     fun `when event is error, then onError is called and error result is returned`() = runTest {
-        val error = GeneralError(message = "test_error")
+        val error = GenericError(message = "test_error")
         val event = PaymentComponentEvent.Error<TestPaymentComponentState>(error)
 
         val result = sessionsComponentEventHandler.onPaymentComponentEvent(event)
@@ -159,7 +159,7 @@ internal class SessionsComponentEventHandlerTest(
     @Test
     fun `when onActionComponentEvent is called with error, then onError is called and error result is returned`() =
         runTest {
-            val error = GeneralError(message = "test_error")
+            val error = GenericError(message = "test_error")
             val event = ActionComponentEvent.Error(error)
 
             val result = sessionsComponentEventHandler.onActionComponentEvent(event)

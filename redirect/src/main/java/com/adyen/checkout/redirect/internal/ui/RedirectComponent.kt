@@ -28,7 +28,7 @@ import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.error.internal.GeneralError
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
@@ -150,7 +150,7 @@ internal class RedirectComponent(
             } catch (e: ModelSerializationException) {
                 trackNativeRedirectError("Serialization error")
                 // TODO - Error propagation. Fix after ModelSerializationException extends from CheckoutError
-                emitError(GeneralError("Serialization error", e))
+                emitError(GenericError("Serialization error", e))
             }
         }
     }
