@@ -8,14 +8,21 @@
 
 package com.adyen.checkout.core.error
 
+import com.adyen.checkout.core.error.internal.GenericError
+import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 
-// Maps internal error hierarchy to public CheckoutError.
-// Add new mappings here as new error types are introduced.
-// TODO - Error propagation - Add mappings for error types
+/**
+ * Maps internal error hierarchy to public CheckoutError.
+ */
 internal fun InternalCheckoutError.toCheckoutError(): CheckoutError {
+    val errorCode = when (this) {
+        is HttpError -> CheckoutError.ErrorCode.HTTP
+        is GenericError -> CheckoutError.ErrorCode.UNKNOWN
+    }
+
     return CheckoutError(
-        code = CheckoutError.ErrorCode.UNKNOWN,
+        code = errorCode,
         message = message,
         cause = this,
     )

@@ -31,8 +31,8 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
-import com.adyen.checkout.core.error.internal.ThreeDS2Error
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.threeds2.ThreeDS2MainNavigationKey
@@ -124,10 +124,7 @@ internal class ThreeDS2Component(
     private fun handleAction(action: Action, activity: Activity) {
         if (action !is Threeds2Action) {
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.INVALID_ACTION,
-                    message = "Unsupported action",
-                ),
+                GenericError("Unsupported action")
             )
             return
         }
@@ -158,10 +155,7 @@ internal class ThreeDS2Component(
             }
 
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.TOKEN_MISSING,
-                    message = "3DS2 token not found.",
-                ),
+                GenericError("3DS2 token not found.")
             )
             return
         }
@@ -191,10 +185,7 @@ internal class ThreeDS2Component(
     ) {
         if (action.subtype == null) {
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.INVALID_ACTION,
-                    message = "3DS2 Action subtype not found.",
-                ),
+                GenericError("3DS2 Action subtype not found.")
             )
             return
         }
@@ -218,8 +209,7 @@ internal class ThreeDS2Component(
         } catch (e: RuntimeException) {
             trackFingerprintErrorEvent(ErrorEvent.THREEDS2_TOKEN_DECODING)
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.TOKEN_DECODING,
+                GenericError(
                     message = "Failed to decode fingerprint token",
                     cause = e,
                 ),
@@ -233,10 +223,7 @@ internal class ThreeDS2Component(
                 message = "Fingerprint creation failed because the token is partial",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.FINGERPRINT_CREATION,
-                    message = "Failed to create ConfigParameters.",
-                ),
+                GenericError("Failed to create ConfigParameters.")
             )
             return
         }
@@ -248,8 +235,7 @@ internal class ThreeDS2Component(
                 message = "Fingerprint handling failed because of uncaught exception",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.FINGERPRINT_HANDLING,
+                GenericError(
                     message = "Unexpected 3DS2 exception.",
                     cause = throwable,
                 ),
@@ -288,10 +274,7 @@ internal class ThreeDS2Component(
                     message = "Fingerprint creation failed because authentication parameters do not exist",
                 )
                 emitError(
-                    ThreeDS2Error(
-                        errorCode = ThreeDS2Error.ErrorCode.FINGERPRINT_CREATION,
-                        message = "Failed to retrieve 3DS2 authentication parameters",
-                    ),
+                    GenericError("Failed to retrieve 3DS2 authentication parameters")
                 )
                 return@launch
             }
@@ -349,8 +332,7 @@ internal class ThreeDS2Component(
                 message = "Transaction creation failed because threeDSMessageVersion is missing",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.TRANSACTION_CREATION,
+                GenericError(
                     message = "Failed to create 3DS2 Transaction. " +
                         "Missing threeDSMessageVersion inside fingerprintToken.",
                 ),
@@ -382,8 +364,7 @@ internal class ThreeDS2Component(
                 message = "Transaction creation failed because the SDK is not initialized",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.TRANSACTION_CREATION,
+                GenericError(
                     message = "Failed to create 3DS2 Transaction",
                     cause = e,
                 ),
@@ -395,8 +376,7 @@ internal class ThreeDS2Component(
                 message = "Transaction creation failed because SDK threw runtime exception",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.TRANSACTION_CREATION,
+                GenericError(
                     message = "Failed to create 3DS2 Transaction",
                     cause = e,
                 ),
@@ -441,8 +421,7 @@ internal class ThreeDS2Component(
                 onFailure = { e ->
                     trackFingerprintErrorEvent(ErrorEvent.API_THREEDS2)
                     emitError(
-                        ThreeDS2Error(
-                            errorCode = ThreeDS2Error.ErrorCode.FINGERPRINT_HANDLING,
+                        GenericError(
                             message = "Unable to submit fingerprint",
                             cause = e,
                         ),
@@ -491,10 +470,7 @@ internal class ThreeDS2Component(
         if (currentTransaction == null) {
             trackChallengeErrorEvent(ErrorEvent.THREEDS2_TRANSACTION_MISSING)
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.TRANSACTION_MISSING,
-                    message = "Failed to make challenge, missing reference to initial transaction.",
-                ),
+                GenericError("Failed to make challenge, missing reference to initial transaction.")
             )
             return
         }
@@ -505,8 +481,7 @@ internal class ThreeDS2Component(
         } catch (e: JSONException) {
             trackChallengeErrorEvent(ErrorEvent.THREEDS2_TOKEN_DECODING)
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.TOKEN_DECODING,
+                GenericError(
                     message = "JSON parsing of challenge token failed",
                     cause = e,
                 ),
@@ -539,8 +514,7 @@ internal class ThreeDS2Component(
                 message = "Challenge failed because input is invalid",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.CHALLENGE_HANDLING,
+                GenericError(
                     message = "Error starting challenge",
                     cause = e,
                 ),
@@ -569,8 +543,7 @@ internal class ThreeDS2Component(
             redirectHandler.launchUriRedirect(activity, url.orEmpty())
         } catch (e: CheckoutException) {
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.CHALLENGE_HANDLING,
+                GenericError(
                     message = e.message ?: "Redirect failed",
                     cause = e,
                 ),
@@ -590,8 +563,7 @@ internal class ThreeDS2Component(
                 message = "Challenge completed and details cannot be created",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.CHALLENGE_HANDLING,
+                GenericError(
                     message = "Challenge completed and details cannot be created",
                     cause = e,
                 ),
@@ -611,8 +583,7 @@ internal class ThreeDS2Component(
                 message = "Challenge is cancelled and details cannot be created",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.CHALLENGE_HANDLING,
+                GenericError(
                     message = "Challenge is cancelled and details cannot be created",
                     cause = e,
                 ),
@@ -632,8 +603,7 @@ internal class ThreeDS2Component(
                 message = "Challenge timed out and details cannot be created",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.CHALLENGE_HANDLING,
+                GenericError(
                     message = "Challenge timed out and details cannot be created",
                     cause = e,
                 ),
@@ -653,8 +623,7 @@ internal class ThreeDS2Component(
                 message = "Challenge failed and details cannot be created",
             )
             emitError(
-                ThreeDS2Error(
-                    errorCode = ThreeDS2Error.ErrorCode.CHALLENGE_HANDLING,
+                GenericError(
                     message = "Challenge failed and details cannot be created",
                     cause = e,
                 ),

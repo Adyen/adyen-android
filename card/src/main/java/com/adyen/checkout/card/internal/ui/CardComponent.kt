@@ -42,7 +42,7 @@ import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntr
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.CardDetails
-import com.adyen.checkout.core.error.internal.ComponentError
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
@@ -210,7 +210,7 @@ internal class CardComponent(
         analyticsManager.trackEvent(event)
 
         // TODO - Error propagation. Change after EncryptionException extends from CheckoutError
-        emitError(ComponentError("Encryption error", e))
+        emitError(GenericError("Encryption error", e))
     }
 
     private fun emitError(error: InternalCheckoutError) {
@@ -220,7 +220,7 @@ internal class CardComponent(
     }
 
     // TODO - Error propagation. Change after implementation of specific error for this case
-    private fun onPublicKeyNotFound(e: ComponentError) {
+    private fun onPublicKeyNotFound(e: InternalCheckoutError) {
         val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)

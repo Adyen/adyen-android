@@ -16,7 +16,8 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.paymentmethod.CardDetails
-import com.adyen.checkout.core.error.internal.ComponentError
+import com.adyen.checkout.core.error.internal.GenericError
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -29,7 +30,7 @@ internal fun CardComponentState.toPaymentComponentState(
     cardEncryptor: BaseCardEncryptor,
     sdkDataProvider: SdkDataProvider,
     onEncryptionFailed: (EncryptionException) -> Unit,
-    onPublicKeyNotFound: (ComponentError) -> Unit,
+    onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
 ): CardPaymentComponentState {
     val publicKey = componentParams.publicKey(onPublicKeyNotFound = onPublicKeyNotFound)
         ?: return invalidCardPaymentComponentState()
@@ -152,9 +153,9 @@ private fun CardComponentState.storePaymentMethod(componentParams: CardComponent
         null
     }
 
-private fun CardComponentParams.publicKey(onPublicKeyNotFound: (ComponentError) -> Unit): String? {
+private fun CardComponentParams.publicKey(onPublicKeyNotFound: (InternalCheckoutError) -> Unit): String? {
     return publicKey ?: run {
-        onPublicKeyNotFound(ComponentError("Public key is missing."))
+        onPublicKeyNotFound(GenericError("Public key is missing."))
         null
     }
 }

@@ -32,7 +32,7 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.toNavEntry
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
-import com.adyen.checkout.core.error.internal.ComponentError
+import com.adyen.checkout.core.error.internal.GenericError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
@@ -156,7 +156,7 @@ internal class PaymentFacilitator(
                 componentEventHandler.onActionComponentEvent(
                     event = ActionComponentEvent.Error(
                         // TODO - Error propagation. Should this be an implementation error?
-                        error = ComponentError(
+                        error = GenericError(
                             message = "Action component does not implement IntentHandlingComponent",
                         ),
                     ),
