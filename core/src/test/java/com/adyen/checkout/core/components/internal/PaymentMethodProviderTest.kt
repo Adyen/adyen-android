@@ -15,7 +15,7 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredInstantPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
@@ -133,7 +133,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = StoredInstantPaymentMethod(
+                paymentMethod = StoredBLIKPaymentMethod(
                     type = "txVariant",
                     name = "name",
                     id = "test_id",
@@ -189,7 +189,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", storedFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = StoredInstantPaymentMethod(
+                paymentMethod = StoredBLIKPaymentMethod(
                     type = "txVariant",
                     name = "name",
                     id = "test_id",
@@ -223,7 +223,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered stored factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
-                paymentMethod = StoredInstantPaymentMethod(
+                paymentMethod = StoredBLIKPaymentMethod(
                     type = "unregistered_txVariant",
                     name = "name",
                     id = "test_id",

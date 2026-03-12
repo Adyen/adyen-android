@@ -17,8 +17,7 @@ import org.json.JSONObject
  * Abstract class representing a stored payment method from the /paymentMethods API response.
  *
  * Specific stored payment method types extend this class with their own fields.
- * Explicitly unsupported stored payment methods are deserialized as [StoredUnsupportedPaymentMethod],
- * while other unknown types fall back to [StoredInstantPaymentMethod].
+ * Unknown unsupported stored payment methods are deserialized as [StoredUnsupportedPaymentMethod].
  */
 abstract class StoredPaymentMethod
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -70,8 +69,7 @@ constructor() : PaymentMethodResponse() {
                 PaymentMethodTypes.TWINT -> StoredTwintPaymentMethod.SERIALIZER
                 PaymentMethodTypes.PAY_BY_BANK_US -> StoredPayByBankUSPaymentMethod.SERIALIZER
                 PaymentMethodTypes.PAY_TO -> StoredPayToPaymentMethod.SERIALIZER
-                in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> StoredUnsupportedPaymentMethod.SERIALIZER
-                else -> StoredInstantPaymentMethod.SERIALIZER
+                else -> StoredUnsupportedPaymentMethod.SERIALIZER
             }
 
             @Suppress("UNCHECKED_CAST")
