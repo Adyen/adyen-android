@@ -58,5 +58,11 @@ data class Environment internal constructor(
             checkoutShopperBaseUrl = URL("https://checkoutshopper-live-apse.adyen.com/checkoutshopper/"),
             checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live-apse.adyen.com/checkoutanalytics/")
         )
+
+        @JvmField
+        val NEA: Environment = Environment(
+            checkoutShopperBaseUrl = URL("https://checkoutshopper-live-nea.adyen.com/checkoutshopper/"),
+            checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live-nea.adyen.com/checkoutanalytics/")
+        )
     }
 }
