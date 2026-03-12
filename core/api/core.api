@@ -418,15 +418,15 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency$Companion {
 
 public final class com/adyen/checkout/core/common/Environment : android/os/Parcelable {
 	public static final field $stable I
-	public static final field APSE Lcom/adyen/checkout/core/common/Environment;
-	public static final field AUSTRALIA Lcom/adyen/checkout/core/common/Environment;
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/core/common/Environment$Companion;
-	public static final field EUROPE Lcom/adyen/checkout/core/common/Environment;
-	public static final field INDIA Lcom/adyen/checkout/core/common/Environment;
-	public static final field NEA Lcom/adyen/checkout/core/common/Environment;
+	public static final field LIVE_APSE Lcom/adyen/checkout/core/common/Environment;
+	public static final field LIVE_AUSTRALIA Lcom/adyen/checkout/core/common/Environment;
+	public static final field LIVE_EUROPE Lcom/adyen/checkout/core/common/Environment;
+	public static final field LIVE_INDIA Lcom/adyen/checkout/core/common/Environment;
+	public static final field LIVE_NEA Lcom/adyen/checkout/core/common/Environment;
+	public static final field LIVE_UNITED_STATES Lcom/adyen/checkout/core/common/Environment;
 	public static final field TEST Lcom/adyen/checkout/core/common/Environment;
-	public static final field UNITED_STATES Lcom/adyen/checkout/core/common/Environment;
 	public final fun component1 ()Ljava/net/URL;
 	public final fun component2 ()Ljava/net/URL;
 	public final fun copy (Ljava/net/URL;Ljava/net/URL;)Lcom/adyen/checkout/core/common/Environment;

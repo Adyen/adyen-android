@@ -70,7 +70,7 @@ internal class GooglePayComponentParamsMapperTest {
 
         val componentParamsBundle = createComponentParamsBundle(
             shopperLocale = Locale.FRANCE,
-            environment = Environment.APSE,
+            environment = Environment.LIVE_APSE,
             clientKey = TEST_CLIENT_KEY_2,
             amount = amount,
         )
@@ -104,7 +104,7 @@ internal class GooglePayComponentParamsMapperTest {
 
         val expected = getGooglePayComponentParams(
             shopperLocale = Locale.FRANCE,
-            environment = Environment.APSE,
+            environment = Environment.LIVE_APSE,
             clientKey = TEST_CLIENT_KEY_2,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             amount = amount,
@@ -270,7 +270,7 @@ internal class GooglePayComponentParamsMapperTest {
     fun `when google pay environment is not set and environment is a live one then google pay environment should be ENVIRONMENT_PRODUCTION`() {
         val componentParamsBundle = createComponentParamsBundle(
             shopperLocale = Locale.CHINA,
-            environment = Environment.UNITED_STATES,
+            environment = Environment.LIVE_UNITED_STATES,
             clientKey = TEST_CLIENT_KEY_2,
         )
         val googlePayConfiguration = createGooglePayConfiguration(
@@ -285,7 +285,7 @@ internal class GooglePayComponentParamsMapperTest {
 
         val expected = getGooglePayComponentParams(
             shopperLocale = Locale.CHINA,
-            environment = Environment.UNITED_STATES,
+            environment = Environment.LIVE_UNITED_STATES,
             clientKey = TEST_CLIENT_KEY_2,
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION,
         )
