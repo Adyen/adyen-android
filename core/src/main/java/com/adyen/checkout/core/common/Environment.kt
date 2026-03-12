@@ -30,37 +30,37 @@ data class Environment internal constructor(
         )
 
         @JvmField
-        val EUROPE: Environment = Environment(
+        val LIVE_EUROPE: Environment = Environment(
             checkoutShopperBaseUrl = URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"),
             checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live.adyen.com/checkoutanalytics/")
         )
 
         @JvmField
-        val UNITED_STATES: Environment = Environment(
+        val LIVE_UNITED_STATES: Environment = Environment(
             checkoutShopperBaseUrl = URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"),
             checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live-us.adyen.com/checkoutanalytics/")
         )
 
         @JvmField
-        val AUSTRALIA: Environment = Environment(
+        val LIVE_AUSTRALIA: Environment = Environment(
             checkoutShopperBaseUrl = URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"),
             checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live-au.adyen.com/checkoutanalytics/")
         )
 
         @JvmField
-        val INDIA: Environment = Environment(
+        val LIVE_INDIA: Environment = Environment(
             checkoutShopperBaseUrl = URL("https://checkoutshopper-live-in.adyen.com/checkoutshopper/"),
             checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live-in.adyen.com/checkoutanalytics/")
         )
 
         @JvmField
-        val APSE: Environment = Environment(
+        val LIVE_APSE: Environment = Environment(
             checkoutShopperBaseUrl = URL("https://checkoutshopper-live-apse.adyen.com/checkoutshopper/"),
             checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live-apse.adyen.com/checkoutanalytics/")
         )
 
         @JvmField
-        val NEA: Environment = Environment(
+        val LIVE_NEA: Environment = Environment(
             checkoutShopperBaseUrl = URL("https://checkoutshopper-live-nea.adyen.com/checkoutshopper/"),
             checkoutAnalyticsBaseUrl = URL("https://checkoutanalytics-live-nea.adyen.com/checkoutanalytics/")
         )
