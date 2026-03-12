@@ -72,7 +72,7 @@ class NewCheckoutController(
         componentStateFlow = flow
     }
 
-    // TODO - Support sessions
+    // TODO - Ensure state is valid, handle state being null, add validate function and support sessions
     override suspend fun submit() {
         if (_state.value is CheckoutControllerState.PaymentMethod) {
             componentStateFlow?.value?.let {
