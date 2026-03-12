@@ -17,8 +17,7 @@ import org.json.JSONObject
  * Abstract class representing a stored payment method from the /paymentMethods API response.
  *
  * Specific stored payment method types extend this class with their own fields.
- * Explicitly unsupported stored payment methods are deserialized as [StoredUnsupportedPaymentMethod],
- * while other unknown types fall back to [StoredInstantPaymentMethod].
+ * Unknown unsupported stored payment methods are deserialized as [StoredUnsupportedPaymentMethod].
  */
 abstract class StoredPaymentMethod
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -26,14 +25,9 @@ constructor() : PaymentMethodResponse() {
     abstract val id: String
     abstract val supportedShopperInteractions: List<String>
 
-    // TODO - Should this be moved to the usage sight?
-    val isEcommerce: Boolean
-        get() = supportedShopperInteractions.contains(ECOMMERCE)
-
     companion object {
         const val ID = "id"
         const val SUPPORTED_SHOPPER_INTERACTIONS = "supportedShopperInteractions"
-        private const val ECOMMERCE = "Ecommerce"
 
         @Suppress("TooGenericExceptionThrown")
         @JvmField
@@ -75,8 +69,7 @@ constructor() : PaymentMethodResponse() {
                 PaymentMethodTypes.TWINT -> StoredTwintPaymentMethod.SERIALIZER
                 PaymentMethodTypes.PAY_BY_BANK_US -> StoredPayByBankUSPaymentMethod.SERIALIZER
                 PaymentMethodTypes.PAY_TO -> StoredPayToPaymentMethod.SERIALIZER
-                in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> StoredUnsupportedPaymentMethod.SERIALIZER
-                else -> StoredInstantPaymentMethod.SERIALIZER
+                else -> StoredUnsupportedPaymentMethod.SERIALIZER
             }
 
             @Suppress("UNCHECKED_CAST")

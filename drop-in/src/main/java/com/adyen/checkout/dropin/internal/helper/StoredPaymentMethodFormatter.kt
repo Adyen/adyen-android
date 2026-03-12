@@ -34,8 +34,8 @@ internal object StoredPaymentMethodFormatter {
             is StoredACHDirectDebitPaymentMethod -> {
                 "•••• ${storedPaymentMethod.bankAccountNumber.takeLast(LAST_DIGITS_COUNT)}"
             }
+
             is StoredCardPaymentMethod -> "•••• ${storedPaymentMethod.lastFour}"
-            // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and handle it here
             else -> storedPaymentMethod.name
         }
     }
@@ -48,7 +48,6 @@ internal object StoredPaymentMethodFormatter {
             is StoredPayToPaymentMethod,
             is StoredCardPaymentMethod -> storedPaymentMethod.name
 
-            // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and return name here
             else -> null
         }
     }

@@ -154,6 +154,16 @@ object PaymentMethodTypes {
         WECHAT_PAY_SDK,
     )
 
+    val SUPPORTED_STORED_PAYMENT_METHODS: List<String> = listOf(
+        ACH,
+        BLIK,
+        CASH_APP_PAY,
+        PAY_BY_BANK_US,
+        PAY_TO,
+        SCHEME,
+        TWINT,
+    )
+
     // Payment methods that do not need a payment component, but only an action component
     @Suppress("unused")
     @Deprecated(

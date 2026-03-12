@@ -18,8 +18,8 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMe
 import com.adyen.checkout.core.components.data.model.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodListSection
@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.stateIn
 internal class PaymentMethodListViewModel(
     private val dropInParams: DropInParams,
     private val paymentMethodRepository: PaymentMethodRepository,
+    private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
 ) : ViewModel() {
 
     val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.storedPaymentMethods
@@ -39,7 +40,7 @@ internal class PaymentMethodListViewModel(
 
     private fun createInitialViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
         val storedPaymentMethodSection = storedPaymentMethods
-            .filter { it.isSupported() }
+            .filter { paymentMethodSupportCheck.isSupported(it) }
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
@@ -52,7 +53,7 @@ internal class PaymentMethodListViewModel(
 
         val paymentOptionsSection = paymentMethodRepository.paymentMethods
             // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
-            .filter { it.isSupported() }
+            .filter { paymentMethodSupportCheck.isSupported(it) }
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
@@ -74,12 +75,6 @@ internal class PaymentMethodListViewModel(
         )
     }
 
-    private fun StoredPaymentMethod.isSupported(): Boolean {
-        return id.isNotEmpty() &&
-            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) &&
-            isEcommerce
-    }
-
     private fun StoredPaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
         val icon = StoredPaymentMethodFormatter.getIcon(this)
         val title = StoredPaymentMethodFormatter.getTitle(this)
@@ -91,10 +86,6 @@ internal class PaymentMethodListViewModel(
             title = title,
             subtitle = subtitle,
         )
-    }
-
-    private fun PaymentMethod.isSupported(): Boolean {
-        return !PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)
     }
 
     private fun PaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
@@ -125,6 +116,7 @@ internal class PaymentMethodListViewModel(
             return PaymentMethodListViewModel(
                 dropInParams = dropInParams,
                 paymentMethodRepository = paymentMethodRepository,
+                paymentMethodSupportCheck = PaymentMethodSupportCheck(),
             ) as T
         }
     }

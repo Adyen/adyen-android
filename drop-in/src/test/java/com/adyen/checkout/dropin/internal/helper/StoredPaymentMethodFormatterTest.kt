@@ -12,9 +12,9 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDire
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredInstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -44,11 +44,12 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is not scheme, then icon is type`() {
-        val storedPaymentMethod = StoredInstantPaymentMethod(
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
             type = PaymentMethodTypes.ACH,
             name = "name",
             id = "id",
             supportedShopperInteractions = emptyList(),
+            bankAccountNumber = "123456789",
         )
 
         val result = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod)
@@ -101,10 +102,9 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("label", result)
     }
 
-    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
-    fun `when type is paypal, then title is name`() {
-        val storedPaymentMethod = StoredInstantPaymentMethod(
+    fun `when type is unsupported, then title is name`() {
+        val storedPaymentMethod = StoredUnsupportedPaymentMethod(
             type = PaymentMethodTypes.PAYPAL,
             name = "name",
             id = "id",
@@ -153,7 +153,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is other, then title is name`() {
-        val storedPaymentMethod = StoredInstantPaymentMethod(
+        val storedPaymentMethod = StoredBLIKPaymentMethod(
             type = "other",
             name = "name",
             id = "id",
@@ -195,10 +195,9 @@ internal class StoredPaymentMethodFormatterTest {
         assertEquals("name", result)
     }
 
-    // TODO - COSDK-998: Create StoredPayPalPaymentMethod with shopperEmail field and test it here
     @Test
-    fun `when type is paypal, then subtitle is null`() {
-        val storedPaymentMethod = StoredInstantPaymentMethod(
+    fun `when type is unsupported, then subtitle is null`() {
+        val storedPaymentMethod = StoredUnsupportedPaymentMethod(
             type = PaymentMethodTypes.PAYPAL,
             name = "name",
             id = "id",
