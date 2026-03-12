@@ -11,10 +11,14 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.core.components.NewCheckoutController
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PaymentComponentProvider {
 
     @Composable
-    fun PaymentComponent(modifier: Modifier)
+    fun PaymentComponent(
+        modifier: Modifier,
+        controller: NewCheckoutController,
+    )
 }
