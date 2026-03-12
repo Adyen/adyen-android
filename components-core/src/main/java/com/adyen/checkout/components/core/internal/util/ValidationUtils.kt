@@ -55,6 +55,7 @@ object ValidationUtils {
             Environment.AUSTRALIA,
             Environment.EUROPE,
             Environment.INDIA,
+            Environment.NEA,
             Environment.UNITED_STATES -> LIVE_CLIENT_KEY_PATTERN.matcher(clientKey).matches()
 
             // this should not be reachable in reality as Environment cannot be instantiated using the constructor
