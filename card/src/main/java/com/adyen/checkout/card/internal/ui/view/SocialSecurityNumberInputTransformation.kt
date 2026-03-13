@@ -12,8 +12,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.ui.text.input.KeyboardType
-import com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberProperties.ALL_SEPARATORS
-import com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberProperties.MAX_LENGTH_UNFORMATTED
+import com.adyen.checkout.card.internal.feature.socialsecuritynumber.SocialSecurityNumberProperties.ALL_SEPARATORS
+import com.adyen.checkout.card.internal.feature.socialsecuritynumber.SocialSecurityNumberProperties.MAX_LENGTH_UNFORMATTED
 
 internal class SocialSecurityNumberInputTransformation : InputTransformation {
 

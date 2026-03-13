@@ -11,14 +11,14 @@ package com.adyen.checkout.card.internal.ui.view
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.foundation.text.input.insert
-import com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberProperties.CNPJ_SEPARATORS
-import com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberProperties.CPF_LENGTH_LIMIT
-import com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberProperties.CPF_SEPARATORS
+import com.adyen.checkout.card.internal.feature.socialsecuritynumber.SocialSecurityNumberProperties.CNPJ_SEPARATORS
+import com.adyen.checkout.card.internal.feature.socialsecuritynumber.SocialSecurityNumberProperties.CPF_SEPARATORS
+import com.adyen.checkout.card.internal.feature.socialsecuritynumber.SocialSecurityNumberProperties.CPF_VALID_LENGTH
 
 internal class SocialSecurityNumberOutputTransformation : OutputTransformation {
 
     override fun TextFieldBuffer.transformOutput() {
-        val separators = if (length <= CPF_LENGTH_LIMIT) CPF_SEPARATORS else CNPJ_SEPARATORS
+        val separators = if (length <= CPF_VALID_LENGTH) CPF_SEPARATORS else CNPJ_SEPARATORS
 
         separators.forEach { separator ->
             if (length > separator.index) insert(separator.index, separator.character.toString())

@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.feature.socialsecuritynumber.SocialSecurityNumberValidator
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidator
 import com.adyen.checkout.core.common.helper.CardNumberValidationResult
@@ -159,12 +160,17 @@ internal object CardValidationUtils {
      */
     internal fun validateSocialSecurityNumber(
         socialSecurityNumber: String,
-        isRequired: Boolean
+        requirementPolicy: RequirementPolicy?
     ): CardSocialSecurityNumberValidation {
-        return if (isRequired && socialSecurityNumber.isBlank()) {
-            CardSocialSecurityNumberValidation.INVALID_BLANK
-        } else {
+        // allow empty value unless field is required
+        if (socialSecurityNumber.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
+            return CardSocialSecurityNumberValidation.VALID
+        }
+
+        return if (SocialSecurityNumberValidator.validateSocialSecurityNumber(socialSecurityNumber)) {
             CardSocialSecurityNumberValidation.VALID
+        } else {
+            CardSocialSecurityNumberValidation.INVALID
         }
     }
 }
@@ -206,5 +212,5 @@ enum class CardHolderNameValidation {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardSocialSecurityNumberValidation {
     VALID,
-    INVALID_BLANK,
+    INVALID,
 }

@@ -6,11 +6,23 @@
  * Created by josephj on 13/3/2026.
  */
 
-package com.adyen.checkout.card.internal.ui.view
+package com.adyen.checkout.card.internal.feature.socialsecuritynumber
 
+/**
+ * This field has two valid formats:
+ * - CPF: 11 digits, formatted as such 123.123.123-12
+ * - CNPJ: 14 digits, formatted as such 12.123.123/1234-12
+ *
+ * The formatting follows the CPF format as long as the length is less than 11 digits. Then between 12 and 14 digits,
+ * the CNPJ format is used.
+ */
 internal object SocialSecurityNumberProperties {
 
-    const val CPF_LENGTH_LIMIT = 11
+    const val CPF_VALID_LENGTH = 11
+    const val CNPJ_VALID_LENGTH = 14
+
+    // same as the CNPJ (the longer format)
+    const val MAX_LENGTH_UNFORMATTED = 14
 
     // e.g 123.123.123-12
     val CPF_SEPARATORS = listOf(
@@ -28,8 +40,6 @@ internal object SocialSecurityNumberProperties {
     )
 
     val ALL_SEPARATORS: List<Char> = (CPF_SEPARATORS + CNPJ_SEPARATORS).map { it.character }
-
-    const val MAX_LENGTH_UNFORMATTED = 14
 }
 
 internal data class Separator(
