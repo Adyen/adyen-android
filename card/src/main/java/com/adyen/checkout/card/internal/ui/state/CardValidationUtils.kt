@@ -18,6 +18,8 @@ import com.adyen.checkout.core.common.helper.CardNumberValidationResult
 import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
+import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidationResult
+import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidator
 import com.adyen.checkout.core.common.internal.helper.StringUtil
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
@@ -159,12 +161,16 @@ internal object CardValidationUtils {
      */
     internal fun validateSocialSecurityNumber(
         socialSecurityNumber: String,
-        isRequired: Boolean
+        requirementPolicy: RequirementPolicy?
     ): CardSocialSecurityNumberValidation {
-        return if (isRequired && socialSecurityNumber.isBlank()) {
-            CardSocialSecurityNumberValidation.INVALID_BLANK
-        } else {
-            CardSocialSecurityNumberValidation.VALID
+        // allow empty value unless field is required
+        if (socialSecurityNumber.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
+            return CardSocialSecurityNumberValidation.VALID
+        }
+
+        return when (SocialSecurityNumberValidator.validateSocialSecurityNumber(socialSecurityNumber)) {
+            is SocialSecurityNumberValidationResult.Invalid -> CardSocialSecurityNumberValidation.INVALID
+            is SocialSecurityNumberValidationResult.Valid -> CardSocialSecurityNumberValidation.VALID
         }
     }
 }
@@ -206,5 +212,5 @@ enum class CardHolderNameValidation {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardSocialSecurityNumberValidation {
     VALID,
-    INVALID_BLANK,
+    INVALID,
 }

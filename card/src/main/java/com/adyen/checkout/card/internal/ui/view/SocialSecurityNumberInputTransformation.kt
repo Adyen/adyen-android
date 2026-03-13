@@ -13,8 +13,8 @@ import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.foundation.text.input.delete
 import androidx.compose.ui.text.input.KeyboardType
-import com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberProperties.ALL_SEPARATORS
-import com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberProperties.MAX_LENGTH_UNFORMATTED
+import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties.ALL_SEPARATORS
+import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties.MAX_LENGTH_UNFORMATTED
 
 internal class SocialSecurityNumberInputTransformation : InputTransformation {
 

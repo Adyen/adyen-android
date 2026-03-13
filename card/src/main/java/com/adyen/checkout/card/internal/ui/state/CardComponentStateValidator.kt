@@ -111,7 +111,7 @@ internal class CardComponentStateValidator(
         return cardValidationMapper.mapSocialSecurityNumberValidation(
             validation = CardValidationUtils.validateSocialSecurityNumber(
                 socialSecurityNumber = socialSecurityNumber.text,
-                isRequired = socialSecurityNumber.requirementPolicy is RequirementPolicy.Required,
+                requirementPolicy = socialSecurityNumber.requirementPolicy,
             ),
         )
     }
