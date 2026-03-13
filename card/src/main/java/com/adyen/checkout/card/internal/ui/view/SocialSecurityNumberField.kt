@@ -11,9 +11,9 @@ package com.adyen.checkout.card.internal.ui.view
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -29,6 +29,9 @@ internal fun SocialSecurityNumberField(
 ) {
     val supportingTextSocialSecurityNumber = socialSecurityNumberState.supportingText?.let { resolveString(it) }
 
+    val inputTransformation = remember { SocialSecurityNumberInputTransformation() }
+    val outputTransformation = remember { SocialSecurityNumberOutputTransformation() }
+
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
@@ -42,10 +45,9 @@ internal fun SocialSecurityNumberField(
         onValueChange = { value ->
             onIntent(CardIntent.UpdateSocialSecurityNumber(value))
         },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.Words,
-        ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = socialSecurityNumberState.isFocused,
+        inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
     )
 }
