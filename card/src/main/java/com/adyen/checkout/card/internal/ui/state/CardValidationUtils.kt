@@ -153,6 +153,20 @@ internal object CardValidationUtils {
             }
         }
     }
+
+    /**
+     * Validate Social Security Number.
+     */
+    internal fun validateSocialSecurityNumber(
+        socialSecurityNumber: String,
+        isRequired: Boolean
+    ): CardSocialSecurityNumberValidation {
+        return if (isRequired && socialSecurityNumber.isBlank()) {
+            CardSocialSecurityNumberValidation.INVALID_BLANK
+        } else {
+            CardSocialSecurityNumberValidation.VALID
+        }
+    }
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -185,6 +199,12 @@ enum class CardSecurityCodeValidation {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardHolderNameValidation {
+    VALID,
+    INVALID_BLANK,
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class CardSocialSecurityNumberValidation {
     VALID,
     INVALID_BLANK,
 }
