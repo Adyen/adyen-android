@@ -97,6 +97,12 @@ private fun CardDetailsSection(
                 onIntent = onIntent,
             )
         }
+        if (viewState.socialSecurityNumber != null) {
+            SocialSecurityNumberField(
+                socialSecurityNumberState = viewState.socialSecurityNumber,
+                onIntent = onIntent,
+            )
+        }
         if (viewState.isStorePaymentFieldVisible) {
             SwitchContainer(
                 checked = viewState.storePaymentMethod,
@@ -124,6 +130,9 @@ private fun CardComponentPreview() {
             ),
             holderName = TextInputViewState(
                 text = "J. Smith",
+            ),
+            socialSecurityNumber = TextInputViewState(
+                text = "123.123.123-12"
             ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = true,

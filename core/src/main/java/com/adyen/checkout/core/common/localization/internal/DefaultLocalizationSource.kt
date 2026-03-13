@@ -51,6 +51,13 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION ->
                 R.string.checkout_card_dual_brand_selector_description
 
+            CheckoutLocalizationKey.CARD_SOCIAL_SECURITY_NUMBER -> R.string.checkout_card_social_security_number
+            CheckoutLocalizationKey.CARD_SOCIAL_SECURITY_NUMBER_HINT ->
+                R.string.checkout_card_social_security_number_hint
+
+            CheckoutLocalizationKey.CARD_SOCIAL_SECURITY_NUMBER_INVALID ->
+                R.string.checkout_card_social_security_number_invalid
+
             // Drop-in
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->

@@ -47,6 +47,9 @@ internal class CardViewStateProducer(
             holderName = state.takeIf {
                 it.holderName.requirementPolicy !is RequirementPolicy.Hidden
             }?.holderName?.toViewState(),
+            socialSecurityNumber = state.takeIf {
+                it.socialSecurityNumber.requirementPolicy !is RequirementPolicy.Hidden
+            }?.socialSecurityNumber?.toViewState(),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
             supportedCardBrands = state.supportedCardBrands,

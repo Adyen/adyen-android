@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.FieldMode
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.runCompileOnly
@@ -52,6 +53,7 @@ internal fun CardComponentState.toPaymentComponentState(
     val paymentComponentData = createPaymentComponentData(
         cardDetails = cardDetails,
         storePaymentMethod = storePaymentMethod(componentParams),
+        socialSecurityNumber = socialSecurityNumber(componentParams),
         componentParams = componentParams,
     )
 
@@ -107,6 +109,7 @@ private fun createCardDetails(
 private fun createPaymentComponentData(
     cardDetails: CardDetails,
     storePaymentMethod: Boolean?,
+    socialSecurityNumber: String?,
     componentParams: CardComponentParams,
 ) = PaymentComponentData(
     paymentMethod = cardDetails,
@@ -114,6 +117,7 @@ private fun createPaymentComponentData(
     shopperReference = componentParams.shopperReference,
     order = null,
     amount = componentParams.amount,
+    socialSecurityNumber = socialSecurityNumber,
 )
 
 private fun createPaymentComponentState(
@@ -142,6 +146,13 @@ private fun CardComponentState.cardBrand(): CardBrand? {
 private fun CardComponentState.holderName(componentParams: CardComponentParams) =
     if (componentParams.showHolderName && holderName.text.isNotBlank()) {
         holderName.text
+    } else {
+        null
+    }
+
+private fun CardComponentState.socialSecurityNumber(componentParams: CardComponentParams) =
+    if (componentParams.socialSecurityNumberMode != FieldMode.HIDE && socialSecurityNumber.text.isNotBlank()) {
+        socialSecurityNumber.text
     } else {
         null
     }

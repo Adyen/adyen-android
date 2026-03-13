@@ -54,6 +54,14 @@ internal class CardComponentStateReducer(
                 holderName = state.holderName.updateFocus(intent.hasFocus),
             )
 
+            is CardIntent.UpdateSocialSecurityNumber -> state.copy(
+                socialSecurityNumber = state.socialSecurityNumber.updateText(intent.socialSecurityNumber),
+            )
+
+            is CardIntent.UpdateSocialSecurityNumberFocus -> state.copy(
+                socialSecurityNumber = state.socialSecurityNumber.updateFocus(intent.hasFocus),
+            )
+
             is CardIntent.UpdateStorePaymentMethod -> state.copy(
                 storePaymentMethod = intent.isChecked,
             )
@@ -72,10 +80,10 @@ internal class CardComponentStateReducer(
                 state.copy(
                     detectedCardTypes = intent.detectedCardTypes,
                     securityCode = state.securityCode.copy(
-                        requirementPolicy = getSecurityCodeRequirementPolicy(cardType)
+                        requirementPolicy = getSecurityCodeRequirementPolicy(cardType),
                     ),
                     expiryDate = state.expiryDate.copy(
-                        requirementPolicy = getExpiryDateRequirementPolicy(cardType)
+                        requirementPolicy = getExpiryDateRequirementPolicy(cardType),
                     ),
                 )
             }
@@ -101,6 +109,7 @@ internal class CardComponentStateReducer(
         val hasExpiryDateError = state.expiryDate.errorMessage != null
         val hasSecurityCodeError = state.securityCode.errorMessage != null
         val hasHolderNameError = state.holderName.errorMessage != null
+        val hasSocialSecurityNumberError = state.socialSecurityNumber.errorMessage != null
 
         return state.copy(
             cardNumber = state.cardNumber.copy(
@@ -118,6 +127,10 @@ internal class CardComponentStateReducer(
             holderName = state.holderName.copy(
                 showError = hasHolderNameError,
                 isFocused = shouldFocus(hasHolderNameError),
+            ),
+            socialSecurityNumber = state.socialSecurityNumber.copy(
+                showError = hasSocialSecurityNumberError,
+                isFocused = shouldFocus(hasSocialSecurityNumberError),
             ),
         )
     }
