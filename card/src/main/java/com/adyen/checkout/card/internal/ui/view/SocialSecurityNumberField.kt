@@ -9,12 +9,10 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties.SOCIAL_SECURITY_MAX_LENGTH
 import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties.SOCIAL_SECURITY_SEPARATORS
@@ -53,7 +51,6 @@ internal fun SocialSecurityNumberField(
         onValueChange = { value ->
             onIntent(CardIntent.UpdateSocialSecurityNumber(value))
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = socialSecurityNumberState.isFocused,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
