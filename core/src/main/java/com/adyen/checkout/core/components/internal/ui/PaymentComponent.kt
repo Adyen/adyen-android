@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 // TODO - Some components might not be composable,
 //  Move ComposableComponent to PaymentMethod specific component later
@@ -24,4 +25,13 @@ interface PaymentComponent<T : BasePaymentComponentState> :
     fun setLoading(isLoading: Boolean)
 
     fun onCleared()
+}
+
+interface NewPaymentComponent {
+
+    fun validate(): Boolean
+
+    fun setLoading(isLoading: Boolean)
+
+    fun getState(): PaymentComponentState<*>
 }

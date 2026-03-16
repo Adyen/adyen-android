@@ -12,16 +12,19 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.internal.CheckoutControllerState
-import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.components.internal.ui.NewPaymentComponent
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.CheckoutException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 // TODO - rename later
 interface CheckoutControllerInterface {
-    suspend fun submit()
+    fun validate(): Boolean
+    fun submit()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -30,12 +33,13 @@ class NewCheckoutController(
     private val context: CheckoutContext,
     @Suppress("unused")
     private val callbacks: CheckoutCallbacks,
+    private val coroutineScope: CoroutineScope,
 ) : CheckoutControllerInterface {
 
     private val _state = MutableStateFlow(createInitialState())
     internal val state: StateFlow<CheckoutControllerState> = _state.asStateFlow()
 
-    private var componentStateFlow: StateFlow<PaymentComponentState<*>>? = null
+    private var paymentComponent: NewPaymentComponent? = null
 
     private fun createInitialState(): CheckoutControllerState {
         return when (target) {
@@ -61,6 +65,11 @@ class NewCheckoutController(
         }
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun attach(component: NewPaymentComponent) {
+        paymentComponent = component
+    }
+
     private fun getPaymentMethodResponse(): PaymentMethodsApiResponse? {
         return when (context) {
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
@@ -68,16 +77,19 @@ class NewCheckoutController(
         }
     }
 
-    fun registerComponentState(flow: StateFlow<PaymentComponentState<*>>) {
-        componentStateFlow = flow
+    override fun validate(): Boolean {
+        return paymentComponent?.validate() ?: false
     }
 
-    // TODO - Ensure state is valid, handle state being null, add validate function and support sessions
-    override suspend fun submit() {
-        if (_state.value is CheckoutControllerState.PaymentMethod) {
-            componentStateFlow?.value?.let {
-                callbacks.beforeSubmit?.beforeSubmit(it)
-                callbacks.onSubmit?.onSubmit(it)
+    // TODO - Handle component being null and support sessions
+    override fun submit() {
+        val component = paymentComponent
+        if (component != null && validate()) {
+            coroutineScope.launch {
+                val componentState = component.getState()
+                component.setLoading(true)
+                callbacks.onSubmit?.onSubmit(componentState)
+                component.setLoading(false)
             }
         }
     }

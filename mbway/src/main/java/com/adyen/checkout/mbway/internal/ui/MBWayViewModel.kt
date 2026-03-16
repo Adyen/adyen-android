@@ -10,22 +10,18 @@ package com.adyen.checkout.mbway.internal.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.core.components.NewCheckoutController
+import com.adyen.checkout.core.components.internal.ui.NewPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 internal class MBWayViewModel(
-    private val controller: NewCheckoutController,
     // TODO - Add constructor params
 //    private val componentParams: ComponentParams,
 //    private val analyticsManager: AnalyticsManager,
@@ -34,7 +30,7 @@ internal class MBWayViewModel(
     componentStateFactory: MBWayComponentStateFactory,
     componentStateReducer: MBWayComponentStateReducer,
     viewStateProducer: MBWayViewStateProducer,
-) : ViewModel() {
+) : ViewModel(), NewPaymentComponent {
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -46,16 +42,6 @@ internal class MBWayViewModel(
     val viewState = componentState.viewState(viewStateProducer, viewModelScope)
 
     init {
-        val paymentComponentStateFlow = componentState
-            .map { it.toPaymentComponentState(amount = null, sdkData = "") }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = componentState.value.toPaymentComponentState(amount = null, sdkData = ""),
-            )
-
-        controller.registerComponentState(paymentComponentStateFlow)
-
         initializeAnalytics()
     }
 
@@ -63,16 +49,21 @@ internal class MBWayViewModel(
 //        analyticsManager.initialize(this, viewModelScope)
     }
 
-    fun submit() {
-        if (componentStateValidator.isValid(componentState.value)) {
-            viewModelScope.launch {
-                componentState.handleIntent(MBWayIntent.UpdateLoading(true))
-                controller.submit()
-                componentState.handleIntent(MBWayIntent.UpdateLoading(false))
-            }
-        } else {
-            onIntent(MBWayIntent.HighlightValidationErrors)
-        }
+    override fun validate(): Boolean {
+        onIntent(MBWayIntent.HighlightValidationErrors)
+        return componentStateValidator.isValid(componentState.value)
+    }
+
+    override fun setLoading(isLoading: Boolean) {
+        componentState.handleIntent(MBWayIntent.UpdateLoading(isLoading))
+    }
+
+    override fun getState(): PaymentComponentState<*> {
+        // TODO - Use actual amount and sdkData
+        return componentState.value.toPaymentComponentState(
+            amount = null,
+            sdkData = null,
+        )
     }
 
     fun onIntent(intent: MBWayIntent) {
