@@ -16,10 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties.SOCIAL_SECURITY_MAX_LENGTH
+import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties.SOCIAL_SECURITY_SEPARATORS
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 
 @Composable
 internal fun SocialSecurityNumberField(
@@ -29,7 +32,12 @@ internal fun SocialSecurityNumberField(
 ) {
     val supportingTextSocialSecurityNumber = socialSecurityNumberState.supportingText?.let { resolveString(it) }
 
-    val inputTransformation = remember { SocialSecurityNumberInputTransformation() }
+    val inputTransformation = remember {
+        DigitOnlyInputTransformation(
+            allowedSeparators = SOCIAL_SECURITY_SEPARATORS,
+            maxLengthWithoutSeparators = SOCIAL_SECURITY_MAX_LENGTH,
+        )
+    }
     val outputTransformation = remember { SocialSecurityNumberOutputTransformation() }
 
     CheckoutTextField(
