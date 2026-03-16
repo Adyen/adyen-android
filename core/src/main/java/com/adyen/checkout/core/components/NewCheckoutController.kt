@@ -31,7 +31,6 @@ interface CheckoutControllerInterface {
 class NewCheckoutController(
     private val target: CheckoutTarget,
     private val context: CheckoutContext,
-    @Suppress("unused")
     private val callbacks: CheckoutCallbacks,
     private val coroutineScope: CoroutineScope,
 ) : CheckoutControllerInterface {
@@ -65,11 +64,6 @@ class NewCheckoutController(
         }
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun attach(component: NewPaymentComponent) {
-        paymentComponent = component
-    }
-
     private fun getPaymentMethodResponse(): PaymentMethodsApiResponse? {
         return when (context) {
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
@@ -77,14 +71,29 @@ class NewCheckoutController(
         }
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun attach(component: NewPaymentComponent) {
+        paymentComponent = component
+    }
+
     override fun validate(): Boolean {
         return paymentComponent?.validate() ?: false
     }
 
-    // TODO - Handle component being null and support sessions
+    // TODO - Support sessions
     override fun submit() {
         val component = paymentComponent
-        if (component != null && validate()) {
+
+        if (component == null) {
+            val error = CheckoutError(
+                code = CheckoutError.ErrorCode.UNKNOWN,
+                message = "Submit should not be called when there is no component attached",
+            )
+            callbacks.onError?.onError(error)
+            return
+        }
+
+        if (validate()) {
             coroutineScope.launch {
                 val componentState = component.getState()
                 component.setLoading(true)
