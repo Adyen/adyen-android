@@ -69,10 +69,9 @@ public abstract interface class com/adyen/checkout/dropin/DropInResultCallback {
 public abstract class com/adyen/checkout/dropin/DropInService : androidx/lifecycle/LifecycleService {
 	public static final field $stable I
 	public fun <init> ()V
-	protected abstract fun onAdditionalDetails (Lcom/adyen/checkout/core/action/data/ActionComponentData;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun onBind (Landroid/content/Intent;)Landroid/os/IBinder;
+	public fun onCreate ()V
+	public fun onDestroy ()V
 	public fun onStartCommand (Landroid/content/Intent;II)I
-	protected abstract fun onSubmit (Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$ConfirmationDialogKt {

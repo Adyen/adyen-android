@@ -101,11 +101,7 @@ internal class DropInViewModel(
     }
 
     fun startDropInService(context: Context) {
-        dropInServiceManager.startAndBind(context)
-    }
-
-    fun unbindDropInService(context: Context) {
-        dropInServiceManager.unbind(context)
+        dropInServiceManager.start(context)
     }
 
     fun stopDropInService(context: Context) {

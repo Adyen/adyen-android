@@ -84,7 +84,6 @@ class DropInActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        viewModel.unbindDropInService(this)
         if (isFinishing) {
             viewModel.stopDropInService(this)
         }
