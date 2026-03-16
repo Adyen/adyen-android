@@ -38,4 +38,7 @@ dependencies {
     api libs.compose.ui.tooling.preview
 
     debugApi libs.compose.ui.tooling
+
+    // Tests
+    testImplementation libs.bundles.junit
 }
