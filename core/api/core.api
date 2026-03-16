@@ -561,6 +561,19 @@ public final class com/adyen/checkout/core/common/helper/CardSecurityCodeValidat
 	public static synthetic fun validateSecurityCode$default (Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidator;Ljava/lang/String;Lcom/adyen/checkout/core/common/CardBrand;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult;
 }
 
+public abstract interface class com/adyen/checkout/core/common/helper/SocialSecurityNumberValidationResult {
+}
+
+public final class com/adyen/checkout/core/common/helper/SocialSecurityNumberValidationResult$Invalid : com/adyen/checkout/core/common/helper/SocialSecurityNumberValidationResult {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/SocialSecurityNumberValidationResult$Valid : com/adyen/checkout/core/common/helper/SocialSecurityNumberValidationResult {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
 public final class com/adyen/checkout/core/common/internal/DefaultImageLoader$Companion {
 }
 
@@ -602,6 +615,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_SECURITY_CODE_HINT_3_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_HINT_4_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_SOCIAL_SECURITY_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_SOCIAL_SECURITY_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_STORE_PAYMENT_METHOD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
