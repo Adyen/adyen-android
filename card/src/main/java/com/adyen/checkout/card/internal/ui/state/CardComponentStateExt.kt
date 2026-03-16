@@ -6,6 +6,8 @@
  * Created by ozgur on 20/11/2025.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.FieldMode

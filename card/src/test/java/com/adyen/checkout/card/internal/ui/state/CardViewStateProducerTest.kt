@@ -249,6 +249,7 @@ internal class CardViewStateProducerTest {
         expiryDate = TextInputComponentState(),
         securityCode = TextInputComponentState(),
         holderName = TextInputComponentState(),
+        socialSecurityNumber = TextInputComponentState(),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

@@ -19,7 +19,7 @@ internal class CardComponentStateReducer(
     private val componentParams: CardComponentParams,
 ) : ComponentStateReducer<CardComponentState, CardIntent> {
 
-    @Suppress("CyclomaticComplexMethod")
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun reduce(state: CardComponentState, intent: CardIntent): CardComponentState {
         return when (intent) {
             is CardIntent.UpdateCardNumber -> state.copy(
