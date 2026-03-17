@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.common.internal.api
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 import com.adyen.checkout.core.error.internal.HttpError
 import okhttp3.Headers.Companion.toHeaders
@@ -116,8 +115,6 @@ internal class OkHttpClient(
                 ?.let { JSONObject(it) }
                 ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
         } catch (e: JSONException) {
-            null
-        } catch (e: ModelSerializationException) {
             null
         }
 
