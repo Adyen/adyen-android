@@ -18,4 +18,4 @@ package com.adyen.checkout.core.error
  */
 class CheckoutException(
     val error: CheckoutError
-) : Exception(error.message, error.cause)
+) : RuntimeException(error.message, error.cause)

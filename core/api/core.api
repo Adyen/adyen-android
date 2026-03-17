@@ -2372,7 +2372,7 @@ public final class com/adyen/checkout/core/error/CheckoutError$ErrorCode {
 	public static final field UNKNOWN Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/error/CheckoutException : java/lang/Exception {
+public final class com/adyen/checkout/core/error/CheckoutException : java/lang/RuntimeException {
 	public static final field $stable I
 	public fun <init> (Lcom/adyen/checkout/core/error/CheckoutError;)V
 	public final fun getError ()Lcom/adyen/checkout/core/error/CheckoutError;
