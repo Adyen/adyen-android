@@ -25,7 +25,6 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.SavedStateHandleContainer
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -289,7 +288,7 @@ internal class ThreeDS2Component(
     }
 
     @OptIn(ExperimentalEncodingApi::class)
-    @Throws(RuntimeException::class, ModelSerializationException::class)
+    @Throws(RuntimeException::class, JSONException::class)
     private fun decodeFingerprintToken(encoded: String): FingerprintToken {
         val decodedFingerprintToken = Base64.decode(encoded).toString(Charsets.UTF_8)
 
