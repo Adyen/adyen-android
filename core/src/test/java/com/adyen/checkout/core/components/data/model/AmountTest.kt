@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.core.components.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.components.internal.validate
 import com.adyen.checkout.core.error.CheckoutError
+import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -45,12 +45,12 @@ internal class AmountTest {
     }
 
     @Test
-    fun `when deserializing with missing currency then ModelSerializationException is thrown`() {
+    fun `when deserializing with missing currency then JSONException is thrown`() {
         val json = JSONObject().apply {
             put("value", 1000L)
         }
 
-        assertThrows(ModelSerializationException::class.java) {
+        assertThrows(JSONException::class.java) {
             Amount.SERIALIZER.deserialize(json)
         }
     }

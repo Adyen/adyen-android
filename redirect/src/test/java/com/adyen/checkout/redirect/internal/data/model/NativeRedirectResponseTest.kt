@@ -1,6 +1,6 @@
 package com.adyen.checkout.redirect.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
+import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -40,7 +40,7 @@ internal class NativeRedirectResponseTest {
     fun `when deserializing and a field is missing, then an error is thrown`() {
         val response = JSONObject()
 
-        assertThrows<ModelSerializationException> {
+        assertThrows<JSONException> {
             NativeRedirectResponse.SERIALIZER.deserialize(response)
         }
     }

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
+import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -105,7 +105,7 @@ internal class AnalyticsTrackInfoTest {
             .put("validationErrorCode", "418")
             .put("validationErrorMessage", "I'm a teapot")
 
-        assertThrows<ModelSerializationException> {
+        assertThrows<JSONException> {
             AnalyticsTrackInfo.SERIALIZER.deserialize(response)
         }
     }
