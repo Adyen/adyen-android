@@ -87,6 +87,10 @@ internal class DropInViewModel(
     }
 
     private fun initializeBackStack() {
+        // If there are multiple items in the back stack, it means that the navigator was initialized
+        // with a saved state handle, and we should not override it.
+        if (navigator.backStack.size > 1) return
+
         val storedPaymentMethods = paymentMethodRepository.storedPaymentMethods.value
         val startingPoint = if (storedPaymentMethods.isEmpty()) {
             PaymentMethodListNavKey
