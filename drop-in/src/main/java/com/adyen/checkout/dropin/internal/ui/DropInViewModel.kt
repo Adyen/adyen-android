@@ -9,8 +9,10 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
@@ -30,13 +32,14 @@ import kotlin.reflect.KClass
 
 internal class DropInViewModel(
     private val input: DropInResultContract.Input,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     lateinit var dropInParams: DropInParams
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
 
-    val navigator: DropInNavigator = DropInNavigator()
+    val navigator: DropInNavigator = DropInNavigator(savedStateHandle)
 
     val checkoutContext = input.checkoutContext
 
@@ -120,6 +123,7 @@ internal class DropInViewModel(
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return DropInViewModel(
                 input = inputProvider(),
+                savedStateHandle = extras.createSavedStateHandle(),
             ) as T
         }
     }

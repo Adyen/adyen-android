@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
@@ -201,7 +202,7 @@ private fun StoredPaymentMethodsContentPreview() {
         )
 
         StoredPaymentMethodsContent(
-            navigator = DropInNavigator(),
+            navigator = DropInNavigator(SavedStateHandle()),
             viewState = viewState,
             onRemoveItem = {},
         )

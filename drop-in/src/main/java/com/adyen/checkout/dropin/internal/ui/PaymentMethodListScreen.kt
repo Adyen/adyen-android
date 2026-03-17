@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
@@ -254,7 +255,7 @@ private fun PaymentMethodListContentPreview() {
         val paymentOptionsTitle =
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES
         PaymentMethodListContent(
-            navigator = DropInNavigator(),
+            navigator = DropInNavigator(SavedStateHandle()),
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
                 storedPaymentMethodSection = PaymentMethodListViewState.PaymentMethodListSection(
