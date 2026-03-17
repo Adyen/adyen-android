@@ -466,11 +466,6 @@ public final class com/adyen/checkout/core/common/PaymentResult : android/os/Par
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/core/common/exception/ModelSerializationException : java/lang/RuntimeException {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/Class;Lorg/json/JSONException;)V
-}
-
 public abstract interface class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult {
 }
 
