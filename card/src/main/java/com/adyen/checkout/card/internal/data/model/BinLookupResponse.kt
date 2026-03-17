@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.card.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -31,27 +29,19 @@ internal data class BinLookupResponse(
         @JvmField
         val SERIALIZER: Serializer<BinLookupResponse> = object : Serializer<BinLookupResponse> {
             override fun serialize(modelObject: BinLookupResponse): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(BRANDS, ModelUtils.serializeOptList(modelObject.brands, Brand.SERIALIZER))
-                    jsonObject.putOpt(ISSUING_COUNTRY_CODE, modelObject.issuingCountryCode)
-                    jsonObject.putOpt(REQUEST_ID, modelObject.requestId)
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(BinLookupResponse::class.java, e)
+                return JSONObject().apply {
+                    putOpt(BRANDS, ModelUtils.serializeOptList(modelObject.brands, Brand.SERIALIZER))
+                    putOpt(ISSUING_COUNTRY_CODE, modelObject.issuingCountryCode)
+                    putOpt(REQUEST_ID, modelObject.requestId)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): BinLookupResponse {
-                return try {
-                    BinLookupResponse(
-                        brands = ModelUtils.deserializeOptList(jsonObject.optJSONArray(BRANDS), Brand.SERIALIZER),
-                        issuingCountryCode = jsonObject.getStringOrNull(ISSUING_COUNTRY_CODE),
-                        requestId = jsonObject.getStringOrNull(REQUEST_ID)
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(BinLookupResponse::class.java, e)
-                }
+                return BinLookupResponse(
+                    brands = ModelUtils.deserializeOptList(jsonObject.optJSONArray(BRANDS), Brand.SERIALIZER),
+                    issuingCountryCode = jsonObject.getStringOrNull(ISSUING_COUNTRY_CODE),
+                    requestId = jsonObject.getStringOrNull(REQUEST_ID)
+                )
             }
         }
     }

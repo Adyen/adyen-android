@@ -9,13 +9,11 @@ package com.adyen.checkout.core.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.action.data.Action
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.data.OrderResponse
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -40,17 +38,13 @@ data class SessionDetailsResponse(
         @JvmField
         val SERIALIZER: Serializer<SessionDetailsResponse> = object : Serializer<SessionDetailsResponse> {
             override fun serialize(modelObject: SessionDetailsResponse): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(SESSION_DATA, modelObject.sessionData)
-                        putOpt(STATUS, modelObject.status)
-                        putOpt(RESULT_CODE, modelObject.resultCode)
-                        putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
-                        putOpt(SESSION_RESULT, modelObject.sessionResult)
-                        putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderResponse.SERIALIZER))
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SessionDetailsResponse::class.java, e)
+                return JSONObject().apply {
+                    putOpt(SESSION_DATA, modelObject.sessionData)
+                    putOpt(STATUS, modelObject.status)
+                    putOpt(RESULT_CODE, modelObject.resultCode)
+                    putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
+                    putOpt(SESSION_RESULT, modelObject.sessionResult)
+                    putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderResponse.SERIALIZER))
                 }
             }
 

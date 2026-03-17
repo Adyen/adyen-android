@@ -1,11 +1,9 @@
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils.parseStringList
 import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeStringList
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -32,44 +30,36 @@ data class StoredBCMCPaymentMethod(
         val SERIALIZER: Serializer<StoredBCMCPaymentMethod> =
             object : Serializer<StoredBCMCPaymentMethod> {
                 override fun serialize(modelObject: StoredBCMCPaymentMethod): JSONObject {
-                    return try {
-                        JSONObject().apply {
-                            put(TYPE, modelObject.type)
-                            put(NAME, modelObject.name)
-                            put(ID, modelObject.id)
-                            put(
-                                SUPPORTED_SHOPPER_INTERACTIONS,
-                                serializeStringList(modelObject.supportedShopperInteractions),
-                            )
-                            put(BRAND, modelObject.brand)
-                            put(LAST_FOUR, modelObject.lastFour)
-                            put(EXPIRY_MONTH, modelObject.expiryMonth)
-                            put(EXPIRY_YEAR, modelObject.expiryYear)
-                            putOpt(HOLDER_NAME, modelObject.holderName)
-                        }
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(StoredBCMCPaymentMethod::class.java, e)
+                    return JSONObject().apply {
+                        put(TYPE, modelObject.type)
+                        put(NAME, modelObject.name)
+                        put(ID, modelObject.id)
+                        put(
+                            SUPPORTED_SHOPPER_INTERACTIONS,
+                            serializeStringList(modelObject.supportedShopperInteractions),
+                        )
+                        put(BRAND, modelObject.brand)
+                        put(LAST_FOUR, modelObject.lastFour)
+                        put(EXPIRY_MONTH, modelObject.expiryMonth)
+                        put(EXPIRY_YEAR, modelObject.expiryYear)
+                        putOpt(HOLDER_NAME, modelObject.holderName)
                     }
                 }
 
                 override fun deserialize(jsonObject: JSONObject): StoredBCMCPaymentMethod {
-                    return try {
-                        StoredBCMCPaymentMethod(
-                            type = jsonObject.getString(TYPE),
-                            name = jsonObject.getString(NAME),
-                            id = jsonObject.getString(ID),
-                            supportedShopperInteractions = parseStringList(
-                                jsonObject.getJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
-                            ),
-                            brand = jsonObject.getString(BRAND),
-                            lastFour = jsonObject.getString(LAST_FOUR),
-                            expiryMonth = jsonObject.getString(EXPIRY_MONTH),
-                            expiryYear = jsonObject.getString(EXPIRY_YEAR),
-                            holderName = jsonObject.getStringOrNull(HOLDER_NAME),
-                        )
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(StoredBCMCPaymentMethod::class.java, e)
-                    }
+                    return StoredBCMCPaymentMethod(
+                        type = jsonObject.getString(TYPE),
+                        name = jsonObject.getString(NAME),
+                        id = jsonObject.getString(ID),
+                        supportedShopperInteractions = parseStringList(
+                            jsonObject.getJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
+                        ),
+                        brand = jsonObject.getString(BRAND),
+                        lastFour = jsonObject.getString(LAST_FOUR),
+                        expiryMonth = jsonObject.getString(EXPIRY_MONTH),
+                        expiryYear = jsonObject.getString(EXPIRY_YEAR),
+                        holderName = jsonObject.getStringOrNull(HOLDER_NAME),
+                    )
                 }
             }
     }

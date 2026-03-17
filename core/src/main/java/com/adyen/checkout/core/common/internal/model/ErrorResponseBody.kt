@@ -9,9 +9,7 @@
 package com.adyen.checkout.core.common.internal.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -35,31 +33,23 @@ data class ErrorResponseBody(
         @JvmField
         val SERIALIZER: Serializer<ErrorResponseBody> = object : Serializer<ErrorResponseBody> {
             override fun serialize(modelObject: ErrorResponseBody): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(STATUS, modelObject.status)
-                    jsonObject.putOpt(ERROR_CODE, modelObject.errorCode)
-                    jsonObject.putOpt(MESSAGE, modelObject.message)
-                    jsonObject.putOpt(ERROR_TYPE, modelObject.errorType)
-                    jsonObject.putOpt(PSP_REFERENCE, modelObject.pspReference)
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(ErrorResponseBody::class.java, e)
+                return JSONObject().apply {
+                    putOpt(STATUS, modelObject.status)
+                    putOpt(ERROR_CODE, modelObject.errorCode)
+                    putOpt(MESSAGE, modelObject.message)
+                    putOpt(ERROR_TYPE, modelObject.errorType)
+                    putOpt(PSP_REFERENCE, modelObject.pspReference)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): ErrorResponseBody {
-                return try {
-                    ErrorResponseBody(
-                        status = jsonObject.getIntOrNull(STATUS),
-                        errorCode = jsonObject.getStringOrNull(ERROR_CODE),
-                        message = jsonObject.getStringOrNull(MESSAGE),
-                        errorType = jsonObject.getStringOrNull(ERROR_TYPE),
-                        pspReference = jsonObject.getStringOrNull(PSP_REFERENCE),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(ErrorResponseBody::class.java, e)
-                }
+                return ErrorResponseBody(
+                    status = jsonObject.getIntOrNull(STATUS),
+                    errorCode = jsonObject.getStringOrNull(ERROR_CODE),
+                    message = jsonObject.getStringOrNull(MESSAGE),
+                    errorType = jsonObject.getStringOrNull(ERROR_TYPE),
+                    pspReference = jsonObject.getStringOrNull(PSP_REFERENCE),
+                )
             }
         }
     }

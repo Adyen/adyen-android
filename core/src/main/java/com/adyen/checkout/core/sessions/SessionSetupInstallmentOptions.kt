@@ -8,14 +8,12 @@
 
 package com.adyen.checkout.core.sessions
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getIntOrNull
 import com.adyen.checkout.core.common.internal.model.optIntList
 import com.adyen.checkout.core.common.internal.model.optStringList
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -34,27 +32,19 @@ data class SessionSetupInstallmentOptions(
         val SERIALIZER: Serializer<SessionSetupInstallmentOptions> =
             object : Serializer<SessionSetupInstallmentOptions> {
                 override fun serialize(modelObject: SessionSetupInstallmentOptions): JSONObject {
-                    return try {
-                        JSONObject().apply {
-                            putOpt(PLANS, JsonUtils.serializeOptStringList(modelObject.plans))
-                            putOpt(PRESELECTED_VALUE, modelObject.preselectedValue)
-                            putOpt(VALUES, JsonUtils.serializeOptIntegerList(modelObject.values))
-                        }
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(SessionSetupInstallmentOptions::class.java, e)
+                    return JSONObject().apply {
+                        putOpt(PLANS, JsonUtils.serializeOptStringList(modelObject.plans))
+                        putOpt(PRESELECTED_VALUE, modelObject.preselectedValue)
+                        putOpt(VALUES, JsonUtils.serializeOptIntegerList(modelObject.values))
                     }
                 }
 
                 override fun deserialize(jsonObject: JSONObject): SessionSetupInstallmentOptions {
-                    return try {
-                        SessionSetupInstallmentOptions(
-                            plans = jsonObject.optStringList(PLANS),
-                            preselectedValue = jsonObject.getIntOrNull(PRESELECTED_VALUE),
-                            values = jsonObject.optIntList(VALUES),
-                        )
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(SessionSetupInstallmentOptions::class.java, e)
-                    }
+                    return SessionSetupInstallmentOptions(
+                        plans = jsonObject.optStringList(PLANS),
+                        preselectedValue = jsonObject.getIntOrNull(PRESELECTED_VALUE),
+                        values = jsonObject.optIntList(VALUES),
+                    )
                 }
             }
     }

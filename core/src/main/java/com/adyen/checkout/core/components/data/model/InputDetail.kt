@@ -7,12 +7,10 @@
  */
 package com.adyen.checkout.core.components.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOptList
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 // TODO - Remove this model when PaymentMethod is removed.
@@ -28,12 +26,8 @@ data class InputDetail(
         @JvmField
         val SERIALIZER: Serializer<InputDetail> = object : Serializer<InputDetail> {
             override fun serialize(modelObject: InputDetail): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(ITEMS, serializeOptList(modelObject.items, Item.SERIALIZER))
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(InputDetail::class.java, e)
+                return JSONObject().apply {
+                    putOpt(ITEMS, serializeOptList(modelObject.items, Item.SERIALIZER))
                 }
             }
 

@@ -8,10 +8,8 @@
 
 package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -28,14 +26,10 @@ data class MBWayDetails(
         @JvmField
         val SERIALIZER: Serializer<MBWayDetails> = object : Serializer<MBWayDetails> {
             override fun serialize(modelObject: MBWayDetails): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(SDK_DATA, modelObject.sdkData)
-                        putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(MBWayDetails::class.java, e)
+                return JSONObject().apply {
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(SDK_DATA, modelObject.sdkData)
+                    putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
                 }
             }
 

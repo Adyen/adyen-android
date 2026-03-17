@@ -10,13 +10,11 @@ package com.adyen.checkout.core.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.action.data.Action
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.data.OrderResponse
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -42,16 +40,12 @@ data class SessionPaymentsResponse(
         val SERIALIZER: Serializer<SessionPaymentsResponse> = object : Serializer<SessionPaymentsResponse> {
             override fun serialize(modelObject: SessionPaymentsResponse): JSONObject {
                 return JSONObject().apply {
-                    try {
-                        putOpt(SESSION_DATA, modelObject.sessionData)
-                        putOpt(STATUS, modelObject.status)
-                        putOpt(RESULT_CODE, modelObject.resultCode)
-                        putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
-                        putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderResponse.SERIALIZER))
-                        putOpt(SESSION_RESULT, modelObject.sessionResult)
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(SessionPaymentsResponse::class.java, e)
-                    }
+                    putOpt(SESSION_DATA, modelObject.sessionData)
+                    putOpt(STATUS, modelObject.status)
+                    putOpt(RESULT_CODE, modelObject.resultCode)
+                    putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
+                    putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderResponse.SERIALIZER))
+                    putOpt(SESSION_RESULT, modelObject.sessionResult)
                 }
             }
 

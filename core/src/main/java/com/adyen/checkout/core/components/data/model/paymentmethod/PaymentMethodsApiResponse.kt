@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOptList
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -33,40 +31,32 @@ data class PaymentMethodsApiResponse(
         @JvmField
         val SERIALIZER: Serializer<PaymentMethodsApiResponse> = object : Serializer<PaymentMethodsApiResponse> {
             override fun serialize(modelObject: PaymentMethodsApiResponse): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(
-                            STORED_PAYMENT_METHODS,
-                            serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER),
-                        )
-                        putOpt(
-                            PAYMENT_METHODS,
-                            serializeOptList(
-                                modelObject.paymentMethods,
-                                PaymentMethod.SERIALIZER,
-                            ),
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(PaymentMethodsApiResponse::class.java, e)
+                return JSONObject().apply {
+                    putOpt(
+                        STORED_PAYMENT_METHODS,
+                        serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER),
+                    )
+                    putOpt(
+                        PAYMENT_METHODS,
+                        serializeOptList(
+                            modelObject.paymentMethods,
+                            PaymentMethod.SERIALIZER,
+                        ),
+                    )
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethodsApiResponse {
-                return try {
-                    PaymentMethodsApiResponse(
-                        storedPaymentMethods = deserializeOptList(
-                            jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
-                            StoredPaymentMethod.SERIALIZER,
-                        ),
-                        paymentMethods = deserializeOptList(
-                            jsonObject.optJSONArray(PAYMENT_METHODS),
-                            PaymentMethod.SERIALIZER,
-                        ),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(PaymentMethodsApiResponse::class.java, e)
-                }
+                return PaymentMethodsApiResponse(
+                    storedPaymentMethods = deserializeOptList(
+                        jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
+                        StoredPaymentMethod.SERIALIZER,
+                    ),
+                    paymentMethods = deserializeOptList(
+                        jsonObject.optJSONArray(PAYMENT_METHODS),
+                        PaymentMethod.SERIALIZER,
+                    ),
+                )
             }
         }
     }

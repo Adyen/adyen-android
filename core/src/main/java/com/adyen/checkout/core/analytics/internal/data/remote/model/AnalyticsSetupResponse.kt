@@ -8,11 +8,9 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -27,23 +25,15 @@ internal data class AnalyticsSetupResponse(
         val SERIALIZER: Serializer<AnalyticsSetupResponse> = object :
             Serializer<AnalyticsSetupResponse> {
             override fun serialize(modelObject: AnalyticsSetupResponse): JSONObject {
-                try {
-                    return JSONObject().apply {
-                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsSetupResponse::class.java, e)
+                return JSONObject().apply {
+                    putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): AnalyticsSetupResponse {
-                return try {
-                    AnalyticsSetupResponse(
-                        checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsSetupResponse::class.java, e)
-                }
+                return AnalyticsSetupResponse(
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                )
             }
         }
     }

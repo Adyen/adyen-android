@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getLongOrNull
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -41,38 +39,30 @@ internal data class AnalyticsTrackLog(
         @JvmField
         val SERIALIZER: Serializer<AnalyticsTrackLog> = object : Serializer<AnalyticsTrackLog> {
             override fun serialize(modelObject: AnalyticsTrackLog): JSONObject {
-                try {
-                    return JSONObject().apply {
-                        put(ID, modelObject.id)
-                        putOpt(TIMESTAMP, modelObject.timestamp)
-                        putOpt(COMPONENT, modelObject.component)
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(SUBTYPE, modelObject.subType)
-                        putOpt(RESULT, modelObject.result)
-                        putOpt(TARGET, modelObject.target)
-                        putOpt(MESSAGE, modelObject.message)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackLog::class.java, e)
+                return JSONObject().apply {
+                    put(ID, modelObject.id)
+                    putOpt(TIMESTAMP, modelObject.timestamp)
+                    putOpt(COMPONENT, modelObject.component)
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(SUBTYPE, modelObject.subType)
+                    putOpt(RESULT, modelObject.result)
+                    putOpt(TARGET, modelObject.target)
+                    putOpt(MESSAGE, modelObject.message)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): AnalyticsTrackLog {
-                return try {
-                    with(jsonObject) {
-                        AnalyticsTrackLog(
-                            id = getString(ID),
-                            timestamp = getLongOrNull(TIMESTAMP),
-                            component = getStringOrNull(COMPONENT),
-                            type = getStringOrNull(TYPE),
-                            subType = getStringOrNull(SUBTYPE),
-                            result = getStringOrNull(RESULT),
-                            target = getStringOrNull(TARGET),
-                            message = getStringOrNull(MESSAGE),
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackLog::class.java, e)
+                return with(jsonObject) {
+                    AnalyticsTrackLog(
+                        id = getString(ID),
+                        timestamp = getLongOrNull(TIMESTAMP),
+                        component = getStringOrNull(COMPONENT),
+                        type = getStringOrNull(TYPE),
+                        subType = getStringOrNull(SUBTYPE),
+                        result = getStringOrNull(RESULT),
+                        target = getStringOrNull(TARGET),
+                        message = getStringOrNull(MESSAGE),
+                    )
                 }
             }
         }

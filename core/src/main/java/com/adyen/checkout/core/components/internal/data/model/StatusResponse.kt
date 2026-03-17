@@ -8,11 +8,9 @@
 package com.adyen.checkout.core.components.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -31,14 +29,10 @@ data class StatusResponse(
         @JvmField
         val SERIALIZER: Serializer<StatusResponse> = object : Serializer<StatusResponse> {
             override fun serialize(modelObject: StatusResponse): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(PAYLOAD, modelObject.payload)
-                        putOpt(RESULT_CODE, modelObject.resultCode)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(StatusResponse::class.java, e)
+                return JSONObject().apply {
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(PAYLOAD, modelObject.payload)
+                    putOpt(RESULT_CODE, modelObject.resultCode)
                 }
             }
 

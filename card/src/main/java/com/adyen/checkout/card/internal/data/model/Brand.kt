@@ -8,13 +8,11 @@
 
 package com.adyen.checkout.card.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
 import com.adyen.checkout.core.common.internal.model.getIntOrNull
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -43,38 +41,29 @@ internal data class Brand(
         @JvmField
         val SERIALIZER: Serializer<Brand> = object : Serializer<Brand> {
             override fun serialize(modelObject: Brand): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(BRAND, modelObject.brand)
-                    jsonObject.putOpt(ENABLE_LUHN_CHECK, modelObject.enableLuhnCheck)
-                    jsonObject.putOpt(SUPPORTED, modelObject.supported)
-                    jsonObject.putOpt(CVC_POLICY, modelObject.cvcPolicy)
-                    jsonObject.putOpt(EXPIRY_DATE_POLICY, modelObject.expiryDatePolicy)
-                    jsonObject.putOpt(EXPIRY_DATE_POLICY, modelObject.expiryDatePolicy)
-                    jsonObject.putOpt(PAN_LENGTH, modelObject.panLength)
-                    jsonObject.putOpt(PAYMENT_METHOD_VARIANT, modelObject.paymentMethodVariant)
-                    jsonObject.putOpt(LOCALE_BRAND, modelObject.localizedBrand)
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(Brand::class.java, e)
+                return JSONObject().apply {
+                    putOpt(BRAND, modelObject.brand)
+                    putOpt(ENABLE_LUHN_CHECK, modelObject.enableLuhnCheck)
+                    putOpt(SUPPORTED, modelObject.supported)
+                    putOpt(CVC_POLICY, modelObject.cvcPolicy)
+                    putOpt(EXPIRY_DATE_POLICY, modelObject.expiryDatePolicy)
+                    putOpt(PAN_LENGTH, modelObject.panLength)
+                    putOpt(PAYMENT_METHOD_VARIANT, modelObject.paymentMethodVariant)
+                    putOpt(LOCALE_BRAND, modelObject.localizedBrand)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): Brand {
-                return try {
-                    Brand(
-                        brand = jsonObject.getStringOrNull(BRAND),
-                        enableLuhnCheck = jsonObject.getBooleanOrNull(ENABLE_LUHN_CHECK),
-                        supported = jsonObject.getBooleanOrNull(SUPPORTED),
-                        cvcPolicy = jsonObject.getStringOrNull(CVC_POLICY),
-                        expiryDatePolicy = jsonObject.getStringOrNull(EXPIRY_DATE_POLICY),
-                        panLength = jsonObject.getIntOrNull(PAN_LENGTH),
-                        paymentMethodVariant = jsonObject.getStringOrNull(PAYMENT_METHOD_VARIANT),
-                        localizedBrand = jsonObject.getStringOrNull(LOCALE_BRAND)
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(Brand::class.java, e)
-                }
+                return Brand(
+                    brand = jsonObject.getStringOrNull(BRAND),
+                    enableLuhnCheck = jsonObject.getBooleanOrNull(ENABLE_LUHN_CHECK),
+                    supported = jsonObject.getBooleanOrNull(SUPPORTED),
+                    cvcPolicy = jsonObject.getStringOrNull(CVC_POLICY),
+                    expiryDatePolicy = jsonObject.getStringOrNull(EXPIRY_DATE_POLICY),
+                    panLength = jsonObject.getIntOrNull(PAN_LENGTH),
+                    paymentMethodVariant = jsonObject.getStringOrNull(PAYMENT_METHOD_VARIANT),
+                    localizedBrand = jsonObject.getStringOrNull(LOCALE_BRAND)
+                )
             }
         }
     }

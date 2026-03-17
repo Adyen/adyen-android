@@ -7,10 +7,8 @@
  */
 package com.adyen.checkout.core.action.data
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -32,17 +30,13 @@ data class RedirectAction(
         @JvmField
         val SERIALIZER: Serializer<RedirectAction> = object : Serializer<RedirectAction> {
             override fun serialize(modelObject: RedirectAction): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(PAYMENT_DATA, modelObject.paymentData)
-                        putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
-                        putOpt(METHOD, modelObject.method)
-                        putOpt(URL, modelObject.url)
-                        putOpt(NATIVE_REDIRECT_DATA, modelObject.nativeRedirectData)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(RedirectAction::class.java, e)
+                return JSONObject().apply {
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(PAYMENT_DATA, modelObject.paymentData)
+                    putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                    putOpt(METHOD, modelObject.method)
+                    putOpt(URL, modelObject.url)
+                    putOpt(NATIVE_REDIRECT_DATA, modelObject.nativeRedirectData)
                 }
             }
 

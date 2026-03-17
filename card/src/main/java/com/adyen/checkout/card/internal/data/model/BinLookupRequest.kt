@@ -8,13 +8,11 @@
 
 package com.adyen.checkout.card.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.common.internal.model.optStringList
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -34,29 +32,21 @@ internal data class BinLookupRequest(
         @JvmField
         val SERIALIZER: Serializer<BinLookupRequest> = object : Serializer<BinLookupRequest> {
             override fun serialize(modelObject: BinLookupRequest): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(ENCRYPTED_BIN, modelObject.encryptedBin)
-                    jsonObject.putOpt(REQUEST_ID, modelObject.requestId)
-                    jsonObject.putOpt(SUPPORTED_BRANDS, JsonUtils.serializeOptStringList(modelObject.supportedBrands))
-                    jsonObject.putOpt(TYPE, modelObject.type)
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(BinLookupRequest::class.java, e)
+                return JSONObject().apply {
+                    putOpt(ENCRYPTED_BIN, modelObject.encryptedBin)
+                    putOpt(REQUEST_ID, modelObject.requestId)
+                    putOpt(SUPPORTED_BRANDS, JsonUtils.serializeOptStringList(modelObject.supportedBrands))
+                    putOpt(TYPE, modelObject.type)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): BinLookupRequest {
-                return try {
-                    BinLookupRequest(
-                        encryptedBin = jsonObject.getStringOrNull(ENCRYPTED_BIN),
-                        requestId = jsonObject.getStringOrNull(REQUEST_ID),
-                        supportedBrands = jsonObject.optStringList(SUPPORTED_BRANDS),
-                        type = jsonObject.getStringOrNull(TYPE),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(BinLookupRequest::class.java, e)
-                }
+                return BinLookupRequest(
+                    encryptedBin = jsonObject.getStringOrNull(ENCRYPTED_BIN),
+                    requestId = jsonObject.getStringOrNull(REQUEST_ID),
+                    supportedBrands = jsonObject.optStringList(SUPPORTED_BRANDS),
+                    type = jsonObject.getStringOrNull(TYPE),
+                )
             }
         }
     }

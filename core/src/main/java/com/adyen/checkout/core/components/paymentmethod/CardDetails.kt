@@ -7,10 +7,8 @@
  */
 package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -45,23 +43,19 @@ data class CardDetails(
         @JvmField
         val SERIALIZER: Serializer<CardDetails> = object : Serializer<CardDetails> {
             override fun serialize(modelObject: CardDetails): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(SDK_DATA, modelObject.sdkData)
-                        putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
-                        putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
-                        putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.encryptedExpiryYear)
-                        putOpt(ENCRYPTED_SECURITY_CODE, modelObject.encryptedSecurityCode)
-                        putOpt(HOLDER_NAME, modelObject.holderName)
-                        putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
-                        putOpt(ENCRYPTED_PASSWORD, modelObject.encryptedPassword)
-                        putOpt(TAX_NUMBER, modelObject.taxNumber)
-                        putOpt(BRAND, modelObject.brand)
-                        putOpt(FUNDING_SOURCE, modelObject.fundingSource)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(CardDetails::class.java, e)
+                return JSONObject().apply {
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(SDK_DATA, modelObject.sdkData)
+                    putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
+                    putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
+                    putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.encryptedExpiryYear)
+                    putOpt(ENCRYPTED_SECURITY_CODE, modelObject.encryptedSecurityCode)
+                    putOpt(HOLDER_NAME, modelObject.holderName)
+                    putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
+                    putOpt(ENCRYPTED_PASSWORD, modelObject.encryptedPassword)
+                    putOpt(TAX_NUMBER, modelObject.taxNumber)
+                    putOpt(BRAND, modelObject.brand)
+                    putOpt(FUNDING_SOURCE, modelObject.fundingSource)
                 }
             }
 

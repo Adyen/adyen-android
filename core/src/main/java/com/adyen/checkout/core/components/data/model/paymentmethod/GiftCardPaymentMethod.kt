@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -29,27 +27,19 @@ data class GiftCardPaymentMethod(
         @JvmField
         val SERIALIZER: Serializer<GiftCardPaymentMethod> = object : Serializer<GiftCardPaymentMethod> {
             override fun serialize(modelObject: GiftCardPaymentMethod): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(TYPE, modelObject.type)
-                        put(NAME, modelObject.name)
-                        put(BRAND, modelObject.brand)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(GiftCardPaymentMethod::class.java, e)
+                return JSONObject().apply {
+                    put(TYPE, modelObject.type)
+                    put(NAME, modelObject.name)
+                    put(BRAND, modelObject.brand)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): GiftCardPaymentMethod {
-                return try {
-                    GiftCardPaymentMethod(
-                        type = jsonObject.getString(TYPE),
-                        name = jsonObject.getString(NAME),
-                        brand = jsonObject.getString(BRAND),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(GiftCardPaymentMethod::class.java, e)
-                }
+                return GiftCardPaymentMethod(
+                    type = jsonObject.getString(TYPE),
+                    name = jsonObject.getString(NAME),
+                    brand = jsonObject.getString(BRAND),
+                )
             }
         }
     }

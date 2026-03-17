@@ -9,12 +9,10 @@
 package com.adyen.checkout.threeds2.internal.data.model
 
 import com.adyen.checkout.core.action.data.Action
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -32,27 +30,19 @@ internal data class SubmitFingerprintResponse(
         @JvmField
         val SERIALIZER: Serializer<SubmitFingerprintResponse> = object : Serializer<SubmitFingerprintResponse> {
             override fun serialize(modelObject: SubmitFingerprintResponse): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(ACTION, modelObject.action)
-                    jsonObject.putOpt(TYPE, modelObject.type)
-                    jsonObject.putOpt(DETAILS, modelObject.details)
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SubmitFingerprintResponse::class.java, e)
+                return JSONObject().apply {
+                    putOpt(ACTION, modelObject.action)
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(DETAILS, modelObject.details)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): SubmitFingerprintResponse {
-                return try {
-                    SubmitFingerprintResponse(
-                        action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
-                        type = jsonObject.getStringOrNull(TYPE),
-                        details = jsonObject.getStringOrNull(DETAILS)
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SubmitFingerprintResponse::class.java, e)
-                }
+                return SubmitFingerprintResponse(
+                    action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
+                    type = jsonObject.getStringOrNull(TYPE),
+                    details = jsonObject.getStringOrNull(DETAILS)
+                )
             }
         }
     }

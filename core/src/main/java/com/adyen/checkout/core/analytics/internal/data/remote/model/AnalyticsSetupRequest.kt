@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
@@ -18,7 +17,6 @@ import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.common.internal.model.optStringList
 import com.adyen.checkout.core.components.data.model.Amount
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -85,65 +83,57 @@ internal data class AnalyticsSetupRequest(
         val SERIALIZER: Serializer<AnalyticsSetupRequest> = object :
             Serializer<AnalyticsSetupRequest> {
             override fun serialize(modelObject: AnalyticsSetupRequest): JSONObject {
-                try {
-                    return JSONObject().apply {
-                        putOpt(VERSION, modelObject.version)
-                        putOpt(CHANNEL, modelObject.channel)
-                        putOpt(PLATFORM, modelObject.platform)
-                        putOpt(LOCALE, modelObject.locale)
-                        putOpt(COMPONENT, modelObject.component)
-                        putOpt(FLAVOR, modelObject.flavor)
-                        putOpt(LEVEL, modelObject.level)
-                        putOpt(DEVICE_BRAND, modelObject.deviceBrand)
-                        putOpt(DEVICE_MODEL, modelObject.deviceModel)
-                        putOpt(REFERRER, modelObject.referrer)
-                        putOpt(SYSTEM_VERSION, modelObject.systemVersion)
-                        putOpt(CONTAINER_WIDTH, modelObject.containerWidth)
-                        putOpt(SCREEN_WIDTH, modelObject.screenWidth)
-                        putOpt(
-                            PAYMENT_METHODS,
-                            JsonUtils.serializeOptStringList(modelObject.paymentMethods),
-                        )
-                        putOpt(
-                            AMOUNT,
-                            ModelUtils.serializeOpt(
-                                modelObject.amount,
-                                Amount.SERIALIZER,
-                            ),
-                        )
-                        putOpt(SESSION_ID, modelObject.sessionId)
-                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsSetupRequest::class.java, e)
+                return JSONObject().apply {
+                    putOpt(VERSION, modelObject.version)
+                    putOpt(CHANNEL, modelObject.channel)
+                    putOpt(PLATFORM, modelObject.platform)
+                    putOpt(LOCALE, modelObject.locale)
+                    putOpt(COMPONENT, modelObject.component)
+                    putOpt(FLAVOR, modelObject.flavor)
+                    putOpt(LEVEL, modelObject.level)
+                    putOpt(DEVICE_BRAND, modelObject.deviceBrand)
+                    putOpt(DEVICE_MODEL, modelObject.deviceModel)
+                    putOpt(REFERRER, modelObject.referrer)
+                    putOpt(SYSTEM_VERSION, modelObject.systemVersion)
+                    putOpt(CONTAINER_WIDTH, modelObject.containerWidth)
+                    putOpt(SCREEN_WIDTH, modelObject.screenWidth)
+                    putOpt(
+                        PAYMENT_METHODS,
+                        JsonUtils.serializeOptStringList(modelObject.paymentMethods),
+                    )
+                    putOpt(
+                        AMOUNT,
+                        ModelUtils.serializeOpt(
+                            modelObject.amount,
+                            Amount.SERIALIZER,
+                        ),
+                    )
+                    putOpt(SESSION_ID, modelObject.sessionId)
+                    putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): AnalyticsSetupRequest {
-                return try {
-                    with(jsonObject) {
-                        AnalyticsSetupRequest(
-                            version = getStringOrNull(VERSION),
-                            channel = getStringOrNull(CHANNEL),
-                            platform = getStringOrNull(PLATFORM),
-                            locale = getStringOrNull(LOCALE),
-                            component = getStringOrNull(COMPONENT),
-                            flavor = getStringOrNull(FLAVOR),
-                            level = getStringOrNull(LEVEL),
-                            deviceBrand = getStringOrNull(DEVICE_BRAND),
-                            deviceModel = getStringOrNull(DEVICE_MODEL),
-                            referrer = getStringOrNull(REFERRER),
-                            systemVersion = getStringOrNull(SYSTEM_VERSION),
-                            containerWidth = getLongOrNull(CONTAINER_WIDTH),
-                            screenWidth = getIntOrNull(SCREEN_WIDTH),
-                            paymentMethods = optStringList(PAYMENT_METHODS),
-                            amount = ModelUtils.deserializeOpt(optJSONObject(AMOUNT), Amount.SERIALIZER),
-                            sessionId = getStringOrNull(SESSION_ID),
-                            checkoutAttemptId = getStringOrNull(CHECKOUT_ATTEMPT_ID),
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsSetupRequest::class.java, e)
+                return with(jsonObject) {
+                    AnalyticsSetupRequest(
+                        version = getStringOrNull(VERSION),
+                        channel = getStringOrNull(CHANNEL),
+                        platform = getStringOrNull(PLATFORM),
+                        locale = getStringOrNull(LOCALE),
+                        component = getStringOrNull(COMPONENT),
+                        flavor = getStringOrNull(FLAVOR),
+                        level = getStringOrNull(LEVEL),
+                        deviceBrand = getStringOrNull(DEVICE_BRAND),
+                        deviceModel = getStringOrNull(DEVICE_MODEL),
+                        referrer = getStringOrNull(REFERRER),
+                        systemVersion = getStringOrNull(SYSTEM_VERSION),
+                        containerWidth = getLongOrNull(CONTAINER_WIDTH),
+                        screenWidth = getIntOrNull(SCREEN_WIDTH),
+                        paymentMethods = optStringList(PAYMENT_METHODS),
+                        amount = ModelUtils.deserializeOpt(optJSONObject(AMOUNT), Amount.SERIALIZER),
+                        sessionId = getStringOrNull(SESSION_ID),
+                        checkoutAttemptId = getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    )
                 }
             }
         }

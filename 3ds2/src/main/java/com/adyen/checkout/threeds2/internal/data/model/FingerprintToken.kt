@@ -7,11 +7,9 @@
  */
 package com.adyen.checkout.threeds2.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -33,32 +31,24 @@ internal data class FingerprintToken(
         @JvmField
         val SERIALIZER: Serializer<FingerprintToken> = object : Serializer<FingerprintToken> {
             override fun serialize(modelObject: FingerprintToken): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(DIRECTORY_SERVER_ID, modelObject.directoryServerId)
-                        putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.directoryServerPublicKey)
-                        putOpt(DIRECTORY_SERVER_ROOT_CERTIFICATES, modelObject.directoryServerRootCertificates)
-                        putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
-                        putOpt(THREEDS_MESSAGE_VERSION, modelObject.threeDSMessageVersion)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(FingerprintToken::class.java, e)
+                return JSONObject().apply {
+                    putOpt(DIRECTORY_SERVER_ID, modelObject.directoryServerId)
+                    putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.directoryServerPublicKey)
+                    putOpt(DIRECTORY_SERVER_ROOT_CERTIFICATES, modelObject.directoryServerRootCertificates)
+                    putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                    putOpt(THREEDS_MESSAGE_VERSION, modelObject.threeDSMessageVersion)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): FingerprintToken {
-                return try {
-                    with(jsonObject) {
-                        FingerprintToken(
-                            directoryServerId = getStringOrNull(DIRECTORY_SERVER_ID),
-                            directoryServerPublicKey = getStringOrNull(DIRECTORY_SERVER_PUBLIC_KEY),
-                            directoryServerRootCertificates = getStringOrNull(DIRECTORY_SERVER_ROOT_CERTIFICATES),
-                            threeDSServerTransID = getStringOrNull(THREEDS_SERVER_TRANS_ID),
-                            threeDSMessageVersion = getStringOrNull(THREEDS_MESSAGE_VERSION)
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(FingerprintToken::class.java, e)
+                return with(jsonObject) {
+                    FingerprintToken(
+                        directoryServerId = getStringOrNull(DIRECTORY_SERVER_ID),
+                        directoryServerPublicKey = getStringOrNull(DIRECTORY_SERVER_PUBLIC_KEY),
+                        directoryServerRootCertificates = getStringOrNull(DIRECTORY_SERVER_ROOT_CERTIFICATES),
+                        threeDSServerTransID = getStringOrNull(THREEDS_SERVER_TRANS_ID),
+                        threeDSMessageVersion = getStringOrNull(THREEDS_MESSAGE_VERSION)
+                    )
                 }
             }
         }

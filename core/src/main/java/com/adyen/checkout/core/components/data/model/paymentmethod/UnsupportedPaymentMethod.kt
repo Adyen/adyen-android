@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -30,25 +28,17 @@ data class UnsupportedPaymentMethod(
         val SERIALIZER: Serializer<UnsupportedPaymentMethod> =
             object : Serializer<UnsupportedPaymentMethod> {
                 override fun serialize(modelObject: UnsupportedPaymentMethod): JSONObject {
-                    return try {
-                        JSONObject().apply {
-                            put(TYPE, modelObject.type)
-                            put(NAME, modelObject.name)
-                        }
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(UnsupportedPaymentMethod::class.java, e)
+                    return JSONObject().apply {
+                        put(TYPE, modelObject.type)
+                        put(NAME, modelObject.name)
                     }
                 }
 
                 override fun deserialize(jsonObject: JSONObject): UnsupportedPaymentMethod {
-                    return try {
-                        UnsupportedPaymentMethod(
-                            type = jsonObject.getString(TYPE),
-                            name = jsonObject.getString(NAME),
-                        )
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(UnsupportedPaymentMethod::class.java, e)
-                    }
+                    return UnsupportedPaymentMethod(
+                        type = jsonObject.getString(TYPE),
+                        name = jsonObject.getString(NAME),
+                    )
                 }
             }
     }

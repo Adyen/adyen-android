@@ -7,10 +7,8 @@
  */
 package com.adyen.checkout.core.action.data
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -33,33 +31,25 @@ class Threeds2Action(
         @JvmField
         val SERIALIZER: Serializer<Threeds2Action> = object : Serializer<Threeds2Action> {
             override fun serialize(modelObject: Threeds2Action): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(PAYMENT_DATA, modelObject.paymentData)
-                        putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
-                        putOpt(TOKEN, modelObject.token)
-                        putOpt(SUBTYPE, modelObject.subtype)
-                        putOpt(AUTHORISATION_TOKEN, modelObject.authorisationToken)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(Threeds2Action::class.java, e)
+                return JSONObject().apply {
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(PAYMENT_DATA, modelObject.paymentData)
+                    putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                    putOpt(TOKEN, modelObject.token)
+                    putOpt(SUBTYPE, modelObject.subtype)
+                    putOpt(AUTHORISATION_TOKEN, modelObject.authorisationToken)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): Threeds2Action {
-                return try {
-                    Threeds2Action(
-                        token = jsonObject.getStringOrNull(TOKEN),
-                        subtype = jsonObject.getStringOrNull(SUBTYPE),
-                        authorisationToken = jsonObject.getStringOrNull(AUTHORISATION_TOKEN),
-                        type = jsonObject.getStringOrNull(TYPE),
-                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
-                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(Threeds2Action::class.java, e)
-                }
+                return Threeds2Action(
+                    token = jsonObject.getStringOrNull(TOKEN),
+                    subtype = jsonObject.getStringOrNull(SUBTYPE),
+                    authorisationToken = jsonObject.getStringOrNull(AUTHORISATION_TOKEN),
+                    type = jsonObject.getStringOrNull(TYPE),
+                    paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
+                    paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
+                )
             }
         }
     }

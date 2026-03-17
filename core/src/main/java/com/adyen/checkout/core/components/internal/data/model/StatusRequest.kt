@@ -7,11 +7,9 @@
  */
 package com.adyen.checkout.core.components.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -25,12 +23,8 @@ internal data class StatusRequest(
         @JvmField
         val SERIALIZER: Serializer<StatusRequest> = object : Serializer<StatusRequest> {
             override fun serialize(modelObject: StatusRequest): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(PAYMENT_DATA, modelObject.paymentData)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(StatusRequest::class.java, e)
+                return JSONObject().apply {
+                    putOpt(PAYMENT_DATA, modelObject.paymentData)
                 }
             }
 

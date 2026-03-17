@@ -8,13 +8,11 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -36,50 +34,42 @@ internal data class AnalyticsTrackRequest(
         val SERIALIZER: Serializer<AnalyticsTrackRequest> = object :
             Serializer<AnalyticsTrackRequest> {
             override fun serialize(modelObject: AnalyticsTrackRequest): JSONObject {
-                try {
-                    return JSONObject().apply {
-                        putOpt(CHANNEL, modelObject.channel)
-                        putOpt(PLATFORM, modelObject.platform)
-                        putOpt(
-                            INFO,
-                            ModelUtils.serializeOptList(
-                                modelObject.info,
-                                AnalyticsTrackInfo.SERIALIZER
-                            ),
-                        )
-                        putOpt(
-                            LOGS,
-                            ModelUtils.serializeOptList(
-                                modelObject.logs,
-                                AnalyticsTrackLog.SERIALIZER
-                            ),
-                        )
-                        putOpt(
-                            ERRORS,
-                            ModelUtils.serializeOptList(
-                                modelObject.errors,
-                                AnalyticsTrackError.SERIALIZER
-                            ),
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackRequest::class.java, e)
+                return JSONObject().apply {
+                    putOpt(CHANNEL, modelObject.channel)
+                    putOpt(PLATFORM, modelObject.platform)
+                    putOpt(
+                        INFO,
+                        ModelUtils.serializeOptList(
+                            modelObject.info,
+                            AnalyticsTrackInfo.SERIALIZER
+                        ),
+                    )
+                    putOpt(
+                        LOGS,
+                        ModelUtils.serializeOptList(
+                            modelObject.logs,
+                            AnalyticsTrackLog.SERIALIZER
+                        ),
+                    )
+                    putOpt(
+                        ERRORS,
+                        ModelUtils.serializeOptList(
+                            modelObject.errors,
+                            AnalyticsTrackError.SERIALIZER
+                        ),
+                    )
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): AnalyticsTrackRequest {
-                return try {
-                    with(jsonObject) {
-                        AnalyticsTrackRequest(
-                            channel = getStringOrNull(CHANNEL),
-                            platform = getStringOrNull(PLATFORM),
-                            info = deserializeOptList(getJSONArray(INFO), AnalyticsTrackInfo.SERIALIZER),
-                            logs = deserializeOptList(getJSONArray(LOGS), AnalyticsTrackLog.SERIALIZER),
-                            errors = deserializeOptList(getJSONArray(ERRORS), AnalyticsTrackError.SERIALIZER),
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackRequest::class.java, e)
+                return with(jsonObject) {
+                    AnalyticsTrackRequest(
+                        channel = getStringOrNull(CHANNEL),
+                        platform = getStringOrNull(PLATFORM),
+                        info = deserializeOptList(getJSONArray(INFO), AnalyticsTrackInfo.SERIALIZER),
+                        logs = deserializeOptList(getJSONArray(LOGS), AnalyticsTrackLog.SERIALIZER),
+                        errors = deserializeOptList(getJSONArray(ERRORS), AnalyticsTrackError.SERIALIZER),
+                    )
                 }
             }
         }

@@ -8,11 +8,9 @@
 
 package com.adyen.checkout.core.components.data
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -32,15 +30,11 @@ data class ShopperName(
         @JvmField
         val SERIALIZER: Serializer<ShopperName> = object : Serializer<ShopperName> {
             override fun serialize(modelObject: ShopperName): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(FIRST_NAME, modelObject.firstName)
-                        putOpt(INFIX, modelObject.infix)
-                        putOpt(LAST_NAME, modelObject.lastName)
-                        putOpt(GENDER, modelObject.gender)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(ShopperName::class.java, e)
+                return JSONObject().apply {
+                    putOpt(FIRST_NAME, modelObject.firstName)
+                    putOpt(INFIX, modelObject.infix)
+                    putOpt(LAST_NAME, modelObject.lastName)
+                    putOpt(GENDER, modelObject.gender)
                 }
             }
 
