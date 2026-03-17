@@ -16,11 +16,13 @@ import androidx.compose.ui.focus.onFocusChanged
 import com.adyen.checkout.blik.internal.ui.state.BlikIntent
 import com.adyen.checkout.core.common.internal.properties.BlikCodeProperties.BLIK_CODE_MAX_LENGTH
 import com.adyen.checkout.core.common.internal.properties.BlikCodeProperties.BLIK_CODE_SEPARATOR
+import com.adyen.checkout.core.common.internal.properties.BlikCodeProperties.BLIK_CODE_SEPARATORS
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
 
 @Composable
 internal fun BlikCodeField(
@@ -36,6 +38,10 @@ internal fun BlikCodeField(
             maxLengthWithoutSeparators = BLIK_CODE_MAX_LENGTH,
         )
     }
+
+    val outputTransformation = remember {
+        SeparatorsOutputTransformation(BLIK_CODE_SEPARATORS)
+    }
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
@@ -50,6 +56,7 @@ internal fun BlikCodeField(
             onIntent(BlikIntent.UpdateBlikCode(value))
         },
         inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
         shouldFocus = blikCodeState.isFocused,
     )
 }

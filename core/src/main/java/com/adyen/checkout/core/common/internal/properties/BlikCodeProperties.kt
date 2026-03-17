@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.common.internal.properties
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 
 /**
  * This field is formatted as such 123 456
@@ -17,4 +18,9 @@ import androidx.annotation.RestrictTo
 object BlikCodeProperties {
     const val BLIK_CODE_MAX_LENGTH = 6
     const val BLIK_CODE_SEPARATOR = ' '
+
+    // e.g 123 456
+    val BLIK_CODE_SEPARATORS = listOf(
+        TextFieldSeparator(BLIK_CODE_SEPARATOR, 3),
+    )
 }
