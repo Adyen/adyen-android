@@ -766,7 +766,8 @@ public final class com/adyen/checkout/core/components/CheckoutController {
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutControllerInterface {
-	public abstract fun submit (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun submit ()V
+	public abstract fun validate ()Z
 }
 
 public final class com/adyen/checkout/core/components/CheckoutControllerKt {
@@ -2029,6 +2030,12 @@ public final class com/adyen/checkout/core/components/internal/data/model/Status
 }
 
 public final class com/adyen/checkout/core/components/internal/data/provider/DefaultSdkDataProvider$Companion {
+}
+
+public abstract interface class com/adyen/checkout/core/components/internal/ui/NewPaymentComponent {
+	public abstract fun getState ()Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;
+	public abstract fun setLoading (Z)V
+	public abstract fun validate ()Z
 }
 
 public final class com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy$Hidden : com/adyen/checkout/core/components/internal/ui/state/model/RequirementPolicy {
