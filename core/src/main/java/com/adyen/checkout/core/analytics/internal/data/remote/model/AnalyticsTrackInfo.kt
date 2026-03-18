@@ -8,14 +8,12 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
 import com.adyen.checkout.core.common.internal.model.getLongOrNull
 import com.adyen.checkout.core.common.internal.model.getMapOrNull
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -49,44 +47,36 @@ internal data class AnalyticsTrackInfo(
         @JvmField
         val SERIALIZER: Serializer<AnalyticsTrackInfo> = object : Serializer<AnalyticsTrackInfo> {
             override fun serialize(modelObject: AnalyticsTrackInfo): JSONObject {
-                try {
-                    return JSONObject().apply {
-                        put(ID, modelObject.id)
-                        putOpt(TIMESTAMP, modelObject.timestamp)
-                        putOpt(COMPONENT, modelObject.component)
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(TARGET, modelObject.target)
-                        putOpt(IS_STORED_PAYMENT_METHOD, modelObject.isStoredPaymentMethod)
-                        putOpt(BRAND, modelObject.brand)
-                        putOpt(ISSUER, modelObject.issuer)
-                        putOpt(VALIDATION_ERROR_CODE, modelObject.validationErrorCode)
-                        putOpt(VALIDATION_ERROR_MESSAGE, modelObject.validationErrorMessage)
-                        putOpt(CONFIG_DATA, modelObject.configData?.let { JSONObject(it) })
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackInfo::class.java, e)
+                return JSONObject().apply {
+                    put(ID, modelObject.id)
+                    putOpt(TIMESTAMP, modelObject.timestamp)
+                    putOpt(COMPONENT, modelObject.component)
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(TARGET, modelObject.target)
+                    putOpt(IS_STORED_PAYMENT_METHOD, modelObject.isStoredPaymentMethod)
+                    putOpt(BRAND, modelObject.brand)
+                    putOpt(ISSUER, modelObject.issuer)
+                    putOpt(VALIDATION_ERROR_CODE, modelObject.validationErrorCode)
+                    putOpt(VALIDATION_ERROR_MESSAGE, modelObject.validationErrorMessage)
+                    putOpt(CONFIG_DATA, modelObject.configData?.let { JSONObject(it) })
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): AnalyticsTrackInfo {
-                return try {
-                    with(jsonObject) {
-                        AnalyticsTrackInfo(
-                            id = getString(ID),
-                            timestamp = getLongOrNull(TIMESTAMP),
-                            component = getStringOrNull(COMPONENT),
-                            type = getStringOrNull(TYPE),
-                            target = getStringOrNull(TARGET),
-                            isStoredPaymentMethod = getBooleanOrNull(IS_STORED_PAYMENT_METHOD),
-                            brand = getStringOrNull(BRAND),
-                            issuer = getStringOrNull(ISSUER),
-                            validationErrorCode = getStringOrNull(VALIDATION_ERROR_CODE),
-                            validationErrorMessage = getStringOrNull(VALIDATION_ERROR_MESSAGE),
-                            configData = getMapOrNull(CONFIG_DATA),
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackInfo::class.java, e)
+                return with(jsonObject) {
+                    AnalyticsTrackInfo(
+                        id = getString(ID),
+                        timestamp = getLongOrNull(TIMESTAMP),
+                        component = getStringOrNull(COMPONENT),
+                        type = getStringOrNull(TYPE),
+                        target = getStringOrNull(TARGET),
+                        isStoredPaymentMethod = getBooleanOrNull(IS_STORED_PAYMENT_METHOD),
+                        brand = getStringOrNull(BRAND),
+                        issuer = getStringOrNull(ISSUER),
+                        validationErrorCode = getStringOrNull(VALIDATION_ERROR_CODE),
+                        validationErrorMessage = getStringOrNull(VALIDATION_ERROR_MESSAGE),
+                        configData = getMapOrNull(CONFIG_DATA),
+                    )
                 }
             }
         }

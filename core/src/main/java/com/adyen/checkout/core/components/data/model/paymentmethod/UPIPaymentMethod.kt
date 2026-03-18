@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOptList
 import com.adyen.checkout.core.components.data.model.AppData
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -32,30 +30,22 @@ data class UPIPaymentMethod(
         @JvmField
         val SERIALIZER: Serializer<UPIPaymentMethod> = object : Serializer<UPIPaymentMethod> {
             override fun serialize(modelObject: UPIPaymentMethod): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(TYPE, modelObject.type)
-                        put(NAME, modelObject.name)
-                        putOpt(APPS, serializeOptList(modelObject.apps, AppData.SERIALIZER))
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(UPIPaymentMethod::class.java, e)
+                return JSONObject().apply {
+                    put(TYPE, modelObject.type)
+                    put(NAME, modelObject.name)
+                    putOpt(APPS, serializeOptList(modelObject.apps, AppData.SERIALIZER))
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): UPIPaymentMethod {
-                return try {
-                    UPIPaymentMethod(
-                        type = jsonObject.getString(TYPE),
-                        name = jsonObject.getString(NAME),
-                        apps = deserializeOptList(
-                            jsonObject.optJSONArray(APPS),
-                            AppData.SERIALIZER,
-                        ),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(UPIPaymentMethod::class.java, e)
-                }
+                return UPIPaymentMethod(
+                    type = jsonObject.getString(TYPE),
+                    name = jsonObject.getString(NAME),
+                    apps = deserializeOptList(
+                        jsonObject.optJSONArray(APPS),
+                        AppData.SERIALIZER,
+                    ),
+                )
             }
         }
     }

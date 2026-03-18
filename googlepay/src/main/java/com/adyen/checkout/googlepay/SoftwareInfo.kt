@@ -8,10 +8,8 @@
 
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -33,24 +31,16 @@ data class SoftwareInfo(
         @JvmField
         val SERIALIZER: Serializer<SoftwareInfo> = object : Serializer<SoftwareInfo> {
             override fun serialize(modelObject: SoftwareInfo): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(SOFTWARE_ID, modelObject.id)
-                        put(SOFTWARE_VERSION, modelObject.version)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SoftwareInfo::class.java, e)
+                return JSONObject().apply {
+                    put(SOFTWARE_ID, modelObject.id)
+                    put(SOFTWARE_VERSION, modelObject.version)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject) = try {
-                SoftwareInfo(
-                    id = jsonObject.getString(SOFTWARE_ID),
-                    version = jsonObject.getString(SOFTWARE_VERSION),
-                )
-            } catch (e: JSONException) {
-                throw ModelSerializationException(SoftwareInfo::class.java, e)
-            }
+            override fun deserialize(jsonObject: JSONObject) = SoftwareInfo(
+                id = jsonObject.getString(SOFTWARE_ID),
+                version = jsonObject.getString(SOFTWARE_VERSION),
+            )
         }
     }
 }

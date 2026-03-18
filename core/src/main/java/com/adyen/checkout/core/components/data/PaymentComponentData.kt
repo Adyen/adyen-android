@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.components.data
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOpt
@@ -17,7 +16,6 @@ import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -64,43 +62,39 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
         val SERIALIZER: Serializer<PaymentComponentData<*>> =
             object : Serializer<PaymentComponentData<*>> {
                 override fun serialize(modelObject: PaymentComponentData<*>): JSONObject {
-                    return try {
-                        JSONObject().apply {
-                            putOpt(
-                                PAYMENT_METHOD,
-                                serializeOpt(
-                                    modelObject.paymentMethod,
-                                    PaymentMethodDetails.SERIALIZER
-                                )
+                    return JSONObject().apply {
+                        putOpt(
+                            PAYMENT_METHOD,
+                            serializeOpt(
+                                modelObject.paymentMethod,
+                                PaymentMethodDetails.SERIALIZER
                             )
-                            putOpt(ORDER, serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
-                            putOpt(AMOUNT, serializeOpt(modelObject.amount, Amount.SERIALIZER))
-                            putOpt(STORE_PAYMENT_METHOD, modelObject.storePaymentMethod)
-                            putOpt(SHOPPER_REFERENCE, modelObject.shopperReference)
-                            putOpt(
-                                BILLING_ADDRESS,
-                                serializeOpt(modelObject.billingAddress, Address.SERIALIZER)
-                            )
-                            putOpt(
-                                DELIVERY_ADDRESS,
-                                serializeOpt(modelObject.deliveryAddress, Address.SERIALIZER)
-                            )
-                            putOpt(
-                                SHOPPER_NAME,
-                                serializeOpt(modelObject.shopperName, ShopperName.SERIALIZER)
-                            )
-                            putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
-                            putOpt(SHOPPER_EMAIL, modelObject.shopperEmail)
-                            putOpt(DATE_OF_BIRTH, modelObject.dateOfBirth)
-                            putOpt(SOCIAL_SECURITY_NUMBER, modelObject.socialSecurityNumber)
-                            putOpt(
-                                INSTALLMENTS,
-                                serializeOpt(modelObject.installments, Installments.SERIALIZER)
-                            )
-                            putOpt(SUPPORT_NATIVE_REDIRECT, modelObject.supportNativeRedirect)
-                        }
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(PaymentComponentData::class.java, e)
+                        )
+                        putOpt(ORDER, serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
+                        putOpt(AMOUNT, serializeOpt(modelObject.amount, Amount.SERIALIZER))
+                        putOpt(STORE_PAYMENT_METHOD, modelObject.storePaymentMethod)
+                        putOpt(SHOPPER_REFERENCE, modelObject.shopperReference)
+                        putOpt(
+                            BILLING_ADDRESS,
+                            serializeOpt(modelObject.billingAddress, Address.SERIALIZER)
+                        )
+                        putOpt(
+                            DELIVERY_ADDRESS,
+                            serializeOpt(modelObject.deliveryAddress, Address.SERIALIZER)
+                        )
+                        putOpt(
+                            SHOPPER_NAME,
+                            serializeOpt(modelObject.shopperName, ShopperName.SERIALIZER)
+                        )
+                        putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
+                        putOpt(SHOPPER_EMAIL, modelObject.shopperEmail)
+                        putOpt(DATE_OF_BIRTH, modelObject.dateOfBirth)
+                        putOpt(SOCIAL_SECURITY_NUMBER, modelObject.socialSecurityNumber)
+                        putOpt(
+                            INSTALLMENTS,
+                            serializeOpt(modelObject.installments, Installments.SERIALIZER)
+                        )
+                        putOpt(SUPPORT_NATIVE_REDIRECT, modelObject.supportNativeRedirect)
                     }
                 }
 

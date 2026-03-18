@@ -8,10 +8,8 @@
 
 package com.adyen.checkout.redirect.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -26,23 +24,15 @@ internal data class NativeRedirectResponse(
         val SERIALIZER: Serializer<NativeRedirectResponse> =
             object : Serializer<NativeRedirectResponse> {
                 override fun serialize(modelObject: NativeRedirectResponse): JSONObject {
-                    val jsonObject = JSONObject()
-                    try {
-                        jsonObject.putOpt(REDIRECT_RESULT, modelObject.redirectResult)
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(NativeRedirectResponse::class.java, e)
+                    return JSONObject().apply {
+                        putOpt(REDIRECT_RESULT, modelObject.redirectResult)
                     }
-                    return jsonObject
                 }
 
                 override fun deserialize(jsonObject: JSONObject): NativeRedirectResponse {
-                    return try {
-                        NativeRedirectResponse(
-                            redirectResult = jsonObject.getString(REDIRECT_RESULT),
-                        )
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(NativeRedirectRequest::class.java, e)
-                    }
+                    return NativeRedirectResponse(
+                        redirectResult = jsonObject.getString(REDIRECT_RESULT),
+                    )
                 }
             }
     }

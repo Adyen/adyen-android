@@ -10,7 +10,7 @@ package com.adyen.checkout.core.common.internal.model
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.internal.model.ModelObject.Serializer
+import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -39,6 +39,7 @@ constructor() : Parcelable {
          * Serialize the [ModelObject] to a [JSONObject].
          * @param modelObject The Model class to be serialized.
          * @return The result JSONObject
+         * @throws JSONException if serialization fails.
          */
         fun serialize(modelObject: T): JSONObject
 
@@ -46,6 +47,7 @@ constructor() : Parcelable {
          * Deserialize a [JSONObject] to a [ModelObject].
          * @param jsonObject The base object to deserialize.
          * @return The ModelObject parsed with the contents from the JSONObject.
+         * @throws JSONException if a required field is missing or has an unexpected type.
          */
         fun deserialize(jsonObject: JSONObject): T
     }

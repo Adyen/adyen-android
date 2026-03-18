@@ -7,10 +7,8 @@
  */
 package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -31,16 +29,12 @@ data class GooglePayDetails(
         val SERIALIZER: Serializer<GooglePayDetails> = object : Serializer<GooglePayDetails> {
             @Suppress("TooGenericExceptionThrown")
             override fun serialize(modelObject: GooglePayDetails): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(SDK_DATA, modelObject.sdkData)
-                        putOpt(GOOGLE_PAY_TOKEN, modelObject.googlePayToken)
-                        putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.googlePayCardNetwork)
-                        putOpt(THREEDS2_SDK_VERSION, modelObject.threeDS2SdkVersion)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(GooglePayDetails::class.java, e)
+                return JSONObject().apply {
+                    putOpt(TYPE, modelObject.type)
+                    putOpt(SDK_DATA, modelObject.sdkData)
+                    putOpt(GOOGLE_PAY_TOKEN, modelObject.googlePayToken)
+                    putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.googlePayCardNetwork)
+                    putOpt(THREEDS2_SDK_VERSION, modelObject.threeDS2SdkVersion)
                 }
             }
 

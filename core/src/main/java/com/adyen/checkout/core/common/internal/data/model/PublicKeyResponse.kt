@@ -8,11 +8,9 @@
 
 package com.adyen.checkout.core.common.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -27,23 +25,15 @@ internal data class PublicKeyResponse(
         @JvmField
         val SERIALIZER: Serializer<PublicKeyResponse> = object : Serializer<PublicKeyResponse> {
             override fun serialize(modelObject: PublicKeyResponse): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(PUBLIC_KEY, modelObject.publicKey)
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(PublicKeyResponse::class.java, e)
+                return JSONObject().apply {
+                    putOpt(PUBLIC_KEY, modelObject.publicKey)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): PublicKeyResponse {
-                return try {
-                    PublicKeyResponse(
-                        publicKey = jsonObject.getStringOrNull(PUBLIC_KEY).orEmpty(),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(PublicKeyResponse::class.java, e)
-                }
+                return PublicKeyResponse(
+                    publicKey = jsonObject.getStringOrNull(PUBLIC_KEY).orEmpty(),
+                )
             }
         }
     }

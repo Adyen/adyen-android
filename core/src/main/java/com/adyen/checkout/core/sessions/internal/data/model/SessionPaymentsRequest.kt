@@ -9,14 +9,12 @@
 package com.adyen.checkout.core.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -34,27 +32,19 @@ data class SessionPaymentsRequest(
             override fun serialize(modelObject: SessionPaymentsRequest): JSONObject {
                 val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(modelObject.paymentComponentData)
                 // SessionPaymentsRequest is actually paymentComponentJson with the sessionData appended to it
-                val jsonObject = JSONObject(paymentComponentJson.toString())
-                try {
-                    jsonObject.putOpt(SESSION_DATA, modelObject.sessionData)
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SessionPaymentsRequest::class.java, e)
+                return JSONObject(paymentComponentJson.toString()).apply {
+                    putOpt(SESSION_DATA, modelObject.sessionData)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): SessionPaymentsRequest {
-                return try {
-                    SessionPaymentsRequest(
-                        sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
-                        paymentComponentData = ModelUtils.deserializeOpt(
-                            jsonObject,
-                            PaymentComponentData.SERIALIZER,
-                        ) as PaymentComponentData<out PaymentMethodDetails>,
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SessionPaymentsRequest::class.java, e)
-                }
+                return SessionPaymentsRequest(
+                    sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
+                    paymentComponentData = ModelUtils.deserializeOpt(
+                        jsonObject,
+                        PaymentComponentData.SERIALIZER,
+                    ) as PaymentComponentData<out PaymentMethodDetails>,
+                )
             }
         }
     }

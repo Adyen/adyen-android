@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.googlepay.old
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
+import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.core.old.internal.data.model.ModelObject
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException

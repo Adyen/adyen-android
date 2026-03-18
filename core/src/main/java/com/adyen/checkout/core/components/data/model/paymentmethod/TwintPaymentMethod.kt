@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -27,25 +25,17 @@ data class TwintPaymentMethod(
         val SERIALIZER: Serializer<TwintPaymentMethod> =
             object : Serializer<TwintPaymentMethod> {
                 override fun serialize(modelObject: TwintPaymentMethod): JSONObject {
-                    return try {
-                        JSONObject().apply {
-                            put(TYPE, modelObject.type)
-                            put(NAME, modelObject.name)
-                        }
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(TwintPaymentMethod::class.java, e)
+                    return JSONObject().apply {
+                        put(TYPE, modelObject.type)
+                        put(NAME, modelObject.name)
                     }
                 }
 
                 override fun deserialize(jsonObject: JSONObject): TwintPaymentMethod {
-                    return try {
-                        TwintPaymentMethod(
-                            type = jsonObject.getString(TYPE),
-                            name = jsonObject.getString(NAME),
-                        )
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(TwintPaymentMethod::class.java, e)
-                    }
+                    return TwintPaymentMethod(
+                        type = jsonObject.getString(TYPE),
+                        name = jsonObject.getString(NAME),
+                    )
                 }
             }
     }

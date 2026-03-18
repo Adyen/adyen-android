@@ -7,11 +7,9 @@
  */
 package com.adyen.checkout.threeds2.internal.data.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -35,33 +33,25 @@ internal data class ChallengeToken(
         @JvmField
         val SERIALIZER: Serializer<ChallengeToken> = object : Serializer<ChallengeToken> {
             override fun serialize(modelObject: ChallengeToken): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(ACS_REFERENCE_NUMBER, modelObject.acsReferenceNumber)
-                        putOpt(ACS_SIGNED_CONTENT, modelObject.acsSignedContent)
-                        putOpt(ACS_TRANS_ID, modelObject.acsTransID)
-                        putOpt(ACS_URL, modelObject.acsURL)
-                        putOpt(MESSAGE_VERSION, modelObject.messageVersion)
-                        putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(ChallengeToken::class.java, e)
+                return JSONObject().apply {
+                    putOpt(ACS_REFERENCE_NUMBER, modelObject.acsReferenceNumber)
+                    putOpt(ACS_SIGNED_CONTENT, modelObject.acsSignedContent)
+                    putOpt(ACS_TRANS_ID, modelObject.acsTransID)
+                    putOpt(ACS_URL, modelObject.acsURL)
+                    putOpt(MESSAGE_VERSION, modelObject.messageVersion)
+                    putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): ChallengeToken {
-                return try {
-                    ChallengeToken(
-                        acsReferenceNumber = jsonObject.getStringOrNull(ACS_REFERENCE_NUMBER),
-                        acsSignedContent = jsonObject.getStringOrNull(ACS_SIGNED_CONTENT),
-                        acsTransID = jsonObject.getStringOrNull(ACS_TRANS_ID),
-                        acsURL = jsonObject.getStringOrNull(ACS_URL),
-                        messageVersion = jsonObject.getStringOrNull(MESSAGE_VERSION),
-                        threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID)
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(ChallengeToken::class.java, e)
-                }
+                return ChallengeToken(
+                    acsReferenceNumber = jsonObject.getStringOrNull(ACS_REFERENCE_NUMBER),
+                    acsSignedContent = jsonObject.getStringOrNull(ACS_SIGNED_CONTENT),
+                    acsTransID = jsonObject.getStringOrNull(ACS_TRANS_ID),
+                    acsURL = jsonObject.getStringOrNull(ACS_URL),
+                    messageVersion = jsonObject.getStringOrNull(MESSAGE_VERSION),
+                    threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID)
+                )
             }
         }
     }

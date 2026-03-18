@@ -8,11 +8,9 @@
 
 package com.adyen.checkout.core.components.data
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -38,17 +36,13 @@ data class Address(
         @JvmField
         val SERIALIZER: Serializer<Address> = object : Serializer<Address> {
             override fun serialize(modelObject: Address): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(CITY, modelObject.city)
-                        putOpt(COUNTRY, modelObject.country)
-                        putOpt(HOUSE_NUMBER_OR_NAME, modelObject.houseNumberOrName)
-                        putOpt(POSTAL_CODE, modelObject.postalCode)
-                        putOpt(STATE_OR_PROVINCE, modelObject.stateOrProvince)
-                        putOpt(STREET, modelObject.street)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(Address::class.java, e)
+                return JSONObject().apply {
+                    putOpt(CITY, modelObject.city)
+                    putOpt(COUNTRY, modelObject.country)
+                    putOpt(HOUSE_NUMBER_OR_NAME, modelObject.houseNumberOrName)
+                    putOpt(POSTAL_CODE, modelObject.postalCode)
+                    putOpt(STATE_OR_PROVINCE, modelObject.stateOrProvince)
+                    putOpt(STREET, modelObject.street)
                 }
             }
 

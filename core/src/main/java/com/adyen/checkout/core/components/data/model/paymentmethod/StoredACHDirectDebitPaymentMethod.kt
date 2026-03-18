@@ -1,10 +1,8 @@
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils.parseStringList
 import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeStringList
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -23,36 +21,28 @@ data class StoredACHDirectDebitPaymentMethod(
         val SERIALIZER: Serializer<StoredACHDirectDebitPaymentMethod> =
             object : Serializer<StoredACHDirectDebitPaymentMethod> {
                 override fun serialize(modelObject: StoredACHDirectDebitPaymentMethod): JSONObject {
-                    return try {
-                        JSONObject().apply {
-                            put(TYPE, modelObject.type)
-                            put(NAME, modelObject.name)
-                            put(ID, modelObject.id)
-                            put(
-                                SUPPORTED_SHOPPER_INTERACTIONS,
-                                serializeStringList(modelObject.supportedShopperInteractions),
-                            )
-                            put(BANK_ACCOUNT_NUMBER, modelObject.bankAccountNumber)
-                        }
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(StoredACHDirectDebitPaymentMethod::class.java, e)
+                    return JSONObject().apply {
+                        put(TYPE, modelObject.type)
+                        put(NAME, modelObject.name)
+                        put(ID, modelObject.id)
+                        put(
+                            SUPPORTED_SHOPPER_INTERACTIONS,
+                            serializeStringList(modelObject.supportedShopperInteractions),
+                        )
+                        put(BANK_ACCOUNT_NUMBER, modelObject.bankAccountNumber)
                     }
                 }
 
                 override fun deserialize(jsonObject: JSONObject): StoredACHDirectDebitPaymentMethod {
-                    return try {
-                        StoredACHDirectDebitPaymentMethod(
-                            type = jsonObject.getString(TYPE),
-                            name = jsonObject.getString(NAME),
-                            id = jsonObject.getString(ID),
-                            supportedShopperInteractions = parseStringList(
-                                jsonObject.getJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
-                            ),
-                            bankAccountNumber = jsonObject.getString(BANK_ACCOUNT_NUMBER),
-                        )
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(StoredACHDirectDebitPaymentMethod::class.java, e)
-                    }
+                    return StoredACHDirectDebitPaymentMethod(
+                        type = jsonObject.getString(TYPE),
+                        name = jsonObject.getString(NAME),
+                        id = jsonObject.getString(ID),
+                        supportedShopperInteractions = parseStringList(
+                            jsonObject.getJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
+                        ),
+                        bankAccountNumber = jsonObject.getString(BANK_ACCOUNT_NUMBER),
+                    )
                 }
             }
     }

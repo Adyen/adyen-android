@@ -10,10 +10,8 @@ package com.adyen.checkout.core.components.data.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CheckoutCurrency
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 import java.math.BigDecimal
 import java.text.DecimalFormat
@@ -33,25 +31,17 @@ data class Amount(
         @JvmField
         val SERIALIZER: Serializer<Amount> = object : Serializer<Amount> {
             override fun serialize(modelObject: Amount): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(CURRENCY, modelObject.currency)
-                        put(VALUE, modelObject.value)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(Amount::class.java, e)
+                return JSONObject().apply {
+                    put(CURRENCY, modelObject.currency)
+                    put(VALUE, modelObject.value)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): Amount {
-                return try {
-                    Amount(
-                        currency = jsonObject.getString(CURRENCY),
-                        value = jsonObject.getLong(VALUE),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(Amount::class.java, e)
-                }
+                return Amount(
+                    currency = jsonObject.getString(CURRENCY),
+                    value = jsonObject.getLong(VALUE),
+                )
             }
         }
     }

@@ -9,13 +9,11 @@
 package com.adyen.checkout.core.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.data.OrderRequest
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -32,25 +30,17 @@ data class SessionSetupRequest(
         @JvmField
         val SERIALIZER: Serializer<SessionSetupRequest> = object : Serializer<SessionSetupRequest> {
             override fun serialize(modelObject: SessionSetupRequest): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(SESSION_DATA, modelObject.sessionData)
-                    jsonObject.putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SessionSetupRequest::class.java, e)
+                return JSONObject().apply {
+                    putOpt(SESSION_DATA, modelObject.sessionData)
+                    putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): SessionSetupRequest {
-                return try {
-                    SessionSetupRequest(
-                        sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
-                        order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(SessionSetupRequest::class.java, e)
-                }
+                return SessionSetupRequest(
+                    sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
+                    order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
+                )
             }
         }
     }

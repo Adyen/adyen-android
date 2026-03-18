@@ -8,11 +8,9 @@
 
 package com.adyen.checkout.core.sessions
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -33,12 +31,8 @@ data class SessionResponse(
         val SERIALIZER: Serializer<SessionResponse> = object : Serializer<SessionResponse> {
             override fun serialize(modelObject: SessionResponse): JSONObject {
                 return JSONObject().apply {
-                    try {
-                        putOpt(ID, modelObject.id)
-                        putOpt(SESSION_DATA, modelObject.sessionData)
-                    } catch (e: JSONException) {
-                        throw ModelSerializationException(SessionResponse::class.java, e)
-                    }
+                    putOpt(ID, modelObject.id)
+                    putOpt(SESSION_DATA, modelObject.sessionData)
                 }
             }
 

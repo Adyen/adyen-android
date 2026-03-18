@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getLongOrNull
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
@@ -39,36 +37,28 @@ internal data class AnalyticsTrackError(
         @JvmField
         val SERIALIZER: Serializer<AnalyticsTrackError> = object : Serializer<AnalyticsTrackError> {
             override fun serialize(modelObject: AnalyticsTrackError): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(ID, modelObject.id)
-                        putOpt(TIMESTAMP, modelObject.timestamp)
-                        putOpt(COMPONENT, modelObject.component)
-                        putOpt(ERROR_TYPE, modelObject.errorType)
-                        putOpt(CODE, modelObject.code)
-                        putOpt(TARGET, modelObject.target)
-                        putOpt(MESSAGE, modelObject.message)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackError::class.java, e)
+                return JSONObject().apply {
+                    put(ID, modelObject.id)
+                    putOpt(TIMESTAMP, modelObject.timestamp)
+                    putOpt(COMPONENT, modelObject.component)
+                    putOpt(ERROR_TYPE, modelObject.errorType)
+                    putOpt(CODE, modelObject.code)
+                    putOpt(TARGET, modelObject.target)
+                    putOpt(MESSAGE, modelObject.message)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): AnalyticsTrackError {
-                return try {
-                    with(jsonObject) {
-                        AnalyticsTrackError(
-                            id = getString(ID),
-                            timestamp = getLongOrNull(TIMESTAMP),
-                            component = getStringOrNull(COMPONENT),
-                            errorType = getStringOrNull(ERROR_TYPE),
-                            code = getStringOrNull(CODE),
-                            target = getStringOrNull(TARGET),
-                            message = getStringOrNull(MESSAGE),
-                        )
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(AnalyticsTrackError::class.java, e)
+                return with(jsonObject) {
+                    AnalyticsTrackError(
+                        id = getString(ID),
+                        timestamp = getLongOrNull(TIMESTAMP),
+                        component = getStringOrNull(COMPONENT),
+                        errorType = getStringOrNull(ERROR_TYPE),
+                        code = getStringOrNull(CODE),
+                        target = getStringOrNull(TARGET),
+                        message = getStringOrNull(MESSAGE),
+                    )
                 }
             }
         }

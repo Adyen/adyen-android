@@ -8,14 +8,12 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeOptStringList
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.components.data.model.Configuration
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -36,32 +34,24 @@ data class GooglePayPaymentMethod(
         @JvmField
         val SERIALIZER: Serializer<GooglePayPaymentMethod> = object : Serializer<GooglePayPaymentMethod> {
             override fun serialize(modelObject: GooglePayPaymentMethod): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(TYPE, modelObject.type)
-                        put(NAME, modelObject.name)
-                        putOpt(BRANDS, serializeOptStringList(modelObject.brands))
-                        putOpt(CONFIGURATION, serializeOpt(modelObject.configuration, Configuration.SERIALIZER))
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
+                return JSONObject().apply {
+                    put(TYPE, modelObject.type)
+                    put(NAME, modelObject.name)
+                    putOpt(BRANDS, serializeOptStringList(modelObject.brands))
+                    putOpt(CONFIGURATION, serializeOpt(modelObject.configuration, Configuration.SERIALIZER))
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): GooglePayPaymentMethod {
-                return try {
-                    GooglePayPaymentMethod(
-                        type = jsonObject.getString(TYPE),
-                        name = jsonObject.getString(NAME),
-                        brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)) ?: emptyList(),
-                        configuration = deserializeOpt(
-                            jsonObject.optJSONObject(CONFIGURATION),
-                            Configuration.SERIALIZER,
-                        ),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
-                }
+                return GooglePayPaymentMethod(
+                    type = jsonObject.getString(TYPE),
+                    name = jsonObject.getString(NAME),
+                    brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)) ?: emptyList(),
+                    configuration = deserializeOpt(
+                        jsonObject.optJSONObject(CONFIGURATION),
+                        Configuration.SERIALIZER,
+                    ),
+                )
             }
         }
     }

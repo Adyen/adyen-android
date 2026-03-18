@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
-import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.common.internal.model.JsonUtils.serializeOptStringList
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -34,29 +32,21 @@ data class BCMCPaymentMethod(
         @JvmField
         val SERIALIZER: Serializer<BCMCPaymentMethod> = object : Serializer<BCMCPaymentMethod> {
             override fun serialize(modelObject: BCMCPaymentMethod): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        put(TYPE, modelObject.type)
-                        put(NAME, modelObject.name)
-                        putOpt(BRANDS, serializeOptStringList(modelObject.brands))
-                        putOpt(FUNDING_SOURCE, modelObject.fundingSource)
-                    }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(BCMCPaymentMethod::class.java, e)
+                return JSONObject().apply {
+                    put(TYPE, modelObject.type)
+                    put(NAME, modelObject.name)
+                    putOpt(BRANDS, serializeOptStringList(modelObject.brands))
+                    putOpt(FUNDING_SOURCE, modelObject.fundingSource)
                 }
             }
 
             override fun deserialize(jsonObject: JSONObject): BCMCPaymentMethod {
-                return try {
-                    BCMCPaymentMethod(
-                        type = jsonObject.getString(TYPE),
-                        name = jsonObject.getString(NAME),
-                        brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)) ?: emptyList(),
-                        fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
-                    )
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(BCMCPaymentMethod::class.java, e)
-                }
+                return BCMCPaymentMethod(
+                    type = jsonObject.getString(TYPE),
+                    name = jsonObject.getString(NAME),
+                    brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)) ?: emptyList(),
+                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
+                )
             }
         }
     }
