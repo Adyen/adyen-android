@@ -8,20 +8,15 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.os.Bundle
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.serialization.NavKeySerializer
-import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
-import androidx.savedstate.serialization.decodeFromSavedState
-import androidx.savedstate.serialization.encodeToSavedState
+import com.adyen.checkout.dropin.internal.helper.BackStackPersister
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 internal class DropInNavigator(
-    private val savedStateHandle: SavedStateHandle,
+    private val backStackPersister: BackStackPersister,
 ) {
 
     // Initialized with an empty key to make the preselected bottom sheet possible
@@ -31,12 +26,9 @@ internal class DropInNavigator(
     private val _finishFlow = MutableStateFlow(false)
     val finishFlow = _finishFlow.asStateFlow()
 
-    private val serializer = SnapshotStateListSerializer(elementSerializer = NavKeySerializer())
-
     init {
-        val saved = savedStateHandle.get<Bundle>(BACK_STACK_KEY)
-        if (saved != null) {
-            val restored = decodeFromSavedState(serializer, saved)
+        val restored = backStackPersister.restore()
+        if (restored != null) {
             _backStack.clear()
             _backStack.addAll(restored)
         }
@@ -68,11 +60,6 @@ internal class DropInNavigator(
     }
 
     private fun persist() {
-        val saved = encodeToSavedState(serializer, _backStack)
-        savedStateHandle[BACK_STACK_KEY] = saved
-    }
-
-    companion object {
-        private const val BACK_STACK_KEY = "DROP_IN_BACK_STACK"
+        backStackPersister.store(_backStack)
     }
 }

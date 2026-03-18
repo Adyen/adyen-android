@@ -9,7 +9,6 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.content.Context
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -23,6 +22,7 @@ import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -32,14 +32,12 @@ import kotlin.reflect.KClass
 
 internal class DropInViewModel(
     private val input: DropInResultContract.Input,
-    private val savedStateHandle: SavedStateHandle,
+    val navigator: DropInNavigator
 ) : ViewModel() {
 
     lateinit var dropInParams: DropInParams
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
-
-    val navigator: DropInNavigator = DropInNavigator(savedStateHandle)
 
     val checkoutContext = input.checkoutContext
 
@@ -127,7 +125,11 @@ internal class DropInViewModel(
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return DropInViewModel(
                 input = inputProvider(),
-                savedStateHandle = extras.createSavedStateHandle(),
+                navigator = DropInNavigator(
+                    backStackPersister = SavedStateBackStackPersister(
+                        savedStateHandle = extras.createSavedStateHandle(),
+                    ),
+                ),
             ) as T
         }
     }

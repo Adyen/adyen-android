@@ -32,6 +32,7 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalPr
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.ui.StoredPaymentMethodsViewState.StoredPaymentMethodsListItem
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.text.Body
@@ -201,8 +202,9 @@ private fun StoredPaymentMethodsContentPreview() {
             ),
         )
 
+        val persister = SavedStateBackStackPersister(SavedStateHandle())
         StoredPaymentMethodsContent(
-            navigator = DropInNavigator(SavedStateHandle()),
+            navigator = DropInNavigator(persister),
             viewState = viewState,
             onRemoveItem = {},
         )
