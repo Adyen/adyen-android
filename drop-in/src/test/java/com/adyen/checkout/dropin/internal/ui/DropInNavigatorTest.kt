@@ -9,9 +9,12 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.dropin.internal.helper.BackStackPersister
+import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,11 +23,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(LoggingExtension::class)
 internal class DropInNavigatorTest {
 
+    private lateinit var persister: BackStackPersister
     private lateinit var navigator: DropInNavigator
 
     @BeforeEach
     fun setUp() {
-        navigator = DropInNavigator()
+        persister = InMemoryBackStackPersister()
+        navigator = DropInNavigator(persister)
     }
 
     @Test
@@ -86,5 +91,16 @@ internal class DropInNavigatorTest {
         assertEquals(1, finishFlow.values.size)
     }
 
+    @Test
+    fun `when restoring from saved state then back stack is restored`() {
+        val key = TestNavKey("test")
+        navigator.navigateTo(key)
+
+        val restoredNavigator = DropInNavigator(persister)
+
+        assertEquals(listOf(EmptyNavKey, key), restoredNavigator.backStack)
+    }
+
+    @Serializable
     private data class TestNavKey(val value: String) : NavKey
 }
