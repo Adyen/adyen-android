@@ -26,9 +26,12 @@ internal class DropInNavigator(
     private val _finishFlow = MutableStateFlow(false)
     val finishFlow = _finishFlow.asStateFlow()
 
+    val didRestoreState: Boolean
+
     init {
         val restored = backStackPersister.restore()
-        if (restored != null) {
+        didRestoreState = restored != null
+        if (didRestoreState) {
             _backStack.clear()
             _backStack.addAll(restored)
         }
