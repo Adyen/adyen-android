@@ -9,12 +9,10 @@
 package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.paymentmethod.BlikDetails
 
 internal fun BlikComponentState.toPaymentComponentState(
-    amount: Amount?,
     sdkDataProvider: SdkDataProvider,
 ): BlikPaymentComponentState {
     val blikDetails = BlikDetails(
@@ -27,7 +25,6 @@ internal fun BlikComponentState.toPaymentComponentState(
     val paymentComponentData = PaymentComponentData(
         paymentMethod = blikDetails,
         order = null,
-        amount = amount,
     )
 
     return BlikPaymentComponentState(

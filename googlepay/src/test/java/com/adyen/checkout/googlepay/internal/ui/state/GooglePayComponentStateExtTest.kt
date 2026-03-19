@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.google.android.gms.wallet.PaymentData
@@ -39,7 +38,6 @@ internal class GooglePayComponentStateExtTest {
     @Test
     fun `when toPaymentComponentState is called with valid payment data, then a valid component state is created`() {
         whenever(paymentData.toJson()).thenReturn(TEST_PAYMENT_DATA_JSON)
-        val amount = Amount("EUR", 1337)
         val paymentMethodType = "googlepay"
         val componentState = GooglePayComponentState(
             isButtonVisible = true,
@@ -49,7 +47,6 @@ internal class GooglePayComponentStateExtTest {
         )
 
         val paymentComponentState = componentState.toPaymentComponentState(
-            amount = amount,
             paymentMethodType = paymentMethodType,
             sdkDataProvider = sdkDataProvider,
         )
@@ -61,7 +58,6 @@ internal class GooglePayComponentStateExtTest {
         )
 
         assertEquals(expectedGooglePayDetails, paymentComponentState.data.paymentMethod)
-        assertEquals(amount, paymentComponentState.data.amount)
         assertNull(paymentComponentState.data.order)
         assertTrue(paymentComponentState.isValid)
     }
@@ -76,32 +72,12 @@ internal class GooglePayComponentStateExtTest {
         )
 
         val paymentComponentState = componentState.toPaymentComponentState(
-            amount = null,
             paymentMethodType = "googlepay",
             sdkDataProvider = sdkDataProvider,
         )
 
         assertFalse(paymentComponentState.isValid)
         assertNull(paymentComponentState.data.paymentMethod)
-    }
-
-    @Test
-    fun `when amount is null, then payment component data has null amount`() {
-        whenever(paymentData.toJson()).thenReturn(TEST_PAYMENT_DATA_JSON)
-        val componentState = GooglePayComponentState(
-            isButtonVisible = true,
-            isLoading = false,
-            isAvailable = true,
-            paymentData = paymentData,
-        )
-
-        val paymentComponentState = componentState.toPaymentComponentState(
-            amount = null,
-            paymentMethodType = "googlepay",
-            sdkDataProvider = sdkDataProvider,
-        )
-
-        assertNull(paymentComponentState.data.amount)
     }
 
     companion object {

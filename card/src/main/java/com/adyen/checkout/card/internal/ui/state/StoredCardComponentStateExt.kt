@@ -82,7 +82,6 @@ private fun createPaymentComponentData(
     storePaymentMethod = null,
     shopperReference = componentParams.shopperReference,
     order = null,
-    amount = componentParams.amount,
 )
 
 private fun createPaymentComponentState(

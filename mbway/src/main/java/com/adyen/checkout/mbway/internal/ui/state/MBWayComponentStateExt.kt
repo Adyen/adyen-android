@@ -9,11 +9,9 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.paymentmethod.MBWayDetails
 
 internal fun MBWayComponentState.toPaymentComponentState(
-    amount: Amount?,
     sdkData: String?,
 ): MBWayPaymentComponentState {
     val sanitizedPhoneNumber = phoneNumber.text.trimStart('0')
@@ -28,7 +26,6 @@ internal fun MBWayComponentState.toPaymentComponentState(
     val paymentComponentData = PaymentComponentData(
         paymentMethod = mbWayDetails,
         order = null,
-        amount = amount,
     )
 
     return MBWayPaymentComponentState(

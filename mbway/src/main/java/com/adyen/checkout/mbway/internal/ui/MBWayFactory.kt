@@ -34,7 +34,6 @@ internal class MBWayFactory : PaymentComponentFactory<MBWayPaymentComponentState
     ): MBWayComponent {
         val componentParams = componentParamsBundle.commonComponentParams
         return MBWayComponent(
-            componentParams = componentParams,
             analyticsManager = analyticsManager,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             componentStateFactory = MBWayComponentStateFactory(componentParams),

@@ -24,7 +24,6 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.paymentmethod.BlikDetails
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +34,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsManager: AnalyticsManager,
-    private val componentParams: ComponentParams,
     private val sdkDataProvider: SdkDataProvider,
     coroutineScope: CoroutineScope,
 ) : PaymentComponent<BlikPaymentComponentState> {
@@ -86,7 +84,6 @@ internal class StoredBlikComponent(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = blikDetails,
             order = null,
-            amount = componentParams.amount,
         )
 
         return BlikPaymentComponentState(

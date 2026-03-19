@@ -47,11 +47,11 @@ internal class MBWayViewModel(
 
     init {
         val paymentComponentStateFlow = componentState
-            .map { it.toPaymentComponentState(amount = null, sdkData = "") }
+            .map { it.toPaymentComponentState(sdkData = "") }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = componentState.value.toPaymentComponentState(amount = null, sdkData = ""),
+                initialValue = componentState.value.toPaymentComponentState(sdkData = ""),
             )
 
         controller.registerComponentState(paymentComponentStateFlow)

@@ -1,7 +1,6 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -22,7 +21,6 @@ internal class MBWayComponentStateExtTest {
 
     @Test
     fun `when toPaymentComponentState is called, then a valid component state is created`() {
-        val amount = Amount("EUR", 1337)
         val componentState = MBWayComponentState(
             countries = emptyList(),
             selectedCountryCode = CountryModel("PT", "Portugal", "+351"),
@@ -33,7 +31,6 @@ internal class MBWayComponentStateExtTest {
         )
 
         val paymentComponentState = componentState.toPaymentComponentState(
-            amount = amount,
             sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
@@ -45,7 +42,6 @@ internal class MBWayComponentStateExtTest {
         val expectedPaymentComponentData = PaymentComponentData(
             paymentMethod = expectedMBWayDetails,
             order = null,
-            amount = amount,
         )
         val expectedPaymentComponentState = MBWayPaymentComponentState(
             data = expectedPaymentComponentData,
@@ -67,7 +63,7 @@ internal class MBWayComponentStateExtTest {
             isLoading = false,
         )
 
-        val paymentComponentState = componentState.toPaymentComponentState(null, sdkDataProvider.createEncodedSdkData())
+        val paymentComponentState = componentState.toPaymentComponentState(sdkDataProvider.createEncodedSdkData())
 
         assertEquals(
             "+351123456789",

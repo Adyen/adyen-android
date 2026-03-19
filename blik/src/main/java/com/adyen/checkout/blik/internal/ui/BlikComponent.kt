@@ -27,7 +27,6 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
@@ -38,7 +37,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 // TODO - Remove UnusedPrivateProperty suppression once analytics are done
 @Suppress("LongParameterList", "UnusedPrivateProperty")
 internal class BlikComponent(
-    private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: BlikComponentStateValidator,
@@ -78,7 +76,6 @@ internal class BlikComponent(
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
-                amount = componentParams.amount,
                 sdkDataProvider = sdkDataProvider,
             )
             eventChannel.trySend(
