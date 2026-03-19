@@ -214,6 +214,6 @@ class DefaultDetectCardTypeRepository(
     companion object {
         private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
 
-        private const val REQUIRED_BIN_SIZE = 11
+        private const val REQUIRED_BIN_SIZE = 8
     }
 }
