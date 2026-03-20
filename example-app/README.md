@@ -9,14 +9,15 @@ Steps to run the example app:
     * Your server should mirror the necessary endpoints for your flow (for example [/sessions](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) for the sessions flow and [/paymentMethods](https://docs.adyen.com/api-explorer/Checkout/latest/post/paymentMethods), [/payments](https://docs.adyen.com/api-explorer/Checkout/latest/post/payments) and [/payments/details](https://docs.adyen.com/api-explorer/Checkout/latest/post/payments/details) for the advanced flow).
     * The API key should be managed on the server.
 2. Duplicate `example.local.gradle` and name it `local.gradle`. Make sure the file is placed in the `example-app` directory.
-3. Replace the predefined values:
+3. Set `org.gradle.dependency.verification=lenient` in the project's `gradle.properties` file. This is required because the example app's dependencies might not be listed in the verification metadata.
+4. Replace the predefined values:
     * `MERCHANT_SERVER_URL`: the URL to your server.
     * `CLIENT_KEY`: your client key. Find out how to obtain it [here](https://docs.adyen.com/development-resources/client-side-authentication/#get-your-client-key).
     * `MERCHANT_ACCOUNT`: your merchant account identifier.
     * `AUTHORIZATION_HEADER_NAME`: the name of the authorization header as expected by your server. You can use an empty string if this is not applicable for you.
     * `AUTHORIZATION_HEADER_VALUE`: the value for the authorization header. You can use an empty string if this is not applicable for you.
-4. Sync the project.
-5. Run on any device or emulator.
+5. Sync the project.
+6. Run on any device or emulator.
 
 > [!WARNING]
 > In case you don't have your own server you can connect to the Adyen Checkout API directly for testing purposes only. Be aware this could potentially leak your credentials, the market-ready application must never connect to Adyen API directly.
