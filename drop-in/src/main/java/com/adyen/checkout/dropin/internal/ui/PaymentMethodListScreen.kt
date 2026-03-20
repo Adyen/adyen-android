@@ -27,7 +27,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -239,8 +238,7 @@ private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
             }
 
             if (item.brands.size > AMOUNT_VISIBLE_BRANDS) {
-                val restSize = remember(item) { item.brands.size - AMOUNT_VISIBLE_BRANDS }
-                SubHeadline("+$restSize", color = CheckoutThemeProvider.colors.textSecondary)
+                SubHeadline(text = "+", color = CheckoutThemeProvider.colors.textSecondary)
             }
 
             Spacer(Modifier.size(Dimensions.Spacing.ExtraSmall))
