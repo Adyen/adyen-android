@@ -199,7 +199,9 @@ private fun PaymentMethodItemList(
     paymentMethodItems: List<PaymentMethodItem>,
     onItemClick: (PaymentMethodItem) -> Unit,
 ) {
-    Column {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
+    ) {
         paymentMethodItems.forEach { item ->
             ListItem(
                 leadingIcon = {
