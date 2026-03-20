@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 19/3/2026.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+        android:id="@+id/imageView_singleBrand"
+        style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+        android:layout_marginHorizontal="@dimen/brand_logo_single_item_horizontal_margin"
+        android:layout_marginVertical="@dimen/standard_half_margin"
+        app:adyenStrokeColor="@color/stroke_color"
+        app:adyenStrokeWidth="0dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_brandsList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:padding="@dimen/standard_quarter_margin"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="2"
+        tools:listitem="@layout/brand_item"
+        tools:visibility="visible" />
+
+</merge>
