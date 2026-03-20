@@ -123,7 +123,7 @@ private fun CardComponentPreview() {
                 text = "5555444433331111",
             ),
             expiryDate = TextInputViewState(
-                text = "12/34",
+                text = "1234",
             ),
             securityCode = TextInputViewState(
                 text = "737",
