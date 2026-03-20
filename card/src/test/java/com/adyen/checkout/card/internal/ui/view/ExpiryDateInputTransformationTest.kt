@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.insert
 import androidx.compose.ui.text.TextRange
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
