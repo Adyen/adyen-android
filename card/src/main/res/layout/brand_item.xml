@@ -13,7 +13,7 @@
     style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent">
+    android:stateListAnimator="@animator/brand_item_elevation">
 
     <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_brandItem"
