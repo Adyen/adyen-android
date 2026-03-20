@@ -11,6 +11,8 @@ package com.adyen.checkout.dropin.internal.service
 import com.adyen.checkout.dropin.DropInService
 
 internal object DropInServiceRegistry {
+
+    @Volatile
     private var service: DropInService? = null
 
     fun register(service: DropInService) {
