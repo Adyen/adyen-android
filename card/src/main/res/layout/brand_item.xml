@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 19/3/2026.
+  -->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/brand_item_container"
+    style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+        android:id="@+id/imageView_brandItem"
+        style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+        app:adyenStrokeColor="@color/stroke_color"
+        app:adyenStrokeWidth="0dp" />
+
+</FrameLayout>
