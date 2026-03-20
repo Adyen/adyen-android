@@ -32,8 +32,8 @@
     </style>
 
     <style name="AdyenCheckout.Card.BrandRecognitionLogoContainer">
-        <item name="android:paddingTop">@dimen/standard_margin</item>
-        <item name="android:paddingBottom">@dimen/standard_margin</item>
+        <item name="android:paddingTop">@dimen/standard_quarter_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_quarter_margin</item>
         <item name="android:paddingStart">@dimen/standard_quarter_margin</item>
         <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
     </style>
