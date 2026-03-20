@@ -19,6 +19,7 @@ internal data class CardViewState(
     val expiryDate: TextInputViewState?,
     val securityCode: TextInputViewState?,
     val holderName: TextInputViewState?,
+    val socialSecurityNumber: TextInputViewState?,
     val storePaymentMethod: Boolean,
     val isStorePaymentFieldVisible: Boolean,
     val supportedCardBrands: List<CardBrand>,

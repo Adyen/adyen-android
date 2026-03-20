@@ -113,6 +113,24 @@ internal class CardComponentStateReducerTest(
     }
 
     @Test
+    fun `when intent is UpdateSocialSecurityNumber, then socialSecurityNumber state is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdateSocialSecurityNumber("123456"))
+
+        assertEquals("123456", actual.socialSecurityNumber.text)
+    }
+
+    @Test
+    fun `when intent is UpdateSocialSecurityNumberFocus, then socialSecurityNumber focus is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdateSocialSecurityNumberFocus(true))
+
+        assertTrue(actual.socialSecurityNumber.isFocused)
+    }
+
+    @Test
     fun `when intent is UpdateStorePaymentMethod, then storePaymentMethod is updated`() {
         val state = createInitialState()
 
@@ -467,6 +485,7 @@ internal class CardComponentStateReducerTest(
         expiryDate = TextInputComponentState(),
         securityCode = TextInputComponentState(),
         holderName = TextInputComponentState(),
+        socialSecurityNumber = TextInputComponentState(),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

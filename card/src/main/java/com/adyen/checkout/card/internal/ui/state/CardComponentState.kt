@@ -20,6 +20,7 @@ internal data class CardComponentState(
     val expiryDate: TextInputComponentState,
     val securityCode: TextInputComponentState,
     val holderName: TextInputComponentState,
+    val socialSecurityNumber: TextInputComponentState,
 
     // UI configuration
     val storePaymentMethod: Boolean,

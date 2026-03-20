@@ -32,12 +32,14 @@ internal class CardComponentStateValidator(
                 state.securityCode.requirementPolicy ?: RequirementPolicy.Required,
             )
         val holderNameError = validateHolderName(state.holderName)
+        val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)
 
         return state.copy(
             cardNumber = state.cardNumber.copy(errorMessage = cardNumberError),
             expiryDate = state.expiryDate.copy(errorMessage = expiryDateError),
             securityCode = state.securityCode.copy(errorMessage = securityCodeError),
             holderName = state.holderName.copy(errorMessage = holderNameError),
+            socialSecurityNumber = state.socialSecurityNumber.copy(errorMessage = socialSecurityNumberError),
         )
     }
 
@@ -45,7 +47,8 @@ internal class CardComponentStateValidator(
         return state.cardNumber.errorMessage == null &&
             state.expiryDate.errorMessage == null &&
             state.securityCode.errorMessage == null &&
-            state.holderName.errorMessage == null
+            state.holderName.errorMessage == null &&
+            state.socialSecurityNumber.errorMessage == null
     }
 
     private fun validateCardNumber(
@@ -98,6 +101,17 @@ internal class CardComponentStateValidator(
             validation = CardValidationUtils.validateHolderName(
                 holderName = holderName.text,
                 isRequired = holderName.requirementPolicy is RequirementPolicy.Required,
+            ),
+        )
+    }
+
+    private fun validateSocialSecurityNumber(
+        socialSecurityNumber: TextInputComponentState,
+    ): CheckoutLocalizationKey? {
+        return cardValidationMapper.mapSocialSecurityNumberValidation(
+            validation = CardValidationUtils.validateSocialSecurityNumber(
+                socialSecurityNumber = socialSecurityNumber.text,
+                requirementPolicy = socialSecurityNumber.requirementPolicy,
             ),
         )
     }

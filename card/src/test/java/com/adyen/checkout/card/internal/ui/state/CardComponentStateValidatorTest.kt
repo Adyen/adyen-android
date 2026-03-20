@@ -106,6 +106,48 @@ internal class CardComponentStateValidatorTest {
     }
 
     @Test
+    fun `when social security number is required and empty, then isValid returns false`() {
+        val state = createValidState().copy(
+            socialSecurityNumber = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Required),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.socialSecurityNumber.errorMessage)
+    }
+
+    @Test
+    fun `when social security number is required and invalid, then isValid returns false`() {
+        val state = createValidState().copy(
+            socialSecurityNumber = TextInputComponentState(
+                text = "123",
+                requirementPolicy = RequirementPolicy.Required,
+            ),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.socialSecurityNumber.errorMessage)
+    }
+
+    @Test
+    fun `when social security number is not required and empty, then isValid returns true`() {
+        val state = createValidState().copy(
+            socialSecurityNumber = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Hidden),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertTrue(result)
+        assertNull(validatedState.socialSecurityNumber.errorMessage)
+    }
+
+    @Test
     fun `when card brand is unsupported and reliable, then card number has error`() {
         val state = createValidState().copy(
             detectedCardTypes = listOf(
@@ -123,6 +165,10 @@ internal class CardComponentStateValidatorTest {
         expiryDate = TextInputComponentState(text = "12/30"),
         securityCode = TextInputComponentState(text = "123"),
         holderName = TextInputComponentState(text = "John Doe", requirementPolicy = RequirementPolicy.Hidden),
+        socialSecurityNumber = TextInputComponentState(
+            text = "12312312312",
+            requirementPolicy = RequirementPolicy.Hidden,
+        ),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
