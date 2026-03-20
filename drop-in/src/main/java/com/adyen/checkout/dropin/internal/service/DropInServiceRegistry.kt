@@ -9,19 +9,23 @@
 package com.adyen.checkout.dropin.internal.service
 
 import com.adyen.checkout.dropin.DropInService
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 
 internal object DropInServiceRegistry {
 
-    @Volatile
-    private var service: DropInService? = null
+    private val service = MutableStateFlow<DropInService?>(null)
 
     fun register(service: DropInService) {
-        this.service = service
+        this.service.value = service
     }
 
     fun unregister() {
-        service = null
+        service.value = null
     }
 
-    fun get(): DropInService? = service
+    suspend fun awaitService(): DropInService {
+        return service.filterNotNull().first()
+    }
 }

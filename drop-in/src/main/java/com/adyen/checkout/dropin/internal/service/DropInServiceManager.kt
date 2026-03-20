@@ -41,11 +41,11 @@ internal class DropInServiceManager(
     }
 
     suspend fun requestOnSubmit(state: PaymentComponentState<*>): CheckoutResult {
-        return DropInServiceRegistry.get()?.onSubmit(state) ?: error("Service is not available")
+        return DropInServiceRegistry.awaitService().onSubmit(state)
     }
 
     suspend fun requestOnAdditionalDetails(data: ActionComponentData): CheckoutResult {
-        return DropInServiceRegistry.get()?.onAdditionalDetails(data) ?: error("Service is not available")
+        return DropInServiceRegistry.awaitService().onAdditionalDetails(data)
     }
 
     suspend fun onPaymentFinished(paymentResult: PaymentResult) {
