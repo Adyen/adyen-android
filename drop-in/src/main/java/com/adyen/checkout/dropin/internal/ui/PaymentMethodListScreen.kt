@@ -53,6 +53,8 @@ import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import java.util.Locale
 
+private const val AMOUNT_VISIBLE_BRANDS = 3
+
 @Composable
 internal fun PaymentMethodListScreen(
     navigator: DropInNavigator,
@@ -221,8 +223,6 @@ private fun PaymentMethodItemList(
     }
 }
 
-private const val AMOUNT_VISIBLE_BRANDS = 3
-
 @Composable
 private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
     Row(
@@ -252,6 +252,7 @@ private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
     }
 }
 
+@Suppress("LongMethod")
 @Preview(showBackground = true)
 @Composable
 private fun PaymentMethodListContentPreview() {
