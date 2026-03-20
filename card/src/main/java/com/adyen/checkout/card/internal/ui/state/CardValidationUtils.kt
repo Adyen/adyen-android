@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidator
 import com.adyen.checkout.core.common.helper.CardNumberValidationResult
@@ -71,7 +72,9 @@ internal object CardValidationUtils {
         expiryDate: String,
         fieldPolicy: Brand.FieldPolicy?,
     ): CardExpiryDateValidation {
-        val result = CardExpiryDateValidator.validateExpiryDate(expiryDate)
+        val (expiryMonth, expiryYear) = ExpiryDateParser.parseToMonthAndYear(expiryDate, returnFullYear = false)
+            ?: return CardExpiryDateValidation.INVALID_OTHER_REASON
+        val result = CardExpiryDateValidator.validateExpiryDate(expiryMonth = expiryMonth, expiryYear = expiryYear)
         return validateExpiryDate(expiryDate, result, fieldPolicy)
     }
 
