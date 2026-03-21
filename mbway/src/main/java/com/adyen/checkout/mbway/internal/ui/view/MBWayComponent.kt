@@ -43,19 +43,20 @@ internal fun MBWayComponent(
             publicKey = "",
         )
         MBWayViewModel(
-            controller = controller,
             componentStateFactory = MBWayComponentStateFactory(componentParams),
             componentStateReducer = MBWayComponentStateReducer(),
             componentStateValidator = MBWayComponentStateValidator(),
             viewStateProducer = MBWayViewStateProducer(),
-        )
+        ).also {
+            controller.attach(it)
+        }
     }
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
     MBWayContent(
         viewState = viewState,
         onIntent = viewModel::onIntent,
-        onSubmitClick = viewModel::submit,
+        onSubmitClick = controller::submit,
         onCountryCodePickerClick = { TODO() },
         modifier = modifier,
     )

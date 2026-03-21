@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -118,12 +119,14 @@ private fun Component(
             )
         }
 
+        val coroutineScope = rememberCoroutineScope()
         CheckoutPaymentFlow(
             controller = remember(selectedPaymentMethod) {
                 NewCheckoutController(
                     target = CheckoutTarget.PaymentMethod(selectedPaymentMethod.type),
                     context = uiState.checkoutContext,
                     callbacks = uiState.checkoutCallbacks,
+                    coroutineScope = coroutineScope,
                 )
             },
             theme = theme,
