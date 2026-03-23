@@ -15,8 +15,9 @@ Steps to run the example app:
     * `MERCHANT_ACCOUNT`: your merchant account identifier.
     * `AUTHORIZATION_HEADER_NAME`: the name of the authorization header as expected by your server. You can use an empty string if this is not applicable for you.
     * `AUTHORIZATION_HEADER_VALUE`: the value for the authorization header. You can use an empty string if this is not applicable for you.
-4. Sync the project.
-5. Run on any device or emulator.
+4. Set `org.gradle.dependency.verification=lenient` in the project's `gradle.properties` file. This is required because the example app's dependencies might not be listed in the verification metadata.
+5. Sync the project.
+6. Run on any device or emulator.
 
 > [!WARNING]
 > In case you don't have your own server you can connect to the Adyen Checkout API directly for testing purposes only. Be aware this could potentially leak your credentials, the market-ready application must never connect to Adyen API directly.
