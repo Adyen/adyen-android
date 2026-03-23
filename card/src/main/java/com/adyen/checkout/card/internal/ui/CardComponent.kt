@@ -46,6 +46,7 @@ import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -59,6 +60,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class CardComponent(
     private val analyticsManager: AnalyticsManager,
     private val cardEncryptor: BaseCardEncryptor,
+    private val genericEncryptor: BaseGenericEncryptor,
     private val componentParams: CardComponentParams,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val componentStateValidator: CardComponentStateValidator,
@@ -114,6 +116,7 @@ internal class CardComponent(
             val paymentComponentState = componentState.value.toPaymentComponentState(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
+                genericEncryptor = genericEncryptor,
                 sdkDataProvider = sdkDataProvider,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,
