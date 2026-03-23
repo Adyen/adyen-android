@@ -50,6 +50,9 @@ internal fun CardComponentState.toPaymentComponentState(
         cardBrand = cardBrand(),
         sdkDataProvider = sdkDataProvider,
         isCvcHidden = securityCode.requirementPolicy is RequirementPolicy.Hidden,
+        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber(componentParams),
+        // TODO add encryption
+        encryptedKcpCardPassword = kcpCardPassword(componentParams),
     )
 
     val paymentComponentData = createPaymentComponentData(
@@ -62,7 +65,6 @@ internal fun CardComponentState.toPaymentComponentState(
     return createPaymentComponentState(paymentComponentData)
 }
 
-@Suppress("LongParameterList")
 private fun CardComponentState.encryptCard(
     cardEncryptor: BaseCardEncryptor,
     publicKey: String,
@@ -95,6 +97,8 @@ private fun createCardDetails(
     holderName: String?,
     cardBrand: CardBrand?,
     isCvcHidden: Boolean,
+    encryptedKcpCardPassword: String?,
+    kcpBirthDateOrTaxNumber: String?,
 ) = CardDetails(
     type = CardDetails.PAYMENT_METHOD_TYPE,
     sdkData = sdkDataProvider.createEncodedSdkData(
@@ -106,6 +110,8 @@ private fun createCardDetails(
     encryptedSecurityCode = if (!isCvcHidden) encryptedCard.encryptedSecurityCode else null,
     holderName = holderName,
     brand = cardBrand?.txVariant,
+    encryptedPassword = encryptedKcpCardPassword,
+    taxNumber = kcpBirthDateOrTaxNumber,
 )
 
 private fun createPaymentComponentData(
@@ -154,6 +160,20 @@ private fun CardComponentState.holderName(componentParams: CardComponentParams) 
 private fun CardComponentState.socialSecurityNumber(componentParams: CardComponentParams) =
     if (componentParams.socialSecurityNumberMode != FieldMode.HIDE && socialSecurityNumber.text.isNotBlank()) {
         socialSecurityNumber.text
+    } else {
+        null
+    }
+
+private fun CardComponentState.kcpBirthDateOrTaxNumber(componentParams: CardComponentParams) =
+    if (componentParams.koreanAuthenticationMode != FieldMode.HIDE && kcpBirthDateOrTaxNumber.text.isNotBlank()) {
+        kcpBirthDateOrTaxNumber.text
+    } else {
+        null
+    }
+
+private fun CardComponentState.kcpCardPassword(componentParams: CardComponentParams) =
+    if (componentParams.koreanAuthenticationMode != FieldMode.HIDE && kcpCardPassword.text.isNotBlank()) {
+        kcpCardPassword.text
     } else {
         null
     }

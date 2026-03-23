@@ -55,6 +55,16 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_SOCIAL_SECURITY_NUMBER_INVALID ->
                 R.string.checkout_card_social_security_number_invalid
 
+            CheckoutLocalizationKey.CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER ->
+                R.string.checkout_card_kcp_birth_date_or_tax_number
+
+            CheckoutLocalizationKey.CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER_INVALID ->
+                R.string.checkout_card_kcp_birth_date_or_tax_number_invalid
+
+            CheckoutLocalizationKey.CARD_KCP_CARD_PASSWORD -> R.string.checkout_card_kcp_password
+            CheckoutLocalizationKey.CARD_KCP_CARD_PASSWORD_INVALID ->
+                R.string.checkout_card_kcp_password_invalid
+
             // Drop-in
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->

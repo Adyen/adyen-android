@@ -69,4 +69,24 @@ internal class CardValidationMapper {
                 CheckoutLocalizationKey.CARD_SOCIAL_SECURITY_NUMBER_INVALID
         }
     }
+
+    fun mapKCPBirthDateOrTaxNumberValidation(
+        validation: KCPBirthDateOrTaxNumberValidation
+    ): CheckoutLocalizationKey? {
+        return when (validation) {
+            KCPBirthDateOrTaxNumberValidation.VALID -> null
+            KCPBirthDateOrTaxNumberValidation.INVALID ->
+                CheckoutLocalizationKey.CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER_INVALID
+        }
+    }
+
+    fun mapKCPCardPasswordValidation(
+        validation: KCPCardPasswordValidation
+    ): CheckoutLocalizationKey? {
+        return when (validation) {
+            KCPCardPasswordValidation.VALID -> null
+            KCPCardPasswordValidation.INVALID ->
+                CheckoutLocalizationKey.CARD_KCP_CARD_PASSWORD_INVALID
+        }
+    }
 }

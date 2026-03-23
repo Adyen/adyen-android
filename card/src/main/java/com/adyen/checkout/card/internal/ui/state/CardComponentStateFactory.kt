@@ -42,6 +42,18 @@ internal class CardComponentStateFactory(
                     FieldMode.HIDE -> RequirementPolicy.Hidden
                 },
             ),
+            kcpBirthDateOrTaxNumber = TextInputComponentState(
+                requirementPolicy = when (componentParams.koreanAuthenticationMode) {
+                    FieldMode.SHOW -> RequirementPolicy.Required
+                    FieldMode.HIDE -> RequirementPolicy.Hidden
+                },
+            ),
+            kcpCardPassword = TextInputComponentState(
+                requirementPolicy = when (componentParams.koreanAuthenticationMode) {
+                    FieldMode.SHOW -> RequirementPolicy.Required
+                    FieldMode.HIDE -> RequirementPolicy.Hidden
+                },
+            ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = componentParams.showStorePayment,
             supportedCardBrands = componentParams.supportedCardBrands,
