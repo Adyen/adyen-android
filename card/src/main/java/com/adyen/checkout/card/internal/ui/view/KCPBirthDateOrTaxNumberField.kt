@@ -10,13 +10,16 @@ package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_OR_TAX_NUMBER_MAX_LENGTH
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 
 @Composable
 internal fun KCPBirthDateOrTaxNumberField(
@@ -25,6 +28,12 @@ internal fun KCPBirthDateOrTaxNumberField(
     modifier: Modifier = Modifier,
 ) {
     val supportingText = kcpBirthDateOrTaxNumberState.supportingText?.let { resolveString(it) }
+
+    val inputTransformation = remember {
+        DigitOnlyInputTransformation(
+            maxLengthWithoutSeparators = KCP_BIRTH_DATE_OR_TAX_NUMBER_MAX_LENGTH,
+        )
+    }
 
     CheckoutTextField(
         modifier = modifier
@@ -40,5 +49,6 @@ internal fun KCPBirthDateOrTaxNumberField(
             onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(value))
         },
         shouldFocus = kcpBirthDateOrTaxNumberState.isFocused,
+        inputTransformation = inputTransformation,
     )
 }
