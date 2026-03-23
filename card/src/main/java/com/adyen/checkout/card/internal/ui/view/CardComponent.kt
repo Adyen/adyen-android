@@ -60,6 +60,7 @@ internal fun CardComponent(
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun CardDetailsSection(
     viewState: CardViewState,

@@ -15,10 +15,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldDecorator
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -75,6 +77,7 @@ import kotlinx.coroutines.flow.collectLatest
  * @param trailingIcon An optional composable function that provides a trailing icon to be
  * displayed at the end of the text field.
  */
+@Suppress("LongMethod")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutTextField(
@@ -94,42 +97,61 @@ fun CheckoutTextField(
     shouldFocus: Boolean = false,
     prefix: String? = null,
     hint: String? = null,
+    isSecureField: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val style = CheckoutThemeProvider.elements.textField
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
-    BasicTextField(
-        state = state,
-        modifier = modifier.focusRequester(focusRequester),
-        enabled = enabled,
-        inputTransformation = inputTransformation,
-        outputTransformation = outputTransformation,
-        textStyle = TextStyle(
-            color = style.textColor,
-            fontSize = innerTextStyle.size.sp,
-            fontWeight = FontWeight(innerTextStyle.weight),
-            lineHeight = innerTextStyle.lineHeight.sp,
-        ),
-        lineLimits = TextFieldLineLimits.SingleLine,
-        cursorBrush = SolidColor(style.activeColor),
-        keyboardOptions = keyboardOptions,
-        interactionSource = interactionSource,
-        decorator = { innerTextField ->
-            CheckoutTextFieldDecorationBox(
-                label = label,
-                innerTextField = innerTextField,
-                supportingText = supportingText,
-                isError = isError,
-                interactionSource = interactionSource,
-                innerIndication = innerIndication,
-                prefix = prefix,
-                hint = if (state.text.isEmpty()) hint else null,
-                trailingIcon = trailingIcon,
-                style = style,
-            )
-        },
+    val focusModifier = modifier.focusRequester(focusRequester)
+    val textStyle = TextStyle(
+        color = style.textColor,
+        fontSize = innerTextStyle.size.sp,
+        fontWeight = FontWeight(innerTextStyle.weight),
+        lineHeight = innerTextStyle.lineHeight.sp,
     )
+    val cursorBrush = SolidColor(style.activeColor)
+    val decorator = TextFieldDecorator { innerTextField ->
+        CheckoutTextFieldDecorationBox(
+            label = label,
+            innerTextField = innerTextField,
+            supportingText = supportingText,
+            isError = isError,
+            interactionSource = interactionSource,
+            innerIndication = innerIndication,
+            prefix = prefix,
+            hint = if (state.text.isEmpty()) hint else null,
+            trailingIcon = trailingIcon,
+            style = style,
+        )
+    }
+    if (!isSecureField) {
+        BasicTextField(
+            state = state,
+            modifier = focusModifier,
+            enabled = enabled,
+            inputTransformation = inputTransformation,
+            outputTransformation = outputTransformation,
+            textStyle = textStyle,
+            lineLimits = TextFieldLineLimits.SingleLine,
+            cursorBrush = cursorBrush,
+            keyboardOptions = keyboardOptions,
+            interactionSource = interactionSource,
+            decorator = decorator,
+        )
+    } else {
+        BasicSecureTextField(
+            state = state,
+            modifier = focusModifier,
+            enabled = enabled,
+            inputTransformation = inputTransformation,
+            textStyle = textStyle,
+            cursorBrush = cursorBrush,
+            keyboardOptions = keyboardOptions,
+            interactionSource = interactionSource,
+            decorator = decorator,
+        )
+    }
 
     if (onValueChange != null) {
         val currentOnValueChange by rememberUpdatedState(onValueChange)
@@ -169,8 +191,14 @@ private fun CheckoutTextFieldPreview(
             CheckoutTextField(
                 onValueChange = {},
                 label = "Label",
-                supportingText = "Description",
                 prefix = "Prefix",
+            )
+
+            val focusRequester = remember { FocusRequester() }
+            CheckoutTextField(
+                onValueChange = {},
+                label = "Label",
+                initialValue = "Value",
                 trailingIcon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
@@ -178,13 +206,6 @@ private fun CheckoutTextFieldPreview(
                         tint = CheckoutThemeProvider.colors.text,
                     )
                 },
-            )
-
-            val focusRequester = remember { FocusRequester() }
-            CheckoutTextField(
-                onValueChange = {},
-                label = "Label",
-                supportingText = "Description",
                 modifier = Modifier.focusRequester(focusRequester),
             )
             LaunchedEffect(Unit) {
@@ -193,9 +214,18 @@ private fun CheckoutTextFieldPreview(
 
             CheckoutTextField(
                 onValueChange = {},
+                initialValue = "Value",
                 label = "Label",
-                supportingText = "Description",
+                supportingText = "Invalid input",
                 isError = true,
+            )
+
+            CheckoutTextField(
+                onValueChange = {},
+                initialValue = "Value",
+                label = "Password",
+                isSecureField = true,
+                modifier = Modifier.focusRequester(focusRequester),
             )
         }
     }

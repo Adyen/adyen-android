@@ -48,13 +48,13 @@ internal class CardComponentStateValidator(
     }
 
     override fun isValid(state: CardComponentState): Boolean {
-        return state.cardNumber.errorMessage == null
-            && state.expiryDate.errorMessage == null
-            && state.securityCode.errorMessage == null
-            && state.holderName.errorMessage == null
-            && state.socialSecurityNumber.errorMessage == null
-            && state.kcpBirthDateOrTaxNumber.errorMessage == null
-            && state.kcpCardPassword.errorMessage == null
+        return state.cardNumber.errorMessage == null &&
+            state.expiryDate.errorMessage == null &&
+            state.securityCode.errorMessage == null &&
+            state.holderName.errorMessage == null &&
+            state.socialSecurityNumber.errorMessage == null &&
+            state.kcpBirthDateOrTaxNumber.errorMessage == null &&
+            state.kcpCardPassword.errorMessage == null
     }
 
     private fun validateCardNumber(
