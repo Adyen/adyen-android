@@ -50,5 +50,6 @@ internal fun KCPCardPasswordField(
         },
         shouldFocus = kcpCardPasswordState.isFocused,
         inputTransformation = inputTransformation,
+        isSecureField = true,
     )
 }
