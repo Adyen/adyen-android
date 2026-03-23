@@ -21,6 +21,8 @@ object KCPBirthDateOrTaxNumberProperties {
     const val KCP_BIRTH_DATE_VALID_LENGTH = 6
     const val KCP_TAX_NUMBER_VALID_LENGTH = 10
 
+    const val KCP_BIRTH_DATE_FORMAT = "yyMMdd"
+
     // same as the tax number (the longer format)
     const val KCP_BIRTH_DATE_OR_TAX_NUMBER_MAX_LENGTH = 10
 }
