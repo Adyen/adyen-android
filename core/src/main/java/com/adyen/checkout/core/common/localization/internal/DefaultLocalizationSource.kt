@@ -58,6 +58,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER ->
                 R.string.checkout_card_kcp_birth_date_or_tax_number
 
+            CheckoutLocalizationKey.CARD_KCP_TAX_NUMBER -> R.string.checkout_card_kcp_tax_number
             CheckoutLocalizationKey.CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER_INVALID ->
                 R.string.checkout_card_kcp_birth_date_or_tax_number_invalid
 
