@@ -25,7 +25,6 @@ import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
-import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -35,11 +34,9 @@ import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.ui.view.ExpiryDateInput
-import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.isVisible
@@ -296,29 +293,15 @@ class CardView @JvmOverloads constructor(
 
         val detectedCardTypes = cardOutputData.detectedCardTypes
         if (detectedCardTypes.isEmpty()) {
-            binding.cardBrandLogoImageViewPrimary.apply {
-                strokeWidth = 0f
-                setImageResource(R.drawable.ic_card)
-            }
-            binding.cardBrandLogoContainerSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
             binding.editTextSecurityCode.setAccessibilityDescription(false)
         } else {
-            val firstDetectedCardType = detectedCardTypes.first()
-            binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
-            binding.cardBrandLogoImageViewPrimary.loadLogo(
-                environment = cardDelegate.componentParams.environment,
-                txVariant = detectedCardTypes[0].cardBrand.txVariant,
-                placeholder = R.drawable.ic_card,
-                errorFallback = R.drawable.ic_card,
-            )
-            setDualBrandedCardImages(cardOutputData.dualBrandData, cardOutputData.cardNumberState.validation)
-
             // TODO 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
             binding.editTextSecurityCode.setAccessibilityDescription(isAmex)
 
+            val firstDetectedCardType = detectedCardTypes.first()
             if (detectedCardTypes.size == 1 &&
                 firstDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
             ) {
@@ -328,26 +311,6 @@ class CardView @JvmOverloads constructor(
                 } else {
                     goToNextInputIfFocus(binding.editTextCardNumber)
                 }
-            }
-        }
-    }
-
-    private fun setDualBrandedCardImages(dualBrandData: DualBrandData?, validation: Validation) {
-        val cardNumberHasFocus = binding.textInputLayoutCardNumber.hasFocus()
-        if (validation is Validation.Invalid && !cardNumberHasFocus) {
-            setCardNumberError(validation.reason)
-        } else {
-            dualBrandData?.brandOptions?.getOrNull(1)?.let { cardBrandItem ->
-                binding.cardBrandLogoContainerSecondary.isVisible = true
-                binding.cardBrandLogoImageViewSecondary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
-                binding.cardBrandLogoImageViewSecondary.loadLogo(
-                    environment = cardDelegate.componentParams.environment,
-                    txVariant = cardBrandItem.brand.txVariant,
-                    placeholder = R.drawable.ic_card,
-                    errorFallback = R.drawable.ic_card,
-                )
-            } ?: run {
-                binding.cardBrandLogoContainerSecondary.isVisible = false
             }
         }
     }
