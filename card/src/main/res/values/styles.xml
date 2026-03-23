@@ -106,8 +106,10 @@
         <item name="drawableTint">?attr/colorOnSurface</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection" />
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Header" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:layout_marginTop">@dimen/standard_half_margin</item>
         <item name="android:textSize">12sp</item>
@@ -116,6 +118,7 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Description" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:alpha">0.54</item>
         <item name="android:layout_marginTop">@dimen/standard_quarter_margin</item>
@@ -124,10 +127,12 @@
 
     <style name="AdyenCheckout.Card.BrandSelection.Item" />
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Item.Logo" parent="AdyenCheckout.Image.Logo">
         <item name="adyenStrokeColor">@color/stroke_color</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Item.Title" parent="AdyenCheckout.ListItemText">
         <item name="android:layout_marginStart">@dimen/standard_three_quarters_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_three_quarters_margin</item>
@@ -135,6 +140,7 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Item.RadioButton" parent="AdyenCheckout.RadioButton">
         <item name="android:layout_marginEnd">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
