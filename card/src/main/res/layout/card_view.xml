@@ -40,6 +40,12 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <com.adyen.checkout.card.internal.ui.view.brand.BrandView
+                android:id="@+id/brandView"
+                style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainer_cardScanning"
                 android:name="com.adyen.checkout.card.internal.ui.view.CardScanningFragment"
