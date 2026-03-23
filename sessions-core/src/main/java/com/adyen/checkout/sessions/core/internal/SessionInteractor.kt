@@ -231,7 +231,7 @@ class SessionInteractor(
                 onSuccess = { response ->
                     updateSessionData(response.sessionData)
 
-                    val paymentMethods = response.paymentMethodsApiResponse
+                    val paymentMethods = response.paymentMethods
                     return if (paymentMethods != null) {
                         SessionCallResult.UpdatePaymentMethods.Successful(paymentMethods, order)
                     } else {

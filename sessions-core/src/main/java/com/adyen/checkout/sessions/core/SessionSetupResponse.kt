@@ -9,7 +9,7 @@
 package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethods
 import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.core.old.internal.data.model.ModelObject
 import com.adyen.checkout.core.old.internal.data.model.ModelUtils
@@ -24,7 +24,7 @@ data class SessionSetupResponse(
     val sessionData: String,
     val amount: Amount?,
     val expiresAt: String,
-    val paymentMethodsApiResponse: PaymentMethodsApiResponse?,
+    val paymentMethods: PaymentMethods?,
     val returnUrl: String?,
     val configuration: SessionSetupConfiguration?,
     val shopperLocale: String?,
@@ -52,8 +52,8 @@ data class SessionSetupResponse(
                     jsonObject.putOpt(
                         PAYMENT_METHODS,
                         ModelUtils.serializeOpt(
-                            modelObject.paymentMethodsApiResponse,
-                            PaymentMethodsApiResponse.SERIALIZER
+                            modelObject.paymentMethods,
+                            PaymentMethods.SERIALIZER
                         )
                     )
                     jsonObject.putOpt(RETURN_URL, modelObject.returnUrl)
@@ -75,9 +75,9 @@ data class SessionSetupResponse(
                         sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                         amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                         expiresAt = jsonObject.getStringOrNull(EXPIRES_AT).orEmpty(),
-                        paymentMethodsApiResponse = ModelUtils.deserializeOpt(
+                        paymentMethods = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(PAYMENT_METHODS),
-                            PaymentMethodsApiResponse.SERIALIZER
+                            PaymentMethods.SERIALIZER
                         ),
                         returnUrl = jsonObject.getStringOrNull(RETURN_URL),
                         configuration = ModelUtils.deserializeOpt(

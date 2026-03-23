@@ -17,10 +17,10 @@ import org.json.JSONObject
 
 /**
  * Object that parses and holds the response data from the /paymentMethods endpoint.
- * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
+ * Use [PaymentMethods.SERIALIZER] to deserialize this class from your JSON response.
  */
 @Parcelize
-data class PaymentMethodsApiResponse(
+data class PaymentMethods(
     var storedPaymentMethods: List<StoredPaymentMethod>? = null,
     var paymentMethods: List<PaymentMethod>? = null,
 ) : ModelObject() {
@@ -30,8 +30,8 @@ data class PaymentMethodsApiResponse(
         private const val PAYMENT_METHODS = "paymentMethods"
 
         @JvmField
-        val SERIALIZER: Serializer<PaymentMethodsApiResponse> = object : Serializer<PaymentMethodsApiResponse> {
-            override fun serialize(modelObject: PaymentMethodsApiResponse): JSONObject {
+        val SERIALIZER: Serializer<PaymentMethods> = object : Serializer<PaymentMethods> {
+            override fun serialize(modelObject: PaymentMethods): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(
@@ -41,12 +41,12 @@ data class PaymentMethodsApiResponse(
                         putOpt(PAYMENT_METHODS, serializeOptList(modelObject.paymentMethods, PaymentMethod.SERIALIZER))
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(PaymentMethodsApiResponse::class.java, e)
+                    throw ModelSerializationException(PaymentMethods::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): PaymentMethodsApiResponse {
-                return PaymentMethodsApiResponse(
+            override fun deserialize(jsonObject: JSONObject): PaymentMethods {
+                return PaymentMethods(
                     storedPaymentMethods = deserializeOptList(
                         jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
                         StoredPaymentMethod.SERIALIZER

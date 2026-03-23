@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.sessions.core
 
-import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethods
 import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.core.old.internal.data.model.ModelObject
 import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
@@ -17,7 +17,7 @@ import org.json.JSONObject
 
 /**
  * Object that parses and holds the response data from the /sessions endpoint.
- * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
+ * Use [PaymentMethods.SERIALIZER] to deserialize payment methods from your JSON response.
  */
 @Parcelize
 data class SessionModel(

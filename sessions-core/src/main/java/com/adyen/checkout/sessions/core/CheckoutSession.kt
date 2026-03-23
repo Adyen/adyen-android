@@ -25,7 +25,7 @@ data class CheckoutSession(
     val clientKey: String,
 ) {
     fun getPaymentMethod(paymentMethodType: String): PaymentMethod? {
-        return sessionSetupResponse.paymentMethodsApiResponse?.paymentMethods.orEmpty().firstOrNull {
+        return sessionSetupResponse.paymentMethods?.paymentMethods.orEmpty().firstOrNull {
             it.type == paymentMethodType
         }
     }

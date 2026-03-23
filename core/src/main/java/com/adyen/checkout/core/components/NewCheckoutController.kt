@@ -64,7 +64,7 @@ class NewCheckoutController(
     private fun getPaymentMethodResponse(): PaymentMethods? {
         return when (context) {
             is CheckoutContext.Advanced -> context.paymentMethods
-            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
+            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethods
         }
     }
 

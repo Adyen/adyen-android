@@ -11,7 +11,7 @@ package com.adyen.checkout.sessions.core.internal
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
-import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethods
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.components.core.action.Action as ActionResponse
 
@@ -59,7 +59,7 @@ interface SessionCallResult {
 
     sealed class UpdatePaymentMethods : SessionCallResult {
         data class Successful(
-            val paymentMethods: PaymentMethodsApiResponse,
+            val paymentMethods: PaymentMethods,
             val order: OrderResponse?,
         ) : UpdatePaymentMethods()
 

@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethods
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
@@ -648,7 +648,7 @@ internal class SessionInteractorTest(
             val result = sessionInteractor.updatePaymentMethods(TEST_ORDER_RESPONSE)
 
             val expectedResult = SessionCallResult.UpdatePaymentMethods.Successful(
-                paymentMethods = requireNotNull(mockResponse.paymentMethodsApiResponse),
+                paymentMethods = requireNotNull(mockResponse.paymentMethods),
                 order = TEST_ORDER_RESPONSE,
             )
             assertEquals(expectedResult, result)
@@ -795,7 +795,7 @@ internal class SessionInteractorTest(
         amount: Amount? = null,
         expiresAt: String = "",
         returnUrl: String = "",
-        paymentMethods: PaymentMethodsApiResponse? = PaymentMethodsApiResponse(),
+        paymentMethods: PaymentMethods? = PaymentMethods(),
         configuration: SessionSetupConfiguration? = null,
         shopperLocale: String? = null,
     ): SessionSetupResponse {
@@ -804,7 +804,7 @@ internal class SessionInteractorTest(
             sessionData = sessionData,
             amount = amount,
             expiresAt = expiresAt,
-            paymentMethodsApiResponse = paymentMethods,
+            paymentMethods = paymentMethods,
             returnUrl = returnUrl,
             configuration = configuration,
             shopperLocale = shopperLocale,

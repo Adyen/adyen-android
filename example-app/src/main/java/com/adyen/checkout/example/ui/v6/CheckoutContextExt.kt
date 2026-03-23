@@ -23,7 +23,7 @@ internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
     val paymentMethods = when (this) {
         is CheckoutContext.Advanced -> this.paymentMethods.paymentMethods
         is CheckoutContext.Sessions ->
-            this.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse?.paymentMethods
+            this.checkoutSession.sessionSetupResponse.paymentMethods?.paymentMethods
     }
 
     return paymentMethods

@@ -15,7 +15,7 @@ import org.json.JSONObject
 
 /**
  * Object that parses and holds the response data from the /sessions endpoint.
- * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
+ * Use [PaymentMethods.SERIALIZER] to deserialize payment methods from your JSON response.
  */
 @Parcelize
 data class SessionResponse(

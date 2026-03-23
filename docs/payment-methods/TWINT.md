@@ -56,14 +56,14 @@ CheckoutConfiguration(
 ### Sessions
 - Include the [`storedPaymentMethodMode`](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions#request-storePaymentMethodMode) and [`shopperReference`](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions#request-shopperReference) parameter in your [`/sessions`](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) request.
 - The API response will contain a list of the shopper's stored payment methods.
-- For drop-in, pass the API response as explained in [the integration guide](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Android&integration=Drop-in#set-up) and it will show the stored payment methods. 
-- For components, get the Twint `StoredPaymentMethod` from the list and pass it when creating the `TwintComponent`:
-```Kotlin
-val storedPaymentMethods = checkoutSession.sessionSetupResponse.paymentMethodsApiResponse?.storedPaymentMethods
-val storedPaymentMethod = storedPaymentMethods?.firstOrNull { TwintComponent.PROVIDER.isPaymentMethodSupported(it) }
-
-val component = TwintComponent.PROVIDER.get(
-    activity = activity, // or fragment = fragment
+ - For drop-in, pass the API response as explained in [the integration guide](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Android&integration=Drop-in#set-up) and it will show the stored payment methods. 
+ - For components, get the Twint `StoredPaymentMethod` from the list and pass it when creating the `TwintComponent`:
+ ```Kotlin
+ val storedPaymentMethods = checkoutSession.sessionSetupResponse.paymentMethods?.storedPaymentMethods
+ val storedPaymentMethod = storedPaymentMethods?.firstOrNull { TwintComponent.PROVIDER.isPaymentMethodSupported(it) }
+ 
+ val component = TwintComponent.PROVIDER.get(
+     activity = activity, // or fragment = fragment
     checkoutSession = checkoutSession,
     storedPaymentMethod = storedPaymentMethod,
     configuration = checkoutConfiguration,
@@ -76,14 +76,14 @@ val component = TwintComponent.PROVIDER.get(
 - The `PaymentComponentState` will contain the shopper's choice in `data.storePaymentMethod`. 
 - Include [`storePaymentMethod`](https://docs.adyen.com/api-explorer/Checkout/latest/post/payments#request-storePaymentMethod) and [`shopperReference`](https://docs.adyen.com/api-explorer/Checkout/latest/post/payments#request-shopperReference) in the [`/payments`](https://docs.adyen.com/api-explorer/Checkout/latest/post/payments) request.
 - Include the [`shopperReference`](https://docs.adyen.com/api-explorer/Checkout/latest/post/paymentMethods#request-shopperReference) in the [`/paymentMethods`](https://docs.adyen.com/api-explorer/Checkout/latest/post/paymentMethods) request and the response will contain a list of the shopper's stored payment methods.
-- For drop-in, pass the API response as explained in [the integration guide](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Android&integration=Drop-in#set-up) and it will show the stored payment methods.
-- For components, get the Twint `StoredPaymentMethod` from the list and pass it when creating the `TwintComponent`:
-```Kotlin
-val storedPaymentMethods = paymentMethodsApiResponse?.storedPaymentMethods
-val storedPaymentMethod = storedPaymentMethods?.firstOrNull { TwintComponent.PROVIDER.isPaymentMethodSupported(it) }
-
-val component = TwintComponent.PROVIDER.get(
-    activity = activity, // or fragment = fragment
+ - For drop-in, pass the API response as explained in [the integration guide](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Android&integration=Drop-in#set-up) and it will show the stored payment methods.
+ - For components, get the Twint `StoredPaymentMethod` from the list and pass it when creating the `TwintComponent`:
+ ```Kotlin
+ val storedPaymentMethods = paymentMethods?.storedPaymentMethods
+ val storedPaymentMethod = storedPaymentMethods?.firstOrNull { TwintComponent.PROVIDER.isPaymentMethodSupported(it) }
+ 
+ val component = TwintComponent.PROVIDER.get(
+     activity = activity, // or fragment = fragment
     storedPaymentMethod = storedPaymentMethod,
     configuration = checkoutConfiguration,
     componentCallback = callback,
