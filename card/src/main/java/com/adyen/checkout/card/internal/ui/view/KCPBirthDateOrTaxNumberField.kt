@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_OR_TAX_NUMBER_MAX_LENGTH
+import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -27,6 +28,14 @@ internal fun KCPBirthDateOrTaxNumberField(
     onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val textLength = kcpBirthDateOrTaxNumberState.text.length
+
+    val label = if (textLength > KCP_BIRTH_DATE_VALID_LENGTH) {
+        resolveString(CheckoutLocalizationKey.CARD_KCP_TAX_NUMBER)
+    } else {
+        resolveString(CheckoutLocalizationKey.CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER)
+    }
+
     val supportingText = kcpBirthDateOrTaxNumberState.supportingText?.let { resolveString(it) }
 
     val inputTransformation = remember {
@@ -41,7 +50,7 @@ internal fun KCPBirthDateOrTaxNumberField(
             .onFocusChanged { focusState ->
                 onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(focusState.isFocused))
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER),
+        label = label,
         initialValue = kcpBirthDateOrTaxNumberState.text,
         isError = kcpBirthDateOrTaxNumberState.isError,
         supportingText = supportingText,
