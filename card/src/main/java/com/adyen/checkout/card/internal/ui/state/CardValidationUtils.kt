@@ -22,6 +22,8 @@ import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidationResult
 import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidator
 import com.adyen.checkout.core.common.internal.helper.StringUtil
+import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties
+import com.adyen.checkout.core.common.internal.properties.KCPCardPasswordProperties
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal object CardValidationUtils {
@@ -188,9 +190,14 @@ internal object CardValidationUtils {
         if (kcpBirthDateOrTaxNumber.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
             return KCPBirthDateOrTaxNumberValidation.VALID
         }
-
-        // TODO add validation
-        return KCPBirthDateOrTaxNumberValidation.VALID
+        if (kcpBirthDateOrTaxNumber.any { !it.isDigit() }) {
+            return KCPBirthDateOrTaxNumberValidation.INVALID
+        }
+        return when (kcpBirthDateOrTaxNumber.length) {
+            KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH -> KCPBirthDateOrTaxNumberValidation.VALID
+            KCPBirthDateOrTaxNumberProperties.KCP_TAX_NUMBER_VALID_LENGTH -> KCPBirthDateOrTaxNumberValidation.VALID
+            else -> KCPBirthDateOrTaxNumberValidation.INVALID
+        }
     }
 
     /**
@@ -204,9 +211,13 @@ internal object CardValidationUtils {
         if (kcpCardPassword.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
             return KCPCardPasswordValidation.VALID
         }
-
-        // TODO add validation
-        return KCPCardPasswordValidation.VALID
+        if (kcpCardPassword.any { !it.isDigit() }) {
+            return KCPCardPasswordValidation.INVALID
+        }
+        return when (kcpCardPassword.length) {
+            KCPCardPasswordProperties.KCP_CARD_PASSWORD_MAX_LENGTH -> KCPCardPasswordValidation.VALID
+            else -> KCPCardPasswordValidation.INVALID
+        }
     }
 }
 
