@@ -15,6 +15,11 @@
         <item name="android:layout_height">@dimen/brand_logo_height</item>
     </style>
 
+    <style name="AdyenCheckout.Image.CardLogo.Detected">
+        <item name="android:layout_width">@dimen/brand_logo_detected_width</item>
+        <item name="android:layout_height">@dimen/brand_logo_detected_height</item>
+    </style>
+
     <style name="AdyenCheckout.Card.BrandListLogo" parent="AdyenCheckout.Image.CardLogo">
         <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
@@ -27,7 +32,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo">
+    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo.Detected">
         <item name="srcCompat">@drawable/ic_card</item>
     </style>
 
