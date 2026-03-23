@@ -9,36 +9,34 @@
 package com.adyen.checkout.dropin
 
 import android.content.Intent
-import android.os.IBinder
 import androidx.lifecycle.LifecycleService
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.dropin.internal.service.DropInBinder
+import com.adyen.checkout.dropin.internal.service.DropInServiceRegistry
 
 abstract class DropInService : LifecycleService() {
 
-    private val binder = object : DropInBinder() {
-        override suspend fun requestOnSubmit(state: PaymentComponentState<*>): CheckoutResult {
-            return onSubmit(state)
-        }
+    override fun onCreate() {
+        super.onCreate()
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
+        DropInServiceRegistry.register(this)
+    }
 
-        override suspend fun requestOnAdditionalDetails(data: ActionComponentData): CheckoutResult {
-            return onAdditionalDetails(data)
-        }
+    override fun onDestroy() {
+        DropInServiceRegistry.unregister()
+        adyenLog(AdyenLogLevel.DEBUG) { "onDestroy" }
+        super.onDestroy()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
-    override fun onBind(intent: Intent): IBinder {
-        super.onBind(intent)
-        return binder
-    }
+    abstract suspend fun onSubmit(state: PaymentComponentState<*>): CheckoutResult
 
-    protected abstract suspend fun onSubmit(state: PaymentComponentState<*>): CheckoutResult
-
-    protected abstract suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult
+    abstract suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult
 }
