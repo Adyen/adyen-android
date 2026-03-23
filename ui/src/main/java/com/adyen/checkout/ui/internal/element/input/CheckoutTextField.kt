@@ -15,10 +15,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldDecorator
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -94,42 +96,61 @@ fun CheckoutTextField(
     shouldFocus: Boolean = false,
     prefix: String? = null,
     hint: String? = null,
+    isSecureField: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val style = CheckoutThemeProvider.elements.textField
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
-    BasicTextField(
-        state = state,
-        modifier = modifier.focusRequester(focusRequester),
-        enabled = enabled,
-        inputTransformation = inputTransformation,
-        outputTransformation = outputTransformation,
-        textStyle = TextStyle(
-            color = style.textColor,
-            fontSize = innerTextStyle.size.sp,
-            fontWeight = FontWeight(innerTextStyle.weight),
-            lineHeight = innerTextStyle.lineHeight.sp,
-        ),
-        lineLimits = TextFieldLineLimits.SingleLine,
-        cursorBrush = SolidColor(style.activeColor),
-        keyboardOptions = keyboardOptions,
-        interactionSource = interactionSource,
-        decorator = { innerTextField ->
-            CheckoutTextFieldDecorationBox(
-                label = label,
-                innerTextField = innerTextField,
-                supportingText = supportingText,
-                isError = isError,
-                interactionSource = interactionSource,
-                innerIndication = innerIndication,
-                prefix = prefix,
-                hint = if (state.text.isEmpty()) hint else null,
-                trailingIcon = trailingIcon,
-                style = style,
-            )
-        },
+    val focusModifier = modifier.focusRequester(focusRequester)
+    val textStyle = TextStyle(
+        color = style.textColor,
+        fontSize = innerTextStyle.size.sp,
+        fontWeight = FontWeight(innerTextStyle.weight),
+        lineHeight = innerTextStyle.lineHeight.sp,
     )
+    val cursorBrush = SolidColor(style.activeColor)
+    val decorator = TextFieldDecorator { innerTextField ->
+        CheckoutTextFieldDecorationBox(
+            label = label,
+            innerTextField = innerTextField,
+            supportingText = supportingText,
+            isError = isError,
+            interactionSource = interactionSource,
+            innerIndication = innerIndication,
+            prefix = prefix,
+            hint = if (state.text.isEmpty()) hint else null,
+            trailingIcon = trailingIcon,
+            style = style,
+        )
+    }
+    if (!isSecureField) {
+        BasicTextField(
+            state = state,
+            modifier = focusModifier,
+            enabled = enabled,
+            inputTransformation = inputTransformation,
+            outputTransformation = outputTransformation,
+            textStyle = textStyle,
+            lineLimits = TextFieldLineLimits.SingleLine,
+            cursorBrush = cursorBrush,
+            keyboardOptions = keyboardOptions,
+            interactionSource = interactionSource,
+            decorator = decorator,
+        )
+    } else {
+        BasicSecureTextField(
+            state = state,
+            modifier = focusModifier,
+            enabled = enabled,
+            inputTransformation = inputTransformation,
+            textStyle = textStyle,
+            cursorBrush = cursorBrush,
+            keyboardOptions = keyboardOptions,
+            interactionSource = interactionSource,
+            decorator = decorator,
+        )
+    }
 
     if (onValueChange != null) {
         val currentOnValueChange by rememberUpdatedState(onValueChange)
