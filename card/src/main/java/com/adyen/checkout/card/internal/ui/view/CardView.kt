@@ -14,7 +14,6 @@ import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import androidx.annotation.RestrictTo
@@ -81,8 +80,6 @@ class CardView @JvmOverloads constructor(
 
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
-    private var cardBrandAdapter: CardBrandAdapter? = null
-
     private lateinit var localizedContext: Context
 
     private lateinit var cardDelegate: CardDelegate
@@ -202,7 +199,6 @@ class CardView @JvmOverloads constructor(
         updateInstallments(cardOutputData)
         updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
-        setCoBadgeBrands(cardOutputData.dualBrandData)
         updateAddressLookupInputText(cardOutputData.addressState)
     }
 
@@ -763,24 +759,6 @@ class CardView @JvmOverloads constructor(
                 binding.recyclerViewCardList.adapter = cardListAdapter
             }
             cardListAdapter?.submitList(cards)
-        }
-    }
-
-    private fun setCoBadgeBrands(dualBrandData: DualBrandData?) {
-        val shouldDisplaySelection = dualBrandData != null && dualBrandData.selectable
-        binding.recyclerViewCobadgeBrands.isVisible = shouldDisplaySelection
-        binding.textViewCobadgeBrandsHeader.isVisible = shouldDisplaySelection
-        binding.textViewCobadgeBrandsDescription.isVisible = shouldDisplaySelection
-        if (shouldDisplaySelection) {
-            if (cardBrandAdapter == null) {
-                cardBrandAdapter = CardBrandAdapter { cardBrandItem ->
-                    cardDelegate.updateInputData {
-                        selectedCardBrand = cardBrandItem.brand
-                    }
-                }
-                binding.recyclerViewCobadgeBrands.adapter = cardBrandAdapter
-            }
-            cardBrandAdapter?.submitList(dualBrandData?.brandOptions)
         }
     }
 
