@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,14 +25,14 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
-import com.adyen.checkout.core.common.helper.CardNumberValidator
+import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
+import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_SEPARATOR
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -82,6 +80,12 @@ private fun CardNumberInputField(
 ) {
     val supportingTextCardNumber = cardNumberState.supportingText?.let { resolveString(it) }
 
+    val inputTransformation = remember {
+        DigitOnlyInputTransformation(
+            allowedSeparators = listOf(CARD_NUMBER_SEPARATOR),
+            maxLengthWithoutSeparators = CARD_NUMBER_MAXIMUM_LENGTH,
+        )
+    }
     val outputTransformation = remember(isAmex) {
         CardNumberOutputTransformation(isAmex = isAmex ?: false)
     }
@@ -99,11 +103,8 @@ private fun CardNumberInputField(
         onValueChange = { value ->
             onIntent(CardIntent.UpdateCardNumber(value))
         },
-        inputTransformation = DigitOnlyInputTransformation().maxLength(
-            maxLength = CardNumberValidator.MAXIMUM_CARD_NUMBER_LENGTH,
-        ),
+        inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = cardNumberState.isFocused,
         trailingIcon = {
             CardNumberFieldIcon(state = cardNumberState, detectedBrands = detectedCardBrands)
@@ -186,6 +187,7 @@ private fun CardNumberFieldIcon(
                 contentDescription = null,
                 tint = Color.Unspecified,
             )
+
             else -> DetectedBrandsList(detectedBrands)
         }
     }

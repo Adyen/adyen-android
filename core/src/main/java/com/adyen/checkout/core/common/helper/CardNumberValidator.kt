@@ -8,20 +8,15 @@
 
 package com.adyen.checkout.core.common.helper
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.helper.StringUtil
+import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
+import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MINIMUM_LENGTH
 
 object CardNumberValidator {
 
     // Luhn Check
     private const val RADIX = 10
     private const val FIVE_DIGIT = 5
-
-    // Card Number
-    private const val MINIMUM_CARD_NUMBER_LENGTH = 12
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    const val MAXIMUM_CARD_NUMBER_LENGTH = 19
 
     /**
      * Validate card number.
@@ -38,8 +33,8 @@ object CardNumberValidator {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) ->
                 CardNumberValidationResult.Invalid.IllegalCharacters()
 
-            length > MAXIMUM_CARD_NUMBER_LENGTH -> CardNumberValidationResult.Invalid.TooLong()
-            length < MINIMUM_CARD_NUMBER_LENGTH -> CardNumberValidationResult.Invalid.TooShort()
+            length > CARD_NUMBER_MAXIMUM_LENGTH -> CardNumberValidationResult.Invalid.TooLong()
+            length < CARD_NUMBER_MINIMUM_LENGTH -> CardNumberValidationResult.Invalid.TooShort()
             enableLuhnCheck && !isLuhnChecksumValid(normalizedNumber) ->
                 CardNumberValidationResult.Invalid.LuhnCheck()
 

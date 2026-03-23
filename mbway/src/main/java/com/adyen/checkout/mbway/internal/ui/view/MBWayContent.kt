@@ -11,11 +11,8 @@ package com.adyen.checkout.mbway.internal.ui.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -25,8 +22,6 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
-import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
-import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
@@ -59,25 +54,7 @@ internal fun MBWayContent(
             )
 
             // PhoneNumber
-            val supportingTextPhoneNumber = viewState.phoneNumber.supportingText?.let { resolveString(it) }
-            CheckoutTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        onIntent(MBWayIntent.UpdatePhoneNumberFocus(focusState.hasFocus))
-                    },
-                label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
-                initialValue = viewState.phoneNumber.text,
-                isError = viewState.phoneNumber.isError,
-                supportingText = supportingTextPhoneNumber,
-                prefix = country.callingCode,
-                onValueChange = { value ->
-                    onIntent(MBWayIntent.UpdatePhoneNumber(value))
-                },
-                inputTransformation = DigitOnlyInputTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                shouldFocus = viewState.phoneNumber.isFocused,
-            )
+            MBWayPhoneNumberField(viewState.phoneNumber, country, onIntent)
         }
     }
 }

@@ -25,7 +25,7 @@ object SocialSecurityNumberProperties {
     const val CNPJ_VALID_LENGTH = 14
 
     // same as the CNPJ (the longer format)
-    const val MAX_LENGTH_UNFORMATTED = 14
+    const val SOCIAL_SECURITY_MAX_LENGTH = 14
 
     // e.g 123.123.123-12
     val CPF_SEPARATORS = listOf(
@@ -42,7 +42,7 @@ object SocialSecurityNumberProperties {
         Separator('-', 15), // - at index 15
     )
 
-    val ALL_SEPARATORS: List<Char> = (CPF_SEPARATORS + CNPJ_SEPARATORS).map { it.character }
+    val SOCIAL_SECURITY_SEPARATORS: List<Char> = listOf('.', '-', '/')
 }
 
 // TODO move this to a common module

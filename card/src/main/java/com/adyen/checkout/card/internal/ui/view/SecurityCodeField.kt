@@ -11,8 +11,6 @@ package com.adyen.checkout.card.internal.ui.view
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,11 +19,12 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
+import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_AMEX
+import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_DEFAULT
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -90,6 +89,17 @@ private fun SecurityCodeFieldInternal(
         ""
     }
 
+    val inputTransformation = remember(isAmex) {
+        val maxLength = if (isAmex == true) {
+            SECURITY_CODE_MAX_LENGTH_AMEX
+        } else {
+            SECURITY_CODE_MAX_LENGTH_DEFAULT
+        }
+        DigitOnlyInputTransformation(
+            maxLengthWithoutSeparators = maxLength,
+        )
+    }
+
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
@@ -103,14 +113,7 @@ private fun SecurityCodeFieldInternal(
         onValueChange = { value ->
             onSecurityCodeChanged(value)
         },
-        inputTransformation = DigitOnlyInputTransformation().maxLength(
-            if (isAmex == false) {
-                MAX_LENGTH_SECURITY_CODE_DEFAULT
-            } else {
-                MAX_LENGTH_SECURITY_CODE_AMEX
-            },
-        ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        inputTransformation = inputTransformation,
         shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
             SecurityCodeIcon(state = securityCodeState)
@@ -161,6 +164,3 @@ private fun SecurityCodeIcon(
         )
     }
 }
-
-private const val MAX_LENGTH_SECURITY_CODE_DEFAULT = 3
-private const val MAX_LENGTH_SECURITY_CODE_AMEX = 4
