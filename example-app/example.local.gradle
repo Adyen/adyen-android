@@ -18,5 +18,10 @@ android {
             initWith debug
             matchingFallbacks = ['debug']
         }
+
+        acceptance {
+            initWith debug
+            matchingFallbacks = ['debug']
+        }
     }
 }
