@@ -37,6 +37,7 @@ import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
+import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
 
 internal class CardFactory :
@@ -65,6 +66,7 @@ internal class CardFactory :
         val viewStateProducer = CardViewStateProducer(dualBrandedCardHandler)
 
         val cardEncryptor = CardEncryptorFactory.provide()
+        val genericEncryptor = GenericEncryptorFactory.provide()
         val httpClient = HttpClientFactory.getHttpClient(componentParamsBundle.commonComponentParams.environment)
         val binLookupService = BinLookupService(httpClient)
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
@@ -72,6 +74,7 @@ internal class CardFactory :
         return CardComponent(
             analyticsManager = analyticsManager,
             cardEncryptor = cardEncryptor,
+            genericEncryptor = genericEncryptor,
             componentParams = cardComponentParams,
             detectCardTypeRepository = detectCardTypeRepository,
             componentStateValidator = componentStateValidator,

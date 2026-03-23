@@ -25,12 +25,14 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 
 @Suppress("ReturnCount")
 internal fun CardComponentState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
+    genericEncryptor: BaseGenericEncryptor,
     sdkDataProvider: SdkDataProvider,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
@@ -44,6 +46,15 @@ internal fun CardComponentState.toPaymentComponentState(
         onEncryptionFailed = onEncryptionFailed,
     ) ?: return invalidCardPaymentComponentState()
 
+    val encryptedKcpCardPassword = kcpCardPassword(componentParams)?.let { kcpCardPassword ->
+        encryptKcpCardPassword(
+            genericEncryptor = genericEncryptor,
+            publicKey = publicKey,
+            kcpCardPassword = kcpCardPassword,
+            onEncryptionFailed = onEncryptionFailed,
+        ) ?: return invalidCardPaymentComponentState()
+    }
+
     val cardDetails = createCardDetails(
         encryptedCard = encryptedCard,
         holderName = holderName(componentParams),
@@ -51,8 +62,7 @@ internal fun CardComponentState.toPaymentComponentState(
         sdkDataProvider = sdkDataProvider,
         isCvcHidden = securityCode.requirementPolicy is RequirementPolicy.Hidden,
         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber(componentParams),
-        // TODO add encryption
-        encryptedKcpCardPassword = kcpCardPassword(componentParams),
+        encryptedKcpCardPassword = encryptedKcpCardPassword,
     )
 
     val paymentComponentData = createPaymentComponentData(
@@ -85,6 +95,24 @@ private fun CardComponentState.encryptCard(
         }
 
         cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
+    } catch (e: EncryptionException) {
+        onEncryptionFailed(e)
+        null
+    }
+}
+
+private fun encryptKcpCardPassword(
+    genericEncryptor: BaseGenericEncryptor,
+    publicKey: String,
+    kcpCardPassword: String,
+    onEncryptionFailed: (EncryptionException) -> Unit,
+): String? {
+    return try {
+        genericEncryptor.encryptField(
+            fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_KCP_PASSWORD,
+            fieldValueToEncrypt = kcpCardPassword,
+            publicKey = publicKey,
+        )
     } catch (e: EncryptionException) {
         onEncryptionFailed(e)
         null
@@ -191,3 +219,5 @@ private fun CardComponentParams.publicKey(onPublicKeyNotFound: (InternalCheckout
         null
     }
 }
+
+private const val ENCRYPTION_KEY_FOR_KCP_PASSWORD = "password"
