@@ -19,11 +19,10 @@ import com.adyen.checkout.core.common.helper.CardNumberValidationResult
 import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
-import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidationResult
-import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidator
 import com.adyen.checkout.core.common.internal.helper.StringUtil
 import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties
 import com.adyen.checkout.core.common.internal.properties.KCPCardPasswordProperties
+import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal object CardValidationUtils {
@@ -173,9 +172,13 @@ internal object CardValidationUtils {
             return CardSocialSecurityNumberValidation.VALID
         }
 
-        return when (SocialSecurityNumberValidator.validateSocialSecurityNumber(socialSecurityNumber)) {
-            is SocialSecurityNumberValidationResult.Invalid -> CardSocialSecurityNumberValidation.INVALID
-            is SocialSecurityNumberValidationResult.Valid -> CardSocialSecurityNumberValidation.VALID
+        if (socialSecurityNumber.any { !it.isDigit() }) {
+            return CardSocialSecurityNumberValidation.INVALID
+        }
+        return when (socialSecurityNumber.length) {
+            SocialSecurityNumberProperties.CPF_VALID_LENGTH -> CardSocialSecurityNumberValidation.VALID
+            SocialSecurityNumberProperties.CNPJ_VALID_LENGTH -> CardSocialSecurityNumberValidation.VALID
+            else -> CardSocialSecurityNumberValidation.INVALID
         }
     }
 
