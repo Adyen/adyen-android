@@ -176,6 +176,38 @@ internal object CardValidationUtils {
             is SocialSecurityNumberValidationResult.Valid -> CardSocialSecurityNumberValidation.VALID
         }
     }
+
+    /**
+     * Validate KCP Birth Date Or Tax Number
+     */
+    internal fun validateKCPBirthDateOrTaxNumber(
+        kcpBirthDateOrTaxNumber: String,
+        requirementPolicy: RequirementPolicy?
+    ): KCPBirthDateOrTaxNumberValidation {
+        // allow empty value unless field is required
+        if (kcpBirthDateOrTaxNumber.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
+            return KCPBirthDateOrTaxNumberValidation.VALID
+        }
+
+        // TODO add validation
+        return KCPBirthDateOrTaxNumberValidation.VALID
+    }
+
+    /**
+     * Validate KCP card password
+     */
+    internal fun validateKCPCardPassword(
+        kcpCardPassword: String,
+        requirementPolicy: RequirementPolicy?
+    ): KCPCardPasswordValidation {
+        // allow empty value unless field is required
+        if (kcpCardPassword.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
+            return KCPCardPasswordValidation.VALID
+        }
+
+        // TODO add validation
+        return KCPCardPasswordValidation.VALID
+    }
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -217,3 +249,16 @@ enum class CardSocialSecurityNumberValidation {
     VALID,
     INVALID,
 }
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class KCPBirthDateOrTaxNumberValidation {
+    VALID,
+    INVALID,
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class KCPCardPasswordValidation {
+    VALID,
+    INVALID,
+}
+

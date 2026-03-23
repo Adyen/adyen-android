@@ -103,6 +103,18 @@ private fun CardDetailsSection(
                 onIntent = onIntent,
             )
         }
+        if (viewState.kcpBirthDateOrTaxNumber != null) {
+            KCPBirthDateOrTaxNumberField(
+                kcpBirthDateOrTaxNumberState = viewState.kcpBirthDateOrTaxNumber,
+                onIntent = onIntent,
+            )
+        }
+        if (viewState.kcpCardPassword != null) {
+            KCPCardPasswordField(
+                kcpCardPasswordState = viewState.kcpCardPassword,
+                onIntent = onIntent,
+            )
+        }
         if (viewState.isStorePaymentFieldVisible) {
             SwitchContainer(
                 checked = viewState.storePaymentMethod,
@@ -132,7 +144,13 @@ private fun CardComponentPreview() {
                 text = "J. Smith",
             ),
             socialSecurityNumber = TextInputViewState(
-                text = "12123123123412"
+                text = "12123123123412",
+            ),
+            kcpBirthDateOrTaxNumber = TextInputViewState(
+                text = "1234567890",
+            ),
+            kcpCardPassword = TextInputViewState(
+                text = "12",
             ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = true,

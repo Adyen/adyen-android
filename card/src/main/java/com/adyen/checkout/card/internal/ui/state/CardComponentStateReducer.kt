@@ -62,6 +62,22 @@ internal class CardComponentStateReducer(
                 socialSecurityNumber = state.socialSecurityNumber.updateFocus(intent.hasFocus),
             )
 
+            is CardIntent.UpdateKcpBirthDateOrTaxNumber -> state.copy(
+                kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.updateText(intent.kcpBirthDateOrTaxNumber),
+            )
+
+            is CardIntent.UpdateKcpBirthDateOrTaxNumberFocus -> state.copy(
+                kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.updateFocus(intent.hasFocus),
+            )
+
+            is CardIntent.UpdateKcpCardPassword -> state.copy(
+                kcpCardPassword = state.kcpCardPassword.updateText(intent.kcpCardPassword),
+            )
+
+            is CardIntent.UpdateKcpCardPasswordFocus -> state.copy(
+                kcpCardPassword = state.kcpCardPassword.updateFocus(intent.hasFocus),
+            )
+
             is CardIntent.UpdateStorePaymentMethod -> state.copy(
                 storePaymentMethod = intent.isChecked,
             )
@@ -110,6 +126,8 @@ internal class CardComponentStateReducer(
         val hasSecurityCodeError = state.securityCode.errorMessage != null
         val hasHolderNameError = state.holderName.errorMessage != null
         val hasSocialSecurityNumberError = state.socialSecurityNumber.errorMessage != null
+        val hasKcpBirthDateOrTaxNumberError = state.kcpBirthDateOrTaxNumber.errorMessage != null
+        val hasKcpCardPasswordError = state.kcpCardPassword.errorMessage != null
 
         return state.copy(
             cardNumber = state.cardNumber.copy(
@@ -131,6 +149,14 @@ internal class CardComponentStateReducer(
             socialSecurityNumber = state.socialSecurityNumber.copy(
                 showError = hasSocialSecurityNumberError,
                 isFocused = shouldFocus(hasSocialSecurityNumberError),
+            ),
+            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.copy(
+                showError = hasKcpBirthDateOrTaxNumberError,
+                isFocused = shouldFocus(hasKcpBirthDateOrTaxNumberError),
+            ),
+            kcpCardPassword = state.kcpCardPassword.copy(
+                showError = hasKcpCardPasswordError,
+                isFocused = shouldFocus(hasKcpCardPasswordError),
             ),
         )
     }
