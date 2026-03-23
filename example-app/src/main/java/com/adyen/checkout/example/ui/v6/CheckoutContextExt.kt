@@ -21,7 +21,7 @@ private val SUPPORTED_V6_PAYMENT_METHODS = listOf(
 @Suppress("RestrictedApi")
 internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
     val paymentMethods = when (this) {
-        is CheckoutContext.Advanced -> this.paymentMethodsApiResponse.paymentMethods
+        is CheckoutContext.Advanced -> this.paymentMethods.paymentMethods
         is CheckoutContext.Sessions ->
             this.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse?.paymentMethods
     }

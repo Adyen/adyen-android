@@ -10,7 +10,7 @@ package com.adyen.checkout.core.common
 
 import android.os.Parcelable
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.sessions.CheckoutSession
 import kotlinx.parcelize.Parcelize
 
@@ -27,7 +27,7 @@ sealed interface CheckoutContext : Parcelable {
 
     @Parcelize
     data class Advanced internal constructor(
-        val paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        val paymentMethods: PaymentMethods,
         val checkoutConfiguration: CheckoutConfiguration,
         internal val checkoutAttemptId: String?,
         internal val publicKey: String?,

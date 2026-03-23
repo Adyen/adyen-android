@@ -57,7 +57,7 @@ internal class DropInViewModel(
     private fun initializePaymentMethods() {
         val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
-            is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
+            is CheckoutContext.Advanced -> context.paymentMethods
         }
 
         if (paymentMethods == null) {

@@ -10,7 +10,7 @@ package com.adyen.checkout.core.components
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutControllerState
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
@@ -61,9 +61,9 @@ class NewCheckoutController(
         }
     }
 
-    private fun getPaymentMethodResponse(): PaymentMethodsApiResponse? {
+    private fun getPaymentMethodResponse(): PaymentMethods? {
         return when (context) {
-            is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
+            is CheckoutContext.Advanced -> context.paymentMethods
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
         }
     }
