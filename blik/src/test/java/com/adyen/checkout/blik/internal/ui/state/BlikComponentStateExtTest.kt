@@ -9,7 +9,6 @@
 package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.paymentmethod.BlikDetails
@@ -29,7 +28,6 @@ internal class BlikComponentStateExtTest {
 
     @Test
     fun `when toPaymentComponentState is called, then a valid component state is created`() {
-        val amount = Amount("PLN", 1000)
         val componentState = BlikComponentState(
             blikCode = TextInputComponentState(
                 text = "123456",
@@ -38,7 +36,6 @@ internal class BlikComponentStateExtTest {
         )
 
         val paymentComponentState = componentState.toPaymentComponentState(
-            amount = amount,
             sdkDataProvider = sdkDataProvider,
         )
 
@@ -51,7 +48,6 @@ internal class BlikComponentStateExtTest {
         val expectedPaymentComponentData = PaymentComponentData(
             paymentMethod = expectedBlikDetails,
             order = null,
-            amount = amount,
         )
         val expectedPaymentComponentState = BlikPaymentComponentState(
             data = expectedPaymentComponentData,

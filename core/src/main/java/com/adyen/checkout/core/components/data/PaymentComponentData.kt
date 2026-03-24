@@ -13,7 +13,6 @@ import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
@@ -28,7 +27,6 @@ import org.json.JSONObject
 data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     val paymentMethod: PaymentMethodDetailsT?,
     val order: OrderRequest?,
-    val amount: Amount?,
     val storePaymentMethod: Boolean? = null,
     val shopperReference: String? = null,
     val billingAddress: Address? = null,
@@ -46,7 +44,6 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
         private const val PAYMENT_METHOD = "paymentMethod"
         private const val STORE_PAYMENT_METHOD = "storePaymentMethod"
         private const val SHOPPER_REFERENCE = "shopperReference"
-        private const val AMOUNT = "amount"
         private const val BILLING_ADDRESS = "billingAddress"
         private const val DELIVERY_ADDRESS = "deliveryAddress"
         private const val SHOPPER_NAME = "shopperName"
@@ -67,24 +64,23 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                             PAYMENT_METHOD,
                             serializeOpt(
                                 modelObject.paymentMethod,
-                                PaymentMethodDetails.SERIALIZER
-                            )
+                                PaymentMethodDetails.SERIALIZER,
+                            ),
                         )
                         putOpt(ORDER, serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
-                        putOpt(AMOUNT, serializeOpt(modelObject.amount, Amount.SERIALIZER))
                         putOpt(STORE_PAYMENT_METHOD, modelObject.storePaymentMethod)
                         putOpt(SHOPPER_REFERENCE, modelObject.shopperReference)
                         putOpt(
                             BILLING_ADDRESS,
-                            serializeOpt(modelObject.billingAddress, Address.SERIALIZER)
+                            serializeOpt(modelObject.billingAddress, Address.SERIALIZER),
                         )
                         putOpt(
                             DELIVERY_ADDRESS,
-                            serializeOpt(modelObject.deliveryAddress, Address.SERIALIZER)
+                            serializeOpt(modelObject.deliveryAddress, Address.SERIALIZER),
                         )
                         putOpt(
                             SHOPPER_NAME,
-                            serializeOpt(modelObject.shopperName, ShopperName.SERIALIZER)
+                            serializeOpt(modelObject.shopperName, ShopperName.SERIALIZER),
                         )
                         putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
                         putOpt(SHOPPER_EMAIL, modelObject.shopperEmail)
@@ -92,7 +88,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                         putOpt(SOCIAL_SECURITY_NUMBER, modelObject.socialSecurityNumber)
                         putOpt(
                             INSTALLMENTS,
-                            serializeOpt(modelObject.installments, Installments.SERIALIZER)
+                            serializeOpt(modelObject.installments, Installments.SERIALIZER),
                         )
                         putOpt(SUPPORT_NATIVE_REDIRECT, modelObject.supportNativeRedirect)
                     }
@@ -106,25 +102,21 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                         ),
                         order = deserializeOpt(
                             jsonObject.optJSONObject(ORDER),
-                            OrderRequest.SERIALIZER
-                        ),
-                        amount = deserializeOpt(
-                            jsonObject.optJSONObject(AMOUNT),
-                            Amount.SERIALIZER
+                            OrderRequest.SERIALIZER,
                         ),
                         storePaymentMethod = jsonObject.getBooleanOrNull(STORE_PAYMENT_METHOD),
                         shopperReference = jsonObject.getStringOrNull(SHOPPER_REFERENCE),
                         billingAddress = deserializeOpt(
                             jsonObject.optJSONObject(BILLING_ADDRESS),
-                            Address.SERIALIZER
+                            Address.SERIALIZER,
                         ),
                         deliveryAddress = deserializeOpt(
                             jsonObject.optJSONObject(DELIVERY_ADDRESS),
-                            Address.SERIALIZER
+                            Address.SERIALIZER,
                         ),
                         shopperName = deserializeOpt(
                             jsonObject.optJSONObject(SHOPPER_NAME),
-                            ShopperName.SERIALIZER
+                            ShopperName.SERIALIZER,
                         ),
                         telephoneNumber = jsonObject.getStringOrNull(TELEPHONE_NUMBER),
                         shopperEmail = jsonObject.getStringOrNull(SHOPPER_EMAIL),
@@ -132,7 +124,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                         socialSecurityNumber = jsonObject.getStringOrNull(SOCIAL_SECURITY_NUMBER),
                         installments = deserializeOpt(
                             jsonObject.optJSONObject(INSTALLMENTS),
-                            Installments.SERIALIZER
+                            Installments.SERIALIZER,
                         ),
                         supportNativeRedirect = jsonObject.getBooleanOrNull(SUPPORT_NATIVE_REDIRECT),
                     )

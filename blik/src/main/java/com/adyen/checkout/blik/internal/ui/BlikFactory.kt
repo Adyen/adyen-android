@@ -36,9 +36,7 @@ internal class BlikFactory :
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
     ): BlikComponent {
-        val componentParams = componentParamsBundle.commonComponentParams
         return BlikComponent(
-            componentParams = componentParams,
             analyticsManager = analyticsManager,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             componentStateFactory = BlikComponentStateFactory(),
@@ -57,11 +55,9 @@ internal class BlikFactory :
         componentParamsBundle: ComponentParamsBundle,
         @Suppress("UNUSED_PARAMETER") checkoutCallbacks: CheckoutCallbacks,
     ): StoredBlikComponent {
-        val componentParams = componentParamsBundle.commonComponentParams
         return StoredBlikComponent(
             storedPaymentMethod = storedPaymentMethod,
             analyticsManager = analyticsManager,
-            componentParams = componentParams,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             coroutineScope = coroutineScope,
         )

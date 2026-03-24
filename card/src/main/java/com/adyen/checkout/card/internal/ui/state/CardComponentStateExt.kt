@@ -118,7 +118,6 @@ private fun createPaymentComponentData(
     storePaymentMethod = storePaymentMethod,
     shopperReference = componentParams.shopperReference,
     order = null,
-    amount = componentParams.amount,
     socialSecurityNumber = socialSecurityNumber,
 )
 
