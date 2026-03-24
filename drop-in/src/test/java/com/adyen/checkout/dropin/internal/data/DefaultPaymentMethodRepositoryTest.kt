@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin.internal.data
 
 import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -21,7 +21,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     @Test
     fun `when initialized with payment methods, then regulars are set`() {
         val paymentMethods = listOf(InstantPaymentMethod(type = "scheme", name = "Cards"))
-        val response = PaymentMethodsApiResponse(paymentMethods = paymentMethods)
+        val response = PaymentMethods(paymentMethods = paymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
 
@@ -30,7 +30,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with null payment methods, then regulars are empty`() {
-        val response = PaymentMethodsApiResponse(paymentMethods = null)
+        val response = PaymentMethods(paymentMethods = null)
 
         val repository = DefaultPaymentMethodRepository(response)
 
@@ -53,7 +53,7 @@ internal class DefaultPaymentMethodRepositoryTest {
                 fundingSource = null,
             ),
         )
-        val response = PaymentMethodsApiResponse(storedPaymentMethods = storedPaymentMethods)
+        val response = PaymentMethods(storedPaymentMethods = storedPaymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
 
@@ -62,7 +62,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with null stored payment methods, then favorites are empty`() = runTest {
-        val response = PaymentMethodsApiResponse(storedPaymentMethods = null)
+        val response = PaymentMethods(storedPaymentMethods = null)
 
         val repository = DefaultPaymentMethodRepository(response)
 
@@ -95,7 +95,7 @@ internal class DefaultPaymentMethodRepositoryTest {
             holderName = null,
             fundingSource = null,
         )
-        val response = PaymentMethodsApiResponse(
+        val response = PaymentMethods(
             storedPaymentMethods = listOf(storedPaymentMethod1, storedPaymentMethod2),
         )
         val repository = DefaultPaymentMethodRepository(response)
@@ -120,7 +120,7 @@ internal class DefaultPaymentMethodRepositoryTest {
             holderName = null,
             fundingSource = null,
         )
-        val response = PaymentMethodsApiResponse(
+        val response = PaymentMethods(
             storedPaymentMethods = listOf(storedPaymentMethod1),
         )
         val repository = DefaultPaymentMethodRepository(response)

@@ -13,7 +13,7 @@ import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.sessions.SessionSetupConfiguration
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
@@ -25,7 +25,7 @@ data class SessionSetupResponse(
     val sessionData: String,
     val amount: Amount?,
     val expiresAt: String,
-    val paymentMethodsApiResponse: PaymentMethodsApiResponse?,
+    val paymentMethods: PaymentMethods?,
     val returnUrl: String?,
     val configuration: SessionSetupConfiguration?,
     val shopperLocale: String?,
@@ -52,8 +52,8 @@ data class SessionSetupResponse(
                     putOpt(
                         PAYMENT_METHODS,
                         ModelUtils.serializeOpt(
-                            modelObject.paymentMethodsApiResponse,
-                            PaymentMethodsApiResponse.SERIALIZER,
+                            modelObject.paymentMethods,
+                            PaymentMethods.SERIALIZER,
                         ),
                     )
                     putOpt(RETURN_URL, modelObject.returnUrl)
@@ -71,9 +71,9 @@ data class SessionSetupResponse(
                     sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                     amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                     expiresAt = jsonObject.getStringOrNull(EXPIRES_AT).orEmpty(),
-                    paymentMethodsApiResponse = ModelUtils.deserializeOpt(
+                    paymentMethods = ModelUtils.deserializeOpt(
                         jsonObject.optJSONObject(PAYMENT_METHODS),
-                        PaymentMethodsApiResponse.SERIALIZER,
+                        PaymentMethods.SERIALIZER,
                     ),
                     returnUrl = jsonObject.getStringOrNull(RETURN_URL),
                     configuration = ModelUtils.deserializeOpt(

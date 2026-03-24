@@ -68,7 +68,7 @@ internal class V6ViewModel @Inject constructor(
     }
 
     private suspend fun fetchPaymentMethods() {
-        val paymentMethodResponse = paymentsRepository.getPaymentMethods(
+        val paymentMethods = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -79,7 +79,7 @@ internal class V6ViewModel @Inject constructor(
             ),
         )
 
-        if (paymentMethodResponse == null) {
+        if (paymentMethods == null) {
             val message = "Payment Method Response is null."
             Log.d(TAG, message)
             uiState = V6UiState.Error(UIText.String(message))
@@ -87,7 +87,7 @@ internal class V6ViewModel @Inject constructor(
         }
 
         val result = Checkout.setup(
-            paymentMethodsApiResponse = paymentMethodResponse,
+            paymentMethods = paymentMethods,
             configuration = configuration,
         )
 

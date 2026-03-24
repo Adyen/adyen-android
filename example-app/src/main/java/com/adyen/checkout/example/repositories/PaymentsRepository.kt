@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.BalanceRequest
@@ -28,7 +28,7 @@ interface PaymentsRepository {
     suspend fun createSessionOld(sessionRequest: SessionRequest): OldSessionModel?
     suspend fun createSession(sessionRequest: SessionRequest): SessionResponse?
     suspend fun getPaymentMethodsOld(paymentMethodsRequest: PaymentMethodsRequest): OldPaymentMethodsApiResponse?
-    suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
+    suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethods?
     suspend fun makePaymentsRequest(paymentsRequest: PaymentsRequest): JSONObject?
     suspend fun makeDetailsRequest(detailsRequest: JSONObject): JSONObject?
     suspend fun getBalance(request: BalanceRequest): JSONObject?
@@ -63,9 +63,9 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
 
     override suspend fun getPaymentMethods(
         paymentMethodsRequest: PaymentMethodsRequest
-    ): PaymentMethodsApiResponse? = safeApiCall {
+    ): PaymentMethods? = safeApiCall {
         checkoutApiService.paymentMethodsAsync(paymentMethodsRequest)
-    }?.let { PaymentMethodsApiResponse.SERIALIZER.deserialize(it) }
+    }?.let { PaymentMethods.SERIALIZER.deserialize(it) }
 
     override suspend fun makePaymentsRequest(paymentsRequest: PaymentsRequest): JSONObject? = safeApiCall {
         checkoutApiService.paymentsAsync(paymentsRequest.combineToJSONObject())
