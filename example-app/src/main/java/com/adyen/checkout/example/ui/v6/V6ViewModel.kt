@@ -80,7 +80,7 @@ internal class V6ViewModel @Inject constructor(
         )
 
         if (paymentMethods == null) {
-            val message = "Payment Method Response is null."
+            val message = "Payment methods are null."
             Log.d(TAG, message)
             uiState = V6UiState.Error(UIText.String(message))
             return
