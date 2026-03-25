@@ -9,11 +9,14 @@
 package com.adyen.checkout.card.internal.ui.view.brand
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.RestrictTo
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.BrandViewBinding
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
@@ -47,6 +50,25 @@ class BrandView @JvmOverloads constructor(
     private var cardBrandAdapter: CardBrandAdapter? = null
 
     private val binding: BrandViewBinding = BrandViewBinding.inflate(LayoutInflater.from(context), this)
+
+    init {
+        val spacing = resources.getDimensionPixelSize(R.dimen.brand_logo_item_spacing)
+        binding.recyclerViewBrandsList.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    val position = parent.getChildAdapterPosition(view)
+                    if (position > 0) {
+                        outRect.left = spacing
+                    }
+                }
+            },
+        )
+    }
 
     fun update(detectedCardTypes: List<DetectedCardType>, dualBrandData: DualBrandData?, environment: Environment) {
         when {
