@@ -9,14 +9,14 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true">
         <objectAnimator
-            android:duration="0"
+            android:duration="@android:integer/config_shortAnimTime"
             android:propertyName="elevation"
             android:valueTo="3dp"
             android:valueType="floatType" />
     </item>
     <item>
         <objectAnimator
-            android:duration="0"
+            android:duration="@android:integer/config_shortAnimTime"
             android:propertyName="elevation"
             android:valueTo="0dp"
             android:valueType="floatType" />
