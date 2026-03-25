@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Analytics
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Authentication
 import com.adyen.checkout.components.core.internal.data.model.sdkData.DirectSdkDataCreation
@@ -58,6 +59,9 @@ class DefaultSdkDataProvider(
             authentication = authentication,
             createdAt = Date().time,
             supportNativeRedirect = true,
+            sdkVersion = AnalyticsPlatformParams.version,
+            platform = AnalyticsPlatformParams.platform,
+            channel = AnalyticsPlatformParams.channel,
         )
     }
 
