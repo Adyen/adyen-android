@@ -8,7 +8,9 @@
 
 package com.adyen.checkout.components.core.internal.provider
 
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import com.adyen.checkout.core.internal.data.model.getLongOrNull
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
@@ -53,6 +55,10 @@ internal class DefaultSdkDataProviderTest {
         )
         assertNotNull(jsonObject.getLongOrNull("createdAt"))
         assertEquals(true, jsonObject.getBooleanOrNull("supportNativeRedirect"))
+        assertEquals(AnalyticsPlatformParams.version, jsonObject.getStringOrNull("sdkVersion"))
+        assertEquals(AnalyticsPlatformParams.platform, jsonObject.getStringOrNull("platform"))
+        assertEquals(AnalyticsPlatformParams.channel, jsonObject.getStringOrNull("channel"))
+        assertEquals("nativeComponent", jsonObject.getStringOrNull("paymentMethodBehavior"))
     }
 
     @Test
@@ -64,6 +70,17 @@ internal class DefaultSdkDataProviderTest {
         assertNotNull(encodedSdkData)
         val jsonObject = decodeJsonObject(encodedSdkData!!)
         assertNull(jsonObject.optJSONObject("authentication")?.getStringOrNull("threeDS2SdkVersion"))
+    }
+
+    @Test
+    fun `when createEncodedSdkData is called with a payment method support value, then it is correctly set`() {
+        analyticsManager.setCheckoutAttemptId("test_checkout_attempt_id")
+
+        val encodedSdkData = sdkDataProvider.createEncodedSdkData(paymentMethodBehavior = PaymentMethodBehavior.GENERIC)
+
+        assertNotNull(encodedSdkData)
+        val jsonObject = decodeJsonObject(encodedSdkData!!)
+        assertEquals("genericComponent", jsonObject.getStringOrNull("paymentMethodBehavior"))
     }
 
     private fun decodeJsonObject(encodedString: String): JSONObject {
