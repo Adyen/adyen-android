@@ -20,6 +20,7 @@ internal data class SdkData(
     val sdkVersion: String,
     val platform: String,
     val channel: String,
+    val paymentMethodBehavior: PaymentMethodBehavior,
 ) {
 
     @Throws(JSONException::class)
@@ -32,6 +33,7 @@ internal data class SdkData(
         putOpt(SDK_VERSION, sdkVersion)
         putOpt(SDK_PLATFORM, platform)
         putOpt(SDK_CHANNEL, channel)
+        putOpt(PAYMENT_METHOD_BEHAVIOR, paymentMethodBehavior.value)
     }
 
     companion object {
@@ -43,5 +45,6 @@ internal data class SdkData(
         private const val SDK_VERSION = "sdkVersion"
         private const val SDK_PLATFORM = "platform"
         private const val SDK_CHANNEL = "channel"
+        private const val PAYMENT_METHOD_BEHAVIOR = "paymentMethodBehavior"
     }
 }

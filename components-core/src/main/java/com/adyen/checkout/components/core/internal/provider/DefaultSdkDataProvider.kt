@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformPa
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Analytics
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Authentication
 import com.adyen.checkout.components.core.internal.data.model.sdkData.DirectSdkDataCreation
+import com.adyen.checkout.components.core.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.components.core.internal.data.model.sdkData.SdkData
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -32,8 +33,11 @@ class DefaultSdkDataProvider(
 ) : SdkDataProvider {
 
     @OptIn(ExperimentalEncodingApi::class)
-    override fun createEncodedSdkData(threeDS2SdkVersion: String?): String? {
-        val sdkData = createSdkData(threeDS2SdkVersion)
+    override fun createEncodedSdkData(
+        threeDS2SdkVersion: String?,
+        paymentMethodBehavior: PaymentMethodBehavior,
+    ): String? {
+        val sdkData = createSdkData(threeDS2SdkVersion, paymentMethodBehavior)
 
         try {
             val jsonObject = sdkData.serialize()
@@ -44,7 +48,10 @@ class DefaultSdkDataProvider(
         }
     }
 
-    private fun createSdkData(threeDS2SdkVersion: String? = null): SdkData {
+    private fun createSdkData(
+        threeDS2SdkVersion: String?,
+        paymentMethodBehavior: PaymentMethodBehavior,
+    ): SdkData {
         val authentication = threeDS2SdkVersion?.let {
             Authentication(
                 threeDS2SdkVersion = it,
@@ -62,6 +69,7 @@ class DefaultSdkDataProvider(
             sdkVersion = AnalyticsPlatformParams.version,
             platform = AnalyticsPlatformParams.platform,
             channel = AnalyticsPlatformParams.channel,
+            paymentMethodBehavior = paymentMethodBehavior,
         )
     }
 
