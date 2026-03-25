@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
 import com.adyen.checkout.core.components.internal.validate
 import com.adyen.checkout.core.error.CheckoutError
@@ -50,7 +50,7 @@ object Checkout {
     }
 
     suspend fun setup(
-        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        paymentMethods: PaymentMethods,
         configuration: CheckoutConfiguration,
     ): Result<CheckoutContext.Advanced> {
         configuration.validate()?.let { error ->
@@ -64,7 +64,7 @@ object Checkout {
 
         return Result.Success(
             CheckoutContext.Advanced(
-                paymentMethodsApiResponse = paymentMethodsApiResponse,
+                paymentMethods = paymentMethods,
                 checkoutConfiguration = configuration,
                 checkoutAttemptId = initializationData.checkoutAttemptId,
                 publicKey = initializationData.publicKey,

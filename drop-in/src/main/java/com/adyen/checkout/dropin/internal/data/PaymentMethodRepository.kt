@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin.internal.data
 
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,12 +25,12 @@ internal interface PaymentMethodRepository {
 }
 
 internal class DefaultPaymentMethodRepository(
-    paymentMethodsApiResponse: PaymentMethodsApiResponse,
+    paymentMethods: PaymentMethods,
 ) : PaymentMethodRepository {
 
-    override val paymentMethods: List<PaymentMethod> = paymentMethodsApiResponse.paymentMethods.orEmpty()
+    override val paymentMethods: List<PaymentMethod> = paymentMethods.paymentMethods.orEmpty()
 
-    private val _storedPaymentMethods = MutableStateFlow(paymentMethodsApiResponse.storedPaymentMethods.orEmpty())
+    private val _storedPaymentMethods = MutableStateFlow(paymentMethods.storedPaymentMethods.orEmpty())
     override val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>> = _storedPaymentMethods.asStateFlow()
 
     override fun removeStoredPaymentMethod(id: String) {
