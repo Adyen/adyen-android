@@ -117,8 +117,8 @@ internal class V6ViewModel @Inject constructor(
         Log.d(TAG, "Bin Lookup Data received: ${binLookupData.joinToString(",") { it.brand }}")
     }
 
-    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
-        val serializedPaymentComponentData = PaymentComponentData.SERIALIZER.serialize(paymentComponentData)
+    private suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult {
+        val serializedPaymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
         val paymentRequest = createPaymentRequest(
             paymentComponentData = serializedPaymentComponentData,
             shopperReference = keyValueStorage.getShopperReference(),
