@@ -880,7 +880,7 @@ public abstract interface class com/adyen/checkout/core/components/OnFinishedCal
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnSubmitCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onSubmit (Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun onSubmit (Lcom/adyen/checkout/core/components/data/PaymentComponentData;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/core/components/data/Address : com/adyen/checkout/core/common/internal/model/ModelObject {
