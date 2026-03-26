@@ -230,7 +230,8 @@ private fun CheckoutTextFieldPreview(
     }
 }
 
-internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<CheckoutTheme> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<CheckoutTheme> {
 
     private val themeProvider = ThemePreviewParameterProvider()
 
