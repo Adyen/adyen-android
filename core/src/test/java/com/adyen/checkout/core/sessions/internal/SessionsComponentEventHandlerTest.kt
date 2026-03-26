@@ -4,7 +4,6 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.OnAdditionalDetailsCallback
 import com.adyen.checkout.core.components.OnSubmitCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent

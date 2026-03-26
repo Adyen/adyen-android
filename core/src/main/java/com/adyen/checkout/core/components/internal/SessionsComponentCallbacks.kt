@@ -13,11 +13,11 @@ import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.components.BeforeSubmitCallback
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.OnAdditionalDetailsCallback
 import com.adyen.checkout.core.components.OnErrorCallback
 import com.adyen.checkout.core.components.OnFinishedCallback
 import com.adyen.checkout.core.components.OnSubmitCallback
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
 
