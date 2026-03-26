@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.common.internal.properties
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 
 /**
  * This field has two valid formats:
@@ -29,25 +30,18 @@ object SocialSecurityNumberProperties {
 
     // e.g 123.123.123-12
     val CPF_SEPARATORS = listOf(
-        Separator('.', 3), // . at index 3
-        Separator('.', 7), // . at index 7 (index should include previous separators)
-        Separator('-', 11), // - at index 11
+        TextFieldSeparator('.', 3), // . at index 3
+        TextFieldSeparator('.', 6), // . at index 6
+        TextFieldSeparator('-', 9), // - at index 9
     )
 
     // e.g 12.123.123/1234-12
     val CNPJ_SEPARATORS = listOf(
-        Separator('.', 2), // . at index 2
-        Separator('.', 6), // . at index 6
-        Separator('/', 10), // . at index 10
-        Separator('-', 15), // - at index 15
+        TextFieldSeparator('.', 2), // . at index 2
+        TextFieldSeparator('.', 5), // . at index 5
+        TextFieldSeparator('/', 8), // . at index 8
+        TextFieldSeparator('-', 12), // - at index 12
     )
 
     val SOCIAL_SECURITY_SEPARATORS: List<Char> = listOf('.', '-', '/')
 }
-
-// TODO move this to a common module
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class Separator(
-    val character: Char,
-    val index: Int,
-)

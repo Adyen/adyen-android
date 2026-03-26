@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.common.internal.properties
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 
 /**
  * This field has two valid formats:
@@ -22,4 +23,19 @@ object CardNumberProperties {
     const val CARD_NUMBER_MAXIMUM_LENGTH = 19
 
     const val CARD_NUMBER_SEPARATOR = ' '
+
+    // e.g 1234 1234 1234 1234 123
+    val CARD_NUMBER_DEFAULT_SEPARATORS = listOf(
+        TextFieldSeparator(CARD_NUMBER_SEPARATOR, 4),
+        TextFieldSeparator(CARD_NUMBER_SEPARATOR, 8),
+        TextFieldSeparator(CARD_NUMBER_SEPARATOR, 12),
+        TextFieldSeparator(CARD_NUMBER_SEPARATOR, 16),
+    )
+
+    // e.g 1234 123456 12345 1234
+    val CARD_NUMBER_AMEX_SEPARATORS = listOf(
+        TextFieldSeparator(CARD_NUMBER_SEPARATOR, 4),
+        TextFieldSeparator(CARD_NUMBER_SEPARATOR, 10),
+        TextFieldSeparator(CARD_NUMBER_SEPARATOR, 15),
+    )
 }
