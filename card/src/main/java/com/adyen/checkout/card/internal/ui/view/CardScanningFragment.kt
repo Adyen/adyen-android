@@ -52,13 +52,16 @@ internal class CardScanningFragment : Fragment() {
         resetScanner()
     }
 
+    fun setScanButtonVisibility(visible: Boolean) {
+        _binding?.scanButton?.isVisible = visible
+    }
+
     private fun resetScanner() {
         val cardScanner = cardScanner ?: return
         val delegate = delegate ?: return
         cardScanner.terminate()
         viewLifecycleOwner.lifecycleScope.launch {
             val didInitialize = cardScanner.initialize(requireContext(), delegate.componentParams.environment)
-            binding.scanButton.isVisible = didInitialize
             delegate.onCardScanningAvailability(didInitialize)
         }
     }

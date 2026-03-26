@@ -80,6 +80,7 @@ class CardView @JvmOverloads constructor(
 
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
+    private var cardScanningFragment: CardScanningFragment? = null
     private lateinit var localizedContext: Context
 
     private lateinit var cardDelegate: CardDelegate
@@ -192,6 +193,7 @@ class CardView @JvmOverloads constructor(
             cardOutputData.detectedCardTypes,
             cardOutputData.dualBrandData,
             cardDelegate.componentParams.environment,
+            cardOutputData.isCardScanningVisible,
         )
         onExpiryDateValidated(cardOutputData.expiryDateState)
         setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
@@ -327,8 +329,11 @@ class CardView @JvmOverloads constructor(
     private fun setCardBrands(
         detectedCardTypes: List<DetectedCardType>,
         dualBrandData: DualBrandData?,
-        environment: Environment
+        environment: Environment,
+        isCardScanningVisible: Boolean,
     ) {
+        binding.brandView.isVisible = !isCardScanningVisible
+        cardScanningFragment?.setScanButtonVisibility(isCardScanningVisible)
         binding.brandView.update(detectedCardTypes, dualBrandData, environment)
     }
 
@@ -554,7 +559,8 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initCardScanning(delegate: CardDelegate) {
-        binding.fragmentContainerCardScanning.getFragment<CardScanningFragment?>()?.initialize(delegate)
+        cardScanningFragment = binding.fragmentContainerCardScanning.getFragment()
+        cardScanningFragment?.initialize(delegate)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {
