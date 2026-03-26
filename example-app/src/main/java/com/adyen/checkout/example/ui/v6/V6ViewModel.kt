@@ -29,7 +29,6 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -118,10 +117,10 @@ internal class V6ViewModel @Inject constructor(
         Log.d(TAG, "Bin Lookup Data received: ${binLookupData.joinToString(",") { it.brand }}")
     }
 
-    private suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
-        val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
+        val serializedPaymentComponentData = PaymentComponentData.SERIALIZER.serialize(paymentComponentData)
         val paymentRequest = createPaymentRequest(
-            paymentComponentData = paymentComponentData,
+            paymentComponentData = serializedPaymentComponentData,
             shopperReference = keyValueStorage.getShopperReference(),
             amount = keyValueStorage.getOldAmount(),
             countryCode = keyValueStorage.getCountry(),

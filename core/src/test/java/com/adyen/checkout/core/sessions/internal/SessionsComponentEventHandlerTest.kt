@@ -4,11 +4,11 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.OnAdditionalDetailsCallback
 import com.adyen.checkout.core.components.OnSubmitCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
-import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.internal.GenericError
@@ -64,11 +64,7 @@ internal class SessionsComponentEventHandlerTest(
     fun `when event is submit and onSubmit is overridden and returns a result, then that result is returned`() =
         runTest {
             val expectedResult = CheckoutResult.Finished()
-            whenever(componentCallbacks.onSubmit) doReturn object : OnSubmitCallback {
-                override suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
-                    return expectedResult
-                }
-            }
+            whenever(componentCallbacks.onSubmit) doReturn OnSubmitCallback { expectedResult }
             whenever(componentCallbacks.onSubmit(any())) doReturn expectedResult
 
             val state = TestPaymentComponentState()

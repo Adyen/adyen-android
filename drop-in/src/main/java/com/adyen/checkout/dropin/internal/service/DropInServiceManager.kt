@@ -13,7 +13,7 @@ import android.content.Intent
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.DropInService
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,8 +40,8 @@ internal class DropInServiceManager(
         context.stopService(intent)
     }
 
-    suspend fun requestOnSubmit(state: PaymentComponentState<*>): CheckoutResult {
-        return DropInServiceRegistry.awaitService().onSubmit(state)
+    suspend fun requestOnSubmit(data: PaymentComponentData<*>): CheckoutResult {
+        return DropInServiceRegistry.awaitService().onSubmit(data)
     }
 
     suspend fun requestOnAdditionalDetails(data: ActionComponentData): CheckoutResult {

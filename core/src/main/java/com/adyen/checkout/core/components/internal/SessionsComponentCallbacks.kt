@@ -32,7 +32,7 @@ internal class SessionsComponentCallbacks(
     }
 
     suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
-        return onSubmit?.onSubmit(paymentComponentState) ?: error("onSubmit() callback is not set.")
+        return onSubmit?.onSubmit(paymentComponentState.data) ?: error("onSubmit() callback is not set.")
     }
 
     suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {

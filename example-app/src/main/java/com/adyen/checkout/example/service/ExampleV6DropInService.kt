@@ -13,7 +13,6 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -33,8 +32,8 @@ class ExampleV6DropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override suspend fun onSubmit(state: PaymentComponentState<*>): CheckoutResult {
-        val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(state.data)
+    override suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult {
+        val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(data)
         // Check out the documentation of this method on the parent DropInService class
         val paymentRequest = createPaymentRequest(
             paymentComponentData = paymentComponentJson,
