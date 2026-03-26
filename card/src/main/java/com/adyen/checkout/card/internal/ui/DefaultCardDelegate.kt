@@ -122,6 +122,8 @@ class DefaultCardDelegate(
 
     private var publicKey: String? = null
 
+    private var isCardScanningAvailable = false
+
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
@@ -433,6 +435,7 @@ class DefaultCardDelegate(
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
+            isCardScanningVisible = isCardScanningAvailable && inputData.cardNumber.isEmpty(),
             dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
                 detectedCardTypes,
                 inputData.selectedCardBrand,
@@ -906,6 +909,8 @@ class DefaultCardDelegate(
             CardEvents.cardScannerUnavailable(getPaymentMethodType())
         }
         analyticsManager.trackEvent(event)
+        isCardScanningAvailable = isAvailable
+        updateOutputData()
     }
 
     override fun onCardScanningDisplayed(didDisplay: Boolean) {

@@ -380,6 +380,47 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
+        fun `When scanner is available and card number is empty, isCardScanningVisible should be true`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.outputDataFlow.test {
+                delegate.onCardScanningAvailability(true)
+                delegate.updateInputData { cardNumber = "" }
+                with(expectMostRecentItem()) {
+                    assertTrue(isCardScanningVisible)
+                }
+            }
+        }
+
+        @Test
+        fun `When scanner is available and card number is not empty, isCardScanningVisible should be false`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.outputDataFlow.test {
+                    delegate.onCardScanningAvailability(true)
+                    delegate.updateInputData { cardNumber = "4111" }
+                    with(expectMostRecentItem()) {
+                        assertFalse(isCardScanningVisible)
+                    }
+                }
+            }
+
+        @Test
+        fun `When scanner is not available and card number is empty, isCardScanningVisible should be false`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.outputDataFlow.test {
+                    delegate.onCardScanningAvailability(false)
+                    delegate.updateInputData { cardNumber = "" }
+                    with(expectMostRecentItem()) {
+                        assertFalse(isCardScanningVisible)
+                    }
+                }
+            }
+
+        @Test
         fun `detect card type repository returns supported cards, then output data should contain them`() = runTest {
             val supportedCardBrands = listOf(
                 CardBrand(cardType = CardType.VISA),
@@ -1550,6 +1591,7 @@ internal class DefaultCardDelegateTest(
         ),
         isCardListVisible: Boolean = true,
         dualBrandData: DualBrandData? = null,
+        isCardScanningVisible: Boolean = false,
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -1575,6 +1617,7 @@ internal class DefaultCardDelegateTest(
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             isCardListVisible = isCardListVisible,
             dualBrandData = dualBrandData,
+            isCardScanningVisible = isCardScanningVisible,
         )
     }
 
