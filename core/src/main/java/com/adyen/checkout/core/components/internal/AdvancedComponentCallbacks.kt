@@ -32,8 +32,8 @@ internal class AdvancedComponentCallbacks(
         return beforeSubmit?.beforeSubmit(paymentComponentState)
     }
 
-    suspend fun onSubmit(data: PaymentComponentState<*>): CheckoutResult {
-        return onSubmit.onSubmit(data.data)
+    suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
+        return onSubmit.onSubmit(paymentComponentState.data)
     }
 
     suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {

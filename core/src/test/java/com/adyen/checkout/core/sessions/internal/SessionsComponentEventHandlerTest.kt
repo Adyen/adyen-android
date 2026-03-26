@@ -71,7 +71,7 @@ internal class SessionsComponentEventHandlerTest(
             val result = sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
 
             assertEquals(expectedResult, result)
-            verify(componentCallbacks).onSubmit(state)
+            verify(componentCallbacks).onSubmit(state.data)
             verify(sessionInteractor, never()).submitPayment(any())
         }
 

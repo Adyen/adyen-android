@@ -73,8 +73,8 @@ internal class PaymentMethodViewModel(
         }
     }
 
-    private suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult {
-        return dropInServiceManager.requestOnSubmit(data)
+    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
+        return dropInServiceManager.requestOnSubmit(paymentComponentData)
     }
 
     private suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {

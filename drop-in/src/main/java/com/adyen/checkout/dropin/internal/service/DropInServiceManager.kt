@@ -40,8 +40,8 @@ internal class DropInServiceManager(
         context.stopService(intent)
     }
 
-    suspend fun requestOnSubmit(data: PaymentComponentData<*>): CheckoutResult {
-        return DropInServiceRegistry.awaitService().onSubmit(data)
+    suspend fun requestOnSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
+        return DropInServiceRegistry.awaitService().onSubmit(paymentComponentData)
     }
 
     suspend fun requestOnAdditionalDetails(data: ActionComponentData): CheckoutResult {
