@@ -9,7 +9,11 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -19,6 +23,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
@@ -29,9 +35,13 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
+import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.internal.theme.toCompose
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun ExpiryDateField(
@@ -117,5 +127,33 @@ private fun ExpiryDateIcon(
             contentDescription = null,
             tint = Color.Unspecified,
         )
+    }
+}
+
+@Preview
+@Composable
+private fun ExpiryDateFieldPreview(
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    InternalCheckoutTheme(theme) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
+            modifier = Modifier
+                .background(theme.colors.background.toCompose())
+                .padding(Dimensions.Spacing.Large),
+        ) {
+            ExpiryDateField(
+                expiryDateState = TextInputViewState(
+                    text = "0330",
+                ),
+                onIntent = {},
+            )
+            ExpiryDateField(
+                expiryDateState = TextInputViewState(
+                    isOptional = true,
+                ),
+                onIntent = {},
+            )
+        }
     }
 }
