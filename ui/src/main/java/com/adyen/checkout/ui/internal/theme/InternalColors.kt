@@ -54,4 +54,5 @@ data class InternalColors(
     }
 }
 
-internal fun CheckoutColor.toCompose() = Color(value)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun CheckoutColor.toCompose() = Color(value)
