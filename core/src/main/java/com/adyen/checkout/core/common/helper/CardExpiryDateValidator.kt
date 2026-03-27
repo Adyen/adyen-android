@@ -9,89 +9,104 @@
 package com.adyen.checkout.core.common.helper
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.common.ui.model.ExpiryDate
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.GregorianCalendar
-import java.util.Locale
 
 object CardExpiryDateValidator {
-    // Date
-    private const val DATE_FORMAT = "MM/yy"
-
-    private val dateFormat: SimpleDateFormat = SimpleDateFormat(DATE_FORMAT, Locale.ROOT)
-
-    init {
-        dateFormat.isLenient = false
-    }
-
     /**
-     * Validate expiry date.
+     * Expiry date.
      *
-     * @param expiryDate Expiry date.
-     *
-     * @return Validation result.
+     * @param expiryMonth 2-digit month value. Valid values are [01-12], 01 being January and 12 being December.
+     * @param expiryYear 2-digit year valid. Valid values are [00-99], 00 being 2000 and 99 being 2099.
      */
     fun validateExpiryDate(
-        expiryDate: ExpiryDate
+        expiryMonth: String,
+        expiryYear: String,
     ): CardExpiryDateValidationResult {
-        return validateExpiryDate(expiryDate.toMMyyString(), GregorianCalendar.getInstance())
+        return validateExpiryDate(expiryMonth, expiryYear, GregorianCalendar.getInstance())
     }
-
-    /**
-     * Validate expiry date.
-     *
-     * @param expiryDate Expiry date in MM/yy format.
-     *
-     * @return Validation result.
-     */
-    fun validateExpiryDate(
-        expiryDate: String
-    ) = validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
 
     @VisibleForTesting
     internal fun validateExpiryDate(
-        expiryDate: String,
-        calendar: Calendar
-    ) = when {
-        dateExists(expiryDate) -> {
-            val expiryDateCalendar = ExpiryDate.getExpiryCalendar(expiryDate)
-            val isInMaxYearRange = isInMaxYearRange(expiryDateCalendar, calendar)
-            val isInMinMonthRange = isInMinMonthRange(expiryDateCalendar, calendar)
+        expiryMonth: String,
+        expiryYear: String,
+        currentCalendar: Calendar,
+    ): CardExpiryDateValidationResult {
+        val expiryDateCalendar = getExpiryCalendar(expiryMonth, expiryYear)
+            ?: return CardExpiryDateValidationResult.Invalid.NonParseableDate()
 
-            when {
-                // higher than maxPast and lower than maxFuture
-                isInMinMonthRange && isInMaxYearRange -> CardExpiryDateValidationResult.Valid()
-                !isInMaxYearRange -> CardExpiryDateValidationResult.Invalid.TooFarInTheFuture()
-                // Too old (!isInMinMonthRange)
-                else -> CardExpiryDateValidationResult.Invalid.TooOld()
-            }
-        }
+        val isInMaxYearRange = isInMaxYearRange(expiryDateCalendar, currentCalendar)
+        val isInMinMonthRange = isInMinMonthRange(expiryDateCalendar, currentCalendar)
 
-        else -> CardExpiryDateValidationResult.Invalid.NonParseableDate()
-    }
-
-    private fun isInMaxYearRange(expiryDateCalendar: Calendar, calendar: Calendar): Boolean {
-        val maxFutureCalendar = calendar.clone() as GregorianCalendar
-        maxFutureCalendar.add(Calendar.YEAR, ExpiryDate.MAXIMUM_YEARS_IN_FUTURE)
-        return expiryDateCalendar.get(Calendar.YEAR) <= maxFutureCalendar.get(Calendar.YEAR)
-    }
-
-    private fun isInMinMonthRange(expiryDateCalendar: Calendar, calendar: Calendar): Boolean {
-        val maxPastCalendar = calendar.clone() as GregorianCalendar
-        maxPastCalendar.add(Calendar.MONTH, -ExpiryDate.MAXIMUM_EXPIRED_MONTHS)
-        return expiryDateCalendar >= maxPastCalendar
-    }
-
-    private fun dateExists(expiryDate: String): Boolean {
-        return try {
-            dateFormat.parse(expiryDate) != null
-        } catch (e: ParseException) {
-            adyenLog(AdyenLogLevel.WARN) { "Invalid expiry date: $expiryDate" }
-            false
+        return when {
+            !isInMaxYearRange -> CardExpiryDateValidationResult.Invalid.TooFarInTheFuture()
+            !isInMinMonthRange -> CardExpiryDateValidationResult.Invalid.TooOld()
+            else -> CardExpiryDateValidationResult.Valid()
         }
     }
+
+    private fun getExpiryCalendar(
+        expiryMonth: String,
+        expiryYear: String,
+    ): Calendar? {
+        val month = expiryMonth.toIntOrNull()
+        val year = expiryYear.toIntOrNull()
+        return when {
+            month == null -> null
+            year == null -> null
+            month !in MIN_MONTH_VALUE..MAX_MONTH_VALUE -> null
+            year !in MIN_YEAR_VALUE..MAX_YEAR_VALUE -> null
+            else -> getExpiryCalendar(month = month, year = year)
+        }
+    }
+
+    private fun getExpiryCalendar(
+        month: Int,
+        year: Int,
+    ): Calendar {
+        return GregorianCalendar().apply {
+            // Clear all fields to avoid unexpected results from current time
+            clear()
+            // Calendar months are 0-based (January is 0), so we subtract 1
+            set(Calendar.MONTH, month - 1)
+            // add 2000 to the 2-digit year
+            set(Calendar.YEAR, YEAR_2000 + year)
+        }
+    }
+
+    /**
+     * Returns true if the year of the card expiry date is not more than 30 years in the future from ths year.
+     */
+    private fun isInMaxYearRange(expiryDateCalendar: Calendar, currentCalendar: Calendar): Boolean {
+        val expiryDateYear = expiryDateCalendar.get(Calendar.YEAR)
+        val currentYear = currentCalendar.get(Calendar.YEAR)
+
+        // we only compare years when validating future
+        return currentYear + MAXIMUM_YEARS_IN_FUTURE >= expiryDateYear
+    }
+
+    /**
+     * Returns true if the card has not expired more than MAXIMUM_EXPIRED_MONTHS complete months ago.
+     * The current month is fully ignored, we only count complete months in the past
+     */
+    private fun isInMinMonthRange(expiryDateCalendar: Calendar, currentCalendar: Calendar): Boolean {
+        val earliestInvalidCalendar = (expiryDateCalendar.clone() as Calendar).apply {
+            add(Calendar.MONTH, MAXIMUM_MONTHS_IN_PAST)
+
+            // since we only count complete months in the past, we go to next month to be on the actual first invalid
+            // moment of the expiry date
+            // e.g. a card with expiry date 01/30 is valid until the last moment of April 2030 (30 April 23:59:59)
+            // which is almost 4 months after the expiry date
+            add(Calendar.MONTH, 1)
+        }
+        return currentCalendar < earliestInvalidCalendar
+    }
+
+    private const val MAXIMUM_YEARS_IN_FUTURE = 30
+    private const val MAXIMUM_MONTHS_IN_PAST = 3
+    private const val MIN_MONTH_VALUE = 1
+    private const val MAX_MONTH_VALUE = 12
+    private const val MIN_YEAR_VALUE = 0
+    private const val MAX_YEAR_VALUE = 99
+    private const val YEAR_2000 = 2000
 }

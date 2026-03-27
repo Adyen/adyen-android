@@ -11,8 +11,6 @@ package com.adyen.checkout.card.internal.ui.view
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,14 +19,16 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.core.common.internal.properties.ExpiryDateProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
+import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -48,6 +48,15 @@ internal fun ExpiryDateField(
         ""
     }
 
+    val inputTransformation = remember { ExpiryDateInputTransformation() }
+    val outputTransformation = remember {
+        SeparatorsOutputTransformation(
+            listOf(
+                TextFieldSeparator(ExpiryDateProperties.EXPIRY_DATE_SEPARATOR, indexInRawString = 2),
+            ),
+        )
+    }
+
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
@@ -61,9 +70,8 @@ internal fun ExpiryDateField(
         onValueChange = { value ->
             onIntent(CardIntent.UpdateExpiryDate(value))
         },
-        inputTransformation = ExpiryDateInputTransformation()
-            .maxLength(maxLength = ExpiryDateInputTransformation.MAX_DIGITS),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
         shouldFocus = expiryDateState.isFocused,
         trailingIcon = {
             ExpiryDateIcon(expiryDateState)
