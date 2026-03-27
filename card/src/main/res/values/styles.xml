@@ -43,6 +43,10 @@
         <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
     </style>
 
+    <style name="AdyenCheckout.Card.BrandSelectionDisclaimer" parent="AdyenCheckout.TextAppearance.Tertiary">
+        <item name="android:text">@string/checkout_card_dual_brand_description</item>
+    </style>
+
     <style name="AdyenCheckout.Card.CardNumberInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_number_hint</item>
     </style>
