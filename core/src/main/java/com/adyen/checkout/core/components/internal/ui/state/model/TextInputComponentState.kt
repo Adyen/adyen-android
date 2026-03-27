@@ -18,7 +18,7 @@ data class TextInputComponentState(
     val errorMessage: CheckoutLocalizationKey? = null,
     val isFocused: Boolean = false,
     val showError: Boolean = false,
-    val requirementPolicy: RequirementPolicy? = null,
+    val requirementPolicy: RequirementPolicy = RequirementPolicy.Required,
 ) {
 
     val isValid: Boolean

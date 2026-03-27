@@ -29,7 +29,7 @@ internal class CardComponentStateValidator(
             validateSecurityCode(
                 state.securityCode,
                 firstSupportedDetectedCardType,
-                state.securityCode.requirementPolicy ?: RequirementPolicy.Required,
+                state.securityCode.requirementPolicy,
             )
         val holderNameError = validateHolderName(state.holderName)
         val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)

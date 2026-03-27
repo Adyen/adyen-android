@@ -23,7 +23,7 @@ internal class StoredCardComponentStateValidator(
             validateSecurityCode(
                 securityCode = state.securityCode,
                 selectedOrFirstCardType = state.detectedCardType,
-                uiState = state.securityCode.requirementPolicy ?: RequirementPolicy.Required,
+                uiState = state.securityCode.requirementPolicy,
             )
 
         return state.copy(
