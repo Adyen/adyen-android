@@ -57,6 +57,15 @@
 
     </FrameLayout>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_dualBrandedDisclaimer"
+        style="@style/AdyenCheckout.Card.BrandSelectionDisclaimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_half_margin"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_cardList"
         android:layout_width="match_parent"

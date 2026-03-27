@@ -339,6 +339,8 @@ class CardView @JvmOverloads constructor(
             else -> BrandState.Placeholder
         }
         binding.brandView.isVisible = !isCardScanningVisible
+        binding.textViewDualBrandedDisclaimer.isVisible = brandState is BrandState.DualBrand &&
+            brandState.dualBrandData.selectable
         cardScanningFragment?.setScanButtonVisibility(isCardScanningVisible)
         binding.brandView.update(brandState)
     }
@@ -394,9 +396,12 @@ class CardView @JvmOverloads constructor(
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.hideError()
             binding.cardBrandLogoContainer.isVisible = true
+            val dualBrandData = cardDelegate.outputData.dualBrandData
+            binding.textViewDualBrandedDisclaimer.isVisible = dualBrandData != null && dualBrandData.selectable
         } else {
             binding.textInputLayoutCardNumber.showError(localizedContext.getString(stringResId))
             binding.cardBrandLogoContainer.isVisible = false
+            binding.textViewDualBrandedDisclaimer.isVisible = false
         }
     }
 
