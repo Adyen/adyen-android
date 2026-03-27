@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal.ui.state.model
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 
 internal class TextInputComponentStateExtTest {
@@ -98,5 +99,33 @@ internal class TextInputComponentStateExtTest {
 
         // THEN
         assertEquals("text", paymentDataValue)
+    }
+
+    @Test
+    fun `when field is hidden, then view state should be null so it doesn't get displayed`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            requirementPolicy = RequirementPolicy.Hidden,
+        )
+
+        // WHEN
+        val viewState = state.toViewState()
+
+        // THEN
+        assertNull(viewState)
+    }
+
+    @Test
+    fun `when field is optional, then view state should exist`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            requirementPolicy = RequirementPolicy.Optional,
+        )
+
+        // WHEN
+        val viewState = state.toViewState()
+
+        // THEN
+        assertNotNull(viewState)
     }
 }

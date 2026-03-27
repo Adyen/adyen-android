@@ -43,10 +43,12 @@ internal fun BlikComponent(
             // Helper text
             Body(text = resolveString(CheckoutLocalizationKey.BLIK_HELPER_TEXT))
 
-            BlikCodeField(
-                blikCodeState = viewState.blikCode,
-                onIntent = onIntent,
-            )
+            if (viewState.blikCode != null) {
+                BlikCodeField(
+                    blikCodeState = viewState.blikCode,
+                    onIntent = onIntent,
+                )
+            }
         }
     }
 }

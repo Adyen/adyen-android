@@ -26,7 +26,8 @@ data class TextInputViewState(
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun TextInputComponentState.toViewState(
     trailingIcon: TrailingIcon? = null,
-): TextInputViewState {
+): TextInputViewState? {
+    if (requirementPolicy == RequirementPolicy.Hidden) return null
     val isError = showError && errorMessage != null
     return TextInputViewState(
         text = text,
