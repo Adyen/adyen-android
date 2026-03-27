@@ -111,7 +111,7 @@ internal class CardViewStateProducerTest {
         // THEN
         assertEquals(
             CardNumberTrailingIcon.Warning,
-            viewState.cardNumber.trailingIcon
+            viewState.cardNumber.trailingIcon,
         )
         assertFalse(viewState.isSupportedCardBrandsShown)
     }
@@ -191,7 +191,7 @@ internal class CardViewStateProducerTest {
         assertFalse(viewState.cardNumber.isError)
         assertEquals(
             CardNumberTrailingIcon.BrandLogos,
-            viewState.cardNumber.trailingIcon
+            viewState.cardNumber.trailingIcon,
         )
     }
 
@@ -236,7 +236,7 @@ internal class CardViewStateProducerTest {
             assertFalse(viewState.isSupportedCardBrandsShown)
             assertEquals(
                 CardNumberTrailingIcon.BrandLogos,
-                viewState.cardNumber.trailingIcon
+                viewState.cardNumber.trailingIcon,
             )
         }
     }
@@ -250,6 +250,8 @@ internal class CardViewStateProducerTest {
         securityCode = TextInputComponentState(),
         holderName = TextInputComponentState(),
         socialSecurityNumber = TextInputComponentState(),
+        kcpBirthDateOrTaxNumber = TextInputComponentState(),
+        kcpCardPassword = TextInputComponentState(),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

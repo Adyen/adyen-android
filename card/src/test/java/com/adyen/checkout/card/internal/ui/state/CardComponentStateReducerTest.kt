@@ -486,6 +486,8 @@ internal class CardComponentStateReducerTest(
         securityCode = TextInputComponentState(),
         holderName = TextInputComponentState(),
         socialSecurityNumber = TextInputComponentState(),
+        kcpCardPassword = TextInputComponentState(),
+        kcpBirthDateOrTaxNumber = TextInputComponentState(),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

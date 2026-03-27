@@ -162,13 +162,15 @@ internal class CardComponentStateValidatorTest {
 
     private fun createValidState() = CardComponentState(
         cardNumber = TextInputComponentState(text = "4111111111111111"),
-        expiryDate = TextInputComponentState(text = "12/30"),
+        expiryDate = TextInputComponentState(text = "1230"),
         securityCode = TextInputComponentState(text = "123"),
         holderName = TextInputComponentState(text = "John Doe", requirementPolicy = RequirementPolicy.Hidden),
         socialSecurityNumber = TextInputComponentState(
             text = "12312312312",
             requirementPolicy = RequirementPolicy.Hidden,
         ),
+        kcpBirthDateOrTaxNumber = TextInputComponentState(text = "123456"),
+        kcpCardPassword = TextInputComponentState(text = "12"),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
