@@ -45,8 +45,6 @@ internal class CardValidationMapper {
     ): CheckoutLocalizationKey? {
         return when (validation) {
             CardSecurityCodeValidation.VALID -> null
-            CardSecurityCodeValidation.VALID_HIDDEN -> null
-            CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY -> null
             CardSecurityCodeValidation.INVALID -> CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID
         }
     }
