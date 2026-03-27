@@ -16,6 +16,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.GiftCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PayByBankUSPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
@@ -23,6 +24,7 @@ import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodListSection
+import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -95,10 +97,17 @@ internal class PaymentMethodListViewModel(
             else -> type
         }
 
+        val brands = when (this) {
+            is CardPaymentMethod -> brands
+            is PayByBankUSPaymentMethod -> PayByBankUSBrandLogo.entries.map { it.path }
+            else -> null
+        }
+
         return PaymentMethodItem(
             id = type,
             icon = icon,
             title = name,
+            brands = brands,
         )
     }
 

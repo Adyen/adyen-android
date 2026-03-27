@@ -26,5 +26,6 @@ internal data class PaymentMethodListViewState(
         val icon: String,
         val title: String,
         val subtitle: String? = null,
+        val brands: List<String>? = null,
     )
 }

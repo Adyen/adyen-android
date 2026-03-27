@@ -10,6 +10,7 @@ package com.adyen.checkout.core.common.internal.ui
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
+import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,6 +29,7 @@ import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.image.ImageLoader
 import com.adyen.checkout.ui.internal.image.LogoSize
 import com.adyen.checkout.ui.internal.image.NetworkImage
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 /**
@@ -76,6 +78,7 @@ fun CheckoutNetworkLogo(
                     alpha = 0.04f,
                 ),
             )
+            .background(CheckoutThemeProvider.colors.background)
             .clip(RoundedCornerShape(Dimensions.CornerRadius)),
         contentDescription = contentDescription,
         imageLoader = imageLoader,
