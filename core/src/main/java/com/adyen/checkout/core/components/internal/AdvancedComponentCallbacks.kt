@@ -33,7 +33,7 @@ internal class AdvancedComponentCallbacks(
     }
 
     suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
-        return onSubmit.onSubmit(paymentComponentState)
+        return onSubmit.onSubmit(paymentComponentState.data)
     }
 
     suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {

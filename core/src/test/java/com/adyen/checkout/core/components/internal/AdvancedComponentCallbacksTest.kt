@@ -78,7 +78,7 @@ internal class AdvancedComponentCallbacksTest(
         val actualAdvancedComponentCallbacks = checkoutCallbacks.toAdvancedComponentCallbacks()
 
         actualAdvancedComponentCallbacks.onSubmit(TEST_PAYMENT_COMPONENT_STATE)
-        verify(checkoutCallbacks.onSubmit)?.onSubmit(TEST_PAYMENT_COMPONENT_STATE)
+        verify(checkoutCallbacks.onSubmit)?.onSubmit(TEST_PAYMENT_COMPONENT_STATE.data)
     }
 
     @Test

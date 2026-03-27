@@ -29,7 +29,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
                 if (componentCallbacks.onSubmit == null) {
                     makePaymentsCall(event.state)
                 } else {
-                    componentCallbacks.onSubmit(event.state)
+                    componentCallbacks.onSubmit(event.state.data)
                 }
             }
 

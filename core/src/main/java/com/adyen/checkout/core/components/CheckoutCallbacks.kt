@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.PaymentResult
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
 import kotlin.reflect.KClass
@@ -49,7 +50,7 @@ fun interface BeforeSubmitCallback : CheckoutCallback {
 }
 
 fun interface OnSubmitCallback : CheckoutCallback {
-    suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult
+    suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult
 }
 
 fun interface OnAdditionalDetailsCallback : CheckoutCallback {

@@ -82,8 +82,8 @@ class SessionsComponentCallbacksTest(
 
             val actualSessionsComponentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks()
 
-            actualSessionsComponentCallbacks.onSubmit(TEST_PAYMENT_COMPONENT_STATE)
-            verify(checkoutCallbacks.onSubmit)?.onSubmit(TEST_PAYMENT_COMPONENT_STATE)
+            actualSessionsComponentCallbacks.onSubmit(TEST_PAYMENT_COMPONENT_STATE.data)
+            verify(checkoutCallbacks.onSubmit)?.onSubmit(TEST_PAYMENT_COMPONENT_STATE.data)
         }
 
     @Test

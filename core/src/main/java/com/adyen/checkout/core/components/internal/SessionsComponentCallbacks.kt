@@ -17,6 +17,7 @@ import com.adyen.checkout.core.components.OnAdditionalDetailsCallback
 import com.adyen.checkout.core.components.OnErrorCallback
 import com.adyen.checkout.core.components.OnFinishedCallback
 import com.adyen.checkout.core.components.OnSubmitCallback
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.error.CheckoutError
 
@@ -31,8 +32,8 @@ internal class SessionsComponentCallbacks(
         return beforeSubmit?.beforeSubmit(paymentComponentState)
     }
 
-    suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
-        return onSubmit?.onSubmit(paymentComponentState) ?: error("onSubmit() callback is not set.")
+    suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
+        return onSubmit?.onSubmit(paymentComponentData) ?: error("onSubmit() callback is not set.")
     }
 
     suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {

@@ -77,7 +77,7 @@ class NewCheckoutController(
         if (_state.value is CheckoutControllerState.PaymentMethod) {
             componentStateFlow?.value?.let {
                 callbacks.beforeSubmit?.beforeSubmit(it)
-                callbacks.onSubmit?.onSubmit(it)
+                callbacks.onSubmit?.onSubmit(it.data)
             }
         }
     }

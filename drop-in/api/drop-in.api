@@ -73,7 +73,7 @@ public abstract class com/adyen/checkout/dropin/DropInService : androidx/lifecyc
 	public fun onCreate ()V
 	public fun onDestroy ()V
 	public fun onStartCommand (Landroid/content/Intent;II)I
-	public abstract fun onSubmit (Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun onSubmit (Lcom/adyen/checkout/core/components/data/PaymentComponentData;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$ConfirmationDialogKt {
