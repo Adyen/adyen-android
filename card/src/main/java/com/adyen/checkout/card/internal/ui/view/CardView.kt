@@ -22,9 +22,11 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.CardViewBinding
+import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -32,6 +34,7 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
@@ -113,6 +116,7 @@ class CardView @JvmOverloads constructor(
         updateInputFields(cardDelegate.outputData)
 
         initCardNumberInput()
+        initBrandSelection()
         initExpiryDateInput()
         initSecurityCodeInput()
         initHolderNameInput()
@@ -184,6 +188,11 @@ class CardView @JvmOverloads constructor(
 
     private fun outputDataChanged(cardOutputData: CardOutputData) {
         onCardNumberValidated(cardOutputData)
+        setCardBrands(
+            cardOutputData.detectedCardTypes,
+            cardOutputData.dualBrandData,
+            cardDelegate.componentParams.environment,
+        )
         onExpiryDateValidated(cardOutputData.expiryDateState)
         setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
         setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
@@ -315,6 +324,14 @@ class CardView @JvmOverloads constructor(
         }
     }
 
+    private fun setCardBrands(
+        detectedCardTypes: List<DetectedCardType>,
+        dualBrandData: DualBrandData?,
+        environment: Environment
+    ) {
+        binding.brandView.update(detectedCardTypes, dualBrandData, environment)
+    }
+
     private fun onExpiryDateValidated(expiryDateState: FieldState<String>) {
         if (binding.editTextExpiryDate.rawValue != expiryDateState.value) {
             binding.editTextExpiryDate.setText(expiryDateState.value)
@@ -338,6 +355,14 @@ class CardView @JvmOverloads constructor(
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             setCardErrorState(hasFocus)
+        }
+    }
+
+    private fun initBrandSelection() {
+        binding.brandView.setOnBrandSelectionListener { cardBrand ->
+            cardDelegate.updateInputData {
+                selectedCardBrand = cardBrand
+            }
         }
     }
 
