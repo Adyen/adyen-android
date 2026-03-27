@@ -9,6 +9,8 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
@@ -127,5 +129,92 @@ internal class TextInputComponentStateExtTest {
 
         // THEN
         assertNotNull(viewState)
+    }
+
+    @Test
+    fun `when field is hidden, then input should not require validation`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            requirementPolicy = RequirementPolicy.Hidden,
+        )
+
+        // WHEN
+        val requiresValidation = state.requiresValidation()
+
+        // THEN
+        assertFalse(requiresValidation)
+    }
+
+    @Test
+    fun `when field is hidden and has text, then input should not require validation`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            text = "hidden",
+            requirementPolicy = RequirementPolicy.Hidden,
+        )
+
+        // WHEN
+        val requiresValidation = state.requiresValidation()
+
+        // THEN
+        assertFalse(requiresValidation)
+    }
+
+    @Test
+    fun `when field is optional and empty, then input should not require validation`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            requirementPolicy = RequirementPolicy.Optional,
+        )
+
+        // WHEN
+        val requiresValidation = state.requiresValidation()
+
+        // THEN
+        assertFalse(requiresValidation)
+    }
+
+    @Test
+    fun `when field is optional and has text, then input should require validation`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            text = "optional",
+            requirementPolicy = RequirementPolicy.Optional,
+        )
+
+        // WHEN
+        val requiresValidation = state.requiresValidation()
+
+        // THEN
+        assertTrue(requiresValidation)
+    }
+
+    @Test
+    fun `when field is required and empty, then input should require validation`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            requirementPolicy = RequirementPolicy.Required,
+        )
+
+        // WHEN
+        val requiresValidation = state.requiresValidation()
+
+        // THEN
+        assertTrue(requiresValidation)
+    }
+
+    @Test
+    fun `when field is required and has text, then input should require validation`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            text = "text",
+            requirementPolicy = RequirementPolicy.Required,
+        )
+
+        // WHEN
+        val requiresValidation = state.requiresValidation()
+
+        // THEN
+        assertTrue(requiresValidation)
     }
 }

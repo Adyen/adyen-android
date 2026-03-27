@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -25,46 +26,51 @@ internal class CardValidationUtilsTest {
 
         @Test
         fun `holder name is required and blank, then result should be invalid`() {
-            val validation = CardValidationUtils.validateHolderName(
-                holderName = "",
-                isRequired = true,
+            val textInputComponentState = TextInputComponentState(
+                text = "",
+                requirementPolicy = RequirementPolicy.Required,
             )
+            val validation = CardValidationUtils.validateHolderName(textInputComponentState)
             assertEquals(CardHolderNameValidation.INVALID_BLANK, validation)
         }
 
         @Test
         fun `holder name is required and whitespace only, then result should be invalid`() {
-            val validation = CardValidationUtils.validateHolderName(
-                holderName = "   ",
-                isRequired = true,
+            val textInputComponentState = TextInputComponentState(
+                text = "   ",
+                requirementPolicy = RequirementPolicy.Required,
             )
+            val validation = CardValidationUtils.validateHolderName(textInputComponentState)
             assertEquals(CardHolderNameValidation.INVALID_BLANK, validation)
         }
 
         @Test
         fun `holder name is required and not blank, then result should be valid`() {
-            val validation = CardValidationUtils.validateHolderName(
-                holderName = "J. Smith",
-                isRequired = true,
+            val textInputComponentState = TextInputComponentState(
+                text = "J. Smith",
+                requirementPolicy = RequirementPolicy.Required,
             )
+            val validation = CardValidationUtils.validateHolderName(textInputComponentState)
             assertEquals(CardHolderNameValidation.VALID, validation)
         }
 
         @Test
-        fun `holder name is not required and blank, then result should be valid`() {
-            val validation = CardValidationUtils.validateHolderName(
-                holderName = "",
-                isRequired = false,
+        fun `holder name is optional and blank, then result should be valid`() {
+            val textInputComponentState = TextInputComponentState(
+                text = "",
+                requirementPolicy = RequirementPolicy.Optional,
             )
+            val validation = CardValidationUtils.validateHolderName(textInputComponentState)
             assertEquals(CardHolderNameValidation.VALID, validation)
         }
 
         @Test
         fun `holder name is not required and not blank, then result should be valid`() {
-            val validation = CardValidationUtils.validateHolderName(
-                holderName = "J. Smith",
-                isRequired = false,
+            val textInputComponentState = TextInputComponentState(
+                text = "hidden",
+                requirementPolicy = RequirementPolicy.Hidden,
             )
+            val validation = CardValidationUtils.validateHolderName(textInputComponentState)
             assertEquals(CardHolderNameValidation.VALID, validation)
         }
     }
@@ -73,13 +79,14 @@ internal class CardValidationUtilsTest {
     @MethodSource("socialSecurityNumberSource")
     fun `when validating social security number then result should match expected value`(
         socialSecurityNumber: String,
-        requirementPolicy: RequirementPolicy?,
+        requirementPolicy: RequirementPolicy,
         expectedValidation: CardSocialSecurityNumberValidation,
     ) {
-        val validation = CardValidationUtils.validateSocialSecurityNumber(
-            socialSecurityNumber = socialSecurityNumber,
+        val textInputComponentState = TextInputComponentState(
+            text = socialSecurityNumber,
             requirementPolicy = requirementPolicy,
         )
+        val validation = CardValidationUtils.validateSocialSecurityNumber(textInputComponentState)
         assertEquals(expectedValidation, validation)
     }
 
@@ -87,13 +94,14 @@ internal class CardValidationUtilsTest {
     @MethodSource("kcpBirthDateOrTaxNumberSource")
     fun `when validating KCP birth date or tax number then result should match expected value`(
         kcpBirthDateOrTaxNumber: String,
-        requirementPolicy: RequirementPolicy?,
+        requirementPolicy: RequirementPolicy,
         expectedValidation: KCPBirthDateOrTaxNumberValidation,
     ) {
-        val validation = CardValidationUtils.validateKCPBirthDateOrTaxNumber(
-            kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber,
+        val textInputComponentState = TextInputComponentState(
+            text = kcpBirthDateOrTaxNumber,
             requirementPolicy = requirementPolicy,
         )
+        val validation = CardValidationUtils.validateKCPBirthDateOrTaxNumber(textInputComponentState)
         assertEquals(expectedValidation, validation)
     }
 
@@ -101,13 +109,14 @@ internal class CardValidationUtilsTest {
     @MethodSource("kcpCardPasswordSource")
     fun `when validating KCP card password then result should match expected value`(
         kcpCardPassword: String,
-        requirementPolicy: RequirementPolicy?,
+        requirementPolicy: RequirementPolicy,
         expectedValidation: KCPCardPasswordValidation,
     ) {
-        val validation = CardValidationUtils.validateKCPCardPassword(
-            kcpCardPassword = kcpCardPassword,
+        val textInputComponentState = TextInputComponentState(
+            text = kcpCardPassword,
             requirementPolicy = requirementPolicy,
         )
+        val validation = CardValidationUtils.validateKCPCardPassword(textInputComponentState)
         assertEquals(expectedValidation, validation)
     }
 

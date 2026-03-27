@@ -18,3 +18,15 @@ import androidx.annotation.RestrictTo
 fun TextInputComponentState.getPaymentDataValue(): String? {
     return text.takeIf { requirementPolicy != RequirementPolicy.Hidden && it.isNotBlank() }
 }
+
+/**
+ * Returns true if the text field requires further validation based on its requirement policy and current text value.
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun TextInputComponentState.requiresValidation(): Boolean {
+    return when (requirementPolicy) {
+        RequirementPolicy.Hidden -> false
+        RequirementPolicy.Optional -> text.isNotBlank()
+        RequirementPolicy.Required -> true
+    }
+}
