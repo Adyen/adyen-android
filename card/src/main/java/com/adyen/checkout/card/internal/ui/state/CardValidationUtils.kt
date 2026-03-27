@@ -13,17 +13,17 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
+import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties
+import com.adyen.checkout.card.internal.ui.properties.KCPCardPasswordProperties
+import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidator
 import com.adyen.checkout.core.common.helper.CardNumberValidationResult
 import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
-import com.adyen.checkout.core.common.internal.helper.StringUtil
-import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties
-import com.adyen.checkout.card.internal.ui.properties.KCPCardPasswordProperties
-import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties
-import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.isNotRequiredAndValid
 
 internal object CardValidationUtils {
 
@@ -31,11 +31,12 @@ internal object CardValidationUtils {
      * Validate card number.
      */
     internal fun validateCardNumber(
-        number: String,
+        cardNumber: TextInputComponentState,
         enableLuhnCheck: Boolean,
         isBrandSupported: Boolean
     ): CardNumberValidation {
-        val validation = CardNumberValidator.validateCardNumber(number, enableLuhnCheck)
+        if (cardNumber.isNotRequiredAndValid()) return CardNumberValidation.VALID
+        val validation = CardNumberValidator.validateCardNumber(cardNumber.text, enableLuhnCheck)
         return validateCardNumber(validation, isBrandSupported)
     }
 
@@ -70,13 +71,14 @@ internal object CardValidationUtils {
      * Validate Expiry Date.
      */
     internal fun validateExpiryDate(
-        expiryDate: String,
+        expiryDate: TextInputComponentState,
         fieldPolicy: Brand.FieldPolicy?,
     ): CardExpiryDateValidation {
-        val (expiryMonth, expiryYear) = ExpiryDateParser.parseToMonthAndYear(expiryDate, returnFullYear = false)
+        if (expiryDate.isNotRequiredAndValid()) return CardExpiryDateValidation.VALID
+        val (expiryMonth, expiryYear) = ExpiryDateParser.parseToMonthAndYear(expiryDate.text, returnFullYear = false)
             ?: return CardExpiryDateValidation.INVALID_OTHER_REASON
         val result = CardExpiryDateValidator.validateExpiryDate(expiryMonth = expiryMonth, expiryYear = expiryYear)
-        return validateExpiryDate(expiryDate, result, fieldPolicy)
+        return validateExpiryDate(expiryDate.text, result, fieldPolicy)
     }
 
     @VisibleForTesting
@@ -117,10 +119,10 @@ internal object CardValidationUtils {
      * Validate Holder Name.
      */
     internal fun validateHolderName(
-        holderName: String,
-        isRequired: Boolean
+        holderName: TextInputComponentState,
     ): CardHolderNameValidation {
-        return if (isRequired && holderName.isBlank()) {
+        if (holderName.isNotRequiredAndValid()) return CardHolderNameValidation.VALID
+        return if (holderName.text.isBlank()) {
             CardHolderNameValidation.INVALID_BLANK
         } else {
             CardHolderNameValidation.VALID
@@ -131,32 +133,14 @@ internal object CardValidationUtils {
      * Validate Security Code.
      */
     internal fun validateSecurityCode(
-        securityCode: String,
+        securityCode: TextInputComponentState,
         detectedCardType: DetectedCardType?,
-        uiState: RequirementPolicy,
     ): CardSecurityCodeValidation {
-        val result = CardSecurityCodeValidator.validateSecurityCode(securityCode, detectedCardType?.cardBrand)
-        return validateSecurityCode(securityCode, uiState, result)
-    }
-
-    @VisibleForTesting
-    internal fun validateSecurityCode(
-        securityCode: String,
-        uiState: RequirementPolicy,
-        validationResult: CardSecurityCodeValidationResult,
-    ): CardSecurityCodeValidation {
-        val normalizedSecurityCode = StringUtil.normalize(securityCode)
-        val length = normalizedSecurityCode.length
-
-        return when {
-            uiState is RequirementPolicy.Hidden -> CardSecurityCodeValidation.VALID_HIDDEN
-            uiState is RequirementPolicy.Optional && length == 0 -> CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY
-            else -> {
-                when (validationResult) {
-                    is CardSecurityCodeValidationResult.Invalid -> CardSecurityCodeValidation.INVALID
-                    is CardSecurityCodeValidationResult.Valid -> CardSecurityCodeValidation.VALID
-                }
-            }
+        if (securityCode.isNotRequiredAndValid()) return CardSecurityCodeValidation.VALID
+        val result = CardSecurityCodeValidator.validateSecurityCode(securityCode.text, detectedCardType?.cardBrand)
+        return when (result) {
+            is CardSecurityCodeValidationResult.Invalid -> CardSecurityCodeValidation.INVALID
+            is CardSecurityCodeValidationResult.Valid -> CardSecurityCodeValidation.VALID
         }
     }
 
@@ -164,18 +148,14 @@ internal object CardValidationUtils {
      * Validate Social Security Number.
      */
     internal fun validateSocialSecurityNumber(
-        socialSecurityNumber: String,
-        requirementPolicy: RequirementPolicy?
+        socialSecurityNumber: TextInputComponentState,
     ): CardSocialSecurityNumberValidation {
-        // allow empty value unless field is required
-        if (socialSecurityNumber.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
-            return CardSocialSecurityNumberValidation.VALID
-        }
+        if (socialSecurityNumber.isNotRequiredAndValid()) return CardSocialSecurityNumberValidation.VALID
 
-        if (socialSecurityNumber.any { !it.isDigit() }) {
+        if (socialSecurityNumber.text.any { !it.isDigit() }) {
             return CardSocialSecurityNumberValidation.INVALID
         }
-        return when (socialSecurityNumber.length) {
+        return when (socialSecurityNumber.text.length) {
             SocialSecurityNumberProperties.CPF_VALID_LENGTH -> CardSocialSecurityNumberValidation.VALID
             SocialSecurityNumberProperties.CNPJ_VALID_LENGTH -> CardSocialSecurityNumberValidation.VALID
             else -> CardSocialSecurityNumberValidation.INVALID
@@ -186,17 +166,14 @@ internal object CardValidationUtils {
      * Validate KCP Birth Date Or Tax Number
      */
     internal fun validateKCPBirthDateOrTaxNumber(
-        kcpBirthDateOrTaxNumber: String,
-        requirementPolicy: RequirementPolicy?
+        kcpBirthDateOrTaxNumber: TextInputComponentState,
     ): KCPBirthDateOrTaxNumberValidation {
-        // allow empty value unless field is required
-        if (kcpBirthDateOrTaxNumber.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
-            return KCPBirthDateOrTaxNumberValidation.VALID
-        }
-        if (kcpBirthDateOrTaxNumber.any { !it.isDigit() }) {
+        if (kcpBirthDateOrTaxNumber.isNotRequiredAndValid()) return KCPBirthDateOrTaxNumberValidation.VALID
+
+        if (kcpBirthDateOrTaxNumber.text.any { !it.isDigit() }) {
             return KCPBirthDateOrTaxNumberValidation.INVALID
         }
-        return when (kcpBirthDateOrTaxNumber.length) {
+        return when (kcpBirthDateOrTaxNumber.text.length) {
             KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH -> KCPBirthDateOrTaxNumberValidation.VALID
             KCPBirthDateOrTaxNumberProperties.KCP_TAX_NUMBER_VALID_LENGTH -> KCPBirthDateOrTaxNumberValidation.VALID
             else -> KCPBirthDateOrTaxNumberValidation.INVALID
@@ -206,18 +183,13 @@ internal object CardValidationUtils {
     /**
      * Validate KCP card password
      */
-    internal fun validateKCPCardPassword(
-        kcpCardPassword: String,
-        requirementPolicy: RequirementPolicy?
-    ): KCPCardPasswordValidation {
-        // allow empty value unless field is required
-        if (kcpCardPassword.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
-            return KCPCardPasswordValidation.VALID
-        }
-        if (kcpCardPassword.any { !it.isDigit() }) {
+    internal fun validateKCPCardPassword(kcpCardPassword: TextInputComponentState): KCPCardPasswordValidation {
+        if (kcpCardPassword.isNotRequiredAndValid()) return KCPCardPasswordValidation.VALID
+
+        if (kcpCardPassword.text.any { !it.isDigit() }) {
             return KCPCardPasswordValidation.INVALID
         }
-        return when (kcpCardPassword.length) {
+        return when (kcpCardPassword.text.length) {
             KCPCardPasswordProperties.KCP_CARD_PASSWORD_MAX_LENGTH -> KCPCardPasswordValidation.VALID
             else -> KCPCardPasswordValidation.INVALID
         }
@@ -247,8 +219,6 @@ enum class CardExpiryDateValidation {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardSecurityCodeValidation {
     VALID,
-    VALID_HIDDEN,
-    VALID_OPTIONAL_EMPTY,
     INVALID,
 }
 
