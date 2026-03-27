@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.BrandViewBinding
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.model.BrandState
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.Environment
@@ -70,15 +71,15 @@ class BrandView @JvmOverloads constructor(
         )
     }
 
-    fun update(detectedCardTypes: List<DetectedCardType>, dualBrandData: DualBrandData?, environment: Environment) {
-        when {
-            detectedCardTypes.isEmpty() -> showSingleBrandPlaceholder()
-            dualBrandData != null -> showBrandsList(dualBrandData)
-            else -> showSingleBrand(detectedCardTypes.first(), environment)
+    internal fun update(state: BrandState) {
+        when (state) {
+            is BrandState.Placeholder -> showSingleBrandPlaceholder()
+            is BrandState.SingleBrand -> showSingleBrand(state.detectedCardType, state.environment)
+            is BrandState.DualBrand -> showBrandsList(state.dualBrandData)
         }
     }
 
-    fun setOnBrandSelectionListener(listener: BrandSelectionListener?) {
+    internal fun setOnBrandSelectionListener(listener: BrandSelectionListener?) {
         this.brandSelectionListener = listener
     }
 
