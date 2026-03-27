@@ -23,10 +23,14 @@ data class TextInputViewState(
     val isOptional: Boolean = false,
 )
 
+/**
+ * Maps a TextInputComponentState to a TextInputViewState or returns null if the view should not be displayed on the UI.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun TextInputComponentState.toViewState(
     trailingIcon: TrailingIcon? = null,
-): TextInputViewState {
+): TextInputViewState? {
+    if (requirementPolicy == RequirementPolicy.Hidden) return null
     val isError = showError && errorMessage != null
     return TextInputViewState(
         text = text,

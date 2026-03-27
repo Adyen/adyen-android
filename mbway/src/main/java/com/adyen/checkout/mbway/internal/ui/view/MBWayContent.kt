@@ -53,8 +53,14 @@ internal fun MBWayContent(
                     .fillMaxWidth(),
             )
 
-            // PhoneNumber
-            MBWayPhoneNumberField(viewState.phoneNumber, country.callingCode, onIntent)
+            if (viewState.phoneNumber != null) {
+                // PhoneNumber
+                MBWayPhoneNumberField(
+                    mbWayPhoneNumberFieldState = viewState.phoneNumber,
+                    countryCode = country.callingCode,
+                    onIntent = onIntent,
+                )
+            }
         }
     }
 }

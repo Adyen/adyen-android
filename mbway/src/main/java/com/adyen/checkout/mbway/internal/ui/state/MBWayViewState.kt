@@ -15,6 +15,6 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 internal data class MBWayViewState(
     val countries: List<CountryModel>,
     val selectedCountryCode: CountryModel,
-    val phoneNumber: TextInputViewState,
+    val phoneNumber: TextInputViewState?,
     val isLoading: Boolean,
 ) : ViewState
