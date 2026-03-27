@@ -12,6 +12,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal sealed class DropInPaymentFlowType {
+
+    @Serializable
     data class RegularPaymentMethod(val txVariant: String) : DropInPaymentFlowType()
+
+    @Serializable
     data class StoredPaymentMethod(val id: String) : DropInPaymentFlowType()
 }

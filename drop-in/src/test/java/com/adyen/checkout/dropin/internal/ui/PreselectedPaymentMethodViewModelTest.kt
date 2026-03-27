@@ -13,6 +13,7 @@ import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.test.LoggingExtension
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -48,7 +49,7 @@ internal class PreselectedPaymentMethodViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        navigator = DropInNavigator()
+        navigator = DropInNavigator(InMemoryBackStackPersister())
     }
 
     @Test
