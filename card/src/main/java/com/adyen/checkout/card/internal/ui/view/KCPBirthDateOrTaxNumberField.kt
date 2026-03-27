@@ -20,8 +20,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.state.CardIntent
-import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_OR_TAX_NUMBER_MAX_LENGTH
-import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH
+import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_OR_TAX_NUMBER_MAX_LENGTH
+import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState

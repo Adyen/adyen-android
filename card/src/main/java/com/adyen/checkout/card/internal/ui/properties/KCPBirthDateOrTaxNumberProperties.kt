@@ -6,17 +6,14 @@
  * Created by josephj on 23/3/2026.
  */
 
-package com.adyen.checkout.core.common.internal.properties
-
-import androidx.annotation.RestrictTo
+package com.adyen.checkout.card.internal.ui.properties
 
 /**
  * This field has two valid formats:
  * - Birth date: 6 digits, following the "yyMMdd" format e.g 230704 for 4 July 2023
  * - Tax number: 10 digits, no special format
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object KCPBirthDateOrTaxNumberProperties {
+internal object KCPBirthDateOrTaxNumberProperties {
 
     const val KCP_BIRTH_DATE_VALID_LENGTH = 6
     const val KCP_TAX_NUMBER_VALID_LENGTH = 10

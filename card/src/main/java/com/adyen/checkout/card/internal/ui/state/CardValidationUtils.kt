@@ -20,9 +20,9 @@ import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.StringUtil
-import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties
-import com.adyen.checkout.core.common.internal.properties.KCPCardPasswordProperties
-import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties
+import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties
+import com.adyen.checkout.card.internal.ui.properties.KCPCardPasswordProperties
+import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal object CardValidationUtils {
