@@ -34,15 +34,4 @@ internal sealed class UPIIntentItem {
 
         override fun getChangePayload(newItem: UPIIntentItem) = null
     }
-
-    data class GenericApp(
-        override val isSelected: Boolean = false
-    ) : UPIIntentItem() {
-        override fun areItemsTheSame(newItem: UPIIntentItem) = newItem is GenericApp
-        override fun areContentsTheSame(newItem: UPIIntentItem) =
-            newItem is GenericApp &&
-                this == newItem
-
-        override fun getChangePayload(newItem: UPIIntentItem) = null
-    }
 }

@@ -34,10 +34,6 @@ internal class UPISelectedModeTest {
                 UPISelectedMode.INTENT,
             ),
             Arguments.arguments(
-                UPIMode.Intent(listOf(UPIIntentItem.GenericApp(true))),
-                UPISelectedMode.INTENT,
-            ),
-            Arguments.arguments(
                 UPIMode.Vpa,
                 UPISelectedMode.VPA,
             ),

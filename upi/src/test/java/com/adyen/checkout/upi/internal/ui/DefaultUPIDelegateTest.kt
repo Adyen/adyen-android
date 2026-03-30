@@ -95,7 +95,6 @@ internal class DefaultUPIDelegateTest(
             val intentItemList = listOf(
                 UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, true),
                 UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST),
-                UPIIntentItem.GenericApp(),
             )
             val expectedAvailableModes = listOf(
                 UPIMode.Intent(intentItemList),
@@ -148,20 +147,6 @@ internal class DefaultUPIDelegateTest(
             delegate.updateInputData {
                 selectedMode = UPISelectedMode.INTENT
                 selectedUPIIntentItem = UPIIntentItem.PaymentApp("id", "name", Environment.TEST)
-            }
-
-            assertTrue(outputTestFlow.latestValue.isValid)
-
-            outputTestFlow.cancel()
-        }
-
-        @Test
-        fun `mode is INTENT and selected upi intent item is GenericApp, then output should be valid`() = runTest {
-            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
-
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = UPIIntentItem.GenericApp()
             }
 
             assertTrue(outputTestFlow.latestValue.isValid)
@@ -249,26 +234,6 @@ internal class DefaultUPIDelegateTest(
             with(componentStateTestFlow.latestValue) {
                 assertEquals(PaymentMethodTypes.UPI_INTENT, data.paymentMethod?.type)
                 assertEquals(paymentApp.id, data.paymentMethod?.appId)
-                assertNull(data.paymentMethod?.virtualPaymentAddress)
-                assertEquals(TEST_ORDER, data.order)
-                assertTrue(isInputValid)
-                assertTrue(isValid)
-            }
-        }
-
-        @Test
-        fun `mode is INTENT and selected intent item is generic app, then component state should be valid`() = runTest {
-            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
-            val outputData = createOutputData(
-                selectedMode = UPISelectedMode.INTENT,
-                selectedUPIIntentItem = UPIIntentItem.GenericApp(),
-            )
-
-            delegate.updateComponentState(outputData)
-
-            with(componentStateTestFlow.latestValue) {
-                assertEquals(PaymentMethodTypes.UPI_INTENT, data.paymentMethod?.type)
-                assertNull(data.paymentMethod?.appId)
                 assertNull(data.paymentMethod?.virtualPaymentAddress)
                 assertEquals(TEST_ORDER, data.order)
                 assertTrue(isInputValid)
@@ -523,11 +488,6 @@ internal class DefaultUPIDelegateTest(
                 UPISelectedMode.INTENT,
                 null,
                 true,
-            ),
-            arguments(
-                UPISelectedMode.INTENT,
-                UPIIntentItem.GenericApp(),
-                false,
             ),
             arguments(
                 UPISelectedMode.VPA,
