@@ -13,7 +13,6 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import androidx.autofill.HintConstants
 import androidx.core.view.isVisible
@@ -166,6 +165,9 @@ internal class UPIView @JvmOverloads constructor(
 
     private fun updateUpiIntentViews(isChecked: Boolean) {
         binding.textViewIntentInstruction.isVisible = isChecked
+        binding.textViewListTitle.isVisible = isChecked
+        // TODO - Add translations and change text dynamically
+        binding.textViewListTitle.text = "On your device"
         binding.recyclerViewUpiIntent.isVisible = isChecked
         if (isChecked) {
             binding.editTextVpa.clearFocus()

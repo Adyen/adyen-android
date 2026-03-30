@@ -33,11 +33,12 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="GooglePay" />
 
+    <!--  TODO - Add translations for contentDescription  -->
     <ImageView
         android:id="@+id/imageView_upi_app_checked"
         android:layout_width="@dimen/logo_small_width"
         android:layout_height="@dimen/logo_small_width"
-        android:contentDescription="TODO: Add translations for Selected"
+        android:contentDescription="Selected"
         android:src="@drawable/ic_upi_checkmark"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
