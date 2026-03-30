@@ -157,19 +157,10 @@ internal class DefaultUPIDelegate(
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
     ): List<UPIIntentItem> {
-        val paymentApps = upiApps.mapToPaymentApp(
+        return upiApps.mapToPaymentApp(
             environment = environment,
             selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
         )
-
-        val genericApp = UPIIntentItem.GenericApp(
-            isSelected = selectedUPIIntentItem is UPIIntentItem.GenericApp,
-        )
-
-        return mutableListOf<UPIIntentItem>().apply {
-            addAll(paymentApps)
-            add(genericApp)
-        }
     }
 
     private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
@@ -227,10 +218,6 @@ internal class DefaultUPIDelegate(
         UPISelectedMode.INTENT -> {
             when (outputData.selectedUPIIntentItem) {
                 is UPIIntentItem.PaymentApp -> {
-                    PaymentMethodTypes.UPI_INTENT
-                }
-
-                is UPIIntentItem.GenericApp -> {
                     PaymentMethodTypes.UPI_INTENT
                 }
 

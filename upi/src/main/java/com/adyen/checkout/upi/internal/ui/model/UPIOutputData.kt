@@ -23,9 +23,7 @@ internal class UPIOutputData(
         get() = when (selectedMode) {
             UPISelectedMode.INTENT -> {
                 when (selectedUPIIntentItem) {
-                    is UPIIntentItem.PaymentApp,
-                    is UPIIntentItem.GenericApp -> true
-
+                    is UPIIntentItem.PaymentApp -> true
                     null -> false
                 }
             }
