@@ -18,12 +18,12 @@ internal object CheckoutTextFieldDefaults {
         attributes: InternalAttributes,
     ): InternalTextFieldStyle {
         return InternalTextFieldStyle(
-            backgroundColor = colors.container,
+            backgroundColor = colors.background,
             textColor = colors.text,
             activeColor = colors.primary,
             errorColor = colors.destructive,
             cornerRadius = attributes.cornerRadius,
-            borderColor = colors.containerOutline,
+            borderColor = colors.textOnDisabled,
             borderWidth = 1,
         )
     }
