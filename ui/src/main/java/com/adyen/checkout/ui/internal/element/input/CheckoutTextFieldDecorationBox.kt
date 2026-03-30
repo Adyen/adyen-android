@@ -36,8 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.text.Footnote
-import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
@@ -86,7 +86,7 @@ internal fun CheckoutTextFieldDecorationBox(
         modifier = modifier,
     ) {
         label?.let {
-            SubHeadline(text = label)
+            BodyEmphasized(text = label)
         }
 
         Row(
