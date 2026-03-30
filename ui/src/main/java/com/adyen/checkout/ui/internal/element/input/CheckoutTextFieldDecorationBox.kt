@@ -96,9 +96,9 @@ internal fun CheckoutTextFieldDecorationBox(
                 .clip(RoundedCornerShape(style.cornerRadius.dp))
                 .indication(interactionSource, innerIndication)
                 .styledBackground(style, isFocused, isError)
+                .padding(horizontal = Dimensions.Spacing.Large)
                 .fillMaxWidth()
-                .heightIn(Dimensions.MinTouchTarget)
-                .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Medium),
+                .heightIn(Dimensions.MinTouchTarget),
         ) {
             prefix?.let {
                 Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
