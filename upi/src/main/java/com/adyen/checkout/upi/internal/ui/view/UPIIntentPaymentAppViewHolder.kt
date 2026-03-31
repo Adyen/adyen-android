@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.upi.internal.ui.view
 
+import androidx.core.view.isVisible
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
@@ -41,7 +42,7 @@ internal class UPIIntentPaymentAppViewHolder(
         paymentApp: UPIIntentItem.PaymentApp,
         isChecked: Boolean,
     ) = with(binding) {
-        radioButtonUpiApp.isChecked = isChecked
+        imageViewUpiAppChecked.isVisible = isChecked
         textViewUpiAppName.text = paymentApp.name
         imageViewUpiLogo.loadLogo(
             environment = paymentApp.environment,
