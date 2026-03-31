@@ -52,6 +52,34 @@ internal class CardExpiryDateValidatorTest {
                 GregorianCalendar.getInstance(),
                 CardExpiryDateValidationResult.Invalid.NonParseableDate(),
             ),
+            // non 2-digit month
+            arguments(
+                "1",
+                "20",
+                GregorianCalendar.getInstance(),
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
+            ),
+            // non 2-digit month
+            arguments(
+                "123",
+                "21",
+                GregorianCalendar.getInstance(),
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
+            ),
+            // non 2-digit year
+            arguments(
+                "10",
+                "2",
+                GregorianCalendar.getInstance(),
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
+            ),
+            // non 2-digit year
+            arguments(
+                "03",
+                "203",
+                GregorianCalendar.getInstance(),
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
+            ),
             // Invalid numbers
             arguments(
                 "-1",

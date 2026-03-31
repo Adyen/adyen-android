@@ -45,6 +45,18 @@ internal class ExpiryDateParserTest {
     }
 
     @Test
+    fun `when input month is not valid then return null`() {
+        val result = ExpiryDateParser.parseToMonthAndYear("4520", true)
+        assertNull(result)
+    }
+
+    @Test
+    fun `when input has illegal characters then return null`() {
+        val result = ExpiryDateParser.parseToMonthAndYear("asbg", true)
+        assertNull(result)
+    }
+
+    @Test
     fun `when month is double digits then it is parsed correctly`() {
         val result = ExpiryDateParser.parseToMonthAndYear("1212", true)
         assertEquals("12" to "2012", result)

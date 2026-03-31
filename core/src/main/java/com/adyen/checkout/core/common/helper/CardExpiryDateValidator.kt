@@ -9,8 +9,11 @@
 package com.adyen.checkout.core.common.helper
 
 import androidx.annotation.VisibleForTesting
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.GregorianCalendar
+import java.util.Locale
 
 object CardExpiryDateValidator {
     /**
@@ -49,28 +52,31 @@ object CardExpiryDateValidator {
         expiryMonth: String,
         expiryYear: String,
     ): Calendar? {
-        val month = expiryMonth.toIntOrNull()
-        val year = expiryYear.toIntOrNull()
-        return when {
-            month == null -> null
-            year == null -> null
-            month !in MIN_MONTH_VALUE..MAX_MONTH_VALUE -> null
-            year !in MIN_YEAR_VALUE..MAX_YEAR_VALUE -> null
-            else -> getExpiryCalendar(month = month, year = year)
+        // this manual check is needed because SimpleDateFormat.parse will not enforce the length and will
+        // successfully parse some months and years that are not 2 digits long
+        if (expiryMonth.length != MONTH_YEAR_NUMBER_OF_DIGITS || expiryYear.length != MONTH_YEAR_NUMBER_OF_DIGITS) {
+            return null
         }
-    }
 
-    private fun getExpiryCalendar(
-        month: Int,
-        year: Int,
-    ): Calendar {
-        return GregorianCalendar().apply {
-            // Clear all fields to avoid unexpected results from current time
-            clear()
-            // Calendar months are 0-based (January is 0), so we subtract 1
-            set(Calendar.MONTH, month - 1)
-            // add 2000 to the 2-digit year
-            set(Calendar.YEAR, YEAR_2000 + year)
+        val date = try {
+            val parsingFormatter = SimpleDateFormat(MONTH_YEAR_FORMAT, Locale.ROOT).apply {
+                isLenient = false
+                // if the expiryYear is more than 20 years in the future, SimpleDateFormat will use the previous century
+                // which means "52" gets parsed to 1952 instead of 2052
+                // this call ensures that every parsed date is after the year 2000
+                set2DigitYearStart(DATE_YEAR_2000)
+            }
+            parsingFormatter.parse("$expiryMonth$expiryYear")
+        } catch (_: ParseException) {
+            null
+        }
+
+        return date?.let {
+            GregorianCalendar().apply {
+                // Clear all fields to avoid unexpected results from current time
+                clear()
+                time = date
+            }
         }
     }
 
@@ -104,9 +110,7 @@ object CardExpiryDateValidator {
 
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_MONTHS_IN_PAST = 3
-    private const val MIN_MONTH_VALUE = 1
-    private const val MAX_MONTH_VALUE = 12
-    private const val MIN_YEAR_VALUE = 0
-    private const val MAX_YEAR_VALUE = 99
-    private const val YEAR_2000 = 2000
+    private const val MONTH_YEAR_NUMBER_OF_DIGITS = 2
+    private const val MONTH_YEAR_FORMAT = "MMyy"
+    private val DATE_YEAR_2000 = GregorianCalendar(2000, 0, 1).time
 }
