@@ -167,7 +167,7 @@ internal class DefaultUPIDelegate(
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
     ): List<UPIIntentItem> {
-        return upiApps
+        return MockResponse.mock.apps.orEmpty()
             .filter { it.appIdentifierInfo?.androidPackageId in detectedPackageNames }
             .ifEmpty { upiApps }
             .mapToPaymentApp(
