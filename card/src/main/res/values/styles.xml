@@ -26,7 +26,7 @@
     </style>
 
     <style name="AdyenCheckout.Card.BrandRecognitionLogoContainerGroup">
-        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginEnd">@dimen/standard_half_margin</item>
         <item name="android:layout_gravity">end|top</item>
         <item name="android:gravity">center_vertical</item>
@@ -157,10 +157,11 @@
     </style>
 
     <style name="AdyenCheckout.Card.ScanButton">
-        <item name="android:paddingTop">@dimen/standard_three_quarters_margin</item>
-        <item name="android:paddingBottom">@dimen/standard_three_quarters_margin</item>
+        <item name="android:paddingTop">@dimen/standard_quarter_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_quarter_margin</item>
         <item name="android:paddingStart">@dimen/standard_quarter_margin</item>
         <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
         <item name="android:contentDescription">@string/checkout_card_scan_button</item>
         <item name="srcCompat">@drawable/ic_camera</item>
         <item name="android:tint">#1A73E8</item>
