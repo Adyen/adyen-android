@@ -665,6 +665,7 @@ internal class StoredCardDelegateTest(
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
             dualBrandData = null,
+            isCardScanningVisible = false,
         )
     }
 
