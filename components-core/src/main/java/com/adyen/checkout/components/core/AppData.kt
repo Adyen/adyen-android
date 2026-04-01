@@ -51,7 +51,7 @@ data class AppData(
                     id = jsonObject.getStringOrNull(ID),
                     name = jsonObject.getStringOrNull(NAME),
                     appIdentifierInfo = deserializeOpt(
-                        jsonObject.getJSONObject(APP_IDENTIFIER_INFO),
+                        jsonObject.optJSONObject(APP_IDENTIFIER_INFO),
                         AppIdentifierInfo.SERIALIZER,
                     ),
                 )
