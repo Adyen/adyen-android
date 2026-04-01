@@ -60,6 +60,12 @@ internal class DefaultUPIDelegate(
     private val packageManager: PackageManager,
 ) : UPIDelegate {
 
+    private val detectedPackageNames by lazy {
+        val intent = Intent(Intent.ACTION_VIEW, GENERIC_UPI_URI)
+        packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            .map { it.activityInfo.packageName }
+    }
+
     private val inputData = UPIInputData()
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -161,12 +167,8 @@ internal class DefaultUPIDelegate(
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
     ): List<UPIIntentItem> {
-        val intent = Intent(Intent.ACTION_VIEW, GENERIC_UPI_URI)
-        val detectedApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-            .map { it.activityInfo.packageName }
-
         return upiApps
-            .filter { it.appIdentifierInfo?.androidPackageId in detectedApps }
+            .filter { it.appIdentifierInfo?.androidPackageId in detectedPackageNames }
             .ifEmpty { upiApps }
             .mapToPaymentApp(
                 environment = environment,
