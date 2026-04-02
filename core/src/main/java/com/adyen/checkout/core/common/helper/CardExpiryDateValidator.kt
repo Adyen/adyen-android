@@ -59,14 +59,7 @@ object CardExpiryDateValidator {
         }
 
         val date = try {
-            val parsingFormatter = SimpleDateFormat(MONTH_YEAR_FORMAT, Locale.ROOT).apply {
-                isLenient = false
-                // if the expiryYear is more than 20 years in the future, SimpleDateFormat will use the previous century
-                // which means "52" gets parsed to 1952 instead of 2052
-                // this call ensures that every parsed date is after the year 2000
-                set2DigitYearStart(DATE_YEAR_2000)
-            }
-            parsingFormatter.parse("$expiryMonth$expiryYear")
+            PARSING_FORMATTER.parse("$expiryMonth$expiryYear")
         } catch (_: ParseException) {
             null
         }
@@ -111,6 +104,11 @@ object CardExpiryDateValidator {
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_MONTHS_IN_PAST = 3
     private const val MONTH_YEAR_NUMBER_OF_DIGITS = 2
-    private const val MONTH_YEAR_FORMAT = "MMyy"
-    private val DATE_YEAR_2000 = GregorianCalendar(2000, 0, 1).time
+    private val PARSING_FORMATTER = SimpleDateFormat("MMyy", Locale.ROOT).apply {
+        isLenient = false
+        // if the expiryYear is more than 20 years in the future, SimpleDateFormat will use the previous century
+        // which means "52" gets parsed to 1952 instead of 2052
+        // this call ensures that every parsed date is after the year 2000
+        set2DigitYearStart(GregorianCalendar(2000, 0, 1).time)
+    }
 }

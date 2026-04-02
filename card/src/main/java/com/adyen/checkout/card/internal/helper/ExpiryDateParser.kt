@@ -15,10 +15,10 @@ import java.util.Date
 import java.util.Locale
 
 internal object ExpiryDateParser {
-    private const val MONTH_YEAR_FORMAT = "MMyy"
-    private const val MONTH_FORMAT = "MM"
-    private const val SHORT_YEAR_FORMAT = "yy"
-    private const val FULL_YEAR_FORMAT = "yyyy"
+    private val PARSING_FORMATTER = getFormatter("MMyy")
+    private val MONTH_FORMATTER = getFormatter("MM")
+    private val SHORT_YEAR_FORMATTER = getFormatter("yy")
+    private val FULL_YEAR_FORMATTER = getFormatter("yyyy")
 
     /**
      * Parses digit only input into a pair of expiryMonth and expiryYear
@@ -41,19 +41,15 @@ internal object ExpiryDateParser {
 
     private fun parseToDate(expiryDate: String): Date? {
         return try {
-            val parsingFormatter = getFormatter(MONTH_YEAR_FORMAT)
-            parsingFormatter.parse(expiryDate)
+            PARSING_FORMATTER.parse(expiryDate)
         } catch (_: ParseException) {
             null
         }
     }
 
     private fun getMonthAndYear(date: Date, returnFullYear: Boolean): Pair<String, String> {
-        val monthFormatter = getFormatter(MONTH_FORMAT)
-        val yearFormat = if (returnFullYear) FULL_YEAR_FORMAT else SHORT_YEAR_FORMAT
-        val yearFormatter = getFormatter(yearFormat)
-
-        return monthFormatter.format(date) to yearFormatter.format(date)
+        val yearFormatter = if (returnFullYear) FULL_YEAR_FORMATTER else SHORT_YEAR_FORMATTER
+        return MONTH_FORMATTER.format(date) to yearFormatter.format(date)
     }
 
     private fun getFormatter(format: String): SimpleDateFormat {
