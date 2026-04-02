@@ -146,7 +146,7 @@ private fun SecurityCodeIcon(
     AnimatedContent(
         targetState = resourceId,
         modifier = modifier,
-        label = "ExpiryDateIcon",
+        label = "SecurityCodeIcon",
     ) { targetResourceId ->
         val iconSize = remember(isInvalid) {
             if (isInvalid) {

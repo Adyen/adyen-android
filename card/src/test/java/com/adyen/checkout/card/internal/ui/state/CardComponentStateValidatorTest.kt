@@ -56,7 +56,7 @@ internal class CardComponentStateValidatorTest {
     @Test
     fun `when expiry date is invalid, then isValid returns false`() {
         val state = createValidState().copy(
-            expiryDate = TextInputComponentState(text = "13/20"),
+            expiryDate = TextInputComponentState(text = "1320"),
         )
 
         val validatedState = validator.validate(state)
@@ -162,7 +162,7 @@ internal class CardComponentStateValidatorTest {
 
     private fun createValidState() = CardComponentState(
         cardNumber = TextInputComponentState(text = "4111111111111111"),
-        expiryDate = TextInputComponentState(text = "12/30"),
+        expiryDate = TextInputComponentState(text = "1230"),
         securityCode = TextInputComponentState(text = "123"),
         holderName = TextInputComponentState(text = "John Doe", requirementPolicy = RequirementPolicy.Hidden),
         socialSecurityNumber = TextInputComponentState(
