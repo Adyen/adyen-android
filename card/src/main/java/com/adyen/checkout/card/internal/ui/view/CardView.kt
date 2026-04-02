@@ -24,6 +24,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.card.internal.ui.model.BrandState
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
@@ -332,9 +333,16 @@ class CardView @JvmOverloads constructor(
         environment: Environment,
         isCardScanningVisible: Boolean,
     ) {
+        val brandState = when {
+            dualBrandData != null -> BrandState.DualBrand(dualBrandData, environment)
+            detectedCardTypes.isNotEmpty() -> BrandState.SingleBrand(detectedCardTypes.first(), environment)
+            else -> BrandState.Placeholder
+        }
         binding.brandView.isVisible = !isCardScanningVisible
+        binding.textViewDualBrandedDisclaimer.isVisible = brandState is BrandState.DualBrand &&
+            brandState.dualBrandData.selectable
         cardScanningFragment?.setScanButtonVisibility(isCardScanningVisible)
-        binding.brandView.update(detectedCardTypes, dualBrandData, environment)
+        binding.brandView.update(brandState)
     }
 
     private fun onExpiryDateValidated(expiryDateState: FieldState<String>) {
@@ -388,9 +396,12 @@ class CardView @JvmOverloads constructor(
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.hideError()
             binding.cardBrandLogoContainer.isVisible = true
+            val dualBrandData = cardDelegate.outputData.dualBrandData
+            binding.textViewDualBrandedDisclaimer.isVisible = dualBrandData != null && dualBrandData.selectable
         } else {
             binding.textInputLayoutCardNumber.showError(localizedContext.getString(stringResId))
             binding.cardBrandLogoContainer.isVisible = false
+            binding.textViewDualBrandedDisclaimer.isVisible = false
         }
     }
 
