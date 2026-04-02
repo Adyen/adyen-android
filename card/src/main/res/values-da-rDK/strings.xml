@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Engangsbetaling</string>
     <string name="checkout_card_installments_option_revolving">Løbende betaling</string>
     <string name="checkout_card_dual_brand_title">Korttype</string>
-    <string name="checkout_card_dual_brand_description">Vælg den korttype, du foretrækker at betale med. Dette er valgfrit.</string>
+    <string name="checkout_card_dual_brand_description">Du kan vælge den korttype, du foretrækker at betale med. Dette er valgfrit.</string>
 
     <string name="checkout_card_scan_button">Scan dit kort</string>
 

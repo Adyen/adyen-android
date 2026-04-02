@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Egyösszegű fizetés</string>
     <string name="checkout_card_installments_option_revolving">Többösszegű fizetés</string>
     <string name="checkout_card_dual_brand_title">Kártyakibocsátó</string>
-    <string name="checkout_card_dual_brand_description">Válassza ki a fizetéshez használni kívánt kártyakibocsátót. Ez nem kötelező.</string>
+    <string name="checkout_card_dual_brand_description">Kiválaszthatja a fizetéshez használni kívánt kártyakibocsátót. Ez nem kötelező.</string>
 
     <string name="checkout_card_scan_button">Kártya beolvasása</string>
 

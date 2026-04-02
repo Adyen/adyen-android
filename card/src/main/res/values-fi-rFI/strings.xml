@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Kertamaksu</string>
     <string name="checkout_card_installments_option_revolving">Toistuva maksu</string>
     <string name="checkout_card_dual_brand_title">Korttibrändi</string>
-    <string name="checkout_card_dual_brand_description">Valitse ensisijainen maksukorttisi. Tämä on vapaaehtoista.</string>
+    <string name="checkout_card_dual_brand_description">Voit valita, millä kortilla haluat maksaa. Tämä on vapaaehtoista.</string>
 
     <string name="checkout_card_scan_button">Skannaa korttisi</string>
 
