@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Plată unică</string>
     <string name="checkout_card_installments_option_revolving">Plată recurentă</string>
     <string name="checkout_card_dual_brand_title">Brandul cardului</string>
-    <string name="checkout_card_dual_brand_description">Selectați brandul cardului cu care preferați să plătiți. Acest lucru este opțional.</string>
+    <string name="checkout_card_dual_brand_description">Puteți selecta marca de card cu care doriți să efectuați plata. Acest lucru este opțional.</string>
 
     <string name="checkout_card_scan_button">Scanați-vă cardul</string>
 
