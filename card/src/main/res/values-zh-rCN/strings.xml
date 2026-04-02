@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">全款支付</string>
     <string name="checkout_card_installments_option_revolving">循环支付</string>
     <string name="checkout_card_dual_brand_title">卡片品牌</string>
-    <string name="checkout_card_dual_brand_description">请选择您偏好的支付卡片品牌。这是可选的。</string>
+    <string name="checkout_card_dual_brand_description">您可以选择您偏好的支付卡片品牌。这是可选的。</string>
 
     <string name="checkout_card_scan_button">扫描您的卡片</string>
 

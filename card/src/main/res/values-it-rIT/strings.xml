@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Pagamento una tantum</string>
     <string name="checkout_card_installments_option_revolving">Pagamento ricorrente</string>
     <string name="checkout_card_dual_brand_title">Marca della carta</string>
-    <string name="checkout_card_dual_brand_description">Seleziona la marca della carta con cui preferisci pagare. Questo è facoltativo.</string>
+    <string name="checkout_card_dual_brand_description">Puoi selezionare la marca della carta con cui preferisci pagare. Questa opzione è facoltativa.</string>
 
     <string name="checkout_card_scan_button">Scansiona la tua carta</string>
 

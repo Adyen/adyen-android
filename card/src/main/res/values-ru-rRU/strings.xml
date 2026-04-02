@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Одноразовый платеж</string>
     <string name="checkout_card_installments_option_revolving">Повторяющаяся оплата</string>
     <string name="checkout_card_dual_brand_title">Платежная система карты</string>
-    <string name="checkout_card_dual_brand_description">Выберите платежную систему карты по умолчанию. Это необязательно.</string>
+    <string name="checkout_card_dual_brand_description">Можно выбрать платежную систему карты по умолчанию. Это необязательно.</string>
 
     <string name="checkout_card_scan_button">Отсканируйте свою карту</string>
 
