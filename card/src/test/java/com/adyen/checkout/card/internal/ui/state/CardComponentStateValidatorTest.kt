@@ -148,6 +148,93 @@ internal class CardComponentStateValidatorTest {
     }
 
     @Test
+    fun `when kcp birth date or tax number is required and empty, then isValid returns false`() {
+        val state = createValidState().copy(
+            kcpBirthDateOrTaxNumber = TextInputComponentState(
+                text = "",
+                requirementPolicy = RequirementPolicy.Required,
+            ),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.kcpBirthDateOrTaxNumber.errorMessage)
+    }
+
+    @Test
+    fun `when kcp birth date or tax number is required and invalid, then isValid returns false`() {
+        val state = createValidState().copy(
+            kcpBirthDateOrTaxNumber = TextInputComponentState(
+                text = "123",
+                requirementPolicy = RequirementPolicy.Required,
+            ),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.kcpBirthDateOrTaxNumber.errorMessage)
+    }
+
+    @Test
+    fun `when kcp birth date or tax number is not required and empty, then isValid returns true`() {
+        val state = createValidState().copy(
+            kcpBirthDateOrTaxNumber = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Hidden),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertTrue(result)
+        assertNull(validatedState.kcpBirthDateOrTaxNumber.errorMessage)
+    }
+
+    @Test
+    fun `when kcp card password is required and empty, then isValid returns false`() {
+        val state = createValidState().copy(
+            kcpCardPassword = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Required),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.kcpCardPassword.errorMessage)
+    }
+
+    @Test
+    fun `when kcp card password is required and invalid, then isValid returns false`() {
+        val state = createValidState().copy(
+            kcpCardPassword = TextInputComponentState(
+                text = "123",
+                requirementPolicy = RequirementPolicy.Required,
+            ),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.kcpCardPassword.errorMessage)
+    }
+
+    @Test
+    fun `when kcp card password is not required and empty, then isValid returns true`() {
+        val state = createValidState().copy(
+            kcpCardPassword = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Hidden),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertTrue(result)
+        assertNull(validatedState.kcpCardPassword.errorMessage)
+    }
+
+    @Test
     fun `when card brand is unsupported and reliable, then card number has error`() {
         val state = createValidState().copy(
             detectedCardTypes = listOf(
@@ -169,6 +256,8 @@ internal class CardComponentStateValidatorTest {
             text = "12312312312",
             requirementPolicy = RequirementPolicy.Hidden,
         ),
+        kcpBirthDateOrTaxNumber = TextInputComponentState(text = "260403"),
+        kcpCardPassword = TextInputComponentState(text = "12"),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

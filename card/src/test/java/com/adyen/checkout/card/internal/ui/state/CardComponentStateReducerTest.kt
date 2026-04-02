@@ -131,6 +131,42 @@ internal class CardComponentStateReducerTest(
     }
 
     @Test
+    fun `when intent is UpdateKcpBirthDateOrTaxNumber, then kcpBirthDateOrTaxNumber state is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdateKcpBirthDateOrTaxNumber("123456"))
+
+        assertEquals("123456", actual.kcpBirthDateOrTaxNumber.text)
+    }
+
+    @Test
+    fun `when intent is UpdateKcpBirthDateOrTaxNumberFocus, then kcpBirthDateOrTaxNumber focus is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(true))
+
+        assertTrue(actual.kcpBirthDateOrTaxNumber.isFocused)
+    }
+
+    @Test
+    fun `when intent is UpdateKcpCardPassword, then kcpCardPassword state is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdateKcpCardPassword("123456"))
+
+        assertEquals("123456", actual.kcpCardPassword.text)
+    }
+
+    @Test
+    fun `when intent is UpdateKcpCardPasswordFocus, then kcpCardPassword focus is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdateKcpCardPasswordFocus(true))
+
+        assertTrue(actual.kcpCardPassword.isFocused)
+    }
+
+    @Test
     fun `when intent is UpdateStorePaymentMethod, then storePaymentMethod is updated`() {
         val state = createInitialState()
 
@@ -486,6 +522,8 @@ internal class CardComponentStateReducerTest(
         securityCode = TextInputComponentState(),
         holderName = TextInputComponentState(),
         socialSecurityNumber = TextInputComponentState(),
+        kcpCardPassword = TextInputComponentState(),
+        kcpBirthDateOrTaxNumber = TextInputComponentState(),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
