@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">一次性付款</string>
     <string name="checkout_card_installments_option_revolving">延期付款</string>
     <string name="checkout_card_dual_brand_title">卡品牌</string>
-    <string name="checkout_card_dual_brand_description">選擇首選付款卡品牌。這是可選項。</string>
+    <string name="checkout_card_dual_brand_description">可以選取首選付款卡品牌。這是可選項。</string>
 
     <string name="checkout_card_scan_button">掃描您的卡片</string>
 

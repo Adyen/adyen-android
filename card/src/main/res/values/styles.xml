@@ -15,27 +15,36 @@
         <item name="android:layout_height">@dimen/brand_logo_height</item>
     </style>
 
+    <style name="AdyenCheckout.Image.CardLogo.Detected">
+        <item name="android:layout_width">@dimen/brand_logo_detected_width</item>
+        <item name="android:layout_height">@dimen/brand_logo_detected_height</item>
+    </style>
+
     <style name="AdyenCheckout.Card.BrandListLogo" parent="AdyenCheckout.Image.CardLogo">
         <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
     </style>
 
     <style name="AdyenCheckout.Card.BrandRecognitionLogoContainerGroup">
-        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginEnd">@dimen/standard_half_margin</item>
         <item name="android:layout_gravity">end|top</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo">
+    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo.Detected">
         <item name="srcCompat">@drawable/ic_card</item>
     </style>
 
     <style name="AdyenCheckout.Card.BrandRecognitionLogoContainer">
-        <item name="android:paddingTop">@dimen/standard_margin</item>
-        <item name="android:paddingBottom">@dimen/standard_margin</item>
+        <item name="android:paddingTop">@dimen/standard_quarter_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_quarter_margin</item>
         <item name="android:paddingStart">@dimen/standard_quarter_margin</item>
         <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandSelectionDisclaimer" parent="AdyenCheckout.TextAppearance.Tertiary">
+        <item name="android:text">@string/checkout_card_dual_brand_description</item>
     </style>
 
     <style name="AdyenCheckout.Card.CardNumberInput" parent="AdyenCheckout.TextInputEditText">
@@ -106,8 +115,10 @@
         <item name="drawableTint">?attr/colorOnSurface</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection" />
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Header" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:layout_marginTop">@dimen/standard_half_margin</item>
         <item name="android:textSize">12sp</item>
@@ -116,6 +127,7 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Description" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:alpha">0.54</item>
         <item name="android:layout_marginTop">@dimen/standard_quarter_margin</item>
@@ -124,10 +136,12 @@
 
     <style name="AdyenCheckout.Card.BrandSelection.Item" />
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Item.Logo" parent="AdyenCheckout.Image.Logo">
         <item name="adyenStrokeColor">@color/stroke_color</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Item.Title" parent="AdyenCheckout.ListItemText">
         <item name="android:layout_marginStart">@dimen/standard_three_quarters_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_three_quarters_margin</item>
@@ -135,6 +149,7 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.Card.BrandSelection.Item.RadioButton" parent="AdyenCheckout.RadioButton">
         <item name="android:layout_marginEnd">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
@@ -146,10 +161,11 @@
     </style>
 
     <style name="AdyenCheckout.Card.ScanButton">
-        <item name="android:paddingTop">@dimen/standard_three_quarters_margin</item>
-        <item name="android:paddingBottom">@dimen/standard_three_quarters_margin</item>
+        <item name="android:paddingTop">@dimen/standard_quarter_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_quarter_margin</item>
         <item name="android:paddingStart">@dimen/standard_quarter_margin</item>
         <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
         <item name="android:contentDescription">@string/checkout_card_scan_button</item>
         <item name="srcCompat">@drawable/ic_camera</item>
         <item name="android:tint">#1A73E8</item>
