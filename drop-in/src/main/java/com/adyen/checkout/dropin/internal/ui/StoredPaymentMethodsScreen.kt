@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,7 +40,6 @@ import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import java.util.Locale
 
 @Composable
 internal fun StoredPaymentMethodsScreen(
@@ -167,7 +167,7 @@ private fun StoredPaymentMethodListItem(
 @Composable
 private fun StoredPaymentMethodsContentPreview() {
     CheckoutCompositionLocalProvider(
-        locale = Locale.getDefault(),
+        locale = LocalLocale.current.platformLocale,
         localizationProvider = null,
         environment = Environment.TEST,
     ) {
