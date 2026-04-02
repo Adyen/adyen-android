@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,7 +52,6 @@ import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import java.util.Locale
 
 private const val AMOUNT_VISIBLE_BRANDS = 3
 
@@ -257,7 +257,7 @@ private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
 @Composable
 private fun PaymentMethodListContentPreview() {
     CheckoutCompositionLocalProvider(
-        locale = Locale.getDefault(),
+        locale = LocalLocale.current.platformLocale,
         localizationProvider = null,
         environment = Environment.TEST,
     ) {
