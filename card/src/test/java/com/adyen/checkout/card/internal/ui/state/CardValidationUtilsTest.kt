@@ -70,6 +70,20 @@ internal class CardValidationUtilsTest {
     }
 
     @ParameterizedTest
+    @MethodSource("socialSecurityNumberSource")
+    fun `when validating social security number then result should match expected value`(
+        socialSecurityNumber: String,
+        requirementPolicy: RequirementPolicy?,
+        expectedValidation: CardSocialSecurityNumberValidation,
+    ) {
+        val validation = CardValidationUtils.validateSocialSecurityNumber(
+            socialSecurityNumber = socialSecurityNumber,
+            requirementPolicy = requirementPolicy,
+        )
+        assertEquals(expectedValidation, validation)
+    }
+
+    @ParameterizedTest
     @MethodSource("kcpBirthDateOrTaxNumberSource")
     fun `when validating KCP birth date or tax number then result should match expected value`(
         kcpBirthDateOrTaxNumber: String,
@@ -98,6 +112,26 @@ internal class CardValidationUtilsTest {
     }
 
     companion object {
+
+        @JvmStatic
+        fun socialSecurityNumberSource() = listOf(
+            // socialSecurityNumber, requirementPolicy, expectedValidation
+            arguments("", RequirementPolicy.Required, CardSocialSecurityNumberValidation.INVALID),
+            // invalid length
+            arguments("12", RequirementPolicy.Required, CardSocialSecurityNumberValidation.INVALID),
+            arguments("12345678", RequirementPolicy.Required, CardSocialSecurityNumberValidation.INVALID),
+            arguments("123456781231435", RequirementPolicy.Required, CardSocialSecurityNumberValidation.INVALID),
+            // valid 11 digits
+            arguments("83487634763", RequirementPolicy.Required, CardSocialSecurityNumberValidation.VALID),
+            // valid 14 digits
+            arguments("54213431264783", RequirementPolicy.Required, CardSocialSecurityNumberValidation.VALID),
+            // hidden
+            arguments("", RequirementPolicy.Hidden, CardSocialSecurityNumberValidation.VALID),
+            // optional
+            arguments("", RequirementPolicy.Optional, CardSocialSecurityNumberValidation.VALID),
+            arguments("78324538473847", RequirementPolicy.Optional, CardSocialSecurityNumberValidation.VALID),
+            arguments("12", RequirementPolicy.Optional, CardSocialSecurityNumberValidation.INVALID),
+        )
 
         @JvmStatic
         fun kcpBirthDateOrTaxNumberSource() = listOf(
