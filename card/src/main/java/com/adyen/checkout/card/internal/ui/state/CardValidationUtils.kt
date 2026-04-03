@@ -13,13 +13,13 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
-import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidator
 import com.adyen.checkout.core.common.helper.CardNumberValidationResult
 import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
+import com.adyen.checkout.core.common.internal.helper.DateUtils
 import com.adyen.checkout.core.common.internal.helper.StringUtil
 import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties
 import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_FORMAT
@@ -204,7 +204,7 @@ internal object CardValidationUtils {
         return when (kcpBirthDateOrTaxNumber.length) {
             KCPBirthDateOrTaxNumberProperties.KCP_TAX_NUMBER_VALID_LENGTH -> KCPBirthDateOrTaxNumberValidation.VALID
             KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH -> {
-                val matchesDateFormat = DateUtils.matchesFormat(kcpBirthDateOrTaxNumber, KCP_BIRTH_DATE_FORMAT)
+                val matchesDateFormat = DateUtils.matchesFormat(kcpBirthDateOrTaxNumber, KCP_BIRTH_DATE_FORMATTER)
                 if (matchesDateFormat) {
                     KCPBirthDateOrTaxNumberValidation.VALID
                 } else {
@@ -236,6 +236,9 @@ internal object CardValidationUtils {
             else -> KCPCardPasswordValidation.INVALID
         }
     }
+
+    // instantiate formatter here to avoid recreation on every validation call
+    private val KCP_BIRTH_DATE_FORMATTER = DateUtils.getFormatter(KCP_BIRTH_DATE_FORMAT)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

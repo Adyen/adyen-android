@@ -9,11 +9,9 @@
 package com.adyen.checkout.core.common.helper
 
 import androidx.annotation.VisibleForTesting
-import java.text.ParseException
-import java.text.SimpleDateFormat
+import com.adyen.checkout.core.common.internal.helper.DateUtils
 import java.util.Calendar
 import java.util.GregorianCalendar
-import java.util.Locale
 
 object CardExpiryDateValidator {
     /**
@@ -58,12 +56,7 @@ object CardExpiryDateValidator {
             return null
         }
 
-        val date = try {
-            PARSING_FORMATTER.parse("$expiryMonth$expiryYear")
-        } catch (_: ParseException) {
-            null
-        }
-
+        val date = DateUtils.parseToDate("$expiryMonth$expiryYear", PARSING_FORMATTER)
         return date?.let {
             GregorianCalendar().apply {
                 // Clear all fields to avoid unexpected results from current time
@@ -104,8 +97,9 @@ object CardExpiryDateValidator {
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_MONTHS_IN_PAST = 3
     private const val MONTH_YEAR_NUMBER_OF_DIGITS = 2
-    private val PARSING_FORMATTER = SimpleDateFormat("MMyy", Locale.ROOT).apply {
-        isLenient = false
+
+    // instantiate formatter here to avoid recreation on every validation call
+    private val PARSING_FORMATTER = DateUtils.getFormatter("MMyy").apply {
         // if the expiryYear is more than 20 years in the future, SimpleDateFormat will use the previous century
         // which means "52" gets parsed to 1952 instead of 2052
         // this call ensures that every parsed date is after the year 2000
