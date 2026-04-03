@@ -8,11 +8,17 @@
 
 package com.adyen.checkout.blik.internal.ui.view
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.blik.internal.ui.state.BlikIntent
 import com.adyen.checkout.core.common.internal.properties.BlikCodeProperties.BLIK_CODE_MAX_LENGTH
 import com.adyen.checkout.core.common.internal.properties.BlikCodeProperties.BLIK_CODE_SEPARATOR
@@ -23,6 +29,11 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
+import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.internal.theme.toCompose
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun BlikCodeField(
@@ -59,4 +70,26 @@ internal fun BlikCodeField(
         outputTransformation = outputTransformation,
         shouldFocus = blikCodeState.isFocused,
     )
+}
+
+@Preview
+@Composable
+private fun BlikCodeFieldPreview(
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    InternalCheckoutTheme(theme) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
+            modifier = Modifier
+                .background(theme.colors.background.toCompose())
+                .padding(Dimensions.Spacing.Large),
+        ) {
+            BlikCodeField(
+                blikCodeState = TextInputViewState(
+                    text = "123456",
+                ),
+                onIntent = {},
+            )
+        }
+    }
 }

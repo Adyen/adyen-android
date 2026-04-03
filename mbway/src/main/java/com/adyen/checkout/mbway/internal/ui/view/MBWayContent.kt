@@ -54,7 +54,7 @@ internal fun MBWayContent(
             )
 
             // PhoneNumber
-            MBWayPhoneNumberField(viewState.phoneNumber, country, onIntent)
+            MBWayPhoneNumberField(viewState.phoneNumber, country.callingCode, onIntent)
         }
     }
 }
