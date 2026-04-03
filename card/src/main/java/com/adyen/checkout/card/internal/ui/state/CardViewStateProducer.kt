@@ -50,6 +50,12 @@ internal class CardViewStateProducer(
             socialSecurityNumber = state.takeIf {
                 it.socialSecurityNumber.requirementPolicy !is RequirementPolicy.Hidden
             }?.socialSecurityNumber?.toViewState(),
+            kcpBirthDateOrTaxNumber = state.takeIf {
+                it.kcpBirthDateOrTaxNumber.requirementPolicy !is RequirementPolicy.Hidden
+            }?.kcpBirthDateOrTaxNumber?.toViewState(),
+            kcpCardPassword = state.takeIf {
+                it.kcpCardPassword.requirementPolicy !is RequirementPolicy.Hidden
+            }?.kcpCardPassword?.toViewState(),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
             supportedCardBrands = state.supportedCardBrands,

@@ -8,17 +8,16 @@
 
 package com.adyen.checkout.card.internal.helper
 
+import com.adyen.checkout.core.common.internal.helper.DateUtils
 import com.adyen.checkout.core.common.internal.properties.ExpiryDateProperties.EXPIRY_DATE_MAX_LENGTH_NO_SEPARATORS
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 internal object ExpiryDateParser {
-    private val PARSING_FORMATTER = getFormatter("MMyy")
-    private val MONTH_FORMATTER = getFormatter("MM")
-    private val SHORT_YEAR_FORMATTER = getFormatter("yy")
-    private val FULL_YEAR_FORMATTER = getFormatter("yyyy")
+    // instantiate formatters here to avoid recreation on every parsing call
+    private val PARSING_FORMATTER = DateUtils.getFormatter("MMyy")
+    private val MONTH_FORMATTER = DateUtils.getFormatter("MM")
+    private val SHORT_YEAR_FORMATTER = DateUtils.getFormatter("yy")
+    private val FULL_YEAR_FORMATTER = DateUtils.getFormatter("yyyy")
 
     /**
      * Parses digit only input into a pair of expiryMonth and expiryYear
@@ -33,28 +32,14 @@ internal object ExpiryDateParser {
             return null
         }
 
-        val date = parseToDate(expiryDate)
+        val date = DateUtils.parseToDate(expiryDate, PARSING_FORMATTER)
         return date?.let {
             getMonthAndYear(date, returnFullYear)
-        }
-    }
-
-    private fun parseToDate(expiryDate: String): Date? {
-        return try {
-            PARSING_FORMATTER.parse(expiryDate)
-        } catch (_: ParseException) {
-            null
         }
     }
 
     private fun getMonthAndYear(date: Date, returnFullYear: Boolean): Pair<String, String> {
         val yearFormatter = if (returnFullYear) FULL_YEAR_FORMATTER else SHORT_YEAR_FORMATTER
         return MONTH_FORMATTER.format(date) to yearFormatter.format(date)
-    }
-
-    private fun getFormatter(format: String): SimpleDateFormat {
-        return SimpleDateFormat(format, Locale.ROOT).apply {
-            isLenient = false
-        }
     }
 }

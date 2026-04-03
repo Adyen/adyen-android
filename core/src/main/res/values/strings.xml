@@ -31,6 +31,11 @@
     <string name="checkout_card_dual_brand_selector_description" translatable="false">Select the card brand you prefer to pay with. This is optional.</string>
     <string name="checkout_card_social_security_number" translatable="false">CPF/CNPJ</string>
     <string name="checkout_card_social_security_number_invalid" translatable="false">Invalid input</string>
+    <string name="checkout_card_kcp_birth_date_or_tax_number" translatable="false">Cardholder birthdate (YYMMDD) or Corporate registration number (10 digits)</string>
+    <string name="checkout_card_kcp_tax_number" translatable="false">Corporate registration number (10 digits)</string>
+    <string name="checkout_card_kcp_birth_date_or_tax_number_invalid" translatable="false">Invalid Cardholder birthdate or Corporate registration number</string>
+    <string name="checkout_card_kcp_password" translatable="false">First 2 digits of card password</string>
+    <string name="checkout_card_kcp_password_invalid" translatable="false">Invalid password</string>
     <string name="checkout_drop_in_manage_favorites_title" translatable="false">Manage your favorite payment options</string>
     <string name="checkout_drop_in_manage_favorites_cards_section_title" translatable="false">Cards</string>
     <string name="checkout_drop_in_manage_favorites_others_section_title" translatable="false">Others</string>

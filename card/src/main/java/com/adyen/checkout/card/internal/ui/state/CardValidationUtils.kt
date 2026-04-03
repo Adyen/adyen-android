@@ -19,9 +19,12 @@ import com.adyen.checkout.core.common.helper.CardNumberValidationResult
 import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
-import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidationResult
-import com.adyen.checkout.core.common.helper.SocialSecurityNumberValidator
+import com.adyen.checkout.core.common.internal.helper.DateUtils
 import com.adyen.checkout.core.common.internal.helper.StringUtil
+import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties
+import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_FORMAT
+import com.adyen.checkout.core.common.internal.properties.KCPCardPasswordProperties
+import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal object CardValidationUtils {
@@ -162,6 +165,7 @@ internal object CardValidationUtils {
     /**
      * Validate Social Security Number.
      */
+    @Suppress("ReturnCount")
     internal fun validateSocialSecurityNumber(
         socialSecurityNumber: String,
         requirementPolicy: RequirementPolicy?
@@ -171,11 +175,70 @@ internal object CardValidationUtils {
             return CardSocialSecurityNumberValidation.VALID
         }
 
-        return when (SocialSecurityNumberValidator.validateSocialSecurityNumber(socialSecurityNumber)) {
-            is SocialSecurityNumberValidationResult.Invalid -> CardSocialSecurityNumberValidation.INVALID
-            is SocialSecurityNumberValidationResult.Valid -> CardSocialSecurityNumberValidation.VALID
+        if (socialSecurityNumber.any { !it.isDigit() }) {
+            return CardSocialSecurityNumberValidation.INVALID
+        }
+        return when (socialSecurityNumber.length) {
+            SocialSecurityNumberProperties.CPF_VALID_LENGTH,
+            SocialSecurityNumberProperties.CNPJ_VALID_LENGTH -> CardSocialSecurityNumberValidation.VALID
+
+            else -> CardSocialSecurityNumberValidation.INVALID
         }
     }
+
+    /**
+     * Validate KCP Birth Date Or Tax Number
+     */
+    @Suppress("ReturnCount")
+    internal fun validateKCPBirthDateOrTaxNumber(
+        kcpBirthDateOrTaxNumber: String,
+        requirementPolicy: RequirementPolicy?
+    ): KCPBirthDateOrTaxNumberValidation {
+        // allow empty value unless field is required
+        if (kcpBirthDateOrTaxNumber.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
+            return KCPBirthDateOrTaxNumberValidation.VALID
+        }
+        if (kcpBirthDateOrTaxNumber.any { !it.isDigit() }) {
+            return KCPBirthDateOrTaxNumberValidation.INVALID
+        }
+        return when (kcpBirthDateOrTaxNumber.length) {
+            KCPBirthDateOrTaxNumberProperties.KCP_TAX_NUMBER_VALID_LENGTH -> KCPBirthDateOrTaxNumberValidation.VALID
+            KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH -> {
+                val matchesDateFormat = DateUtils.matchesFormat(kcpBirthDateOrTaxNumber, KCP_BIRTH_DATE_FORMATTER)
+                if (matchesDateFormat) {
+                    KCPBirthDateOrTaxNumberValidation.VALID
+                } else {
+                    KCPBirthDateOrTaxNumberValidation.INVALID
+                }
+            }
+
+            else -> KCPBirthDateOrTaxNumberValidation.INVALID
+        }
+    }
+
+    /**
+     * Validate KCP card password
+     */
+    @Suppress("ReturnCount")
+    internal fun validateKCPCardPassword(
+        kcpCardPassword: String,
+        requirementPolicy: RequirementPolicy?
+    ): KCPCardPasswordValidation {
+        // allow empty value unless field is required
+        if (kcpCardPassword.isEmpty() && requirementPolicy != RequirementPolicy.Required) {
+            return KCPCardPasswordValidation.VALID
+        }
+        if (kcpCardPassword.any { !it.isDigit() }) {
+            return KCPCardPasswordValidation.INVALID
+        }
+        return when (kcpCardPassword.length) {
+            KCPCardPasswordProperties.KCP_CARD_PASSWORD_MAX_LENGTH -> KCPCardPasswordValidation.VALID
+            else -> KCPCardPasswordValidation.INVALID
+        }
+    }
+
+    // instantiate formatter here to avoid recreation on every validation call
+    private val KCP_BIRTH_DATE_FORMATTER = DateUtils.getFormatter(KCP_BIRTH_DATE_FORMAT)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -214,6 +277,18 @@ enum class CardHolderNameValidation {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardSocialSecurityNumberValidation {
+    VALID,
+    INVALID,
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class KCPBirthDateOrTaxNumberValidation {
+    VALID,
+    INVALID,
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class KCPCardPasswordValidation {
     VALID,
     INVALID,
 }

@@ -25,12 +25,14 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 
-@Suppress("ReturnCount")
+@Suppress("ReturnCount", "LongParameterList")
 internal fun CardComponentState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
+    genericEncryptor: BaseGenericEncryptor,
     sdkDataProvider: SdkDataProvider,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
@@ -44,12 +46,23 @@ internal fun CardComponentState.toPaymentComponentState(
         onEncryptionFailed = onEncryptionFailed,
     ) ?: return invalidCardPaymentComponentState()
 
+    val encryptedKcpCardPassword = kcpCardPassword(componentParams)?.let { kcpCardPassword ->
+        encryptKcpCardPassword(
+            genericEncryptor = genericEncryptor,
+            publicKey = publicKey,
+            kcpCardPassword = kcpCardPassword,
+            onEncryptionFailed = onEncryptionFailed,
+        ) ?: return invalidCardPaymentComponentState()
+    }
+
     val cardDetails = createCardDetails(
         encryptedCard = encryptedCard,
         holderName = holderName(componentParams),
         cardBrand = cardBrand(),
         sdkDataProvider = sdkDataProvider,
         isCvcHidden = securityCode.requirementPolicy is RequirementPolicy.Hidden,
+        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber(componentParams),
+        encryptedKcpCardPassword = encryptedKcpCardPassword,
     )
 
     val paymentComponentData = createPaymentComponentData(
@@ -62,7 +75,6 @@ internal fun CardComponentState.toPaymentComponentState(
     return createPaymentComponentState(paymentComponentData)
 }
 
-@Suppress("LongParameterList")
 private fun CardComponentState.encryptCard(
     cardEncryptor: BaseCardEncryptor,
     publicKey: String,
@@ -89,12 +101,33 @@ private fun CardComponentState.encryptCard(
     }
 }
 
+private fun encryptKcpCardPassword(
+    genericEncryptor: BaseGenericEncryptor,
+    publicKey: String,
+    kcpCardPassword: String,
+    onEncryptionFailed: (EncryptionException) -> Unit,
+): String? {
+    return try {
+        genericEncryptor.encryptField(
+            fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_KCP_PASSWORD,
+            fieldValueToEncrypt = kcpCardPassword,
+            publicKey = publicKey,
+        )
+    } catch (e: EncryptionException) {
+        onEncryptionFailed(e)
+        null
+    }
+}
+
+@Suppress("LongParameterList")
 private fun createCardDetails(
     encryptedCard: EncryptedCard,
     sdkDataProvider: SdkDataProvider,
     holderName: String?,
     cardBrand: CardBrand?,
     isCvcHidden: Boolean,
+    encryptedKcpCardPassword: String?,
+    kcpBirthDateOrTaxNumber: String?,
 ) = CardDetails(
     type = CardDetails.PAYMENT_METHOD_TYPE,
     sdkData = sdkDataProvider.createEncodedSdkData(
@@ -106,6 +139,8 @@ private fun createCardDetails(
     encryptedSecurityCode = if (!isCvcHidden) encryptedCard.encryptedSecurityCode else null,
     holderName = holderName,
     brand = cardBrand?.txVariant,
+    encryptedPassword = encryptedKcpCardPassword,
+    taxNumber = kcpBirthDateOrTaxNumber,
 )
 
 private fun createPaymentComponentData(
@@ -158,6 +193,20 @@ private fun CardComponentState.socialSecurityNumber(componentParams: CardCompone
         null
     }
 
+private fun CardComponentState.kcpBirthDateOrTaxNumber(componentParams: CardComponentParams) =
+    if (componentParams.koreanAuthenticationMode != FieldMode.HIDE && kcpBirthDateOrTaxNumber.text.isNotBlank()) {
+        kcpBirthDateOrTaxNumber.text
+    } else {
+        null
+    }
+
+private fun CardComponentState.kcpCardPassword(componentParams: CardComponentParams) =
+    if (componentParams.koreanAuthenticationMode != FieldMode.HIDE && kcpCardPassword.text.isNotBlank()) {
+        kcpCardPassword.text
+    } else {
+        null
+    }
+
 private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams) =
     if (componentParams.showStorePayment) {
         storePaymentMethod
@@ -171,3 +220,5 @@ private fun CardComponentParams.publicKey(onPublicKeyNotFound: (InternalCheckout
         null
     }
 }
+
+private const val ENCRYPTION_KEY_FOR_KCP_PASSWORD = "password"

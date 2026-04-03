@@ -33,6 +33,8 @@ internal class CardComponentStateValidator(
             )
         val holderNameError = validateHolderName(state.holderName)
         val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)
+        val kcpBirthDateOrTaxNumberError = validateKcpBirthDateOrTaxNumber(state.kcpBirthDateOrTaxNumber)
+        val kcpCardPasswordError = validateKcpCardPassword(state.kcpCardPassword)
 
         return state.copy(
             cardNumber = state.cardNumber.copy(errorMessage = cardNumberError),
@@ -40,6 +42,8 @@ internal class CardComponentStateValidator(
             securityCode = state.securityCode.copy(errorMessage = securityCodeError),
             holderName = state.holderName.copy(errorMessage = holderNameError),
             socialSecurityNumber = state.socialSecurityNumber.copy(errorMessage = socialSecurityNumberError),
+            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.copy(errorMessage = kcpBirthDateOrTaxNumberError),
+            kcpCardPassword = state.kcpCardPassword.copy(errorMessage = kcpCardPasswordError),
         )
     }
 
@@ -48,7 +52,9 @@ internal class CardComponentStateValidator(
             state.expiryDate.errorMessage == null &&
             state.securityCode.errorMessage == null &&
             state.holderName.errorMessage == null &&
-            state.socialSecurityNumber.errorMessage == null
+            state.socialSecurityNumber.errorMessage == null &&
+            state.kcpBirthDateOrTaxNumber.errorMessage == null &&
+            state.kcpCardPassword.errorMessage == null
     }
 
     private fun validateCardNumber(
@@ -112,6 +118,28 @@ internal class CardComponentStateValidator(
             validation = CardValidationUtils.validateSocialSecurityNumber(
                 socialSecurityNumber = socialSecurityNumber.text,
                 requirementPolicy = socialSecurityNumber.requirementPolicy,
+            ),
+        )
+    }
+
+    private fun validateKcpBirthDateOrTaxNumber(
+        kcpBirthDateOrTaxNumber: TextInputComponentState,
+    ): CheckoutLocalizationKey? {
+        return cardValidationMapper.mapKCPBirthDateOrTaxNumberValidation(
+            validation = CardValidationUtils.validateKCPBirthDateOrTaxNumber(
+                kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber.text,
+                requirementPolicy = kcpBirthDateOrTaxNumber.requirementPolicy,
+            ),
+        )
+    }
+
+    private fun validateKcpCardPassword(
+        kcpCardPassword: TextInputComponentState,
+    ): CheckoutLocalizationKey? {
+        return cardValidationMapper.mapKCPCardPasswordValidation(
+            validation = CardValidationUtils.validateKCPCardPassword(
+                kcpCardPassword = kcpCardPassword.text,
+                requirementPolicy = kcpCardPassword.requirementPolicy,
             ),
         )
     }

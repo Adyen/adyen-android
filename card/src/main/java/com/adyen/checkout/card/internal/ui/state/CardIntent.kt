@@ -35,6 +35,14 @@ internal sealed interface CardIntent : ComponentStateIntent {
 
     data class UpdateSocialSecurityNumberFocus(val hasFocus: Boolean) : CardIntent
 
+    data class UpdateKcpBirthDateOrTaxNumber(val kcpBirthDateOrTaxNumber: String) : CardIntent
+
+    data class UpdateKcpBirthDateOrTaxNumberFocus(val hasFocus: Boolean) : CardIntent
+
+    data class UpdateKcpCardPassword(val kcpCardPassword: String) : CardIntent
+
+    data class UpdateKcpCardPasswordFocus(val hasFocus: Boolean) : CardIntent
+
     data class UpdateStorePaymentMethod(val isChecked: Boolean) : CardIntent
 
     data class SelectBrand(val cardBrand: CardBrand) : CardIntent
