@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.upi.internal.ui
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.annotation.VisibleForTesting
+import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.components.core.OrderRequest
@@ -54,7 +57,14 @@ internal class DefaultUPIDelegate(
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
     private val sdkDataProvider: SdkDataProvider,
+    private val packageManager: PackageManager,
 ) : UPIDelegate {
+
+    private val detectedPackageNames by lazy {
+        val intent = Intent(Intent.ACTION_VIEW, GENERIC_UPI_URI)
+        packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            .map { it.activityInfo.packageName }
+    }
 
     private val inputData = UPIInputData()
 
@@ -157,10 +167,13 @@ internal class DefaultUPIDelegate(
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
     ): List<UPIIntentItem> {
-        return upiApps.mapToPaymentApp(
-            environment = environment,
-            selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
-        )
+        return upiApps
+            .filter { it.appIdentifierInfo?.androidPackageId in detectedPackageNames }
+            .ifEmpty { upiApps }
+            .mapToPaymentApp(
+                environment = environment,
+                selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
+            )
     }
 
     private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
@@ -279,5 +292,9 @@ internal class DefaultUPIDelegate(
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
+    }
+
+    companion object {
+        private val GENERIC_UPI_URI = "upi://pay".toUri()
     }
 }

@@ -8,9 +8,14 @@
 
 package com.adyen.checkout.upi.internal.ui
 
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AppData
+import com.adyen.checkout.components.core.AppIdentifierInfo
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
@@ -55,8 +60,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -67,6 +74,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultUPIDelegateTest(
     @Mock private val submitHandler: SubmitHandler<UPIComponentState>,
+    @Mock private val packageManager: PackageManager,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -426,6 +434,89 @@ internal class DefaultUPIDelegateTest(
         }
     }
 
+    @Nested
+    inner class CreateIntentItemsTest {
+
+        @Test
+        fun `when only some apps are installed, then only the installed apps should be available`() = runTest {
+            // GIVEN
+            val paymentMethod = PaymentMethod(
+                apps = listOf(
+                    AppData("id1", "name1", AppIdentifierInfo("com.package1")),
+                    AppData("id2", "name2", AppIdentifierInfo("com.package2")),
+                    AppData("id3", "name3", AppIdentifierInfo("com.package3")),
+                ),
+            )
+            // id2 and id3 are filtered out because they don't match the package names
+            val resolveInfos = listOf(
+                createResolveInfo("com.package1"),
+                createResolveInfo("com.whatsapp"),
+                createResolveInfo("com.google.android.apps.nbu.paisa.user"),
+            )
+            whenever(packageManager.queryIntentActivities(any<Intent>(), anyInt())) doReturn resolveInfos
+
+            // WHEN
+            val delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+            val intentItemList = listOf(
+                UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, true),
+            )
+
+            delegate.updateInputData {
+                selectedUPIIntentItem = intentItemList.first()
+            }
+
+            // THEN
+            val expectedAvailableModes = listOf(
+                UPIMode.Intent(intentItemList),
+                UPIMode.Vpa,
+            )
+            assertEquals(expectedAvailableModes, outputTestFlow.latestValue.availableModes)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `when no apps are installed, then all apps should be returned`() = runTest {
+            // GIVEN
+            val paymentMethod = PaymentMethod(
+                apps = listOf(
+                    AppData("id1", "name1", AppIdentifierInfo("com.package1")),
+                    AppData("id2", "name2", AppIdentifierInfo("com.package2")),
+                ),
+            )
+            whenever(packageManager.queryIntentActivities(any<Intent>(), anyInt())) doReturn emptyList()
+
+            // WHEN
+            val delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+            val intentItemList = listOf(
+                UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, true),
+                UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST),
+            )
+
+            delegate.updateInputData {
+                selectedUPIIntentItem = intentItemList.first()
+            }
+
+            // THEN
+            val expectedAvailableModes = listOf(
+                UPIMode.Intent(intentItemList),
+                UPIMode.Vpa,
+            )
+            assertEquals(expectedAvailableModes, outputTestFlow.latestValue.availableModes)
+
+            outputTestFlow.cancel()
+        }
+
+        private fun createResolveInfo(packageName: String): ResolveInfo {
+            val resolveInfo = ResolveInfo()
+            resolveInfo.activityInfo = ActivityInfo()
+            resolveInfo.activityInfo.packageName = packageName
+            return resolveInfo
+        }
+    }
+
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
         configuration: UPIConfiguration.Builder.() -> Unit = {}
@@ -456,6 +547,7 @@ internal class DefaultUPIDelegateTest(
             componentConfiguration = configuration.getUPIConfiguration(),
         ),
         sdkDataProvider = sdkDataProvider,
+        packageManager = packageManager,
     )
 
     companion object {

@@ -222,13 +222,15 @@ public final class com/adyen/checkout/components/core/AppData : com/adyen/checko
 	public static final field Companion Lcom/adyen/checkout/components/core/AppData$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/components/core/AppIdentifierInfo;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/components/core/AppIdentifierInfo;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/components/core/AppData;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/AppData;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/AppData;
+	public final fun component3 ()Lcom/adyen/checkout/components/core/AppIdentifierInfo;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/components/core/AppIdentifierInfo;)Lcom/adyen/checkout/components/core/AppData;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/AppData;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/components/core/AppIdentifierInfo;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/AppData;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAppIdentifierInfo ()Lcom/adyen/checkout/components/core/AppIdentifierInfo;
 	public final fun getId ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -244,6 +246,34 @@ public final class com/adyen/checkout/components/core/AppData$Creator : android/
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/components/core/AppData;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public final fun newArray (I)[Lcom/adyen/checkout/components/core/AppData;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/components/core/AppIdentifierInfo : com/adyen/checkout/core/internal/data/model/ModelObject {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/components/core/AppIdentifierInfo$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/components/core/AppIdentifierInfo;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/AppIdentifierInfo;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/AppIdentifierInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAndroidPackageId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/components/core/AppIdentifierInfo$Companion {
+}
+
+public final class com/adyen/checkout/components/core/AppIdentifierInfo$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/components/core/AppIdentifierInfo;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/components/core/AppIdentifierInfo;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
