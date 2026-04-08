@@ -29,8 +29,6 @@ object PaymentMethodProvider {
     private val factories = ConcurrentHashMap<String, PaymentComponentFactory<*, *>>()
     private val storedFactories = ConcurrentHashMap<String, StoredPaymentComponentFactory<*, *>>()
 
-    private val paymentMethodProviders = ConcurrentHashMap<String, PaymentComponentProvider>()
-
     fun register(
         txVariant: String,
         factory: ComponentFactory,
@@ -42,13 +40,6 @@ object PaymentMethodProvider {
         if (factory is StoredPaymentComponentFactory<*, *>) {
             storedFactories[txVariant] = factory
         }
-    }
-
-    fun register(
-        txVariant: String,
-        paymentComponentProvider: PaymentComponentProvider
-    ) {
-        paymentMethodProviders[txVariant] = paymentComponentProvider
     }
 
     /**
@@ -150,10 +141,6 @@ object PaymentMethodProvider {
             // TODO - Errors Propagation. Propagate an initialization error via onError()
             error("Factory for stored payment method type: $txVariant is not registered.")
         }
-    }
-
-    fun get(paymentMethodResponse: PaymentMethodResponse?): PaymentComponentProvider? {
-        return paymentMethodProviders[paymentMethodResponse?.type]
     }
 
     /**
