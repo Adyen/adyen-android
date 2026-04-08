@@ -13,10 +13,10 @@ import org.json.JSONObject
 
 internal data class SdkData(
     val schemaVersion: Int,
-    val analytics: Analytics? = null,
-    val authentication: Authentication? = null,
-    val createdAt: Long? = null,
-    val supportNativeRedirect: Boolean? = null,
+    val analytics: Analytics?,
+    val authentication: Authentication?,
+    val createdAt: Long?,
+    val supportNativeRedirect: Boolean?,
     val sdkVersion: String,
     val platform: String,
     val channel: String,
