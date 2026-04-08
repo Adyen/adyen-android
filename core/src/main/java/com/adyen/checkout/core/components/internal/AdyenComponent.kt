@@ -20,7 +20,6 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 
 internal class AdyenComponent(
     paymentMethod: PaymentMethodResponse,
@@ -46,9 +45,8 @@ internal class AdyenComponent(
     internal fun ViewFactory(
         modifier: Modifier,
         localizationProvider: CheckoutLocalizationProvider?,
-        navigationProvider: CheckoutNavigationProvider?,
     ) {
-        paymentFacilitator.ViewFactory(modifier, localizationProvider, navigationProvider)
+        paymentFacilitator.ViewFactory(modifier, localizationProvider)
     }
 
     fun observe(lifecycle: Lifecycle) {

@@ -10,8 +10,7 @@ package com.adyen.checkout.await.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
-import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.await.AwaitMainNavigationKey
+import androidx.compose.ui.Modifier
 import com.adyen.checkout.await.internal.ui.view.AwaitComponent
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.AwaitAction
@@ -27,7 +26,6 @@ import com.adyen.checkout.core.components.internal.data.api.StatusRepository
 import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
@@ -62,11 +60,16 @@ internal class AwaitComponent(
     private val redirectEventChannel = bufferedChannel<RedirectViewEvent>()
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        AwaitNavKey to CheckoutNavEntry(AwaitNavKey, AwaitMainNavigationKey) { _ -> MainScreen() },
-    )
+    @Composable
+    override fun Content(modifier: Modifier) {
+        redirectEvent(
+            redirectHandler = redirectHandler,
+            viewEventFlow = redirectEventFlow,
+            onError = ::emitError,
+        )
 
-    override val navigationStartingPoint: NavKey = AwaitNavKey
+        AwaitComponent()
+    }
 
     override fun handleAction() {
         paymentDataRepository.paymentData = action.paymentData
@@ -144,7 +147,7 @@ internal class AwaitComponent(
             emitDetails(payload)
         } else {
             emitError(
-                GenericError("Payment was not completed. - ${statusResponse.resultCode}")
+                GenericError("Payment was not completed. - ${statusResponse.resultCode}"),
             )
         }
     }
@@ -183,17 +186,6 @@ internal class AwaitComponent(
             details = details,
             paymentData = paymentDataRepository.paymentData,
         )
-    }
-
-    @Composable
-    private fun MainScreen() {
-        redirectEvent(
-            redirectHandler = redirectHandler,
-            viewEventFlow = redirectEventFlow,
-            onError = ::emitError,
-        )
-
-        AwaitComponent()
     }
 
     companion object {

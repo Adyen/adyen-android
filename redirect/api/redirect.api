@@ -7,14 +7,6 @@ public final class com/adyen/checkout/redirect/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/redirect/RedirectMainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/redirect/RedirectMainNavigationKey;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/adyen/checkout/redirect/old/RedirectComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/redirect/old/RedirectComponent$Companion;

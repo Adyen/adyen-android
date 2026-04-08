@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.card.CardMainNavigationKey
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
@@ -38,7 +36,6 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.CardDetails
@@ -87,13 +84,6 @@ internal class CardComponent(
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
-    // TODO - Remove navigation
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        CardNavKey to CheckoutNavEntry(CardNavKey, CardMainNavigationKey) { },
-    )
-
-    override val navigationStartingPoint: NavKey = CardNavKey
-
     init {
         initializeAnalytics()
         subscribeToDetectedCardTypes()
@@ -104,12 +94,15 @@ internal class CardComponent(
         analyticsManager.initialize(this, coroutineScope)
     }
 
-    fun setOnBinValueCallback(onBinValueCallback: OnBinValueCallback?) {
-        this.onBinValueCallback = onBinValueCallback
-    }
-
-    fun setOnBinLookupCallback(onBinLookupCallback: OnBinLookupCallback?) {
-        this.onBinLookupCallback = onBinLookupCallback
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val viewState by viewState.collectAsStateWithLifecycle()
+        CardComponent(
+            viewState = viewState,
+            onIntent = ::handleIntent,
+            onSubmitClick = ::submit,
+            modifier = modifier,
+        )
     }
 
     override fun submit() {
@@ -139,16 +132,6 @@ internal class CardComponent(
 
     private fun onIntent(intent: CardIntent) {
         componentState.handleIntent(intent)
-    }
-
-    @Composable
-    override fun Content(modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-        CardComponent(
-            viewState = viewState,
-            onIntent = ::handleIntent,
-            onSubmitClick = ::submit,
-        )
     }
 
     private fun handleIntent(intent: CardIntent) {
@@ -228,5 +211,13 @@ internal class CardComponent(
         val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
+    }
+
+    fun setOnBinValueCallback(onBinValueCallback: OnBinValueCallback?) {
+        this.onBinValueCallback = onBinValueCallback
+    }
+
+    fun setOnBinLookupCallback(onBinLookupCallback: OnBinLookupCallback?) {
+        this.onBinLookupCallback = onBinLookupCallback
     }
 }

@@ -11,14 +11,6 @@ public final class com/adyen/checkout/threeds2/ThreeDS2ConfigurationKt {
 	public static synthetic fun threeDS2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
-public final class com/adyen/checkout/threeds2/ThreeDS2MainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/threeds2/ThreeDS2MainNavigationKey;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/adyen/checkout/threeds2/old/Adyen3DS2Component : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/threeds2/old/Adyen3DS2Component$Companion;

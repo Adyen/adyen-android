@@ -13,8 +13,8 @@ import android.app.Application
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.RedirectAction
@@ -29,12 +29,10 @@ import com.adyen.checkout.core.common.internal.SavedStateHandleContainer
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
-import com.adyen.checkout.threeds2.ThreeDS2MainNavigationKey
 import com.adyen.checkout.threeds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.threeds2.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.threeds2.internal.data.model.ChallengeToken
@@ -92,14 +90,8 @@ internal class ThreeDS2Component(
     private val threeDsEventChannel = bufferedChannel<ThreeDS2Event>()
     private val threeDsEventFlow: Flow<ThreeDS2Event> = threeDsEventChannel.receiveAsFlow()
 
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        ThreeDS2NavKey to CheckoutNavEntry(ThreeDS2NavKey, ThreeDS2MainNavigationKey) { _ -> MainScreen() },
-    )
-
-    override val navigationStartingPoint: NavKey = ThreeDS2NavKey
-
     @Composable
-    private fun MainScreen() {
+    override fun Content(modifier: Modifier) {
         threeDsEvent(
             handleAction = ::handleAction,
             viewEventFlow = threeDsEventFlow,
@@ -123,7 +115,7 @@ internal class ThreeDS2Component(
     private fun handleAction(action: Action, activity: Activity) {
         if (action !is Threeds2Action) {
             emitError(
-                GenericError("Unsupported action")
+                GenericError("Unsupported action"),
             )
             return
         }
@@ -154,7 +146,7 @@ internal class ThreeDS2Component(
             }
 
             emitError(
-                GenericError("3DS2 token not found.")
+                GenericError("3DS2 token not found."),
             )
             return
         }
@@ -184,7 +176,7 @@ internal class ThreeDS2Component(
     ) {
         if (action.subtype == null) {
             emitError(
-                GenericError("3DS2 Action subtype not found.")
+                GenericError("3DS2 Action subtype not found."),
             )
             return
         }
@@ -222,7 +214,7 @@ internal class ThreeDS2Component(
                 message = "Fingerprint creation failed because the token is partial",
             )
             emitError(
-                GenericError("Failed to create ConfigParameters.")
+                GenericError("Failed to create ConfigParameters."),
             )
             return
         }
@@ -273,7 +265,7 @@ internal class ThreeDS2Component(
                     message = "Fingerprint creation failed because authentication parameters do not exist",
                 )
                 emitError(
-                    GenericError("Failed to retrieve 3DS2 authentication parameters")
+                    GenericError("Failed to retrieve 3DS2 authentication parameters"),
                 )
                 return@launch
             }
@@ -469,7 +461,7 @@ internal class ThreeDS2Component(
         if (currentTransaction == null) {
             trackChallengeErrorEvent(ErrorEvent.THREEDS2_TRANSACTION_MISSING)
             emitError(
-                GenericError("Failed to make challenge, missing reference to initial transaction.")
+                GenericError("Failed to make challenge, missing reference to initial transaction."),
             )
             return
         }

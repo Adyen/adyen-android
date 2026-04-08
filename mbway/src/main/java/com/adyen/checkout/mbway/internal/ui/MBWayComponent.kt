@@ -12,19 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
-import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
-import com.adyen.checkout.mbway.MBWayCountryCodePickerNavigationKey
-import com.adyen.checkout.mbway.MBWayMainNavigationKey
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
@@ -49,19 +43,6 @@ internal class MBWayComponent(
     coroutineScope: CoroutineScope,
 ) : PaymentComponent<MBWayPaymentComponentState> {
 
-    // TODO - Remove navigation
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        MBWayNavKey to CheckoutNavEntry(MBWayNavKey, MBWayMainNavigationKey) { },
-
-        MBWayCountryCodeNavKey to CheckoutNavEntry(
-            MBWayCountryCodeNavKey,
-            MBWayCountryCodePickerNavigationKey,
-            CheckoutDisplayStrategy.FULL_SCREEN_DIALOG,
-        ) { backStack -> CountryCodePickerScreen(backStack) },
-    )
-
-    override val navigationStartingPoint: NavKey = MBWayNavKey
-
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
         eventChannel.receiveAsFlow()
@@ -81,6 +62,21 @@ internal class MBWayComponent(
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         analyticsManager.initialize(this, coroutineScope)
+    }
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val viewState by viewState.collectAsStateWithLifecycle()
+
+        MBWayContent(
+            modifier = modifier,
+            viewState = viewState,
+            onSubmitClick = ::submit,
+            onCountryCodePickerClick = {
+                // TODO - Implement
+            },
+            onIntent = ::onIntent,
+        )
     }
 
     override fun submit() {
@@ -108,30 +104,16 @@ internal class MBWayComponent(
         componentState.handleIntent(intent)
     }
 
+    // TODO - Move to secondary screen architecture
+    @Suppress("unused")
     @Composable
-    override fun Content(modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
-        MBWayContent(
-            modifier = modifier,
-            viewState = viewState,
-            onSubmitClick = ::submit,
-            onCountryCodePickerClick = {
-                // TODO - Implement
-            },
-            onIntent = ::onIntent,
-        )
-    }
-
-    @Composable
-    private fun CountryCodePickerScreen(backStack: NavBackStack<NavKey>) {
+    private fun CountryCodePickerScreen() {
         val viewState by viewState.collectAsStateWithLifecycle()
 
         CountryCodePicker(
             viewState = viewState,
             onItemClick = {
                 onIntent(MBWayIntent.UpdateCountry(it))
-                backStack.removeLastOrNull()
             },
         )
     }

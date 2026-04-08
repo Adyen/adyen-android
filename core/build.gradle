@@ -9,7 +9,6 @@ plugins {
     alias libs.plugins.checkout.android.library
     alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.kotlin.serialization
 }
 
 checkoutPublishing {
@@ -35,11 +34,9 @@ dependencies {
     api project(":ui")
 
     api libs.bundles.androidx.lifecycle
-    api libs.bundles.androidx.navigation3
 
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui
-    implementation libs.compose.viewmodel
     implementation libs.okhttp
     implementation libs.androidx.browser
 

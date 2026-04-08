@@ -10,13 +10,9 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.scene.DialogSceneStrategy
-import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
@@ -30,8 +26,6 @@ import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.components.internal.ui.navigation.toNavEntry
-import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 import com.adyen.checkout.core.error.internal.GenericError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -52,28 +46,17 @@ internal class PaymentFacilitator(
     private var actionComponent: ActionComponent? = null
     private var actionObservationJob: Job? = null
 
-    private val backStack = NavBackStack(mutableStateListOf(paymentComponent.navigationStartingPoint))
-
     @Composable
     fun ViewFactory(
         modifier: Modifier,
         localizationProvider: CheckoutLocalizationProvider?,
-        navigationProvider: CheckoutNavigationProvider?,
     ) {
         CheckoutCompositionLocalProvider(
             locale = commonComponentParams.shopperLocale,
             localizationProvider = localizationProvider,
             environment = commonComponentParams.environment,
         ) {
-            NavDisplay(
-                backStack = backStack,
-                sceneStrategy = DialogSceneStrategy(),
-            ) { key ->
-                val entries = paymentComponent.navigation + actionComponent?.navigation.orEmpty()
-                val entry = entries[key] ?: error("Unknown key: $key")
-                val properties = navigationProvider?.provide(entry.publicKey)
-                entry.toNavEntry(modifier, backStack, properties)
-            }
+            paymentComponent.Content(modifier)
         }
     }
 
@@ -129,9 +112,6 @@ internal class PaymentFacilitator(
             coroutineScope = coroutineScope,
         )
         this.actionComponent = actionComponent
-
-        backStack.clear()
-        backStack.add(actionComponent.navigationStartingPoint)
 
         actionObservationJob = actionComponent.eventFlow
             .flowWithLifecycle(lifecycle)

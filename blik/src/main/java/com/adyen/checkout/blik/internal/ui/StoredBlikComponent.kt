@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.blik.StoredBlikNavigationKey
 import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
 import com.adyen.checkout.blik.internal.ui.view.StoredBlikComponent
@@ -24,7 +22,6 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.paymentmethod.BlikDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -38,13 +35,6 @@ internal class StoredBlikComponent(
     coroutineScope: CoroutineScope,
 ) : PaymentComponent<BlikPaymentComponentState> {
 
-    // TODO - Remove navigation
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        StoredBlikNavKey to CheckoutNavEntry(StoredBlikNavKey, StoredBlikNavigationKey) { },
-    )
-
-    override val navigationStartingPoint: NavKey = StoredBlikNavKey
-
     private val eventChannel = bufferedChannel<PaymentComponentEvent<BlikPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<BlikPaymentComponentState>> =
         eventChannel.receiveAsFlow()
@@ -57,6 +47,16 @@ internal class StoredBlikComponent(
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         analyticsManager.initialize(this, coroutineScope)
+    }
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val isLoading by this.isLoading.collectAsStateWithLifecycle()
+
+        StoredBlikComponent(
+            viewState = StoredBlikViewState(isLoading = isLoading),
+            onSubmitClick = ::submit,
+        )
     }
 
     override fun submit() {
@@ -88,16 +88,6 @@ internal class StoredBlikComponent(
         return BlikPaymentComponentState(
             data = paymentComponentData,
             isValid = true,
-        )
-    }
-
-    @Composable
-    override fun Content(modifier: Modifier) {
-        val isLoading by this.isLoading.collectAsStateWithLifecycle()
-
-        StoredBlikComponent(
-            viewState = StoredBlikViewState(isLoading = isLoading),
-            onSubmitClick = ::submit,
         )
     }
 }
