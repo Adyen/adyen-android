@@ -756,7 +756,7 @@ public final class com/adyen/checkout/core/components/CheckoutControllerKt {
 }
 
 public final class com/adyen/checkout/core/components/CheckoutPaymentFlowKt {
-	public static final fun CheckoutPaymentFlow (Lcom/adyen/checkout/core/components/NewCheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CheckoutPaymentFlow (Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutPaymentMethodKt {
@@ -846,7 +846,7 @@ public final class com/adyen/checkout/core/components/CheckoutTarget$StoredPayme
 public final class com/adyen/checkout/core/components/ComposableSingletons$CheckoutPaymentFlowKt {
 	public static final field INSTANCE Lcom/adyen/checkout/core/components/ComposableSingletons$CheckoutPaymentFlowKt;
 	public fun <init> ()V
-	public final fun getLambda$411902645$core_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-733971306$core_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/core/components/NewCheckoutControllerKt {

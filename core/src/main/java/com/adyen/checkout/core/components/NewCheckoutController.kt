@@ -50,6 +50,7 @@ fun NewCheckoutController(
             val analyticsManager = AnalyticsManagerFactory().provide(
                 componentParams = componentParamsBundle.commonComponentParams,
                 applicationContext = applicationContext,
+                // TODO - Analytics: Pass the correct paymentMethod type
                 source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
                 sessionId = null,
                 checkoutAttemptId = context.checkoutAttemptId,
@@ -78,6 +79,7 @@ fun NewCheckoutController(
             val analyticsManager = AnalyticsManagerFactory().provide(
                 componentParams = componentParamsBundle.commonComponentParams,
                 applicationContext = applicationContext,
+                // TODO - Analytics: Pass the correct paymentMethod type
                 source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
                 sessionId = context.checkoutSession.sessionSetupResponse.id,
                 checkoutAttemptId = context.checkoutAttemptId,
@@ -97,6 +99,7 @@ fun NewCheckoutController(
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Suppress("LongParameterList")
 class NewCheckoutController(
     private val target: CheckoutTarget,
     private val context: CheckoutContext,
