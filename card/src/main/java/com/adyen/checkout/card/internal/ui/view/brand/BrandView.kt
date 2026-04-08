@@ -25,6 +25,7 @@ import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 
 /**
  * BrandView for card input field.
@@ -86,12 +87,14 @@ class BrandView @JvmOverloads constructor(
     private fun showSingleBrandPlaceholder() {
         binding.imageViewSingleBrand.isVisible = true
         binding.recyclerViewBrandsList.isVisible = false
+        binding.imageViewSingleBrand.strokeWidth = 0f
         binding.imageViewSingleBrand.setImageResource(R.drawable.ic_card)
     }
 
     private fun showSingleBrand(detectedCardType: DetectedCardType, environment: Environment) {
         binding.imageViewSingleBrand.isVisible = true
         binding.recyclerViewBrandsList.isVisible = false
+        binding.imageViewSingleBrand.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
         binding.imageViewSingleBrand.loadLogo(
             environment = environment,
             txVariant = detectedCardType.cardBrand.txVariant,
