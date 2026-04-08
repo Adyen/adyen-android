@@ -10,8 +10,8 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.card.CardMainNavigationKey
 import com.adyen.checkout.card.OnBinLookupCallback
@@ -87,8 +87,9 @@ internal class CardComponent(
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
+    // TODO - Remove navigation
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        CardNavKey to CheckoutNavEntry(CardNavKey, CardMainNavigationKey) { backStack -> MainScreen(backStack) },
+        CardNavKey to CheckoutNavEntry(CardNavKey, CardMainNavigationKey) { },
     )
 
     override val navigationStartingPoint: NavKey = CardNavKey
@@ -141,7 +142,7 @@ internal class CardComponent(
     }
 
     @Composable
-    private fun MainScreen(@Suppress("UNUSED_PARAMETER") backStack: NavBackStack<NavKey>) {
+    override fun Content(modifier: Modifier) {
         val viewState by viewState.collectAsStateWithLifecycle()
         CardComponent(
             viewState = viewState,

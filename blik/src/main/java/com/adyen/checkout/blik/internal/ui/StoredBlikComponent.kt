@@ -10,8 +10,8 @@ package com.adyen.checkout.blik.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.blik.StoredBlikNavigationKey
 import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
@@ -38,10 +38,9 @@ internal class StoredBlikComponent(
     coroutineScope: CoroutineScope,
 ) : PaymentComponent<BlikPaymentComponentState> {
 
+    // TODO - Remove navigation
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        StoredBlikNavKey to CheckoutNavEntry(StoredBlikNavKey, StoredBlikNavigationKey) { backStack ->
-            MainScreen(backStack)
-        },
+        StoredBlikNavKey to CheckoutNavEntry(StoredBlikNavKey, StoredBlikNavigationKey) { },
     )
 
     override val navigationStartingPoint: NavKey = StoredBlikNavKey
@@ -93,8 +92,7 @@ internal class StoredBlikComponent(
     }
 
     @Composable
-    @Suppress("UNUSED_PARAMETER")
-    private fun MainScreen(backStack: NavBackStack<NavKey>) {
+    override fun Content(modifier: Modifier) {
         val isLoading by this.isLoading.collectAsStateWithLifecycle()
 
         StoredBlikComponent(

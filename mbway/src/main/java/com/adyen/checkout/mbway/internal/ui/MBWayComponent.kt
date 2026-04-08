@@ -10,6 +10,7 @@ package com.adyen.checkout.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -48,8 +49,9 @@ internal class MBWayComponent(
     coroutineScope: CoroutineScope,
 ) : PaymentComponent<MBWayPaymentComponentState> {
 
+    // TODO - Remove navigation
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        MBWayNavKey to CheckoutNavEntry(MBWayNavKey, MBWayMainNavigationKey) { backStack -> MainScreen(backStack) },
+        MBWayNavKey to CheckoutNavEntry(MBWayNavKey, MBWayMainNavigationKey) { },
 
         MBWayCountryCodeNavKey to CheckoutNavEntry(
             MBWayCountryCodeNavKey,
@@ -107,13 +109,16 @@ internal class MBWayComponent(
     }
 
     @Composable
-    private fun MainScreen(backStack: NavBackStack<NavKey>) {
+    override fun Content(modifier: Modifier) {
         val viewState by viewState.collectAsStateWithLifecycle()
 
         MBWayContent(
+            modifier = modifier,
             viewState = viewState,
             onSubmitClick = ::submit,
-            onCountryCodePickerClick = { backStack.add(MBWayCountryCodeNavKey) },
+            onCountryCodePickerClick = {
+                // TODO - Implement
+            },
             onIntent = ::onIntent,
         )
     }
