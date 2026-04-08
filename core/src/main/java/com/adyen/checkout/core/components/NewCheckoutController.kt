@@ -8,56 +8,148 @@
 
 package com.adyen.checkout.core.components
 
+import android.content.Context
 import androidx.annotation.RestrictTo
+import androidx.appcompat.app.AppCompatDelegate
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
+import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.internal.CheckoutControllerState
-import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.error.CheckoutError
-import com.adyen.checkout.core.error.CheckoutException
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.adyen.checkout.core.components.internal.PaymentMethodProvider
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
+import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 // TODO - rename later
 interface CheckoutControllerInterface {
     suspend fun submit()
 }
 
+fun NewCheckoutController(
+    target: CheckoutTarget,
+    context: CheckoutContext,
+    callbacks: CheckoutCallbacks,
+    applicationContext: Context,
+    coroutineScope: CoroutineScope,
+): NewCheckoutController {
+    when (context) {
+        // TODO - Move this logic to the a different location
+        is CheckoutContext.Advanced -> {
+            val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
+                checkoutConfiguration = context.checkoutConfiguration,
+                deviceLocale = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault(),
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                publicKey = context.publicKey,
+            )
+
+            val analyticsManager = AnalyticsManagerFactory().provide(
+                componentParams = componentParamsBundle.commonComponentParams,
+                applicationContext = applicationContext,
+                // TODO - Analytics: Pass the correct paymentMethod type
+                source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
+                sessionId = null,
+                checkoutAttemptId = context.checkoutAttemptId,
+            )
+
+            return NewCheckoutController(
+                target = target,
+                context = context,
+                callbacks = callbacks,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                checkoutConfiguration = context.checkoutConfiguration,
+                componentParamsBundle = componentParamsBundle,
+            )
+        }
+
+        is CheckoutContext.Sessions -> {
+            val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
+                checkoutConfiguration = context.checkoutConfiguration,
+                deviceLocale = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault(),
+                dropInOverrideParams = null,
+                componentSessionParams = SessionParamsFactory.create(context.checkoutSession),
+                publicKey = context.publicKey,
+            )
+
+            val analyticsManager = AnalyticsManagerFactory().provide(
+                componentParams = componentParamsBundle.commonComponentParams,
+                applicationContext = applicationContext,
+                // TODO - Analytics: Pass the correct paymentMethod type
+                source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
+                sessionId = context.checkoutSession.sessionSetupResponse.id,
+                checkoutAttemptId = context.checkoutAttemptId,
+            )
+
+            return NewCheckoutController(
+                target = target,
+                context = context,
+                callbacks = callbacks,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                checkoutConfiguration = context.checkoutConfiguration,
+                componentParamsBundle = componentParamsBundle,
+            )
+        }
+    }
+}
+
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Suppress("LongParameterList")
 class NewCheckoutController(
     private val target: CheckoutTarget,
     private val context: CheckoutContext,
     @Suppress("unused")
     private val callbacks: CheckoutCallbacks,
+    private val coroutineScope: CoroutineScope,
+    private val analyticsManager: AnalyticsManager,
+    private val checkoutConfiguration: CheckoutConfiguration,
+    private val componentParamsBundle: ComponentParamsBundle,
 ) : CheckoutControllerInterface {
 
-    private val _state = MutableStateFlow(createInitialState())
-    internal val state: StateFlow<CheckoutControllerState> = _state.asStateFlow()
+    internal val paymentComponent: PaymentComponent<*>?
 
-    private var componentStateFlow: StateFlow<PaymentComponentState<*>>? = null
-
-    private fun createInitialState(): CheckoutControllerState {
-        return when (target) {
+    init {
+        paymentComponent = when (target) {
             is CheckoutTarget.PaymentMethod -> {
                 val paymentMethod = getPaymentMethodResponse()?.paymentMethods?.find { it.type == target.txVariant }
-                CheckoutControllerState.PaymentMethod(paymentMethod)
+
+                if (paymentMethod == null) {
+                    null
+                } else {
+                    PaymentMethodProvider.getPaymentComponent(
+                        paymentMethod = paymentMethod,
+                        coroutineScope = coroutineScope,
+                        analyticsManager = analyticsManager,
+                        checkoutConfiguration = checkoutConfiguration,
+                        componentParamsBundle = componentParamsBundle,
+                        checkoutCallbacks = callbacks,
+                    )
+                }
             }
 
             is CheckoutTarget.StoredPaymentMethod -> {
-                val paymentMethod = getPaymentMethodResponse()?.storedPaymentMethods?.find { it.id == target.id }
-                CheckoutControllerState.PaymentMethod(paymentMethod)
+                val storedPaymentMethod = getPaymentMethodResponse()?.storedPaymentMethods?.find { it.id == target.id }
+
+                if (storedPaymentMethod == null) {
+                    null
+                } else {
+                    PaymentMethodProvider.getStoredPaymentComponent(
+                        storedPaymentMethod = storedPaymentMethod,
+                        coroutineScope = coroutineScope,
+                        analyticsManager = analyticsManager,
+                        checkoutConfiguration = checkoutConfiguration,
+                        componentParamsBundle = componentParamsBundle,
+                        checkoutCallbacks = callbacks,
+                    )
+                }
             }
 
-            is CheckoutTarget.Action -> CheckoutControllerState.Action(target.action)
-            else -> {
-                // TODO - introduce proper error code
-                val error = CheckoutError(
-                    code = CheckoutError.ErrorCode.UNKNOWN,
-                    message = "Unknown target: $target",
-                )
-                throw CheckoutException(error)
-            }
+            else -> null
         }
     }
 
@@ -68,17 +160,13 @@ class NewCheckoutController(
         }
     }
 
-    fun registerComponentState(flow: StateFlow<PaymentComponentState<*>>) {
-        componentStateFlow = flow
-    }
-
     // TODO - Ensure state is valid, handle state being null, add validate function and support sessions
     override suspend fun submit() {
-        if (_state.value is CheckoutControllerState.PaymentMethod) {
-            componentStateFlow?.value?.let {
-                callbacks.beforeSubmit?.beforeSubmit(it)
-                callbacks.onSubmit?.onSubmit(it.data)
-            }
-        }
+//        if (_state.value is CheckoutControllerState.PaymentMethod) {
+//            componentStateFlow?.value?.let {
+//                callbacks.beforeSubmit?.beforeSubmit(it)
+//                callbacks.onSubmit?.onSubmit(it.data)
+//            }
+//        }
     }
 }

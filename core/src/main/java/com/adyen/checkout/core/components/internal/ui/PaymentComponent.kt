@@ -9,6 +9,8 @@
 package com.adyen.checkout.core.components.internal.ui
 
 import androidx.annotation.RestrictTo
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 
@@ -24,4 +26,7 @@ interface PaymentComponent<T : BasePaymentComponentState> :
     fun setLoading(isLoading: Boolean)
 
     fun onCleared()
+
+    @Composable
+    fun Content(modifier: Modifier)
 }

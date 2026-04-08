@@ -3,12 +3,13 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 4/3/2026.
+ * Created by ararat on 8/4/2026.
  */
 
 package com.adyen.checkout.core.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
@@ -16,16 +17,13 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
-// TODO - Architecture: Adjust this to make it work
 @Composable
-fun CheckoutPaymentFlow(
-//    controller: NewCheckoutController,
-//    modifier: Modifier = Modifier,
+fun CheckoutPaymentMethod(
+    controller: NewCheckoutController,
+    modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-//    val state by controller.state.collectAsStateWithLifecycle()
-
     InternalCheckoutTheme(theme) {
         // TODO - get params from controller
         CheckoutCompositionLocalProvider(
@@ -33,17 +31,7 @@ fun CheckoutPaymentFlow(
             localizationProvider = localizationProvider,
             environment = Environment.TEST,
         ) {
-//            when (val localState = state) {
-//                is CheckoutControllerState.PaymentMethod -> {
-//                    val provider = remember { PaymentMethodProvider.get(localState.paymentMethod) }
-//                    provider?.PaymentComponent(
-//                        modifier = modifier,
-//                        controller = controller,
-//                    )
-//                }
-//
-//                is CheckoutControllerState.Action -> TODO()
-//            }
+            controller.paymentComponent?.Content(modifier)
         }
     }
 }

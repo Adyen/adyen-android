@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.components.internal.ui
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -30,4 +32,9 @@ internal class TestPaymentComponent : PaymentComponent<BasePaymentComponentState
     override fun setLoading(isLoading: Boolean) = Unit
 
     override fun onCleared() = Unit
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        // Not necessary
+    }
 }

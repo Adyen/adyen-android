@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -36,6 +38,11 @@ internal class GooglePayComponent : PaymentComponent<GooglePayPaymentComponentSt
         get() = TODO("Not yet implemented")
     override val navigationStartingPoint: NavKey
         get() = TODO("Not yet implemented")
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        TODO("Not yet implemented")
+    }
 
     companion object {
         @JvmField

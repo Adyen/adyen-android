@@ -61,6 +61,7 @@ object PaymentMethodProvider {
      *
      * @return [PaymentComponent] for given payment method.
      */
+    // TODO - Check if this is still necessary
     @Suppress("LongParameterList")
     fun get(
         paymentMethod: PaymentMethodResponse,
@@ -100,7 +101,7 @@ object PaymentMethodProvider {
     }
 
     @Suppress("LongParameterList")
-    private fun getPaymentComponent(
+    fun getPaymentComponent(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -127,7 +128,7 @@ object PaymentMethodProvider {
     }
 
     @Suppress("LongParameterList")
-    private fun getStoredPaymentComponent(
+    fun getStoredPaymentComponent(
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,

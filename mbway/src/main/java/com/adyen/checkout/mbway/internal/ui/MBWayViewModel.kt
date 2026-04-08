@@ -18,10 +18,6 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
-import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class MBWayViewModel(
@@ -46,16 +42,6 @@ internal class MBWayViewModel(
     val viewState = componentState.viewState(viewStateProducer, viewModelScope)
 
     init {
-        val paymentComponentStateFlow = componentState
-            .map { it.toPaymentComponentState(sdkData = "") }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = componentState.value.toPaymentComponentState(sdkData = ""),
-            )
-
-        controller.registerComponentState(paymentComponentStateFlow)
-
         initializeAnalytics()
     }
 

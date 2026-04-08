@@ -37,15 +37,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.adyen.checkout.core.components.CheckoutPaymentFlow
+import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.NewCheckoutController
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -118,14 +120,20 @@ private fun Component(
             )
         }
 
-        CheckoutPaymentFlow(
-            controller = remember(selectedPaymentMethod) {
-                NewCheckoutController(
-                    target = CheckoutTarget.PaymentMethod(selectedPaymentMethod.type),
-                    context = uiState.checkoutContext,
-                    callbacks = uiState.checkoutCallbacks,
-                )
-            },
+        val coroutineScope = rememberCoroutineScope()
+        val context = LocalContext.current
+        val checkoutController = remember(selectedPaymentMethod) {
+            NewCheckoutController(
+                target = CheckoutTarget.PaymentMethod(selectedPaymentMethod.type),
+                context = uiState.checkoutContext,
+                callbacks = uiState.checkoutCallbacks,
+                applicationContext = context,
+                coroutineScope = coroutineScope,
+            )
+        }
+
+        CheckoutPaymentMethod(
+            controller = checkoutController,
             theme = theme,
             modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
         )
