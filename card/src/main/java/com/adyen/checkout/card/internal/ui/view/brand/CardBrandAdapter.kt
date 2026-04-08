@@ -17,6 +17,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.BrandItemBinding
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 
 internal class CardBrandAdapter(
     val isSelectable: Boolean,
@@ -43,6 +44,7 @@ internal class CardBrandItemViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(cardBrandItem: CardBrandItem) {
+        binding.imageViewBrandItem.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
         binding.imageViewBrandItem.loadLogo(
             cardBrandItem.environment,
             cardBrandItem.brand.txVariant,
@@ -50,7 +52,10 @@ internal class CardBrandItemViewHolder(
     }
 
     fun bindSelectable(cardBrandItem: CardBrandItem, onItemClicked: (CardBrandItem) -> Unit) {
-        bind(cardBrandItem)
+        binding.imageViewBrandItem.loadLogo(
+            cardBrandItem.environment,
+            cardBrandItem.brand.txVariant,
+        )
         binding.root.setOnClickListener { onItemClicked(cardBrandItem) }
         binding.brandItemContainer.setBackgroundResource(R.drawable.bg_brand_item_selector)
         binding.brandItemContainer.isSelected = cardBrandItem.isSelected
