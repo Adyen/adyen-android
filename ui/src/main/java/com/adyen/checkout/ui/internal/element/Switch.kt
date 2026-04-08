@@ -10,9 +10,7 @@ package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,11 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import androidx.compose.material3.Switch as MaterialSwitch
 import androidx.compose.material3.SwitchDefaults as MaterialSwitchDefaults
@@ -89,27 +87,20 @@ private fun Switch(
 private fun SwitchContainerPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Spacing.Large),
+    CheckoutThemeWrapper(theme) {
+        val description = "A very long and detailed description that covers multiple lines"
+        SwitchContainer(
+            checked = false,
+            onCheckedChange = null,
         ) {
-            val description = "A very long and detailed description that covers multiple lines"
-            SwitchContainer(
-                checked = false,
-                onCheckedChange = null,
-            ) {
-                Body(description)
-            }
+            Body(description)
+        }
 
-            SwitchContainer(
-                checked = true,
-                onCheckedChange = null,
-            ) {
-                Body(description)
-            }
+        SwitchContainer(
+            checked = true,
+            onCheckedChange = null,
+        ) {
+            Body(description)
         }
     }
 }

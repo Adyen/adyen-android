@@ -9,11 +9,8 @@
 package com.adyen.checkout.ui.internal.element.button
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalContentColor
@@ -31,13 +28,11 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -113,16 +108,10 @@ private fun CheckoutToggleButton(
 private fun CheckoutButtonGroupPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            Modifier
-                .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            CheckoutButtonGroup(
-                items = listOf("Item 1", "Item 2", "Item 3"),
-                onItemSelected = {},
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        CheckoutButtonGroup(
+            items = listOf("Item 1", "Item 2", "Item 3"),
+            onItemSelected = {},
+        )
     }
 }

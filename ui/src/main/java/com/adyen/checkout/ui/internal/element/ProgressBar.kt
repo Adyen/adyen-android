@@ -9,19 +9,14 @@
 package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -43,14 +38,7 @@ fun ProgressBar(
 private fun ProgressBarPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            ProgressBar()
-        }
+    CheckoutThemeWrapper(theme) {
+        ProgressBar()
     }
 }

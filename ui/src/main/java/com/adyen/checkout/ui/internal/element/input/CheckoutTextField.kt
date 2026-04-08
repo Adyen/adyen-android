@@ -10,11 +10,7 @@ package com.adyen.checkout.ui.internal.element.input
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -44,11 +40,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -175,59 +169,52 @@ fun CheckoutTextField(
 private fun CheckoutTextFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            CheckoutTextField(
-                onValueChange = {},
-                label = "Label",
-                supportingText = "Description",
-            )
+    CheckoutThemeWrapper(theme) {
+        CheckoutTextField(
+            onValueChange = {},
+            label = "Label",
+            supportingText = "Description",
+        )
 
-            CheckoutTextField(
-                onValueChange = {},
-                label = "Label",
-                prefix = "Prefix",
-            )
+        CheckoutTextField(
+            onValueChange = {},
+            label = "Label",
+            prefix = "Prefix",
+        )
 
-            val focusRequester = remember { FocusRequester() }
-            CheckoutTextField(
-                onValueChange = {},
-                label = "Label",
-                initialValue = "Value",
-                trailingIcon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
-                        contentDescription = null,
-                        tint = CheckoutThemeProvider.colors.text,
-                    )
-                },
-                modifier = Modifier.focusRequester(focusRequester),
-            )
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
-            }
-
-            CheckoutTextField(
-                onValueChange = {},
-                initialValue = "Value",
-                label = "Label",
-                supportingText = "Invalid input",
-                isError = true,
-            )
-
-            CheckoutTextField(
-                onValueChange = {},
-                initialValue = "Value",
-                label = "Password",
-                isSecureField = true,
-                modifier = Modifier.focusRequester(focusRequester),
-            )
+        val focusRequester = remember { FocusRequester() }
+        CheckoutTextField(
+            onValueChange = {},
+            label = "Label",
+            initialValue = "Value",
+            trailingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+            modifier = Modifier.focusRequester(focusRequester),
+        )
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
         }
+
+        CheckoutTextField(
+            onValueChange = {},
+            initialValue = "Value",
+            label = "Label",
+            supportingText = "Invalid input",
+            isError = true,
+        )
+
+        CheckoutTextField(
+            onValueChange = {},
+            initialValue = "Value",
+            label = "Password",
+            isSecureField = true,
+            modifier = Modifier.focusRequester(focusRequester),
+        )
     }
 }
 

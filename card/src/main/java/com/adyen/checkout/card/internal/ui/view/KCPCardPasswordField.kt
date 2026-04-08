@@ -8,11 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,9 +23,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.theme.toCompose
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -70,19 +64,12 @@ internal fun KCPCardPasswordField(
 private fun KCPCardPasswordFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            KCPCardPasswordField(
-                kcpCardPasswordState = TextInputViewState(
-                    text = "12",
-                ),
-                onIntent = {},
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        KCPCardPasswordField(
+            kcpCardPasswordState = TextInputViewState(
+                text = "12",
+            ),
+            onIntent = {},
+        )
     }
 }

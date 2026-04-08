@@ -10,7 +10,6 @@ package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -42,11 +41,10 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -204,41 +202,34 @@ private fun CardNumberFieldIcon(
 private fun CardNumberFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            CardNumberField(
-                cardNumberState = TextInputViewState(
-                    text = "5555444433331111",
-                ),
-                supportedCardBrands = listOf(
-                    CardBrand(CardType.MASTERCARD.txVariant),
-                    CardBrand(CardType.VISA.txVariant),
-                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
-                ),
-                isSupportedCardBrandsShown = true,
-                detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
-                isAmex = false,
-                onIntent = {},
-            )
+    CheckoutThemeWrapper(theme) {
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "5555444433331111",
+            ),
+            supportedCardBrands = listOf(
+                CardBrand(CardType.MASTERCARD.txVariant),
+                CardBrand(CardType.VISA.txVariant),
+                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            ),
+            isSupportedCardBrandsShown = true,
+            detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
+            isAmex = false,
+            onIntent = {},
+        )
 
-            CardNumberField(
-                cardNumberState = TextInputViewState(
-                    text = "1234123456123451234",
-                ),
-                supportedCardBrands = listOf(
-                    CardBrand(CardType.MASTERCARD.txVariant),
-                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
-                ),
-                isSupportedCardBrandsShown = false,
-                detectedCardBrands = emptyList(),
-                isAmex = true,
-                onIntent = {},
-            )
-        }
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "1234123456123451234",
+            ),
+            supportedCardBrands = listOf(
+                CardBrand(CardType.MASTERCARD.txVariant),
+                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            ),
+            isSupportedCardBrandsShown = false,
+            detectedCardBrands = emptyList(),
+            isAmex = true,
+            onIntent = {},
+        )
     }
 }

@@ -21,8 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,8 +52,10 @@ internal fun DropInScaffold(
 
 @Preview(showBackground = true)
 @Composable
-private fun DropInScaffoldPreview() {
-    InternalCheckoutTheme {
+private fun DropInScaffoldPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    InternalCheckoutTheme(theme) {
         DropInScaffold(
             navigationIcon = {
                 IconButton(

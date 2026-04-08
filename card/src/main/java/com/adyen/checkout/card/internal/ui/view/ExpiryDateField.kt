@@ -9,11 +9,7 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -36,11 +32,10 @@ import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -135,25 +130,18 @@ private fun ExpiryDateIcon(
 private fun ExpiryDateFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            ExpiryDateField(
-                expiryDateState = TextInputViewState(
-                    text = "0330",
-                ),
-                onIntent = {},
-            )
-            ExpiryDateField(
-                expiryDateState = TextInputViewState(
-                    isOptional = true,
-                ),
-                onIntent = {},
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        ExpiryDateField(
+            expiryDateState = TextInputViewState(
+                text = "0330",
+            ),
+            onIntent = {},
+        )
+        ExpiryDateField(
+            expiryDateState = TextInputViewState(
+                isOptional = true,
+            ),
+            onIntent = {},
+        )
     }
 }

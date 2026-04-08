@@ -14,7 +14,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,11 +29,11 @@ import androidx.constraintlayout.compose.ConstraintLayoutBaseScope
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -146,17 +145,15 @@ private fun ConstraintLayoutScope.StepConnector(
 private fun StepperPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Surface(color = CheckoutThemeProvider.colors.background) {
-            val steps = listOf(
-                "Step 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et lectus in leo varius " +
-                    "facilisis sit amet ut ipsum.",
-                "Step 2",
-                "Step 3",
-                "Step 4: Fusce pretium orci ut nibh rutrum mattis. In condimentum augue id justo cursus facilisis.",
-                "Step 5",
-            )
-            Stepper(steps, Modifier.padding(Dimensions.Spacing.Large))
-        }
+    CheckoutThemeWrapper(theme) {
+        val steps = listOf(
+            "Step 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et lectus in leo varius " +
+                "facilisis sit amet ut ipsum.",
+            "Step 2",
+            "Step 3",
+            "Step 4: Fusce pretium orci ut nibh rutrum mattis. In condimentum augue id justo cursus facilisis.",
+            "Step 5",
+        )
+        Stepper(steps)
     }
 }

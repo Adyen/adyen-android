@@ -8,11 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,9 +23,7 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.theme.toCompose
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -66,19 +60,12 @@ internal fun HolderNameField(
 private fun HolderNameFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            HolderNameField(
-                holderNameState = TextInputViewState(
-                    text = "John Smith",
-                ),
-                onIntent = {},
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        HolderNameField(
+            holderNameState = TextInputViewState(
+                text = "John Smith",
+            ),
+            onIntent = {},
+        )
     }
 }
