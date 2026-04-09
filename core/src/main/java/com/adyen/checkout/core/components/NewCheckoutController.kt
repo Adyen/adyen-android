@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
@@ -209,6 +210,23 @@ class NewCheckoutController(
             commonComponentParams = componentParamsBundle.commonComponentParams,
         )
         this.actionComponent = actionComponent
+
+        actionComponent.eventFlow
+            .onEach { event ->
+                when (event) {
+                    is ActionComponentEvent.ActionDetails -> {
+                        callbacks.onAdditionalDetails?.onAdditionalDetails(event.data)
+                    }
+
+                    is ActionComponentEvent.Error -> {
+                        callbacks.onError?.onError(event.error.toCheckoutError())
+                    }
+                }
+            }
+            .launchIn(coroutineScope)
+
+        actionComponent.handleAction()
+
         onNavigate?.invoke(CheckoutRoute.Action)
     }
 
