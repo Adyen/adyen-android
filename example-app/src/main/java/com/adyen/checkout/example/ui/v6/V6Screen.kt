@@ -47,9 +47,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutPaymentFlow
 import com.adyen.checkout.core.components.CheckoutTarget
-import com.adyen.checkout.core.components.NewCheckoutController
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
@@ -123,7 +123,7 @@ private fun Component(
         val coroutineScope = rememberCoroutineScope()
         val context = LocalContext.current
         val checkoutController = remember(selectedPaymentMethod) {
-            NewCheckoutController(
+            CheckoutController(
                 target = CheckoutTarget.PaymentMethod(selectedPaymentMethod.type),
                 context = uiState.checkoutContext,
                 callbacks = uiState.checkoutCallbacks,

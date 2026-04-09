@@ -93,6 +93,7 @@ internal class V6SessionsViewModel @Inject constructor(
         Log.d(TAG, "onError: ${error.message}")
     }
 
+    @Suppress("unused")
     fun handleIntent(intent: Intent) {
         // TODO - Check if the controller should handle the intent or if we can do this inside a component
     }

@@ -19,7 +19,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 fun CheckoutPaymentFlow(
-    controller: NewCheckoutController,
+    controller: CheckoutController,
     modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,

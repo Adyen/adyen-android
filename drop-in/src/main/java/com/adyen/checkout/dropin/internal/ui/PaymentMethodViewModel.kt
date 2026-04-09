@@ -19,9 +19,9 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
-import com.adyen.checkout.core.components.NewCheckoutController
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.error.CheckoutError
@@ -50,7 +50,7 @@ internal class PaymentMethodViewModel(
         onFinished = ::onFinished,
     )
 
-    val controller = NewCheckoutController(
+    val controller = CheckoutController(
         target = when (paymentFlowType) {
             is DropInPaymentFlowType.RegularPaymentMethod -> {
                 CheckoutTarget.PaymentMethod(txVariant = paymentFlowType.txVariant)
@@ -66,9 +66,7 @@ internal class PaymentMethodViewModel(
         coroutineScope = viewModelScope,
     )
 
-    private
-
-    fun createViewState(): PaymentMethodViewState {
+    private fun createViewState(): PaymentMethodViewState {
         val paymentMethod = when (paymentFlowType) {
             is DropInPaymentFlowType.RegularPaymentMethod -> {
                 paymentMethodRepository.paymentMethods.first { it.type == paymentFlowType.txVariant }

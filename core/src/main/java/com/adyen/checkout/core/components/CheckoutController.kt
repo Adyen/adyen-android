@@ -10,7 +10,6 @@ package com.adyen.checkout.core.components
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
@@ -35,19 +34,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.Locale
 
-// TODO - rename later
-interface CheckoutControllerInterface {
-    fun submit()
-}
-
-fun NewCheckoutController(
+fun CheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext,
     callbacks: CheckoutCallbacks,
     // TODO - find a way to not require application context in the controller
     applicationContext: Context,
     coroutineScope: CoroutineScope,
-): NewCheckoutController {
+): CheckoutController {
     val checkoutConfiguration: CheckoutConfiguration
     val checkoutAttemptId: String?
     val publicKey: String?
@@ -89,7 +83,7 @@ fun NewCheckoutController(
         checkoutAttemptId = checkoutAttemptId,
     )
 
-    return NewCheckoutController(
+    return CheckoutController(
         target = target,
         context = context,
         callbacks = callbacks,
@@ -100,18 +94,16 @@ fun NewCheckoutController(
     )
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("LongParameterList")
-class NewCheckoutController(
+class CheckoutController internal constructor(
     private val target: CheckoutTarget,
     private val context: CheckoutContext,
-    @Suppress("unused")
     private val callbacks: CheckoutCallbacks,
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
     private val checkoutConfiguration: CheckoutConfiguration,
     private val componentParamsBundle: ComponentParamsBundle,
-) : CheckoutControllerInterface {
+) {
 
     internal val paymentComponent: PaymentComponent<*>?
     internal var actionComponent: ActionComponent? = null
@@ -198,7 +190,6 @@ class NewCheckoutController(
         }
     }
 
-    @SuppressLint("VisibleForTests")
     private fun handleAction(action: Action) {
         val actionComponent = ActionComponentProvider.get(
             action = action,
@@ -206,7 +197,7 @@ class NewCheckoutController(
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             // TODO - Check if we really need saved state handle
-            savedStateHandle = SavedStateHandle(),
+            savedStateHandle = @SuppressLint("VisibleForTests") SavedStateHandle(),
             // TODO - Check if session params should be taken into account
             commonComponentParams = componentParamsBundle.commonComponentParams,
         )
@@ -232,7 +223,7 @@ class NewCheckoutController(
     }
 
     // TODO - Ensure we are not handling an action
-    override fun submit() {
+    fun submit() {
         paymentComponent?.submit()
     }
 }

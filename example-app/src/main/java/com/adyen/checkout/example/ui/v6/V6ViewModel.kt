@@ -157,6 +157,7 @@ internal class V6ViewModel @Inject constructor(
         uiState = V6UiState.Error(UIText.String(error.message.orEmpty()))
     }
 
+    @Suppress("unused")
     fun handleIntent(intent: Intent) {
         // TODO - Check if the controller should handle the intent or if we can do this inside a component
     }
