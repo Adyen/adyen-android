@@ -16,18 +16,22 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.error.toCheckoutError
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.Locale
 
 // TODO - rename later
 interface CheckoutControllerInterface {
-    suspend fun submit()
+    fun submit()
 }
 
 fun NewCheckoutController(
@@ -51,6 +55,7 @@ fun NewCheckoutController(
             componentSessionParams = null
             sessionId = null
         }
+
         is CheckoutContext.Sessions -> {
             checkoutConfiguration = context.checkoutConfiguration
             checkoutAttemptId = context.checkoutAttemptId
@@ -142,6 +147,21 @@ class NewCheckoutController(
 
             else -> null
         }
+
+        paymentComponent?.eventFlow
+            ?.onEach { event ->
+                when (event) {
+                    is PaymentComponentEvent.Submit -> {
+                        callbacks.beforeSubmit?.beforeSubmit(event.state)
+                        callbacks.onSubmit?.onSubmit(event.state.data)
+                    }
+
+                    is PaymentComponentEvent.Error -> {
+                        callbacks.onError?.onError(event.error.toCheckoutError())
+                    }
+                }
+            }
+            ?.launchIn(coroutineScope)
     }
 
     private fun getPaymentMethodResponse(): PaymentMethods? {
@@ -151,13 +171,8 @@ class NewCheckoutController(
         }
     }
 
-    // TODO - Ensure state is valid, handle state being null, add validate function and support sessions
-    override suspend fun submit() {
-//        if (_state.value is CheckoutControllerState.PaymentMethod) {
-//            componentStateFlow?.value?.let {
-//                callbacks.beforeSubmit?.beforeSubmit(it)
-//                callbacks.onSubmit?.onSubmit(it.data)
-//            }
-//        }
+    // TODO - Ensure we are not handling an action
+    override fun submit() {
+        paymentComponent?.submit()
     }
 }
