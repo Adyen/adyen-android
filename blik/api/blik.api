@@ -47,6 +47,12 @@ public final class com/adyen/checkout/blik/internal/ui/ComposableSingletons$Stor
 	public final fun getLambda$-1061264656$blik_release ()Lkotlin/jvm/functions/Function3;
 }
 
+public final class com/adyen/checkout/blik/internal/ui/view/ComposableSingletons$BlikCodeFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/blik/internal/ui/view/ComposableSingletons$BlikCodeFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$-472485039$blik_release ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/adyen/checkout/blik/internal/ui/view/ComposableSingletons$StoredBlikComponentKt {
 	public static final field INSTANCE Lcom/adyen/checkout/blik/internal/ui/view/ComposableSingletons$StoredBlikComponentKt;
 	public fun <init> ()V
