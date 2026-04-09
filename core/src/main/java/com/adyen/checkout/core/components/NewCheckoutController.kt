@@ -8,9 +8,14 @@
 
 package com.adyen.checkout.core.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
@@ -107,9 +112,10 @@ class NewCheckoutController(
 ) : CheckoutControllerInterface {
 
     internal val paymentComponent: PaymentComponent<*>?
+    internal var actionComponent: ActionComponent? = null
 
     init {
-        // TODO - Move this logic to the factory into a separate class
+        // TODO - Move this logic to the factory and into a separate class
         paymentComponent = when (target) {
             is CheckoutTarget.PaymentMethod -> {
                 val paymentMethod = getPaymentMethodResponse()?.paymentMethods?.find { it.type == target.txVariant }
@@ -153,7 +159,8 @@ class NewCheckoutController(
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         callbacks.beforeSubmit?.beforeSubmit(event.state)
-                        callbacks.onSubmit?.onSubmit(event.state.data)
+                        val result = callbacks.onSubmit?.onSubmit(event.state.data)
+                        result?.let { handleResult(it) }
                     }
 
                     is PaymentComponentEvent.Error -> {
@@ -169,6 +176,34 @@ class NewCheckoutController(
             is CheckoutContext.Advanced -> context.paymentMethods
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethods
         }
+    }
+
+    private fun handleResult(checkoutResult: CheckoutResult) {
+        when (checkoutResult) {
+            is CheckoutResult.Action -> handleAction(checkoutResult.action)
+            is CheckoutResult.Error -> {
+                // TODO - Handle error state
+            }
+
+            is CheckoutResult.Finished -> {
+                // TODO - Handle finished state
+            }
+        }
+    }
+
+    @SuppressLint("VisibleForTests")
+    private fun handleAction(action: Action) {
+        val actionComponent = ActionComponentProvider.get(
+            action = action,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            checkoutConfiguration = checkoutConfiguration,
+            // TODO - Check if we really need saved state handle
+            savedStateHandle = SavedStateHandle(),
+            // TODO - Check if session params should be taken into account
+            commonComponentParams = componentParamsBundle.commonComponentParams,
+        )
+        this.actionComponent = actionComponent
     }
 
     // TODO - Ensure we are not handling an action
