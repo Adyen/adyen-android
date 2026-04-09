@@ -6,16 +6,14 @@
  * Created by josephj on 13/3/2026.
  */
 
-package com.adyen.checkout.core.common.internal.properties
+package com.adyen.checkout.blik.internal.ui.properties
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 
 /**
  * This field is formatted as such 123 456
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object BlikCodeProperties {
+internal object BlikCodeProperties {
     const val BLIK_CODE_MAX_LENGTH = 6
     const val BLIK_CODE_SEPARATOR = ' '
 

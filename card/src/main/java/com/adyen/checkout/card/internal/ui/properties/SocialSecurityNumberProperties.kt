@@ -6,9 +6,8 @@
  * Created by josephj on 13/3/2026.
  */
 
-package com.adyen.checkout.core.common.internal.properties
+package com.adyen.checkout.card.internal.ui.properties
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 
 /**
@@ -19,8 +18,7 @@ import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
  * The formatting follows the CPF format as long as the length is less than 11 digits. Then between 12 and 14 digits,
  * the CNPJ format is used.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object SocialSecurityNumberProperties {
+internal object SocialSecurityNumberProperties {
 
     const val CPF_VALID_LENGTH = 11
     const val CNPJ_VALID_LENGTH = 14

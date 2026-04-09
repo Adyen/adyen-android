@@ -13,6 +13,10 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
+import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties
+import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_FORMAT
+import com.adyen.checkout.card.internal.ui.properties.KCPCardPasswordProperties
+import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidator
 import com.adyen.checkout.core.common.helper.CardNumberValidationResult
@@ -21,10 +25,6 @@ import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.DateUtils
 import com.adyen.checkout.core.common.internal.helper.StringUtil
-import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties
-import com.adyen.checkout.core.common.internal.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_FORMAT
-import com.adyen.checkout.core.common.internal.properties.KCPCardPasswordProperties
-import com.adyen.checkout.core.common.internal.properties.SocialSecurityNumberProperties
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal object CardValidationUtils {

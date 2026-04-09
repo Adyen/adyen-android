@@ -6,15 +6,12 @@
  * Created by josephj on 23/3/2026.
  */
 
-package com.adyen.checkout.core.common.internal.properties
-
-import androidx.annotation.RestrictTo
+package com.adyen.checkout.card.internal.ui.properties
 
 /**
  * This field is a two-digit number
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object KCPCardPasswordProperties {
+internal object KCPCardPasswordProperties {
 
     const val KCP_CARD_PASSWORD_MAX_LENGTH = 2
 }
