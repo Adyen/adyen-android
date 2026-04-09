@@ -9,41 +9,60 @@
 package com.adyen.checkout.core.components
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalLocale
-import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
-// TODO - Architecture: Adjust this to make it work
 @Composable
 fun CheckoutPaymentFlow(
-//    controller: NewCheckoutController,
-//    modifier: Modifier = Modifier,
+    controller: NewCheckoutController,
+    modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-//    val state by controller.state.collectAsStateWithLifecycle()
-
-    InternalCheckoutTheme(theme) {
-        // TODO - get params from controller
-        CheckoutCompositionLocalProvider(
-            locale = LocalLocale.current.platformLocale,
-            localizationProvider = localizationProvider,
-            environment = Environment.TEST,
-        ) {
-//            when (val localState = state) {
-//                is CheckoutControllerState.PaymentMethod -> {
-//                    val provider = remember { PaymentMethodProvider.get(localState.paymentMethod) }
-//                    provider?.PaymentComponent(
-//                        modifier = modifier,
-//                        controller = controller,
-//                    )
-//                }
-//
-//                is CheckoutControllerState.Action -> TODO()
-//            }
+    var state by remember {
+        val initialState = when {
+            controller.actionComponent != null -> CheckoutPaymentFlowState.Action
+            else -> CheckoutPaymentFlowState.PaymentMethod
         }
+        mutableStateOf(initialState)
     }
+
+    when (state) {
+        CheckoutPaymentFlowState.PaymentMethod -> {
+            CheckoutPaymentMethod(
+                controller = controller,
+                onNavigate = { route ->
+                    state = when (route) {
+                        CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
+                        is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary
+                    }
+                },
+                modifier = modifier,
+                theme = theme,
+                localizationProvider = localizationProvider,
+            )
+        }
+
+        CheckoutPaymentFlowState.Action -> {
+            CheckoutAction(
+                controller = controller,
+                modifier = modifier,
+                theme = theme,
+                localizationProvider = localizationProvider,
+            )
+        }
+
+        CheckoutPaymentFlowState.Secondary -> TODO()
+    }
+}
+
+private sealed class CheckoutPaymentFlowState {
+    data object PaymentMethod : CheckoutPaymentFlowState()
+    data object Action : CheckoutPaymentFlowState()
+    data object Secondary : CheckoutPaymentFlowState()
 }

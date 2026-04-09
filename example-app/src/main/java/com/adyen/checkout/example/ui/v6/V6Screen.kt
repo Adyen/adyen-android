@@ -47,7 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.adyen.checkout.core.components.CheckoutPaymentMethod
+import com.adyen.checkout.core.components.CheckoutPaymentFlow
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.NewCheckoutController
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -132,11 +132,8 @@ private fun Component(
             )
         }
 
-        CheckoutPaymentMethod(
+        CheckoutPaymentFlow(
             controller = checkoutController,
-            onNavigate = {
-                // TODO - Handle navigation
-            },
             theme = theme,
             modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
         )
