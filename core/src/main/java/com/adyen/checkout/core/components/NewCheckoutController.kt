@@ -158,9 +158,11 @@ class NewCheckoutController(
             ?.onEach { event ->
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
+                        paymentComponent.setLoading(true)
                         callbacks.beforeSubmit?.beforeSubmit(event.state)
                         val result = callbacks.onSubmit?.onSubmit(event.state.data)
                         result?.let { handleResult(it) }
+                        paymentComponent.setLoading(false)
                     }
 
                     is PaymentComponentEvent.Error -> {
