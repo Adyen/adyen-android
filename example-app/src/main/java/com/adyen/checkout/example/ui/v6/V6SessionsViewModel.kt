@@ -20,7 +20,6 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -45,8 +44,6 @@ internal class V6SessionsViewModel @Inject constructor(
         Environment.TEST,
         BuildConfig.CLIENT_KEY,
     )
-
-    val checkoutController = CheckoutController()
 
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
@@ -97,7 +94,7 @@ internal class V6SessionsViewModel @Inject constructor(
     }
 
     fun handleIntent(intent: Intent) {
-        checkoutController.handleIntent(intent)
+        // TODO - Check if the controller should handle the intent or if we can do this inside a component
     }
 
     companion object {
