@@ -307,8 +307,8 @@ class DefaultCardDelegate(
             .launchIn(coroutineScope)
 
         outputDataFlow.map { it.dualBrandData?.brandOptions?.map { it.brand.txVariant } }
-            .filterNotNull()
             .distinctUntilChanged()
+            .filterNotNull()
             .map { brandOptions ->
                 val event = GenericEvents.displayed(
                     component = paymentMethod.type.orEmpty(),
