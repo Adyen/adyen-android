@@ -870,9 +870,7 @@ class DefaultCardDelegate(
         return if (dualBrandData != null) {
             dualBrandData.selectedBrand?.txVariant
         } else {
-            val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
-            val firstDetectedBrand = detectedCardTypes.firstOrNull()
-            val cardType = reliableCardBrand ?: firstDetectedBrand
+            val cardType = detectedCardTypes.firstOrNull { it.isReliable }
             cardType?.cardBrand?.txVariant
         }
     }
