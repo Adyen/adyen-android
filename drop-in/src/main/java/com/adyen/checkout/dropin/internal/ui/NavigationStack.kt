@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -117,6 +118,7 @@ private fun paymentMethodNavEntry(
                     paymentMethodRepository = viewModel.paymentMethodRepository,
                     checkoutContext = viewModel.checkoutContext,
                     dropInServiceManager = viewModel.dropInServiceManager,
+                    applicationContext = LocalContext.current.applicationContext,
                 ),
                 key = key.paymentFlowType.hashCode().toString(),
             ),

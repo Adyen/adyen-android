@@ -44,6 +44,7 @@ fun NewCheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext,
     callbacks: CheckoutCallbacks,
+    // TODO - find a way to not require application context in the controller
     applicationContext: Context,
     coroutineScope: CoroutineScope,
 ): NewCheckoutController {
