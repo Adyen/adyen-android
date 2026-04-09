@@ -125,6 +125,48 @@ public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons
 	public final fun getLambda$-1473578756$card_release ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$CardNumberFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$CardNumberFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$-1231691795$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$ExpiryDateFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$ExpiryDateFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$649979389$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$HolderNameFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$HolderNameFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$-157173079$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$KCPBirthDateOrTaxNumberFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$KCPBirthDateOrTaxNumberFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$-260918241$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$KCPCardPasswordFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$KCPCardPasswordFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$1151671039$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$SecurityCodeFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$SecurityCodeFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$263955669$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$SocialSecurityNumberFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$SocialSecurityNumberFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$1650509159$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
 public abstract class com/adyen/checkout/card/old/AddressConfiguration : android/os/Parcelable {
 	public static final field $stable I
 }

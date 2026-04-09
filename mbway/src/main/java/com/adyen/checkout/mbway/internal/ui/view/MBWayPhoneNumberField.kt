@@ -13,18 +13,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun MBWayPhoneNumberField(
     mbWayPhoneNumberFieldState: TextInputViewState,
-    country: CountryModel,
+    countryCode: String,
     onIntent: (MBWayIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -40,11 +44,27 @@ internal fun MBWayPhoneNumberField(
         initialValue = mbWayPhoneNumberFieldState.text,
         isError = mbWayPhoneNumberFieldState.isError,
         supportingText = supportingTextPhoneNumber,
-        prefix = country.callingCode,
+        prefix = countryCode,
         onValueChange = { value ->
             onIntent(MBWayIntent.UpdatePhoneNumber(value))
         },
         inputTransformation = inputTransformation,
         shouldFocus = mbWayPhoneNumberFieldState.isFocused,
     )
+}
+
+@Preview
+@Composable
+private fun MBWayPhoneNumberFieldPreview(
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemeWrapper(theme) {
+        MBWayPhoneNumberField(
+            mbWayPhoneNumberFieldState = TextInputViewState(
+                text = "12345612",
+            ),
+            countryCode = "+31",
+            onIntent = {},
+        )
+    }
 }

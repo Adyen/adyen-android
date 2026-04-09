@@ -9,12 +9,8 @@
 package com.adyen.checkout.ui.internal.element.input
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -25,11 +21,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
@@ -89,27 +83,20 @@ fun ValuePickerField(
 private fun ValuePickerFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(theme.colors.background.toCompose())
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            ValuePickerField(
-                value = "Value",
-                label = "Label",
-                onClick = { },
-                supportingText = "Description",
-            )
+    CheckoutThemeWrapper(theme) {
+        ValuePickerField(
+            value = "Value",
+            label = "Label",
+            onClick = { },
+            supportingText = "Description",
+        )
 
-            ValuePickerField(
-                value = "Value",
-                label = "Label",
-                onClick = { },
-                supportingText = "Description",
-                isError = true,
-            )
-        }
+        ValuePickerField(
+            value = "Value",
+            label = "Label",
+            onClick = { },
+            supportingText = "Description",
+            isError = true,
+        )
     }
 }

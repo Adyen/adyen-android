@@ -19,6 +19,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
@@ -30,9 +32,12 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun SecurityCodeField(
@@ -161,6 +166,30 @@ private fun SecurityCodeIcon(
             imageVector = ImageVector.vectorResource(targetResourceId),
             contentDescription = null,
             tint = Color.Unspecified,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SecurityCodeFieldPreview(
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemeWrapper(theme) {
+        SecurityCodeField(
+            securityCodeState = TextInputViewState(
+                text = "123",
+            ),
+            isAmex = false,
+            onIntent = {},
+        )
+
+        SecurityCodeField(
+            securityCodeState = TextInputViewState(
+                isOptional = true,
+            ),
+            isAmex = true,
+            onIntent = {},
         )
     }
 }

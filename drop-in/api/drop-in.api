@@ -79,16 +79,16 @@ public abstract class com/adyen/checkout/dropin/DropInService : androidx/lifecyc
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$ConfirmationDialogKt {
 	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$ConfirmationDialogKt;
 	public fun <init> ()V
-	public final fun getLambda$-2122102634$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$238359866$drop_in_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$DropInScaffoldKt {
 	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$DropInScaffoldKt;
 	public fun <init> ()V
-	public final fun getLambda$-37615307$drop_in_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-485978390$drop_in_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1389843276$drop_in_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$815084689$drop_in_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1706848153$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-86404576$drop_in_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1379559420$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$242907973$drop_in_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$DropInTopAppBarKt {

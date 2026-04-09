@@ -9,13 +9,9 @@
 package com.adyen.checkout.ui.internal.element.button
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -30,11 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -61,35 +57,28 @@ fun PrimaryButton(
 private fun PrimaryButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            PrimaryButton(
-                onClick = {},
-                text = "Primary",
-                isLoading = false,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            PrimaryButton(
-                onClick = {},
-                text = "Primary",
-                isLoading = false,
-                leadingIcon = {
-                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-            PrimaryButton(
-                onClick = {},
-                text = "Loading",
-                isLoading = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        PrimaryButton(
+            onClick = {},
+            text = "Primary",
+            isLoading = false,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        PrimaryButton(
+            onClick = {},
+            text = "Primary",
+            isLoading = false,
+            leadingIcon = {
+                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        PrimaryButton(
+            onClick = {},
+            text = "Loading",
+            isLoading = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -117,35 +106,28 @@ fun SecondaryButton(
 private fun SecondaryButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            SecondaryButton(
-                onClick = {},
-                text = "Secondary",
-                isLoading = false,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            SecondaryButton(
-                onClick = {},
-                text = "Secondary",
-                isLoading = false,
-                leadingIcon = {
-                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-            SecondaryButton(
-                onClick = {},
-                text = "Loading",
-                isLoading = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        SecondaryButton(
+            onClick = {},
+            text = "Secondary",
+            isLoading = false,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        SecondaryButton(
+            onClick = {},
+            text = "Secondary",
+            isLoading = false,
+            leadingIcon = {
+                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        SecondaryButton(
+            onClick = {},
+            text = "Loading",
+            isLoading = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -173,35 +155,28 @@ fun TertiaryButton(
 private fun TertiaryButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            TertiaryButton(
-                onClick = {},
-                text = "Tertiary",
-                isLoading = false,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            TertiaryButton(
-                onClick = {},
-                text = "Tertiary",
-                isLoading = false,
-                leadingIcon = {
-                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-            TertiaryButton(
-                onClick = {},
-                text = "Loading",
-                isLoading = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        TertiaryButton(
+            onClick = {},
+            text = "Tertiary",
+            isLoading = false,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        TertiaryButton(
+            onClick = {},
+            text = "Tertiary",
+            isLoading = false,
+            leadingIcon = {
+                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        TertiaryButton(
+            onClick = {},
+            text = "Loading",
+            isLoading = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -229,35 +204,28 @@ fun DestructiveButton(
 private fun DestructiveButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
-                .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            DestructiveButton(
-                onClick = {},
-                text = "Destructive",
-                isLoading = false,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            DestructiveButton(
-                onClick = {},
-                text = "Destructive",
-                isLoading = false,
-                leadingIcon = {
-                    Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-            DestructiveButton(
-                onClick = {},
-                text = "Loading",
-                isLoading = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+    CheckoutThemeWrapper(theme) {
+        DestructiveButton(
+            onClick = {},
+            text = "Destructive",
+            isLoading = false,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        DestructiveButton(
+            onClick = {},
+            text = "Destructive",
+            isLoading = false,
+            leadingIcon = {
+                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        DestructiveButton(
+            onClick = {},
+            text = "Loading",
+            isLoading = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 

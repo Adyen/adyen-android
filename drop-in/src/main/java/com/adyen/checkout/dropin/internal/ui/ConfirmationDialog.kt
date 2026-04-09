@@ -25,9 +25,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.adyen.checkout.ui.internal.element.button.DestructiveButton
 import com.adyen.checkout.ui.internal.element.button.SecondaryButton
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -76,7 +76,7 @@ internal fun ConfirmationDialog(
 private fun ConfirmationDialogPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
+    CheckoutThemeWrapper(theme) {
         ConfirmationDialog(
             confirmationText = "Confirm",
             onConfirmationClick = {},

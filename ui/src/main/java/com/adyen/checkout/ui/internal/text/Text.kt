@@ -9,10 +9,6 @@
 package com.adyen.checkout.ui.internal.text
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,10 +19,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
+import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -152,21 +147,14 @@ private fun CheckoutText(
 private fun TextPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
-            modifier = Modifier
-                .background(CheckoutThemeProvider.colors.background)
-                .padding(Dimensions.Spacing.Large),
-        ) {
-            Title("Title")
-            Subtitle("Subtitle")
-            Body("Body")
-            BodyEmphasized("Body Emphasized")
-            SubHeadline("SubHeadline")
-            SubHeadlineEmphasized("SubHeadline Emphasized")
-            Footnote("Footnote")
-            FootnoteEmphasized("Footnote Emphasized")
-        }
+    CheckoutThemeWrapper(theme) {
+        Title("Title")
+        Subtitle("Subtitle")
+        Body("Body")
+        BodyEmphasized("Body Emphasized")
+        SubHeadline("SubHeadline")
+        SubHeadlineEmphasized("SubHeadline Emphasized")
+        Footnote("Footnote")
+        FootnoteEmphasized("Footnote Emphasized")
     }
 }
