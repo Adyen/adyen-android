@@ -113,6 +113,9 @@ class NewCheckoutController(
 
     internal val paymentComponent: PaymentComponent<*>?
     internal var actionComponent: ActionComponent? = null
+        private set
+
+    internal var onNavigate: ((CheckoutRoute) -> Unit)? = null
 
     init {
         // TODO - Move this logic to the factory and into a separate class
@@ -206,6 +209,7 @@ class NewCheckoutController(
             commonComponentParams = componentParamsBundle.commonComponentParams,
         )
         this.actionComponent = actionComponent
+        onNavigate?.invoke(CheckoutRoute.Action)
     }
 
     // TODO - Ensure we are not handling an action

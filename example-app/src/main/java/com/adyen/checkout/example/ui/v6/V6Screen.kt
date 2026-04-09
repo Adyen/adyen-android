@@ -134,6 +134,9 @@ private fun Component(
 
         CheckoutPaymentMethod(
             controller = checkoutController,
+            onNavigate = {
+                // TODO - Handle navigation
+            },
             theme = theme,
             modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
         )
