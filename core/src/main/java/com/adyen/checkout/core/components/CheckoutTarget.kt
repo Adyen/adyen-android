@@ -11,7 +11,7 @@ package com.adyen.checkout.core.components
 import com.adyen.checkout.core.action.data.Action as ActionResponse
 
 interface CheckoutTarget {
-    data class PaymentMethod(val txVariant: String) : CheckoutTarget
+    data class PaymentMethod(val type: String) : CheckoutTarget
     data class StoredPaymentMethod(val id: String) : CheckoutTarget
     data class Action(val action: ActionResponse) : CheckoutTarget
 }

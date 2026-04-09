@@ -115,7 +115,7 @@ class CheckoutController internal constructor(
         // TODO - Move this logic to the factory and into a separate class
         paymentComponent = when (target) {
             is CheckoutTarget.PaymentMethod -> {
-                val paymentMethod = getPaymentMethodResponse()?.paymentMethods?.find { it.type == target.txVariant }
+                val paymentMethod = getPaymentMethodResponse()?.paymentMethods?.find { it.type == target.type }
 
                 if (paymentMethod == null) {
                     null
