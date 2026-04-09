@@ -20,6 +20,7 @@ import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
@@ -36,66 +37,55 @@ fun NewCheckoutController(
     applicationContext: Context,
     coroutineScope: CoroutineScope,
 ): NewCheckoutController {
+    val checkoutConfiguration: CheckoutConfiguration
+    val checkoutAttemptId: String?
+    val publicKey: String?
+    val componentSessionParams: SessionParams?
+    val sessionId: String?
+
     when (context) {
-        // TODO - Move this logic to the a different location
         is CheckoutContext.Advanced -> {
-            val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
-                checkoutConfiguration = context.checkoutConfiguration,
-                deviceLocale = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault(),
-                dropInOverrideParams = null,
-                componentSessionParams = null,
-                publicKey = context.publicKey,
-            )
-
-            val analyticsManager = AnalyticsManagerFactory().provide(
-                componentParams = componentParamsBundle.commonComponentParams,
-                applicationContext = applicationContext,
-                // TODO - Analytics: Pass the correct paymentMethod type
-                source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
-                sessionId = null,
-                checkoutAttemptId = context.checkoutAttemptId,
-            )
-
-            return NewCheckoutController(
-                target = target,
-                context = context,
-                callbacks = callbacks,
-                coroutineScope = coroutineScope,
-                analyticsManager = analyticsManager,
-                checkoutConfiguration = context.checkoutConfiguration,
-                componentParamsBundle = componentParamsBundle,
-            )
+            checkoutConfiguration = context.checkoutConfiguration
+            checkoutAttemptId = context.checkoutAttemptId
+            publicKey = context.publicKey
+            componentSessionParams = null
+            sessionId = null
         }
-
         is CheckoutContext.Sessions -> {
-            val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
-                checkoutConfiguration = context.checkoutConfiguration,
-                deviceLocale = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault(),
-                dropInOverrideParams = null,
-                componentSessionParams = SessionParamsFactory.create(context.checkoutSession),
-                publicKey = context.publicKey,
-            )
-
-            val analyticsManager = AnalyticsManagerFactory().provide(
-                componentParams = componentParamsBundle.commonComponentParams,
-                applicationContext = applicationContext,
-                // TODO - Analytics: Pass the correct paymentMethod type
-                source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
-                sessionId = context.checkoutSession.sessionSetupResponse.id,
-                checkoutAttemptId = context.checkoutAttemptId,
-            )
-
-            return NewCheckoutController(
-                target = target,
-                context = context,
-                callbacks = callbacks,
-                coroutineScope = coroutineScope,
-                analyticsManager = analyticsManager,
-                checkoutConfiguration = context.checkoutConfiguration,
-                componentParamsBundle = componentParamsBundle,
-            )
+            checkoutConfiguration = context.checkoutConfiguration
+            checkoutAttemptId = context.checkoutAttemptId
+            publicKey = context.publicKey
+            componentSessionParams = SessionParamsFactory.create(context.checkoutSession)
+            sessionId = context.checkoutSession.sessionSetupResponse.id
         }
     }
+
+    val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
+        checkoutConfiguration = checkoutConfiguration,
+        deviceLocale = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault(),
+        dropInOverrideParams = null,
+        componentSessionParams = componentSessionParams,
+        publicKey = publicKey,
+    )
+
+    val analyticsManager = AnalyticsManagerFactory().provide(
+        componentParams = componentParamsBundle.commonComponentParams,
+        applicationContext = applicationContext,
+        // TODO - Analytics: Pass the correct paymentMethod type
+        source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
+        sessionId = sessionId,
+        checkoutAttemptId = checkoutAttemptId,
+    )
+
+    return NewCheckoutController(
+        target = target,
+        context = context,
+        callbacks = callbacks,
+        coroutineScope = coroutineScope,
+        analyticsManager = analyticsManager,
+        checkoutConfiguration = checkoutConfiguration,
+        componentParamsBundle = componentParamsBundle,
+    )
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -114,6 +104,7 @@ class NewCheckoutController(
     internal val paymentComponent: PaymentComponent<*>?
 
     init {
+        // TODO - Move this logic to the factory into a separate class
         paymentComponent = when (target) {
             is CheckoutTarget.PaymentMethod -> {
                 val paymentMethod = getPaymentMethodResponse()?.paymentMethods?.find { it.type == target.txVariant }
