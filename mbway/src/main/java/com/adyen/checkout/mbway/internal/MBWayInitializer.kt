@@ -14,14 +14,12 @@ import androidx.startup.Initializer
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.mbway.internal.ui.MBWayFactory
-import com.adyen.checkout.mbway.internal.ui.MBWayProvider
 
 @Keep
 internal class MBWayInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
         PaymentMethodProvider.register(PaymentMethodTypes.MB_WAY, MBWayFactory())
-        PaymentMethodProvider.register(PaymentMethodTypes.MB_WAY, MBWayProvider())
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
