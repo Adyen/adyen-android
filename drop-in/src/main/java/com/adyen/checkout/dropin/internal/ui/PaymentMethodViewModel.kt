@@ -53,7 +53,7 @@ internal class PaymentMethodViewModel(
     val controller = CheckoutController(
         target = when (paymentFlowType) {
             is DropInPaymentFlowType.RegularPaymentMethod -> {
-                CheckoutTarget.PaymentMethod(txVariant = paymentFlowType.txVariant)
+                CheckoutTarget.PaymentMethod(type = paymentFlowType.txVariant)
             }
 
             is DropInPaymentFlowType.StoredPaymentMethod -> {

@@ -1,10 +1,22 @@
-package com.adyen.checkout.core.components
+/*
+ * Copyright (c) 2026 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 10/4/2026.
+ */
+
+package com.adyen.checkout.core.components.internal
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
@@ -62,14 +74,37 @@ internal class CheckoutControllerFactory {
             checkoutAttemptId = checkoutAttemptId,
         )
 
-        return CheckoutController(
-            target = target,
-            context = context,
+        val actionHandler = ActionHandler(
             callbacks = callbacks,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
+        )
+
+        val flow: CheckoutFlow = when (target) {
+            is CheckoutTarget.PaymentMethod,
+            is CheckoutTarget.StoredPaymentMethod -> FullCheckoutFlow(
+                target = target,
+                context = context,
+                callbacks = callbacks,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                checkoutConfiguration = checkoutConfiguration,
+                componentParamsBundle = componentParamsBundle,
+                actionHandler = actionHandler,
+            )
+
+            is CheckoutTarget.Action -> ActionOnlyCheckoutFlow(
+                action = target.action,
+                actionHandler = actionHandler,
+            )
+
+            else -> error("Unsupported target: $target")
+        }
+
+        return CheckoutController(
+            flow = flow,
         )
     }
 }
