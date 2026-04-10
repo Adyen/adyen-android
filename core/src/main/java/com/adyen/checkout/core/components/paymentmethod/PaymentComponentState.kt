@@ -13,6 +13,7 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 /**
  * The current state of a PaymentComponent.
  */
+// TODO - Remove PaymentComponentState because we don't want to expose it any longer
 interface PaymentComponentState<PaymentMethodDetailsT : PaymentMethodDetails> {
 
     /**

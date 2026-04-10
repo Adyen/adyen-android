@@ -748,7 +748,7 @@ public final class com/adyen/checkout/core/components/CheckoutController {
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutControllerInterface {
-	public abstract fun submit (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun submit ()V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutControllerKt {
