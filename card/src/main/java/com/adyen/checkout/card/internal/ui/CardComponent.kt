@@ -165,7 +165,8 @@ internal class CardComponent(
             supportedCardBrands = componentParams.supportedCardBrands,
             clientKey = componentParams.clientKey,
             coroutineScope = coroutineScope,
-            type = CardDetails.PAYMENT_METHOD_TYPE,
+            // TODO ensure this is set dynamically when BCMC is supported
+            paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
         )
         onIntent(CardIntent.UpdateCardNumber(newCardNumber))
     }
