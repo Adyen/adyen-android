@@ -8,15 +8,14 @@
 
 package com.adyen.checkout.card.internal.data.api
 
+import com.adyen.checkout.card.internal.data.model.BinLookupCacheResult
 import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
-import com.adyen.checkout.card.internal.data.model.BinLookupResult
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
-import com.adyen.checkout.core.common.internal.helper.Sha256
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
@@ -31,12 +30,11 @@ import java.util.UUID
 internal class DefaultDetectCardTypeRepository(
     private val cardEncryptor: BaseCardEncryptor,
     private val binLookupService: BinLookupService,
+    private val binLookupCache: BinLookupCache,
 ) : DetectCardTypeRepository {
 
     private val _detectedCardTypesFlow: Channel<List<DetectedCardType>> = bufferedChannel()
     override val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow.receiveAsFlow()
-
-    private val cachedBinLookup = HashMap<String, BinLookupResult>()
 
     @Suppress("LongParameterList")
     override fun detectCardType(
@@ -50,17 +48,17 @@ internal class DefaultDetectCardTypeRepository(
         adyenLog(AdyenLogLevel.DEBUG) { "detectCardType" }
         if (shouldFetchReliableTypes(cardNumber)) {
             when (val cachedResult = getFromCache(cardNumber)) {
-                is BinLookupResult.Available -> {
+                is BinLookupCacheResult.Available -> {
                     adyenLog(AdyenLogLevel.DEBUG) { "Retrieving from cache." }
                     _detectedCardTypesFlow.trySend(cachedResult.detectedCardTypes)
                     return
                 }
 
-                is BinLookupResult.Loading -> {
+                is BinLookupCacheResult.Fetching -> {
                     adyenLog(AdyenLogLevel.DEBUG) { "BinLookup request is in progress." }
                 }
 
-                is BinLookupResult.Unavailable -> {
+                is BinLookupCacheResult.Unavailable -> {
                     adyenLog(AdyenLogLevel.DEBUG) { "Fetching from network." }
                     fetchFromNetwork(
                         cardNumber,
@@ -125,7 +123,7 @@ internal class DefaultDetectCardTypeRepository(
             isSupported = supportedCardBrands.contains(cardBrand),
             panLength = null,
             paymentMethodVariant = null,
-            localizedBrand = null
+            localizedBrand = null,
         )
     }
 
@@ -133,12 +131,9 @@ internal class DefaultDetectCardTypeRepository(
         return cardNumber.length >= REQUIRED_BIN_SIZE
     }
 
-    private fun getFromCache(cardNumber: String): BinLookupResult {
-        return cachedBinLookup[hashBin(cardNumber)] ?: BinLookupResult.Unavailable
-    }
-
-    private fun hashBin(cardNumber: String): String {
-        return Sha256.hashString(cardNumber.take(REQUIRED_BIN_SIZE))
+    private fun getFromCache(cardNumber: String): BinLookupCacheResult {
+        val bin = getBin(cardNumber)
+        return binLookupCache.getResult(bin)
     }
 
     private suspend fun fetch(
@@ -148,18 +143,22 @@ internal class DefaultDetectCardTypeRepository(
         clientKey: String,
         type: String?
     ): List<DetectedCardType>? {
-        val key = hashBin(cardNumber)
-        cachedBinLookup[key] = BinLookupResult.Loading
-        val binLookupResponse = makeBinLookup(cardNumber, publicKey, supportedCardBrands, clientKey, type)
+        val bin = getBin(cardNumber)
+        binLookupCache.setFetching(bin)
 
+        val binLookupResponse = makeBinLookup(cardNumber, publicKey, supportedCardBrands, clientKey, type)
         return if (binLookupResponse == null) {
-            cachedBinLookup.remove(key)
+            binLookupCache.remove(bin)
             null
         } else {
             val detectedCardTypes = mapResponse(binLookupResponse)
-            cachedBinLookup[key] = BinLookupResult.Available(detectedCardTypes)
+            binLookupCache.setCachedResults(bin, detectedCardTypes)
             detectedCardTypes
         }
+    }
+
+    private fun getBin(cardNumber: String): String {
+        return cardNumber.take(REQUIRED_BIN_SIZE)
     }
 
     private suspend fun makeBinLookup(
@@ -204,14 +203,14 @@ internal class DefaultDetectCardTypeRepository(
                 isSupported = brandResponse.supported != false,
                 panLength = brandResponse.panLength,
                 paymentMethodVariant = brandResponse.paymentMethodVariant,
-                localizedBrand = brandResponse.localizedBrand
+                localizedBrand = brandResponse.localizedBrand,
             )
         }
     }
 
     companion object {
         private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(
-            CardBrand(txVariant = CardType.BCMC.txVariant)
+            CardBrand(txVariant = CardType.BCMC.txVariant),
         )
 
         private const val REQUIRED_BIN_SIZE = 11
