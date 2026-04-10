@@ -15,7 +15,6 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
@@ -31,6 +30,7 @@ internal class DefaultDetectCardTypeRepository(
     private val cardEncryptor: BaseCardEncryptor,
     private val binLookupService: BinLookupService,
     private val binLookupCache: BinLookupCache,
+    private val localCardBrandDetectionService: LocalCardBrandDetectionService,
 ) : DetectCardTypeRepository {
 
     private val _detectedCardTypesFlow: Channel<List<DetectedCardType>> = bufferedChannel()
@@ -71,7 +71,8 @@ internal class DefaultDetectCardTypeRepository(
                 }
             }
         }
-        _detectedCardTypesFlow.trySend(detectCardLocally(cardNumber, supportedCardBrands))
+        val locallyDetectedCardBrands = localCardBrandDetectionService.getCardBrands(cardNumber, supportedCardBrands)
+        _detectedCardTypesFlow.trySend(locallyDetectedCardBrands)
     }
 
     @Suppress("LongParameterList")
@@ -99,32 +100,6 @@ internal class DefaultDetectCardTypeRepository(
                 }
             }
         }
-    }
-
-    private fun detectCardLocally(cardNumber: String, supportedCardBrands: List<CardBrand>): List<DetectedCardType> {
-        adyenLog(AdyenLogLevel.DEBUG) { "detectCardLocally" }
-        if (cardNumber.isEmpty()) {
-            return emptyList()
-        }
-        val estimateCardTypes = CardBrand.estimate(cardNumber)
-        return estimateCardTypes.map { localDetectedCard(it, supportedCardBrands) }
-    }
-
-    private fun localDetectedCard(cardBrand: CardBrand, supportedCardBrands: List<CardBrand>): DetectedCardType {
-        return DetectedCardType(
-            cardBrand = cardBrand,
-            isReliable = false,
-            enableLuhnCheck = true,
-            cvcPolicy = when {
-                NO_CVC_BRANDS.contains(cardBrand) -> Brand.FieldPolicy.HIDDEN
-                else -> Brand.FieldPolicy.REQUIRED
-            },
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = supportedCardBrands.contains(cardBrand),
-            panLength = null,
-            paymentMethodVariant = null,
-            localizedBrand = null,
-        )
     }
 
     private fun shouldFetchReliableTypes(cardNumber: String): Boolean {
@@ -209,10 +184,6 @@ internal class DefaultDetectCardTypeRepository(
     }
 
     companion object {
-        private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(
-            CardBrand(txVariant = CardType.BCMC.txVariant),
-        )
-
         private const val REQUIRED_BIN_SIZE = 11
     }
 }
