@@ -48,17 +48,21 @@ internal class DetectCardTypeRepositoryTest(
     private lateinit var detectCardTypeRepository: DefaultDetectCardTypeRepository
     private lateinit var binLookupCache: BinLookupCache
     private lateinit var localCardBrandDetectionService: LocalCardBrandDetectionService
+    private lateinit var networkCardBrandDetectionService: NetworkCardBrandDetectionService
 
     @BeforeEach
     fun before() {
         cardEncryptor = TestCardEncryptor()
         binLookupCache = BinLookupCache()
         localCardBrandDetectionService = LocalCardBrandDetectionService()
-        detectCardTypeRepository = DefaultDetectCardTypeRepository(
+        networkCardBrandDetectionService = NetworkCardBrandDetectionService(
             cardEncryptor,
             binLookupService,
+        )
+        detectCardTypeRepository = DefaultDetectCardTypeRepository(
             binLookupCache,
             localCardBrandDetectionService,
+            networkCardBrandDetectionService,
         )
     }
 
@@ -79,7 +83,7 @@ internal class DetectCardTypeRepositoryTest(
                         supportedCardBrands = listOf(CardBrand(CardType.SOLO.txVariant)),
                         clientKey = "",
                         coroutineScope = coroutineScope,
-                        type = "",
+                        paymentMethodType = "",
                     )
 
                     val actual = expectMostRecentItem()
@@ -101,7 +105,7 @@ internal class DetectCardTypeRepositoryTest(
                     supportedCardBrands = listOf(CardBrand(CardType.SOLO.txVariant)),
                     clientKey = "",
                     coroutineScope = coroutineScope,
-                    type = "",
+                    paymentMethodType = "",
                 )
 
                 val detectedCardSolo = expectMostRecentItem().first {
@@ -124,7 +128,7 @@ internal class DetectCardTypeRepositoryTest(
                         supportedCardBrands = listOf(),
                         clientKey = "",
                         coroutineScope = coroutineScope,
-                        type = "",
+                        paymentMethodType = "",
                     )
 
                     assertFalse(expectMostRecentItem().first().isSupported)
@@ -143,7 +147,7 @@ internal class DetectCardTypeRepositoryTest(
                     supportedCardBrands = listOf(),
                     clientKey = "",
                     coroutineScope = coroutineScope,
-                    type = "",
+                    paymentMethodType = "",
                 )
 
                 assertEquals(Brand.FieldPolicy.HIDDEN, expectMostRecentItem().first().cvcPolicy)
@@ -163,7 +167,7 @@ internal class DetectCardTypeRepositoryTest(
                         supportedCardBrands = listOf(),
                         clientKey = "",
                         coroutineScope = coroutineScope,
-                        type = "",
+                        paymentMethodType = "",
                     )
 
                     assertEquals(Brand.FieldPolicy.REQUIRED, expectMostRecentItem().first().cvcPolicy)
@@ -207,7 +211,7 @@ internal class DetectCardTypeRepositoryTest(
                             supportedCardBrands = listOf(),
                             clientKey = "",
                             coroutineScope = coroutineScope,
-                            type = "",
+                            paymentMethodType = "",
                         )
                         verify(binLookupService).makeBinLookup(any(), any())
                         val expected = DetectedCardType(
@@ -260,7 +264,7 @@ internal class DetectCardTypeRepositoryTest(
                             supportedCardBrands = listOf(),
                             clientKey = "",
                             coroutineScope = coroutineScope,
-                            type = "",
+                            paymentMethodType = "",
                         )
                         val expected = DetectedCardType(
                             cardBrand = CardBrand(CardType.MASTERCARD.txVariant),
@@ -282,7 +286,7 @@ internal class DetectCardTypeRepositoryTest(
                             supportedCardBrands = listOf(),
                             clientKey = "",
                             coroutineScope = coroutineScope,
-                            type = "",
+                            paymentMethodType = "",
                         )
 
                         verify(binLookupService, times(1)).makeBinLookup(any(), any())

@@ -24,6 +24,6 @@ internal interface DetectCardTypeRepository {
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
-        type: String? = null
+        paymentMethodType: String? = null
     )
 }
