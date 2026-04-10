@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.getCardConfiguration
+import com.adyen.checkout.card.internal.data.api.BinLookupCache
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
@@ -69,7 +70,8 @@ internal class CardFactory :
         val genericEncryptor = GenericEncryptorFactory.provide()
         val httpClient = HttpClientFactory.getHttpClient(componentParamsBundle.commonComponentParams.environment)
         val binLookupService = BinLookupService(httpClient)
-        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
+        val binLookupCache = BinLookupCache()
+        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService, binLookupCache)
 
         return CardComponent(
             analyticsManager = analyticsManager,

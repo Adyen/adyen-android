@@ -11,19 +11,19 @@ package com.adyen.checkout.card.internal.data.model
 /**
  * Result of Bin Lookup cache query.
  */
-internal sealed class BinLookupResult {
+internal sealed class BinLookupCacheResult {
     /**
      * Bin Lookup Result not available in cache.
      */
-    object Unavailable : BinLookupResult()
+    object Unavailable : BinLookupCacheResult()
 
     /**
      * Bin Lookup Result is being fetched from the API.
      */
-    object Loading : BinLookupResult()
+    object Fetching : BinLookupCacheResult()
 
     /**
      * Bin Lookup Result is available in cache.
      */
-    data class Available(val detectedCardTypes: List<DetectedCardType>) : BinLookupResult()
+    data class Available(val detectedCardTypes: List<DetectedCardType>) : BinLookupCacheResult()
 }
