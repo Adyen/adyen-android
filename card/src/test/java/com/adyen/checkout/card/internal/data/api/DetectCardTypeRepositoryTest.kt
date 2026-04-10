@@ -47,12 +47,19 @@ internal class DetectCardTypeRepositoryTest(
     private lateinit var cardEncryptor: TestCardEncryptor
     private lateinit var detectCardTypeRepository: DefaultDetectCardTypeRepository
     private lateinit var binLookupCache: BinLookupCache
+    private lateinit var localCardBrandDetectionService: LocalCardBrandDetectionService
 
     @BeforeEach
     fun before() {
         cardEncryptor = TestCardEncryptor()
         binLookupCache = BinLookupCache()
-        detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService, binLookupCache)
+        localCardBrandDetectionService = LocalCardBrandDetectionService()
+        detectCardTypeRepository = DefaultDetectCardTypeRepository(
+            cardEncryptor,
+            binLookupService,
+            binLookupCache,
+            localCardBrandDetectionService,
+        )
     }
 
     @Nested
