@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.card.StoredCardNavigationKey
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -36,7 +34,6 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.CardDetails
@@ -74,12 +71,6 @@ internal class StoredCardComponent(
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
-    // TODO - Remove navigation
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        StoredCardNavKey to CheckoutNavEntry(StoredCardNavKey, StoredCardNavigationKey) { },
-    )
-    override val navigationStartingPoint: NavKey = StoredCardNavKey
-
     init {
         val cardType = CardBrand(txVariant = storedPaymentMethod.brand)
 
@@ -106,6 +97,16 @@ internal class StoredCardComponent(
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         analyticsManager.initialize(this, coroutineScope)
+    }
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val viewState by viewState.collectAsStateWithLifecycle()
+        StoredCardComponent(
+            viewState = viewState,
+            onIntent = ::onIntent,
+            onSubmitClick = ::submit,
+        )
     }
 
     override fun submit() {
@@ -149,16 +150,6 @@ internal class StoredCardComponent(
         val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         // exceptionChannel.trySend(e)
-    }
-
-    @Composable
-    override fun Content(modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-        StoredCardComponent(
-            viewState = viewState,
-            onIntent = ::onIntent,
-            onSubmitClick = ::submit,
-        )
     }
 
     companion object {

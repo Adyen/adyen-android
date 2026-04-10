@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import kotlinx.coroutines.flow.Flow
 
-@Suppress("TooGenericExceptionCaught")
 @SuppressLint("ComposableNaming")
 @Composable
 internal fun threeDsEvent(

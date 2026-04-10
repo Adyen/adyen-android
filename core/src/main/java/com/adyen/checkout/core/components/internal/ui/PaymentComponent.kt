@@ -14,19 +14,16 @@ import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 
-// TODO - Some components might not be composable,
-//  Move ComposableComponent to PaymentMethod specific component later
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PaymentComponent<T : BasePaymentComponentState> :
-    EventComponent<PaymentComponentEvent<T>>,
-    NavigationComponent {
+    EventComponent<PaymentComponentEvent<T>> {
+
+    @Composable
+    fun Content(modifier: Modifier)
 
     fun submit()
 
     fun setLoading(isLoading: Boolean)
 
     fun onCleared()
-
-    @Composable
-    fun Content(modifier: Modifier)
 }

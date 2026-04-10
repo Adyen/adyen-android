@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.blik.BlikMainNavigationKey
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateFactory
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateReducer
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
@@ -27,15 +25,13 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-// TODO - Remove UnusedPrivateProperty suppression once analytics are done
-@Suppress("LongParameterList", "UnusedPrivateProperty")
+@Suppress("LongParameterList")
 internal class BlikComponent(
     private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
@@ -45,13 +41,6 @@ internal class BlikComponent(
     viewStateProducer: BlikViewStateProducer,
     coroutineScope: CoroutineScope,
 ) : PaymentComponent<BlikPaymentComponentState> {
-
-    // TODO - Remove navigation
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        BlikNavKey to CheckoutNavEntry(BlikNavKey, BlikMainNavigationKey) { },
-    )
-
-    override val navigationStartingPoint: NavKey = BlikNavKey
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<BlikPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<BlikPaymentComponentState>> =
@@ -72,6 +61,18 @@ internal class BlikComponent(
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         analyticsManager.initialize(this, coroutineScope)
+    }
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val viewState by viewState.collectAsStateWithLifecycle()
+
+        BlikComponent(
+            viewState = viewState,
+            onSubmitClick = ::submit,
+            onIntent = ::onIntent,
+            modifier = modifier,
+        )
     }
 
     override fun submit() {
@@ -97,16 +98,5 @@ internal class BlikComponent(
 
     private fun onIntent(intent: BlikIntent) {
         componentState.handleIntent(intent)
-    }
-
-    @Composable
-    override fun Content(modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
-        BlikComponent(
-            viewState = viewState,
-            onSubmitClick = ::submit,
-            onIntent = ::onIntent,
-        )
     }
 }

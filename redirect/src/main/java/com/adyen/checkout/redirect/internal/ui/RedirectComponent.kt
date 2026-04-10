@@ -10,7 +10,7 @@ package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.navigation3.runtime.NavKey
+import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.action.data.RedirectAction
@@ -26,14 +26,12 @@ import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
-import com.adyen.checkout.redirect.RedirectMainNavigationKey
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
@@ -62,14 +60,8 @@ internal class RedirectComponent(
     private val redirectEventChannel = bufferedChannel<RedirectViewEvent>()
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
-    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        RedirectNavKey to CheckoutNavEntry(RedirectNavKey, RedirectMainNavigationKey) { _ -> MainScreen() },
-    )
-
-    override val navigationStartingPoint: NavKey = RedirectNavKey
-
     @Composable
-    private fun MainScreen() {
+    override fun Content(modifier: Modifier) {
         redirectEvent(
             redirectHandler = redirectHandler,
             viewEventFlow = redirectEventFlow,

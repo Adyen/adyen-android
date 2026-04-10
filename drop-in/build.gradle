@@ -76,12 +76,13 @@ dependencies {
     api project(':wechatpay')
 
     // Dependencies
+    implementation libs.androidx.lifecycle.service
     implementation libs.androidx.recyclerview
+    implementation libs.bundles.androidx.navigation3
     implementation libs.compose.material
     implementation libs.compose.material.icons
     implementation libs.compose.viewmodel
     implementation libs.material
-    implementation libs.androidx.lifecycle.service
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
