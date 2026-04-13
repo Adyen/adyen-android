@@ -10,12 +10,11 @@ on:
         required: true
         description: Release notes
 
-permissions:
-  contents: read
-
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
