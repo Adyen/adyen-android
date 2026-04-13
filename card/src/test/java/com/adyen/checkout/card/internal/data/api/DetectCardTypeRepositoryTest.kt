@@ -8,32 +8,36 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import app.cash.turbine.test
+import com.adyen.checkout.card.internal.data.model.BinLookupCacheResult
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
-import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -67,231 +71,360 @@ internal class DetectCardTypeRepositoryTest(
     }
 
     @Nested
-    @DisplayName("when card number is less than 11 digits ")
+    @DisplayName("when detecting card types and the card number is shorter than bin size")
     inner class LocalDetectionTest {
 
         @Test
-        fun `then the brand should be detected locally and isReliable should be false, enableLuhnCheck should be true, expiryDatePolicy should be required`() =
-            runTest {
-                detectCardTypeRepository.detectedCardTypesFlow.test {
-                    val cardNumber = "6767"
+        fun `and the brand is in supportedCardBrands, then card brands are detected locally`() = runTest {
+            val cardNumber = "6767"
+            val cardBrand = CardBrand(CardType.SOLO.txVariant)
 
-                    val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                    detectCardTypeRepository.detectCardType(
-                        cardNumber = cardNumber,
-                        publicKey = "",
-                        supportedCardBrands = listOf(CardBrand(CardType.SOLO.txVariant)),
-                        clientKey = "",
-                        coroutineScope = coroutineScope,
-                        paymentMethodType = "",
-                    )
+            val flow = detectCardTypeRepository.detectCardTypes(
+                cardNumber = cardNumber,
+                publicKey = "",
+                supportedCardBrands = listOf(cardBrand),
+                clientKey = "",
+                paymentMethodType = "",
+            ).test(testScheduler)
 
-                    val actual = expectMostRecentItem()
-                    assertFalse(actual.first().isReliable)
-                    assertTrue(actual.first().enableLuhnCheck)
-                    assertEquals(Brand.FieldPolicy.REQUIRED, actual.first().expiryDatePolicy)
-                }
-            }
+            // assert flow emits only once
+            assertEquals(1, flow.values.size)
 
-        @Test
-        fun `and the brand is in supportedCardBrands, then emitted detected card type should be supported`() = runTest {
-            detectCardTypeRepository.detectedCardTypesFlow.test {
-                val cardNumber = "6767"
+            val detectedCardType = flow.latestValue.single { it.cardBrand == cardBrand }
+            val expectedDetectedCardType = DetectedCardType(
+                cardBrand = cardBrand,
+                isReliable = false,
+                enableLuhnCheck = true,
+                cvcPolicy = Brand.FieldPolicy.REQUIRED,
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                isSupported = true,
+                panLength = null,
+                paymentMethodVariant = null,
+                localizedBrand = null,
+            )
 
-                val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                detectCardTypeRepository.detectCardType(
-                    cardNumber = cardNumber,
-                    publicKey = "",
-                    supportedCardBrands = listOf(CardBrand(CardType.SOLO.txVariant)),
-                    clientKey = "",
-                    coroutineScope = coroutineScope,
-                    paymentMethodType = "",
-                )
-
-                val detectedCardSolo = expectMostRecentItem().first {
-                    it.cardBrand == CardBrand(CardType.SOLO.txVariant)
-                }
-                assertTrue(detectedCardSolo.isSupported)
-            }
+            assertEquals(expectedDetectedCardType, detectedCardType)
         }
 
         @Test
         fun `and the brand is not in supportedCardBrands, then emitted detected card type should not be supported`() =
             runTest {
-                detectCardTypeRepository.detectedCardTypesFlow.test {
-                    val cardNumber = "5454"
+                val cardNumber = "6767"
+                val cardBrand = CardBrand(CardType.SOLO.txVariant)
 
-                    val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                    detectCardTypeRepository.detectCardType(
-                        cardNumber = cardNumber,
-                        publicKey = "",
-                        supportedCardBrands = listOf(),
-                        clientKey = "",
-                        coroutineScope = coroutineScope,
-                        paymentMethodType = "",
-                    )
+                val flow = detectCardTypeRepository.detectCardTypes(
+                    cardNumber = cardNumber,
+                    publicKey = "",
+                    supportedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
+                    clientKey = "",
+                    paymentMethodType = "",
+                ).test(testScheduler)
 
-                    assertFalse(expectMostRecentItem().first().isSupported)
-                }
+                // assert flow emits only once
+                assertEquals(1, flow.values.size)
+
+                val detectedCardType = flow.latestValue.single { it.cardBrand == cardBrand }
+
+                assertFalse(detectedCardType.isSupported)
             }
 
         @Test
         fun `and the brand is a no cvc brand, then emitted detected card type should have cvc as hidden`() = runTest {
-            detectCardTypeRepository.detectedCardTypesFlow.test {
-                val cardNumber = "6703"
+            val cardNumber = "6703"
+            val cardBrand = CardBrand(CardType.BCMC.txVariant)
 
-                val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                detectCardTypeRepository.detectCardType(
+            val flow = detectCardTypeRepository.detectCardTypes(
+                cardNumber = cardNumber,
+                publicKey = "",
+                supportedCardBrands = listOf(cardBrand),
+                clientKey = "",
+                paymentMethodType = "",
+            ).test(testScheduler)
+
+            // assert flow emits only once
+            assertEquals(1, flow.values.size)
+
+            val detectedCardType = flow.latestValue.single { it.cardBrand == cardBrand }
+
+            assertEquals(Brand.FieldPolicy.HIDDEN, detectedCardType.cvcPolicy)
+        }
+
+        @Test
+        fun `and the card number is empty, then an empty list should be emitted`() = runTest {
+            val cardNumber = ""
+
+            val flow = detectCardTypeRepository.detectCardTypes(
+                cardNumber = cardNumber,
+                publicKey = "",
+                supportedCardBrands = emptyList(),
+                clientKey = "",
+                paymentMethodType = "",
+            ).test(testScheduler)
+
+            // assert flow emits only once
+            assertEquals(1, flow.values.size)
+
+            assert(flow.latestValue.isEmpty())
+        }
+    }
+
+    @Nested
+    @DisplayName("when detecting card types and the card number is equal or longer than bin size")
+    inner class BinLookupTest {
+
+        @Test
+        fun `then local and network card types are emitted and a bin lookup call is made`() = runTest {
+            whenever(binLookupService.makeBinLookup(any(), any())).doReturn(
+                BinLookupResponse(
+                    brands = listOf(
+                        Brand(
+                            brand = "mc",
+                            enableLuhnCheck = true,
+                            supported = true,
+                            cvcPolicy = "required",
+                            expiryDatePolicy = "required",
+                            panLength = 16,
+                            paymentMethodVariant = "scheme",
+                            localizedBrand = "MasterCard",
+                        ),
+                    ),
+                ),
+            )
+
+            val cardNumber = "545454545454"
+
+            val flow = detectCardTypeRepository.detectCardTypes(
+                cardNumber = cardNumber,
+                publicKey = "",
+                supportedCardBrands = listOf(),
+                clientKey = "",
+                paymentMethodType = "",
+            ).test(testScheduler)
+
+            verify(binLookupService).makeBinLookup(any(), any())
+            val expected = DetectedCardType(
+                cardBrand = CardBrand(CardType.MASTERCARD.txVariant),
+                isReliable = true,
+                enableLuhnCheck = true,
+                cvcPolicy = Brand.FieldPolicy.REQUIRED,
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                isSupported = true,
+                panLength = 16,
+                paymentMethodVariant = PaymentMethodTypes.SCHEME,
+                localizedBrand = "MasterCard",
+            )
+
+            // assert flow emits twice (local + network)
+            assertEquals(2, flow.values.size)
+
+            val localDetectedCardTypes = flow.values[0]
+            assert(!localDetectedCardTypes.first().isReliable)
+
+            val networkDetectedCardType = flow.values[1].first()
+            assertEquals(expected, networkDetectedCardType)
+        }
+
+        @Test
+        fun `and the same BIN was already was fetched, then only one bin lookup call should be made and results are returned`() =
+            runTest {
+                whenever(binLookupService.makeBinLookup(any(), any())).doReturn(
+                    BinLookupResponse(
+                        brands = listOf(
+                            Brand(
+                                brand = "mc",
+                                enableLuhnCheck = true,
+                                supported = true,
+                                cvcPolicy = "required",
+                                expiryDatePolicy = "required",
+                                panLength = 16,
+                                paymentMethodVariant = "scheme",
+                                localizedBrand = "MasterCard",
+                            ),
+                        ),
+                    ),
+                )
+
+                val cardNumber = "54545454545"
+
+                val firstFlow = detectCardTypeRepository.detectCardTypes(
                     cardNumber = cardNumber,
                     publicKey = "",
                     supportedCardBrands = listOf(),
                     clientKey = "",
-                    coroutineScope = coroutineScope,
                     paymentMethodType = "",
-                )
+                ).test(testScheduler)
 
-                assertEquals(Brand.FieldPolicy.HIDDEN, expectMostRecentItem().first().cvcPolicy)
+                // assert flow emits twice (local + network)
+                assertEquals(2, firstFlow.values.size)
+                assert(!firstFlow.values[0].first().isReliable)
+                assert(firstFlow.values[1].first().isReliable)
+
+                val cardNumberWithOneExtraDigit = "545454545454"
+                val secondFlow = detectCardTypeRepository.detectCardTypes(
+                    cardNumber = cardNumberWithOneExtraDigit,
+                    publicKey = "",
+                    supportedCardBrands = listOf(),
+                    clientKey = "",
+                    paymentMethodType = "",
+                ).test(testScheduler)
+
+                // assert flow emits once (cache)
+                assertEquals(1, secondFlow.values.size)
+                assert(secondFlow.values[0].first().isReliable)
+
+                verify(binLookupService, times(1)).makeBinLookup(any(), any())
             }
+
+        @Test
+        fun `and the same BIN is currently being fetched, then only one bin lookup call should be made and second call does not return network results`() =
+            runTest {
+                whenever(binLookupService.makeBinLookup(any(), any())).doSuspendableAnswer {
+                    // small delay to emulate a network request
+                    delay(100)
+                    BinLookupResponse(
+                        brands = listOf(
+                            Brand(
+                                brand = "mc",
+                                enableLuhnCheck = true,
+                                supported = true,
+                                cvcPolicy = "required",
+                                expiryDatePolicy = "required",
+                                panLength = 16,
+                                paymentMethodVariant = "scheme",
+                                localizedBrand = "MasterCard",
+                            ),
+                        ),
+                    )
+                }
+
+                val cardNumber = "54545454545"
+                val firstFlow = detectCardTypeRepository.detectCardTypes(
+                    cardNumber = cardNumber,
+                    publicKey = "",
+                    supportedCardBrands = listOf(),
+                    clientKey = "",
+                    paymentMethodType = "",
+                ).test(testScheduler)
+
+                val cardNumberWithOneExtraDigit = "545454545454"
+                val secondFlow = detectCardTypeRepository.detectCardTypes(
+                    cardNumber = cardNumberWithOneExtraDigit,
+                    publicKey = "",
+                    supportedCardBrands = listOf(),
+                    clientKey = "",
+                    paymentMethodType = "",
+                ).test(testScheduler)
+
+                advanceUntilIdle()
+
+                // assert flow emits twice (local + network)
+                assertEquals(2, firstFlow.values.size)
+                assert(!firstFlow.values[0].first().isReliable)
+                assert(firstFlow.values[1].first().isReliable)
+
+                // assert flow emits once (local)
+                assertEquals(1, secondFlow.values.size)
+                assert(!secondFlow.values[0].first().isReliable)
+            }
+
+        @Test
+        fun `and results are returned, then results should be in cache`() = runTest {
+            whenever(binLookupService.makeBinLookup(any(), any())).doReturn(
+                BinLookupResponse(
+                    brands = listOf(
+                        Brand(
+                            brand = "mc",
+                            enableLuhnCheck = true,
+                            supported = true,
+                            cvcPolicy = "required",
+                            expiryDatePolicy = "required",
+                            panLength = 16,
+                            paymentMethodVariant = "scheme",
+                            localizedBrand = "MasterCard",
+                        ),
+                    ),
+                ),
+            )
+
+            val cardNumber = "545454545454"
+
+            val flow = detectCardTypeRepository.detectCardTypes(
+                cardNumber = cardNumber,
+                publicKey = "",
+                supportedCardBrands = listOf(),
+                clientKey = "",
+                paymentMethodType = "",
+            ).test(testScheduler)
+            // first value emitted is local, second is network
+            val detectedCardTypes = flow.values[1]
+
+            val bin = detectCardTypeRepository.getBin(cardNumber)
+            assertNotNull(bin)
+
+            val result = binLookupCache.getResult(bin)
+            assertInstanceOf<BinLookupCacheResult.Available>(result)
+            assertEquals(detectedCardTypes, result.detectedCardTypes)
         }
 
         @Test
-        fun `and the brand is not a no cvc brand, then emitted detected card type should have cvc as hidden`() =
-            runTest {
-                detectCardTypeRepository.detectedCardTypesFlow.test {
-                    val cardNumber = "5454"
-
-                    val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                    detectCardTypeRepository.detectCardType(
-                        cardNumber = cardNumber,
-                        publicKey = "",
-                        supportedCardBrands = listOf(),
-                        clientKey = "",
-                        coroutineScope = coroutineScope,
-                        paymentMethodType = "",
-                    )
-
-                    assertEquals(Brand.FieldPolicy.REQUIRED, expectMostRecentItem().first().cvcPolicy)
-                }
-            }
-    }
-
-    @Nested
-    @DisplayName("when card number at least 11 digits")
-    inner class BinLookupTest {
-
-        @Test
-        fun `and detectCardTypes is called for the first time with that bin, then a bin lookup call should be made`() =
-            runTest {
-                whenever(binLookupService.makeBinLookup(any(), any())).doReturn(
-                    BinLookupResponse(
-                        brands = listOf(
-                            Brand(
-                                brand = "mc",
-                                enableLuhnCheck = true,
-                                supported = true,
-                                cvcPolicy = "required",
-                                expiryDatePolicy = "required",
-                                panLength = 16,
-                                paymentMethodVariant = "scheme",
-                                localizedBrand = "MasterCard",
-                            ),
+        fun `and results are being fetched, then cache should be marked as fetching`() = runTest {
+            whenever(binLookupService.makeBinLookup(any(), any())).doSuspendableAnswer {
+                // small delay to emulate a network request
+                delay(100)
+                BinLookupResponse(
+                    brands = listOf(
+                        Brand(
+                            brand = "mc",
+                            enableLuhnCheck = true,
+                            supported = true,
+                            cvcPolicy = "required",
+                            expiryDatePolicy = "required",
+                            panLength = 16,
+                            paymentMethodVariant = "scheme",
+                            localizedBrand = "MasterCard",
                         ),
                     ),
                 )
-                // Ignore locally detected items
-                detectCardTypeRepository
-                    .detectedCardTypesFlow
-                    .filter { it.all { detectedCardType -> detectedCardType.isReliable } }
-                    .test {
-                        val cardNumber = "545454545454"
-                        val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                        detectCardTypeRepository.detectCardType(
-                            cardNumber = cardNumber,
-                            publicKey = "",
-                            supportedCardBrands = listOf(),
-                            clientKey = "",
-                            coroutineScope = coroutineScope,
-                            paymentMethodType = "",
-                        )
-                        verify(binLookupService).makeBinLookup(any(), any())
-                        val expected = DetectedCardType(
-                            cardBrand = CardBrand(CardType.MASTERCARD.txVariant),
-                            isReliable = true,
-                            enableLuhnCheck = true,
-                            cvcPolicy = Brand.FieldPolicy.REQUIRED,
-                            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                            isSupported = true,
-                            panLength = 16,
-                            paymentMethodVariant = PaymentMethodTypes.SCHEME,
-                            localizedBrand = "MasterCard",
-                        )
-
-                        assertEquals(expected, expectMostRecentItem().first())
-                    }
             }
+
+            val cardNumber = "545454545454"
+
+            detectCardTypeRepository.detectCardTypes(
+                cardNumber = cardNumber,
+                publicKey = "",
+                supportedCardBrands = listOf(),
+                clientKey = "",
+                paymentMethodType = "",
+            ).test(testScheduler)
+
+            val bin = detectCardTypeRepository.getBin(cardNumber)
+            assertNotNull(bin)
+
+            val result = binLookupCache.getResult(bin)
+            assertInstanceOf<BinLookupCacheResult.Fetching>(result)
+        }
 
         @Test
-        fun `and detectCardTypes is called more than once with the same bin, only one bin lookup call should be made`() =
-            runTest {
-                whenever(binLookupService.makeBinLookup(any(), any())).doReturn(
-                    BinLookupResponse(
-                        brands = listOf(
-                            Brand(
-                                brand = "mc",
-                                enableLuhnCheck = true,
-                                supported = true,
-                                cvcPolicy = "required",
-                                expiryDatePolicy = "required",
-                                panLength = 16,
-                                paymentMethodVariant = "scheme",
-                                localizedBrand = "MasterCard",
-                            ),
-                        ),
-                    ),
-                )
-
-                // Ignore locally detected items
-                detectCardTypeRepository
-                    .detectedCardTypesFlow
-                    .filter { it.all { detectedCardType -> detectedCardType.isReliable } }
-                    .test {
-                        val cardNumber = "54545454545"
-                        val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                        // First call result is cached
-                        detectCardTypeRepository.detectCardType(
-                            cardNumber = cardNumber,
-                            publicKey = "",
-                            supportedCardBrands = listOf(),
-                            clientKey = "",
-                            coroutineScope = coroutineScope,
-                            paymentMethodType = "",
-                        )
-                        val expected = DetectedCardType(
-                            cardBrand = CardBrand(CardType.MASTERCARD.txVariant),
-                            isReliable = true,
-                            enableLuhnCheck = true,
-                            cvcPolicy = Brand.FieldPolicy.REQUIRED,
-                            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                            isSupported = true,
-                            panLength = 16,
-                            paymentMethodVariant = PaymentMethodTypes.SCHEME,
-                            localizedBrand = "MasterCard",
-                        )
-                        assertEquals(expected, expectMostRecentItem().first())
-
-                        val cardNumber2 = "545454545454"
-                        detectCardTypeRepository.detectCardType(
-                            cardNumber = cardNumber2,
-                            publicKey = "",
-                            supportedCardBrands = listOf(),
-                            clientKey = "",
-                            coroutineScope = coroutineScope,
-                            paymentMethodType = "",
-                        )
-
-                        verify(binLookupService, times(1)).makeBinLookup(any(), any())
-                        assertEquals(expected, expectMostRecentItem().first())
-                    }
+        fun `and the call fails, then cache should be empty`() = runTest {
+            whenever(binLookupService.makeBinLookup(any(), any())).doAnswer {
+                throw HttpError(0, "test bin lookup failed", null)
             }
+
+            val cardNumber = "545454545454"
+
+            detectCardTypeRepository.detectCardTypes(
+                cardNumber = cardNumber,
+                publicKey = "",
+                supportedCardBrands = listOf(),
+                clientKey = "",
+                paymentMethodType = "",
+            ).test(testScheduler)
+
+            val bin = detectCardTypeRepository.getBin(cardNumber)
+            assertNotNull(bin)
+
+            val result = binLookupCache.getResult(bin)
+            assertInstanceOf<BinLookupCacheResult.Unavailable>(result)
+        }
     }
 }
