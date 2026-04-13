@@ -11,9 +11,6 @@ on:
       - 'fix/**'
       - 'hotfix/**'
 
-permissions:
-  pull-requests: write
-
 jobs:
   get_label:
     if: startsWith(github.event.pull_request.head.ref, 'feature/') || startsWith(github.event.pull_request.head.ref, 'fix/') || startsWith(github.event.pull_request.head.ref, 'chore/')
@@ -39,6 +36,8 @@ jobs:
   add_label_to_pr:
     needs: get_label
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Checkout to current branch

@@ -12,9 +12,6 @@ on:
       github-token:
         required: true
 
-permissions:
-  contents: write
-
 jobs:
   fetch_updated_release_notes_file:
     name: Fetch Updated Release Notes File
@@ -42,6 +39,8 @@ jobs:
     name: Update Release Notes
     needs: fetch_updated_release_notes_file
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
