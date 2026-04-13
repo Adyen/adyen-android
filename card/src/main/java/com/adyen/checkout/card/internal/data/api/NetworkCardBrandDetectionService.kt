@@ -25,15 +25,15 @@ internal class NetworkCardBrandDetectionService(
 ) {
 
     suspend fun getCardBrands(
-        cardNumber: String,
+        bin: String,
         publicKey: String,
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
         paymentMethodType: String?
-    ): List<DetectedCardType>? {
+    ): Result<List<DetectedCardType>> {
         adyenLog(AdyenLogLevel.DEBUG) { "fetching card brands from network - bin lookup" }
-        val binLookupResponse = runSuspendCatching {
-            val encryptedBin = cardEncryptor.encryptBin(cardNumber, publicKey)
+        val binLookupResult = runSuspendCatching {
+            val encryptedBin = cardEncryptor.encryptBin(bin, publicKey)
             val stringCardBrands = supportedCardBrands.map { it.txVariant }
             val requestId = UUID.randomUUID().toString()
             val request = BinLookupRequest(encryptedBin, requestId, stringCardBrands, paymentMethodType)
@@ -43,12 +43,11 @@ internal class NetworkCardBrandDetectionService(
                 clientKey = clientKey,
             )
         }
-            .getOrElse { e ->
+            .onFailure { e ->
                 adyenLog(AdyenLogLevel.ERROR, e) { "getCardBrands - Error calling bin lookup" }
-                return null
             }
 
-        return mapResponse(binLookupResponse)
+        return binLookupResult.map(::mapResponse)
     }
 
     private fun mapResponse(binLookupResponse: BinLookupResponse): List<DetectedCardType> {

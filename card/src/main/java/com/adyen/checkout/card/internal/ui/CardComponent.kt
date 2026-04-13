@@ -30,8 +30,6 @@ import com.adyen.checkout.card.internal.ui.view.CardComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -86,7 +84,7 @@ internal class CardComponent(
 
     init {
         initializeAnalytics()
-        subscribeToDetectedCardTypes()
+        subscribeToDetectedCardTypesChanges()
         subscribeToBinChanges()
     }
 
@@ -142,32 +140,27 @@ internal class CardComponent(
     }
 
     private fun onCardNumberChanged(newCardNumber: String) {
-        detectCardTypeRepository.detectCardType(
-            cardNumber = newCardNumber,
-            publicKey = componentParams.publicKey,
-            supportedCardBrands = componentParams.supportedCardBrands,
-            clientKey = componentParams.clientKey,
-            coroutineScope = coroutineScope,
-            // TODO ensure this is set dynamically when BCMC is supported
-            paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
-        )
+        detectCardTypes(newCardNumber)
         onIntent(CardIntent.UpdateCardNumber(newCardNumber))
     }
 
-    private fun subscribeToDetectedCardTypes() {
-        detectCardTypeRepository.detectedCardTypesFlow
-            .onEach { detectedCardTypes ->
-                onDetectedCardTypes(detectedCardTypes)
-            }
-            .map { detectedCardTypes ->
-                detectedCardTypes.filter { it.isReliable && it.isSupported }.map { it.cardBrand }
-            }
-            .distinctUntilChanged()
-            .onEach {
-                // TODO - Card. Dual brands reset brand
-                // inputData.selectedCardBrand = null
-            }
-            .launchIn(coroutineScope)
+    private fun detectCardTypes(cardNumber: String) {
+        val publicKey = componentParams.publicKey
+        if (publicKey == null) {
+            onPublicKeyNotFound(GenericError("Public key is missing."))
+            return
+        }
+
+        detectCardTypeRepository.detectCardTypes(
+            cardNumber = cardNumber,
+            publicKey = publicKey,
+            supportedCardBrands = componentParams.supportedCardBrands,
+            clientKey = componentParams.clientKey,
+            // TODO ensure this is set dynamically when BCMC is supported
+            paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
+        ).onEach { result ->
+            onIntent(CardIntent.UpdateDetectedCardTypes(result))
+        }.launchIn(coroutineScope)
     }
 
     private fun subscribeToBinChanges() {
@@ -179,18 +172,22 @@ internal class CardComponent(
             .launchIn(coroutineScope)
     }
 
-    private fun onDetectedCardTypes(detectedCardTypes: List<DetectedCardType>) {
-        adyenLog(AdyenLogLevel.DEBUG) {
-            "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
-                "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
-        }
+    private fun subscribeToDetectedCardTypesChanges() {
+        componentState
+            .map { it.detectedCardTypes }
+            .distinctUntilChanged()
+            .drop(1)
+            .onEach(::onDetectedCardTypesChanged)
+            .launchIn(coroutineScope)
+    }
+
+    private fun onDetectedCardTypesChanged(detectedCardTypes: List<DetectedCardType>) {
         val isReliable = detectedCardTypes.any { it.isReliable }
-        if (componentState.value.detectedCardTypes != detectedCardTypes && isReliable) {
+        if (isReliable) {
             onBinLookupCallback?.onBinLookup(
                 data = detectedCardTypes.map(DetectedCardType::toBinLookupData),
             )
         }
-        onIntent(CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
     }
 
     private fun onEncryptionError(e: EncryptionException) {
