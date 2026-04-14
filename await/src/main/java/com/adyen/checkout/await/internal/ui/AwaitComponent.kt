@@ -68,7 +68,7 @@ internal class AwaitComponent(
             onError = ::emitError,
         )
 
-        AwaitComponent()
+        AwaitComponent(modifier)
     }
 
     override fun handleAction() {

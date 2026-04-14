@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
@@ -113,6 +114,9 @@ class NewCheckoutController(
 
     internal val paymentComponent: PaymentComponent<*>?
     internal var actionComponent: ActionComponent? = null
+        private set
+
+    internal var onNavigate: ((CheckoutRoute) -> Unit)? = null
 
     init {
         // TODO - Move this logic to the factory and into a separate class
@@ -206,6 +210,24 @@ class NewCheckoutController(
             commonComponentParams = componentParamsBundle.commonComponentParams,
         )
         this.actionComponent = actionComponent
+
+        actionComponent.eventFlow
+            .onEach { event ->
+                when (event) {
+                    is ActionComponentEvent.ActionDetails -> {
+                        callbacks.onAdditionalDetails?.onAdditionalDetails(event.data)
+                    }
+
+                    is ActionComponentEvent.Error -> {
+                        callbacks.onError?.onError(event.error.toCheckoutError())
+                    }
+                }
+            }
+            .launchIn(coroutineScope)
+
+        actionComponent.handleAction()
+
+        onNavigate?.invoke(CheckoutRoute.Action)
     }
 
     // TODO - Ensure we are not handling an action
