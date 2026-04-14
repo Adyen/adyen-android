@@ -24,7 +24,7 @@ fun CheckoutPaymentFlow(
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-    var state by remember {
+    var state by remember(controller) {
         val initialState = when {
             controller.actionComponent != null -> CheckoutPaymentFlowState.Action
             else -> CheckoutPaymentFlowState.PaymentMethod
