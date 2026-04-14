@@ -17,7 +17,6 @@ import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +37,7 @@ internal class ActionHandler(
 
     private var job: Job? = null
 
-    fun handleAction(action: Action, onNavigate: ((CheckoutRoute) -> Unit)?) {
+    fun handleAction(action: Action) {
         job?.cancel()
 
         val actionComponent = ActionComponentProvider.get(
@@ -68,7 +67,5 @@ internal class ActionHandler(
             .launchIn(coroutineScope)
 
         actionComponent.handleAction()
-
-        onNavigate?.invoke(CheckoutRoute.Action)
     }
 }

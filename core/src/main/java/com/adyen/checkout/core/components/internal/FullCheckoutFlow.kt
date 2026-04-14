@@ -77,7 +77,10 @@ internal class FullCheckoutFlow(
 
     private fun handleResult(checkoutResult: CheckoutResult) {
         when (checkoutResult) {
-            is CheckoutResult.Action -> actionHandler.handleAction(checkoutResult.action, onNavigate)
+            is CheckoutResult.Action -> {
+                actionHandler.handleAction(checkoutResult.action)
+                onNavigate?.invoke(CheckoutRoute.Action)
+            }
             is CheckoutResult.Error -> {
                 // TODO - Handle error state
             }

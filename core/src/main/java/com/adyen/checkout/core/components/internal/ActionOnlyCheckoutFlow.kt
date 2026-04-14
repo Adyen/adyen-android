@@ -25,7 +25,7 @@ internal class ActionOnlyCheckoutFlow(
     override var onNavigate: ((CheckoutRoute) -> Unit)? = null
 
     init {
-        actionHandler.handleAction(action, onNavigate)
+        actionHandler.handleAction(action)
     }
 
     override fun submit() {
