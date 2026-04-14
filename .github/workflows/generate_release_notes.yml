@@ -10,6 +10,8 @@ on:
 jobs:
   get_allowed_labels:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     outputs:
       allowed-labels: ${{ steps.get_allowed_labels.outputs.allowed_labels }}
