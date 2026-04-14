@@ -16,6 +16,8 @@ jobs:
   fetch_updated_release_notes_file:
     name: Fetch Updated Release Notes File
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       updated-release-notes-filepath: ${{ steps.fetch_updated_release_notes_file.outputs.updated-release-notes-filepath }}
 

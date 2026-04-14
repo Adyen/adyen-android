@@ -6,19 +6,21 @@ on:
     branches:
       - 'release/**'
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   check:
     name: Check
+    permissions:
+      contents: read
     uses: ./.github/workflows/check.yml
   generate_version_name:
     name: Generate version name
+    permissions:
+      contents: read
     uses: ./.github/workflows/generate_version_name.yml
   publish_to_maven_central:
     name: Publish to Maven Central
+    permissions:
+      contents: read
     uses: ./.github/workflows/publish_to_maven_central.yml
     secrets:
       SONATYPE_CENTRAL_PORTAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
@@ -33,6 +35,8 @@ jobs:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
   create_github_release:
     name: Create GitHub release
+    permissions:
+      contents: write
     uses: ./.github/workflows/create_github_release.yml
     secrets:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,6 +45,8 @@ jobs:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
   generate_release_notes:
     name: Generate release notes
+    permissions:
+      contents: write
     uses: ./.github/workflows/generate_release_notes.yml
     secrets:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,6 +55,9 @@ jobs:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
   create_release_notes_pr:
     name: Create release notes pr
+    permissions:
+      contents: write
+      pull-requests: write
     uses: ./.github/workflows/create_release_notes_pr.yml
     needs: [generate_version_name, generate_release_notes]
     with:
