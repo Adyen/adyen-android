@@ -13,7 +13,6 @@ import android.content.pm.PackageManager
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -60,10 +59,12 @@ internal class DefaultUPIDelegate(
     private val packageManager: PackageManager,
 ) : UPIDelegate {
 
-    private val detectedPackageNames by lazy {
+    private val detectedApps by lazy {
         val intent = Intent(Intent.ACTION_VIEW, GENERIC_UPI_URI)
-        packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        val localApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
             .map { it.activityInfo.packageName }
+        paymentMethod.apps.orEmpty()
+            .filter { it.appIdentifierInfo?.androidPackageId in localApps }
     }
 
     private val inputData = UPIInputData()
@@ -130,7 +131,7 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createOutputData(includeValidationErrors: Boolean = false) = with(inputData) {
-        val availableModes = createAvailableModes(this, paymentMethod)
+        val availableModes = createAvailableModes(this)
         val selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode()
         val showNoSelectedUPIIntentItemError =
             shouldShowNoSelectedUPIIntentItemError(selectedMode, selectedUPIIntentItem, includeValidationErrors)
@@ -146,12 +147,10 @@ internal class DefaultUPIDelegate(
 
     private fun createAvailableModes(
         inputData: UPIInputData,
-        paymentMethod: PaymentMethod,
     ) = with(inputData) {
         val appIds = paymentMethod.apps
         if (!appIds.isNullOrEmpty()) {
             val intentItemList = createIntentItems(
-                appIds,
                 componentParams.environment,
                 selectedUPIIntentItem,
             )
@@ -163,13 +162,11 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createIntentItems(
-        upiApps: List<AppData>,
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
     ): List<UPIIntentItem> {
-        return upiApps
-            .filter { it.appIdentifierInfo?.androidPackageId in detectedPackageNames }
-            .ifEmpty { upiApps }
+        return detectedApps
+            .ifEmpty { paymentMethod.apps.orEmpty() }
             .mapToPaymentApp(
                 environment = environment,
                 selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
