@@ -8,12 +8,9 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 
 internal data class PaymentMethodViewState(
-    val paymentMethod: PaymentMethodResponse,
-    val checkoutContext: CheckoutContext,
+    val paymentMethodName: String,
     val description: CheckoutLocalizationKey?,
 )

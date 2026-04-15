@@ -639,10 +639,6 @@ public final class com/adyen/checkout/core/common/localization/StringResourceLoc
 	public fun getLocalizedString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {
-	public static final fun AdyenPaymentFlow (Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodResponse;Lcom/adyen/checkout/core/common/CheckoutContext;Lcom/adyen/checkout/core/components/CheckoutCallbacks;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
-}
-
 public final class com/adyen/checkout/core/components/AnalyticsConfiguration : android/os/Parcelable {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -707,7 +703,7 @@ public final class com/adyen/checkout/core/components/Checkout$Result$Success : 
 }
 
 public final class com/adyen/checkout/core/components/CheckoutActionKt {
-	public static final fun CheckoutAction (Lcom/adyen/checkout/core/components/NewCheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CheckoutAction (Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutCallback {
@@ -745,26 +741,19 @@ public final class com/adyen/checkout/core/components/CheckoutConfiguration$CREA
 
 public final class com/adyen/checkout/core/components/CheckoutController {
 	public static final field $stable I
-	public fun <init> ()V
-	public final fun handleAction (Lcom/adyen/checkout/core/action/data/Action;)V
-	public final fun handleIntent (Landroid/content/Intent;)V
 	public final fun submit ()V
 }
 
-public abstract interface class com/adyen/checkout/core/components/CheckoutControllerInterface {
-	public abstract fun submit ()V
-}
-
 public final class com/adyen/checkout/core/components/CheckoutControllerKt {
-	public static final fun rememberCheckoutController (Landroidx/compose/runtime/Composer;I)Lcom/adyen/checkout/core/components/CheckoutController;
+	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext;Lcom/adyen/checkout/core/components/CheckoutCallbacks;Landroid/content/Context;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
 }
 
 public final class com/adyen/checkout/core/components/CheckoutPaymentFlowKt {
-	public static final fun CheckoutPaymentFlow (Lcom/adyen/checkout/core/components/NewCheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CheckoutPaymentFlow (Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutPaymentMethodKt {
-	public static final fun CheckoutPaymentMethod (Lcom/adyen/checkout/core/components/NewCheckoutController;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CheckoutPaymentMethod (Lcom/adyen/checkout/core/components/CheckoutController;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutResult {
@@ -869,10 +858,6 @@ public final class com/adyen/checkout/core/components/CheckoutTarget$StoredPayme
 	public final fun getId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/core/components/NewCheckoutControllerKt {
-	public static final fun NewCheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext;Lcom/adyen/checkout/core/components/CheckoutCallbacks;Landroid/content/Context;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/NewCheckoutController;
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnAdditionalDetailsCallback : com/adyen/checkout/core/components/CheckoutCallback {

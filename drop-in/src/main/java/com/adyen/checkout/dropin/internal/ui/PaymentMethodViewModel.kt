@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -18,7 +19,9 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.error.CheckoutError
@@ -34,16 +37,33 @@ internal class PaymentMethodViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val checkoutContext: CheckoutContext,
     private val dropInServiceManager: DropInServiceManager,
+    private val applicationContext: Context,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(createViewState())
     val viewState: StateFlow<PaymentMethodViewState> = _viewState.asStateFlow()
 
-    val checkoutCallbacks = CheckoutCallbacks(
+    private val checkoutCallbacks = CheckoutCallbacks(
         onSubmit = ::onSubmit,
         onAdditionalDetails = ::onAdditionalDetails,
         onError = ::onError,
         onFinished = ::onFinished,
+    )
+
+    val controller = CheckoutController(
+        target = when (paymentFlowType) {
+            is DropInPaymentFlowType.RegularPaymentMethod -> {
+                CheckoutTarget.PaymentMethod(txVariant = paymentFlowType.txVariant)
+            }
+
+            is DropInPaymentFlowType.StoredPaymentMethod -> {
+                CheckoutTarget.StoredPaymentMethod(id = paymentFlowType.id)
+            }
+        },
+        context = checkoutContext,
+        callbacks = checkoutCallbacks,
+        applicationContext = applicationContext,
+        coroutineScope = viewModelScope,
     )
 
     private fun createViewState(): PaymentMethodViewState {
@@ -58,8 +78,7 @@ internal class PaymentMethodViewModel(
         }
 
         return PaymentMethodViewState(
-            paymentMethod = paymentMethod,
-            checkoutContext = checkoutContext,
+            paymentMethodName = paymentMethod.name,
             description = paymentMethod.getDescription(),
         )
     }
@@ -98,6 +117,7 @@ internal class PaymentMethodViewModel(
         private val paymentMethodRepository: PaymentMethodRepository,
         private val checkoutContext: CheckoutContext,
         private val dropInServiceManager: DropInServiceManager,
+        private val applicationContext: Context,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -106,6 +126,7 @@ internal class PaymentMethodViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 checkoutContext = checkoutContext,
                 dropInServiceManager = dropInServiceManager,
+                applicationContext = applicationContext,
             ) as T
         }
     }

@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.AdyenPaymentFlow
-import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutPaymentFlow
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -36,14 +36,14 @@ internal fun PaymentMethodScreen(
     viewModel: PaymentMethodViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PaymentMethodScreenContent(navigator, viewState, viewModel.checkoutCallbacks)
+    PaymentMethodScreenContent(navigator, viewState, viewModel.controller)
 }
 
 @Composable
 private fun PaymentMethodScreenContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodViewState,
-    checkoutCallbacks: CheckoutCallbacks,
+    controller: CheckoutController,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -57,7 +57,7 @@ private fun PaymentMethodScreenContent(
                 }
             }
         },
-        title = viewState.paymentMethod.name,
+        title = viewState.paymentMethodName,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -80,10 +80,9 @@ private fun PaymentMethodScreenContent(
                 )
             }
 
-            AdyenPaymentFlow(
-                paymentMethod = viewState.paymentMethod,
-                checkoutContext = viewState.checkoutContext,
-                checkoutCallbacks = checkoutCallbacks,
+            // TODO - Pass theme and localization provider
+            CheckoutPaymentFlow(
+                controller = controller,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.Spacing.Large),

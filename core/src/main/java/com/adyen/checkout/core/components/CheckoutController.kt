@@ -1,51 +1,229 @@
 /*
- * Copyright (c) 2025 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 15/7/2025.
+ * Created by oscars on 4/3/2026.
  */
 
 package com.adyen.checkout.core.components
 
-import android.content.Intent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import android.annotation.SuppressLint
+import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.action.internal.ActionComponentProvider
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
+import com.adyen.checkout.core.analytics.internal.AnalyticsSource
+import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.PaymentMethodProvider
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.error.toCheckoutError
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
+import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import java.util.Locale
 
-// TODO - KDocs
-class CheckoutController {
+fun CheckoutController(
+    target: CheckoutTarget,
+    context: CheckoutContext,
+    callbacks: CheckoutCallbacks,
+    // TODO - find a way to not require application context in the controller
+    applicationContext: Context,
+    coroutineScope: CoroutineScope,
+): CheckoutController {
+    val checkoutConfiguration: CheckoutConfiguration
+    val checkoutAttemptId: String?
+    val publicKey: String?
+    val componentSessionParams: SessionParams?
+    val sessionId: String?
 
-    private val _events = MutableSharedFlow<Event>(
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    when (context) {
+        is CheckoutContext.Advanced -> {
+            checkoutConfiguration = context.checkoutConfiguration
+            checkoutAttemptId = context.checkoutAttemptId
+            publicKey = context.publicKey
+            componentSessionParams = null
+            sessionId = null
+        }
+
+        is CheckoutContext.Sessions -> {
+            checkoutConfiguration = context.checkoutConfiguration
+            checkoutAttemptId = context.checkoutAttemptId
+            publicKey = context.publicKey
+            componentSessionParams = SessionParamsFactory.create(context.checkoutSession)
+            sessionId = context.checkoutSession.sessionSetupResponse.id
+        }
+    }
+
+    val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
+        checkoutConfiguration = checkoutConfiguration,
+        deviceLocale = AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault(),
+        dropInOverrideParams = null,
+        componentSessionParams = componentSessionParams,
+        publicKey = publicKey,
     )
-    internal val events: SharedFlow<Event> = _events.asSharedFlow()
 
-    fun submit() {
-        _events.tryEmit(Event.Submit)
-    }
+    val analyticsManager = AnalyticsManagerFactory().provide(
+        componentParams = componentParamsBundle.commonComponentParams,
+        applicationContext = applicationContext,
+        // TODO - Analytics: Pass the correct paymentMethod type
+        source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
+        sessionId = sessionId,
+        checkoutAttemptId = checkoutAttemptId,
+    )
 
-    // TODO - discuss if this should be in the controller or somewhere else, for if the merchant wants to use our
-    //   component to only handle actions
-    fun handleAction(action: Action) {
-        _events.tryEmit(Event.HandleAction(action))
-    }
-
-    fun handleIntent(intent: Intent) {
-        _events.tryEmit(Event.HandleIntent(intent))
-    }
-
-    internal sealed class Event {
-        data object Submit : Event()
-        data class HandleAction(val action: Action) : Event()
-        data class HandleIntent(val intent: Intent) : Event()
-    }
+    return CheckoutController(
+        target = target,
+        context = context,
+        callbacks = callbacks,
+        coroutineScope = coroutineScope,
+        analyticsManager = analyticsManager,
+        checkoutConfiguration = checkoutConfiguration,
+        componentParamsBundle = componentParamsBundle,
+    )
 }
 
-@Composable
-fun rememberCheckoutController() = remember { CheckoutController() }
+@Suppress("LongParameterList")
+class CheckoutController internal constructor(
+    private val target: CheckoutTarget,
+    private val context: CheckoutContext,
+    private val callbacks: CheckoutCallbacks,
+    private val coroutineScope: CoroutineScope,
+    private val analyticsManager: AnalyticsManager,
+    private val checkoutConfiguration: CheckoutConfiguration,
+    private val componentParamsBundle: ComponentParamsBundle,
+) {
+
+    internal val paymentComponent: PaymentComponent<*>?
+    internal var actionComponent: ActionComponent? = null
+        private set
+
+    internal var onNavigate: ((CheckoutRoute) -> Unit)? = null
+
+    init {
+        // TODO - Move this logic to the factory and into a separate class
+        paymentComponent = when (target) {
+            is CheckoutTarget.PaymentMethod -> {
+                val paymentMethod = getPaymentMethodResponse()?.paymentMethods?.find { it.type == target.txVariant }
+
+                if (paymentMethod == null) {
+                    null
+                } else {
+                    PaymentMethodProvider.getPaymentComponent(
+                        paymentMethod = paymentMethod,
+                        coroutineScope = coroutineScope,
+                        analyticsManager = analyticsManager,
+                        checkoutConfiguration = checkoutConfiguration,
+                        componentParamsBundle = componentParamsBundle,
+                        checkoutCallbacks = callbacks,
+                    )
+                }
+            }
+
+            is CheckoutTarget.StoredPaymentMethod -> {
+                val storedPaymentMethod = getPaymentMethodResponse()?.storedPaymentMethods?.find { it.id == target.id }
+
+                if (storedPaymentMethod == null) {
+                    null
+                } else {
+                    PaymentMethodProvider.getStoredPaymentComponent(
+                        storedPaymentMethod = storedPaymentMethod,
+                        coroutineScope = coroutineScope,
+                        analyticsManager = analyticsManager,
+                        checkoutConfiguration = checkoutConfiguration,
+                        componentParamsBundle = componentParamsBundle,
+                        checkoutCallbacks = callbacks,
+                    )
+                }
+            }
+
+            else -> null
+        }
+
+        paymentComponent?.eventFlow
+            ?.onEach { event ->
+                when (event) {
+                    is PaymentComponentEvent.Submit -> {
+                        paymentComponent.setLoading(true)
+                        callbacks.beforeSubmit?.beforeSubmit(event.state)
+                        val result = callbacks.onSubmit?.onSubmit(event.state.data)
+                        result?.let { handleResult(it) }
+                        paymentComponent.setLoading(false)
+                    }
+
+                    is PaymentComponentEvent.Error -> {
+                        callbacks.onError?.onError(event.error.toCheckoutError())
+                    }
+                }
+            }
+            ?.launchIn(coroutineScope)
+    }
+
+    private fun getPaymentMethodResponse(): PaymentMethods? {
+        return when (context) {
+            is CheckoutContext.Advanced -> context.paymentMethods
+            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethods
+        }
+    }
+
+    private fun handleResult(checkoutResult: CheckoutResult) {
+        when (checkoutResult) {
+            is CheckoutResult.Action -> handleAction(checkoutResult.action)
+            is CheckoutResult.Error -> {
+                // TODO - Handle error state
+            }
+
+            is CheckoutResult.Finished -> {
+                // TODO - Handle finished state
+            }
+        }
+    }
+
+    private fun handleAction(action: Action) {
+        val actionComponent = ActionComponentProvider.get(
+            action = action,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            checkoutConfiguration = checkoutConfiguration,
+            // TODO - Check if we really need saved state handle
+            savedStateHandle = @SuppressLint("VisibleForTests") SavedStateHandle(),
+            // TODO - Check if session params should be taken into account
+            commonComponentParams = componentParamsBundle.commonComponentParams,
+        )
+        this.actionComponent = actionComponent
+
+        actionComponent.eventFlow
+            .onEach { event ->
+                when (event) {
+                    is ActionComponentEvent.ActionDetails -> {
+                        callbacks.onAdditionalDetails?.onAdditionalDetails(event.data)
+                    }
+
+                    is ActionComponentEvent.Error -> {
+                        callbacks.onError?.onError(event.error.toCheckoutError())
+                    }
+                }
+            }
+            .launchIn(coroutineScope)
+
+        actionComponent.handleAction()
+
+        onNavigate?.invoke(CheckoutRoute.Action)
+    }
+
+    // TODO - Ensure we are not handling an action
+    fun submit() {
+        paymentComponent?.submit()
+    }
+}

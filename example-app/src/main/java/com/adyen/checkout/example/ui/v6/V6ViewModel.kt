@@ -26,7 +26,6 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
@@ -49,8 +48,6 @@ internal class V6ViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
-
-    val checkoutController = CheckoutController()
 
     // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
     private val configuration = CheckoutConfiguration(
@@ -160,8 +157,9 @@ internal class V6ViewModel @Inject constructor(
         uiState = V6UiState.Error(UIText.String(error.message.orEmpty()))
     }
 
+    @Suppress("unused")
     fun handleIntent(intent: Intent) {
-        checkoutController.handleIntent(intent)
+        // TODO - Check if the controller should handle the intent or if we can do this inside a component
     }
 
     companion object {
