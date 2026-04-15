@@ -1,6 +1,7 @@
 package com.adyen.checkout.components.core.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
+import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -21,7 +22,8 @@ internal class AnalyticsTrackInfoTest {
             issuer = "ing",
             validationErrorCode = "418",
             validationErrorMessage = "I'm a teapot",
-            mapOf("test" to "something"),
+            configData = mapOf("test" to "something"),
+            presentedValues = listOf("value1", "value2"),
         )
 
         val actual = AnalyticsTrackInfo.SERIALIZER.serialize(request)
@@ -42,6 +44,7 @@ internal class AnalyticsTrackInfoTest {
                 JSONObject()
                     .put("test", "something"),
             )
+            .put("presentedValues", JSONArray(listOf("value1", "value2")))
 
         assertEquals(expected.toString(), actual.toString())
     }
@@ -64,6 +67,7 @@ internal class AnalyticsTrackInfoTest {
                 JSONObject()
                     .put("test", "something"),
             )
+            .put("presentedValues", JSONArray(listOf("value1", "value2")))
 
         val actual = AnalyticsTrackInfo.SERIALIZER.deserialize(response)
 
@@ -78,7 +82,8 @@ internal class AnalyticsTrackInfoTest {
             issuer = "ing",
             validationErrorCode = "418",
             validationErrorMessage = "I'm a teapot",
-            mapOf("test" to "something"),
+            configData = mapOf("test" to "something"),
+            presentedValues = listOf("value1", "value2"),
         )
 
         assertEquals(expected, actual)
