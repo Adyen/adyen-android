@@ -97,6 +97,8 @@ internal class DefaultUPIDelegate(
 
         val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+
+        trackDisplayedEvent()
     }
 
     override fun observe(
@@ -191,6 +193,9 @@ internal class DefaultUPIDelegate(
     }
 
     private fun outputDataChanged(outputData: UPIOutputData) {
+        if (this.outputData.selectedMode != outputData.selectedMode) {
+            trackDisplayedEvent()
+        }
         _outputDataFlow.tryEmit(outputData)
     }
 
@@ -286,6 +291,31 @@ internal class DefaultUPIDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    private fun trackDisplayedEvent() {
+        val component: String
+        val target: String?
+        val presentedValues: List<String>?
+        when (outputData.selectedMode) {
+            UPISelectedMode.INTENT -> {
+                component = PaymentMethodTypes.UPI_INTENT
+                target = if (detectedApps.isEmpty()) INFO_EVENT_TARGET_ISSUER_LIST else INFO_EVENT_TARGET_LIST_DETECTED
+                presentedValues = detectedApps.mapNotNull { it.id }
+            }
+
+            UPISelectedMode.VPA -> {
+                component = PaymentMethodTypes.UPI_COLLECT
+                target = null
+                presentedValues = null
+            }
+        }
+        val event = GenericEvents.displayed(
+            component = component,
+            target = target,
+            presentedValues = presentedValues,
+        )
+        analyticsManager.trackEvent(event)
+    }
+
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
@@ -293,5 +323,7 @@ internal class DefaultUPIDelegate(
 
     companion object {
         private val GENERIC_UPI_URI = "upi://pay".toUri()
+        private const val INFO_EVENT_TARGET_ISSUER_LIST = "issuerList"
+        private const val INFO_EVENT_TARGET_LIST_DETECTED = "listDetected"
     }
 }
