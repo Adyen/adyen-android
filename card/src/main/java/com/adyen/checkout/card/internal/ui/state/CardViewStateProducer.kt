@@ -16,7 +16,6 @@ import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
-import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
@@ -38,24 +37,16 @@ internal class CardViewStateProducer(
             cardNumber = state.cardNumber.toViewState(
                 trailingIcon = getCardNumberTrailingIcon(state.cardNumber),
             ),
-            expiryDate = state.expiryDate.takeIf { it.requirementPolicy !is RequirementPolicy.Hidden }?.toViewState(
+            expiryDate = state.expiryDate.toViewState(
                 trailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
             ),
-            securityCode = state.securityCode.takeIf { it.requirementPolicy !is RequirementPolicy.Hidden }?.toViewState(
+            securityCode = state.securityCode.toViewState(
                 trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, detectedCardBrands),
             ),
-            holderName = state.takeIf {
-                it.holderName.requirementPolicy !is RequirementPolicy.Hidden
-            }?.holderName?.toViewState(),
-            socialSecurityNumber = state.takeIf {
-                it.socialSecurityNumber.requirementPolicy !is RequirementPolicy.Hidden
-            }?.socialSecurityNumber?.toViewState(),
-            kcpBirthDateOrTaxNumber = state.takeIf {
-                it.kcpBirthDateOrTaxNumber.requirementPolicy !is RequirementPolicy.Hidden
-            }?.kcpBirthDateOrTaxNumber?.toViewState(),
-            kcpCardPassword = state.takeIf {
-                it.kcpCardPassword.requirementPolicy !is RequirementPolicy.Hidden
-            }?.kcpCardPassword?.toViewState(),
+            holderName = state.holderName.toViewState(),
+            socialSecurityNumber = state.socialSecurityNumber.toViewState(),
+            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.toViewState(),
+            kcpCardPassword = state.kcpCardPassword.toViewState(),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
             supportedCardBrands = state.supportedCardBrands,

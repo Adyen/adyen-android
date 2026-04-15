@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
-import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class CardComponentStateValidator(
@@ -29,7 +28,6 @@ internal class CardComponentStateValidator(
             validateSecurityCode(
                 state.securityCode,
                 firstSupportedDetectedCardType,
-                state.securityCode.requirementPolicy ?: RequirementPolicy.Required,
             )
         val holderNameError = validateHolderName(state.holderName)
         val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)
@@ -67,7 +65,7 @@ internal class CardComponentStateValidator(
 
         return cardValidationMapper.mapCardNumberValidation(
             validation = CardValidationUtils.validateCardNumber(
-                number = cardNumber.text,
+                cardNumber = cardNumber,
                 enableLuhnCheck = enableLuhnCheck,
                 isBrandSupported = !shouldFailWithUnsupportedBrand,
             ),
@@ -80,7 +78,7 @@ internal class CardComponentStateValidator(
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapExpiryDateValidation(
             validation = CardValidationUtils.validateExpiryDate(
-                expiryDate = expiryDate.text,
+                expiryDate = expiryDate,
                 fieldPolicy = selectedOrFirstCardType?.expiryDatePolicy,
             ),
         )
@@ -89,13 +87,11 @@ internal class CardComponentStateValidator(
     private fun validateSecurityCode(
         securityCode: TextInputComponentState,
         selectedOrFirstCardType: DetectedCardType?,
-        uiState: RequirementPolicy,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapSecurityCodeValidation(
             validation = CardValidationUtils.validateSecurityCode(
-                securityCode = securityCode.text,
+                securityCode = securityCode,
                 detectedCardType = selectedOrFirstCardType,
-                uiState = uiState,
             ),
         )
     }
@@ -104,10 +100,7 @@ internal class CardComponentStateValidator(
         holderName: TextInputComponentState,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapHolderNameValidation(
-            validation = CardValidationUtils.validateHolderName(
-                holderName = holderName.text,
-                isRequired = holderName.requirementPolicy is RequirementPolicy.Required,
-            ),
+            validation = CardValidationUtils.validateHolderName(holderName = holderName),
         )
     }
 
@@ -115,10 +108,7 @@ internal class CardComponentStateValidator(
         socialSecurityNumber: TextInputComponentState,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapSocialSecurityNumberValidation(
-            validation = CardValidationUtils.validateSocialSecurityNumber(
-                socialSecurityNumber = socialSecurityNumber.text,
-                requirementPolicy = socialSecurityNumber.requirementPolicy,
-            ),
+            validation = CardValidationUtils.validateSocialSecurityNumber(socialSecurityNumber = socialSecurityNumber),
         )
     }
 
@@ -127,8 +117,7 @@ internal class CardComponentStateValidator(
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapKCPBirthDateOrTaxNumberValidation(
             validation = CardValidationUtils.validateKCPBirthDateOrTaxNumber(
-                kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber.text,
-                requirementPolicy = kcpBirthDateOrTaxNumber.requirementPolicy,
+                kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber,
             ),
         )
     }
@@ -137,10 +126,7 @@ internal class CardComponentStateValidator(
         kcpCardPassword: TextInputComponentState,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapKCPCardPasswordValidation(
-            validation = CardValidationUtils.validateKCPCardPassword(
-                kcpCardPassword = kcpCardPassword.text,
-                requirementPolicy = kcpCardPassword.requirementPolicy,
-            ),
+            validation = CardValidationUtils.validateKCPCardPassword(kcpCardPassword = kcpCardPassword),
         )
     }
 }

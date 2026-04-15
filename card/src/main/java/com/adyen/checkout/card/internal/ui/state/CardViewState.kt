@@ -15,7 +15,7 @@ import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 internal data class CardViewState(
-    val cardNumber: TextInputViewState,
+    val cardNumber: TextInputViewState?,
     val expiryDate: TextInputViewState?,
     val securityCode: TextInputViewState?,
     val holderName: TextInputViewState?,

@@ -71,14 +71,16 @@ private fun CardDetailsSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
     ) {
-        CardNumberField(
-            cardNumberState = viewState.cardNumber,
-            supportedCardBrands = viewState.supportedCardBrands,
-            isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
-            detectedCardBrands = viewState.detectedCardBrands,
-            isAmex = viewState.isAmex,
-            onIntent = onIntent,
-        )
+        if (viewState.cardNumber != null) {
+            CardNumberField(
+                cardNumberState = viewState.cardNumber,
+                supportedCardBrands = viewState.supportedCardBrands,
+                isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
+                detectedCardBrands = viewState.detectedCardBrands,
+                isAmex = viewState.isAmex,
+                onIntent = onIntent,
+            )
+        }
         if (viewState.expiryDate != null) {
             ExpiryDateField(
                 expiryDateState = viewState.expiryDate,

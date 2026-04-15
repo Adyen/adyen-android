@@ -30,8 +30,8 @@ internal class TextInputComponentStateTest {
         val viewState = state.toViewState()
 
         // THEN
-        assertTrue(viewState.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState.supportingText)
+        assertEquals(true, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
     }
 
     // UC1: Error on Explicit Validation - verify isValid
@@ -84,7 +84,7 @@ internal class TextInputComponentStateTest {
         val viewState = focusedState.toViewState()
 
         // THEN
-        assertFalse(viewState.isError)
+        assertEquals(false, viewState?.isError)
     }
 
     // UC3: Error on Focus Loss
@@ -121,8 +121,8 @@ internal class TextInputComponentStateTest {
         val viewState = blurredState.toViewState()
 
         // THEN
-        assertTrue(viewState.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState.supportingText)
+        assertEquals(true, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
     }
 
     // UC4: No Error While Typing
@@ -158,7 +158,7 @@ internal class TextInputComponentStateTest {
         val viewState = typingState.toViewState()
 
         // THEN
-        assertFalse(viewState.isError)
+        assertEquals(false, viewState?.isError)
         assertFalse(typingState.showError)
     }
 
@@ -177,7 +177,7 @@ internal class TextInputComponentStateTest {
         val viewState = blurredState.toViewState()
 
         // THEN
-        assertFalse(viewState.isError)
+        assertEquals(false, viewState?.isError)
     }
 
     // UC14: Empty Field - verify empty is considered valid
@@ -211,8 +211,8 @@ internal class TextInputComponentStateTest {
         val viewState = state.toViewState()
 
         // THEN
-        assertFalse(viewState.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState.supportingText)
+        assertEquals(false, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
     }
 
     // Additional test: Verify error replaces placeholder
@@ -230,7 +230,7 @@ internal class TextInputComponentStateTest {
         val viewState = state.toViewState()
 
         // THEN
-        assertTrue(viewState.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState.supportingText)
+        assertEquals(true, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
     }
 }
