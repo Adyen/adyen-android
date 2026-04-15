@@ -196,6 +196,9 @@ internal class DefaultUPIDelegate(
         if (this.outputData.selectedMode != outputData.selectedMode) {
             trackDisplayedEvent()
         }
+        if (this.outputData.selectedUPIIntentItem != outputData.selectedUPIIntentItem) {
+            trackSelectedEvent((outputData.selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id.orEmpty())
+        }
         _outputDataFlow.tryEmit(outputData)
     }
 
@@ -312,6 +315,16 @@ internal class DefaultUPIDelegate(
             component = component,
             target = target,
             presentedValues = presentedValues,
+        )
+        analyticsManager.trackEvent(event)
+    }
+
+    private fun trackSelectedEvent(itemId: String) {
+        val target = if (detectedApps.isEmpty()) INFO_EVENT_TARGET_ISSUER_LIST else INFO_EVENT_TARGET_LIST_DETECTED
+        val event = GenericEvents.selected(
+            component = PaymentMethodTypes.UPI_INTENT,
+            target = target,
+            issuer = itemId,
         )
         analyticsManager.trackEvent(event)
     }
