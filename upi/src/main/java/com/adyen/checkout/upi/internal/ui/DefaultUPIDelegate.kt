@@ -302,7 +302,7 @@ internal class DefaultUPIDelegate(
             UPISelectedMode.INTENT -> {
                 component = PaymentMethodTypes.UPI_INTENT
                 target = if (detectedApps.isEmpty()) INFO_EVENT_TARGET_ISSUER_LIST else INFO_EVENT_TARGET_LIST_DETECTED
-                presentedValues = detectedApps.mapNotNull { it.id }
+                presentedValues = detectedApps.ifEmpty { paymentMethod.apps }?.mapNotNull { it.id }
             }
 
             UPISelectedMode.VPA -> {
