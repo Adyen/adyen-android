@@ -98,7 +98,7 @@ internal class DefaultUPIDelegate(
         val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
 
-        trackDisplayedEvent()
+        trackDisplayedEvent(outputData)
     }
 
     override fun observe(
@@ -194,7 +194,7 @@ internal class DefaultUPIDelegate(
 
     private fun outputDataChanged(outputData: UPIOutputData) {
         if (this.outputData.selectedMode != outputData.selectedMode) {
-            trackDisplayedEvent()
+            trackDisplayedEvent(outputData)
         }
         if (this.outputData.selectedUPIIntentItem != outputData.selectedUPIIntentItem) {
             trackSelectedEvent((outputData.selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id.orEmpty())
@@ -294,7 +294,7 @@ internal class DefaultUPIDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    private fun trackDisplayedEvent() {
+    private fun trackDisplayedEvent(outputData: UPIOutputData) {
         val component: String
         val target: String?
         val presentedValues: List<String>?
