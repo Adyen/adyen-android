@@ -383,7 +383,7 @@ internal class DefaultUPIDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             val expectedEvent = GenericEvents.rendered(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            analyticsManager.assertHasEventEquals(expectedEvent)
         }
 
         @Test
@@ -431,6 +431,149 @@ internal class DefaultUPIDelegateTest(
             delegate.onCleared()
 
             analyticsManager.assertIsCleared()
+        }
+
+        @Test
+        fun `when mode changes to INTENT with detected apps, then displayed event is tracked with listDetected target`() = runTest {
+            val paymentMethod = PaymentMethod(
+                type = TEST_PAYMENT_METHOD_TYPE,
+                apps = listOf(
+                    AppData("id1", "name1", AppIdentifierInfo("com.package1")),
+                    AppData("id2", "name2", AppIdentifierInfo("com.package2")),
+                ),
+            )
+            val resolveInfos = listOf(
+                createResolveInfo("com.package1"),
+                createResolveInfo("com.package2"),
+            )
+            whenever(packageManager.queryIntentActivities(any<Intent>(), anyInt())) doReturn resolveInfos
+            delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.INTENT
+            }
+
+            val expectedEvent = GenericEvents.displayed(
+                component = PaymentMethodTypes.UPI_INTENT,
+                target = "listDetected",
+                presentedValues = listOf("id1", "id2"),
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when mode changes to INTENT without detected apps, then displayed event is tracked with issuerList target`() = runTest {
+            val paymentMethod = PaymentMethod(
+                type = TEST_PAYMENT_METHOD_TYPE,
+                apps = listOf(
+                    AppData("id1", "name1", AppIdentifierInfo("com.package1")),
+                    AppData("id2", "name2", AppIdentifierInfo("com.package2")),
+                ),
+            )
+            whenever(packageManager.queryIntentActivities(any<Intent>(), anyInt())) doReturn emptyList()
+            delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.INTENT
+            }
+
+            val expectedEvent = GenericEvents.displayed(
+                component = PaymentMethodTypes.UPI_INTENT,
+                target = "issuerList",
+                presentedValues = listOf("id1", "id2"),
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when mode changes to VPA, then displayed event is tracked without target and presentedValues`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.VPA
+            }
+
+            val expectedEvent = GenericEvents.displayed(
+                component = PaymentMethodTypes.UPI_COLLECT,
+                target = null,
+                presentedValues = null,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when an UPI app is selected with detected apps, then selected event is tracked with listDetected target`() = runTest {
+            val paymentMethod = PaymentMethod(
+                type = TEST_PAYMENT_METHOD_TYPE,
+                apps = listOf(
+                    AppData("id1", "name1", AppIdentifierInfo("com.package1")),
+                    AppData("id2", "name2", AppIdentifierInfo("com.package2")),
+                ),
+            )
+            val resolveInfos = listOf(
+                createResolveInfo("com.package1"),
+                createResolveInfo("com.package2"),
+            )
+            whenever(packageManager.queryIntentActivities(any<Intent>(), anyInt())) doReturn resolveInfos
+            delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                selectedUPIIntentItem = UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST)
+            }
+
+            val expectedEvent = GenericEvents.selected(
+                component = PaymentMethodTypes.UPI_INTENT,
+                target = "listDetected",
+                issuer = "id2",
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when an UPI app is selected without detected apps, then selected event is tracked with issuerList target`() = runTest {
+            val paymentMethod = PaymentMethod(
+                type = TEST_PAYMENT_METHOD_TYPE,
+                apps = listOf(
+                    AppData("id1", "name1", AppIdentifierInfo("com.package1")),
+                    AppData("id2", "name2", AppIdentifierInfo("com.package2")),
+                ),
+            )
+            whenever(packageManager.queryIntentActivities(any<Intent>(), anyInt())) doReturn emptyList()
+            delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                selectedUPIIntentItem = UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST)
+            }
+
+            val expectedEvent = GenericEvents.selected(
+                component = PaymentMethodTypes.UPI_INTENT,
+                target = "issuerList",
+                issuer = "id1",
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when delegate is initialized with VPA mode, then displayed event is tracked`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.displayed(
+                component = PaymentMethodTypes.UPI_COLLECT,
+                target = null,
+                presentedValues = null,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        private fun createResolveInfo(packageName: String): ResolveInfo {
+            val resolveInfo = ResolveInfo()
+            resolveInfo.activityInfo = ActivityInfo()
+            resolveInfo.activityInfo.packageName = packageName
+            return resolveInfo
         }
     }
 
