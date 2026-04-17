@@ -144,6 +144,7 @@ internal class DefaultUPIDelegate(
             selectedUPIIntentItem = selectedUPIIntentItem,
             showNoSelectedUPIIntentItemError = showNoSelectedUPIIntentItemError,
             virtualPaymentAddressFieldState = validateVirtualPaymentAddress(vpaVirtualPaymentAddress),
+            didDetectApps = detectedApps.isNotEmpty(),
         )
     }
 
