@@ -13,7 +13,6 @@ import android.content.pm.PackageManager
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -60,10 +59,12 @@ internal class DefaultUPIDelegate(
     private val packageManager: PackageManager,
 ) : UPIDelegate {
 
-    private val detectedPackageNames by lazy {
+    private val detectedApps by lazy {
         val intent = Intent(Intent.ACTION_VIEW, GENERIC_UPI_URI)
-        packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        val localApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
             .map { it.activityInfo.packageName }
+        paymentMethod.apps.orEmpty()
+            .filter { it.appIdentifierInfo?.androidPackageId in localApps }
     }
 
     private val inputData = UPIInputData()
@@ -96,6 +97,8 @@ internal class DefaultUPIDelegate(
 
         val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+
+        trackDisplayedEvent(outputData)
     }
 
     override fun observe(
@@ -130,7 +133,7 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createOutputData(includeValidationErrors: Boolean = false) = with(inputData) {
-        val availableModes = createAvailableModes(this, paymentMethod)
+        val availableModes = createAvailableModes(this)
         val selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode()
         val showNoSelectedUPIIntentItemError =
             shouldShowNoSelectedUPIIntentItemError(selectedMode, selectedUPIIntentItem, includeValidationErrors)
@@ -146,12 +149,10 @@ internal class DefaultUPIDelegate(
 
     private fun createAvailableModes(
         inputData: UPIInputData,
-        paymentMethod: PaymentMethod,
     ) = with(inputData) {
         val appIds = paymentMethod.apps
         if (!appIds.isNullOrEmpty()) {
             val intentItemList = createIntentItems(
-                appIds,
                 componentParams.environment,
                 selectedUPIIntentItem,
             )
@@ -163,13 +164,11 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createIntentItems(
-        upiApps: List<AppData>,
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
     ): List<UPIIntentItem> {
-        return upiApps
-            .filter { it.appIdentifierInfo?.androidPackageId in detectedPackageNames }
-            .ifEmpty { upiApps }
+        return detectedApps
+            .ifEmpty { paymentMethod.apps.orEmpty() }
             .mapToPaymentApp(
                 environment = environment,
                 selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
@@ -194,6 +193,12 @@ internal class DefaultUPIDelegate(
     }
 
     private fun outputDataChanged(outputData: UPIOutputData) {
+        if (this.outputData.selectedMode != outputData.selectedMode) {
+            trackDisplayedEvent(outputData)
+        }
+        if (this.outputData.selectedUPIIntentItem != outputData.selectedUPIIntentItem) {
+            trackSelectedEvent((outputData.selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id.orEmpty())
+        }
         _outputDataFlow.tryEmit(outputData)
     }
 
@@ -289,6 +294,41 @@ internal class DefaultUPIDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    private fun trackDisplayedEvent(outputData: UPIOutputData) {
+        val component: String
+        val target: String?
+        val presentedValues: List<String>?
+        when (outputData.selectedMode) {
+            UPISelectedMode.INTENT -> {
+                component = PaymentMethodTypes.UPI_INTENT
+                target = if (detectedApps.isEmpty()) INFO_EVENT_TARGET_ISSUER_LIST else INFO_EVENT_TARGET_LIST_DETECTED
+                presentedValues = detectedApps.ifEmpty { paymentMethod.apps }?.mapNotNull { it.id }
+            }
+
+            UPISelectedMode.VPA -> {
+                component = PaymentMethodTypes.UPI_COLLECT
+                target = null
+                presentedValues = null
+            }
+        }
+        val event = GenericEvents.displayed(
+            component = component,
+            target = target,
+            presentedValues = presentedValues,
+        )
+        analyticsManager.trackEvent(event)
+    }
+
+    private fun trackSelectedEvent(itemId: String) {
+        val target = if (detectedApps.isEmpty()) INFO_EVENT_TARGET_ISSUER_LIST else INFO_EVENT_TARGET_LIST_DETECTED
+        val event = GenericEvents.selected(
+            component = PaymentMethodTypes.UPI_INTENT,
+            target = target,
+            issuer = itemId,
+        )
+        analyticsManager.trackEvent(event)
+    }
+
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
@@ -296,5 +336,7 @@ internal class DefaultUPIDelegate(
 
     companion object {
         private val GENERIC_UPI_URI = "upi://pay".toUri()
+        private const val INFO_EVENT_TARGET_ISSUER_LIST = "issuerList"
+        private const val INFO_EVENT_TARGET_LIST_DETECTED = "listDetected"
     }
 }

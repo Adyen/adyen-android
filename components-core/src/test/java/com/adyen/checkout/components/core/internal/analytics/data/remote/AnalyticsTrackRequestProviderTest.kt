@@ -35,6 +35,7 @@ internal class AnalyticsTrackRequestProviderTest {
                 validationErrorCode = "418",
                 validationErrorMessage = "I'm a teapot",
                 configData = mapOf("test" to "yes"),
+                presentedValues = listOf("value1", "value2"),
             ),
         )
         val logList = listOf(
@@ -78,6 +79,7 @@ internal class AnalyticsTrackRequestProviderTest {
                     validationErrorCode = "418",
                     validationErrorMessage = "I'm a teapot",
                     configData = mapOf("test" to "yes"),
+                    presentedValues = listOf("value1", "value2"),
                 ),
             ),
             logs = listOf(

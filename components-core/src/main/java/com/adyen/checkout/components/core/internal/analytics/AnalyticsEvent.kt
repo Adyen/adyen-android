@@ -34,6 +34,7 @@ sealed interface AnalyticsEvent {
         val validationErrorCode: String? = null,
         val validationErrorMessage: String? = null,
         val configData: Map<String, String>? = null,
+        val presentedValues: List<String>? = null,
     ) : AnalyticsEvent {
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

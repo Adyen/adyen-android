@@ -9,6 +9,8 @@
 package com.adyen.checkout.components.core.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.JsonUtils.parseOptStringList
+import com.adyen.checkout.core.internal.data.model.JsonUtils.serializeOptStringList
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import com.adyen.checkout.core.internal.data.model.getLongOrNull
@@ -31,6 +33,7 @@ internal data class AnalyticsTrackInfo(
     val validationErrorCode: String?,
     val validationErrorMessage: String?,
     val configData: Map<String, String>?,
+    val presentedValues: List<String>?,
 ) : ModelObject() {
 
     companion object {
@@ -45,6 +48,7 @@ internal data class AnalyticsTrackInfo(
         private const val VALIDATION_ERROR_CODE = "validationErrorCode"
         private const val VALIDATION_ERROR_MESSAGE = "validationErrorMessage"
         private const val CONFIG_DATA = "configData"
+        private const val PRESENTED_VALUES = "presentedValues"
 
         @JvmField
         val SERIALIZER: Serializer<AnalyticsTrackInfo> = object : Serializer<AnalyticsTrackInfo> {
@@ -62,6 +66,7 @@ internal data class AnalyticsTrackInfo(
                         putOpt(VALIDATION_ERROR_CODE, modelObject.validationErrorCode)
                         putOpt(VALIDATION_ERROR_MESSAGE, modelObject.validationErrorMessage)
                         putOpt(CONFIG_DATA, modelObject.configData?.let { JSONObject(it) })
+                        putOpt(PRESENTED_VALUES, serializeOptStringList(modelObject.presentedValues))
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AnalyticsTrackInfo::class.java, e)
@@ -83,6 +88,7 @@ internal data class AnalyticsTrackInfo(
                             validationErrorCode = getStringOrNull(VALIDATION_ERROR_CODE),
                             validationErrorMessage = getStringOrNull(VALIDATION_ERROR_MESSAGE),
                             configData = getMapOrNull(CONFIG_DATA),
+                            presentedValues = parseOptStringList(jsonObject.optJSONArray(PRESENTED_VALUES)),
                         )
                     }
                 } catch (e: JSONException) {
