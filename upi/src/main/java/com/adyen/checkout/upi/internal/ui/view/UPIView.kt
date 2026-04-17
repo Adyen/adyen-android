@@ -166,14 +166,19 @@ internal class UPIView @JvmOverloads constructor(
     private fun updateUpiIntentViews(isChecked: Boolean) {
         binding.textViewIntentInstruction.isVisible = isChecked
         binding.textViewListTitle.isVisible = isChecked
-        // TODO - Add translations and change text dynamically
-        binding.textViewListTitle.text = "On your device"
         binding.recyclerViewUpiIntent.isVisible = isChecked
         if (isChecked) {
             binding.editTextVpa.clearFocus()
             hideKeyboard()
             delegate.updateInputData { selectedMode = UPISelectedMode.INTENT }
         }
+
+        val listTitleId = if (delegate.outputData.didDetectApps) {
+            R.string.checkout_upi_app_list_title_detected
+        } else {
+            R.string.checkout_upi_app_list_title_not_detected
+        }
+        binding.textViewListTitle.text = localizedContext.getString(listTitleId)
     }
 
     private fun onIntentItemClicked(item: UPIIntentItem) {

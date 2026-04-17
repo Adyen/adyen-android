@@ -753,6 +753,7 @@ internal class DefaultUPIDelegateTest(
             selectedUPIIntentItem = selectedUPIIntentItem,
             showNoSelectedUPIIntentItemError = showNoSelectedUPIIntentItemError,
             virtualPaymentAddressFieldState = virtualPaymentAddressFieldState,
+            didDetectApps = false,
         )
     }
 }

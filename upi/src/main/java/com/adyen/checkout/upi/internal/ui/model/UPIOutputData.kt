@@ -14,9 +14,10 @@ import com.adyen.checkout.components.core.internal.ui.model.OutputData
 internal class UPIOutputData(
     val availableModes: List<UPIMode>,
     val selectedMode: UPISelectedMode,
-    var selectedUPIIntentItem: UPIIntentItem? = null,
+    val selectedUPIIntentItem: UPIIntentItem? = null,
     val showNoSelectedUPIIntentItemError: Boolean,
     val virtualPaymentAddressFieldState: FieldState<String>,
+    val didDetectApps: Boolean,
 ) : OutputData {
 
     override val isValid: Boolean
