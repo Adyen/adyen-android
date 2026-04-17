@@ -23,7 +23,10 @@
         android:id="@+id/toggleButton_choice"
         style="@style/AdyenCheckout.UPI.ButtonToggleGroup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_intent"
