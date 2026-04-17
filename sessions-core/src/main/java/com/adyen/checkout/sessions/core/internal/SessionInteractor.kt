@@ -119,9 +119,11 @@ class SessionInteractor(
                 onSuccess = { response ->
                     updateSessionData(response.sessionData)
 
-                    return when (val action = response.action) {
+                    return when (response.action) {
                         null -> SessionCallResult.Details.Finished(response.mapToSessionPaymentResult())
-                        else -> SessionCallResult.Details.Action(action)
+                        else -> SessionCallResult.Details.Error(
+                            throwable = IllegalStateException("Unexpected action response during additional details"),
+                        )
                     }
                 },
                 onFailure = {
