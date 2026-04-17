@@ -25,6 +25,7 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
