@@ -208,7 +208,9 @@ internal class SessionComponentEventHandlerTest(
             @Test
             fun `then loading state should be propagated properly`() = runTest {
                 whenever(sessionInteractor.onDetailsCallRequested(any(), any(), any())) doReturn
-                    SessionCallResult.Details.Error(IllegalStateException("Unexpected action response during additional details"))
+                    SessionCallResult.Details.Error(
+                        IllegalStateException("Unexpected action response during additional details"),
+                    )
                 val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
