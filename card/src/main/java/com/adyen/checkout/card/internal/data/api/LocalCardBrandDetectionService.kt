@@ -15,18 +15,20 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 
-internal class LocalCardBrandDetectionService {
+internal class LocalCardBrandDetectionService(
+    private val supportedCardBrands: List<CardBrand>,
+) {
 
-    fun getCardBrands(cardNumber: String, supportedCardBrands: List<CardBrand>): List<DetectedCardType> {
+    fun getCardBrands(cardNumber: String): List<DetectedCardType> {
         adyenLog(AdyenLogLevel.DEBUG) { "getting local card brands" }
         if (cardNumber.isEmpty()) {
             return emptyList()
         }
         val matchingCardBrands = CardBrand.estimate(cardNumber)
-        return matchingCardBrands.map { mapCardBrands(it, supportedCardBrands) }
+        return matchingCardBrands.map(::mapCardBrands)
     }
 
-    private fun mapCardBrands(cardBrand: CardBrand, supportedCardBrands: List<CardBrand>): DetectedCardType {
+    private fun mapCardBrands(cardBrand: CardBrand): DetectedCardType {
         return DetectedCardType(
             cardBrand = cardBrand,
             isReliable = false,

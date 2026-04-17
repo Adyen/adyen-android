@@ -162,20 +162,7 @@ internal class CardComponent(
     }
 
     private fun detectCardTypes(cardNumber: String) {
-        val publicKey = componentParams.publicKey
-        if (publicKey == null) {
-            onPublicKeyNotFound(GenericError("Public key is missing."))
-            return
-        }
-
-        detectCardTypeRepository.detectCardTypes(
-            cardNumber = cardNumber,
-            publicKey = publicKey,
-            supportedCardBrands = componentParams.supportedCardBrands,
-            clientKey = componentParams.clientKey,
-            // TODO ensure this is set dynamically when BCMC is supported
-            paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
-        ).onEach { result ->
+        detectCardTypeRepository.detectCardTypes(cardNumber).onEach { result ->
             onIntent(CardIntent.UpdateDetectedCardTypes(result))
         }.launchIn(coroutineScope)
     }
