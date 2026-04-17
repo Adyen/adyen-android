@@ -12,7 +12,6 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.BinLookupCacheResult
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,13 +22,7 @@ internal class DefaultDetectCardTypeRepository(
     private val networkCardBrandDetectionService: NetworkCardBrandDetectionService,
 ) : DetectCardTypeRepository {
 
-    override fun detectCardTypes(
-        cardNumber: String,
-        publicKey: String,
-        supportedCardBrands: List<CardBrand>,
-        clientKey: String,
-        paymentMethodType: String?
-    ): Flow<List<DetectedCardType>> = flow {
+    override fun detectCardTypes(cardNumber: String): Flow<List<DetectedCardType>> = flow {
         // if we remove this@DefaultDetectCardTypeRepository the tag gets resolved as SafeCollector since we're inside
         // a flow block
         // TODO fix logger to resolve the correct tag
@@ -53,10 +46,7 @@ internal class DefaultDetectCardTypeRepository(
 
             is BinLookupCacheResult.Fetching -> {
                 // return local card types
-                val localDetectedCardTypes = localCardBrandDetectionService.getCardBrands(
-                    cardNumber,
-                    supportedCardBrands,
-                )
+                val localDetectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber)
                 emit(localDetectedCardTypes)
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                     "card types detected locally: ${localDetectedCardTypes.toLogString()}"
@@ -65,10 +55,7 @@ internal class DefaultDetectCardTypeRepository(
 
             is BinLookupCacheResult.Unavailable -> {
                 // return local card types first
-                val localDetectedCardTypes = localCardBrandDetectionService.getCardBrands(
-                    cardNumber,
-                    supportedCardBrands,
-                )
+                val localDetectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber)
                 emit(localDetectedCardTypes)
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                     "card types detected locally: ${localDetectedCardTypes.toLogString()}"
@@ -76,13 +63,7 @@ internal class DefaultDetectCardTypeRepository(
 
                 if (bin != null) {
                     // fetch from network and cache results
-                    val networkDetectedCardTypes = detectCardTypesFromNetwork(
-                        bin,
-                        publicKey,
-                        supportedCardBrands,
-                        clientKey,
-                        paymentMethodType,
-                    )
+                    val networkDetectedCardTypes = detectCardTypesFromNetwork(bin)
                     if (networkDetectedCardTypes != null) {
                         emit(networkDetectedCardTypes)
                         this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
@@ -102,25 +83,13 @@ internal class DefaultDetectCardTypeRepository(
         return cardNumber.takeIf { it.length >= BIN_LENGTH }?.take(BIN_LENGTH)
     }
 
-    private suspend fun detectCardTypesFromNetwork(
-        bin: String,
-        publicKey: String,
-        supportedCardBrands: List<CardBrand>,
-        clientKey: String,
-        paymentMethodType: String?
-    ): List<DetectedCardType>? {
+    private suspend fun detectCardTypesFromNetwork(bin: String): List<DetectedCardType>? {
         adyenLog(AdyenLogLevel.VERBOSE) { "detectCardTypesFromNetwork" }
 
         // ensure we don't call bin lookup again while another call for the same bin is in progress
         binLookupCache.setFetching(bin)
 
-        val detectionResult = networkCardBrandDetectionService.getCardBrands(
-            bin,
-            publicKey,
-            supportedCardBrands,
-            clientKey,
-            paymentMethodType,
-        )
+        val detectionResult = networkCardBrandDetectionService.getCardBrands(bin)
         return detectionResult.fold(
             onSuccess = { detectedCardTypes ->
                 binLookupCache.setCachedResults(bin, detectedCardTypes)

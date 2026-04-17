@@ -18,12 +18,12 @@ import kotlinx.coroutines.withContext
 
 internal class BinLookupService(
     private val httpClient: HttpClient,
+    private val clientKey: String,
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
     suspend fun makeBinLookup(
         request: BinLookupRequest,
-        clientKey: String,
     ): BinLookupResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v2/bin/binLookup",

@@ -39,6 +39,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -70,13 +71,17 @@ internal class CardFactory :
 
         val cardEncryptor = CardEncryptorFactory.provide()
         val genericEncryptor = GenericEncryptorFactory.provide()
-        val httpClient = HttpClientFactory.getHttpClient(componentParamsBundle.commonComponentParams.environment)
-        val binLookupService = BinLookupService(httpClient)
+        val httpClient = HttpClientFactory.getHttpClient(cardComponentParams.environment)
+        val binLookupService = BinLookupService(httpClient, cardComponentParams.clientKey)
         val binLookupCache = BinLookupCache()
-        val localCardBrandDetectionService = LocalCardBrandDetectionService()
+        val localCardBrandDetectionService = LocalCardBrandDetectionService(cardComponentParams.supportedCardBrands)
         val networkCardBrandDetectionService = NetworkCardBrandDetectionService(
             cardEncryptor,
             binLookupService,
+            cardComponentParams.publicKey,
+            cardComponentParams.supportedCardBrands,
+            // TODO ensure this is set to BCMC in the BCMC factory supported
+            paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
         )
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(
             binLookupCache,
