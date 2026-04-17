@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.core.components
 
-import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.components.data.OrderResponse
-import com.adyen.checkout.core.action.data.Action as ActionResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.error.CheckoutError
+import com.adyen.checkout.core.action.data.Action as ActionResponse
 
 // TODO - KDocs, revisit later after having parameters
 /**
