@@ -18,4 +18,6 @@
     <string name="checkout_upi_id_tab_title">UPI ID</string>
     <string name="checkout_upi_id_instruction">UPI IDを入力してください</string>
     <string name="checkout_upi_app_instruction">お好みのUPIアプリを選択</string>
+    <string name="checkout_upi_app_list_title_detected">お使いのデバイスで</string>
+    <string name="checkout_upi_app_list_title_not_detected">オプション</string>
 </resources>

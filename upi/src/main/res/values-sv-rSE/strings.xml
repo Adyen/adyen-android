@@ -14,8 +14,10 @@
     <string name="checkout_upi_id_label">UPI-ID</string>
     <string name="checkout_upi_app_other_upi">Annan UPI</string>
     <string name="checkout_upi_no_app_selected">Välj din föredragna UPI-app för att fortsätta</string>
-    <string name="checkout_upi_app_tab_title">UPI-app</string>
+    <string name="checkout_upi_app_tab_title">UPI-appar</string>
     <string name="checkout_upi_id_tab_title">UPI-ID</string>
     <string name="checkout_upi_id_instruction">Bekräfta ditt UPI-ID</string>
     <string name="checkout_upi_app_instruction">Välj din föredragna UPI-app</string>
+    <string name="checkout_upi_app_list_title_detected">På din enhet</string>
+    <string name="checkout_upi_app_list_title_not_detected">Alternativ</string>
 </resources>

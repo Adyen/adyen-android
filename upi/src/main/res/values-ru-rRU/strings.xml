@@ -14,8 +14,10 @@
     <string name="checkout_upi_id_label">Идентификатор UPI</string>
     <string name="checkout_upi_app_other_upi">Другие UPI</string>
     <string name="checkout_upi_no_app_selected">Для продолжения выберите предпочитаемое приложение UPI</string>
-    <string name="checkout_upi_app_tab_title">Приложение UPI</string>
+    <string name="checkout_upi_app_tab_title">Приложения UPI</string>
     <string name="checkout_upi_id_tab_title">Идентификатор UPI</string>
     <string name="checkout_upi_id_instruction">Введите свой идентификатор UPI</string>
     <string name="checkout_upi_app_instruction">Выберите предпочитаемое приложение UPI</string>
+    <string name="checkout_upi_app_list_title_detected">На вашем устройстве</string>
+    <string name="checkout_upi_app_list_title_not_detected">Опции</string>
 </resources>
