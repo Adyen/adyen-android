@@ -83,13 +83,11 @@
         android:id="@+id/recyclerView_upiIntent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:descendantFocusability="beforeDescendants"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:overScrollMode="never"
+        android:nestedScrollingEnabled="false"
         android:paddingBottom="@dimen/standard_half_margin"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/upi_app"
         tools:visibility="visible" />
 
     <com.google.android.material.textfield.TextInputLayout
