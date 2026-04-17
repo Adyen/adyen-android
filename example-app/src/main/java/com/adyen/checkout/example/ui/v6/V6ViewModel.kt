@@ -23,6 +23,7 @@ import com.adyen.checkout.card.onBinLookup
 import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
@@ -31,6 +32,7 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.error.CheckoutError
@@ -121,10 +123,10 @@ internal class V6ViewModel @Inject constructor(
         Log.d(TAG, "Bin Lookup Data received: ${binLookupData.joinToString(",") { it.brand }}")
     }
 
-    private suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult {
-        val serializedPaymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
+    private suspend fun onSubmit(data: PaymentComponentData<*>): SubmitResult {
+        val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
         val paymentRequest = createPaymentRequest(
-            paymentComponentData = serializedPaymentComponentData,
+            paymentComponentData = paymentComponentData,
             shopperReference = keyValueStorage.getShopperReference(),
             amount = keyValueStorage.getOldAmount(),
             countryCode = keyValueStorage.getCountry(),
@@ -135,27 +137,48 @@ internal class V6ViewModel @Inject constructor(
             shopperEmail = keyValueStorage.getShopperEmail(),
         )
         val response = paymentsRepository.makePaymentsRequest(paymentRequest)
-        return handleResponse(response)
+        return handleSubmitResponse(response)
     }
 
-    private suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
+    private suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): AdditionalDetailsResult {
         val request = ActionComponentData.SERIALIZER.serialize(actionComponentData)
         val response = paymentsRepository.makeDetailsRequest(request)
-        return handleResponse(response)
+        return handleAdditionalDetailsResponse(response)
     }
 
-    private fun handleResponse(json: JSONObject?): CheckoutResult {
+    private fun handleSubmitResponse(json: JSONObject?): SubmitResult {
         return when {
-            json == null -> CheckoutResult.Error("Network error")
+            json == null -> SubmitResult.Error(
+                CheckoutError(
+                    code = CheckoutError.ErrorCode.UNKNOWN,
+                    message = "Network error",
+                )
+            )
             json.has("action") -> {
                 val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
-                CheckoutResult.Action(action)
+                SubmitResult.Action(action)
             }
 
             else -> {
                 // TODO - move to onFinished callback after it's introduced
                 uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                CheckoutResult.Finished()
+                SubmitResult.Finished()
+            }
+        }
+    }
+
+    private fun handleAdditionalDetailsResponse(json: JSONObject?): AdditionalDetailsResult {
+        return when {
+            json == null -> AdditionalDetailsResult.Error(
+                CheckoutError(
+                    code = CheckoutError.ErrorCode.UNKNOWN,
+                    message = "Network error",
+                )
+            )
+            else -> {
+                // TODO - move to onFinished callback after it's introduced
+                uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
+                AdditionalDetailsResult.Finished()
             }
         }
     }

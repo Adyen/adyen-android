@@ -17,10 +17,11 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
@@ -117,11 +118,11 @@ internal class PaymentMethodViewModel(
         // TODO - Implement after beforeSubmit is added to DropInService
     }
 
-    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
+    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): SubmitResult {
         return dropInServiceManager.requestOnSubmit(paymentComponentData)
     }
 
-    private suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+    private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         return dropInServiceManager.requestOnAdditionalDetails(data)
     }
 
