@@ -104,23 +104,9 @@ class ExampleV6DropInService : DropInService() {
                 )
             }
 
-            isAction(jsonResponse) -> {
-                Log.d(TAG, "Received unexpected action during additional details")
-                AdditionalDetailsResult.Error(
-                    CheckoutError(
-                        code = CheckoutError.ErrorCode.UNKNOWN,
-                        message = "Unexpected action response during additional details",
-                    )
-                )
-            }
-
             else -> {
                 Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
-                val resultCode = if (jsonResponse.has("resultCode")) {
-                    jsonResponse.get("resultCode").toString()
-                } else {
-                    "EMPTY"
-                }
+                val resultCode = jsonResponse.optString("resultCode").takeIf { it.isNotEmpty() }
                 AdditionalDetailsResult.Finished(resultCode)
             }
         }
