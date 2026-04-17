@@ -16,32 +16,33 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import java.util.UUID
 
 internal class NetworkCardBrandDetectionService(
     private val cardEncryptor: BaseCardEncryptor,
     private val binLookupService: BinLookupService,
+    private val publicKey: String?,
+    private val supportedCardBrands: List<CardBrand>,
+    private val paymentMethodType: String?,
 ) {
 
-    suspend fun getCardBrands(
-        bin: String,
-        publicKey: String,
-        supportedCardBrands: List<CardBrand>,
-        clientKey: String,
-        paymentMethodType: String?
-    ): Result<List<DetectedCardType>> {
+    suspend fun getCardBrands(bin: String): Result<List<DetectedCardType>> {
         adyenLog(AdyenLogLevel.DEBUG) { "fetching card brands from network - bin lookup" }
+        val publicKey = publicKey
+        if (publicKey == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Public key is null" }
+            // no need for an error callback since BIN lookup failing is not a fatal error
+            return Result.failure(GenericError("Public key is missing."))
+        }
         val binLookupResult = runSuspendCatching {
             val encryptedBin = cardEncryptor.encryptBin(bin, publicKey)
             val stringCardBrands = supportedCardBrands.map { it.txVariant }
             val requestId = UUID.randomUUID().toString()
             val request = BinLookupRequest(encryptedBin, requestId, stringCardBrands, paymentMethodType)
 
-            binLookupService.makeBinLookup(
-                request = request,
-                clientKey = clientKey,
-            )
+            binLookupService.makeBinLookup(request)
         }
             .onFailure { e ->
                 adyenLog(AdyenLogLevel.ERROR, e) { "getCardBrands - Error calling bin lookup" }
