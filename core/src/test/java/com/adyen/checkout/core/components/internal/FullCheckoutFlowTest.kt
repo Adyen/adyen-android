@@ -18,9 +18,9 @@ import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
@@ -93,7 +93,7 @@ internal class FullCheckoutFlowTest {
         @Test
         fun `when submit results in Action, then paymentMethodNavigation emits Action route`() = runTest {
             val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
-            whenever(componentRequestDispatcher.submit(any())) doReturn CheckoutResult.Action(action)
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
 
             val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 

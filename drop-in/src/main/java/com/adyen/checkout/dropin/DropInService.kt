@@ -13,7 +13,8 @@ import androidx.lifecycle.LifecycleService
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.dropin.internal.service.DropInServiceRegistry
 
@@ -36,7 +37,7 @@ abstract class DropInService : LifecycleService() {
         return START_STICKY
     }
 
-    abstract suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult
+    abstract suspend fun onSubmit(data: PaymentComponentData<*>): SubmitResult
 
-    abstract suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult
+    abstract suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult
 }

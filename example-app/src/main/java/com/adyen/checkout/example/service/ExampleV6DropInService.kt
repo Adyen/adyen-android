@@ -11,8 +11,10 @@ package com.adyen.checkout.example.service
 import android.util.Log
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -32,7 +34,7 @@ class ExampleV6DropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult {
+    override suspend fun onSubmit(data: PaymentComponentData<*>): SubmitResult {
         val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(data)
         // Check out the documentation of this method on the parent DropInService class
         val paymentRequest = createPaymentRequest(
@@ -49,29 +51,33 @@ class ExampleV6DropInService : DropInService() {
 
         Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
         val response = paymentsRepository.makePaymentsRequest(paymentRequest)
-        return handleResponse(response)
+        return handleSubmitResponse(response)
     }
 
-    override suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+    override suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         Log.d(TAG, "onAdditionalDetails")
         val actionComponentJson = ActionComponentData.SERIALIZER.serialize(data)
         Log.v(TAG, "actionComponentJson - ${actionComponentJson.toStringPretty()}")
         val response = paymentsRepository.makeDetailsRequest(actionComponentJson)
-        return handleResponse(response)
+        return handleAdditionalDetailsResponse(response)
     }
 
-    private fun handleResponse(jsonResponse: JSONObject?): CheckoutResult {
+    private fun handleSubmitResponse(jsonResponse: JSONObject?): SubmitResult {
         return when {
             jsonResponse == null -> {
                 Log.e(TAG, "FAILED")
-                // TODO - Replace with appropriate error type once error structure PRs are merged
-                CheckoutResult.Error(errorMessage = "IOException")
+                SubmitResult.Error(
+                    CheckoutError(
+                        code = CheckoutError.ErrorCode.UNKNOWN,
+                        message = "IOException",
+                    )
+                )
             }
 
             isAction(jsonResponse) -> {
                 Log.d(TAG, "Received action")
                 val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
-                CheckoutResult.Action(action)
+                SubmitResult.Action(action)
             }
 
             else -> {
@@ -81,7 +87,41 @@ class ExampleV6DropInService : DropInService() {
                 } else {
                     "EMPTY"
                 }
-                CheckoutResult.Finished(resultCode)
+                SubmitResult.Finished(resultCode)
+            }
+        }
+    }
+
+    private fun handleAdditionalDetailsResponse(jsonResponse: JSONObject?): AdditionalDetailsResult {
+        return when {
+            jsonResponse == null -> {
+                Log.e(TAG, "FAILED")
+                AdditionalDetailsResult.Error(
+                    CheckoutError(
+                        code = CheckoutError.ErrorCode.UNKNOWN,
+                        message = "IOException",
+                    )
+                )
+            }
+
+            isAction(jsonResponse) -> {
+                Log.d(TAG, "Received unexpected action during additional details")
+                AdditionalDetailsResult.Error(
+                    CheckoutError(
+                        code = CheckoutError.ErrorCode.UNKNOWN,
+                        message = "Unexpected action response during additional details",
+                    )
+                )
+            }
+
+            else -> {
+                Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
+                val resultCode = if (jsonResponse.has("resultCode")) {
+                    jsonResponse.get("resultCode").toString()
+                } else {
+                    "EMPTY"
+                }
+                AdditionalDetailsResult.Finished(resultCode)
             }
         }
     }
