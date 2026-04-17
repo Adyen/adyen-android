@@ -298,7 +298,7 @@ internal class SessionInteractorTest(
             }
 
             @Test
-            fun `action is required then Action is returned and session data is updated`() = runTest {
+            fun `action is required then Error is returned and session data is updated`() = runTest {
                 sessionInteractor.sessionFlow.test {
                     val mockResponse = createSessionDetailsResponse(
                         action = RedirectAction(),
@@ -308,11 +308,10 @@ internal class SessionInteractorTest(
 
                     val result = sessionInteractor.onDetailsCallRequested(ActionComponentData(), { false }, "")
 
-                    val expectedResult = SessionCallResult.Details.Action(
-                        requireNotNull(mockResponse.action),
-                    )
-
-                    assertEquals(expectedResult, result)
+                    assertTrue(result is SessionCallResult.Details.Error)
+                    require(result is SessionCallResult.Details.Error)
+                    assertTrue(result.throwable is IllegalStateException)
+                    assertEquals("Unexpected action response during additional details", result.throwable.message)
 
                     val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
                     assertEquals(expectedSessionModel, expectMostRecentItem())
