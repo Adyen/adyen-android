@@ -18,7 +18,7 @@ enum class CardType(val txVariant: String, private val pattern: Pattern) {
 
     AMERICAN_EXPRESS("amex", Pattern.compile("^3[47][0-9]{0,13}$")),
     ARGENCARD("argencard", Pattern.compile("^(50)(1)\\d*$")),
-    BCMC("bcmc", Pattern.compile("^[4-6][0-9]{0,18}$")),
+    BCMC("bcmc", Pattern.compile("^((6703)[0-9]{0,15}|(479658|606005)[0-9]{0,13})$")),
     BIJENKORF_CARD("bijcard", Pattern.compile("^(5100081)[0-9]{0,9}$")),
     CABAL("cabal", Pattern.compile("^(58|6[03])([03469])\\d*$")),
     CARTEBANCAIRE("cartebancaire", Pattern.compile("^[4-6][0-9]{0,15}$")),
