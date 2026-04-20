@@ -14,8 +14,10 @@
     <string name="checkout_upi_id_label">UPI ID</string>
     <string name="checkout_upi_app_other_upi">Drugi UPI</string>
     <string name="checkout_upi_no_app_selected">Za nadaljevanje izberite svojo želeno aplikacijo UPI</string>
-    <string name="checkout_upi_app_tab_title">Aplikacija UPI</string>
+    <string name="checkout_upi_app_tab_title">Aplikacije UPI</string>
     <string name="checkout_upi_id_tab_title">UPI ID</string>
     <string name="checkout_upi_id_instruction">Vnesite svoj UPI ID</string>
     <string name="checkout_upi_app_instruction">Izberite svojo želeno aplikacijo UPI</string>
+    <string name="checkout_upi_app_list_title_detected">V vaši napravi</string>
+    <string name="checkout_upi_app_list_title_not_detected">Možnosti</string>
 </resources>

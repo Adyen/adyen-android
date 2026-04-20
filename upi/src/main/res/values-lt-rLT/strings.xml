@@ -14,8 +14,10 @@
     <string name="checkout_upi_id_label">UPI ID</string>
     <string name="checkout_upi_app_other_upi">Kitos UPI</string>
     <string name="checkout_upi_no_app_selected">Norėdami tęsti, pasirinkite pageidaujamą UPI programėlę</string>
-    <string name="checkout_upi_app_tab_title">UPI programėlė</string>
+    <string name="checkout_upi_app_tab_title">UPI programos</string>
     <string name="checkout_upi_id_tab_title">UPI ID</string>
     <string name="checkout_upi_id_instruction">Įveskite savo UPI ID</string>
     <string name="checkout_upi_app_instruction">Pasirinkite pageidaujamą UPI programėlę</string>
+    <string name="checkout_upi_app_list_title_detected">Jūsų įrenginyje</string>
+    <string name="checkout_upi_app_list_title_not_detected">Parinktys</string>
 </resources>

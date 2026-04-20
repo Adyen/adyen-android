@@ -14,8 +14,10 @@
     <string name="checkout_upi_id_label">ID UPI</string>
     <string name="checkout_upi_app_other_upi">Alte UPI</string>
     <string name="checkout_upi_no_app_selected">Selectați aplicația UPI preferată pentru a continua</string>
-    <string name="checkout_upi_app_tab_title">Aplicația UPI</string>
+    <string name="checkout_upi_app_tab_title">Aplicații UPI</string>
     <string name="checkout_upi_id_tab_title">ID-ul UPI</string>
     <string name="checkout_upi_id_instruction">Completați identificatorul dvs. UPI</string>
     <string name="checkout_upi_app_instruction">Selectați aplicația UPI preferată</string>
+    <string name="checkout_upi_app_list_title_detected">Pe dispozitivul dvs.</string>
+    <string name="checkout_upi_app_list_title_not_detected">Opțiuni</string>
 </resources>

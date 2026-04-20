@@ -18,4 +18,6 @@
     <string name="checkout_upi_id_tab_title">UPI ID</string>
     <string name="checkout_upi_id_instruction">Zadejte své ID UPI</string>
     <string name="checkout_upi_app_instruction">Vyberte preferovanou aplikaci UPI</string>
+    <string name="checkout_upi_app_list_title_detected">Na vašem zařízení</string>
+    <string name="checkout_upi_app_list_title_not_detected">Možnosti</string>
 </resources>
