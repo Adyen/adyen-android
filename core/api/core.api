@@ -639,6 +639,12 @@ public final class com/adyen/checkout/core/common/localization/StringResourceLoc
 	public fun getLocalizedString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
 }
 
+public final class com/adyen/checkout/core/components/AdvancedCheckoutCallbacks : com/adyen/checkout/core/components/CheckoutCallbacks {
+	public static final field $stable I
+	public fun <init> (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
 public final class com/adyen/checkout/core/components/AnalyticsConfiguration : android/os/Parcelable {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -662,10 +668,6 @@ public final class com/adyen/checkout/core/components/AnalyticsLevel : java/lang
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/components/AnalyticsLevel;
 	public static fun values ()[Lcom/adyen/checkout/core/components/AnalyticsLevel;
-}
-
-public abstract interface class com/adyen/checkout/core/components/BeforeSubmitCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun beforeSubmit (Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/core/components/Checkout {
@@ -706,14 +708,12 @@ public final class com/adyen/checkout/core/components/CheckoutActionKt {
 	public static final fun CheckoutAction (Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
-public abstract interface class com/adyen/checkout/core/components/CheckoutCallback {
+public abstract interface class com/adyen/checkout/core/components/CheckoutAdditionalCallback {
 }
 
-public final class com/adyen/checkout/core/components/CheckoutCallbacks {
+public abstract class com/adyen/checkout/core/components/CheckoutCallbacks {
 	public static final field $stable I
-	public fun <init> ()V
-	public fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lcom/adyen/checkout/core/components/OnFinishedCallback;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lcom/adyen/checkout/core/components/OnFinishedCallback;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutConfiguration : android/os/Parcelable {
@@ -745,7 +745,8 @@ public final class com/adyen/checkout/core/components/CheckoutController {
 }
 
 public final class com/adyen/checkout/core/components/CheckoutControllerKt {
-	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext;Lcom/adyen/checkout/core/components/CheckoutCallbacks;Landroid/content/Context;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
+	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Advanced;Lcom/adyen/checkout/core/components/AdvancedCheckoutCallbacks;Landroid/content/Context;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
+	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Sessions;Lcom/adyen/checkout/core/components/SessionCheckoutCallbacks;Landroid/content/Context;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
 }
 
 public final class com/adyen/checkout/core/components/CheckoutPaymentFlowKt {
@@ -860,20 +861,10 @@ public final class com/adyen/checkout/core/components/CheckoutTarget$StoredPayme
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class com/adyen/checkout/core/components/OnAdditionalDetailsCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onAdditionalDetails (Lcom/adyen/checkout/core/action/data/ActionComponentData;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public abstract interface class com/adyen/checkout/core/components/OnErrorCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onError (Lcom/adyen/checkout/core/error/CheckoutError;)V
-}
-
-public abstract interface class com/adyen/checkout/core/components/OnFinishedCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onFinished (Lcom/adyen/checkout/core/common/PaymentResult;)V
-}
-
-public abstract interface class com/adyen/checkout/core/components/OnSubmitCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onSubmit (Lcom/adyen/checkout/core/components/data/PaymentComponentData;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+public final class com/adyen/checkout/core/components/SessionCheckoutCallbacks : com/adyen/checkout/core/components/CheckoutCallbacks {
+	public static final field $stable I
+	public fun <init> (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adyen/checkout/core/components/data/Address : com/adyen/checkout/core/common/internal/model/ModelObject {

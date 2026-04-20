@@ -75,11 +75,11 @@ public final class com/adyen/checkout/card/FieldMode : java/lang/Enum {
 	public static fun values ()[Lcom/adyen/checkout/card/FieldMode;
 }
 
-public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : com/adyen/checkout/core/components/CheckoutCallback {
+public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : com/adyen/checkout/core/components/CheckoutAdditionalCallback {
 	public abstract fun onBinLookup (Ljava/util/List;)V
 }
 
-public abstract interface class com/adyen/checkout/card/OnBinValueCallback : com/adyen/checkout/core/components/CheckoutCallback {
+public abstract interface class com/adyen/checkout/card/OnBinValueCallback : com/adyen/checkout/core/components/CheckoutAdditionalCallback {
 	public abstract fun onBinValue (Ljava/lang/String;)V
 }
 
