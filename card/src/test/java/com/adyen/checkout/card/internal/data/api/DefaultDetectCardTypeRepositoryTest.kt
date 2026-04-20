@@ -108,7 +108,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
             }
 
         @Test
-        fun `and the same BIN is currently being fetched, then local card brands are emitted and network brands are skipped for second call`() =
+        fun `and the same BIN is currently being fetched, then the second call should not emit any results`() =
             runTest {
                 whenever(binLookupService.makeBinLookup(any())).doSuspendableAnswer {
                     // small delay to emulate a network request
@@ -125,12 +125,8 @@ internal class DefaultDetectCardTypeRepositoryTest(
 
                 advanceUntilIdle()
 
-                // assert flow emits once (local)
-                assertEquals(1, secondFlow.values.size)
-                assertEquals(
-                    localCardBrandDetectionService.getCardBrands(cardNumberWithSameBin),
-                    secondFlow.values[0],
-                )
+                // assert flow does not emit
+                assert(secondFlow.values.isEmpty())
             }
 
         @Test
@@ -154,33 +150,34 @@ internal class DefaultDetectCardTypeRepositoryTest(
         }
 
         @Test
-        fun `and a different BIN is currently being fetched, then network brands are emitted for second call`() = runTest {
-            whenever(binLookupService.makeBinLookup(any())).doSuspendableAnswer {
-                // small delay to emulate a network request
-                delay(100)
-                mockBinLookupResponse()
+        fun `and a different BIN is currently being fetched, then network brands are emitted for second call`() =
+            runTest {
+                whenever(binLookupService.makeBinLookup(any())).doSuspendableAnswer {
+                    // small delay to emulate a network request
+                    delay(100)
+                    mockBinLookupResponse()
+                }
+
+                detectCardTypeRepository.detectCardTypes("54545454545").test(testScheduler)
+
+                val cardNumberWithDifferentBin = "411111111111"
+                val secondFlow = detectCardTypeRepository
+                    .detectCardTypes(cardNumberWithDifferentBin)
+                    .test(testScheduler)
+
+                advanceUntilIdle()
+
+                val bin = detectCardTypeRepository.getBin(cardNumberWithDifferentBin)
+                assertNotNull(bin)
+
+                // assert flow emits twice (local + network)
+                assertEquals(2, secondFlow.values.size)
+                assertEquals(
+                    localCardBrandDetectionService.getCardBrands(cardNumberWithDifferentBin),
+                    secondFlow.values[0],
+                )
+                assertEquals(networkCardBrandDetectionService.getCardBrands(bin).getOrNull(), secondFlow.values[1])
             }
-
-            detectCardTypeRepository.detectCardTypes("54545454545").test(testScheduler)
-
-            val cardNumberWithDifferentBin = "411111111111"
-            val secondFlow = detectCardTypeRepository
-                .detectCardTypes(cardNumberWithDifferentBin)
-                .test(testScheduler)
-
-            advanceUntilIdle()
-
-            val bin = detectCardTypeRepository.getBin(cardNumberWithDifferentBin)
-            assertNotNull(bin)
-
-            // assert flow emits twice (local + network)
-            assertEquals(2, secondFlow.values.size)
-            assertEquals(
-                localCardBrandDetectionService.getCardBrands(cardNumberWithDifferentBin),
-                secondFlow.values[0],
-            )
-            assertEquals(networkCardBrandDetectionService.getCardBrands(bin).getOrNull(), secondFlow.values[1])
-        }
 
         @Test
         fun `and network results are returned, then results should be in cache`() = runTest {
