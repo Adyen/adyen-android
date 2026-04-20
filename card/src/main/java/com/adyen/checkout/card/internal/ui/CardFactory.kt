@@ -85,8 +85,8 @@ internal class CardFactory :
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
         ).apply {
             // TODO - Find an alternative way, so we don't need the callbacks
-            setOnBinValueCallback(checkoutCallbacks.getCallback(OnBinValueCallback::class))
-            setOnBinLookupCallback(checkoutCallbacks.getCallback(OnBinLookupCallback::class))
+            setOnBinValueCallback(checkoutCallbacks.getAdditionalCallback(OnBinValueCallback::class))
+            setOnBinLookupCallback(checkoutCallbacks.getAdditionalCallback(OnBinLookupCallback::class))
         }
     }
 

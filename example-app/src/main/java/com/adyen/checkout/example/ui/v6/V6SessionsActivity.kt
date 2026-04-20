@@ -51,6 +51,7 @@ class V6SessionsActivity : AppCompatActivity() {
                 V6Screen(
                     theme = theme,
                     uiState = viewModel.uiState,
+                    onPaymentMethodSelected = viewModel::onPaymentMethodSelected,
                 )
             }
         }

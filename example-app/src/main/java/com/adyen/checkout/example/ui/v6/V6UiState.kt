@@ -8,8 +8,7 @@
 
 package com.adyen.checkout.example.ui.v6
 
-import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.UIText
@@ -17,9 +16,9 @@ import com.adyen.checkout.example.ui.compose.UIText
 sealed interface V6UiState {
 
     data class Component(
-        val checkoutContext: CheckoutContext,
-        val checkoutCallbacks: CheckoutCallbacks,
         val paymentMethods: List<PaymentMethod>,
+        val selectedPaymentMethod: PaymentMethod,
+        val checkoutController: CheckoutController,
     ) : V6UiState
 
     data object Loading : V6UiState

@@ -19,7 +19,6 @@ import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -56,14 +55,14 @@ internal class FullCheckoutFlow(
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         paymentComponent.setLoading(true)
-                        callbacks.beforeSubmit?.beforeSubmit(event.state)
-                        val result = callbacks.onSubmit?.onSubmit(event.state.data)
-                        result?.let { handleResult(it) }
+//                        callbacks.beforeSubmit?.beforeSubmit(event.state)
+//                        val result = callbacks.onSubmit?.onSubmit(event.state.data)
+//                        result?.let { handleResult(it) }
                         paymentComponent.setLoading(false)
                     }
 
                     is PaymentComponentEvent.Error -> {
-                        callbacks.onError?.onError(event.error.toCheckoutError())
+//                        callbacks.onError?.onError(event.error.toCheckoutError())
                     }
                 }
             }
@@ -75,12 +74,14 @@ internal class FullCheckoutFlow(
         paymentComponent?.submit()
     }
 
+    @Suppress("unused")
     private fun handleResult(checkoutResult: CheckoutResult) {
         when (checkoutResult) {
             is CheckoutResult.Action -> {
                 actionHandler.handleAction(checkoutResult.action)
                 onNavigate?.invoke(CheckoutRoute.Action)
             }
+
             is CheckoutResult.Error -> {
                 // TODO - Handle error state
             }

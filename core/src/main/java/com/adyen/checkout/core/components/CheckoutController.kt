@@ -18,8 +18,25 @@ import kotlinx.coroutines.CoroutineScope
 
 fun CheckoutController(
     target: CheckoutTarget,
-    context: CheckoutContext,
-    callbacks: CheckoutCallbacks,
+    context: CheckoutContext.Advanced,
+    callbacks: AdvancedCheckoutCallbacks,
+    // TODO - find a way to not require application context in the controller
+    applicationContext: Context,
+    coroutineScope: CoroutineScope,
+): CheckoutController {
+    return CheckoutControllerFactory().create(
+        target = target,
+        context = context,
+        callbacks = callbacks,
+        applicationContext = applicationContext,
+        coroutineScope = coroutineScope,
+    )
+}
+
+fun CheckoutController(
+    target: CheckoutTarget,
+    context: CheckoutContext.Sessions,
+    callbacks: SessionCheckoutCallbacks,
     // TODO - find a way to not require application context in the controller
     applicationContext: Context,
     coroutineScope: CoroutineScope,

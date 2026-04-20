@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.mock
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -114,7 +115,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = CheckoutCallbacks(),
+                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -143,7 +144,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = CheckoutCallbacks(),
+                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -177,7 +178,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = CheckoutCallbacks(),
+                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertSame(component, actualComponent)
@@ -199,7 +200,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = CheckoutCallbacks(),
+                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
             assertSame(component, actualComponent)
@@ -214,7 +215,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = CheckoutCallbacks(),
+                checkoutCallbacks = mock(),
             )
         }
     }
@@ -233,7 +234,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = CheckoutCallbacks(),
+                checkoutCallbacks = mock(),
             )
         }
     }

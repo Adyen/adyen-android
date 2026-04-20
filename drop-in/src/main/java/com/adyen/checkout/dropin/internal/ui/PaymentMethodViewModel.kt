@@ -43,28 +43,28 @@ internal class PaymentMethodViewModel(
     private val _viewState = MutableStateFlow(createViewState())
     val viewState: StateFlow<PaymentMethodViewState> = _viewState.asStateFlow()
 
-    private val checkoutCallbacks = CheckoutCallbacks(
-        onSubmit = ::onSubmit,
-        onAdditionalDetails = ::onAdditionalDetails,
-        onError = ::onError,
-        onFinished = ::onFinished,
-    )
-
-    val controller = CheckoutController(
-        target = when (paymentFlowType) {
-            is DropInPaymentFlowType.RegularPaymentMethod -> {
-                CheckoutTarget.PaymentMethod(type = paymentFlowType.txVariant)
-            }
-
-            is DropInPaymentFlowType.StoredPaymentMethod -> {
-                CheckoutTarget.StoredPaymentMethod(id = paymentFlowType.id)
-            }
-        },
-        context = checkoutContext,
-        callbacks = checkoutCallbacks,
-        applicationContext = applicationContext,
-        coroutineScope = viewModelScope,
-    )
+//    private val checkoutCallbacks = CheckoutCallbacks(
+//        onSubmit = ::onSubmit,
+//        onAdditionalDetails = ::onAdditionalDetails,
+//        onError = ::onError,
+//        onFinished = ::onFinished,
+//    )
+//
+//    val controller = CheckoutController(
+//        target = when (paymentFlowType) {
+//            is DropInPaymentFlowType.RegularPaymentMethod -> {
+//                CheckoutTarget.PaymentMethod(type = paymentFlowType.txVariant)
+//            }
+//
+//            is DropInPaymentFlowType.StoredPaymentMethod -> {
+//                CheckoutTarget.StoredPaymentMethod(id = paymentFlowType.id)
+//            }
+//        },
+//        context = checkoutContext,
+//        callbacks = checkoutCallbacks,
+//        applicationContext = applicationContext,
+//        coroutineScope = viewModelScope,
+//    )
 
     private fun createViewState(): PaymentMethodViewState {
         val paymentMethod = when (paymentFlowType) {
