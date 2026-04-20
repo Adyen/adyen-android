@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Płatność jednorazowa</string>
     <string name="checkout_card_installments_option_revolving">Płatność odnawialna</string>
     <string name="checkout_card_dual_brand_title">Marka karty</string>
-    <string name="checkout_card_dual_brand_description">Wybierz markę karty, którą preferujesz dokonywać płatności. Jest to opcjonalne.</string>
+    <string name="checkout_card_dual_brand_description">Możesz wybrać markę karty, którą preferujesz dokonywać płatności. Jest to opcjonalne.</string>
 
     <string name="checkout_card_scan_button">Zeskanuj kartę</string>
 

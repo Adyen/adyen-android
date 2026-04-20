@@ -122,6 +122,8 @@ class DefaultCardDelegate(
 
     private var publicKey: String? = null
 
+    private var isCardScanningAvailable = false
+
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
@@ -305,8 +307,8 @@ class DefaultCardDelegate(
             .launchIn(coroutineScope)
 
         outputDataFlow.map { it.dualBrandData?.brandOptions?.map { it.brand.txVariant } }
-            .filterNotNull()
             .distinctUntilChanged()
+            .filterNotNull()
             .map { brandOptions ->
                 val event = GenericEvents.displayed(
                     component = paymentMethod.type.orEmpty(),
@@ -433,6 +435,7 @@ class DefaultCardDelegate(
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
+            isCardScanningVisible = isCardScanningAvailable && inputData.cardNumber.isEmpty(),
             dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
                 detectedCardTypes,
                 inputData.selectedCardBrand,
@@ -867,9 +870,7 @@ class DefaultCardDelegate(
         return if (dualBrandData != null) {
             dualBrandData.selectedBrand?.txVariant
         } else {
-            val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
-            val firstDetectedBrand = detectedCardTypes.firstOrNull()
-            val cardType = reliableCardBrand ?: firstDetectedBrand
+            val cardType = detectedCardTypes.firstOrNull { it.isReliable }
             cardType?.cardBrand?.txVariant
         }
     }
@@ -906,6 +907,8 @@ class DefaultCardDelegate(
             CardEvents.cardScannerUnavailable(getPaymentMethodType())
         }
         analyticsManager.trackEvent(event)
+        isCardScanningAvailable = isAvailable
+        updateOutputData()
     }
 
     override fun onCardScanningDisplayed(didDisplay: Boolean) {

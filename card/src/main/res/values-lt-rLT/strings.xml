@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Vienkartinis mokėjimas</string>
     <string name="checkout_card_installments_option_revolving">Atnaujinamasis mokėjimas</string>
     <string name="checkout_card_dual_brand_title">Kortelės prekių ženklas</string>
-    <string name="checkout_card_dual_brand_description">Pasirinkite kortelės, kuria pageidaujate atsiskaityti, prekių ženklą. Tai neprivaloma.</string>
+    <string name="checkout_card_dual_brand_description">Galite pasirinkti pageidaujamą mokėjimo kortelės prekių ženklą. Tai neprivaloma.</string>
 
     <string name="checkout_card_scan_button">Nuskaitykite savo kortelę</string>
 
