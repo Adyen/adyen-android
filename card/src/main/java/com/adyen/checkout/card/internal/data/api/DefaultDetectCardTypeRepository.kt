@@ -45,11 +45,9 @@ internal class DefaultDetectCardTypeRepository(
             }
 
             is BinLookupCacheResult.Fetching -> {
-                // return local card types
-                val localDetectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber)
-                emit(localDetectedCardTypes)
+                // do nothing, a previous call/flow will emit the results when finished
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
-                    "card types detected locally: ${localDetectedCardTypes.toLogString()}"
+                    "request already in progress, will not emit results"
                 }
             }
 
