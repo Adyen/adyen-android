@@ -16,12 +16,12 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.error.CheckoutError
@@ -43,28 +43,7 @@ internal class PaymentMethodViewModel(
     private val _viewState = MutableStateFlow(createViewState())
     val viewState: StateFlow<PaymentMethodViewState> = _viewState.asStateFlow()
 
-//    private val checkoutCallbacks = CheckoutCallbacks(
-//        onSubmit = ::onSubmit,
-//        onAdditionalDetails = ::onAdditionalDetails,
-//        onError = ::onError,
-//        onFinished = ::onFinished,
-//    )
-//
-//    val controller = CheckoutController(
-//        target = when (paymentFlowType) {
-//            is DropInPaymentFlowType.RegularPaymentMethod -> {
-//                CheckoutTarget.PaymentMethod(type = paymentFlowType.txVariant)
-//            }
-//
-//            is DropInPaymentFlowType.StoredPaymentMethod -> {
-//                CheckoutTarget.StoredPaymentMethod(id = paymentFlowType.id)
-//            }
-//        },
-//        context = checkoutContext,
-//        callbacks = checkoutCallbacks,
-//        applicationContext = applicationContext,
-//        coroutineScope = viewModelScope,
-//    )
+    val controller = createCheckoutController()
 
     private fun createViewState(): PaymentMethodViewState {
         val paymentMethod = when (paymentFlowType) {
@@ -92,6 +71,52 @@ internal class PaymentMethodViewModel(
         }
     }
 
+    private fun createCheckoutController(): CheckoutController {
+        val target = when (paymentFlowType) {
+            is DropInPaymentFlowType.RegularPaymentMethod -> {
+                CheckoutTarget.PaymentMethod(type = paymentFlowType.txVariant)
+            }
+
+            is DropInPaymentFlowType.StoredPaymentMethod -> {
+                CheckoutTarget.StoredPaymentMethod(id = paymentFlowType.id)
+            }
+        }
+
+        return when (checkoutContext) {
+            is CheckoutContext.Advanced -> {
+                CheckoutController(
+                    target = target,
+                    context = checkoutContext,
+                    callbacks = AdvancedCheckoutCallbacks(
+                        onSubmit = ::onSubmit,
+                        onAdditionalDetails = ::onAdditionalDetails,
+                        onError = ::onError,
+                    ),
+                    applicationContext = applicationContext,
+                    coroutineScope = viewModelScope,
+                )
+            }
+
+            is CheckoutContext.Sessions -> {
+                CheckoutController(
+                    target = target,
+                    context = checkoutContext,
+                    callbacks = SessionCheckoutCallbacks(
+                        beforeSubmit = ::beforeSubmit,
+                        onError = ::onError,
+                        onFinished = ::onFinished,
+                    ),
+                    applicationContext = applicationContext,
+                    coroutineScope = viewModelScope,
+                )
+            }
+        }
+    }
+
+    private fun beforeSubmit(@Suppress("unused") paymentComponentData: PaymentComponentData<*>) {
+        // TODO - Implement after beforeSubmit is added to DropInService
+    }
+
     private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
         return dropInServiceManager.requestOnSubmit(paymentComponentData)
     }
@@ -106,9 +131,10 @@ internal class PaymentMethodViewModel(
         }
     }
 
-    private fun onFinished(paymentResult: PaymentResult) {
+    private fun onFinished() {
+        // TODO - Implement after signature of onFinished is updated
         viewModelScope.launch {
-            dropInServiceManager.onPaymentFinished(paymentResult)
+//            dropInServiceManager.onPaymentFinished(paymentResult)
         }
     }
 

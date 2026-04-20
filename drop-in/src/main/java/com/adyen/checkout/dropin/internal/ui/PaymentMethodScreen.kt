@@ -36,7 +36,7 @@ internal fun PaymentMethodScreen(
     viewModel: PaymentMethodViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-//    PaymentMethodScreenContent(navigator, viewState, viewModel.controller)
+    PaymentMethodScreenContent(navigator, viewState, viewModel.controller)
 }
 
 @Composable
