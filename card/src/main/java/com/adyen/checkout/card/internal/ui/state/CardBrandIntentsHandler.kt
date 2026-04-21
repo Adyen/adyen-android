@@ -15,10 +15,10 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
-internal class UpdateDetectedCardTypesIntentHandler(
+internal class CardBrandIntentsHandler(
     private val componentParams: CardComponentParams,
 ) {
-    fun updateCardComponentState(
+    fun onUpdateDetectedCardTypes(
         state: CardComponentState,
         intent: CardIntent.UpdateDetectedCardTypes,
     ): CardComponentState {
@@ -36,7 +36,10 @@ internal class UpdateDetectedCardTypesIntentHandler(
             // local detection + supported brands
             !isDetectedFromNetwork -> {
                 // select the first brand and discard the rest
-                CardBrandState.SingleBrand(supportedDetectedCardTypes.first().toCardBrandData(), false)
+                CardBrandState.SingleBrand(
+                    cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
+                    isReliable = false,
+                )
             }
 
             // network detection + no detected brands
@@ -52,26 +55,45 @@ internal class UpdateDetectedCardTypesIntentHandler(
 
             // network detection + 1 detected brand
             supportedDetectedCardTypes.size == 1 -> {
-                CardBrandState.SingleBrand(supportedDetectedCardTypes.first().toCardBrandData(), true)
+                CardBrandState.SingleBrand(
+                    cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
+                    isReliable = true,
+                )
             }
 
             // network detection + multiple detected brands
             else -> {
                 // select the first 2 brands and discard the rest (should only have 2 brands normally)
-                CardBrandState.DualBrand(supportedDetectedCardTypes.take(2).map { it.toCardBrandData() })
+                val cardBrandDataList = supportedDetectedCardTypes.take(2).map { it.toCardBrandData() }
+
+                val currentCardBrandState = state.cardBrandState
+                // if the list of brands has not changed, keep the previously selected brand, otherwise reset it
+                val shopperSelectedCardBrandData = if (
+                    currentCardBrandState is CardBrandState.DualBrand &&
+                    currentCardBrandState.cardBrandDataList == cardBrandDataList
+                ) {
+                    currentCardBrandState.shopperSelectedCardBrandData
+                } else {
+                    null
+                }
+
+                CardBrandState.DualBrand(
+                    cardBrandDataList = cardBrandDataList,
+                    shopperSelectedCardBrandData = shopperSelectedCardBrandData,
+                )
             }
         }
 
-        val selectedOrFirstReliableCardType = when {
-            state.selectedCardBrand != null -> {
-                supportedDetectedCardTypes.firstOrNull { it.cardBrand.txVariant == state.selectedCardBrand.txVariant }
+        val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
+            is CardBrandState.DualBrand -> {
+                cardBrandState.shopperSelectedCardBrandData ?: cardBrandState.cardBrandDataList.firstOrNull()
             }
 
-            isDetectedFromNetwork -> supportedDetectedCardTypes.firstOrNull()
+            is CardBrandState.SingleBrand if cardBrandState.isReliable -> cardBrandState.cardBrandData
             else -> null
         }
-        val cvcPolicy = selectedOrFirstReliableCardType?.cvcPolicy
-        val expiryDatePolicy = selectedOrFirstReliableCardType?.expiryDatePolicy
+        val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
+        val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
 
         return state.copy(
             cardBrandState = cardBrandState,
@@ -112,6 +134,22 @@ internal class UpdateDetectedCardTypesIntentHandler(
                 CVCVisibility.ALWAYS_SHOW -> RequirementPolicy.Required
                 CVCVisibility.HIDE_FIRST, CVCVisibility.ALWAYS_HIDE -> RequirementPolicy.Hidden
             }
+        }
+    }
+
+    fun onBrandSelected(state: CardComponentState, intent: CardIntent.SelectBrand): CardComponentState {
+        val currentCardBrandState = state.cardBrandState
+        return if (currentCardBrandState is CardBrandState.DualBrand) {
+            val selectedCardBrandData = currentCardBrandState.cardBrandDataList.firstOrNull {
+                it.cardBrand == intent.cardBrand
+            }
+            state.copy(
+                cardBrandState = currentCardBrandState.copy(
+                    shopperSelectedCardBrandData = selectedCardBrandData,
+                ),
+            )
+        } else {
+            state
         }
     }
 }

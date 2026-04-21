@@ -11,7 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
 
 internal class CardComponentStateReducer(
-    private val updateDetectedCardTypesIntentHandler: UpdateDetectedCardTypesIntentHandler,
+    private val cardBrandIntentsHandler: CardBrandIntentsHandler,
 ) : ComponentStateReducer<CardComponentState, CardIntent> {
 
     @Suppress("CyclomaticComplexMethod", "LongMethod")
@@ -77,12 +77,12 @@ internal class CardComponentStateReducer(
                 storePaymentMethod = intent.isChecked,
             )
 
-            is CardIntent.SelectBrand -> state.copy(
-                selectedCardBrand = intent.cardBrand,
-            )
+            is CardIntent.SelectBrand -> {
+                cardBrandIntentsHandler.onBrandSelected(state, intent)
+            }
 
             is CardIntent.UpdateDetectedCardTypes -> {
-                updateDetectedCardTypesIntentHandler.updateCardComponentState(state, intent)
+                cardBrandIntentsHandler.onUpdateDetectedCardTypes(state, intent)
             }
 
             is CardIntent.UpdateLoading -> state.copy(
