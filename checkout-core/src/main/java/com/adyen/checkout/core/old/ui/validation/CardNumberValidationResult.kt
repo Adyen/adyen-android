@@ -16,11 +16,41 @@ package com.adyen.checkout.core.old.ui.validation
     level = DeprecationLevel.WARNING,
 )
 sealed interface CardNumberValidationResult {
+
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Valid : CardNumberValidationResult
+
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     interface Invalid : CardNumberValidationResult {
+
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         class IllegalCharacters : Invalid
+
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         class TooLong : Invalid
+
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         class TooShort : Invalid
+
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         class LuhnCheck : Invalid
     }
 }
