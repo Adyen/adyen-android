@@ -173,11 +173,24 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
 )
 
 private fun CardComponentState.cardBrand(): CardBrand? {
-    val supportedDetectedCardTypes = detectedCardTypes.filter { it.isSupported && it.isReliable }
-    return if (supportedDetectedCardTypes.size > 1) {
-        selectedCardBrand ?: supportedDetectedCardTypes.firstOrNull()?.cardBrand
-    } else {
-        supportedDetectedCardTypes.firstOrNull()?.cardBrand
+    return when (cardBrandState) {
+        is CardBrandState.SingleBrand -> {
+            if (cardBrandState.detectedCardType.isReliable) {
+                cardBrandState.detectedCardType.cardBrand
+            } else {
+                null
+            }
+        }
+
+        is CardBrandState.DualBrand -> {
+            cardBrandState.detectedCardTypes.firstOrNull {
+                it.cardBrand.txVariant == selectedCardBrand?.txVariant
+            }?.cardBrand
+        }
+
+        else -> {
+            null
+        }
     }
 }
 

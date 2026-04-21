@@ -8,15 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.CVCVisibility
-import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
-import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal class CardComponentStateReducer(
-    private val componentParams: CardComponentParams,
+    private val updateDetectedCardTypesIntentHandler: UpdateDetectedCardTypesIntentHandler,
 ) : ComponentStateReducer<CardComponentState, CardIntent> {
 
     @Suppress("CyclomaticComplexMethod", "LongMethod")
@@ -87,21 +82,7 @@ internal class CardComponentStateReducer(
             )
 
             is CardIntent.UpdateDetectedCardTypes -> {
-                val cardType = if (state.selectedCardBrand != null) {
-                    intent.detectedCardTypes.firstOrNull { it.cardBrand.txVariant == state.selectedCardBrand.txVariant }
-                } else {
-                    intent.detectedCardTypes.firstOrNull { it.isReliable && it.isSupported }
-                }
-
-                state.copy(
-                    detectedCardTypes = intent.detectedCardTypes,
-                    securityCode = state.securityCode.copy(
-                        requirementPolicy = getSecurityCodeRequirementPolicy(cardType),
-                    ),
-                    expiryDate = state.expiryDate.copy(
-                        requirementPolicy = getExpiryDateRequirementPolicy(cardType),
-                    ),
-                )
+                updateDetectedCardTypesIntentHandler.updateCardComponentState(state, intent)
             }
 
             is CardIntent.UpdateLoading -> state.copy(
@@ -159,35 +140,5 @@ internal class CardComponentStateReducer(
                 isFocused = shouldFocus(hasKcpCardPasswordError),
             ),
         )
-    }
-
-    private fun getExpiryDateRequirementPolicy(cardType: DetectedCardType?): RequirementPolicy {
-        return cardType?.let {
-            when (it.expiryDatePolicy) {
-                Brand.FieldPolicy.REQUIRED -> RequirementPolicy.Required
-                Brand.FieldPolicy.OPTIONAL -> RequirementPolicy.Optional
-                Brand.FieldPolicy.HIDDEN -> RequirementPolicy.Hidden
-            }
-        } ?: RequirementPolicy.Required
-    }
-
-    private fun getSecurityCodeRequirementPolicy(cardType: DetectedCardType?): RequirementPolicy {
-        return cardType?.let {
-            when (componentParams.cvcVisibility) {
-                CVCVisibility.ALWAYS_SHOW,
-                CVCVisibility.HIDE_FIRST -> {
-                    when (it.cvcPolicy) {
-                        Brand.FieldPolicy.REQUIRED -> RequirementPolicy.Required
-                        Brand.FieldPolicy.OPTIONAL -> RequirementPolicy.Optional
-                        Brand.FieldPolicy.HIDDEN -> RequirementPolicy.Hidden
-                    }
-                }
-
-                CVCVisibility.ALWAYS_HIDE -> RequirementPolicy.Hidden
-            }
-        } ?: when (componentParams.cvcVisibility) {
-            CVCVisibility.ALWAYS_SHOW -> RequirementPolicy.Required
-            CVCVisibility.HIDE_FIRST, CVCVisibility.ALWAYS_HIDE -> RequirementPolicy.Hidden
-        }
     }
 }

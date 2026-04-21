@@ -35,17 +35,17 @@ internal object CardValidationUtils {
     internal fun validateCardNumber(
         cardNumber: TextInputComponentState,
         enableLuhnCheck: Boolean,
-        isBrandSupported: Boolean
+        isUnsupportedBrand: Boolean
     ): CardNumberValidation {
         if (!cardNumber.requiresValidation()) return CardNumberValidation.VALID
         val validation = CardNumberValidator.validateCardNumber(cardNumber.text, enableLuhnCheck)
-        return validateCardNumber(validation, isBrandSupported)
+        return validateCardNumber(validation, isUnsupportedBrand)
     }
 
     @VisibleForTesting
     internal fun validateCardNumber(
         validationResult: CardNumberValidationResult,
-        isBrandSupported: Boolean
+        isUnsupportedBrand: Boolean
     ): CardNumberValidation {
         return when (validationResult) {
             is CardNumberValidationResult.Invalid -> {
@@ -63,7 +63,7 @@ internal object CardValidationUtils {
             }
 
             is CardNumberValidationResult.Valid -> when {
-                !isBrandSupported -> CardNumberValidation.INVALID_UNSUPPORTED_BRAND
+                isUnsupportedBrand -> CardNumberValidation.INVALID_UNSUPPORTED_BRAND
                 else -> CardNumberValidation.VALID
             }
         }

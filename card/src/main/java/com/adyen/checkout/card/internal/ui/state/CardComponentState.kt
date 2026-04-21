@@ -31,9 +31,16 @@ internal data class CardComponentState(
     val isLoading: Boolean,
 
     // Component state
-    val detectedCardTypes: List<DetectedCardType>,
+    val cardBrandState: CardBrandState,
     val selectedCardBrand: CardBrand?,
 ) : ComponentState
+
+internal sealed class CardBrandState {
+    data object NoBrandsDetected : CardBrandState()
+    data object UnsupportedBrand : CardBrandState()
+    data class SingleBrand(val detectedCardType: DetectedCardType) : CardBrandState()
+    data class DualBrand(val detectedCardTypes: List<DetectedCardType>) : CardBrandState()
+}
 
 internal val CardComponentState.binValue: String
     get() = if (cardNumber.isValid && cardNumber.text.length >= EXTENDED_CARD_NUMBER_LENGTH) {

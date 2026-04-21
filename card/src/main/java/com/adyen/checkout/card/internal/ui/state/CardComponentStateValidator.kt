@@ -18,17 +18,22 @@ internal class CardComponentStateValidator(
 ) : ComponentStateValidator<CardComponentState> {
 
     override fun validate(state: CardComponentState): CardComponentState {
-        val isReliable = state.detectedCardTypes.any { it.isReliable }
-        val supportedDetectedCardTypes = state.detectedCardTypes.filter { it.isSupported }
-        val firstSupportedDetectedCardType = supportedDetectedCardTypes.firstOrNull()
+        val selectedOrFirstCardType = when (val cardBrandState = state.cardBrandState) {
+            is CardBrandState.SingleBrand -> cardBrandState.detectedCardType
 
-        val cardNumberError = validateCardNumber(state.cardNumber, firstSupportedDetectedCardType, isReliable)
-        val expiryDateError = validateExpiryDate(state.expiryDate, firstSupportedDetectedCardType)
-        val securityCodeError =
-            validateSecurityCode(
-                state.securityCode,
-                firstSupportedDetectedCardType,
-            )
+            is CardBrandState.DualBrand -> {
+                cardBrandState.detectedCardTypes.firstOrNull {
+                    it.cardBrand.txVariant == state.selectedCardBrand?.txVariant
+                } ?: cardBrandState.detectedCardTypes.first()
+            }
+
+            else -> null
+        }
+        val isUnsupportedBrand = state.cardBrandState is CardBrandState.UnsupportedBrand
+
+        val cardNumberError = validateCardNumber(state.cardNumber, selectedOrFirstCardType, isUnsupportedBrand)
+        val expiryDateError = validateExpiryDate(state.expiryDate, selectedOrFirstCardType)
+        val securityCodeError = validateSecurityCode(state.securityCode, selectedOrFirstCardType)
         val holderNameError = validateHolderName(state.holderName)
         val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)
         val kcpBirthDateOrTaxNumberError = validateKcpBirthDateOrTaxNumber(state.kcpBirthDateOrTaxNumber)
@@ -58,16 +63,15 @@ internal class CardComponentStateValidator(
     private fun validateCardNumber(
         cardNumber: TextInputComponentState,
         selectedOrFirstCardType: DetectedCardType?,
-        isReliable: Boolean,
+        isUnsupportedBrand: Boolean,
     ): CheckoutLocalizationKey? {
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
-        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
         return cardValidationMapper.mapCardNumberValidation(
             validation = CardValidationUtils.validateCardNumber(
                 cardNumber = cardNumber,
                 enableLuhnCheck = enableLuhnCheck,
-                isBrandSupported = !shouldFailWithUnsupportedBrand,
+                isUnsupportedBrand = isUnsupportedBrand,
             ),
         )
     }
