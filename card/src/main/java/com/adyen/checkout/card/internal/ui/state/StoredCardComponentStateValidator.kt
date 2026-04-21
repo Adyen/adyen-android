@@ -40,7 +40,7 @@ internal class StoredCardComponentStateValidator(
         return cardValidationMapper.mapSecurityCodeValidation(
             validation = CardValidationUtils.validateSecurityCode(
                 securityCode = securityCode,
-                detectedCardType = selectedOrFirstCardType,
+                cardBrand = selectedOrFirstCardType?.cardBrand,
             ),
         )
     }
