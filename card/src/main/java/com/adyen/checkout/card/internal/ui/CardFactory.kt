@@ -27,6 +27,7 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
+import com.adyen.checkout.card.internal.ui.state.UpdateDetectedCardTypesIntentHandler
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -65,7 +66,8 @@ internal class CardFactory :
         val cardValidationMapper = CardValidationMapper()
         val dualBrandedCardHandler = DualBrandedCardHandler()
         val componentStateFactory = CardComponentStateFactory(cardComponentParams)
-        val componentStateReducer = CardComponentStateReducer(cardComponentParams)
+        val updateDetectedCardTypesIntentHandler = UpdateDetectedCardTypesIntentHandler(cardComponentParams)
+        val componentStateReducer = CardComponentStateReducer(updateDetectedCardTypesIntentHandler)
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = CardViewStateProducer(dualBrandedCardHandler)
 

@@ -58,7 +58,7 @@ internal class CardComponentStateFactory(
             isStorePaymentFieldVisible = componentParams.showStorePayment,
             supportedCardBrands = componentParams.supportedCardBrands,
             isLoading = false,
-            detectedCardTypes = emptyList(),
+            cardBrandState = CardBrandState.NoBrandsDetected,
             selectedCardBrand = null,
         )
     }

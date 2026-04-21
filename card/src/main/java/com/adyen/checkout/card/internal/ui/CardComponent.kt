@@ -18,6 +18,8 @@ import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.state.CardBrandState
+import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -48,6 +50,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -161,20 +164,26 @@ internal class CardComponent(
 
     private fun subscribeToDetectedCardTypesChanges() {
         componentState
-            .map { it.detectedCardTypes }
+            .mapNotNull(::getReliableDetectedCardTypes)
             .distinctUntilChanged()
-            .drop(1)
-            .onEach(::onDetectedCardTypesChanged)
+            .onEach(::updateBinLookupCallback)
             .launchIn(coroutineScope)
     }
 
-    private fun onDetectedCardTypesChanged(detectedCardTypes: List<DetectedCardType>) {
-        val isReliable = detectedCardTypes.any { it.isReliable }
-        if (isReliable) {
-            onBinLookupCallback?.onBinLookup(
-                data = detectedCardTypes.map(DetectedCardType::toBinLookupData),
-            )
+    private fun getReliableDetectedCardTypes(state: CardComponentState): List<DetectedCardType>? {
+        return when (val cardBrandState = state.cardBrandState) {
+            is CardBrandState.DualBrand -> cardBrandState.detectedCardTypes
+            is CardBrandState.SingleBrand -> listOf(cardBrandState.detectedCardType)
+            else -> null
+        }.takeIf { detectedCardTypes ->
+            !detectedCardTypes.isNullOrEmpty() && detectedCardTypes.any { it.isReliable }
         }
+    }
+
+    private fun updateBinLookupCallback(detectedCardTypes: List<DetectedCardType>) {
+        onBinLookupCallback?.onBinLookup(
+            data = detectedCardTypes.map(DetectedCardType::toBinLookupData),
+        )
     }
 
     private fun onEncryptionError(e: EncryptionException) {
