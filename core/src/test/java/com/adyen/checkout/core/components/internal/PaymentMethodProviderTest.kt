@@ -11,7 +11,6 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -32,7 +31,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.mock
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -109,13 +107,12 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", factory)
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
-            val actualComponent = PaymentMethodProvider.get(
+            val actualComponent = PaymentMethodProvider.getPaymentComponent(
                 paymentMethod = InstantPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -133,8 +130,8 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", storedFactory)
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
-            val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = StoredBLIKPaymentMethod(
+            val actualComponent = PaymentMethodProvider.getStoredPaymentComponent(
+                storedPaymentMethod = StoredBLIKPaymentMethod(
                     type = "txVariant",
                     name = "name",
                     id = "test_id",
@@ -144,7 +141,6 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -172,13 +168,12 @@ internal class PaymentMethodProviderTest {
         runTest {
             PaymentMethodProvider.register("txVariant", factory)
 
-            val actualComponent = PaymentMethodProvider.get(
+            val actualComponent = PaymentMethodProvider.getPaymentComponent(
                 paymentMethod = InstantPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertSame(component, actualComponent)
@@ -189,8 +184,8 @@ internal class PaymentMethodProviderTest {
         runTest {
             PaymentMethodProvider.register("txVariant", storedFactory)
 
-            val actualComponent = PaymentMethodProvider.get(
-                paymentMethod = StoredBLIKPaymentMethod(
+            val actualComponent = PaymentMethodProvider.getStoredPaymentComponent(
+                storedPaymentMethod = StoredBLIKPaymentMethod(
                     type = "txVariant",
                     name = "name",
                     id = "test_id",
@@ -200,7 +195,6 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = mock(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
             assertSame(component, actualComponent)
@@ -209,13 +203,12 @@ internal class PaymentMethodProviderTest {
     @Test
     fun `when get is called for an unregistered factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
-            PaymentMethodProvider.get(
+            PaymentMethodProvider.getPaymentComponent(
                 paymentMethod = InstantPaymentMethod(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = mock(),
             )
         }
     }
@@ -223,8 +216,8 @@ internal class PaymentMethodProviderTest {
     @Test
     fun `when get is called for an unregistered stored factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
-            PaymentMethodProvider.get(
-                paymentMethod = StoredBLIKPaymentMethod(
+            PaymentMethodProvider.getStoredPaymentComponent(
+                storedPaymentMethod = StoredBLIKPaymentMethod(
                     type = "unregistered_txVariant",
                     name = "name",
                     id = "test_id",
@@ -234,7 +227,6 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
-                checkoutCallbacks = mock(),
             )
         }
     }
@@ -262,7 +254,6 @@ internal class PaymentMethodProviderTest {
                 analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
                 componentParamsBundle: ComponentParamsBundle,
-                checkoutCallbacks: CheckoutCallbacks,
             ) = paymentComponent
         }
 
@@ -275,7 +266,6 @@ internal class PaymentMethodProviderTest {
                 analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
                 componentParamsBundle: ComponentParamsBundle,
-                checkoutCallbacks: CheckoutCallbacks,
             ) = paymentComponent
         }
 

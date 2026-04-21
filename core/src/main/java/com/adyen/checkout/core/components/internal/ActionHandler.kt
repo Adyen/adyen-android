@@ -15,16 +15,16 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 internal class ActionHandler(
-    @Suppress("unused") private val callbacks: CheckoutCallbacks,
+    private val componentRequestDispatcher: ComponentRequestDispatcher,
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
     private val checkoutConfiguration: CheckoutConfiguration,
@@ -55,11 +55,11 @@ internal class ActionHandler(
             .onEach { event ->
                 when (event) {
                     is ActionComponentEvent.ActionDetails -> {
-//                        callbacks.onAdditionalDetails?.onAdditionalDetails(event.data)
+                        componentRequestDispatcher.additionalDetails(event.data)
                     }
 
                     is ActionComponentEvent.Error -> {
-//                        callbacks.onError?.onError(event.error.toCheckoutError())
+                        componentRequestDispatcher.error(event.error.toCheckoutError())
                     }
                 }
             }

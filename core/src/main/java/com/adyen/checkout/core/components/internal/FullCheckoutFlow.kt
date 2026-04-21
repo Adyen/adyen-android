@@ -11,7 +11,6 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutRoute
@@ -19,6 +18,7 @@ import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.onEach
 internal class FullCheckoutFlow(
     target: CheckoutTarget,
     context: CheckoutContext,
-    callbacks: CheckoutCallbacks,
+    componentRequestDispatcher: ComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
     analyticsManager: AnalyticsManager,
     checkoutConfiguration: CheckoutConfiguration,
@@ -38,7 +38,6 @@ internal class FullCheckoutFlow(
     override val paymentComponent: PaymentComponent<*>? = createPaymentComponent(
         target = target,
         context = context,
-        callbacks = callbacks,
         coroutineScope = coroutineScope,
         analyticsManager = analyticsManager,
         checkoutConfiguration = checkoutConfiguration,
@@ -55,14 +54,13 @@ internal class FullCheckoutFlow(
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         paymentComponent.setLoading(true)
-//                        callbacks.beforeSubmit?.beforeSubmit(event.state)
-//                        val result = callbacks.onSubmit?.onSubmit(event.state.data)
-//                        result?.let { handleResult(it) }
+                        val result = componentRequestDispatcher.submit(event.state.data)
+                        handleResult(result)
                         paymentComponent.setLoading(false)
                     }
 
                     is PaymentComponentEvent.Error -> {
-//                        callbacks.onError?.onError(event.error.toCheckoutError())
+                        componentRequestDispatcher.error(event.error.toCheckoutError())
                     }
                 }
             }
@@ -95,7 +93,6 @@ internal class FullCheckoutFlow(
     private fun createPaymentComponent(
         target: CheckoutTarget,
         context: CheckoutContext,
-        callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
@@ -116,7 +113,6 @@ internal class FullCheckoutFlow(
                         analyticsManager = analyticsManager,
                         checkoutConfiguration = checkoutConfiguration,
                         componentParamsBundle = componentParamsBundle,
-                        checkoutCallbacks = callbacks,
                     )
                 }
             }
@@ -135,7 +131,6 @@ internal class FullCheckoutFlow(
                         analyticsManager = analyticsManager,
                         checkoutConfiguration = checkoutConfiguration,
                         componentParamsBundle = componentParamsBundle,
-                        checkoutCallbacks = callbacks,
                     )
                 }
             }

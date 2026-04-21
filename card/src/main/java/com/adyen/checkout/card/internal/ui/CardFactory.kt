@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui
 
-import com.adyen.checkout.card.OnBinLookupCallback
-import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.getCardConfiguration
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
@@ -26,7 +24,6 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidat
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -50,7 +47,6 @@ internal class CardFactory :
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        checkoutCallbacks: CheckoutCallbacks,
     ): CardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
@@ -83,11 +79,12 @@ internal class CardFactory :
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
-        ).apply {
-            // TODO - Find an alternative way, so we don't need the callbacks
-            setOnBinValueCallback(checkoutCallbacks.getAdditionalCallback(OnBinValueCallback::class))
-            setOnBinLookupCallback(checkoutCallbacks.getAdditionalCallback(OnBinLookupCallback::class))
-        }
+        )
+        // TODO - Find a way to pass additional callbacks
+//        .apply {
+//            setOnBinValueCallback(checkoutCallbacks.getAdditionalCallback(OnBinValueCallback::class))
+//            setOnBinLookupCallback(checkoutCallbacks.getAdditionalCallback(OnBinLookupCallback::class))
+//        }
     }
 
     override fun create(
@@ -96,7 +93,6 @@ internal class CardFactory :
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        @Suppress("UNUSED_PARAMETER") checkoutCallbacks: CheckoutCallbacks,
     ): StoredCardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,

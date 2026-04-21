@@ -9,7 +9,6 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
@@ -24,7 +23,6 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayPaymentCompon
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        checkoutCallbacks: CheckoutCallbacks
     ): GooglePayComponent {
         return GooglePayComponent()
     }

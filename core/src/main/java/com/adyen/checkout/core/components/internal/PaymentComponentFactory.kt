@@ -33,7 +33,6 @@ interface PaymentComponentFactory<CS : BasePaymentComponentState, T : PaymentCom
      * @param analyticsManager Analytics manager for tracking component events.
      * @param checkoutConfiguration Checkout Configuration.
      * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
-     * @param checkoutCallbacks Callbacks for component events.
      *
      * @return A [PaymentComponent] instance.
      */
@@ -44,6 +43,5 @@ interface PaymentComponentFactory<CS : BasePaymentComponentState, T : PaymentCom
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        checkoutCallbacks: CheckoutCallbacks,
     ): T
 }
