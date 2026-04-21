@@ -16,6 +16,16 @@ package com.adyen.checkout.core.old.ui.validation
     level = DeprecationLevel.WARNING,
 )
 sealed interface CardSecurityCodeValidationResult {
+
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Valid : CardSecurityCodeValidationResult
+
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Invalid : CardSecurityCodeValidationResult
 }
