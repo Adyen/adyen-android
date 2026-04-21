@@ -173,10 +173,8 @@ internal class CardComponent(
     private fun getReliableDetectedCardTypes(state: CardComponentState): List<DetectedCardType>? {
         return when (val cardBrandState = state.cardBrandState) {
             is CardBrandState.DualBrand -> cardBrandState.detectedCardTypes
-            is CardBrandState.SingleBrand -> listOf(cardBrandState.detectedCardType)
+            is CardBrandState.SingleBrand if cardBrandState.isReliable -> listOf(cardBrandState.detectedCardType)
             else -> null
-        }.takeIf { detectedCardTypes ->
-            !detectedCardTypes.isNullOrEmpty() && detectedCardTypes.any { it.isReliable }
         }
     }
 

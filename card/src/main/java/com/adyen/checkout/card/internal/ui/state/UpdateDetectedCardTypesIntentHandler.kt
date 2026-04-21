@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -20,10 +21,10 @@ internal class UpdateDetectedCardTypesIntentHandler(
         state: CardComponentState,
         intent: CardIntent.UpdateDetectedCardTypes,
     ): CardComponentState {
-        val detectedCardTypes = intent.detectedCardTypes
+        val detectedCardTypes = intent.detectedCardTypeList.detectedCardTypes
+        val isDetectedFromNetwork = intent.detectedCardTypeList.source == DetectedCardTypeList.Source.NETWORK
 
         val supportedDetectedCardTypes = detectedCardTypes.filter { it.isSupported }
-        val isDetectedFromNetwork = detectedCardTypes.any { it.isReliable }
 
         val cardBrandState = when {
             // local detection + no supported brands
@@ -34,7 +35,7 @@ internal class UpdateDetectedCardTypesIntentHandler(
             // local detection + supported brands
             !isDetectedFromNetwork -> {
                 // select the first brand and discard the rest
-                CardBrandState.SingleBrand(supportedDetectedCardTypes.first())
+                CardBrandState.SingleBrand(supportedDetectedCardTypes.first(), false)
             }
 
             // network detection + no detected brands
@@ -50,7 +51,7 @@ internal class UpdateDetectedCardTypesIntentHandler(
 
             // network detection + 1 detected brand
             supportedDetectedCardTypes.size == 1 -> {
-                CardBrandState.SingleBrand(supportedDetectedCardTypes.first())
+                CardBrandState.SingleBrand(supportedDetectedCardTypes.first(), true)
             }
 
             // network detection + multiple detected brands

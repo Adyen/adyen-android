@@ -60,7 +60,6 @@ internal class NetworkCardBrandDetectionService(
             val cardBrand = CardBrand(txVariant = brandResponse.brand)
             DetectedCardType(
                 cardBrand = cardBrand,
-                isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(
                     brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value,

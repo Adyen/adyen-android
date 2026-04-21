@@ -268,10 +268,8 @@ internal class CardComponentStateValidatorTest {
 
     private fun createDetectedCardType(
         isSupported: Boolean = true,
-        isReliable: Boolean = true,
     ) = DetectedCardType(
         cardBrand = CardBrand("visa"),
-        isReliable = isReliable,
         enableLuhnCheck = true,
         cvcPolicy = Brand.FieldPolicy.REQUIRED,
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,

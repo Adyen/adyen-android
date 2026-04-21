@@ -265,7 +265,6 @@ internal class CardViewStateProducerTest {
         isSupported: Boolean = true,
     ) = DetectedCardType(
         cardBrand = cardBrand,
-        isReliable = true,
         enableLuhnCheck = true,
         cvcPolicy = Brand.FieldPolicy.REQUIRED,
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,

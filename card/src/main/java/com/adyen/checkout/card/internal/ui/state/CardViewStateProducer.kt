@@ -23,14 +23,10 @@ internal class CardViewStateProducer(
 ) : ViewStateProducer<CardComponentState, CardViewState> {
 
     override fun produce(state: CardComponentState): CardViewState {
-        val dualBrandData = if (state.cardBrandState is CardBrandState.DualBrand) {
-            dualBrandedCardHandler.processDetectedCardTypes(
-                detectedCardTypes = state.cardBrandState.detectedCardTypes,
-                selectedBrand = state.selectedCardBrand,
-            )
-        } else {
-            null
-        }
+        val dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
+            cardBrandState = state.cardBrandState,
+            selectedBrand = state.selectedCardBrand,
+        )
 
         val isSupportedCardBrandsShown = state.cardBrandState in listOf(
             CardBrandState.NoBrandsDetected,

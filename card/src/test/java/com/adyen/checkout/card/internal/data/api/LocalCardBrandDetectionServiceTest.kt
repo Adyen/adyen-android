@@ -40,7 +40,6 @@ internal class LocalCardBrandDetectionServiceTest {
 
         val expectedDetectedCardType = DetectedCardType(
             cardBrand = cardBrand,
-            isReliable = false,
             enableLuhnCheck = true,
             cvcPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,

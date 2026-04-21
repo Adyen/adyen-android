@@ -120,7 +120,6 @@ internal class StoredCardComponentStateReducerTest {
 
     private fun createDetectedCardType() = DetectedCardType(
         cardBrand = CardBrand("visa"),
-        isReliable = true,
         enableLuhnCheck = true,
         cvcPolicy = Brand.FieldPolicy.REQUIRED,
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,

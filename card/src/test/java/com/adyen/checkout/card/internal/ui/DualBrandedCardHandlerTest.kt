@@ -30,7 +30,7 @@ internal class DualBrandedCardHandlerTest {
         selectedBrand: CardBrand?,
         expectedDualBrandData: DualBrandData?
     ) {
-        val actual = dualBrandedCardHandler.processDetectedCardTypes(detectedCardTypes, selectedBrand)
+        val actual = dualBrandedCardHandler.processDetectedCardTypes(detectedCardTypes, selectedBrand,)
         assertEquals(expectedDualBrandData, actual)
     }
 
@@ -48,7 +48,6 @@ internal class DualBrandedCardHandlerTest {
                 listOf(
                     DetectedCardType(
                         CardBrand(CardType.VISA.txVariant),
-                        isReliable = true,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -59,7 +58,6 @@ internal class DualBrandedCardHandlerTest {
                     ),
                     DetectedCardType(
                         CardBrand(CardType.CARTEBANCAIRE.txVariant),
-                        isReliable = false,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -76,7 +74,6 @@ internal class DualBrandedCardHandlerTest {
                 listOf(
                     DetectedCardType(
                         CardBrand(CardType.VISA.txVariant),
-                        isReliable = true,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -87,7 +84,6 @@ internal class DualBrandedCardHandlerTest {
                     ),
                     DetectedCardType(
                         CardBrand(CardType.CARTEBANCAIRE.txVariant),
-                        isReliable = true,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -115,7 +111,6 @@ internal class DualBrandedCardHandlerTest {
                 listOf(
                     DetectedCardType(
                         CardBrand(CardType.VISA.txVariant),
-                        isReliable = true,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -126,7 +121,6 @@ internal class DualBrandedCardHandlerTest {
                     ),
                     DetectedCardType(
                         CardBrand(CardType.DANKORT.txVariant),
-                        isReliable = true,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -154,7 +148,6 @@ internal class DualBrandedCardHandlerTest {
                 listOf(
                     DetectedCardType(
                         CardBrand(CardType.MASTERCARD.txVariant),
-                        isReliable = true,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -165,7 +158,6 @@ internal class DualBrandedCardHandlerTest {
                     ),
                     DetectedCardType(
                         CardBrand("eft_pos"),
-                        isReliable = true,
                         enableLuhnCheck = true,
                         cvcPolicy = Brand.FieldPolicy.REQUIRED,
                         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,

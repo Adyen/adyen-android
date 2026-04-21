@@ -446,13 +446,11 @@ internal class CardComponentStateReducerTest(
 
         private fun createDetectedCardType(
             cardBrand: CardBrand = CardBrand("visa"),
-            isReliable: Boolean = true,
             isSupported: Boolean = true,
             cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
         ) = DetectedCardType(
             cardBrand = cardBrand,
-            isReliable = isReliable,
             enableLuhnCheck = true,
             cvcPolicy = cvcPolicy,
             expiryDatePolicy = expiryDatePolicy,

@@ -242,7 +242,6 @@ internal class NetworkCardBrandDetectionServiceTest(
         @Suppress("LongParameterList")
         private fun mockDetectedCardType(
             cardBrand: CardBrand = CardBrand(CardType.MASTERCARD.txVariant),
-            isReliable: Boolean = true,
             enableLuhnCheck: Boolean = true,
             cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
@@ -253,7 +252,6 @@ internal class NetworkCardBrandDetectionServiceTest(
         ): DetectedCardType {
             return DetectedCardType(
                 cardBrand,
-                isReliable,
                 enableLuhnCheck,
                 cvcPolicy,
                 expiryDatePolicy,
