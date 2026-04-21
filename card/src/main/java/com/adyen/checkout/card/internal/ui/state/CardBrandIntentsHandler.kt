@@ -22,12 +22,40 @@ internal class CardBrandIntentsHandler(
         state: CardComponentState,
         intent: CardIntent.UpdateDetectedCardTypes,
     ): CardComponentState {
+        val cardBrandState = getCardBrandState(state, intent)
+
+        val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
+            is CardBrandState.DualBrand -> {
+                cardBrandState.shopperSelectedCardBrandData ?: cardBrandState.cardBrandDataList.firstOrNull()
+            }
+
+            is CardBrandState.SingleBrand if cardBrandState.isReliable -> cardBrandState.cardBrandData
+            else -> null
+        }
+        val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
+        val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
+
+        return state.copy(
+            cardBrandState = cardBrandState,
+            securityCode = state.securityCode.copy(
+                requirementPolicy = getSecurityCodeRequirementPolicy(cvcPolicy),
+            ),
+            expiryDate = state.expiryDate.copy(
+                requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
+            ),
+        )
+    }
+
+    private fun getCardBrandState(
+        currentState: CardComponentState,
+        intent: CardIntent.UpdateDetectedCardTypes,
+    ): CardBrandState {
         val detectedCardTypes = intent.detectedCardTypeList.detectedCardTypes
         val isDetectedFromNetwork = intent.detectedCardTypeList.source == DetectedCardTypeList.Source.NETWORK
 
         val supportedDetectedCardTypes = detectedCardTypes.filter { it.isSupported }
 
-        val cardBrandState = when {
+        return when {
             // local detection + no supported brands
             !isDetectedFromNetwork && supportedDetectedCardTypes.isEmpty() -> {
                 CardBrandState.NoBrandsDetected
@@ -66,7 +94,7 @@ internal class CardBrandIntentsHandler(
                 // select the first 2 brands and discard the rest (should only have 2 brands normally)
                 val cardBrandDataList = supportedDetectedCardTypes.take(2).map { it.toCardBrandData() }
 
-                val currentCardBrandState = state.cardBrandState
+                val currentCardBrandState = currentState.cardBrandState
                 // if the list of brands has not changed, keep the previously selected brand, otherwise reset it
                 val shopperSelectedCardBrandData = if (
                     currentCardBrandState is CardBrandState.DualBrand &&
@@ -83,27 +111,6 @@ internal class CardBrandIntentsHandler(
                 )
             }
         }
-
-        val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
-            is CardBrandState.DualBrand -> {
-                cardBrandState.shopperSelectedCardBrandData ?: cardBrandState.cardBrandDataList.firstOrNull()
-            }
-
-            is CardBrandState.SingleBrand if cardBrandState.isReliable -> cardBrandState.cardBrandData
-            else -> null
-        }
-        val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
-        val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
-
-        return state.copy(
-            cardBrandState = cardBrandState,
-            securityCode = state.securityCode.copy(
-                requirementPolicy = getSecurityCodeRequirementPolicy(cvcPolicy),
-            ),
-            expiryDate = state.expiryDate.copy(
-                requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
-            ),
-        )
     }
 
     private fun getExpiryDateRequirementPolicy(expiryDatePolicy: Brand.FieldPolicy?): RequirementPolicy {
