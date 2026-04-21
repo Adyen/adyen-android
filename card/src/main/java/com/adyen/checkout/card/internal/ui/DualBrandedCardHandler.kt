@@ -8,23 +8,23 @@
 
 package com.adyen.checkout.card.internal.ui
 
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
+import com.adyen.checkout.card.internal.ui.state.CardBrandData
 import com.adyen.checkout.card.internal.ui.state.CardBrandState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 
 internal class DualBrandedCardHandler {
 
-    internal fun processDetectedCardTypes(
+    internal fun getDualBrandData(
         cardBrandState: CardBrandState,
         selectedBrand: CardBrand?,
     ): DualBrandData? {
         if (cardBrandState !is CardBrandState.DualBrand || !isShopperSelectionAllowed(cardBrandState)) return null
 
         val brandOptions = mapToCardBrandItemList(
-            reliableAndSupportedTypes = cardBrandState.detectedCardTypes,
+            cardBrandDataList = cardBrandState.cardBrandDataList,
             selectedBrand = selectedBrand,
         )
 
@@ -35,23 +35,25 @@ internal class DualBrandedCardHandler {
     }
 
     private fun isShopperSelectionAllowed(cardBrandState: CardBrandState.DualBrand): Boolean {
-        return cardBrandState.detectedCardTypes.any { it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS }
+        return cardBrandState.cardBrandDataList.any { it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS }
     }
 
     private fun mapToCardBrandItemList(
-        reliableAndSupportedTypes: List<DetectedCardType>,
+        cardBrandDataList: List<CardBrandData>,
         selectedBrand: CardBrand?,
-    ) = reliableAndSupportedTypes.mapIndexed { index, detectedCardType ->
-        if (selectedBrand == null) {
-            detectedCardType.mapToCardBrandItem(index == 0)
-        } else {
-            detectedCardType.mapToCardBrandItem(
-                detectedCardType.cardBrand.txVariant == selectedBrand.txVariant,
-            )
+    ): List<CardBrandItem> {
+        return cardBrandDataList.mapIndexed { index, cardBrandData ->
+            if (selectedBrand == null) {
+                cardBrandData.mapToCardBrandItem(index == 0)
+            } else {
+                cardBrandData.mapToCardBrandItem(
+                    cardBrandData.cardBrand.txVariant == selectedBrand.txVariant,
+                )
+            }
         }
     }
 
-    private fun DetectedCardType.mapToCardBrandItem(isSelected: Boolean) = CardBrandItem(
+    private fun CardBrandData.mapToCardBrandItem(isSelected: Boolean) = CardBrandItem(
         name = localizedBrand ?: cardBrand.txVariant,
         brand = cardBrand,
         isSelected = isSelected,

@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
+import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -35,7 +36,7 @@ internal class UpdateDetectedCardTypesIntentHandler(
             // local detection + supported brands
             !isDetectedFromNetwork -> {
                 // select the first brand and discard the rest
-                CardBrandState.SingleBrand(supportedDetectedCardTypes.first(), false)
+                CardBrandState.SingleBrand(supportedDetectedCardTypes.first().toCardBrandData(), false)
             }
 
             // network detection + no detected brands
@@ -51,13 +52,13 @@ internal class UpdateDetectedCardTypesIntentHandler(
 
             // network detection + 1 detected brand
             supportedDetectedCardTypes.size == 1 -> {
-                CardBrandState.SingleBrand(supportedDetectedCardTypes.first(), true)
+                CardBrandState.SingleBrand(supportedDetectedCardTypes.first().toCardBrandData(), true)
             }
 
             // network detection + multiple detected brands
             else -> {
                 // select the first 2 brands and discard the rest (should only have 2 brands normally)
-                CardBrandState.DualBrand(supportedDetectedCardTypes.take(2))
+                CardBrandState.DualBrand(supportedDetectedCardTypes.take(2).map { it.toCardBrandData() })
             }
         }
 

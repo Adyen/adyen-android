@@ -30,7 +30,7 @@ internal class DualBrandedCardHandlerTest {
         selectedBrand: CardBrand?,
         expectedDualBrandData: DualBrandData?
     ) {
-        val actual = dualBrandedCardHandler.processDetectedCardTypes(detectedCardTypes, selectedBrand,)
+        val actual = dualBrandedCardHandler.getDualBrandData(detectedCardTypes, selectedBrand,)
         assertEquals(expectedDualBrandData, actual)
     }
 

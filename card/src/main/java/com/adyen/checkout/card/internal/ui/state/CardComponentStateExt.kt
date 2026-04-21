@@ -175,11 +175,11 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
 private fun CardComponentState.cardBrand(): CardBrand? {
     return when (cardBrandState) {
         is CardBrandState.SingleBrand if cardBrandState.isReliable -> {
-            cardBrandState.detectedCardType.cardBrand
+            cardBrandState.cardBrandData.cardBrand
         }
 
         is CardBrandState.DualBrand -> {
-            cardBrandState.detectedCardTypes.firstOrNull {
+            cardBrandState.cardBrandDataList.firstOrNull {
                 it.cardBrand.txVariant == selectedCardBrand?.txVariant
             }?.cardBrand
         }
