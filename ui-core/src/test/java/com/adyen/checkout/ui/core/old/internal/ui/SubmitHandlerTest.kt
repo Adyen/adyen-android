@@ -6,6 +6,8 @@
  * Created by ararat on 15/7/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.ui.core.old.internal.ui
 
 import androidx.lifecycle.SavedStateHandle

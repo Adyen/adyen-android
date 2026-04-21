@@ -6,6 +6,8 @@
  * Created by ararat on 22/1/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.ui.core.old
 
 import android.content.Context
