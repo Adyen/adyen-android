@@ -40,6 +40,7 @@ internal sealed class CardBrandState {
     data class SingleBrand(val cardBrandData: CardBrandData, val isReliable: Boolean) : CardBrandState()
     data class DualBrand(
         val cardBrandDataList: List<CardBrandData>,
+        val shopperSelectionAllowed: Boolean,
         val shopperSelectedCardBrandData: CardBrandData?,
     ) : CardBrandState()
 }
