@@ -27,6 +27,10 @@ import java.util.Locale
 /**
  * Configuration class for the [CardComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class CardConfiguration private constructor(
@@ -52,6 +56,10 @@ class CardConfiguration private constructor(
     /**
      * Builder to create a [CardConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Suppress("TooManyFunctions")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<CardConfiguration, Builder>,
@@ -315,6 +323,10 @@ class CardConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.card(
     configuration: @CheckoutConfigurationMarker CardConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

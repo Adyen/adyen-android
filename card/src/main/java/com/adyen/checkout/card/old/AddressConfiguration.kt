@@ -8,11 +8,19 @@ import kotlinx.parcelize.Parcelize
  * Configuration class for Address Form in Card Component. This class can be used define the
  * visibility of the address form.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class AddressConfiguration : Parcelable {
 
     /**
      * Address Form will be hidden.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @SuppressLint("ObjectInPublicSealedClass")
     @Parcelize
     object None : AddressConfiguration()
@@ -20,6 +28,10 @@ sealed class AddressConfiguration : Parcelable {
     /**
      * Only postal code will be shown as part of the card component.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Parcelize
     data class PostalCode(
         val addressFieldPolicy: CardAddressFieldPolicy = CardAddressFieldPolicy.Required()
@@ -32,6 +44,10 @@ sealed class AddressConfiguration : Parcelable {
      * @param supportedCountryCodes Supported country codes to be filtered from the available country
      * options.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Parcelize
     data class FullAddress(
         val defaultCountryCode: String? = null,
@@ -42,29 +58,49 @@ sealed class AddressConfiguration : Parcelable {
     /**
      * Address Lookup option will be shown as part of card component.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Parcelize
     class Lookup : AddressConfiguration()
 
     /**
      * Configuration for requirement of the address fields.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     sealed class CardAddressFieldPolicy : Parcelable {
 
         /**
          * Address form fields will be required.
          */
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         @Parcelize
         class Required : CardAddressFieldPolicy()
 
         /**
          * Address form fields will be optional.
          */
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         @Parcelize
         class Optional : CardAddressFieldPolicy()
 
         /**
          * Address form fields will be optional for given [brands] and required for the other brands.
          */
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         @Parcelize
         data class OptionalForCardTypes(val brands: List<String>) : CardAddressFieldPolicy()
     }

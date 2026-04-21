@@ -10,4 +10,8 @@ package com.adyen.checkout.card.old
 
 import com.adyen.checkout.core.old.CardType
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 typealias CardType = CardType

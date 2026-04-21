@@ -6,6 +6,8 @@
  * Created by josephj on 31/1/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.old.internal.util.CardNumberUtils

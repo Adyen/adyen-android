@@ -6,6 +6,8 @@
  * Created by josephj on 8/8/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.data.api
 
 import com.adyen.checkout.card.old.internal.data.api.DetectCardTypeRepository

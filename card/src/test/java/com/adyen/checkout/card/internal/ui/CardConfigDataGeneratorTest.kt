@@ -6,6 +6,8 @@
  * Created by oscars on 19/8/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.ui
 
 import com.adyen.checkout.card.old.KCPAuthVisibility

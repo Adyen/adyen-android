@@ -6,6 +6,8 @@
  * Created by ozgur on 4/10/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.ui
 
 import com.adyen.checkout.card.R

@@ -6,6 +6,8 @@
  * Created by ozgur on 4/7/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.old.internal.data.model.Brand

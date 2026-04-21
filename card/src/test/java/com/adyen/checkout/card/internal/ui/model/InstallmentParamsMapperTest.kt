@@ -6,6 +6,8 @@
  * Created by atef on 24/2/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.old.InstallmentConfiguration

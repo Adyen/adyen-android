@@ -6,6 +6,8 @@
  * Created by josephj on 16/11/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.old.AddressConfiguration
