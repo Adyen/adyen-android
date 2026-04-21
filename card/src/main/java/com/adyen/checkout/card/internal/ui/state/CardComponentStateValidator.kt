@@ -18,13 +18,13 @@ internal class CardComponentStateValidator(
 ) : ComponentStateValidator<CardComponentState> {
 
     override fun validate(state: CardComponentState): CardComponentState {
-        val selectedOrFirstCardType = when (val cardBrandState = state.cardBrandState) {
-            is CardBrandState.SingleBrand -> cardBrandState.detectedCardType
+        val selectedOrFirstCardBrandData = when (val cardBrandState = state.cardBrandState) {
+            is CardBrandState.SingleBrand -> cardBrandState.cardBrandData
 
             is CardBrandState.DualBrand -> {
-                cardBrandState.detectedCardTypes.firstOrNull {
+                cardBrandState.cardBrandDataList.firstOrNull {
                     it.cardBrand.txVariant == state.selectedCardBrand?.txVariant
-                } ?: cardBrandState.detectedCardTypes.first()
+                } ?: cardBrandState.cardBrandDataList.first()
             }
 
             else -> null
@@ -32,11 +32,11 @@ internal class CardComponentStateValidator(
         val isUnsupportedBrand = state.cardBrandState is CardBrandState.UnsupportedBrand
         val cardNumberError = validateCardNumber(
             state.cardNumber,
-            selectedOrFirstCardType?.enableLuhnCheck,
+            selectedOrFirstCardBrandData?.enableLuhnCheck,
             isUnsupportedBrand,
         )
         val expiryDateError = validateExpiryDate(state.expiryDate)
-        val securityCodeError = validateSecurityCode(state.securityCode, selectedOrFirstCardType?.cardBrand)
+        val securityCodeError = validateSecurityCode(state.securityCode, selectedOrFirstCardBrandData?.cardBrand)
         val holderNameError = validateHolderName(state.holderName)
         val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)
         val kcpBirthDateOrTaxNumberError = validateKcpBirthDateOrTaxNumber(state.kcpBirthDateOrTaxNumber)

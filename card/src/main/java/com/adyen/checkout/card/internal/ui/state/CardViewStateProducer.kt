@@ -23,7 +23,7 @@ internal class CardViewStateProducer(
 ) : ViewStateProducer<CardComponentState, CardViewState> {
 
     override fun produce(state: CardComponentState): CardViewState {
-        val dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
+        val dualBrandData = dualBrandedCardHandler.getDualBrandData(
             cardBrandState = state.cardBrandState,
             selectedBrand = state.selectedCardBrand,
         )
@@ -61,8 +61,8 @@ internal class CardViewStateProducer(
 
     private fun getDetectedCardBrands(cardBrandState: CardBrandState): List<CardBrand> {
         return when (cardBrandState) {
-            is CardBrandState.DualBrand -> cardBrandState.detectedCardTypes.map { it.cardBrand }
-            is CardBrandState.SingleBrand -> listOf(cardBrandState.detectedCardType.cardBrand)
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.map { it.cardBrand }
+            is CardBrandState.SingleBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             else -> emptyList()
         }
     }

@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -38,9 +37,17 @@ internal data class CardComponentState(
 internal sealed class CardBrandState {
     data object NoBrandsDetected : CardBrandState()
     data object UnsupportedBrand : CardBrandState()
-    data class SingleBrand(val detectedCardType: DetectedCardType, val isReliable: Boolean) : CardBrandState()
-    data class DualBrand(val detectedCardTypes: List<DetectedCardType>) : CardBrandState()
+    data class SingleBrand(val cardBrandData: CardBrandData, val isReliable: Boolean) : CardBrandState()
+    data class DualBrand(val cardBrandDataList: List<CardBrandData>) : CardBrandState()
 }
+
+internal data class CardBrandData(
+    val cardBrand: CardBrand,
+    val enableLuhnCheck: Boolean,
+    val panLength: Int?,
+    val paymentMethodVariant: String?,
+    val localizedBrand: String?
+)
 
 internal val CardComponentState.binValue: String
     get() = if (cardNumber.isValid && cardNumber.text.length >= EXTENDED_CARD_NUMBER_LENGTH) {
