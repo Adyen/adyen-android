@@ -14,8 +14,8 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 fun CheckoutCallbacks.card(initBlock: CardCallbacks.() -> Unit) {
     apply {
         val callbacks = CardCallbacks().apply(initBlock)
-        callbacks.onBinValue?.let { addCallback(it, OnBinValueCallback::class) }
-        callbacks.onBinLookup?.let { addCallback(it, OnBinLookupCallback::class) }
+        callbacks.onBinValue?.let { addAdditionalCallback(it, OnBinValueCallback::class) }
+        callbacks.onBinLookup?.let { addAdditionalCallback(it, OnBinLookupCallback::class) }
     }
 }
 

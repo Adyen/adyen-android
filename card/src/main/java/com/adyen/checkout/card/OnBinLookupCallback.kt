@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 
-fun interface OnBinLookupCallback : CheckoutCallback {
+fun interface OnBinLookupCallback : CheckoutAdditionalCallback {
 
     fun onBinLookup(data: List<BinLookupData>)
 }

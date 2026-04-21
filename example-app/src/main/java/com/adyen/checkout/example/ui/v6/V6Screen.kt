@@ -37,19 +37,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutPaymentFlow
-import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
@@ -64,6 +59,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun V6Screen(
     theme: CheckoutTheme,
     uiState: V6UiState,
+    onPaymentMethodSelected: (PaymentMethod) -> Unit,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
@@ -83,7 +79,13 @@ fun V6Screen(
         },
     ) { contentPadding ->
         when (uiState) {
-            is V6UiState.Component -> Component(theme, uiState, Modifier.padding(contentPadding))
+            is V6UiState.Component -> Component(
+                theme = theme,
+                uiState = uiState,
+                onPaymentMethodSelected = onPaymentMethodSelected,
+                modifier = Modifier.padding(contentPadding),
+            )
+
             is V6UiState.Final -> Final(uiState, Modifier.padding(contentPadding))
             is V6UiState.Error -> Error(uiState, Modifier.padding(contentPadding))
             is V6UiState.Loading -> Loading(Modifier.padding(contentPadding))
@@ -95,6 +97,7 @@ fun V6Screen(
 private fun Component(
     theme: CheckoutTheme,
     uiState: V6UiState.Component,
+    onPaymentMethodSelected: (PaymentMethod) -> Unit,
     modifier: Modifier,
 ) {
     Column(
@@ -102,38 +105,25 @@ private fun Component(
         modifier = modifier.fillMaxSize(),
     ) {
         var shouldShowDialog by remember { mutableStateOf(false) }
-        var selectedPaymentMethod by rememberSaveable { mutableStateOf(uiState.paymentMethods.first()) }
 
         DropDownButton(
             theme = theme,
             onClick = { shouldShowDialog = !shouldShowDialog },
-            text = selectedPaymentMethod.name,
+            text = uiState.selectedPaymentMethod.name,
             isExpanded = shouldShowDialog,
         )
 
         if (shouldShowDialog) {
             PaymentMethodOptionsDialog(
                 paymentMethods = uiState.paymentMethods,
-                onItemClick = { selectedPaymentMethod = it },
+                onItemClick = onPaymentMethodSelected,
                 onDismissRequest = { shouldShowDialog = false },
                 theme = theme,
             )
         }
 
-        val coroutineScope = rememberCoroutineScope()
-        val context = LocalContext.current
-        val checkoutController = remember(selectedPaymentMethod) {
-            CheckoutController(
-                target = CheckoutTarget.PaymentMethod(selectedPaymentMethod.type),
-                context = uiState.checkoutContext,
-                callbacks = uiState.checkoutCallbacks,
-                applicationContext = context,
-                coroutineScope = coroutineScope,
-            )
-        }
-
         CheckoutPaymentFlow(
-            controller = checkoutController,
+            controller = uiState.checkoutController,
             theme = theme,
             modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
         )
