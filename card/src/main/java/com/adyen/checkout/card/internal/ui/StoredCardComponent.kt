@@ -76,7 +76,6 @@ internal class StoredCardComponent(
 
         val storedDetectedCardType = DetectedCardType(
             cardBrand = cardType,
-            isReliable = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
                 componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||

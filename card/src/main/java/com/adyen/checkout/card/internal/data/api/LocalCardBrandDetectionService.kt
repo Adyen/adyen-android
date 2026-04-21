@@ -31,7 +31,6 @@ internal class LocalCardBrandDetectionService(
     private fun mapCardBrands(cardBrand: CardBrand): DetectedCardType {
         return DetectedCardType(
             cardBrand = cardBrand,
-            isReliable = false,
             enableLuhnCheck = true,
             cvcPolicy = when {
                 NO_CVC_BRANDS.contains(cardBrand) -> Brand.FieldPolicy.HIDDEN

@@ -38,7 +38,7 @@ internal data class CardComponentState(
 internal sealed class CardBrandState {
     data object NoBrandsDetected : CardBrandState()
     data object UnsupportedBrand : CardBrandState()
-    data class SingleBrand(val detectedCardType: DetectedCardType) : CardBrandState()
+    data class SingleBrand(val detectedCardType: DetectedCardType, val isReliable: Boolean) : CardBrandState()
     data class DualBrand(val detectedCardTypes: List<DetectedCardType>) : CardBrandState()
 }
 

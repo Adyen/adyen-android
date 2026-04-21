@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.data.api
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.BinLookupCacheResult
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +23,7 @@ internal class DefaultDetectCardTypeRepository(
     private val networkCardBrandDetectionService: NetworkCardBrandDetectionService,
 ) : DetectCardTypeRepository {
 
-    override fun detectCardTypes(cardNumber: String): Flow<List<DetectedCardType>> = flow {
+    override fun detectCardTypes(cardNumber: String): Flow<DetectedCardTypeList> = flow {
         // if we remove this@DefaultDetectCardTypeRepository the tag gets resolved as SafeCollector since we're inside
         // a flow block
         // TODO fix logger to resolve the correct tag
@@ -38,7 +39,7 @@ internal class DefaultDetectCardTypeRepository(
         when (cachedResult) {
             is BinLookupCacheResult.Available -> {
                 // found card types in cache, no need to fetch from network or local
-                emit(cachedResult.detectedCardTypes)
+                emit(DetectedCardTypeList(cachedResult.detectedCardTypes, DetectedCardTypeList.Source.NETWORK))
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                     "card types returned from cache: ${cachedResult.detectedCardTypes.toLogString()}"
                 }
@@ -54,7 +55,7 @@ internal class DefaultDetectCardTypeRepository(
             is BinLookupCacheResult.Unavailable -> {
                 // return local card types first
                 val localDetectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber)
-                emit(localDetectedCardTypes)
+                emit(DetectedCardTypeList(localDetectedCardTypes, DetectedCardTypeList.Source.LOCAL))
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                     "card types detected locally: ${localDetectedCardTypes.toLogString()}"
                 }
@@ -63,7 +64,7 @@ internal class DefaultDetectCardTypeRepository(
                     // fetch from network and cache results
                     val networkDetectedCardTypes = detectCardTypesFromNetwork(bin)
                     if (networkDetectedCardTypes != null) {
-                        emit(networkDetectedCardTypes)
+                        emit(DetectedCardTypeList(networkDetectedCardTypes, DetectedCardTypeList.Source.NETWORK))
                         this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                             "card types fetched from network: ${networkDetectedCardTypes.toLogString()}"
                         }

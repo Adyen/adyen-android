@@ -11,21 +11,20 @@ package com.adyen.checkout.card.internal.ui
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
+import com.adyen.checkout.card.internal.ui.state.CardBrandState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 
 internal class DualBrandedCardHandler {
 
     internal fun processDetectedCardTypes(
-        detectedCardTypes: List<DetectedCardType>,
-        selectedBrand: CardBrand?
+        cardBrandState: CardBrandState,
+        selectedBrand: CardBrand?,
     ): DualBrandData? {
-        val reliableAndSupportedTypes = detectedCardTypes.filter { it.isSupported && it.isReliable }
-
-        if (!isDualBrandedFlow(reliableAndSupportedTypes)) return null
+        if (cardBrandState !is CardBrandState.DualBrand || !isShopperSelectionAllowed(cardBrandState)) return null
 
         val brandOptions = mapToCardBrandItemList(
-            reliableAndSupportedTypes = reliableAndSupportedTypes,
+            reliableAndSupportedTypes = cardBrandState.detectedCardTypes,
             selectedBrand = selectedBrand,
         )
 
@@ -35,11 +34,8 @@ internal class DualBrandedCardHandler {
         )
     }
 
-    private fun isDualBrandedFlow(reliableAndSupportedTypes: List<DetectedCardType>) =
-        reliableAndSupportedTypes.size > 1 && hasSupportedBrands(reliableAndSupportedTypes)
-
-    private fun hasSupportedBrands(reliableAndSupportedTypes: List<DetectedCardType>) = reliableAndSupportedTypes.any {
-        it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS
+    private fun isShopperSelectionAllowed(cardBrandState: CardBrandState.DualBrand): Boolean {
+        return cardBrandState.detectedCardTypes.any { it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS }
     }
 
     private fun mapToCardBrandItemList(
