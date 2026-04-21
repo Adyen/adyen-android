@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.core.old.ui.model
 
 import com.adyen.checkout.core.old.internal.ui.model.EMPTY_DATE

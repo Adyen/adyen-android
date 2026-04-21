@@ -13,6 +13,10 @@ import com.adyen.checkout.core.old.internal.data.model.ErrorResponseBody
 /**
  * Indicates that an internal API call has failed.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class HttpException(
     val code: Int,
     message: String,

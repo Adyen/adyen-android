@@ -22,6 +22,10 @@ import java.util.Locale
  * @param expiryMonth 1 based month value. Valid values are [1-12], 1 being January and 12 being December.
  * @param expiryYear 4 digit year (i.e. 2024)
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class ExpiryDate(
     val expiryMonth: Int,
     val expiryYear: Int,

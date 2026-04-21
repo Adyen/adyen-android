@@ -18,6 +18,10 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object CardExpiryDateValidator {
     // Date
     private const val DATE_FORMAT = "MM/yy"

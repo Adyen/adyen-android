@@ -11,6 +11,10 @@ package com.adyen.checkout.core.old.ui.validation
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.old.internal.util.StringUtil
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object CardNumberValidator {
 
     // Luhn Check

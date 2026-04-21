@@ -13,5 +13,9 @@ import org.json.JSONException
 /**
  * Exception thrown when an issue occurs during serialization of a [ModelObject].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class ModelSerializationException(modelClass: Class<*>, cause: JSONException?) :
     CheckoutException("Unexpected exception while serializing ${modelClass.simpleName}.", cause)

@@ -11,6 +11,10 @@ package com.adyen.checkout.core.old.ui.validation
 /**
  * Possible validation results for security code validation. (@see [CardSecurityCodeValidator.validateSecurityCode]
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed interface CardSecurityCodeValidationResult {
     class Valid : CardSecurityCodeValidationResult
     class Invalid : CardSecurityCodeValidationResult

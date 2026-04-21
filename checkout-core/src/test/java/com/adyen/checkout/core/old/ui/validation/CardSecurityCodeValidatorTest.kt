@@ -6,6 +6,8 @@
  * Created by ozgur on 4/10/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.core.old.ui.validation
 
 import com.adyen.checkout.core.old.CardBrand

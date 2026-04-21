@@ -11,6 +11,10 @@ package com.adyen.checkout.core.old.exception
 /**
  * Indicates that a required method was not implemented.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class MethodNotImplementedException(
     errorMessage: String,
     cause: Throwable? = null

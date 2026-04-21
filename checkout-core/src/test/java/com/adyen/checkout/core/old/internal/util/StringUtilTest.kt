@@ -6,6 +6,8 @@
  * Created by caiof on 16/3/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.core.old.internal.util
 
 import org.junit.jupiter.api.Assertions.assertEquals

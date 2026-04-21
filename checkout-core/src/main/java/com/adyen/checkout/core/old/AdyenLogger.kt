@@ -16,6 +16,10 @@ import com.adyen.checkout.core.old.internal.util.Logger
 /**
  * Utility class to configure the Adyen logger.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface AdyenLogger {
 
     fun shouldLog(level: AdyenLogLevel): Boolean

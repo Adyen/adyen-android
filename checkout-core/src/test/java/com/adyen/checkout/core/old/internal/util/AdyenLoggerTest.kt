@@ -6,6 +6,8 @@
  * Created by oscars on 17/6/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.core.old.internal.util
 
 import android.util.Log

@@ -11,4 +11,8 @@ package com.adyen.checkout.core.old.exception
 /**
  * This exception indicates that the payment flow was manually cancelled by the user.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 open class CancellationException(errorMessage: String) : ComponentException(errorMessage)
