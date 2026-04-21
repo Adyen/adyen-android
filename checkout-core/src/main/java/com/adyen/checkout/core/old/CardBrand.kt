@@ -15,6 +15,10 @@ import kotlinx.parcelize.Parcelize
  * the predefined list of [CardType]. Can be used to configure the supported card schemes with
  * [CardConfiguration.Builder.setSupportedCardTypes].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class CardBrand constructor(val txVariant: String) : Parcelable {
 

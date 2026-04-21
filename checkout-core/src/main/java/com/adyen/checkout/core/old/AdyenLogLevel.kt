@@ -10,6 +10,10 @@ package com.adyen.checkout.core.old
 
 import android.util.Log
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class AdyenLogLevel(
     val priority: Int,
 ) {

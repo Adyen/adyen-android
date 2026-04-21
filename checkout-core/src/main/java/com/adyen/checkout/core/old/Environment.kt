@@ -14,6 +14,10 @@ import java.net.URL
 /**
  * Identifies which host URL to be used for internal network calls.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class Environment internal constructor(
     val checkoutShopperBaseUrl: URL,

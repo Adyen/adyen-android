@@ -11,6 +11,10 @@ package com.adyen.checkout.core.old.ui.validation
 /**
  * Possible validation results for card number validation. (@see [CardNumberValidator.validateCardNumber]
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed interface CardNumberValidationResult {
     class Valid : CardNumberValidationResult
     interface Invalid : CardNumberValidationResult {

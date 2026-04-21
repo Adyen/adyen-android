@@ -12,6 +12,10 @@ import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.internal.util.StringUtil
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object CardSecurityCodeValidator {
 
     // Security Code

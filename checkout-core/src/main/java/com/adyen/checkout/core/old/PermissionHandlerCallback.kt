@@ -8,6 +8,10 @@
 
 package com.adyen.checkout.core.old
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface PermissionHandlerCallback {
     fun onPermissionGranted(requestedPermission: String)
     fun onPermissionDenied(requestedPermission: String)

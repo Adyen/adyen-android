@@ -11,6 +11,10 @@ package com.adyen.checkout.core.old.ui.validation
 /**
  * Possible validation results for expiry date validation. (@see [CardExpiryDateValidator.validateExpiryDate]
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed interface CardExpiryDateValidationResult {
     class Valid : CardExpiryDateValidationResult
     interface Invalid : CardExpiryDateValidationResult {

@@ -5,6 +5,9 @@
  *
  * Created by caiof on 18/4/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.core.old.internal.data.model
 
 import org.json.JSONObject
