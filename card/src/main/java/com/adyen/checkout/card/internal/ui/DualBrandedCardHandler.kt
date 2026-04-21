@@ -12,12 +12,11 @@ import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.state.CardBrandData
 import com.adyen.checkout.card.internal.ui.state.CardBrandState
-import com.adyen.checkout.core.common.CardType
 
 internal class DualBrandedCardHandler {
 
     internal fun getDualBrandData(cardBrandState: CardBrandState): DualBrandData? {
-        if (cardBrandState !is CardBrandState.DualBrand || !isShopperSelectionAllowed(cardBrandState)) return null
+        if (cardBrandState !is CardBrandState.DualBrand || !cardBrandState.shopperSelectionAllowed) return null
 
         val selectedOrFirstCardBrandData = cardBrandState.shopperSelectedCardBrandData
             ?: cardBrandState.cardBrandDataList.first()
@@ -30,10 +29,6 @@ internal class DualBrandedCardHandler {
             brandOptionFirst = brandOptions[0],
             brandOptionSecond = brandOptions[1],
         )
-    }
-
-    private fun isShopperSelectionAllowed(cardBrandState: CardBrandState.DualBrand): Boolean {
-        return cardBrandState.cardBrandDataList.any { it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS }
     }
 
     private fun mapToCardBrandItemList(
@@ -52,12 +47,4 @@ internal class DualBrandedCardHandler {
         brand = cardBrand,
         isSelected = isSelected,
     )
-
-    companion object {
-        private val SUPPORTED_CARD_BRANDS = listOf(
-            CardType.CARTEBANCAIRE,
-            CardType.BCMC,
-            CardType.DANKORT,
-        ).map { it.txVariant }
-    }
 }

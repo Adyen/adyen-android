@@ -92,21 +92,29 @@ internal class CardBrandIntentsHandler(
             // network detection + multiple detected brands
             else -> {
                 // select the first 2 brands and discard the rest (should only have 2 brands normally)
-                val cardBrandDataList = supportedDetectedCardTypes.take(2).map { it.toCardBrandData() }
+                val firstTwoDetectedCardTypes = supportedDetectedCardTypes.take(2)
+                val cardBrandDataList = firstTwoDetectedCardTypes.map { it.toCardBrandData() }
 
+                val shopperSelectionAllowed = firstTwoDetectedCardTypes.any {
+                    it.isShopperSelectionAllowedInDualBranded
+                }
                 val currentCardBrandState = currentState.cardBrandState
-                // if the list of brands has not changed, keep the previously selected brand, otherwise reset it
                 val shopperSelectedCardBrandData = if (
                     currentCardBrandState is CardBrandState.DualBrand &&
                     currentCardBrandState.cardBrandDataList == cardBrandDataList
                 ) {
+                    // the list of brands has not changed, keep the previously selected brand
                     currentCardBrandState.shopperSelectedCardBrandData
+                } else if (shopperSelectionAllowed) {
+                    // auto select the first brand
+                    cardBrandDataList.firstOrNull()
                 } else {
                     null
                 }
 
                 CardBrandState.DualBrand(
                     cardBrandDataList = cardBrandDataList,
+                    shopperSelectionAllowed = shopperSelectionAllowed,
                     shopperSelectedCardBrandData = shopperSelectedCardBrandData,
                 )
             }

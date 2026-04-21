@@ -85,6 +85,7 @@ internal class StoredCardComponent(
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
             isSupported = true,
+            isShopperSelectionAllowedInDualBranded = false,
             panLength = null,
             paymentMethodVariant = null,
             localizedBrand = null,
