@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -30,10 +30,13 @@ internal class CardComponentStateValidator(
             else -> null
         }
         val isUnsupportedBrand = state.cardBrandState is CardBrandState.UnsupportedBrand
-
-        val cardNumberError = validateCardNumber(state.cardNumber, selectedOrFirstCardType, isUnsupportedBrand)
-        val expiryDateError = validateExpiryDate(state.expiryDate, selectedOrFirstCardType)
-        val securityCodeError = validateSecurityCode(state.securityCode, selectedOrFirstCardType)
+        val cardNumberError = validateCardNumber(
+            state.cardNumber,
+            selectedOrFirstCardType?.enableLuhnCheck,
+            isUnsupportedBrand,
+        )
+        val expiryDateError = validateExpiryDate(state.expiryDate)
+        val securityCodeError = validateSecurityCode(state.securityCode, selectedOrFirstCardType?.cardBrand)
         val holderNameError = validateHolderName(state.holderName)
         val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)
         val kcpBirthDateOrTaxNumberError = validateKcpBirthDateOrTaxNumber(state.kcpBirthDateOrTaxNumber)
@@ -62,11 +65,9 @@ internal class CardComponentStateValidator(
 
     private fun validateCardNumber(
         cardNumber: TextInputComponentState,
-        selectedOrFirstCardType: DetectedCardType?,
+        enableLuhnCheck: Boolean?,
         isUnsupportedBrand: Boolean,
     ): CheckoutLocalizationKey? {
-        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
-
         return cardValidationMapper.mapCardNumberValidation(
             validation = CardValidationUtils.validateCardNumber(
                 cardNumber = cardNumber,
@@ -78,24 +79,22 @@ internal class CardComponentStateValidator(
 
     private fun validateExpiryDate(
         expiryDate: TextInputComponentState,
-        selectedOrFirstCardType: DetectedCardType?,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapExpiryDateValidation(
             validation = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
-                fieldPolicy = selectedOrFirstCardType?.expiryDatePolicy,
             ),
         )
     }
 
     private fun validateSecurityCode(
         securityCode: TextInputComponentState,
-        selectedOrFirstCardType: DetectedCardType?,
+        cardBrand: CardBrand?,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapSecurityCodeValidation(
             validation = CardValidationUtils.validateSecurityCode(
                 securityCode = securityCode,
-                detectedCardType = selectedOrFirstCardType,
+                cardBrand = cardBrand,
             ),
         )
     }

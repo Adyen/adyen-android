@@ -10,13 +10,12 @@ package com.adyen.checkout.card.internal.ui.state
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties
 import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_FORMAT
 import com.adyen.checkout.card.internal.ui.properties.KCPCardPasswordProperties
 import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidator
 import com.adyen.checkout.core.common.helper.CardNumberValidationResult
@@ -34,11 +33,11 @@ internal object CardValidationUtils {
      */
     internal fun validateCardNumber(
         cardNumber: TextInputComponentState,
-        enableLuhnCheck: Boolean,
+        enableLuhnCheck: Boolean?,
         isUnsupportedBrand: Boolean
     ): CardNumberValidation {
         if (!cardNumber.requiresValidation()) return CardNumberValidation.VALID
-        val validation = CardNumberValidator.validateCardNumber(cardNumber.text, enableLuhnCheck)
+        val validation = CardNumberValidator.validateCardNumber(cardNumber.text, enableLuhnCheck ?: true)
         return validateCardNumber(validation, isUnsupportedBrand)
     }
 
@@ -73,47 +72,27 @@ internal object CardValidationUtils {
      * Validate Expiry Date.
      */
     @Suppress("ReturnCount")
-    internal fun validateExpiryDate(
-        expiryDate: TextInputComponentState,
-        fieldPolicy: Brand.FieldPolicy?,
-    ): CardExpiryDateValidation {
+    internal fun validateExpiryDate(expiryDate: TextInputComponentState): CardExpiryDateValidation {
         if (!expiryDate.requiresValidation()) return CardExpiryDateValidation.VALID
         val (expiryMonth, expiryYear) = ExpiryDateParser.parseToMonthAndYear(expiryDate.text, returnFullYear = false)
             ?: return CardExpiryDateValidation.INVALID_OTHER_REASON
         val result = CardExpiryDateValidator.validateExpiryDate(expiryMonth = expiryMonth, expiryYear = expiryYear)
-        return validateExpiryDate(expiryDate.text, result, fieldPolicy)
-    }
 
-    @VisibleForTesting
-    internal fun validateExpiryDate(
-        expiryDate: String,
-        validationResult: CardExpiryDateValidationResult,
-        fieldPolicy: Brand.FieldPolicy?
-    ): CardExpiryDateValidation {
-        return when (validationResult) {
+        return when (result) {
             is CardExpiryDateValidationResult.Valid -> CardExpiryDateValidation.VALID
 
-            is CardExpiryDateValidationResult.Invalid -> {
-                when (validationResult) {
-                    is CardExpiryDateValidationResult.Invalid.TooFarInTheFuture ->
-                        CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE
+            is CardExpiryDateValidationResult.Invalid.TooFarInTheFuture ->
+                CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE
 
-                    is CardExpiryDateValidationResult.Invalid.TooOld ->
-                        CardExpiryDateValidation.INVALID_TOO_OLD
+            is CardExpiryDateValidationResult.Invalid.TooOld ->
+                CardExpiryDateValidation.INVALID_TOO_OLD
 
-                    is CardExpiryDateValidationResult.Invalid.NonParseableDate -> {
-                        if (expiryDate.isBlank() && fieldPolicy?.isRequired() == false) {
-                            CardExpiryDateValidation.VALID_NOT_REQUIRED
-                        } else {
-                            CardExpiryDateValidation.INVALID_OTHER_REASON
-                        }
-                    }
+            is CardExpiryDateValidationResult.Invalid.NonParseableDate ->
+                CardExpiryDateValidation.INVALID_OTHER_REASON
 
-                    else -> {
-                        // should not happen, due to CardExpiryDateValidationResult being an abstract class
-                        CardExpiryDateValidation.INVALID_OTHER_REASON
-                    }
-                }
+            else -> {
+                // should not happen, due to CardExpiryDateValidationResult being an abstract class
+                CardExpiryDateValidation.INVALID_OTHER_REASON
             }
         }
     }
@@ -137,10 +116,10 @@ internal object CardValidationUtils {
      */
     internal fun validateSecurityCode(
         securityCode: TextInputComponentState,
-        detectedCardType: DetectedCardType?,
+        cardBrand: CardBrand?,
     ): CardSecurityCodeValidation {
         if (!securityCode.requiresValidation()) return CardSecurityCodeValidation.VALID
-        val result = CardSecurityCodeValidator.validateSecurityCode(securityCode.text, detectedCardType?.cardBrand)
+        val result = CardSecurityCodeValidator.validateSecurityCode(securityCode.text, cardBrand)
         return when (result) {
             is CardSecurityCodeValidationResult.Invalid -> CardSecurityCodeValidation.INVALID
             is CardSecurityCodeValidationResult.Valid -> CardSecurityCodeValidation.VALID
@@ -228,7 +207,6 @@ enum class CardNumberValidation {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardExpiryDateValidation {
     VALID,
-    VALID_NOT_REQUIRED,
     INVALID_TOO_FAR_IN_THE_FUTURE,
     INVALID_TOO_OLD,
     INVALID_OTHER_REASON,
