@@ -12,20 +12,18 @@ import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.state.CardBrandData
 import com.adyen.checkout.card.internal.ui.state.CardBrandState
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 
 internal class DualBrandedCardHandler {
 
-    internal fun getDualBrandData(
-        cardBrandState: CardBrandState,
-        selectedBrand: CardBrand?,
-    ): DualBrandData? {
+    internal fun getDualBrandData(cardBrandState: CardBrandState): DualBrandData? {
         if (cardBrandState !is CardBrandState.DualBrand || !isShopperSelectionAllowed(cardBrandState)) return null
 
+        val selectedOrFirstCardBrandData = cardBrandState.shopperSelectedCardBrandData
+            ?: cardBrandState.cardBrandDataList.first()
         val brandOptions = mapToCardBrandItemList(
             cardBrandDataList = cardBrandState.cardBrandDataList,
-            selectedBrand = selectedBrand,
+            selectedCardBrandData = selectedOrFirstCardBrandData,
         )
 
         return DualBrandData(
@@ -40,16 +38,12 @@ internal class DualBrandedCardHandler {
 
     private fun mapToCardBrandItemList(
         cardBrandDataList: List<CardBrandData>,
-        selectedBrand: CardBrand?,
+        selectedCardBrandData: CardBrandData,
     ): List<CardBrandItem> {
-        return cardBrandDataList.mapIndexed { index, cardBrandData ->
-            if (selectedBrand == null) {
-                cardBrandData.mapToCardBrandItem(index == 0)
-            } else {
-                cardBrandData.mapToCardBrandItem(
-                    cardBrandData.cardBrand.txVariant == selectedBrand.txVariant,
-                )
-            }
+        return cardBrandDataList.map { cardBrandData ->
+            cardBrandData.mapToCardBrandItem(
+                isSelected = (cardBrandData == selectedCardBrandData),
+            )
         }
     }
 

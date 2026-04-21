@@ -15,6 +15,8 @@ import com.adyen.checkout.card.internal.ui.state.CardBrandData
 internal fun DetectedCardType.toCardBrandData() = CardBrandData(
     cardBrand = cardBrand,
     enableLuhnCheck = enableLuhnCheck,
+    cvcPolicy = cvcPolicy,
+    expiryDatePolicy = expiryDatePolicy,
     panLength = panLength,
     paymentMethodVariant = paymentMethodVariant,
     localizedBrand = localizedBrand,

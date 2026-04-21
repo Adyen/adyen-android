@@ -22,9 +22,7 @@ internal class CardComponentStateValidator(
             is CardBrandState.SingleBrand -> cardBrandState.cardBrandData
 
             is CardBrandState.DualBrand -> {
-                cardBrandState.cardBrandDataList.firstOrNull {
-                    it.cardBrand.txVariant == state.selectedCardBrand?.txVariant
-                } ?: cardBrandState.cardBrandDataList.first()
+                cardBrandState.shopperSelectedCardBrandData ?: cardBrandState.cardBrandDataList.first()
             }
 
             else -> null

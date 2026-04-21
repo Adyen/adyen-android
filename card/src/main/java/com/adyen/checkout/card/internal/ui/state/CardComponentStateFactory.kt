@@ -59,7 +59,6 @@ internal class CardComponentStateFactory(
             supportedCardBrands = componentParams.supportedCardBrands,
             isLoading = false,
             cardBrandState = CardBrandState.NoBrandsDetected,
-            selectedCardBrand = null,
         )
     }
 }

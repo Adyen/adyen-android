@@ -173,21 +173,12 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
 )
 
 private fun CardComponentState.cardBrand(): CardBrand? {
-    return when (cardBrandState) {
-        is CardBrandState.SingleBrand if cardBrandState.isReliable -> {
-            cardBrandState.cardBrandData.cardBrand
-        }
-
-        is CardBrandState.DualBrand -> {
-            cardBrandState.cardBrandDataList.firstOrNull {
-                it.cardBrand.txVariant == selectedCardBrand?.txVariant
-            }?.cardBrand
-        }
-
-        else -> {
-            null
-        }
+    val selectedOrReliableCardBrandData = when (cardBrandState) {
+        is CardBrandState.SingleBrand if cardBrandState.isReliable -> cardBrandState.cardBrandData.cardBrand
+        is CardBrandState.DualBrand -> cardBrandState.shopperSelectedCardBrandData?.cardBrand
+        else -> null
     }
+    return selectedOrReliableCardBrandData
 }
 
 private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams): Boolean? {

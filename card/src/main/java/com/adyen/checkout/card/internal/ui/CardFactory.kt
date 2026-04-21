@@ -17,6 +17,7 @@ import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.LocalCardBrandDetectionService
 import com.adyen.checkout.card.internal.data.api.NetworkCardBrandDetectionService
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
+import com.adyen.checkout.card.internal.ui.state.CardBrandIntentsHandler
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -27,7 +28,6 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
-import com.adyen.checkout.card.internal.ui.state.UpdateDetectedCardTypesIntentHandler
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -66,8 +66,8 @@ internal class CardFactory :
         val cardValidationMapper = CardValidationMapper()
         val dualBrandedCardHandler = DualBrandedCardHandler()
         val componentStateFactory = CardComponentStateFactory(cardComponentParams)
-        val updateDetectedCardTypesIntentHandler = UpdateDetectedCardTypesIntentHandler(cardComponentParams)
-        val componentStateReducer = CardComponentStateReducer(updateDetectedCardTypesIntentHandler)
+        val cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams)
+        val componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler)
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = CardViewStateProducer(dualBrandedCardHandler)
 
