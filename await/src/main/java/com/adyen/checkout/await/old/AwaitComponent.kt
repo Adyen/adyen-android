@@ -28,6 +28,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle the 'await' action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class AwaitComponent internal constructor(
     override val delegate: AwaitDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,

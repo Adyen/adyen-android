@@ -22,6 +22,10 @@ import java.util.Locale
 /**
  * Configuration class for the [AwaitComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class AwaitConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -34,6 +38,10 @@ class AwaitConfiguration private constructor(
     /**
      * Builder to create an [AwaitConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : BaseConfigurationBuilder<AwaitConfiguration, Builder> {
 
         /**
@@ -91,6 +99,10 @@ class AwaitConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.await(
     configuration: @CheckoutConfigurationMarker AwaitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

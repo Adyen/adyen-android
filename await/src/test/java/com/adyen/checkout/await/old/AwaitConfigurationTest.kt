@@ -6,6 +6,8 @@
  * Created by ararat on 11/7/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.await.old
 
 import com.adyen.checkout.components.core.Amount
