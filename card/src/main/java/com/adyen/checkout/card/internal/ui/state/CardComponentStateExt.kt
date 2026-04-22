@@ -174,8 +174,8 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
 
 private fun CardComponentState.cardBrand(): CardBrand? {
     val selectedOrReliableCardBrandData = when (cardBrandState) {
-        is CardBrandState.SingleBrand if cardBrandState.isReliable -> cardBrandState.cardBrandData.cardBrand
-        is CardBrandState.DualBrand -> cardBrandState.shopperSelectedCardBrandData?.cardBrand
+        is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData.cardBrand
+        is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData.cardBrand
         else -> null
     }
     return selectedOrReliableCardBrandData

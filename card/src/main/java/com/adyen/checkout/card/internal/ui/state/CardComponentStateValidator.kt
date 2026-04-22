@@ -19,12 +19,10 @@ internal class CardComponentStateValidator(
 
     override fun validate(state: CardComponentState): CardComponentState {
         val selectedOrFirstCardBrandData = when (val cardBrandState = state.cardBrandState) {
-            is CardBrandState.SingleBrand -> cardBrandState.cardBrandData
-
-            is CardBrandState.DualBrand -> {
-                cardBrandState.shopperSelectedCardBrandData ?: cardBrandState.cardBrandDataList.first()
-            }
-
+            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.SingleUnreliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
             else -> null
         }
         val isUnsupportedBrand = state.cardBrandState is CardBrandState.UnsupportedBrand

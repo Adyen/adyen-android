@@ -173,7 +173,8 @@ internal class CardComponent(
     private fun getReliableCardBrandDataList(state: CardComponentState): List<CardBrandData>? {
         return when (val cardBrandState = state.cardBrandState) {
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList
-            is CardBrandState.SingleBrand if cardBrandState.isReliable -> listOf(cardBrandState.cardBrandData)
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList
+            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData)
             else -> null
         }
     }
