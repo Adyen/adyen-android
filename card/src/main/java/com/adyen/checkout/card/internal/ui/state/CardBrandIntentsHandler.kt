@@ -25,11 +25,9 @@ internal class CardBrandIntentsHandler(
         val cardBrandState = getCardBrandState(state, intent)
 
         val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
-            is CardBrandState.DualBrand -> {
-                cardBrandState.shopperSelectedCardBrandData ?: cardBrandState.cardBrandDataList.firstOrNull()
-            }
-
-            is CardBrandState.SingleBrand if cardBrandState.isReliable -> cardBrandState.cardBrandData
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
+            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
             else -> null
         }
         val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
@@ -64,9 +62,8 @@ internal class CardBrandIntentsHandler(
             // local detection + supported brands
             !isDetectedFromNetwork -> {
                 // select the first brand and discard the rest
-                CardBrandState.SingleBrand(
+                CardBrandState.SingleUnreliableBrand(
                     cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
-                    isReliable = false,
                 )
             }
 
@@ -83,9 +80,8 @@ internal class CardBrandIntentsHandler(
 
             // network detection + 1 detected brand
             supportedDetectedCardTypes.size == 1 -> {
-                CardBrandState.SingleBrand(
+                CardBrandState.SingleReliableBrand(
                     cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
-                    isReliable = true,
                 )
             }
 
@@ -98,25 +94,26 @@ internal class CardBrandIntentsHandler(
                 val shopperSelectionAllowed = firstTwoDetectedCardTypes.any {
                     it.isShopperSelectionAllowedInDualBranded
                 }
-                val currentCardBrandState = currentState.cardBrandState
-                val shopperSelectedCardBrandData = if (
-                    currentCardBrandState is CardBrandState.DualBrand &&
-                    currentCardBrandState.cardBrandDataList == cardBrandDataList
-                ) {
-                    // the list of brands has not changed, keep the previously selected brand
-                    currentCardBrandState.shopperSelectedCardBrandData
-                } else if (shopperSelectionAllowed) {
-                    // auto select the first brand
-                    cardBrandDataList.firstOrNull()
-                } else {
-                    null
-                }
 
-                CardBrandState.DualBrand(
-                    cardBrandDataList = cardBrandDataList,
-                    shopperSelectionAllowed = shopperSelectionAllowed,
-                    shopperSelectedCardBrandData = shopperSelectedCardBrandData,
-                )
+                if (shopperSelectionAllowed) {
+                    val currentCardBrandState = currentState.cardBrandState
+                    val shopperSelectedCardBrandData = if (
+                        currentCardBrandState is CardBrandState.DualBrandWithShopperSelection &&
+                        currentCardBrandState.cardBrandDataList == cardBrandDataList
+                    ) {
+                        // the list of brands has not changed, keep the previously selected brand
+                        currentCardBrandState.shopperSelectedCardBrandData
+                    } else {
+                        // auto select the first brand
+                        cardBrandDataList.first()
+                    }
+                    CardBrandState.DualBrandWithShopperSelection(
+                        cardBrandDataList = cardBrandDataList,
+                        shopperSelectedCardBrandData = shopperSelectedCardBrandData,
+                    )
+                } else {
+                    CardBrandState.DualBrand(cardBrandDataList)
+                }
             }
         }
     }
@@ -154,17 +151,18 @@ internal class CardBrandIntentsHandler(
 
     fun onBrandSelected(state: CardComponentState, intent: CardIntent.SelectBrand): CardComponentState {
         val currentCardBrandState = state.cardBrandState
-        return if (currentCardBrandState is CardBrandState.DualBrand) {
+        if (currentCardBrandState is CardBrandState.DualBrandWithShopperSelection) {
             val selectedCardBrandData = currentCardBrandState.cardBrandDataList.firstOrNull {
                 it.cardBrand == intent.cardBrand
             }
-            state.copy(
-                cardBrandState = currentCardBrandState.copy(
-                    shopperSelectedCardBrandData = selectedCardBrandData,
-                ),
-            )
-        } else {
-            state
+            if (selectedCardBrandData != null) {
+                return state.copy(
+                    cardBrandState = currentCardBrandState.copy(
+                        shopperSelectedCardBrandData = selectedCardBrandData,
+                    ),
+                )
+            }
         }
+        return state
     }
 }

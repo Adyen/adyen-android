@@ -59,7 +59,9 @@ internal class CardViewStateProducer(
     private fun getDetectedCardBrands(cardBrandState: CardBrandState): List<CardBrand> {
         return when (cardBrandState) {
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.map { it.cardBrand }
-            is CardBrandState.SingleBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList.map { it.cardBrand }
+            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
+            is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             else -> emptyList()
         }
     }

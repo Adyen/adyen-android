@@ -16,13 +16,11 @@ import com.adyen.checkout.card.internal.ui.state.CardBrandState
 internal class DualBrandedCardHandler {
 
     internal fun getDualBrandData(cardBrandState: CardBrandState): DualBrandData? {
-        if (cardBrandState !is CardBrandState.DualBrand || !cardBrandState.shopperSelectionAllowed) return null
+        if (cardBrandState !is CardBrandState.DualBrandWithShopperSelection) return null
 
-        val selectedOrFirstCardBrandData = cardBrandState.shopperSelectedCardBrandData
-            ?: cardBrandState.cardBrandDataList.first()
         val brandOptions = mapToCardBrandItemList(
             cardBrandDataList = cardBrandState.cardBrandDataList,
-            selectedCardBrandData = selectedOrFirstCardBrandData,
+            selectedCardBrandData = cardBrandState.shopperSelectedCardBrandData,
         )
 
         return DualBrandData(
