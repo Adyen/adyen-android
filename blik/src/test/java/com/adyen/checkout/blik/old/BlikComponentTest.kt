@@ -6,6 +6,8 @@
  * Created by ozgur on 17/12/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.blik.old
 
 import androidx.lifecycle.LifecycleOwner

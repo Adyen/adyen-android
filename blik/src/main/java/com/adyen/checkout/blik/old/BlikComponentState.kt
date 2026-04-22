@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 /**
  * Represents the state of [BlikComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class BlikComponentState(
     override val data: PaymentComponentData<BlikPaymentMethod>,
     override val isInputValid: Boolean,

@@ -33,6 +33,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.BLIK] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class BlikComponent internal constructor(
     private val blikDelegate: BlikDelegate,
     private val genericActionDelegate: GenericActionDelegate,

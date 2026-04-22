@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [BlikConfiguration].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class BlikConfiguration private constructor(
@@ -40,6 +44,10 @@ class BlikConfiguration private constructor(
     /**
      * Builder to create a [BlikConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BlikConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -115,6 +123,10 @@ class BlikConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.blik(
     configuration: @CheckoutConfigurationMarker BlikConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
