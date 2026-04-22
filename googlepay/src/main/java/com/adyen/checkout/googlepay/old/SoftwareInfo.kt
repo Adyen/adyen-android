@@ -20,6 +20,10 @@ import org.json.JSONObject
  * @param id The id of the client / library making the call.
  * @param version The version of the caller
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class SoftwareInfo(
     val id: String,

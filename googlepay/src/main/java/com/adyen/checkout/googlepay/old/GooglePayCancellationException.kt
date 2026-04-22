@@ -13,4 +13,8 @@ import com.adyen.checkout.core.old.exception.CancellationException
 /**
  * This exception indicates that the payment flow was manually cancelled by the user.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class GooglePayCancellationException(errorMessage: String) : CancellationException(errorMessage)

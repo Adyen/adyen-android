@@ -20,6 +20,10 @@ import kotlinx.parcelize.Parcelize
  * @param buttonType Changes the text displayed inside of the button.
  * @param cornerRadius Sets the corner radius of the button. For example, passing 16 means the radius will be 16 dp.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("MaxLineLength")
 @Parcelize
 data class GooglePayButtonStyling(
@@ -28,6 +32,10 @@ data class GooglePayButtonStyling(
     @Dimension(Dimension.DP) val cornerRadius: Int? = null,
 ) : Parcelable
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class GooglePayButtonTheme(
     val value: Int,
 ) {
@@ -35,6 +43,10 @@ enum class GooglePayButtonTheme(
     DARK(ButtonConstants.ButtonTheme.DARK),
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class GooglePayButtonType(
     val value: Int,
 ) {

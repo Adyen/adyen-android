@@ -6,6 +6,8 @@
  * Created by ozgur on 3/2/2026.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.googlepay.old.internal.util
 
 import com.adyen.checkout.components.core.Amount

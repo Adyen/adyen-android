@@ -38,6 +38,10 @@ import kotlinx.coroutines.flow.Flow
  * A [PaymentComponent] that supports the [PaymentMethodTypes.GOOGLE_PAY] and [PaymentMethodTypes.GOOGLE_PAY_LEGACY]
  * payment methods.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class GooglePayComponent internal constructor(
     private val googlePayDelegate: GooglePayDelegate,
     private val genericActionDelegate: GenericActionDelegate,

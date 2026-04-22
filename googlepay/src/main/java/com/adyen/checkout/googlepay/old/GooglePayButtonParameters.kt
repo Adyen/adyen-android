@@ -11,6 +11,10 @@ package com.adyen.checkout.googlepay.old
 /**
  * Class containing some of the parameters required to initialize the Google Pay button.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class GooglePayButtonParameters(
     val allowedPaymentMethods: String,
 )
