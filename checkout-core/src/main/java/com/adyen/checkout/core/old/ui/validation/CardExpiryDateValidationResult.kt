@@ -16,10 +16,35 @@ package com.adyen.checkout.core.old.ui.validation
     level = DeprecationLevel.WARNING,
 )
 sealed interface CardExpiryDateValidationResult {
+
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Valid : CardExpiryDateValidationResult
+
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     interface Invalid : CardExpiryDateValidationResult {
+
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         class TooFarInTheFuture : Invalid
+
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         class TooOld : Invalid
+
+        @Deprecated(
+            message = "Deprecated. This will be removed in a future release.",
+            level = DeprecationLevel.WARNING,
+        )
         class NonParseableDate : Invalid
     }
 }
