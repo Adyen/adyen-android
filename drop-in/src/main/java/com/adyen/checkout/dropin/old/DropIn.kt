@@ -38,6 +38,10 @@ import java.util.Locale
  * To start the checkout flow, register you activity or fragment using [registerForDropInResult] to receive the result
  * of Drop-in. Then call one of the [startPayment] methods.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object DropIn {
 
     internal const val RESULT_KEY = "payment_result"

@@ -17,6 +17,10 @@ import com.adyen.checkout.dropin.old.internal.ui.DropInActivity
 import com.adyen.checkout.dropin.old.internal.ui.model.SessionDropInResultContractParams
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class SessionDropInResultContract :
     ActivityResultContract<SessionDropInResultContractParams, SessionDropInResult?>() {
     override fun createIntent(context: Context, input: SessionDropInResultContractParams): Intent {

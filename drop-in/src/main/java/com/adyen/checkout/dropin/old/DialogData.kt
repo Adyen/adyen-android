@@ -14,6 +14,10 @@ package com.adyen.checkout.dropin.old
  * @param title The title displayed in the dialog. If not provided a generic error title will be shown.
  * @param message The message displayed in the dialog. If not provided a generic error message will be shown.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class ErrorDialog(
     val title: String? = null,
     val message: String? = null,
@@ -25,6 +29,10 @@ data class ErrorDialog(
  * @param title The title displayed in the dialog.
  * @param message The message displayed in the dialog.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class FinishedDialog(
     val title: String,
     val message: String,

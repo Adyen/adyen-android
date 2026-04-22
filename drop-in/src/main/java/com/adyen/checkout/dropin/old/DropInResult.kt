@@ -11,11 +11,19 @@ package com.adyen.checkout.dropin.old
 /**
  * A class that contains the final result of Drop-in.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class DropInResult {
 
     /**
      * Drop-in was dismissed by the user before it has completed.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class CancelledByUser : DropInResult()
 
     /**
@@ -28,6 +36,10 @@ sealed class DropInResult {
      *
      * @param reason The reason of the error.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(val reason: String?) : DropInResult()
 
     /**
@@ -36,5 +48,9 @@ sealed class DropInResult {
      *
      * @param result The result of Drop-in, mirrors the value of [DropInServiceResult.Finished.result].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Finished(val result: String) : DropInResult()
 }

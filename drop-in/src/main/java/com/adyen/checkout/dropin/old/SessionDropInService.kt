@@ -36,6 +36,10 @@ import kotlinx.coroutines.launch
  *
  * Make sure you define add your subclass of this [SessionDropInService] in your manifest file.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface, SessionDropInServiceContract {
 
     private lateinit var sessionInteractor: SessionInteractor

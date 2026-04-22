@@ -14,6 +14,10 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.old.exception.MethodNotImplementedException
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("TooManyFunctions")
 interface BaseDropInServiceContract {
 

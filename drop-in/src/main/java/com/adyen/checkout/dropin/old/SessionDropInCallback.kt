@@ -11,6 +11,10 @@ package com.adyen.checkout.dropin.old
 /**
  * A class that defines the callbacks from Drop-in to the Activity or Fragment that launched it.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun interface SessionDropInCallback {
 
     /**

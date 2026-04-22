@@ -16,6 +16,10 @@ import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.old.exception.MethodNotImplementedException
 import org.json.JSONObject
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface DropInServiceContract {
 
     /**

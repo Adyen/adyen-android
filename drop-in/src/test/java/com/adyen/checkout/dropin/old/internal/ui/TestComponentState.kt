@@ -6,6 +6,8 @@
  * Created by ozgur on 22/2/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.dropin.old.internal.ui
 
 import com.adyen.checkout.components.core.PaymentComponentData
