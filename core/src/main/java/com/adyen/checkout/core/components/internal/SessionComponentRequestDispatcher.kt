@@ -42,6 +42,12 @@ internal class SessionComponentRequestDispatcher(
                 }
             },
             onFailure = { error ->
+                // TODO - Add analytics
+//                val event = GenericEvents.error(
+//                    component = paymentMethodType,
+//                    event = ErrorEvent.API_PAYMENTS,
+//                )
+//                analyticsManager.trackEvent(event)
                 return CheckoutResult.Error(error.message ?: "Failed to submit payment")
             },
         )
