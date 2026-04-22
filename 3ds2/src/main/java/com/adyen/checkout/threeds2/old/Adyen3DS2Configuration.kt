@@ -24,6 +24,10 @@ import java.util.Locale
 /**
  * Configuration class for the [Adyen3DS2Component].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("LongParameterList")
 @Parcelize
 class Adyen3DS2Configuration private constructor(
@@ -39,6 +43,10 @@ class Adyen3DS2Configuration private constructor(
     /**
      * Builder to create an [Adyen3DS2Configuration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration, Builder> {
 
         private var uiCustomization: UiCustomization? = null
@@ -126,6 +134,10 @@ class Adyen3DS2Configuration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.adyen3DS2(
     configuration: @CheckoutConfigurationMarker Adyen3DS2Configuration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

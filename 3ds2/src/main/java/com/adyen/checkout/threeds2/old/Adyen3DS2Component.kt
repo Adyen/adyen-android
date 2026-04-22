@@ -30,6 +30,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle 3DS2 related actions.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class Adyen3DS2Component internal constructor(
     override val delegate: Adyen3DS2Delegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,

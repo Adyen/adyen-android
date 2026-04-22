@@ -6,6 +6,8 @@
  * Created by ozgur on 3/12/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.threeds2.old
 
 import android.app.Activity

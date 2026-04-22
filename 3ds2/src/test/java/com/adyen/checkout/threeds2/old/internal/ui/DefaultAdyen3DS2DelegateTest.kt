@@ -7,6 +7,7 @@
  */
 
 @file:OptIn(ExperimentalEncodingApi::class)
+@file:Suppress("DEPRECATION")
 
 package com.adyen.checkout.threeds2.old.internal.ui
 
