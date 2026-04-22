@@ -33,6 +33,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.MB_WAY] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class MBWayComponent internal constructor(
     private val mbWayDelegate: MBWayDelegate,
     private val genericActionDelegate: GenericActionDelegate,

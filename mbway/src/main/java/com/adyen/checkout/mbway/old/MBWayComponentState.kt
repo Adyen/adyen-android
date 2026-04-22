@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 /**
  * Represents the state of [MBWayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class MBWayComponentState(
     override val data: PaymentComponentData<MBWayPaymentMethod>,
     override val isInputValid: Boolean,

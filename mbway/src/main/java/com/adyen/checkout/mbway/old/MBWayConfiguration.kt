@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [MBWayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class MBWayConfiguration private constructor(
@@ -40,6 +44,10 @@ class MBWayConfiguration private constructor(
     /**
      * Builder to create an [MBWayConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<MBWayConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -115,6 +123,10 @@ class MBWayConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.mbWay(
     configuration: @CheckoutConfigurationMarker MBWayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
