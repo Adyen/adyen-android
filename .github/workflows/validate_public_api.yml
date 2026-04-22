@@ -50,6 +50,10 @@ jobs:
         run: |
           if [ -s api_changes.txt ]
           then
+            # DEBUG: print api_changes.txt content to diagnose false positives
+            echo "::group::api_changes.txt content"
+            cat api_changes.txt
+            echo "::endgroup::"
             # Fail workflow if there are API changes
             exit 1
           fi
