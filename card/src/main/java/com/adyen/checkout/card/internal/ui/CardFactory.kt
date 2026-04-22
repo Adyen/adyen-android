@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.card.OnBinLookupCallback
+import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.getCardConfiguration
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
@@ -24,11 +26,13 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidat
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.getAdditionalCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
@@ -47,6 +51,7 @@ internal class CardFactory :
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): CardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
@@ -79,6 +84,8 @@ internal class CardFactory :
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            onBinValueCallback = additionalCallbacks.getAdditionalCallback<OnBinValueCallback>(),
+            onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
         )
         // TODO - Find a way to pass additional callbacks
 //        .apply {

@@ -14,6 +14,7 @@ import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
 import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.BlikViewStateProducer
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -33,6 +34,7 @@ internal class BlikFactory :
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): BlikComponent {
         return BlikComponent(
             analyticsManager = analyticsManager,

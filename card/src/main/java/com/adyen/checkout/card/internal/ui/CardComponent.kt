@@ -66,10 +66,9 @@ internal class CardComponent(
     viewStateProducer: CardViewStateProducer,
     private val coroutineScope: CoroutineScope,
     private val sdkDataProvider: SdkDataProvider,
+    private val onBinValueCallback: OnBinValueCallback?,
+    private val onBinLookupCallback: OnBinLookupCallback?,
 ) : PaymentComponent<CardPaymentComponentState> {
-
-    private var onBinValueCallback: OnBinValueCallback? = null
-    private var onBinLookupCallback: OnBinLookupCallback? = null
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> =
@@ -211,13 +210,5 @@ internal class CardComponent(
         val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
-    }
-
-    fun setOnBinValueCallback(onBinValueCallback: OnBinValueCallback?) {
-        this.onBinValueCallback = onBinValueCallback
-    }
-
-    fun setOnBinLookupCallback(onBinLookupCallback: OnBinLookupCallback?) {
-        this.onBinLookupCallback = onBinLookupCallback
     }
 }

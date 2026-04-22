@@ -32,6 +32,7 @@ import java.util.Locale
 
 internal class CheckoutControllerFactory {
 
+    @Suppress("LongMethod")
     fun create(
         target: CheckoutTarget,
         context: CheckoutContext,
@@ -94,6 +95,7 @@ internal class CheckoutControllerFactory {
         val flow = createFlow(
             target = target,
             context = context,
+            callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
@@ -179,6 +181,7 @@ internal class CheckoutControllerFactory {
     private fun createFlow(
         target: CheckoutTarget,
         context: CheckoutContext,
+        callbacks: CheckoutCallbacks,
         componentRequestDispatcher: ComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -190,6 +193,7 @@ internal class CheckoutControllerFactory {
         is CheckoutTarget.StoredPaymentMethod -> FullCheckoutFlow(
             target = target,
             context = context,
+            callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,

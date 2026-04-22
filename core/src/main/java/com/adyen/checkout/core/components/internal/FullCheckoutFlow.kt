@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutRoute
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.onEach
 internal class FullCheckoutFlow(
     target: CheckoutTarget,
     context: CheckoutContext,
+    callbacks: CheckoutCallbacks,
     componentRequestDispatcher: ComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
     analyticsManager: AnalyticsManager,
@@ -35,9 +37,11 @@ internal class FullCheckoutFlow(
     private val actionHandler: ActionHandler,
 ) : CheckoutFlow {
 
+    // TODO - Inject paymentComponent in constructor
     override val paymentComponent: PaymentComponent<*>? = createPaymentComponent(
         target = target,
         context = context,
+        callbacks = callbacks,
         coroutineScope = coroutineScope,
         analyticsManager = analyticsManager,
         checkoutConfiguration = checkoutConfiguration,
@@ -93,6 +97,7 @@ internal class FullCheckoutFlow(
     private fun createPaymentComponent(
         target: CheckoutTarget,
         context: CheckoutContext,
+        callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
@@ -113,6 +118,7 @@ internal class FullCheckoutFlow(
                         analyticsManager = analyticsManager,
                         checkoutConfiguration = checkoutConfiguration,
                         componentParamsBundle = componentParamsBundle,
+                        additionalCallbacks = callbacks.additionalCallbacks,
                     )
                 }
             }

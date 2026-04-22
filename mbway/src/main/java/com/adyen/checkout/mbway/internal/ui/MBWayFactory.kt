@@ -9,6 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
@@ -29,6 +30,7 @@ internal class MBWayFactory : PaymentComponentFactory<MBWayPaymentComponentState
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): MBWayComponent {
         val componentParams = componentParamsBundle.commonComponentParams
         return MBWayComponent(

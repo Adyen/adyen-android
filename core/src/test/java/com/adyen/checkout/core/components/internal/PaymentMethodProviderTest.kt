@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -28,7 +29,7 @@ import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
@@ -113,6 +114,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                additionalCallbacks = emptySet(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -174,6 +176,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                additionalCallbacks = emptySet(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertSame(component, actualComponent)
@@ -201,34 +204,33 @@ internal class PaymentMethodProviderTest {
         }
 
     @Test
-    fun `when get is called for an unregistered factory, then an error is thrown`() = runTest {
-        assertThrows<IllegalStateException> {
-            PaymentMethodProvider.getPaymentComponent(
-                paymentMethod = InstantPaymentMethod(type = "unregistered_txVariant", name = "name"),
-                coroutineScope = this,
-                analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
-                componentParamsBundle = generateComponentParamsBundle(),
-            )
-        }
+    fun `when get is called for an unregistered factory, then null is returned`() = runTest {
+        val actualComponent = PaymentMethodProvider.getPaymentComponent(
+            paymentMethod = InstantPaymentMethod(type = "unregistered_txVariant", name = "name"),
+            coroutineScope = this,
+            analyticsManager = TestAnalyticsManager(),
+            checkoutConfiguration = generateCheckoutConfiguration(),
+            componentParamsBundle = generateComponentParamsBundle(),
+            additionalCallbacks = emptySet(),
+        )
+        assertNull(actualComponent)
     }
 
     @Test
-    fun `when get is called for an unregistered stored factory, then an error is thrown`() = runTest {
-        assertThrows<IllegalStateException> {
-            PaymentMethodProvider.getStoredPaymentComponent(
-                storedPaymentMethod = StoredBLIKPaymentMethod(
-                    type = "unregistered_txVariant",
-                    name = "name",
-                    id = "test_id",
-                    supportedShopperInteractions = emptyList(),
-                ),
-                coroutineScope = this,
-                analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
-                componentParamsBundle = generateComponentParamsBundle(),
-            )
-        }
+    fun `when get is called for an unregistered stored factory, then null is returned`() = runTest {
+        val actualComponent = PaymentMethodProvider.getStoredPaymentComponent(
+            storedPaymentMethod = StoredBLIKPaymentMethod(
+                type = "unregistered_txVariant",
+                name = "name",
+                id = "test_id",
+                supportedShopperInteractions = emptyList(),
+            ),
+            coroutineScope = this,
+            analyticsManager = TestAnalyticsManager(),
+            checkoutConfiguration = generateCheckoutConfiguration(),
+            componentParamsBundle = generateComponentParamsBundle(),
+        )
+        assertNull(actualComponent)
     }
 
     @Test
@@ -254,6 +256,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
                 componentParamsBundle: ComponentParamsBundle,
+                additionalCallbacks: Set<CheckoutAdditionalCallback>,
             ) = paymentComponent
         }
 

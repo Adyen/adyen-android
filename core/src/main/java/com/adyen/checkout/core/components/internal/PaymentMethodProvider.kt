@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -45,6 +46,7 @@ object PaymentMethodProvider {
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): PaymentComponent<BasePaymentComponentState>? {
         val txVariant = paymentMethod.type
 
@@ -55,6 +57,7 @@ object PaymentMethodProvider {
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
+            additionalCallbacks = additionalCallbacks,
         ) as? PaymentComponent<BasePaymentComponentState>
     }
 
