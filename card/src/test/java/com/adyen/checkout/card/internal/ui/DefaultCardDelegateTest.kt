@@ -1368,6 +1368,72 @@ internal class DefaultCardDelegateTest(
 
             analyticsManager.assertIsCleared()
         }
+
+        @Test
+        fun `when selectable dual brand is shown, then displayed event is tracked`() = runTest {
+            delegate = createCardDelegate(configuration = createDualBrandSelectableConfiguration())
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+            whenever(cardConfigDataGenerator.generateDualBrandConfigData(any())) doReturn emptyMap()
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateInputData { cardNumber = "4" }
+
+            analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 1)
+        }
+
+        @Test
+        fun `when dual brand is not selectable, then displayed event is not tracked`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED_UNSELECTABLE
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateInputData { cardNumber = "4" }
+
+            analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 0)
+        }
+
+        @Test
+        fun `when dual brand data is null, then displayed event is not tracked`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateInputData { cardNumber = "4" }
+
+            analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 0)
+        }
+
+        @Test
+        fun `when same selectable dual brand is emitted consecutively, then displayed event is tracked only once`() =
+            runTest {
+                delegate = createCardDelegate(configuration = createDualBrandSelectableConfiguration())
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+                whenever(cardConfigDataGenerator.generateDualBrandConfigData(any())) doReturn emptyMap()
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.updateInputData { cardNumber = "4" }
+                delegate.updateInputData { cardNumber = "42" }
+
+                analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 1)
+            }
+
+        @Test
+        fun `when dual brand transitions through null and back to selectable, then displayed event is tracked each time`() =
+            runTest {
+                delegate = createCardDelegate(configuration = createDualBrandSelectableConfiguration())
+                whenever(cardConfigDataGenerator.generateDualBrandConfigData(any())) doReturn emptyMap()
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+                delegate.updateInputData { cardNumber = "4" }
+
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+                delegate.updateInputData { cardNumber = "42" }
+
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+                delegate.updateInputData { cardNumber = "421" }
+
+                analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 2)
+            }
     }
 
     @Nested
@@ -1774,6 +1840,20 @@ internal class DefaultCardDelegateTest(
             isCardScanningVisible = isCardScanningVisible,
         )
     }
+
+    private fun createDualBrandSelectableConfiguration() = createCheckoutConfiguration {
+        supportedCardBrands = listOf(
+            CardBrand(cardType = CardType.BCMC),
+            CardBrand(cardType = CardType.MAESTRO),
+        )
+    }
+
+    private fun createExpectedDualBrandDisplayedEvent() = GenericEvents.displayed(
+        component = PaymentMethodTypes.SCHEME,
+        target = "dual_brand_button",
+        brand = "bcmc",
+        configData = emptyMap(),
+    )
 
     @Suppress("LongParameterList")
     private fun createDetectedCardType(

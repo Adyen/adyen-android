@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal.analytics
 
 import kotlinx.coroutines.CoroutineScope
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.fail
@@ -46,6 +47,11 @@ class TestAnalyticsManager : AnalyticsManager {
     fun assertLastEventNotEquals(expected: AnalyticsEvent) {
         if (events.isEmpty()) return
         assertFalse(areEventsEqual(expected, events.last()))
+    }
+
+    fun assertEventCountEquals(expected: AnalyticsEvent, count: Int) {
+        val actual = events.count { areEventsEqual(expected, it) }
+        assertEquals(count, actual, "Expected $count events matching $expected but got $actual")
     }
 
     private fun areEventsEqual(expected: AnalyticsEvent, actual: AnalyticsEvent): Boolean {
