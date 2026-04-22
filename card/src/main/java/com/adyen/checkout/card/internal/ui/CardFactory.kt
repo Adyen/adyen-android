@@ -87,11 +87,6 @@ internal class CardFactory :
             onBinValueCallback = additionalCallbacks.getAdditionalCallback<OnBinValueCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
         )
-        // TODO - Find a way to pass additional callbacks
-//        .apply {
-//            setOnBinValueCallback(checkoutCallbacks.getAdditionalCallback(OnBinValueCallback::class))
-//            setOnBinLookupCallback(checkoutCallbacks.getAdditionalCallback(OnBinLookupCallback::class))
-//        }
     }
 
     override fun create(
