@@ -30,13 +30,7 @@ internal class DefaultDetectCardTypeRepository(
         this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.VERBOSE) { "detectCardTypes" }
         val bin = getBin(cardNumber)
 
-        val cachedResult = if (bin != null) {
-            binLookupCache.getResult(bin)
-        } else {
-            BinLookupCacheResult.Unavailable
-        }
-
-        when (cachedResult) {
+        when (val cachedResult = binLookupCache.getResult(bin)) {
             is BinLookupCacheResult.Available -> {
                 // found card types in cache, no need to fetch from network or local
                 emit(DetectedCardTypeList(cachedResult.detectedCardTypes, DetectedCardTypeList.Source.NETWORK))

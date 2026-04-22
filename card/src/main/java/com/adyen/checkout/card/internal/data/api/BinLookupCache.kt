@@ -17,9 +17,12 @@ internal class BinLookupCache {
 
     private val cachedBinLookupResults = ConcurrentHashMap<String, BinLookupCacheResult>()
 
-    fun getResult(bin: String): BinLookupCacheResult {
-        val key = hashBin(bin)
-        return cachedBinLookupResults[key] ?: BinLookupCacheResult.Unavailable
+    fun getResult(bin: String?): BinLookupCacheResult {
+        val cachedResult = bin?.let {
+            val key = hashBin(bin)
+            cachedBinLookupResults[key]
+        }
+        return cachedResult ?: BinLookupCacheResult.Unavailable
     }
 
     fun setFetching(bin: String) {
