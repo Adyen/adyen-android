@@ -89,6 +89,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -306,14 +307,16 @@ class DefaultCardDelegate(
             }
             .launchIn(coroutineScope)
 
-        outputDataFlow.map { it.dualBrandData?.brandOptions?.map { it.brand.txVariant } }
-            .distinctUntilChanged()
+        outputDataFlow
+            .map { it.dualBrandData?.takeIf { data -> data.selectable } }
+            .distinctUntilChangedBy { it?.brandOptions?.map { option -> option.brand.txVariant } }
             .filterNotNull()
-            .map { brandOptions ->
+            .onEach { dualBrandData ->
+                val brandOptions = dualBrandData.brandOptions.map { it.brand.txVariant }
                 val event = GenericEvents.displayed(
                     component = paymentMethod.type.orEmpty(),
                     target = DUAL_BRAND_ANALYTICS_TARGET,
-                    brand = outputData.dualBrandData?.selectedBrand?.txVariant.orEmpty(),
+                    brand = dualBrandData.selectedBrand?.txVariant.orEmpty(),
                     configData = cardConfigDataGenerator.generateDualBrandConfigData(brandOptions),
                 )
                 analyticsManager.trackEvent(event)
