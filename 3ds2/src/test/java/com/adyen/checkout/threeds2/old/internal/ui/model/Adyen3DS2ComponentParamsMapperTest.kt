@@ -6,6 +6,8 @@
  * Created by ozgur on 30/10/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.threeds2.old.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount

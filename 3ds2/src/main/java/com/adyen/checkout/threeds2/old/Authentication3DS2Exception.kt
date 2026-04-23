@@ -13,6 +13,10 @@ import com.adyen.checkout.core.old.exception.ComponentException
  * This exception is just an indication that the 3DS2 Authentication did not finish as expected.
  * Can be caused by an actual error, like a timeout or a runtime exception.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class Authentication3DS2Exception(errorMessage: String) : ComponentException(errorMessage) {
     companion object {
         private const val serialVersionUID = 7142998120028361912L
