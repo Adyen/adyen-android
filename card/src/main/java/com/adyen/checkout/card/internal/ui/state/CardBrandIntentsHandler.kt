@@ -23,25 +23,7 @@ internal class CardBrandIntentsHandler(
         intent: CardIntent.UpdateDetectedCardTypes,
     ): CardComponentState {
         val cardBrandState = getCardBrandState(state, intent)
-
-        val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
-            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
-            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
-            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
-            else -> null
-        }
-        val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
-        val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
-
-        return state.copy(
-            cardBrandState = cardBrandState,
-            securityCode = state.securityCode.copy(
-                requirementPolicy = getSecurityCodeRequirementPolicy(cvcPolicy),
-            ),
-            expiryDate = state.expiryDate.copy(
-                requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
-            ),
-        )
+        return getUpdatedCardComponentState(state, cardBrandState)
     }
 
     private fun getCardBrandState(
@@ -118,6 +100,46 @@ internal class CardBrandIntentsHandler(
         }
     }
 
+    fun onBrandSelected(state: CardComponentState, intent: CardIntent.SelectBrand): CardComponentState {
+        val currentCardBrandState = state.cardBrandState
+        if (currentCardBrandState is CardBrandState.DualBrandWithShopperSelection) {
+            val selectedCardBrandData = currentCardBrandState.cardBrandDataList.firstOrNull {
+                it.cardBrand == intent.cardBrand
+            }
+            if (selectedCardBrandData != null) {
+                val cardBrandState = currentCardBrandState.copy(
+                    shopperSelectedCardBrandData = selectedCardBrandData,
+                )
+                return getUpdatedCardComponentState(state, cardBrandState)
+            }
+        }
+        return state
+    }
+
+    private fun getUpdatedCardComponentState(
+        state: CardComponentState,
+        cardBrandState: CardBrandState
+    ): CardComponentState {
+        val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
+            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
+            else -> null
+        }
+        val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
+        val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
+
+        return state.copy(
+            cardBrandState = cardBrandState,
+            securityCode = state.securityCode.copy(
+                requirementPolicy = getSecurityCodeRequirementPolicy(cvcPolicy),
+            ),
+            expiryDate = state.expiryDate.copy(
+                requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
+            ),
+        )
+    }
+
     private fun getExpiryDateRequirementPolicy(expiryDatePolicy: Brand.FieldPolicy?): RequirementPolicy {
         if (expiryDatePolicy == null) return RequirementPolicy.Required
 
@@ -147,22 +169,5 @@ internal class CardBrandIntentsHandler(
                 CVCVisibility.HIDE_FIRST, CVCVisibility.ALWAYS_HIDE -> RequirementPolicy.Hidden
             }
         }
-    }
-
-    fun onBrandSelected(state: CardComponentState, intent: CardIntent.SelectBrand): CardComponentState {
-        val currentCardBrandState = state.cardBrandState
-        if (currentCardBrandState is CardBrandState.DualBrandWithShopperSelection) {
-            val selectedCardBrandData = currentCardBrandState.cardBrandDataList.firstOrNull {
-                it.cardBrand == intent.cardBrand
-            }
-            if (selectedCardBrandData != null) {
-                return state.copy(
-                    cardBrandState = currentCardBrandState.copy(
-                        shopperSelectedCardBrandData = selectedCardBrandData,
-                    ),
-                )
-            }
-        }
-        return state
     }
 }
