@@ -8,65 +8,57 @@
 # Created by oscars on 14/6/2024.
 #
 
+# Input is the raw `git diff` output for `.api` files produced by the workflow
+# (see .github/workflows/validate_public_api.yml).
 input_file="api_changes.txt"
 output_file="api_changes.md"
 
-touch "$output_file"
-
-if [ -s $input_file ]
+if [ ! -s "$input_file" ]
 then
-  echo "# 🚫 Public API changes" >> "$output_file"
-else
-  echo "# ✅ No public API changes" >> "$output_file"
+  echo "# ✅ No public API changes" > "$output_file"
   exit 0
 fi
 
-# Find all .api files to loop over later
-api_files=($(find . -name '*.api'))
-api_files_size=${#api_files[@]}
+echo "# 🚫 Public API changes" > "$output_file"
 
-for ((i = 0 ; i < $api_files_size ; i+= 2 )); do
-  git_diff=$(git diff --no-index "${api_files[i]}" "${api_files[i + 1]}")
-  if [ -n "$git_diff" ]
-  then
-    # Add module name as title
-    file_name=${api_files[i]}
-    words=(${file_name//\// })
-    words_size=${#words[@]}
-    last_index=$(( words_size-1))
-    title=${words[$last_index]}
-    title=${title%????}
-    echo "## $title" >> "$output_file"
+# The input is one or more consecutive git-diff sections, one per changed file.
+# Split it into per-file sections, render each as its own fenced diff block
+# with a heading derived from the module name (parent folder of the .api file).
+awk '
+  /^diff --git / {
+    # Close previous block if any.
+    if (in_block) {
+      print "```"
+      in_block = 0
+    }
 
-    diff_index=0
-    is_block_open=false
-    # Dump git diff output
-    while read -r line; do
-      # Skip first 4 lines as they are verbose
-      if (( $diff_index > 3 ))
-      then
+    # Extract the b-path (post-image) to derive the module name.
+    # Line format: `diff --git a/<path> b/<path>`
+    match($0, / b\/[^ ]+/)
+    b_path = substr($0, RSTART + 3, RLENGTH - 3)
 
-        if [[ "$line" == "@@"* ]]
-        then
-          if $is_block_open
-          then
-            # Close code block
-            echo "\`\`\`" >> "$output_file"
-            is_block_open=false
-          fi
+    # Module name = segment before `/api/` (e.g. `ui-core/api/ui-core.api` → `ui-core`).
+    module = b_path
+    sub(/\/api\/.*/, "", module)
 
-          # Open code block
-          echo "\`\`\`diff" >> "$output_file"
-          is_block_open=true
-        fi
-        echo "$line" >> "$output_file"
-      fi
-      ((diff_index++))
-    done <<< "$git_diff"
+    print ""
+    print "## " module
+    print "```diff"
+    in_block = 1
+    skip_header = 1
+    next
+  }
+  # Skip the remaining git-diff header lines (`index ...`, `new file mode ...`,
+  # `deleted file mode ...`, `--- a/...`, `+++ b/...`). These duplicate info
+  # already shown in the `## <module>` heading. Passthrough begins at the first
+  # `@@` hunk header.
+  skip_header && !/^@@/ { next }
+  /^@@/ { skip_header = 0 }
+  { if (in_block) print }
+  END {
+    if (in_block) print "```"
+  }
+' "$input_file" >> "$output_file"
 
-    # Always close last code block
-    echo "\`\`\`" >> "$output_file"
-  fi
-done
-
+echo "" >> "$output_file"
 echo "If these changes are intentional run \`./gradlew apiDump\` and commit the changes." >> "$output_file"

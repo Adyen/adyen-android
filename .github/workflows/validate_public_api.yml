@@ -32,7 +32,15 @@ jobs:
 
       - name: Check public API
         run: |
-          ( ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt" ) || true
+          # Regenerate all .api files from the current source.
+          ./gradlew apiDump --quiet
+          # Mark any newly-created .api files (e.g. from a new module) as
+          # intent-to-add so they show up in `git diff` even though untracked.
+          git add --intent-to-add -- '**/*.api'
+          # Capture only actual changes to .api files. This ignores unrelated
+          # stderr output from the build (e.g. javac "uses deprecated API" notes,
+          # Gradle deprecation warnings) that previously caused false positives.
+          git diff --no-color -- '**/*.api' > "${{ github.workspace }}/api_changes.txt"
           bash ./scripts/process_api_changes.sh
 
       - name: Comment on PR
