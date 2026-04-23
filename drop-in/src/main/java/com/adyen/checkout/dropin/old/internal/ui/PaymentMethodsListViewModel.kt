@@ -174,8 +174,8 @@ internal class PaymentMethodsListViewModel(
         // no ops
     }
 
-    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        eventsChannel.trySend(PaymentMethodListStoredEvent.AdditionalDetails(actionComponentData))
+    override fun onAdditionalDetails(data: ActionComponentData) {
+        eventsChannel.trySend(PaymentMethodListStoredEvent.AdditionalDetails(data))
     }
 
     override fun onError(componentError: ComponentError) {
