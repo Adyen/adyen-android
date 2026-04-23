@@ -109,10 +109,10 @@ interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponent
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param actionComponentData The data from the action component.
+     * @param data The data from the action component.
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
-    fun onAdditionalDetails(actionComponentData: ActionComponentData): Boolean = false
+    fun onAdditionalDetails(data: ActionComponentData): Boolean = false
 
     /**
      * Indicates that an API call is being executed by the component. Could be used to show a loading indicator in your
