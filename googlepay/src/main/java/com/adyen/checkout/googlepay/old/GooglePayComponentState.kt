@@ -15,6 +15,10 @@ import com.google.android.gms.wallet.PaymentData
 /**
  * Represents the state of [GooglePayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class GooglePayComponentState(
     override val data: PaymentComponentData<GooglePayPaymentMethod>,
     override val isInputValid: Boolean,

@@ -24,6 +24,10 @@ import org.json.JSONObject
  * @param format The format of the billing address. Check the Google Pay SDK documentation for the possible values.
  * @param isPhoneNumberRequired Set to true if a phone number is required for the billing address.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("MaxLineLength")
 @Parcelize
 data class BillingAddressParameters(

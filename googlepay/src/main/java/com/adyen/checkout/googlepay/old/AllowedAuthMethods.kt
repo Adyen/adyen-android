@@ -10,6 +10,10 @@ package com.adyen.checkout.googlepay.old
 /**
  * The authentication methods accepted by Google Pay.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("MemberVisibilityCanBePrivate")
 object AllowedAuthMethods {
 

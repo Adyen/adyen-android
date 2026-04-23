@@ -23,6 +23,10 @@ import org.json.JSONObject
  * @param merchantId The id of the merchant.
  * @param softwareInfo Information associated with the caller of the request.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class MerchantInfo(
     var merchantName: String? = null,

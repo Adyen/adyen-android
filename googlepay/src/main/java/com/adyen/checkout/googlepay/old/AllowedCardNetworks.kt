@@ -10,6 +10,10 @@ package com.adyen.checkout.googlepay.old
 /**
  * The card networks accepted by Google Pay.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("MemberVisibilityCanBePrivate")
 object AllowedCardNetworks {
 

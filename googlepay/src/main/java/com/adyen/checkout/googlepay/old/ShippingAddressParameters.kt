@@ -25,6 +25,10 @@ import org.json.JSONObject
  * @param allowedCountryCodes A list of ISO 3166-1 alpha-2 country code values where shipping is allowed.
  * @param isPhoneNumberRequired Set to true if a phone number is required for the shipping address.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("MaxLineLength")
 @Parcelize
 data class ShippingAddressParameters(

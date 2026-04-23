@@ -29,6 +29,10 @@ import java.util.Locale
 /**
  * Configuration class for the [GooglePayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class GooglePayConfiguration private constructor(
@@ -62,6 +66,10 @@ class GooglePayConfiguration private constructor(
     /**
      * Builder to create a [GooglePayConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Suppress("TooManyFunctions")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<GooglePayConfiguration, Builder>,
@@ -453,6 +461,10 @@ class GooglePayConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.googlePay(
     configuration: @CheckoutConfigurationMarker GooglePayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

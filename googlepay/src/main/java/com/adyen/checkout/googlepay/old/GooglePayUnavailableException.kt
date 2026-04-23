@@ -10,6 +10,10 @@ package com.adyen.checkout.googlepay.old
 
 import com.adyen.checkout.components.core.PaymentMethodUnavailableException
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class GooglePayUnavailableException(
     cause: Throwable? = null,
 ) : PaymentMethodUnavailableException(

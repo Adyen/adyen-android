@@ -6,6 +6,8 @@
  * Created by ozgur on 3/2/2026.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.googlepay.old
 
 import android.app.Activity
