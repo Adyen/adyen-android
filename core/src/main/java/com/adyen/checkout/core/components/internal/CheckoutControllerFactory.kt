@@ -25,6 +25,7 @@ import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +46,7 @@ internal class CheckoutControllerFactory {
         val checkoutAttemptId: String?
         val publicKey: String?
         val componentSessionParams: SessionParams?
-        val sessionId: String?
+        val sessionSetup: SessionSetupResponse?
 
         when (context) {
             is CheckoutContext.Advanced -> {
@@ -53,7 +54,7 @@ internal class CheckoutControllerFactory {
                 checkoutAttemptId = context.checkoutAttemptId
                 publicKey = context.publicKey
                 componentSessionParams = null
-                sessionId = null
+                sessionSetup = null
             }
 
             is CheckoutContext.Sessions -> {
@@ -61,7 +62,7 @@ internal class CheckoutControllerFactory {
                 checkoutAttemptId = context.checkoutAttemptId
                 publicKey = context.publicKey
                 componentSessionParams = SessionParamsFactory.create(context.checkoutSession)
-                sessionId = context.checkoutSession.sessionSetupResponse.id
+                sessionSetup = context.checkoutSession.sessionSetupResponse
             }
         }
 
@@ -74,13 +75,13 @@ internal class CheckoutControllerFactory {
         val analyticsManager = createAnalyticsManager(
             applicationContext = applicationContext,
             componentParamsBundle = componentParamsBundle,
-            sessionId = sessionId,
+            sessionId = sessionSetup?.id,
             checkoutAttemptId = checkoutAttemptId,
         )
 
         val componentRequestDispatcher = createComponentRequestDispatcher(
             callbacks = callbacks,
-            context = context,
+            sessionSetup = sessionSetup,
             configuration = checkoutConfiguration,
         )
 
@@ -138,7 +139,7 @@ internal class CheckoutControllerFactory {
 
     private fun createComponentRequestDispatcher(
         callbacks: CheckoutCallbacks,
-        context: CheckoutContext,
+        sessionSetup: SessionSetupResponse?,
         configuration: CheckoutConfiguration,
     ): ComponentRequestDispatcher {
         return when (callbacks) {
@@ -147,13 +148,13 @@ internal class CheckoutControllerFactory {
             }
 
             is SessionCheckoutCallbacks -> {
-                val session = (context as CheckoutContext.Sessions).checkoutSession.sessionSetupResponse
+                requireNotNull(sessionSetup)
                 val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
                 val sessionService = SessionService(httpClient)
                 val sessionRepository = SessionRepository(sessionService, configuration.clientKey)
                 SessionComponentRequestDispatcher(
-                    initialSessionData = session.sessionData,
-                    sessionId = session.id,
+                    initialSessionData = sessionSetup.sessionData,
+                    sessionId = sessionSetup.id,
                     callbacks = callbacks,
                     sessionRepository = sessionRepository,
                 )

@@ -51,6 +51,7 @@ object CheckoutInitializer {
         val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
         val sessionService = SessionService(httpClient)
         val sessionRepository = SessionRepository(sessionService, checkoutConfiguration.clientKey)
+        // TODO - Do we need to pass order here?
         sessionRepository.setupSession(sessionResponse.id, sessionResponse.sessionData, null)
             .fold(
                 onSuccess = { response ->
