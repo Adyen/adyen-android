@@ -8,57 +8,57 @@
 # Created by oscars on 14/6/2024.
 #
 
-# Input is the raw `git diff` output for `.api` files produced by the workflow
-# (see .github/workflows/validate_public_api.yml).
-input_file="api_changes.txt"
+# Reads `git diff` output for `.api` files from stdin and renders a Markdown
+# report to `api_changes.md`. Intended to be piped from the workflow:
+#
+#   git diff --no-color -- '**/*.api' | bash scripts/process_api_changes.sh
 output_file="api_changes.md"
 
-if [ ! -s "$input_file" ]
+diff_output="$(cat)"
+
+if [ -z "$diff_output" ]
 then
   echo "# ✅ No public API changes" > "$output_file"
   exit 0
 fi
 
-echo "# 🚫 Public API changes" > "$output_file"
+{
+  echo "# 🚫 Public API changes"
+  # Split the concatenated git-diff sections (one per changed file) into
+  # per-module fenced diff blocks, headed by the module name.
+  printf '%s\n' "$diff_output" | awk '
+    /^diff --git / {
+      if (in_block) {
+        print "```"
+        in_block = 0
+      }
 
-# The input is one or more consecutive git-diff sections, one per changed file.
-# Split it into per-file sections, render each as its own fenced diff block
-# with a heading derived from the module name (parent folder of the .api file).
-awk '
-  /^diff --git / {
-    # Close previous block if any.
-    if (in_block) {
-      print "```"
-      in_block = 0
+      # Derive the module name from the b-path (`diff --git a/<path> b/<path>`).
+      match($0, / b\/[^ ]+/)
+      b_path = substr($0, RSTART + 3, RLENGTH - 3)
+
+      # Strip `/api/<name>.api` to leave just the module folder
+      # (e.g. `ui-core/api/ui-core.api` → `ui-core`).
+      module = b_path
+      sub(/\/api\/.*/, "", module)
+
+      print ""
+      print "## " module
+      print "```diff"
+      in_block = 1
+      skip_header = 1
+      next
     }
-
-    # Extract the b-path (post-image) to derive the module name.
-    # Line format: `diff --git a/<path> b/<path>`
-    match($0, / b\/[^ ]+/)
-    b_path = substr($0, RSTART + 3, RLENGTH - 3)
-
-    # Module name = segment before `/api/` (e.g. `ui-core/api/ui-core.api` → `ui-core`).
-    module = b_path
-    sub(/\/api\/.*/, "", module)
-
-    print ""
-    print "## " module
-    print "```diff"
-    in_block = 1
-    skip_header = 1
-    next
-  }
-  # Skip the remaining git-diff header lines (`index ...`, `new file mode ...`,
-  # `deleted file mode ...`, `--- a/...`, `+++ b/...`). These duplicate info
-  # already shown in the `## <module>` heading. Passthrough begins at the first
-  # `@@` hunk header.
-  skip_header && !/^@@/ { next }
-  /^@@/ { skip_header = 0 }
-  { if (in_block) print }
-  END {
-    if (in_block) print "```"
-  }
-' "$input_file" >> "$output_file"
-
-echo "" >> "$output_file"
-echo "If these changes are intentional run \`./gradlew apiDump\` and commit the changes." >> "$output_file"
+    # Skip the remaining git-diff header lines (`index ...`, `new file mode`,
+    # `deleted file mode`, `--- a/...`, `+++ b/...`); passthrough starts at
+    # the first `@@` hunk header.
+    skip_header && !/^@@/ { next }
+    /^@@/ { skip_header = 0 }
+    { if (in_block) print }
+    END {
+      if (in_block) print "```"
+    }
+  '
+  echo ""
+  echo 'If these changes are intentional run `./gradlew apiDump` and commit the changes.'
+} > "$output_file"
