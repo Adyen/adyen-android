@@ -12,7 +12,7 @@ import com.adyen.checkout.core.error.CheckoutError
 
 sealed interface AdditionalDetailsResult {
 
-    data class Finished(val temp: String? = null) : AdditionalDetailsResult
+    data class Finished(val resultCode: String) : AdditionalDetailsResult
 
     data class Error(val error: CheckoutError) : AdditionalDetailsResult
 }

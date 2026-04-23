@@ -106,7 +106,7 @@ class ExampleV6DropInService : DropInService() {
 
             else -> {
                 Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
-                val resultCode = jsonResponse.optString("resultCode").takeIf { it.isNotEmpty() }
+                val resultCode = jsonResponse.optString("resultCode")
                 AdditionalDetailsResult.Finished(resultCode)
             }
         }

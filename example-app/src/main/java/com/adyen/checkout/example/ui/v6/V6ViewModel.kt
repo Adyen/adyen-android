@@ -163,7 +163,7 @@ internal class V6ViewModel @Inject constructor(
             else -> {
                 // TODO - move to onFinished callback after it's introduced
                 uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                SubmitResult.Finished()
+                SubmitResult.Finished(resultCode = json.optString("resultCode"))
             }
         }
     }
@@ -179,7 +179,7 @@ internal class V6ViewModel @Inject constructor(
             else -> {
                 // TODO - move to onFinished callback after it's introduced
                 uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                AdditionalDetailsResult.Finished()
+                AdditionalDetailsResult.Finished(resultCode = json.optString("resultCode"))
             }
         }
     }
