@@ -32,8 +32,12 @@ jobs:
 
       - name: Check public API
         run: |
-          ( ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt" ) || true
-          bash ./scripts/process_api_changes.sh
+          # Regenerate all .api files from the current source.
+          ./gradlew apiDump --quiet
+          # Mark any newly-created .api files (e.g. from a new module) as
+          # intent-to-add so they show up in `git diff` even though untracked.
+          git add --intent-to-add -- '**/*.api'
+          git diff --no-color -- '**/*.api' | bash ./scripts/process_api_changes.sh
 
       - name: Comment on PR
         # This step will only run on pull_request events.
@@ -48,8 +52,5 @@ jobs:
 
       - name: Check if successful
         run: |
-          if [ -s api_changes.txt ]
-          then
-            # Fail workflow if there are API changes
-            exit 1
-          fi
+          # Fail the workflow if any `.api` file has uncommitted changes.
+          git diff --quiet -- '**/*.api'

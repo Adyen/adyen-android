@@ -8,65 +8,65 @@
 # Created by oscars on 14/6/2024.
 #
 
-input_file="api_changes.txt"
+# Reads `git diff` output for `.api` files from stdin and renders a Markdown
+# report to `api_changes.md`. Intended to be piped from the workflow:
+#
+#   git diff --no-color -- '**/*.api' | bash scripts/process_api_changes.sh
 output_file="api_changes.md"
 
-touch "$output_file"
+diff_output="$(cat)"
 
-if [ -s $input_file ]
+if [ -z "$diff_output" ]
 then
-  echo "# 🚫 Public API changes" >> "$output_file"
-else
-  echo "# ✅ No public API changes" >> "$output_file"
+  echo "# ✅ No public API changes" > "$output_file"
   exit 0
 fi
 
-# Find all .api files to loop over later
-api_files=($(find . -name '*.api'))
-api_files_size=${#api_files[@]}
+{
+  echo "# 🚫 Public API changes"
+  # Split the concatenated git-diff sections (one per changed file) into
+  # per-module fenced diff blocks, headed by the module name.
+  printf '%s\n' "$diff_output" | awk '
+    /^diff --git / {
+      if (in_block) {
+        print "```"
+        in_block = 0
+      }
 
-for ((i = 0 ; i < $api_files_size ; i+= 2 )); do
-  git_diff=$(git diff --no-index "${api_files[i]}" "${api_files[i + 1]}")
-  if [ -n "$git_diff" ]
-  then
-    # Add module name as title
-    file_name=${api_files[i]}
-    words=(${file_name//\// })
-    words_size=${#words[@]}
-    last_index=$(( words_size-1))
-    title=${words[$last_index]}
-    title=${title%????}
-    echo "## $title" >> "$output_file"
+      # Derive the module name from the b-path. Match both ` b/...` and
+      # ` "b/..."` (git quotes paths that contain spaces), and only call
+      # `substr` on a successful match.
+      if (match($0, / "?b\//)) {
+        b_path = substr($0, RSTART + RLENGTH)
+        gsub(/"/, "", b_path)
 
-    diff_index=0
-    is_block_open=false
-    # Dump git diff output
-    while read -r line; do
-      # Skip first 4 lines as they are verbose
-      if (( $diff_index > 3 ))
-      then
+        # Strip `/api/<name>.api` to leave just the module folder (e.g.
+        # `ui-core/api/ui-core.api` → `ui-core`). Fall back to dropping the
+        # `.api` suffix for paths without a `/api/` segment.
+        module = b_path
+        if (!sub(/\/api\/.*/, "", module)) {
+          sub(/\.api$/, "", module)
+        }
+        if (module == "") module = "root"
 
-        if [[ "$line" == "@@"* ]]
-        then
-          if $is_block_open
-          then
-            # Close code block
-            echo "\`\`\`" >> "$output_file"
-            is_block_open=false
-          fi
-
-          # Open code block
-          echo "\`\`\`diff" >> "$output_file"
-          is_block_open=true
-        fi
-        echo "$line" >> "$output_file"
-      fi
-      ((diff_index++))
-    done <<< "$git_diff"
-
-    # Always close last code block
-    echo "\`\`\`" >> "$output_file"
-  fi
-done
-
-echo "If these changes are intentional run \`./gradlew apiDump\` and commit the changes." >> "$output_file"
+        print ""
+        print "## " module
+        print "```diff"
+        in_block = 1
+        skip_header = 1
+      }
+      next
+    }
+    # Skip the remaining git-diff header lines (`index ...`, `new file mode`,
+    # `deleted file mode`, `--- a/...`, `+++ b/...`); passthrough starts at
+    # the first `@@` hunk header.
+    skip_header && !/^@@/ { next }
+    /^@@/ { skip_header = 0 }
+    { if (in_block) print }
+    END {
+      if (in_block) print "```"
+    }
+  '
+  echo ""
+  echo 'If these changes are intentional run `./gradlew apiDump` and commit the changes.'
+} > "$output_file"
