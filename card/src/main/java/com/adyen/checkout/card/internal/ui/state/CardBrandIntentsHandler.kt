@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
+import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -17,13 +18,29 @@ import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPol
 
 internal class CardBrandIntentsHandler(
     private val componentParams: CardComponentParams,
+    private val detectCardTypeBinHelper: DetectCardTypeBinHelper,
 ) {
     fun onUpdateDetectedCardTypes(
         state: CardComponentState,
         intent: CardIntent.UpdateDetectedCardTypes,
     ): CardComponentState {
-        val cardBrandState = getCardBrandState(state, intent)
-        return getUpdatedCardComponentState(state, cardBrandState)
+        val shouldDiscardIntent = shouldDiscardIntent(
+            currentCardNumber = state.cardNumber.text,
+            intentBin = intent.detectedCardTypeList.cardDetectionBin,
+        )
+        return if (shouldDiscardIntent) {
+            state
+        } else {
+            val newCardBrandState = getCardBrandState(state, intent)
+            getUpdatedCardComponentState(state, newCardBrandState)
+        }
+    }
+
+    private fun shouldDiscardIntent(currentCardNumber: String, intentBin: String?): Boolean {
+        val currentBin = detectCardTypeBinHelper.getCardDetectionBin(currentCardNumber)
+        // result is not relevant anymore and should be discarded
+        // this can happen if network results are returned after a delay and the BIN has already changed
+        return intentBin != currentBin
     }
 
     private fun getCardBrandState(

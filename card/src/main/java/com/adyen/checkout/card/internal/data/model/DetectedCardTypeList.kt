@@ -11,6 +11,11 @@ package com.adyen.checkout.card.internal.data.model
 internal data class DetectedCardTypeList(
     val detectedCardTypes: List<DetectedCardType>,
     val source: Source,
+    /**
+     * This BIN is only used internally for card brand detection and is different from the actual BIN which is returned
+     * in the public API.
+     */
+    val cardDetectionBin: String?,
 ) {
     enum class Source {
         LOCAL,
