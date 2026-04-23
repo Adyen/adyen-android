@@ -13,22 +13,21 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.action.data.Action as ActionResponse
 
-// TODO - KDocs, revisit later after having parameters
 /**
  * Represents the outcome of a checkout operation.
  */
 sealed interface SubmitResult {
 
     /** Indicates the payment process has finished successfully. */
-    // TODO - Replace temp parameter with actual value
-    data class Finished(val temp: String? = null) : SubmitResult
+    data class Finished(val resultCode: String) : SubmitResult
 
     /** Indicates that an additional action is required from the shopper. */
     data class Action(val action: ActionResponse) : SubmitResult
 
+    /** Indicates that a partial payment has been made. */
     data class PartialPayment(
         val order: OrderResponse?,
-        val paymentMethods: PaymentMethods,
+        val paymentMethods: PaymentMethods? = null,
     ) : SubmitResult
 
     /** Indicates an error occurred during the payment process. */
