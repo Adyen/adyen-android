@@ -29,7 +29,7 @@ sealed interface SubmitResult {
 
     /** Indicates that a partial payment has been made. */
     data class PartialPayment(
-        val order: OrderResponse?,
+        val order: OrderResponse,
         val paymentMethods: PaymentMethods? = null,
     ) : SubmitResult
 }
