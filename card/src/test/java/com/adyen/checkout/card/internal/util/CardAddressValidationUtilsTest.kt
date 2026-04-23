@@ -6,6 +6,8 @@
  * Created by onurk on 11/1/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.old.internal.ui.model.AddressFieldPolicyParams

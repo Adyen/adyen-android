@@ -26,6 +26,10 @@ import kotlinx.parcelize.Parcelize
  * @param cardBasedOptions Installment Options to be used for specific card types.
  * @param showInstallmentAmount A flag to show the installment amount.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class InstallmentConfiguration(
     val defaultOptions: InstallmentOptions.DefaultInstallmentOptions? = null,
@@ -50,6 +54,10 @@ data class InstallmentConfiguration(
  *
  * Note: All values specified in [values] must be greater than 1.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class InstallmentOptions : Parcelable {
 
     abstract val values: List<Int>
@@ -64,6 +72,10 @@ sealed class InstallmentOptions : Parcelable {
      * @param includeRevolving see [InstallmentOptions.includeRevolving]
      * @param cardBrand a [CardBrand] to apply the given options
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Parcelize
     data class CardBasedInstallmentOptions(
         override val values: List<Int>,
@@ -84,6 +96,10 @@ sealed class InstallmentOptions : Parcelable {
      * @param values see [InstallmentOptions.values]
      * @param includeRevolving see [InstallmentOptions.includeRevolving]
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Parcelize
     data class DefaultInstallmentOptions(
         override val values: List<Int>,

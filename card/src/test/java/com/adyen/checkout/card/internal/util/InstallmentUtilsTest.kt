@@ -6,6 +6,8 @@
  * Created by ararat on 17/11/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card.internal.util
 
 import android.content.Context

@@ -39,6 +39,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SCHEME] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("TooManyFunctions")
 open class CardComponent
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

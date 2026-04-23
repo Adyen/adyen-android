@@ -6,6 +6,8 @@
  * Created by josephj on 7/12/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card
 
 import androidx.lifecycle.LifecycleOwner
