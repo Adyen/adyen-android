@@ -62,6 +62,10 @@ import kotlin.collections.set
  * their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class DropInConfiguration private constructor(
@@ -102,6 +106,10 @@ class DropInConfiguration private constructor(
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Suppress("unused", "TooManyFunctions")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder> {
@@ -512,6 +520,10 @@ class DropInConfiguration private constructor(
 
 private const val DROP_IN_CONFIG_KEY = "DROP_IN_CONFIG_KEY"
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.dropIn(
     configuration: @CheckoutConfigurationMarker Builder.() -> Unit = {}
 ): CheckoutConfiguration {

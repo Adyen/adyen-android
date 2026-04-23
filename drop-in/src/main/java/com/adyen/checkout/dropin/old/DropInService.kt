@@ -24,6 +24,10 @@ import com.adyen.checkout.dropin.old.internal.service.BaseDropInService
  * You need to implement the [onSubmit] and [onAdditionalDetails] with this service. The rest of the methods are
  * optional.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 abstract class DropInService : BaseDropInService(), DropInServiceContract {
 
     final override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {

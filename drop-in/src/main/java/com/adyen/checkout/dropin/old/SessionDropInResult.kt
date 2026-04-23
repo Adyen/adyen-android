@@ -13,11 +13,19 @@ import com.adyen.checkout.sessions.core.SessionPaymentResult
 /**
  * A class that contains the final result of Drop-in.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class SessionDropInResult {
 
     /**
      * Drop-in was dismissed by the user before it has completed.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class CancelledByUser : SessionDropInResult()
 
     /**
@@ -30,6 +38,10 @@ sealed class SessionDropInResult {
      *
      * @param reason The reason of the error.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(val reason: String?) : SessionDropInResult()
 
     /**
@@ -38,5 +50,9 @@ sealed class SessionDropInResult {
      *
      * @param result The result of the payment.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Finished(val result: SessionPaymentResult) : SessionDropInResult()
 }

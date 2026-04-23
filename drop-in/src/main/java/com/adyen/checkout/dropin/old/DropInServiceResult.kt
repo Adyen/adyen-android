@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.components.core.action.Action as ActionResponse
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class BaseDropInServiceResult
 
 internal interface DropInServiceResultError {
@@ -26,6 +30,10 @@ internal interface DropInServiceResultError {
 /**
  * The result of a network call to be sent to [DropInService] or [SessionDropInService].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class DropInServiceResult : BaseDropInServiceResult() {
 
     /**
@@ -38,6 +46,10 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      * @param finishedDialog If set, a dialog will be shown with the data passed in [FinishedDialog]. If null, no
      * dialog will be displayed.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Finished(
         val result: String,
         val finishedDialog: FinishedDialog? = null,
@@ -50,6 +62,10 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      *
      * @param action the action object to be handled by Drop-in.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Action(val action: ActionResponse) : DropInServiceResult()
 
     /**
@@ -68,6 +84,10 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      * @param paymentMethodsApiResponse the updated payment methods list.
      * @param order the order object returned from the backend, or null if an order was cancelled.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Update(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val order: OrderResponse?
@@ -82,6 +102,10 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(
         override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
@@ -94,11 +118,19 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      *
      * @param paymentMethodsApiResponse Optionally pass this to refresh the displayed payment methods.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class ToPaymentMethodsList(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse? = null,
     ) : DropInServiceResult()
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
 
     /**
@@ -108,6 +140,10 @@ sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
      *
      * Use [BalanceResult.SERIALIZER] to deserialize your JSON response string.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Balance(val balance: BalanceResult) : BalanceDropInServiceResult()
 
     /**
@@ -121,6 +157,10 @@ sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(
         override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
@@ -128,6 +168,10 @@ sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
     ) : BalanceDropInServiceResult(), DropInServiceResultError
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
 
     /**
@@ -137,6 +181,10 @@ sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
      *
      * Use [OrderResponse.SERIALIZER] to deserialize your JSON response string.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class OrderCreated(val order: OrderResponse) : OrderDropInServiceResult()
 
     /**
@@ -150,6 +198,10 @@ sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(
         override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
@@ -157,6 +209,10 @@ sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
     ) : OrderDropInServiceResult(), DropInServiceResultError
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
 
     /**
@@ -166,6 +222,10 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
      *
      * @param id Id of the stored payment method.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class PaymentMethodRemoved(val id: String) : RecurringDropInServiceResult()
 
     /**
@@ -179,6 +239,10 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(
         override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
@@ -186,6 +250,10 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
     ) : RecurringDropInServiceResult(), DropInServiceResultError
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class AddressLookupDropInServiceResult : BaseDropInServiceResult() {
 
     /**
@@ -195,6 +263,10 @@ sealed class AddressLookupDropInServiceResult : BaseDropInServiceResult() {
      *
      * @param options Address options to be displayed to the shopper.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class LookupResult(
         val options: List<LookupAddress>
     ) : AddressLookupDropInServiceResult()
@@ -206,6 +278,10 @@ sealed class AddressLookupDropInServiceResult : BaseDropInServiceResult() {
      *
      * @param lookupAddress Complete address details.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class LookupComplete(
         val lookupAddress: LookupAddress
     ) : AddressLookupDropInServiceResult()
@@ -221,6 +297,10 @@ sealed class AddressLookupDropInServiceResult : BaseDropInServiceResult() {
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(
         override val errorDialog: ErrorDialog?,
         override val reason: String? = null,

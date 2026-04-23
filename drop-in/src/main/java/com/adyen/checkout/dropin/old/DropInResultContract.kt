@@ -16,6 +16,10 @@ import androidx.activity.result.contract.ActivityResultContract
 import com.adyen.checkout.dropin.old.internal.ui.DropInActivity
 import com.adyen.checkout.dropin.old.internal.ui.model.DropInResultContractParams
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class DropInResultContract : ActivityResultContract<DropInResultContractParams, DropInResult?>() {
     override fun createIntent(context: Context, input: DropInResultContractParams): Intent {
         return DropInActivity.createIntent(

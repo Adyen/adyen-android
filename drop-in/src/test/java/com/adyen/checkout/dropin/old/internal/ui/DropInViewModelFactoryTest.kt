@@ -6,6 +6,8 @@
  * Created by oscars on 5/11/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.dropin.old.internal.ui
 
 import com.adyen.checkout.components.core.PaymentMethod

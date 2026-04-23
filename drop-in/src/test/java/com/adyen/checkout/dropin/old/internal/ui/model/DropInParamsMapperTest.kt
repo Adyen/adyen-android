@@ -6,6 +6,8 @@
  * Created by oscars on 5/11/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.dropin.old.internal.ui.model
 
 import android.os.Bundle

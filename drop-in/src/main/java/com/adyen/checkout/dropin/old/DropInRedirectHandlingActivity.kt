@@ -15,6 +15,10 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.old.internal.ui.DropInActivity
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class DropInRedirectHandlingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
