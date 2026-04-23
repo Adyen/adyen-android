@@ -142,8 +142,8 @@ internal class CardComponent(
     }
 
     private fun onCardNumberChanged(newCardNumber: String) {
-        detectCardTypes(newCardNumber)
         onIntent(CardIntent.UpdateCardNumber(newCardNumber))
+        detectCardTypes(newCardNumber)
     }
 
     private fun detectCardTypes(cardNumber: String) {
