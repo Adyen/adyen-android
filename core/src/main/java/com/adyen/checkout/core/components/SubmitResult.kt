@@ -24,12 +24,12 @@ sealed interface SubmitResult {
     /** Indicates that an additional action is required from the shopper. */
     data class Action(val action: ActionResponse) : SubmitResult
 
+    /** Indicates an error occurred during the payment process. */
+    data class Error(val error: CheckoutError) : SubmitResult
+
     /** Indicates that a partial payment has been made. */
     data class PartialPayment(
         val order: OrderResponse?,
         val paymentMethods: PaymentMethods? = null,
     ) : SubmitResult
-
-    /** Indicates an error occurred during the payment process. */
-    data class Error(val error: CheckoutError) : SubmitResult
 }
