@@ -33,20 +33,28 @@ fi
         in_block = 0
       }
 
-      # Derive the module name from the b-path (`diff --git a/<path> b/<path>`).
-      match($0, / b\/[^ ]+/)
-      b_path = substr($0, RSTART + 3, RLENGTH - 3)
+      # Derive the module name from the b-path. Match both ` b/...` and
+      # ` "b/..."` (git quotes paths that contain spaces), and only call
+      # `substr` on a successful match.
+      if (match($0, / "?b\//)) {
+        b_path = substr($0, RSTART + RLENGTH)
+        gsub(/"/, "", b_path)
 
-      # Strip `/api/<name>.api` to leave just the module folder
-      # (e.g. `ui-core/api/ui-core.api` → `ui-core`).
-      module = b_path
-      sub(/\/api\/.*/, "", module)
+        # Strip `/api/<name>.api` to leave just the module folder (e.g.
+        # `ui-core/api/ui-core.api` → `ui-core`). Fall back to dropping the
+        # `.api` suffix for paths without a `/api/` segment.
+        module = b_path
+        if (!sub(/\/api\/.*/, "", module)) {
+          sub(/\.api$/, "", module)
+        }
+        if (module == "") module = "root"
 
-      print ""
-      print "## " module
-      print "```diff"
-      in_block = 1
-      skip_header = 1
+        print ""
+        print "## " module
+        print "```diff"
+        in_block = 1
+        skip_header = 1
+      }
       next
     }
     # Skip the remaining git-diff header lines (`index ...`, `new file mode`,
