@@ -38,7 +38,7 @@ abstract class CheckoutCallbacks(
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 inline fun <reified T : CheckoutAdditionalCallback> Set<CheckoutAdditionalCallback>.getAdditionalCallback(): T? {
-    return filterIsInstance<T>().firstOrNull()
+    return find { it is T } as? T
 }
 
 interface CheckoutAdditionalCallback
