@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -235,11 +232,9 @@ internal class CardComponentStateValidatorTest {
     }
 
     @Test
-    fun `when card brand is unsupported and reliable, then card number has error`() {
+    fun `when card brand is unsupported, then card number has error`() {
         val state = createValidState().copy(
-            detectedCardTypes = listOf(
-                createDetectedCardType(isSupported = false, isReliable = true),
-            ),
+            cardBrandState = CardBrandState.UnsupportedBrand,
         )
 
         val validatedState = validator.validate(state)
@@ -262,20 +257,6 @@ internal class CardComponentStateValidatorTest {
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
         isLoading = false,
-        detectedCardTypes = listOf(createDetectedCardType()),
-        selectedCardBrand = null,
-    )
-
-    private fun createDetectedCardType(
-        isSupported: Boolean = true,
-    ) = DetectedCardType(
-        cardBrand = CardBrand("visa"),
-        enableLuhnCheck = true,
-        cvcPolicy = Brand.FieldPolicy.REQUIRED,
-        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-        isSupported = isSupported,
-        panLength = 16,
-        paymentMethodVariant = null,
-        localizedBrand = null,
+        cardBrandState = CardBrandState.NoBrandsDetected,
     )
 }

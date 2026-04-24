@@ -11,6 +11,8 @@ package com.adyen.checkout.card.internal.data.api
 import com.adyen.checkout.card.internal.data.model.BinLookupCacheResult
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
+import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.cse.internal.TestCardEncryptor
@@ -45,6 +47,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
     private lateinit var networkCardBrandDetectionService: NetworkCardBrandDetectionService
     private lateinit var localCardBrandDetectionService: LocalCardBrandDetectionService
     private lateinit var binLookupCache: BinLookupCache
+    private lateinit var detectCardTypeBinHelper: DetectCardTypeBinHelper
     private lateinit var detectCardTypeRepository: DefaultDetectCardTypeRepository
 
     @BeforeEach
@@ -60,7 +63,12 @@ internal class DefaultDetectCardTypeRepositoryTest(
 
             // assert flow emits only once (local)
             assertEquals(1, flow.values.size)
-            assertEquals(localCardBrandDetectionService.getCardBrands(cardNumber), flow.values[0])
+            val expected = DetectedCardTypeList(
+                detectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber),
+                source = DetectedCardTypeList.Source.LOCAL,
+                cardDetectionBin = null,
+            )
+            assertEquals(expected, flow.values[0])
         }
 
     @Nested
@@ -74,13 +82,25 @@ internal class DefaultDetectCardTypeRepositoryTest(
             val cardNumber = "545454545454"
             val flow = detectCardTypeRepository.detectCardTypes(cardNumber).test(testScheduler)
 
-            val bin = detectCardTypeRepository.getBin(cardNumber)
+            val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumber)
             assertNotNull(bin)
 
             // assert flow emits twice (local + network)
             assertEquals(2, flow.values.size)
-            assertEquals(localCardBrandDetectionService.getCardBrands(cardNumber), flow.values[0])
-            assertEquals(networkCardBrandDetectionService.getCardBrands(bin).getOrNull(), flow.values[1])
+
+            val expectedLocal = DetectedCardTypeList(
+                detectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber),
+                source = DetectedCardTypeList.Source.LOCAL,
+                cardDetectionBin = bin,
+            )
+            assertEquals(expectedLocal, flow.values[0])
+
+            val expectedNetwork = DetectedCardTypeList(
+                detectedCardTypes = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow(),
+                source = DetectedCardTypeList.Source.NETWORK,
+                cardDetectionBin = bin,
+            )
+            assertEquals(expectedNetwork, flow.values[1])
         }
 
         @Test
@@ -98,13 +118,18 @@ internal class DefaultDetectCardTypeRepositoryTest(
                 // assert flow emits once (cache)
                 assertEquals(1, secondFlow.values.size)
 
-                val bin = detectCardTypeRepository.getBin(cardNumberWithSameBin)
+                val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumberWithSameBin)
                 assertNotNull(bin)
 
                 val cachedResult = binLookupCache.getResult(bin)
                 assertInstanceOf<BinLookupCacheResult.Available>(cachedResult)
 
-                assertEquals(cachedResult.detectedCardTypes, secondFlow.values[0])
+                val expected = DetectedCardTypeList(
+                    detectedCardTypes = cachedResult.detectedCardTypes,
+                    source = DetectedCardTypeList.Source.NETWORK,
+                    cardDetectionBin = bin,
+                )
+                assertEquals(expected, secondFlow.values[0])
             }
 
         @Test
@@ -140,13 +165,25 @@ internal class DefaultDetectCardTypeRepositoryTest(
                 .detectCardTypes(cardNumberWithDifferentBin)
                 .test(testScheduler)
 
-            val bin = detectCardTypeRepository.getBin(cardNumberWithDifferentBin)
+            val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumberWithDifferentBin)
             assertNotNull(bin)
 
             // assert flow emits twice (local + network)
             assertEquals(2, secondFlow.values.size)
-            assertEquals(localCardBrandDetectionService.getCardBrands(cardNumberWithDifferentBin), secondFlow.values[0])
-            assertEquals(networkCardBrandDetectionService.getCardBrands(bin).getOrNull(), secondFlow.values[1])
+
+            val expectedLocal = DetectedCardTypeList(
+                detectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumberWithDifferentBin),
+                source = DetectedCardTypeList.Source.LOCAL,
+                cardDetectionBin = bin,
+            )
+            assertEquals(expectedLocal, secondFlow.values[0])
+
+            val expectedNetwork = DetectedCardTypeList(
+                detectedCardTypes = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow(),
+                source = DetectedCardTypeList.Source.NETWORK,
+                cardDetectionBin = bin,
+            )
+            assertEquals(expectedNetwork, secondFlow.values[1])
         }
 
         @Test
@@ -167,16 +204,25 @@ internal class DefaultDetectCardTypeRepositoryTest(
 
                 advanceUntilIdle()
 
-                val bin = detectCardTypeRepository.getBin(cardNumberWithDifferentBin)
+                val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumberWithDifferentBin)
                 assertNotNull(bin)
 
                 // assert flow emits twice (local + network)
                 assertEquals(2, secondFlow.values.size)
-                assertEquals(
-                    localCardBrandDetectionService.getCardBrands(cardNumberWithDifferentBin),
-                    secondFlow.values[0],
+
+                val expectedLocal = DetectedCardTypeList(
+                    detectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumberWithDifferentBin),
+                    source = DetectedCardTypeList.Source.LOCAL,
+                    cardDetectionBin = bin,
                 )
-                assertEquals(networkCardBrandDetectionService.getCardBrands(bin).getOrNull(), secondFlow.values[1])
+                assertEquals(expectedLocal, secondFlow.values[0])
+
+                val expectedNetwork = DetectedCardTypeList(
+                    detectedCardTypes = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow(),
+                    source = DetectedCardTypeList.Source.NETWORK,
+                    cardDetectionBin = bin,
+                )
+                assertEquals(expectedNetwork, secondFlow.values[1])
             }
 
         @Test
@@ -186,9 +232,9 @@ internal class DefaultDetectCardTypeRepositoryTest(
             val cardNumber = "545454545454"
             val flow = detectCardTypeRepository.detectCardTypes(cardNumber).test(testScheduler)
             // first value emitted is local, second is network, which are the ones that get cached
-            val networkCardTypes = flow.values[1]
+            val networkCardTypes = flow.values[1].detectedCardTypes
 
-            val bin = detectCardTypeRepository.getBin(cardNumber)
+            val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumber)
             assertNotNull(bin)
 
             val result = binLookupCache.getResult(bin)
@@ -207,7 +253,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
             val cardNumber = "545454545454"
             detectCardTypeRepository.detectCardTypes(cardNumber).test(testScheduler)
 
-            val bin = detectCardTypeRepository.getBin(cardNumber)
+            val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumber)
             assertNotNull(bin)
 
             val result = binLookupCache.getResult(bin)
@@ -223,7 +269,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
             val cardNumber = "545454545454"
             detectCardTypeRepository.detectCardTypes(cardNumber).test(testScheduler)
 
-            val bin = detectCardTypeRepository.getBin(cardNumber)
+            val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumber)
             assertNotNull(bin)
 
             val result = binLookupCache.getResult(bin)
@@ -250,6 +296,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
 
     private fun initializeTest(supportedCardBrands: List<CardBrand> = emptyList()) {
         binLookupCache = BinLookupCache()
+        detectCardTypeBinHelper = DetectCardTypeBinHelper()
         localCardBrandDetectionService = LocalCardBrandDetectionService(supportedCardBrands)
         networkCardBrandDetectionService = NetworkCardBrandDetectionService(
             cardEncryptor = TestCardEncryptor(),
@@ -259,6 +306,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
             paymentMethodType = "",
         )
         detectCardTypeRepository = DefaultDetectCardTypeRepository(
+            detectCardTypeBinHelper,
             binLookupCache,
             localCardBrandDetectionService,
             networkCardBrandDetectionService,

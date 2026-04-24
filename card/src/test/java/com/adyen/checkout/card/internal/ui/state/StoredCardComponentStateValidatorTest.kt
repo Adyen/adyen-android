@@ -107,6 +107,7 @@ internal class StoredCardComponentStateValidatorTest {
         cvcPolicy = Brand.FieldPolicy.REQUIRED,
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
         isSupported = true,
+        isShopperSelectionAllowedInDualBranded = false,
         panLength = 16,
         paymentMethodVariant = null,
         localizedBrand = null,
