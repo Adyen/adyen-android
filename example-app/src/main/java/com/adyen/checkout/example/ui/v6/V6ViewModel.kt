@@ -23,15 +23,13 @@ import com.adyen.checkout.card.onBinLookup
 import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -141,8 +139,8 @@ internal class V6ViewModel @Inject constructor(
         return handleSubmitResponse(response)
     }
 
-    private suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): AdditionalDetailsResult {
-        val request = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+    private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
+        val request = ActionComponentData.SERIALIZER.serialize(data)
         val response = paymentsRepository.makeDetailsRequest(request)
         return handleAdditionalDetailsResponse(response)
     }
