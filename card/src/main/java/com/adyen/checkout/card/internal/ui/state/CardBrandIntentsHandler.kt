@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.helper.toCardBrandData
@@ -48,72 +49,75 @@ internal class CardBrandIntentsHandler(
         intent: CardIntent.UpdateDetectedCardTypes,
     ): CardBrandState {
         val detectedCardTypes = intent.detectedCardTypeList.detectedCardTypes
-        val isDetectedFromNetwork = intent.detectedCardTypeList.source == DetectedCardTypeList.Source.NETWORK
-
         val supportedDetectedCardTypes = detectedCardTypes.filter { it.isSupported }
 
-        return when {
-            // local detection + no supported brands
-            !isDetectedFromNetwork && supportedDetectedCardTypes.isEmpty() -> {
-                CardBrandState.NoBrandsDetected
-            }
-
-            // local detection + supported brands
-            !isDetectedFromNetwork -> {
-                // select the first brand and discard the rest
-                CardBrandState.SingleUnreliableBrand(
-                    cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
-                )
-            }
-
-            // network detection + no detected brands
-            detectedCardTypes.isEmpty() -> {
-                // Bin lookup did not return any brands
-                CardBrandState.NoBrandsDetected
-            }
-
-            // network detection + detected brands but no supported brands
-            supportedDetectedCardTypes.isEmpty() -> {
-                CardBrandState.UnsupportedBrand
-            }
-
-            // network detection + 1 detected brand
-            supportedDetectedCardTypes.size == 1 -> {
-                CardBrandState.SingleReliableBrand(
-                    cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
-                )
-            }
-
-            // network detection + multiple detected brands
-            else -> {
-                // select the first 2 brands and discard the rest (should only have 2 brands normally)
-                val firstTwoDetectedCardTypes = supportedDetectedCardTypes.take(2)
-                val cardBrandDataList = firstTwoDetectedCardTypes.map { it.toCardBrandData() }
-
-                val shopperSelectionAllowed = firstTwoDetectedCardTypes.any {
-                    it.isShopperSelectionAllowedInDualBranded
-                }
-
-                if (shopperSelectionAllowed) {
-                    val currentCardBrandState = currentState.cardBrandState
-                    val shopperSelectedCardBrandData = if (
-                        currentCardBrandState is CardBrandState.DualBrandWithShopperSelection &&
-                        currentCardBrandState.cardBrandDataList == cardBrandDataList
-                    ) {
-                        // the list of brands has not changed, keep the previously selected brand
-                        currentCardBrandState.shopperSelectedCardBrandData
-                    } else {
-                        // auto select the first brand
-                        cardBrandDataList.first()
-                    }
-                    CardBrandState.DualBrandWithShopperSelection(
-                        cardBrandDataList = cardBrandDataList,
-                        shopperSelectedCardBrandData = shopperSelectedCardBrandData,
-                    )
+        return when (intent.detectedCardTypeList.source) {
+            DetectedCardTypeList.Source.LOCAL -> {
+                if (supportedDetectedCardTypes.isEmpty()) {
+                    // local detection + no supported brands
+                    CardBrandState.NoBrandsDetected
                 } else {
-                    CardBrandState.DualBrand(cardBrandDataList)
+                    // local detection + supported brands
+                    // select the first brand and discard the rest
+                    CardBrandState.SingleUnreliableBrand(
+                        cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
+                    )
                 }
             }
+
+            DetectedCardTypeList.Source.NETWORK -> {
+                when {
+                    // network detection + no detected brands
+                    detectedCardTypes.isEmpty() -> CardBrandState.NoBrandsDetected
+
+                    // network detection + detected brands but no supported brands
+                    supportedDetectedCardTypes.isEmpty() -> CardBrandState.UnsupportedBrand
+
+                    // network detection + 1 detected brand
+                    supportedDetectedCardTypes.size == 1 -> {
+                        CardBrandState.SingleReliableBrand(
+                            cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
+                        )
+                    }
+
+                    // network detection + multiple detected brands
+                    else -> {
+                        getDualBrandedCardBrandState(currentState.cardBrandState, supportedDetectedCardTypes)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getDualBrandedCardBrandState(
+        currentCardBrandState: CardBrandState,
+        supportedDetectedCardTypes: List<DetectedCardType>
+    ): CardBrandState {
+        // select the first 2 brands and discard the rest (should only have 2 brands normally)
+        val firstTwoDetectedCardTypes = supportedDetectedCardTypes.take(2)
+        val cardBrandDataList = firstTwoDetectedCardTypes.map { it.toCardBrandData() }
+
+        val shopperSelectionAllowed = firstTwoDetectedCardTypes.any {
+            it.isShopperSelectionAllowedInDualBranded
+        }
+
+        return if (shopperSelectionAllowed) {
+            val shopperSelectedCardBrandData = if (
+                currentCardBrandState is CardBrandState.DualBrandWithShopperSelection &&
+                currentCardBrandState.cardBrandDataList == cardBrandDataList
+            ) {
+                // the list of brands has not changed, keep the previously selected brand
+                currentCardBrandState.shopperSelectedCardBrandData
+            } else {
+                // auto select the first brand
+                cardBrandDataList.first()
+            }
+            CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = cardBrandDataList,
+                shopperSelectedCardBrandData = shopperSelectedCardBrandData,
+            )
+        } else {
+            CardBrandState.DualBrand(cardBrandDataList)
         }
     }
 
