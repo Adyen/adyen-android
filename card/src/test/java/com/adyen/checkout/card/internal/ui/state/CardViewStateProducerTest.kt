@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
@@ -37,7 +36,7 @@ internal class CardViewStateProducerTest {
     fun `when no card brand is detected, then supported card brands should be shown`() {
         // GIVEN
         val componentState = createComponentState(
-            detectedCardTypes = emptyList(),
+            cardBrandState = CardBrandState.NoBrandsDetected,
         )
 
         // WHEN
@@ -52,12 +51,7 @@ internal class CardViewStateProducerTest {
     fun `when supported card brand is detected, then supported card brands should be hidden`() {
         // GIVEN
         val componentState = createComponentState(
-            detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isSupported = true,
-                ),
-            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
 
         // WHEN
@@ -72,12 +66,7 @@ internal class CardViewStateProducerTest {
     fun `when unsupported card brand is detected, then supported card brands should be shown`() {
         // GIVEN
         val componentState = createComponentState(
-            detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("unknown"),
-                    isSupported = false,
-                ),
-            ),
+            cardBrandState = CardBrandState.UnsupportedBrand,
         )
 
         // WHEN
@@ -97,12 +86,7 @@ internal class CardViewStateProducerTest {
                 errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
                 showError = true,
             ),
-            detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isSupported = true,
-                ),
-            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
 
         // WHEN
@@ -127,12 +111,7 @@ internal class CardViewStateProducerTest {
                 isFocused = true,
                 showError = false, // Focus gain clears showError
             ),
-            detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isSupported = true,
-                ),
-            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
 
         // WHEN
@@ -154,7 +133,7 @@ internal class CardViewStateProducerTest {
                 isFocused = true,
                 showError = false, // Focus gain clears showError
             ),
-            detectedCardTypes = emptyList(),
+            cardBrandState = CardBrandState.NoBrandsDetected,
         )
 
         // WHEN
@@ -175,12 +154,7 @@ internal class CardViewStateProducerTest {
                 errorMessage = null,
                 showError = false,
             ),
-            detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isSupported = true,
-                ),
-            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
 
         // WHEN
@@ -206,12 +180,7 @@ internal class CardViewStateProducerTest {
                 isFocused = true,
                 showError = false, // Text change sets showError to false
             ),
-            detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isSupported = true,
-                ),
-            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
         val componentStateWithoutError = createComponentState(
             cardNumber = TextInputComponentState(
@@ -219,12 +188,7 @@ internal class CardViewStateProducerTest {
                 isFocused = true,
                 showError = false,
             ),
-            detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isSupported = true,
-                ),
-            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
 
         listOf(componentStateWithHiddenError, componentStateWithoutError).forEach { componentState ->
@@ -243,7 +207,7 @@ internal class CardViewStateProducerTest {
 
     private fun createComponentState(
         cardNumber: TextInputComponentState = TextInputComponentState(),
-        detectedCardTypes: List<DetectedCardType> = emptyList(),
+        cardBrandState: CardBrandState = CardBrandState.NoBrandsDetected,
     ) = CardComponentState(
         cardNumber = cardNumber,
         expiryDate = TextInputComponentState(),
@@ -256,21 +220,18 @@ internal class CardViewStateProducerTest {
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
         isLoading = false,
-        detectedCardTypes = detectedCardTypes,
-        selectedCardBrand = null,
+        cardBrandState = cardBrandState,
     )
 
-    private fun createDetectedCardType(
-        cardBrand: CardBrand = CardBrand("visa"),
-        isSupported: Boolean = true,
-    ) = DetectedCardType(
-        cardBrand = cardBrand,
-        enableLuhnCheck = true,
-        cvcPolicy = Brand.FieldPolicy.REQUIRED,
-        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-        isSupported = isSupported,
-        panLength = 16,
-        paymentMethodVariant = null,
-        localizedBrand = null,
-    )
+    private fun getCardBrandData(): CardBrandData {
+        return CardBrandData(
+            cardBrand = CardBrand(""),
+            enableLuhnCheck = true,
+            cvcPolicy = Brand.FieldPolicy.REQUIRED,
+            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+            panLength = null,
+            paymentMethodVariant = null,
+            localizedBrand = null,
+        )
+    }
 }
