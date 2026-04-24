@@ -8,36 +8,30 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.CVCVisibility
+import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.mock
 
 @ExtendWith(MockitoExtension::class)
-internal class CardComponentStateReducerTest(
-    @Mock private val cardComponentParams: CardComponentParams,
-) {
+internal class CardComponentStateReducerTest {
 
     private lateinit var reducer: CardComponentStateReducer
 
     @BeforeEach
     fun beforeEach() {
-        reducer = CardComponentStateReducer(cardComponentParams)
+        val detectCardTypeBinHelper = DetectCardTypeBinHelper()
+        val cardComponentParams = mock<CardComponentParams>()
+        val cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams, detectCardTypeBinHelper)
+        reducer = CardComponentStateReducer(cardBrandIntentsHandler)
     }
 
     @Test
@@ -176,292 +170,6 @@ internal class CardComponentStateReducerTest(
     }
 
     @Test
-    fun `when intent is SelectBrand, then selectedCardBrand is updated`() {
-        val state = createInitialState()
-        val cardBrand = CardBrand("visa")
-
-        val actual = reducer.reduce(state, CardIntent.SelectBrand(cardBrand))
-
-        assertEquals(cardBrand, actual.selectedCardBrand)
-    }
-
-    @Nested
-    @DisplayName("when intent is UpdateDetectedCardTypes")
-    inner class UpdateDetectedCardTypesTest {
-
-        @Test
-        fun `when intent is UpdateDetectedCardTypes, then detectedCardTypes state is updated with new list`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cardBrand = CardBrand("visa")),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(detectedCardTypes, actual.detectedCardTypes)
-        }
-
-        @Test
-        fun `when selectedCardBrand is set, then card type matching selectedCardBrand txVariant is used for policies`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val selectedBrand = CardBrand("mc")
-            val state = createInitialState().copy(selectedCardBrand = selectedBrand)
-            val detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    cvcPolicy = Brand.FieldPolicy.REQUIRED,
-                ),
-                createDetectedCardType(
-                    cardBrand = CardBrand("mc"),
-                    cvcPolicy = Brand.FieldPolicy.OPTIONAL,
-                ),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Optional, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when selectedCardBrand is null, then first reliable and supported card type is used for policies`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isReliable = false,
-                    isSupported = true,
-                    cvcPolicy = Brand.FieldPolicy.REQUIRED,
-                ),
-                createDetectedCardType(
-                    cardBrand = CardBrand("mc"),
-                    isReliable = true,
-                    isSupported = true,
-                    cvcPolicy = Brand.FieldPolicy.OPTIONAL,
-                ),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Optional, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when no card type is both reliable and supported, then default policies are applied`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(
-                    cardBrand = CardBrand("visa"),
-                    isReliable = false,
-                    isSupported = true,
-                ),
-                createDetectedCardType(
-                    cardBrand = CardBrand("mc"),
-                    isReliable = true,
-                    isSupported = false,
-                ),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Required, actual.securityCode.requirementPolicy)
-            assertEquals(RequirementPolicy.Required, actual.expiryDate.requirementPolicy)
-        }
-
-        @Test
-        fun `when detected card type has expiryDatePolicy REQUIRED, then expiryDate requirementPolicy is Required`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(expiryDatePolicy = Brand.FieldPolicy.REQUIRED),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Required, actual.expiryDate.requirementPolicy)
-        }
-
-        @Test
-        fun `when detected card type has expiryDatePolicy OPTIONAL, then expiryDate requirementPolicy is Optional`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(expiryDatePolicy = Brand.FieldPolicy.OPTIONAL),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Optional, actual.expiryDate.requirementPolicy)
-        }
-
-        @Test
-        fun `when detected card type has expiryDatePolicy HIDDEN, then expiryDate requirementPolicy is Hidden`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(expiryDatePolicy = Brand.FieldPolicy.HIDDEN),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Hidden, actual.expiryDate.requirementPolicy)
-        }
-
-        @Test
-        fun `when detected card types list is empty, then expiryDate requirementPolicy defaults to Required`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = emptyList<DetectedCardType>()
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Required, actual.expiryDate.requirementPolicy)
-        }
-
-        @Test
-        fun `when cvcVisibility is ALWAYS_SHOW and detected card type has cvcPolicy REQUIRED, then securityCode requirementPolicy is Required`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Required, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when cvcVisibility is ALWAYS_SHOW and detected card type has cvcPolicy OPTIONAL, then securityCode requirementPolicy is Optional`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Optional, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when cvcVisibility is ALWAYS_SHOW and detected card type has cvcPolicy HIDDEN, then securityCode requirementPolicy is Hidden`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Hidden, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when cvcVisibility is HIDE_FIRST and detected card type has cvcPolicy REQUIRED, then securityCode requirementPolicy is Required`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.HIDE_FIRST)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Required, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when cvcVisibility is HIDE_FIRST and detected card type has cvcPolicy OPTIONAL, then securityCode requirementPolicy is Optional`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.HIDE_FIRST)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Optional, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when cvcVisibility is HIDE_FIRST and detected card type has cvcPolicy HIDDEN, then securityCode requirementPolicy is Hidden`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.HIDE_FIRST)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Hidden, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when cvcVisibility is ALWAYS_HIDE, then securityCode requirementPolicy is Hidden regardless of detected card type cvcPolicy`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_HIDE)
-            val state = createInitialState()
-            val detectedCardTypes = listOf(
-                createDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-            )
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Hidden, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when detected card types list is empty and cvcVisibility is ALWAYS_SHOW, then securityCode requirementPolicy defaults to Required`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
-            val state = createInitialState()
-            val detectedCardTypes = emptyList<DetectedCardType>()
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Required, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when detected card types list is empty and cvcVisibility is HIDE_FIRST, then securityCode requirementPolicy defaults to Hidden`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.HIDE_FIRST)
-            val state = createInitialState()
-            val detectedCardTypes = emptyList<DetectedCardType>()
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Hidden, actual.securityCode.requirementPolicy)
-        }
-
-        @Test
-        fun `when detected card types list is empty and cvcVisibility is ALWAYS_HIDE, then securityCode requirementPolicy defaults to Hidden`() {
-            whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_HIDE)
-            val state = createInitialState()
-            val detectedCardTypes = emptyList<DetectedCardType>()
-
-            val actual = reducer.reduce(state, CardIntent.UpdateDetectedCardTypes(detectedCardTypes))
-
-            assertEquals(RequirementPolicy.Hidden, actual.securityCode.requirementPolicy)
-        }
-
-        private fun createDetectedCardType(
-            cardBrand: CardBrand = CardBrand("visa"),
-            isSupported: Boolean = true,
-            cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
-            expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
-        ) = DetectedCardType(
-            cardBrand = cardBrand,
-            enableLuhnCheck = true,
-            cvcPolicy = cvcPolicy,
-            expiryDatePolicy = expiryDatePolicy,
-            isSupported = isSupported,
-            panLength = 16,
-            paymentMethodVariant = null,
-            localizedBrand = null,
-        )
-    }
-
-    @Test
     fun `when intent is UpdateLoading, then isLoading is updated`() {
         val state = createInitialState()
 
@@ -526,7 +234,6 @@ internal class CardComponentStateReducerTest(
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
         isLoading = false,
-        detectedCardTypes = emptyList(),
-        selectedCardBrand = null,
+        cardBrandState = CardBrandState.NoBrandsDetected,
     )
 }

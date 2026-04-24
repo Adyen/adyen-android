@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
@@ -137,7 +138,8 @@ internal class CardBrandIntentsHandler(
         return state
     }
 
-    private fun getUpdatedCardComponentState(
+    @VisibleForTesting
+    internal fun getUpdatedCardComponentState(
         state: CardComponentState,
         cardBrandState: CardBrandState
     ): CardComponentState {
