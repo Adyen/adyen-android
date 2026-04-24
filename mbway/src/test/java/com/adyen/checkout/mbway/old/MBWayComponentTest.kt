@@ -6,6 +6,8 @@
  * Created by oscars on 8/7/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.mbway.old
 
 import androidx.lifecycle.LifecycleOwner
