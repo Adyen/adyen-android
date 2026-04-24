@@ -9,28 +9,36 @@
 package com.adyen.checkout.core.components
 
 import androidx.annotation.RestrictTo
-import kotlin.reflect.KClass
-import kotlin.reflect.safeCast
 
 abstract class CheckoutCallbacks(
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit,
 ) {
 
-    private val additionalCallbacks = mutableMapOf<KClass<out CheckoutAdditionalCallback>, CheckoutAdditionalCallback>()
+    private val _additionalCallbacks = mutableSetOf<CheckoutAdditionalCallback>()
+
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    val additionalCallbacks: Set<CheckoutAdditionalCallback>
+        get() = _additionalCallbacks
 
     init {
         apply(additionalCallbacksBlock)
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun <T : CheckoutAdditionalCallback> addAdditionalCallback(callback: T, clazz: KClass<T>) {
-        additionalCallbacks[clazz] = callback
+    fun addAdditionalCallback(callback: CheckoutAdditionalCallback) {
+        _additionalCallbacks.add(callback)
     }
+}
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun <T : CheckoutAdditionalCallback> getAdditionalCallback(clazz: KClass<T>): T? {
-        return additionalCallbacks[clazz]?.let { clazz.safeCast(it) }
-    }
+/**
+ * Returns the first registered callback that is an instance of [T], or `null` if none match.
+ *
+ * Registering multiple callbacks that implement the same interface type is not supported;
+ * in that case this returns the first one added.
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+inline fun <reified T : CheckoutAdditionalCallback> Set<CheckoutAdditionalCallback>.getAdditionalCallback(): T? {
+    return find { it is T } as? T
 }
 
 interface CheckoutAdditionalCallback

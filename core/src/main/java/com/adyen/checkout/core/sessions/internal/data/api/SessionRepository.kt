@@ -13,7 +13,6 @@ import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsRequest
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsRequest
@@ -28,41 +27,44 @@ internal class SessionRepository(
 
     @Suppress("CommentWrapping")
     suspend fun setupSession(
-        sessionResponse: SessionResponse,
+        sessionId: String,
+        sessionData: String?,
         order: OrderRequest?,
     ): Result<SessionSetupResponse> = runSuspendCatching {
-        val request = SessionSetupRequest(sessionData = sessionResponse.sessionData.orEmpty(), order = order)
+        val request = SessionSetupRequest(sessionData = sessionData.orEmpty(), order = order)
         sessionService.setupSession(
             request = request,
-            sessionId = sessionResponse.id,
+            sessionId = sessionId,
             clientKey = clientKey,
         )
     }
 
     suspend fun submitPayment(
-        sessionResponse: SessionResponse,
+        sessionId: String,
+        sessionData: String?,
         paymentComponentData: PaymentComponentData<out PaymentMethodDetails>
     ): Result<SessionPaymentsResponse> = runSuspendCatching {
-        val request = SessionPaymentsRequest(sessionResponse.sessionData.orEmpty(), paymentComponentData)
+        val request = SessionPaymentsRequest(sessionData.orEmpty(), paymentComponentData)
         sessionService.submitPayment(
             request = request,
-            sessionId = sessionResponse.id,
+            sessionId = sessionId,
             clientKey = clientKey,
         )
     }
 
     suspend fun submitDetails(
-        sessionResponse: SessionResponse,
+        sessionId: String,
+        sessionData: String?,
         actionComponentData: ActionComponentData
     ): Result<SessionDetailsResponse> = runSuspendCatching {
         val request = SessionDetailsRequest(
-            sessionData = sessionResponse.sessionData.orEmpty(),
+            sessionData = sessionData.orEmpty(),
             paymentData = actionComponentData.paymentData,
             details = actionComponentData.details,
         )
         sessionService.submitDetails(
             request = request,
-            sessionId = sessionResponse.id,
+            sessionId = sessionId,
             clientKey = clientKey,
         )
     }

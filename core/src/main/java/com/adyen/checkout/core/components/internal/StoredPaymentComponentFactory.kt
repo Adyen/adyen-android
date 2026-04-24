@@ -10,7 +10,6 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -33,7 +32,6 @@ interface StoredPaymentComponentFactory<CS : BasePaymentComponentState, T : Paym
      * @param analyticsManager Analytics manager for tracking component events.
      * @param checkoutConfiguration Checkout Configuration.
      * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
-     * @param checkoutCallbacks Callbacks for component events.
      *
      * @return A [PaymentComponent] instance for the stored payment method.
      */
@@ -44,6 +42,5 @@ interface StoredPaymentComponentFactory<CS : BasePaymentComponentState, T : Paym
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        checkoutCallbacks: CheckoutCallbacks,
     ): T
 }

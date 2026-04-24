@@ -2369,45 +2369,6 @@ public final class com/adyen/checkout/core/sessions/CheckoutSession : android/os
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public abstract class com/adyen/checkout/core/sessions/CheckoutSessionResult {
-	public static final field $stable I
-}
-
-public final class com/adyen/checkout/core/sessions/CheckoutSessionResult$Error : com/adyen/checkout/core/sessions/CheckoutSessionResult {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/Exception;)V
-	public final fun getException ()Ljava/lang/Exception;
-}
-
-public final class com/adyen/checkout/core/sessions/CheckoutSessionResult$Success : com/adyen/checkout/core/sessions/CheckoutSessionResult {
-	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/sessions/CheckoutSession;)V
-	public final fun getCheckoutSession ()Lcom/adyen/checkout/core/sessions/CheckoutSession;
-}
-
-public final class com/adyen/checkout/core/sessions/SessionPaymentResult : android/os/Parcelable {
-	public static final field $stable I
-	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()Lcom/adyen/checkout/core/components/data/OrderResponse;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;)Lcom/adyen/checkout/core/sessions/SessionPaymentResult;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/SessionPaymentResult;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/SessionPaymentResult;
-	public final fun describeContents ()I
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getOrder ()Lcom/adyen/checkout/core/components/data/OrderResponse;
-	public final fun getResultCode ()Ljava/lang/String;
-	public final fun getSessionData ()Ljava/lang/String;
-	public final fun getSessionId ()Ljava/lang/String;
-	public final fun getSessionResult ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-	public final fun writeToParcel (Landroid/os/Parcel;I)V
-}
-
 public final class com/adyen/checkout/core/sessions/SessionResponse : com/adyen/checkout/core/common/internal/model/ModelObject {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;

@@ -14,12 +14,18 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
+import com.adyen.checkout.core.sessions.internal.data.api.SessionService
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +33,7 @@ import java.util.Locale
 
 internal class CheckoutControllerFactory {
 
+    @Suppress("LongMethod")
     fun create(
         target: CheckoutTarget,
         context: CheckoutContext,
@@ -39,7 +46,7 @@ internal class CheckoutControllerFactory {
         val checkoutAttemptId: String?
         val publicKey: String?
         val componentSessionParams: SessionParams?
-        val sessionId: String?
+        val sessionSetup: SessionSetupResponse?
 
         when (context) {
             is CheckoutContext.Advanced -> {
@@ -47,7 +54,7 @@ internal class CheckoutControllerFactory {
                 checkoutAttemptId = context.checkoutAttemptId
                 publicKey = context.publicKey
                 componentSessionParams = null
-                sessionId = null
+                sessionSetup = null
             }
 
             is CheckoutContext.Sessions -> {
@@ -55,7 +62,7 @@ internal class CheckoutControllerFactory {
                 checkoutAttemptId = context.checkoutAttemptId
                 publicKey = context.publicKey
                 componentSessionParams = SessionParamsFactory.create(context.checkoutSession)
-                sessionId = context.checkoutSession.sessionSetupResponse.id
+                sessionSetup = context.checkoutSession.sessionSetupResponse
             }
         }
 
@@ -68,12 +75,18 @@ internal class CheckoutControllerFactory {
         val analyticsManager = createAnalyticsManager(
             applicationContext = applicationContext,
             componentParamsBundle = componentParamsBundle,
-            sessionId = sessionId,
+            sessionId = sessionSetup?.id,
             checkoutAttemptId = checkoutAttemptId,
         )
 
-        val actionHandler = createActionHandler(
+        val componentRequestDispatcher = createComponentRequestDispatcher(
             callbacks = callbacks,
+            sessionSetup = sessionSetup,
+            configuration = checkoutConfiguration,
+        )
+
+        val actionHandler = createActionHandler(
+            componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
@@ -84,6 +97,7 @@ internal class CheckoutControllerFactory {
             target = target,
             context = context,
             callbacks = callbacks,
+            componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
@@ -123,14 +137,41 @@ internal class CheckoutControllerFactory {
         checkoutAttemptId = checkoutAttemptId,
     )
 
-    private fun createActionHandler(
+    private fun createComponentRequestDispatcher(
         callbacks: CheckoutCallbacks,
+        sessionSetup: SessionSetupResponse?,
+        configuration: CheckoutConfiguration,
+    ): ComponentRequestDispatcher {
+        return when (callbacks) {
+            is AdvancedCheckoutCallbacks -> {
+                AdvancedComponentRequestDispatcher(callbacks)
+            }
+
+            is SessionCheckoutCallbacks -> {
+                requireNotNull(sessionSetup)
+                val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
+                val sessionService = SessionService(httpClient)
+                val sessionRepository = SessionRepository(sessionService, configuration.clientKey)
+                SessionComponentRequestDispatcher(
+                    initialSessionData = sessionSetup.sessionData,
+                    sessionId = sessionSetup.id,
+                    callbacks = callbacks,
+                    sessionRepository = sessionRepository,
+                )
+            }
+
+            else -> error("Unsupported callbacks: $callbacks")
+        }
+    }
+
+    private fun createActionHandler(
+        componentRequestDispatcher: ComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
     ) = ActionHandler(
-        callbacks = callbacks,
+        componentRequestDispatcher = componentRequestDispatcher,
         coroutineScope = coroutineScope,
         analyticsManager = analyticsManager,
         checkoutConfiguration = checkoutConfiguration,
@@ -142,6 +183,7 @@ internal class CheckoutControllerFactory {
         target: CheckoutTarget,
         context: CheckoutContext,
         callbacks: CheckoutCallbacks,
+        componentRequestDispatcher: ComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
@@ -153,6 +195,7 @@ internal class CheckoutControllerFactory {
             target = target,
             context = context,
             callbacks = callbacks,
+            componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,

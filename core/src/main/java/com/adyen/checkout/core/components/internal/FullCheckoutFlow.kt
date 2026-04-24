@@ -19,6 +19,7 @@ import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -28,6 +29,7 @@ internal class FullCheckoutFlow(
     target: CheckoutTarget,
     context: CheckoutContext,
     callbacks: CheckoutCallbacks,
+    componentRequestDispatcher: ComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
     analyticsManager: AnalyticsManager,
     checkoutConfiguration: CheckoutConfiguration,
@@ -35,6 +37,7 @@ internal class FullCheckoutFlow(
     private val actionHandler: ActionHandler,
 ) : CheckoutFlow {
 
+    // TODO - Inject paymentComponent in constructor
     override val paymentComponent: PaymentComponent<*>? = createPaymentComponent(
         target = target,
         context = context,
@@ -55,14 +58,13 @@ internal class FullCheckoutFlow(
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         paymentComponent.setLoading(true)
-//                        callbacks.beforeSubmit?.beforeSubmit(event.state)
-//                        val result = callbacks.onSubmit?.onSubmit(event.state.data)
-//                        result?.let { handleResult(it) }
+                        val result = componentRequestDispatcher.submit(event.state.data)
+                        handleResult(result)
                         paymentComponent.setLoading(false)
                     }
 
                     is PaymentComponentEvent.Error -> {
-//                        callbacks.onError?.onError(event.error.toCheckoutError())
+                        componentRequestDispatcher.error(event.error.toCheckoutError())
                     }
                 }
             }
@@ -116,7 +118,7 @@ internal class FullCheckoutFlow(
                         analyticsManager = analyticsManager,
                         checkoutConfiguration = checkoutConfiguration,
                         componentParamsBundle = componentParamsBundle,
-                        checkoutCallbacks = callbacks,
+                        additionalCallbacks = callbacks.additionalCallbacks,
                     )
                 }
             }
@@ -135,7 +137,6 @@ internal class FullCheckoutFlow(
                         analyticsManager = analyticsManager,
                         checkoutConfiguration = checkoutConfiguration,
                         componentParamsBundle = componentParamsBundle,
-                        checkoutCallbacks = callbacks,
                     )
                 }
             }

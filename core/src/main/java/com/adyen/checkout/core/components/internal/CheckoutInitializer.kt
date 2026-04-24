@@ -18,9 +18,9 @@ import com.adyen.checkout.core.common.internal.data.api.PublicKeyService
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.sessions.CheckoutSession
-import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionResponse
-import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
+import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
+import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.supervisorScope
 
@@ -32,7 +32,7 @@ object CheckoutInitializer {
         sessionResponse: SessionResponse?,
     ): InitializationData = supervisorScope {
         val checkoutSessionDeferred = async {
-            sessionResponse?.let { getCheckoutSession(it, checkoutConfiguration) }
+            sessionResponse?.let { setupCheckoutSession(it, checkoutConfiguration) }
         }
         val publicKeyDeferred = async { fetchPublicKey(checkoutConfiguration) }
         val checkoutAttemptIdDeferred = async { fetchCheckoutAttemptId(checkoutConfiguration) }
@@ -44,16 +44,30 @@ object CheckoutInitializer {
         )
     }
 
-    private suspend fun getCheckoutSession(
+    private suspend fun setupCheckoutSession(
         sessionResponse: SessionResponse,
         checkoutConfiguration: CheckoutConfiguration,
     ): CheckoutSession? {
-        return when (
-            val result = CheckoutSessionProvider.createSession(sessionResponse, checkoutConfiguration)
-        ) {
-            is CheckoutSessionResult.Success -> result.checkoutSession
-            is CheckoutSessionResult.Error -> null
-        }
+        val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
+        val sessionService = SessionService(httpClient)
+        val sessionRepository = SessionRepository(sessionService, checkoutConfiguration.clientKey)
+        // TODO - Do we need to pass order here?
+        sessionRepository.setupSession(sessionResponse.id, sessionResponse.sessionData, null)
+            .fold(
+                onSuccess = { response ->
+                    return CheckoutSession(
+                        // TODO - Check if this still needs to be overridden with local amount
+                        sessionSetupResponse = response.copy(amount = checkoutConfiguration.amount),
+                        // TODO - Check if orders need to be supported
+                        order = null,
+                        environment = checkoutConfiguration.environment,
+                        clientKey = checkoutConfiguration.clientKey,
+                    )
+                },
+                onFailure = {
+                    return null
+                },
+            )
     }
 
     private suspend fun fetchPublicKey(checkoutConfiguration: CheckoutConfiguration): String? {
