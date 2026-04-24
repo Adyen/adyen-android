@@ -50,6 +50,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("TooManyFunctions")
 internal class V6ViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
