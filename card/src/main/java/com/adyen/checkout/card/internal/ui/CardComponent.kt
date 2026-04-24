@@ -170,12 +170,17 @@ internal class CardComponent(
             .launchIn(coroutineScope)
     }
 
+    /**
+     * Only return the reliable card brands in the onBinLookup callback
+     */
     private fun getReliableCardBrandDataList(state: CardComponentState): List<CardBrandData>? {
         return when (val cardBrandState = state.cardBrandState) {
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList
             is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData)
-            else -> null
+            is CardBrandState.NoBrandsDetected,
+            is CardBrandState.SingleUnreliableBrand,
+            is CardBrandState.UnsupportedBrand -> null
         }
     }
 

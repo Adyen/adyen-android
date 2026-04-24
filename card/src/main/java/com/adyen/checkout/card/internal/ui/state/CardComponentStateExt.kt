@@ -172,11 +172,19 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
     isValid = false,
 )
 
+/**
+ * We only prefill the card brand in the onSubmit payload if we are sure the card has a single brand identified on the
+ * backend (reliable) or if the shopper manually selected that brand. In all other cases we cannot reliably assume
+ * there is only one possible brand for the /payments call
+ */
 private fun CardComponentState.cardBrand(): CardBrand? {
     val selectedOrReliableCardBrandData = when (cardBrandState) {
         is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData.cardBrand
         is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData.cardBrand
-        else -> null
+        is CardBrandState.DualBrand,
+        is CardBrandState.NoBrandsDetected,
+        is CardBrandState.SingleUnreliableBrand,
+        is CardBrandState.UnsupportedBrand -> null
     }
     return selectedOrReliableCardBrandData
 }

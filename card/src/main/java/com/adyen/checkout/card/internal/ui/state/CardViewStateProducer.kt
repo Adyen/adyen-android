@@ -25,8 +25,16 @@ internal class CardViewStateProducer(
     override fun produce(state: CardComponentState): CardViewState {
         val dualBrandData = dualBrandedCardHandler.getDualBrandData(state.cardBrandState)
 
-        val isSupportedCardBrandsShown = state.cardBrandState == CardBrandState.NoBrandsDetected ||
-            state.cardBrandState == CardBrandState.UnsupportedBrand
+        // we only show all supported card brands when we do not detect any brands for this specific card
+        val isSupportedCardBrandsShown = when (state.cardBrandState) {
+            is CardBrandState.UnsupportedBrand,
+            is CardBrandState.NoBrandsDetected -> true
+
+            is CardBrandState.SingleReliableBrand,
+            is CardBrandState.SingleUnreliableBrand,
+            is CardBrandState.DualBrand,
+            is CardBrandState.DualBrandWithShopperSelection -> false
+        }
 
         val detectedCardBrands = getDetectedCardBrands(state.cardBrandState)
 
@@ -54,13 +62,15 @@ internal class CardViewStateProducer(
         )
     }
 
+    // detected card brands are shown on the UI in all flows
     private fun getDetectedCardBrands(cardBrandState: CardBrandState): List<CardBrand> {
         return when (cardBrandState) {
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.map { it.cardBrand }
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList.map { it.cardBrand }
             is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
-            else -> emptyList()
+            is CardBrandState.NoBrandsDetected,
+            is CardBrandState.UnsupportedBrand -> emptyList()
         }
     }
 

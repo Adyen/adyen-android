@@ -141,11 +141,15 @@ internal class CardBrandIntentsHandler(
         state: CardComponentState,
         cardBrandState: CardBrandState
     ): CardComponentState {
+        // We should only override the default behavior of the CVC / expiry date if the identified brand is reliable
+        // With DualBrand (no shopper selection) we can rely on the first brand
         val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
             is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
-            else -> null
+            is CardBrandState.NoBrandsDetected,
+            is CardBrandState.SingleUnreliableBrand,
+            is CardBrandState.UnsupportedBrand -> null
         }
         val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
         val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
