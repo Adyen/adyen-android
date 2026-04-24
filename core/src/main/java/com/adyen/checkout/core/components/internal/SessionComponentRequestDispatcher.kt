@@ -9,8 +9,9 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.CheckoutError.ErrorCode
@@ -25,7 +26,7 @@ internal class SessionComponentRequestDispatcher(
 
     private var sessionData: String? = initialSessionData
 
-    override suspend fun submit(data: PaymentComponentData<*>): CheckoutResult {
+    override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
         // TODO - Session patching
         callbacks.beforeSubmit?.invoke(data)
         sessionRepository.submitPayment(
@@ -37,8 +38,8 @@ internal class SessionComponentRequestDispatcher(
                 sessionData = response.sessionData
                 // TODO - Check if we need to support partial payment flow
                 return when {
-                    response.action != null -> CheckoutResult.Action(response.action)
-                    else -> CheckoutResult.Finished(response.resultCode)
+                    response.action != null -> SubmitResult.Action(response.action)
+                    else -> SubmitResult.Finished(response.resultCode.orEmpty())
                 }
             },
             onFailure = { error ->
@@ -48,12 +49,18 @@ internal class SessionComponentRequestDispatcher(
 //                    event = ErrorEvent.API_PAYMENTS,
 //                )
 //                analyticsManager.trackEvent(event)
-                return CheckoutResult.Error(error.message ?: "Failed to submit payment")
+                return SubmitResult.Error(
+                    CheckoutError(
+                        code = ErrorCode.HTTP,
+                        message = error.message ?: "Failed to submit payment",
+                        cause = error,
+                    ),
+                )
             },
         )
     }
 
-    override suspend fun additionalDetails(data: ActionComponentData) {
+    override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         sessionRepository.submitDetails(
             sessionId = sessionId,
             sessionData = sessionData,
@@ -62,15 +69,16 @@ internal class SessionComponentRequestDispatcher(
             onSuccess = { response ->
                 sessionData = response.sessionData
                 callbacks.onFinished()
+                return AdditionalDetailsResult.Finished(response.resultCode.orEmpty())
             },
             onFailure = { error ->
-                callbacks.onError(
-                    CheckoutError(
-                        code = ErrorCode.HTTP,
-                        message = "Failed to submit details",
-                        cause = error,
-                    ),
+                val checkoutError = CheckoutError(
+                    code = ErrorCode.HTTP,
+                    message = "Failed to submit details",
+                    cause = error,
                 )
+                callbacks.onError(checkoutError)
+                return AdditionalDetailsResult.Error(checkoutError)
             },
         )
     }

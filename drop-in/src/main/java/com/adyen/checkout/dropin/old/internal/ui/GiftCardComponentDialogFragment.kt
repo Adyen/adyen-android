@@ -132,7 +132,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
         // no ops
     }
 
-    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+    override fun onAdditionalDetails(data: ActionComponentData) {
         adyenLog(AdyenLogLevel.DEBUG) { "onAdditionalDetails" }
         // no ops
     }

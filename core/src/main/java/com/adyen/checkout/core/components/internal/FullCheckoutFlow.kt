@@ -13,9 +13,9 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -77,19 +77,23 @@ internal class FullCheckoutFlow(
     }
 
     @Suppress("unused")
-    private fun handleResult(checkoutResult: CheckoutResult) {
-        when (checkoutResult) {
-            is CheckoutResult.Action -> {
-                actionHandler.handleAction(checkoutResult.action)
+    private fun handleResult(submitResult: SubmitResult) {
+        when (submitResult) {
+            is SubmitResult.Action -> {
+                actionHandler.handleAction(submitResult.action)
                 onNavigate?.invoke(CheckoutRoute.Action)
             }
 
-            is CheckoutResult.Error -> {
+            is SubmitResult.Error -> {
                 // TODO - Handle error state
             }
 
-            is CheckoutResult.Finished -> {
+            is SubmitResult.Finished -> {
                 // TODO - Handle finished state
+            }
+
+            is SubmitResult.PartialPayment -> {
+                // TODO - Handle partial payment state
             }
         }
     }

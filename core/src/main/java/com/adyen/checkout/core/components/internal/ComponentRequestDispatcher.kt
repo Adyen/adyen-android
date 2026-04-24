@@ -9,15 +9,16 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 
 internal interface ComponentRequestDispatcher {
 
-    suspend fun submit(data: PaymentComponentData<*>): CheckoutResult
+    suspend fun submit(data: PaymentComponentData<*>): SubmitResult
 
-    suspend fun additionalDetails(data: ActionComponentData)
+    suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult
 
     fun error(error: CheckoutError)
 }

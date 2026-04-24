@@ -271,17 +271,6 @@ public final class com/adyen/checkout/sessions/core/internal/SessionCallResult$C
 public abstract class com/adyen/checkout/sessions/core/internal/SessionCallResult$Details : com/adyen/checkout/sessions/core/internal/SessionCallResult {
 }
 
-public final class com/adyen/checkout/sessions/core/internal/SessionCallResult$Details$Action : com/adyen/checkout/sessions/core/internal/SessionCallResult$Details {
-	public fun <init> (Lcom/adyen/checkout/components/core/action/Action;)V
-	public final fun component1 ()Lcom/adyen/checkout/components/core/action/Action;
-	public final fun copy (Lcom/adyen/checkout/components/core/action/Action;)Lcom/adyen/checkout/sessions/core/internal/SessionCallResult$Details$Action;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/sessions/core/internal/SessionCallResult$Details$Action;Lcom/adyen/checkout/components/core/action/Action;ILjava/lang/Object;)Lcom/adyen/checkout/sessions/core/internal/SessionCallResult$Details$Action;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAction ()Lcom/adyen/checkout/components/core/action/Action;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/adyen/checkout/sessions/core/internal/SessionCallResult$Details$Error : com/adyen/checkout/sessions/core/internal/SessionCallResult$Details {
 	public fun <init> (Ljava/lang/Throwable;)V
 	public final fun component1 ()Ljava/lang/Throwable;

@@ -12,7 +12,8 @@ import android.content.Context
 import android.content.Intent
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.PaymentResult
-import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.DropInService
@@ -40,11 +41,11 @@ internal class DropInServiceManager(
         context.stopService(intent)
     }
 
-    suspend fun requestOnSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
+    suspend fun requestOnSubmit(paymentComponentData: PaymentComponentData<*>): SubmitResult {
         return DropInServiceRegistry.awaitService().onSubmit(paymentComponentData)
     }
 
-    suspend fun requestOnAdditionalDetails(data: ActionComponentData): CheckoutResult {
+    suspend fun requestOnAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         return DropInServiceRegistry.awaitService().onAdditionalDetails(data)
     }
 

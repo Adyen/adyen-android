@@ -148,7 +148,7 @@ internal abstract class BaseComponentDialogFragment :
         startPayment(state)
     }
 
-    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+    override fun onAdditionalDetails(data: ActionComponentData) {
         error("This event should not be used in drop-in")
     }
 
