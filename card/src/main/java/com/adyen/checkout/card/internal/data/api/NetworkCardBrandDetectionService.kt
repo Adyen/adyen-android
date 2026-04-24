@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.error.internal.GenericError
@@ -60,7 +61,6 @@ internal class NetworkCardBrandDetectionService(
             val cardBrand = CardBrand(txVariant = brandResponse.brand)
             DetectedCardType(
                 cardBrand = cardBrand,
-                isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(
                     brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value,
@@ -69,10 +69,21 @@ internal class NetworkCardBrandDetectionService(
                     brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value,
                 ),
                 isSupported = brandResponse.supported != false,
+                // in the future this flag should come directly from the backend
+                isShopperSelectionAllowedInDualBranded = brandResponse.brand
+                    in SUPPORTED_CARD_BRANDS_FOR_DUAL_BRANDED_SELECTION,
                 panLength = brandResponse.panLength,
                 paymentMethodVariant = brandResponse.paymentMethodVariant,
                 localizedBrand = brandResponse.localizedBrand,
             )
         }
+    }
+
+    companion object {
+        private val SUPPORTED_CARD_BRANDS_FOR_DUAL_BRANDED_SELECTION = listOf(
+            CardType.CARTEBANCAIRE,
+            CardType.BCMC,
+            CardType.DANKORT,
+        ).map { it.txVariant }
     }
 }

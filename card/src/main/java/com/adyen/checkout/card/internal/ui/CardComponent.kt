@@ -15,9 +15,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.state.CardBrandData
+import com.adyen.checkout.card.internal.ui.state.CardBrandState
+import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -48,6 +50,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -84,8 +87,8 @@ internal class CardComponent(
 
     init {
         initializeAnalytics()
-        subscribeToDetectedCardTypesChanges()
-        subscribeToBinChanges()
+        onCardBrandDataChanged()
+        onBinChanged()
     }
 
     private fun initializeAnalytics() {
@@ -140,8 +143,8 @@ internal class CardComponent(
     }
 
     private fun onCardNumberChanged(newCardNumber: String) {
-        detectCardTypes(newCardNumber)
         onIntent(CardIntent.UpdateCardNumber(newCardNumber))
+        detectCardTypes(newCardNumber)
     }
 
     private fun detectCardTypes(cardNumber: String) {
@@ -150,7 +153,7 @@ internal class CardComponent(
         }.launchIn(coroutineScope)
     }
 
-    private fun subscribeToBinChanges() {
+    private fun onBinChanged() {
         componentState
             .map { it.binValue }
             .distinctUntilChanged()
@@ -159,22 +162,32 @@ internal class CardComponent(
             .launchIn(coroutineScope)
     }
 
-    private fun subscribeToDetectedCardTypesChanges() {
+    private fun onCardBrandDataChanged() {
         componentState
-            .map { it.detectedCardTypes }
+            .mapNotNull(::getReliableCardBrandDataList)
             .distinctUntilChanged()
-            .drop(1)
-            .onEach(::onDetectedCardTypesChanged)
+            .onEach(::updateBinLookupCallback)
             .launchIn(coroutineScope)
     }
 
-    private fun onDetectedCardTypesChanged(detectedCardTypes: List<DetectedCardType>) {
-        val isReliable = detectedCardTypes.any { it.isReliable }
-        if (isReliable) {
-            onBinLookupCallback?.onBinLookup(
-                data = detectedCardTypes.map(DetectedCardType::toBinLookupData),
-            )
+    /**
+     * Only return the reliable card brands in the onBinLookup callback
+     */
+    private fun getReliableCardBrandDataList(state: CardComponentState): List<CardBrandData>? {
+        return when (val cardBrandState = state.cardBrandState) {
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList
+            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData)
+            is CardBrandState.NoBrandsDetected,
+            is CardBrandState.SingleUnreliableBrand,
+            is CardBrandState.UnsupportedBrand -> null
         }
+    }
+
+    private fun updateBinLookupCallback(cardBrandDataList: List<CardBrandData>) {
+        onBinLookupCallback?.onBinLookup(
+            data = cardBrandDataList.map(CardBrandData::toBinLookupData),
+        )
     }
 
     private fun onEncryptionError(e: EncryptionException) {

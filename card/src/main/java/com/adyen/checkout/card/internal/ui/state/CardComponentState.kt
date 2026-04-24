@@ -9,7 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -31,9 +31,30 @@ internal data class CardComponentState(
     val isLoading: Boolean,
 
     // Component state
-    val detectedCardTypes: List<DetectedCardType>,
-    val selectedCardBrand: CardBrand?,
+    val cardBrandState: CardBrandState,
 ) : ComponentState
+
+internal sealed class CardBrandState {
+    data object NoBrandsDetected : CardBrandState()
+    data object UnsupportedBrand : CardBrandState()
+    data class SingleReliableBrand(val cardBrandData: CardBrandData) : CardBrandState()
+    data class SingleUnreliableBrand(val cardBrandData: CardBrandData) : CardBrandState()
+    data class DualBrand(val cardBrandDataList: List<CardBrandData>) : CardBrandState()
+    data class DualBrandWithShopperSelection(
+        val cardBrandDataList: List<CardBrandData>,
+        val shopperSelectedCardBrandData: CardBrandData,
+    ) : CardBrandState()
+}
+
+internal data class CardBrandData(
+    val cardBrand: CardBrand,
+    val enableLuhnCheck: Boolean,
+    val cvcPolicy: Brand.FieldPolicy,
+    val expiryDatePolicy: Brand.FieldPolicy,
+    val panLength: Int?,
+    val paymentMethodVariant: String?,
+    val localizedBrand: String?
+)
 
 internal val CardComponentState.binValue: String
     get() = if (cardNumber.isValid && cardNumber.text.length >= EXTENDED_CARD_NUMBER_LENGTH) {

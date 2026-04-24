@@ -76,7 +76,6 @@ internal class StoredCardComponent(
 
         val storedDetectedCardType = DetectedCardType(
             cardBrand = cardType,
-            isReliable = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
                 componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||
@@ -86,6 +85,7 @@ internal class StoredCardComponent(
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
             isSupported = true,
+            isShopperSelectionAllowedInDualBranded = false,
             panLength = null,
             paymentMethodVariant = null,
             localizedBrand = null,

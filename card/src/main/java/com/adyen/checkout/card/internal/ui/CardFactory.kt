@@ -16,7 +16,9 @@ import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.LocalCardBrandDetectionService
 import com.adyen.checkout.card.internal.data.api.NetworkCardBrandDetectionService
+import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
+import com.adyen.checkout.card.internal.ui.state.CardBrandIntentsHandler
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -62,10 +64,13 @@ internal class CardFactory :
             paymentMethod = paymentMethod as? CardPaymentMethod,
         )
 
+        val detectCardTypeBinHelper = DetectCardTypeBinHelper()
+
         val cardValidationMapper = CardValidationMapper()
         val dualBrandedCardHandler = DualBrandedCardHandler()
         val componentStateFactory = CardComponentStateFactory(cardComponentParams)
-        val componentStateReducer = CardComponentStateReducer(cardComponentParams)
+        val cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams, detectCardTypeBinHelper)
+        val componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler)
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = CardViewStateProducer(dualBrandedCardHandler)
 
@@ -84,6 +89,7 @@ internal class CardFactory :
             paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
         )
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(
+            detectCardTypeBinHelper,
             binLookupCache,
             localCardBrandDetectionService,
             networkCardBrandDetectionService,

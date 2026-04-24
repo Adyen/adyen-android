@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import kotlinx.coroutines.flow.Flow
 
 internal interface DetectCardTypeRepository {
-    fun detectCardTypes(cardNumber: String): Flow<List<DetectedCardType>>
+    fun detectCardTypes(cardNumber: String): Flow<DetectedCardTypeList>
 }

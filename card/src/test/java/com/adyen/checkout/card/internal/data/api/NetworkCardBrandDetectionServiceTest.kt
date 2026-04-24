@@ -211,6 +211,27 @@ internal class NetworkCardBrandDetectionServiceTest(
                 ),
             ),
             arguments(
+                listOf(
+                    mockBrand(brand = "cartebancaire"),
+                    mockBrand(brand = "bcmc"),
+                    mockBrand(brand = "dankort"),
+                ),
+                listOf(
+                    mockDetectedCardType(
+                        cardBrand = CardBrand(CardType.CARTEBANCAIRE.txVariant),
+                        isShopperSelectionAllowedInDualBranded = true,
+                    ),
+                    mockDetectedCardType(
+                        cardBrand = CardBrand(CardType.BCMC.txVariant),
+                        isShopperSelectionAllowedInDualBranded = true,
+                    ),
+                    mockDetectedCardType(
+                        cardBrand = CardBrand(CardType.DANKORT.txVariant),
+                        isShopperSelectionAllowedInDualBranded = true,
+                    ),
+                ),
+            ),
+            arguments(
                 null,
                 emptyList<DetectedCardType>(),
             ),
@@ -242,22 +263,22 @@ internal class NetworkCardBrandDetectionServiceTest(
         @Suppress("LongParameterList")
         private fun mockDetectedCardType(
             cardBrand: CardBrand = CardBrand(CardType.MASTERCARD.txVariant),
-            isReliable: Boolean = true,
             enableLuhnCheck: Boolean = true,
             cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
             isSupported: Boolean = true,
+            isShopperSelectionAllowedInDualBranded: Boolean = false,
             panLength: Int? = 16,
             paymentMethodVariant: String? = PaymentMethodTypes.SCHEME,
             localizedBrand: String? = "MasterCard",
         ): DetectedCardType {
             return DetectedCardType(
                 cardBrand,
-                isReliable,
                 enableLuhnCheck,
                 cvcPolicy,
                 expiryDatePolicy,
                 isSupported,
+                isShopperSelectionAllowedInDualBranded,
                 panLength,
                 paymentMethodVariant,
                 localizedBrand,

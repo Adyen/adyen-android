@@ -8,37 +8,39 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.BinLookupCacheResult
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
+import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 internal class DefaultDetectCardTypeRepository(
+    private val detectCardTypeBinHelper: DetectCardTypeBinHelper,
     private val binLookupCache: BinLookupCache,
     private val localCardBrandDetectionService: LocalCardBrandDetectionService,
     private val networkCardBrandDetectionService: NetworkCardBrandDetectionService,
 ) : DetectCardTypeRepository {
 
-    override fun detectCardTypes(cardNumber: String): Flow<List<DetectedCardType>> = flow {
+    override fun detectCardTypes(cardNumber: String): Flow<DetectedCardTypeList> = flow {
         // if we remove this@DefaultDetectCardTypeRepository the tag gets resolved as SafeCollector since we're inside
         // a flow block
         // TODO fix logger to resolve the correct tag
         this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.VERBOSE) { "detectCardTypes" }
-        val bin = getBin(cardNumber)
+        val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumber)
 
-        val cachedResult = if (bin != null) {
-            binLookupCache.getResult(bin)
-        } else {
-            BinLookupCacheResult.Unavailable
-        }
-
-        when (cachedResult) {
+        when (val cachedResult = binLookupCache.getResult(bin)) {
             is BinLookupCacheResult.Available -> {
                 // found card types in cache, no need to fetch from network or local
-                emit(cachedResult.detectedCardTypes)
+                emit(
+                    DetectedCardTypeList(
+                        detectedCardTypes = cachedResult.detectedCardTypes,
+                        source = DetectedCardTypeList.Source.NETWORK,
+                        cardDetectionBin = bin,
+                    ),
+                )
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                     "card types returned from cache: ${cachedResult.detectedCardTypes.toLogString()}"
                 }
@@ -54,7 +56,13 @@ internal class DefaultDetectCardTypeRepository(
             is BinLookupCacheResult.Unavailable -> {
                 // return local card types first
                 val localDetectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber)
-                emit(localDetectedCardTypes)
+                emit(
+                    DetectedCardTypeList(
+                        detectedCardTypes = localDetectedCardTypes,
+                        source = DetectedCardTypeList.Source.LOCAL,
+                        cardDetectionBin = bin,
+                    ),
+                )
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                     "card types detected locally: ${localDetectedCardTypes.toLogString()}"
                 }
@@ -63,7 +71,13 @@ internal class DefaultDetectCardTypeRepository(
                     // fetch from network and cache results
                     val networkDetectedCardTypes = detectCardTypesFromNetwork(bin)
                     if (networkDetectedCardTypes != null) {
-                        emit(networkDetectedCardTypes)
+                        emit(
+                            DetectedCardTypeList(
+                                detectedCardTypes = networkDetectedCardTypes,
+                                source = DetectedCardTypeList.Source.NETWORK,
+                                cardDetectionBin = bin,
+                            ),
+                        )
                         this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
                             "card types fetched from network: ${networkDetectedCardTypes.toLogString()}"
                         }
@@ -71,14 +85,6 @@ internal class DefaultDetectCardTypeRepository(
                 }
             }
         }
-    }
-
-    /**
-     * Returns the BIN if the card number is equal or longer than the BIN length
-     */
-    @VisibleForTesting
-    internal fun getBin(cardNumber: String): String? {
-        return cardNumber.takeIf { it.length >= BIN_LENGTH }?.take(BIN_LENGTH)
     }
 
     private suspend fun detectCardTypesFromNetwork(bin: String): List<DetectedCardType>? {
@@ -120,9 +126,5 @@ internal class DefaultDetectCardTypeRepository(
             .takeIf { it.isNotEmpty() }
             ?.joinToString(" - ")
             ?: "none"
-    }
-
-    companion object {
-        private const val BIN_LENGTH = 11
     }
 }

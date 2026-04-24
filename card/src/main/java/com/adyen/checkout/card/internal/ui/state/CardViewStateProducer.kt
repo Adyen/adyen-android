@@ -10,7 +10,6 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
-import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
@@ -24,14 +23,20 @@ internal class CardViewStateProducer(
 ) : ViewStateProducer<CardComponentState, CardViewState> {
 
     override fun produce(state: CardComponentState): CardViewState {
-        val supportedDetectedCardTypes = state.detectedCardTypes.filter { it.isSupported }
-        val firstSupportedDetectedCardType = supportedDetectedCardTypes.firstOrNull()
+        val dualBrandData = dualBrandedCardHandler.getDualBrandData(state.cardBrandState)
 
-        val dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
-            detectedCardTypes = state.detectedCardTypes,
-            selectedBrand = state.selectedCardBrand,
-        )
-        val detectedCardBrands = getDetectedCardBrands(dualBrandData, firstSupportedDetectedCardType?.cardBrand)
+        // we only show all supported card brands when we do not detect any brands for this specific card
+        val isSupportedCardBrandsShown = when (state.cardBrandState) {
+            is CardBrandState.UnsupportedBrand,
+            is CardBrandState.NoBrandsDetected -> true
+
+            is CardBrandState.SingleReliableBrand,
+            is CardBrandState.SingleUnreliableBrand,
+            is CardBrandState.DualBrand,
+            is CardBrandState.DualBrandWithShopperSelection -> false
+        }
+
+        val detectedCardBrands = getDetectedCardBrands(state.cardBrandState)
 
         return CardViewState(
             cardNumber = state.cardNumber.toViewState(
@@ -50,17 +55,23 @@ internal class CardViewStateProducer(
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
             supportedCardBrands = state.supportedCardBrands,
-            isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
+            isSupportedCardBrandsShown = isSupportedCardBrandsShown,
             detectedCardBrands = detectedCardBrands,
             isLoading = state.isLoading,
             dualBrandData = dualBrandData,
         )
     }
 
-    private fun getDetectedCardBrands(dualBrandData: DualBrandData?, fallbackDetectedCardBrand: CardBrand?) = when {
-        dualBrandData != null -> listOf(dualBrandData.brandOptionFirst.brand, dualBrandData.brandOptionSecond.brand)
-        fallbackDetectedCardBrand != null -> listOf(fallbackDetectedCardBrand)
-        else -> listOf()
+    // detected card brands are shown on the UI in all flows
+    private fun getDetectedCardBrands(cardBrandState: CardBrandState): List<CardBrand> {
+        return when (cardBrandState) {
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.map { it.cardBrand }
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList.map { it.cardBrand }
+            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
+            is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
+            is CardBrandState.NoBrandsDetected,
+            is CardBrandState.UnsupportedBrand -> emptyList()
+        }
     }
 
     private fun getCardNumberTrailingIcon(cardNumber: TextInputComponentState): CardNumberTrailingIcon {
