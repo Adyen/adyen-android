@@ -51,4 +51,8 @@ data class OrderRequest constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 typealias Order = OrderRequest
