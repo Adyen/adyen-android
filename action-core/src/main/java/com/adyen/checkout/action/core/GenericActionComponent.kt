@@ -31,6 +31,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle every action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class GenericActionComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,
