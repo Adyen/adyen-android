@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [OpenBankingComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class OpenBankingConfiguration private constructor(
@@ -40,6 +44,10 @@ class OpenBankingConfiguration private constructor(
     /**
      * Builder to create an [OpenBankingConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : IssuerListBuilder<OpenBankingConfiguration, Builder> {
 
         /**
@@ -101,6 +109,10 @@ class OpenBankingConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.openBanking(
     configuration: @CheckoutConfigurationMarker OpenBankingConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

@@ -21,6 +21,10 @@ import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLCompo
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ONLINE_BANKING_PL] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class OnlineBankingPLComponent internal constructor(
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod, OnlineBankingPLComponentState>,
     genericActionDelegate: GenericActionDelegate,

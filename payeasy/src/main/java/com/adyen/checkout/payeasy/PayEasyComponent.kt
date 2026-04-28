@@ -21,6 +21,10 @@ import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_ATM] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class PayEasyComponent internal constructor(
     delegate: EContextDelegate<PayEasyPaymentMethod, PayEasyComponentState>,
     genericActionDelegate: GenericActionDelegate,

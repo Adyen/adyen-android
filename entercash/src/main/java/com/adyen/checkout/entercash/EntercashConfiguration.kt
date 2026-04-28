@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [EntercashComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class EntercashConfiguration private constructor(
@@ -40,6 +44,10 @@ class EntercashConfiguration private constructor(
     /**
      * Builder to create an [EntercashConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : IssuerListBuilder<EntercashConfiguration, Builder> {
 
         /**
@@ -101,6 +109,10 @@ class EntercashConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.entercash(
     configuration: @CheckoutConfigurationMarker EntercashConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

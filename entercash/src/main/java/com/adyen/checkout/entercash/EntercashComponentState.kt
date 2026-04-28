@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.EntercashPaymentMethod
 /**
  * Represents the state of [EntercashComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class EntercashComponentState(
     override val data: PaymentComponentData<EntercashPaymentMethod>,
     override val isInputValid: Boolean,
