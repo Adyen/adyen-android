@@ -27,3 +27,17 @@ internal fun InternalCheckoutError.toCheckoutError(): CheckoutError {
         cause = this,
     )
 }
+
+/**
+ * Maps an arbitrary [Throwable] to a public [CheckoutError]. Delegates to the
+ * [InternalCheckoutError] mapping when applicable; otherwise wraps the throwable as an
+ * [CheckoutError.ErrorCode.UNKNOWN] error preserving the original cause and message.
+ */
+internal fun Throwable.toCheckoutError(): CheckoutError = when (this) {
+    is InternalCheckoutError -> toCheckoutError()
+    else -> CheckoutError(
+        code = CheckoutError.ErrorCode.UNKNOWN,
+        message = message,
+        cause = this,
+    )
+}

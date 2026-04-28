@@ -44,6 +44,7 @@ import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -139,12 +140,8 @@ internal class V6ViewModel @Inject constructor(
 
     private fun handleSubmitResponse(json: JSONObject?): SubmitResult {
         return when {
-            json == null -> SubmitResult.Error(
-                CheckoutError(
-                    code = CheckoutError.ErrorCode.UNKNOWN,
-                    message = "Network error",
-                )
-            )
+            json == null -> throw IOException("Empty payments response")
+
             json.has("action") -> {
                 val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                 SubmitResult.Action(action)
@@ -153,23 +150,19 @@ internal class V6ViewModel @Inject constructor(
             else -> {
                 // TODO - move to onFinished callback after it's introduced
                 uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                SubmitResult.Finished(resultCode = json.optString("resultCode"))
+                SubmitResult.Completion(resultCode = json.optString("resultCode"))
             }
         }
     }
 
     private fun handleAdditionalDetailsResponse(json: JSONObject?): AdditionalDetailsResult {
         return when {
-            json == null -> AdditionalDetailsResult.Error(
-                CheckoutError(
-                    code = CheckoutError.ErrorCode.UNKNOWN,
-                    message = "Network error",
-                )
-            )
+            json == null -> throw IOException("Empty payments/details response")
+
             else -> {
                 // TODO - move to onFinished callback after it's introduced
                 uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                AdditionalDetailsResult.Finished(resultCode = json.optString("resultCode"))
+                AdditionalDetailsResult.Completion(resultCode = json.optString("resultCode"))
             }
         }
     }

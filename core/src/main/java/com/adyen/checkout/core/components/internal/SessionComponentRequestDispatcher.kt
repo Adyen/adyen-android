@@ -14,7 +14,6 @@ import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
-import com.adyen.checkout.core.error.CheckoutError.ErrorCode
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 
 internal class SessionComponentRequestDispatcher(
@@ -39,7 +38,7 @@ internal class SessionComponentRequestDispatcher(
                 // TODO - Check if we need to support partial payment flow
                 return when {
                     response.action != null -> SubmitResult.Action(response.action)
-                    else -> SubmitResult.Finished(response.resultCode.orEmpty())
+                    else -> SubmitResult.Completion(response.resultCode.orEmpty())
                 }
             },
             onFailure = { error ->
@@ -49,13 +48,8 @@ internal class SessionComponentRequestDispatcher(
 //                    event = ErrorEvent.API_PAYMENTS,
 //                )
 //                analyticsManager.trackEvent(event)
-                return SubmitResult.Error(
-                    CheckoutError(
-                        code = ErrorCode.HTTP,
-                        message = error.message ?: "Failed to submit payment",
-                        cause = error,
-                    ),
-                )
+//                callbacks.onError(error.toCheckoutError())
+                throw error
             },
         )
     }
@@ -69,16 +63,11 @@ internal class SessionComponentRequestDispatcher(
             onSuccess = { response ->
                 sessionData = response.sessionData
                 callbacks.onFinished()
-                return AdditionalDetailsResult.Finished(response.resultCode.orEmpty())
+                return AdditionalDetailsResult.Completion(response.resultCode.orEmpty())
             },
             onFailure = { error ->
-                val checkoutError = CheckoutError(
-                    code = ErrorCode.HTTP,
-                    message = "Failed to submit details",
-                    cause = error,
-                )
-                callbacks.onError(checkoutError)
-                return AdditionalDetailsResult.Error(checkoutError)
+//                callbacks.onError(error.toCheckoutError())
+                throw error
             },
         )
     }

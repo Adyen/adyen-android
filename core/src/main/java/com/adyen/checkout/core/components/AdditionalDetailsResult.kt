@@ -8,11 +8,8 @@
 
 package com.adyen.checkout.core.components
 
-import com.adyen.checkout.core.error.CheckoutError
-
 sealed interface AdditionalDetailsResult {
 
-    data class Finished(val resultCode: String) : AdditionalDetailsResult
-
-    data class Error(val error: CheckoutError) : AdditionalDetailsResult
+    /** Indicates the additional-details exchange has completed and carries a final `resultCode`. */
+    data class Completion(val resultCode: String) : AdditionalDetailsResult
 }

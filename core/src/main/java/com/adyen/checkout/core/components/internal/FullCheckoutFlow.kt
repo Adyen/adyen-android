@@ -12,6 +12,7 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
@@ -69,8 +70,9 @@ internal class FullCheckoutFlow(
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         paymentComponent.setLoading(true)
-                        val result = componentRequestDispatcher.submit(event.state.data)
-                        handleResult(result)
+                        runSuspendCatching { componentRequestDispatcher.submit(event.state.data) }
+                            .onSuccess { handleResult(it) }
+                            .onFailure { componentRequestDispatcher.error(it.toCheckoutError()) }
                         paymentComponent.setLoading(false)
                     }
 
@@ -95,7 +97,6 @@ internal class FullCheckoutFlow(
         paymentComponent?.submit()
     }
 
-    @Suppress("unused")
     private fun handleResult(submitResult: SubmitResult) {
         when (submitResult) {
             is SubmitResult.Action -> {
@@ -103,12 +104,12 @@ internal class FullCheckoutFlow(
                 paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Action())
             }
 
-            is SubmitResult.Error -> {
-                // TODO - Handle error state
+            is SubmitResult.Completion -> {
+                // TODO - Handle completion state
             }
 
-            is SubmitResult.Finished -> {
-                // TODO - Handle finished state
+            is SubmitResult.Retry -> {
+                // TODO - Handle retry state (re-prompt shopper, optionally surface errorMessage)
             }
 
             is SubmitResult.PartialPayment -> {

@@ -15,6 +15,7 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.error.toCheckoutError
@@ -55,7 +56,8 @@ internal class ActionHandler(
             .onEach { event ->
                 when (event) {
                     is ActionComponentEvent.ActionDetails -> {
-                        componentRequestDispatcher.additionalDetails(event.data)
+                        runSuspendCatching { componentRequestDispatcher.additionalDetails(event.data) }
+                            .onFailure { componentRequestDispatcher.error(it.toCheckoutError()) }
                     }
 
                     is ActionComponentEvent.Error -> {

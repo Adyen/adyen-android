@@ -14,7 +14,6 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -23,6 +22,7 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.old.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
+import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -66,12 +66,7 @@ class ExampleV6DropInService : DropInService() {
         return when {
             jsonResponse == null -> {
                 Log.e(TAG, "FAILED")
-                SubmitResult.Error(
-                    CheckoutError(
-                        code = CheckoutError.ErrorCode.UNKNOWN,
-                        message = "IOException",
-                    )
-                )
+                throw IOException("Empty payments response")
             }
 
             isAction(jsonResponse) -> {
@@ -87,7 +82,7 @@ class ExampleV6DropInService : DropInService() {
                 } else {
                     "EMPTY"
                 }
-                SubmitResult.Finished(resultCode)
+                SubmitResult.Completion(resultCode)
             }
         }
     }
@@ -96,18 +91,13 @@ class ExampleV6DropInService : DropInService() {
         return when {
             jsonResponse == null -> {
                 Log.e(TAG, "FAILED")
-                AdditionalDetailsResult.Error(
-                    CheckoutError(
-                        code = CheckoutError.ErrorCode.UNKNOWN,
-                        message = "IOException",
-                    )
-                )
+                throw IOException("Empty payments/details response")
             }
 
             else -> {
                 Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
                 val resultCode = jsonResponse.optString("resultCode")
-                AdditionalDetailsResult.Finished(resultCode)
+                AdditionalDetailsResult.Completion(resultCode)
             }
         }
     }
