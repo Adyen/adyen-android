@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.onlinebankingcz
 
 import com.adyen.checkout.components.core.Amount

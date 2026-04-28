@@ -21,6 +21,10 @@ import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
  * A [PaymentComponent] that supports the [PaymentMethodTypes.MOLPAY_MALAYSIA], [PaymentMethodTypes.MOLPAY_THAILAND]
  * and [PaymentMethodTypes.MOLPAY_VIETNAM] payment methods.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class MolpayComponent internal constructor(
     delegate: IssuerListDelegate<MolpayPaymentMethod, MolpayComponentState>,
     genericActionDelegate: GenericActionDelegate,

@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [ConvenienceStoresJPComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("LongParameterList")
 @Parcelize
 class ConvenienceStoresJPConfiguration private constructor(
@@ -38,6 +42,10 @@ class ConvenienceStoresJPConfiguration private constructor(
     /**
      * Builder to create a [ConvenienceStoresJPConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : EContextConfiguration.Builder<ConvenienceStoresJPConfiguration, Builder> {
 
         /**
@@ -97,6 +105,10 @@ class ConvenienceStoresJPConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.convenienceStoresJP(
     configuration: @CheckoutConfigurationMarker ConvenienceStoresJPConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

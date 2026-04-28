@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.MolpayPaymentMethod
 /**
  * Represents the state of [MolpayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class MolpayComponentState(
     override val data: PaymentComponentData<MolpayPaymentMethod>,
     override val isInputValid: Boolean,

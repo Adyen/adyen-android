@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [EPSComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class EPSConfiguration private constructor(
@@ -40,6 +44,10 @@ class EPSConfiguration private constructor(
     /**
      * Builder to create an [EPSConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : IssuerListBuilder<EPSConfiguration, Builder> {
 
         /**
@@ -112,6 +120,10 @@ class EPSConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.eps(
     configuration: @CheckoutConfigurationMarker EPSConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

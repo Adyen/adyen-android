@@ -21,6 +21,10 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_STORES] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class ConvenienceStoresJPComponent internal constructor(
     delegate: EContextDelegate<ConvenienceStoresJPPaymentMethod, ConvenienceStoresJPComponentState>,
     genericActionDelegate: GenericActionDelegate,
