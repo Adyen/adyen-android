@@ -32,6 +32,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle the 'redirect' action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class RedirectComponent internal constructor(
     override val delegate: RedirectDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,
@@ -83,6 +87,10 @@ class RedirectComponent internal constructor(
         delegate.onCleared()
     }
 
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     companion object {
 
         @JvmField
