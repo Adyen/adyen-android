@@ -21,6 +21,10 @@ import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPCompo
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_ONLINE] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class OnlineBankingJPComponent internal constructor(
     delegate: EContextDelegate<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>,
     genericActionDelegate: GenericActionDelegate,

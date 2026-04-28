@@ -16,6 +16,10 @@ import kotlinx.parcelize.Parcelize
 /**
  * Represents the state of [GiftCardComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class GiftCardComponentState(
     override val data: PaymentComponentData<GiftCardPaymentMethod>,

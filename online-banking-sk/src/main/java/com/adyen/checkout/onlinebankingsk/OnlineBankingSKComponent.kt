@@ -21,6 +21,10 @@ import com.adyen.checkout.onlinebankingsk.internal.provider.OnlineBankingSKCompo
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ONLINE_BANKING_SK] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class OnlineBankingSKComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod, OnlineBankingSKComponentState>,
     genericActionDelegate: GenericActionDelegate,

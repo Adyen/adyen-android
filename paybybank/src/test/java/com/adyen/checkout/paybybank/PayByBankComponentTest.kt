@@ -6,6 +6,8 @@
  * Created by josephj on 14/12/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.paybybank
 
 import androidx.lifecycle.LifecycleOwner

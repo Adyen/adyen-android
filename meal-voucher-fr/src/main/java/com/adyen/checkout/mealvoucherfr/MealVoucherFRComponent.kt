@@ -16,6 +16,10 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import com.adyen.checkout.mealvoucherfr.internal.provider.MealVoucherFRComponentProvider
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class MealVoucherFRComponent internal constructor(
     giftCardDelegate: GiftCardDelegate,
     genericActionDelegate: GenericActionDelegate,

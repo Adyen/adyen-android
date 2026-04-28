@@ -29,6 +29,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle the 'sdk' action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class WeChatPayActionComponent internal constructor(
     override val delegate: WeChatDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,

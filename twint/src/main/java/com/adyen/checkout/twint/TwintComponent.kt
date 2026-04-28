@@ -35,6 +35,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.TWINT] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class TwintComponent internal constructor(
     private val twintDelegate: TwintDelegate,
     private val genericActionDelegate: GenericActionDelegate,

@@ -6,6 +6,8 @@
  * Created by atef on 31/3/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.boleto
 
 import androidx.lifecycle.LifecycleOwner

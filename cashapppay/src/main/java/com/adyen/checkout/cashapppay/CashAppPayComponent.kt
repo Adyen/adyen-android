@@ -36,6 +36,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.CASH_APP_PAY] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class CashAppPayComponent internal constructor(
     private val cashAppPayDelegate: CashAppPayDelegate,
     private val genericActionDelegate: GenericActionDelegate,

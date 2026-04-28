@@ -6,6 +6,8 @@
  * Created by ozgur on 28/8/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.mealvoucherfr
 
 import com.adyen.checkout.components.core.Amount

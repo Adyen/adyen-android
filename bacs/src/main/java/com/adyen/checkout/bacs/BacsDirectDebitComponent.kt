@@ -34,6 +34,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.BACS] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class BacsDirectDebitComponent internal constructor(
     private val bacsDelegate: BacsDirectDebitDelegate,
     private val genericActionDelegate: GenericActionDelegate,

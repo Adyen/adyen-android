@@ -6,6 +6,8 @@
  * Created by oscars on 5/7/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.cashapppay.internal.ui
 
 import android.app.Application

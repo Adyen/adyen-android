@@ -17,6 +17,10 @@ import org.json.JSONObject
 /**
  * Implement this callback to interact with a GiftCardComponent.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface GiftCardComponentCallback : ComponentCallback<GiftCardComponentState> {
     /**
      * In this method you should make a network call to the /orders endpoint of the Checkout API through your server.

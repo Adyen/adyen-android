@@ -33,6 +33,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SEPA] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class SepaComponent internal constructor(
     private val sepaDelegate: SepaDelegate,
     private val genericActionDelegate: GenericActionDelegate,

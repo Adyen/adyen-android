@@ -6,6 +6,8 @@
  * Created by atef on 4/4/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.boleto.internal.util
 
 import com.adyen.checkout.boleto.R
