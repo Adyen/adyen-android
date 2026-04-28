@@ -14,6 +14,10 @@ import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.sessions.core.internal.CheckoutSessionInitializer
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object CheckoutSessionProvider {
 
     /**
