@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.action.core.internal.ui
 
 import android.app.Application
