@@ -16,6 +16,10 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class StoredPaymentMethod(
     var type: String? = null,

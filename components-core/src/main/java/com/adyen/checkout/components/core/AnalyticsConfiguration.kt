@@ -14,6 +14,10 @@ import kotlinx.parcelize.Parcelize
 /**
  * Class that allows configuring internal analytics.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class AnalyticsConfiguration(
     /**
@@ -28,6 +32,10 @@ data class AnalyticsConfiguration(
  * The different configurable levels of analytics. Learn more about the
  * [data we are collecting](https://docs.adyen.com/online-payments/analytics-and-data-tracking/#data-we-are-collecting).
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class AnalyticsLevel {
     /**
      * All analytics events, logs and errors are sent from the library.

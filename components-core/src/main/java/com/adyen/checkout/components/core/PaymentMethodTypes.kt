@@ -10,6 +10,10 @@ package com.adyen.checkout.components.core
 /**
  * Helper class with a list of all the currently supported Payment Methods on Components and Drop-In.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object PaymentMethodTypes {
 
     // Placeholder value if the type is not found.

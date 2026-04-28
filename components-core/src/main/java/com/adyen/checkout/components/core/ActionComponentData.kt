@@ -20,6 +20,10 @@ import org.json.JSONObject
  * Class containing the whole request data expected by the /payments/details endpoint. Use
  * [ActionComponentData.SERIALIZER] to serialize it to a [JSONObject].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class ActionComponentData(
     var paymentData: String? = null,

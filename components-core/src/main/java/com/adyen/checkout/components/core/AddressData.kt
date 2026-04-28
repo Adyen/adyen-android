@@ -11,6 +11,10 @@ package com.adyen.checkout.components.core
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class AddressData(
     val postalCode: String,
     val street: String,

@@ -6,6 +6,8 @@
  * Created by ararat on 2/2/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core
 
 internal class TestComponentCallback : ComponentCallback<TestComponentState> {

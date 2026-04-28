@@ -6,6 +6,8 @@
  * Created by ararat on 21/11/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.internal.util
 
 import org.junit.Assert.assertEquals
