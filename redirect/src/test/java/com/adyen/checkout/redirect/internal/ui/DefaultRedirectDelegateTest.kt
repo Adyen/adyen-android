@@ -6,6 +6,8 @@
  * Created by josephj on 18/8/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.redirect.internal.ui
 
 import android.app.Activity

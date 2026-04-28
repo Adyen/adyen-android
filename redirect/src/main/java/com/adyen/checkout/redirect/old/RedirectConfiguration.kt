@@ -21,6 +21,10 @@ import java.util.Locale
 /**
  * Configuration class for the [RedirectComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class RedirectConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -33,6 +37,10 @@ class RedirectConfiguration private constructor(
     /**
      * Builder to create a [RedirectConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : BaseConfigurationBuilder<RedirectConfiguration, Builder> {
 
         /**
@@ -90,6 +98,10 @@ class RedirectConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.redirect(
     configuration: @CheckoutConfigurationMarker RedirectConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
