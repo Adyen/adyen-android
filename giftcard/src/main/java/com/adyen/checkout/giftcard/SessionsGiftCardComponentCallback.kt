@@ -22,6 +22,10 @@ import org.json.JSONObject
 /**
  * Implement this callback to interact with a [GiftCardComponent] initialized with a session.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardComponentState> {
 
     /**

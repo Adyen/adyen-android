@@ -27,6 +27,10 @@ import java.util.Locale
 /**
  * Configuration class for the [TwintComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class TwintConfiguration
 @Suppress("LongParameterList")
@@ -42,6 +46,10 @@ private constructor(
     val actionHandlingMethod: ActionHandlingMethod?,
 ) : Configuration, ButtonConfiguration {
 
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<TwintConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -146,6 +154,10 @@ private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.twint(
     configuration: @CheckoutConfigurationMarker TwintConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

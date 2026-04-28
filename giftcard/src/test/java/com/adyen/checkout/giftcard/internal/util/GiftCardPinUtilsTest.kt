@@ -6,6 +6,8 @@
  * Created by ararat on 20/8/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.giftcard.internal.util
 
 import org.junit.jupiter.api.Assertions.assertEquals

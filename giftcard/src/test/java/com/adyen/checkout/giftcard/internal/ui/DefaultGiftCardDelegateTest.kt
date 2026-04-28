@@ -6,6 +6,8 @@
  * Created by oscars on 18/7/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.giftcard.internal.ui
 
 import app.cash.turbine.test

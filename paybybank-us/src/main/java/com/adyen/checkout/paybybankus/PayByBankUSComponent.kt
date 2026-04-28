@@ -32,6 +32,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.PAY_BY_BANK_US] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class PayByBankUSComponent internal constructor(
     private val payByBankUSDelegate: PayByBankUSDelegate,
     private val genericActionDelegate: GenericActionDelegate,
