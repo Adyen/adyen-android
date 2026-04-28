@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 /**
  * Represents the state of [SepaComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class SepaComponentState(
     override val data: PaymentComponentData<SepaPaymentMethod>,
     override val isInputValid: Boolean,

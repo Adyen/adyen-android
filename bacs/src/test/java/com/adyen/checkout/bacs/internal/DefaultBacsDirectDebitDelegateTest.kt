@@ -6,6 +6,8 @@
  * Created by atef on 18/8/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.bacs.internal
 
 import app.cash.turbine.test

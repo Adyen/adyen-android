@@ -6,6 +6,8 @@
  * Created by josephj on 13/12/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.issuerlist.utils
 
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent

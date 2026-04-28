@@ -37,6 +37,10 @@ import kotlinx.coroutines.flow.Flow
  * [PaymentMethodTypes.BOLETOBANCARIO_HSBC], [PaymentMethodTypes.BOLETOBANCARIO_ITAU],
  * [PaymentMethodTypes.BOLETOBANCARIO_SANTANDER] and [PaymentMethodTypes.BOLETO_PRIMEIRO_PAY] payment methods.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class BoletoComponent internal constructor(
     private val boletoDelegate: BoletoDelegate,
     private val genericActionDelegate: GenericActionDelegate,

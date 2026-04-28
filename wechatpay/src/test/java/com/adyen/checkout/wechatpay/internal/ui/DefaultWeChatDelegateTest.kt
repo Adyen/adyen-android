@@ -6,6 +6,8 @@
  * Created by oscars on 19/8/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.wechatpay.internal.ui
 
 import android.app.Activity

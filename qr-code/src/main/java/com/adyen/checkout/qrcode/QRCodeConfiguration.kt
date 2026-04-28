@@ -22,6 +22,10 @@ import java.util.Locale
 /**
  * Configuration class for the [QRCodeComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class QRCodeConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -34,6 +38,10 @@ class QRCodeConfiguration private constructor(
     /**
      * Builder to create a [QRCodeConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : BaseConfigurationBuilder<QRCodeConfiguration, Builder> {
 
         /**
@@ -91,6 +99,10 @@ class QRCodeConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.qrCode(
     configuration: @CheckoutConfigurationMarker QRCodeConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

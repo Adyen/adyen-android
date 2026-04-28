@@ -26,6 +26,10 @@ import java.util.Locale
 /**
  * Configuration class for the [BacsDirectDebitComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class BacsDirectDebitConfiguration private constructor(
@@ -41,6 +45,10 @@ class BacsDirectDebitConfiguration private constructor(
     /**
      * Builder to create an [BacsDirectDebitConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BacsDirectDebitConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -116,6 +124,10 @@ class BacsDirectDebitConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.bacsDirectDebit(
     configuration: @CheckoutConfigurationMarker BacsDirectDebitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

@@ -11,6 +11,10 @@ package com.adyen.checkout.issuerlist
 /**
  * Represents the multiple view types the can be displayed with an issuer list component.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class IssuerListViewType {
     /**
      * A simple list of issuers inside a recycler view.

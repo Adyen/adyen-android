@@ -21,6 +21,10 @@ import java.util.Locale
 /**
  * Configuration class for the [WeChatPayActionComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class WeChatPayActionConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -33,6 +37,10 @@ class WeChatPayActionConfiguration private constructor(
     /**
      * Builder to create a [WeChatPayActionConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : BaseConfigurationBuilder<WeChatPayActionConfiguration, Builder> {
 
         /**
@@ -90,6 +98,10 @@ class WeChatPayActionConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.weChatPayAction(
     configuration: @CheckoutConfigurationMarker WeChatPayActionConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.instant.internal.provider
 
 import com.adyen.checkout.components.core.PaymentMethod

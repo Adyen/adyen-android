@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.ideal
 
 import androidx.lifecycle.LifecycleOwner

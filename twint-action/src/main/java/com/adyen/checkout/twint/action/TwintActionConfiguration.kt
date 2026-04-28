@@ -22,6 +22,10 @@ import java.util.Locale
 /**
  * Configuration class for the [TwintActionComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class TwintActionConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -31,6 +35,10 @@ class TwintActionConfiguration private constructor(
     override val amount: Amount?,
 ) : Configuration {
 
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : BaseConfigurationBuilder<TwintActionConfiguration, Builder> {
 
         /**
@@ -89,6 +97,10 @@ class TwintActionConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.twintAction(
     configuration: @CheckoutConfigurationMarker TwintActionConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

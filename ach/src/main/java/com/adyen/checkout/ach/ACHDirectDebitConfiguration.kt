@@ -26,6 +26,10 @@ import java.util.Locale
 /**
  * Configuration class for the [ACHDirectDebitComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class ACHDirectDebitConfiguration private constructor(
@@ -43,6 +47,10 @@ class ACHDirectDebitConfiguration private constructor(
     /**
      * Builder to create an [ACHDirectDebitConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<ACHDirectDebitConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -152,6 +160,10 @@ class ACHDirectDebitConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.achDirectDebit(
     configuration: @CheckoutConfigurationMarker ACHDirectDebitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

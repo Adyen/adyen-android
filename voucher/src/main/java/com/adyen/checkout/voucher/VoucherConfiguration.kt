@@ -22,6 +22,10 @@ import java.util.Locale
 /**
  * Configuration class for the [VoucherComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class VoucherConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -34,6 +38,10 @@ class VoucherConfiguration private constructor(
     /**
      * Builder to create a [VoucherConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : BaseConfigurationBuilder<VoucherConfiguration, Builder> {
 
         /**
@@ -91,6 +99,10 @@ class VoucherConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.voucher(
     configuration: @CheckoutConfigurationMarker VoucherConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

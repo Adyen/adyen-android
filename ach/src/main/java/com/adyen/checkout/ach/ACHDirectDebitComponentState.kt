@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMet
 /**
  * Represents the state of [ACHDirectDebitComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class ACHDirectDebitComponentState(
     override val data: PaymentComponentData<ACHDirectDebitPaymentMethod>,
     override val isInputValid: Boolean,
