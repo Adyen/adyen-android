@@ -18,6 +18,10 @@ import com.adyen.checkout.core.old.Environment
  * A class holding the data required to launch Drop-in or a component with the sessions flow.
  * Use [CheckoutSessionProvider.createSession] to create this class.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class CheckoutSession(
     val sessionSetupResponse: SessionSetupResponse,
     val order: Order?,

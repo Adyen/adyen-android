@@ -19,6 +19,10 @@ import org.json.JSONObject
  * Object that parses and holds the response data from the /sessions endpoint.
  * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class SessionModel(
     val id: String,

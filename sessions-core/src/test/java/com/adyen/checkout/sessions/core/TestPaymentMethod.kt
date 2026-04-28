@@ -6,6 +6,8 @@
  * Created by josephj on 2/2/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.sessions.core
 
 import android.os.Parcel

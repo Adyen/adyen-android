@@ -13,7 +13,20 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 /**
  * The result of the API call to fetch a [CheckoutSession].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class CheckoutSessionResult {
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Success(val checkoutSession: CheckoutSession) : CheckoutSessionResult()
+
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Error(val exception: CheckoutException) : CheckoutSessionResult()
 }
