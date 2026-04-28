@@ -22,6 +22,10 @@ import kotlinx.parcelize.Parcelize
  * [Result codes](https://docs.adyen.com/online-payments/build-your-integration/payment-result-codes/).
  * @param order An order, only applicable in case of an ongoing partial payment flow.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class SessionPaymentResult(
     val sessionId: String?,
