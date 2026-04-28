@@ -6,6 +6,8 @@
  * Created by ararat on 14/7/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.await.old.internal.ui
 
 import android.app.Activity
