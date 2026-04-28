@@ -10,4 +10,8 @@ package com.adyen.checkout.bcmc
 
 import com.adyen.checkout.card.old.CardComponentState
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 typealias BcmcComponentState = CardComponentState

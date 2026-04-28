@@ -10,4 +10,8 @@ package com.adyen.checkout.mealvoucherfr
 
 import com.adyen.checkout.giftcard.GiftCardComponentState
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 typealias MealVoucherFRComponentState = GiftCardComponentState
