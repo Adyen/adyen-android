@@ -53,6 +53,10 @@ import com.adyen.checkout.ui.core.old.internal.ui.ViewableComponent
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -94,6 +98,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -136,6 +144,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -177,6 +189,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -214,6 +230,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -256,6 +276,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -295,6 +319,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -336,6 +364,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -378,6 +410,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -421,6 +457,10 @@ fun <
  *
  * @return The Component
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -453,6 +493,10 @@ fun <
 /**
  * A [Composable] that can display input and fill in details for a [Component].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("unused")
 @Composable
 fun <T> AdyenComponent(

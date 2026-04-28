@@ -45,6 +45,10 @@ import com.adyen.checkout.sessions.core.CheckoutSessionProvider
  *
  * @return The [ActivityResultLauncher] required to receive the result of Drop-in.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("unused")
 @Composable
 fun rememberLauncherForDropInResult(
@@ -73,6 +77,10 @@ fun rememberLauncherForDropInResult(
  * @param dropInConfiguration Additional required configuration data.
  * @param serviceClass Service that extends from [SessionDropInService] to optionally take over the checkout flow.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @SuppressLint("ComposableNaming")
 @Suppress("unused")
 @Composable
@@ -111,6 +119,10 @@ fun DropIn.startPayment(
  * @param checkoutConfiguration Additional required configuration data.
  * @param serviceClass Service that extends from [SessionDropInService] to optionally take over the checkout flow.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @SuppressLint("ComposableNaming")
 @Suppress("unused")
 @Composable
@@ -145,6 +157,10 @@ fun DropIn.startPayment(
  *
  * @return The [ActivityResultLauncher] required to receive the result of Drop-in.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("unused")
 @Composable
 fun rememberLauncherForDropInResult(
@@ -172,6 +188,10 @@ fun rememberLauncherForDropInResult(
  * @param dropInConfiguration Additional required configuration data.
  * @param serviceClass Service that extends from [DropInService] to interact with Drop-in during the checkout flow.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @SuppressLint("ComposableNaming")
 @Suppress("unused")
 @Composable
@@ -209,6 +229,10 @@ fun DropIn.startPayment(
  * @param checkoutConfiguration Additional required configuration data.
  * @param serviceClass Service that extends from [DropInService] to interact with Drop-in during the checkout flow.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @SuppressLint("ComposableNaming")
 @Suppress("unused")
 @Composable
