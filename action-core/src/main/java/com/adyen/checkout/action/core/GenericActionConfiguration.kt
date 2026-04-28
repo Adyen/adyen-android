@@ -35,6 +35,10 @@ import java.util.Locale
  * customize their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class GenericActionConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -53,6 +57,10 @@ class GenericActionConfiguration private constructor(
      * component.
      */
     @Suppress("unused")
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         BaseConfigurationBuilder<GenericActionConfiguration, Builder>,
         ActionHandlingConfigurationBuilder<Builder> {

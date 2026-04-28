@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.action.core
 
 import com.adyen.checkout.await.old.AwaitConfiguration
