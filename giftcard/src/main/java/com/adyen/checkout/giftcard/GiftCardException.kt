@@ -13,4 +13,8 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 /**
  * Exception thrown when an error occurs during a payment flow using Gift Cards.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class GiftCardException(errorMessage: String) : CheckoutException(errorMessage)

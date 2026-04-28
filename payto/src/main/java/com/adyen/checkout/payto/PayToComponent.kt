@@ -34,6 +34,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.PAY_TO] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class PayToComponent internal constructor(
     private val payToDelegate: PayToDelegate,
     private val genericActionDelegate: GenericActionDelegate,

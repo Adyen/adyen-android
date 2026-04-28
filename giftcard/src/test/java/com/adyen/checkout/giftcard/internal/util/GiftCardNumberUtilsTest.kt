@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.giftcard.internal.util
 
 import org.junit.jupiter.api.Assertions.assertEquals

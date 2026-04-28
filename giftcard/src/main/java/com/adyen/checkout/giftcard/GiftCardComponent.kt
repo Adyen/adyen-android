@@ -36,6 +36,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.GIFTCARD] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 open class GiftCardComponent
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
