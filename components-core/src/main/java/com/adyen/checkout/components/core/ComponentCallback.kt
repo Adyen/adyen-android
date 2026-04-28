@@ -16,6 +16,10 @@ import org.json.JSONObject
 /**
  * Implement this callback to interact with a [PaymentComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface ComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallback {
 
     /**

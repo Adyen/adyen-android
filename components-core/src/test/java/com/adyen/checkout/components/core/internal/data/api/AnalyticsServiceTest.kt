@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest

@@ -10,6 +10,10 @@ package com.adyen.checkout.components.core.action
 /**
  * Helper class with a list of all the currently supported Actions on Components and Drop-In.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object ActionTypes {
     const val AWAIT = "await"
     const val QR_CODE = "qrCode"

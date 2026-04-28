@@ -15,6 +15,10 @@ import java.util.Collections
  * Utility class holding currency information.
  * @see [Adyen currency codes](https://docs.adyen.com/developers/currency-codes)
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("MagicNumber")
 enum class CheckoutCurrency(val fractionDigits: Int) {
     AED(2),

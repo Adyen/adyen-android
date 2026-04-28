@@ -21,6 +21,10 @@ import org.json.JSONObject
  * [Action.SERIALIZER] can be used to serialize and deserialize the subclasses of [Action] without having to know the
  * exact type of the subclass.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 abstract class Action : ModelObject() {
     abstract var type: String?
     abstract var paymentData: String?

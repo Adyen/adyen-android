@@ -14,6 +14,10 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class PayByBankUSPaymentMethod(
     override var type: String?,

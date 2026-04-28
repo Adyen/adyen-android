@@ -8,5 +8,9 @@
 
 package com.adyen.checkout.components.core.action
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("UnnecessaryAbstractClass")
 abstract class BaseThreeds2Action : Action()

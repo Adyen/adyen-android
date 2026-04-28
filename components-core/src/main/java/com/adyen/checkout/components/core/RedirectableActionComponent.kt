@@ -8,6 +8,10 @@
 
 package com.adyen.checkout.components.core
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface RedirectableActionComponent {
 
     /**

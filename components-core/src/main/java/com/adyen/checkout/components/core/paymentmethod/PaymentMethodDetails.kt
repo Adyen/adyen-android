@@ -20,6 +20,10 @@ import org.json.JSONObject
  * [PaymentMethodDetails.SERIALIZER] can be used to serialize and deserialize the subclasses of [PaymentMethodDetails]
  * without having to know the exact type of the subclass.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 abstract class PaymentMethodDetails : ModelObject() {
 
     abstract var type: String?

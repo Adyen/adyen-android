@@ -11,6 +11,10 @@ package com.adyen.checkout.components.core
 /**
  * Used to configure the method used to handle actions.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class ActionHandlingMethod {
     /**
      * The action will be handled in a native way (e.g. using a SDK). **If** there is no way to handle the action

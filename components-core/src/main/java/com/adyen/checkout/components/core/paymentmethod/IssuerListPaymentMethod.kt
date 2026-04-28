@@ -7,6 +7,10 @@
  */
 package com.adyen.checkout.components.core.paymentmethod
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 abstract class IssuerListPaymentMethod : PaymentMethodDetails() {
     abstract var issuer: String?
 

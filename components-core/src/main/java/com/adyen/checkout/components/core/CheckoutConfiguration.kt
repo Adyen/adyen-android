@@ -53,6 +53,10 @@ import java.util.Locale
  * @param analyticsConfiguration A configuration for the internal analytics of the library.
  * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @CheckoutConfigurationMarker
 class CheckoutConfiguration(
     override val environment: Environment,

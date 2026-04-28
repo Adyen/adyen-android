@@ -6,6 +6,8 @@
  * Created by ozgur on 31/1/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core
 
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
