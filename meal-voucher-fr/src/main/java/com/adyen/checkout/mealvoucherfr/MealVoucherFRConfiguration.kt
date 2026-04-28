@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [MealVoucherFRComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class MealVoucherFRConfiguration private constructor(
@@ -41,6 +45,10 @@ class MealVoucherFRConfiguration private constructor(
     /**
      * Builder to create a [MealVoucherFRConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<MealVoucherFRConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -131,6 +139,10 @@ class MealVoucherFRConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.mealVoucherFR(
     configuration: @CheckoutConfigurationMarker MealVoucherFRConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

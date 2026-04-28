@@ -23,6 +23,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] used for handling payment methods that do not require any input from the shopper.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class InstantPaymentComponent internal constructor(
     private val instantPaymentDelegate: InstantPaymentDelegate,
     private val genericActionDelegate: GenericActionDelegate,

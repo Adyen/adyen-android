@@ -28,6 +28,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle the 'voucher' action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class VoucherComponent internal constructor(
     override val delegate: VoucherDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,

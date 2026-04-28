@@ -9,6 +9,10 @@ package com.adyen.checkout.wechatpay
 
 import android.content.Intent
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object WeChatPayUtils {
 
     private const val RESULT_EXTRA_KEY = "_wxapi_baseresp_errstr"

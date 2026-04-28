@@ -22,6 +22,10 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
  * You can directly call /payments after you receive a callback from [isAvailable].
  * You can use [WeChatPayActionComponent] to handle the returned action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class WeChatPayProvider : PaymentMethodAvailabilityCheck<WeChatPayActionConfiguration> {
 
     override fun isAvailable(

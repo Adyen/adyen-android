@@ -20,6 +20,10 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.BCMC] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class BcmcComponent internal constructor(
     cardDelegate: CardDelegate,
     genericActionDelegate: GenericActionDelegate,

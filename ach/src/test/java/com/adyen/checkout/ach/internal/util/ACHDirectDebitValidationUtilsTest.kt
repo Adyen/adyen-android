@@ -6,6 +6,8 @@
  * Created by onurk on 16/2/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.ach.internal.util
 
 import com.adyen.checkout.ach.R
