@@ -23,6 +23,7 @@ enum class IntegrationRegion(val countryCode: String, val currency: String) {
     FI("FI", "EUR"),
     FR("FR", "EUR"),
     DE("DE", "EUR"),
+    GR("GR", "EUR"),
     HK("HK", "HKD"),
     IN("IN", "INR"),
     ID("ID", "IDR"),

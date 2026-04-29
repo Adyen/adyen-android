@@ -13,10 +13,14 @@ import org.json.JSONObject
 
 internal data class SdkData(
     val schemaVersion: Int,
-    val analytics: Analytics? = null,
-    val authentication: Authentication? = null,
-    val createdAt: Long? = null,
-    val supportNativeRedirect: Boolean? = null,
+    val analytics: Analytics?,
+    val authentication: Authentication?,
+    val createdAt: Long?,
+    val supportNativeRedirect: Boolean?,
+    val sdkVersion: String,
+    val platform: String,
+    val channel: String,
+    val paymentMethodBehavior: PaymentMethodBehavior,
 ) {
 
     @Throws(JSONException::class)
@@ -26,6 +30,10 @@ internal data class SdkData(
         putOpt(AUTHENTICATION, authentication?.serialize())
         putOpt(CREATED_AT, createdAt)
         putOpt(SUPPORT_NATIVE_REDIRECT, supportNativeRedirect)
+        putOpt(SDK_VERSION, sdkVersion)
+        putOpt(SDK_PLATFORM, platform)
+        putOpt(SDK_CHANNEL, channel)
+        putOpt(PAYMENT_METHOD_BEHAVIOR, paymentMethodBehavior.value)
     }
 
     companion object {
@@ -34,5 +42,9 @@ internal data class SdkData(
         private const val AUTHENTICATION = "authentication"
         private const val CREATED_AT = "createdAt"
         private const val SUPPORT_NATIVE_REDIRECT = "supportNativeRedirect"
+        private const val SDK_VERSION = "sdkVersion"
+        private const val SDK_PLATFORM = "platform"
+        private const val SDK_CHANNEL = "channel"
+        private const val PAYMENT_METHOD_BEHAVIOR = "paymentMethodBehavior"
     }
 }

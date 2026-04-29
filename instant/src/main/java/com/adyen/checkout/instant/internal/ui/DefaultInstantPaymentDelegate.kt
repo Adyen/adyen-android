@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
@@ -63,7 +64,7 @@ internal class DefaultInstantPaymentDelegate(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-                sdkData = sdkDataProvider.createEncodedSdkData(),
+                sdkData = sdkDataProvider.createEncodedSdkData(paymentMethodBehavior = PaymentMethodBehavior.GENERIC),
                 subtype = getSubtype(paymentMethod),
             ),
             order = order,
