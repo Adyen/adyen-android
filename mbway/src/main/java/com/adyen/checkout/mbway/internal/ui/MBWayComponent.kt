@@ -85,6 +85,7 @@ internal class MBWayComponent(
             viewState = viewState,
             onItemClick = {
                 onIntent(MBWayIntent.UpdateCountry(it))
+                eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
             },
             modifier = modifier,
         )
