@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 /**
  * Represents the state of [SevenElevenComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class SevenElevenComponentState(
     override val data: PaymentComponentData<SevenElevenPaymentMethod>,
     override val isInputValid: Boolean,

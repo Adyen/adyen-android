@@ -20,6 +20,10 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.EPS] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class EPSComponent internal constructor(
     delegate: IssuerListDelegate<EPSPaymentMethod, EPSComponentState>,
     genericActionDelegate: GenericActionDelegate,

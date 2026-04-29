@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [PayEasyComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("LongParameterList")
 @Parcelize
 class PayEasyConfiguration private constructor(
@@ -38,6 +42,10 @@ class PayEasyConfiguration private constructor(
     /**
      * Builder to create a [PayEasyConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : EContextConfiguration.Builder<PayEasyConfiguration, Builder> {
 
         /**
@@ -97,6 +105,10 @@ class PayEasyConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.payEasy(
     configuration: @CheckoutConfigurationMarker PayEasyConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

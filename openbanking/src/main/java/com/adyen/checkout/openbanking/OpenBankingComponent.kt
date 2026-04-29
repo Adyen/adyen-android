@@ -20,6 +20,10 @@ import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProv
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.OPEN_BANKING] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class OpenBankingComponent internal constructor(
     delegate: IssuerListDelegate<OpenBankingPaymentMethod, OpenBankingComponentState>,
     genericActionDelegate: GenericActionDelegate,

@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPayme
 /**
  * Represents the state of [ConvenienceStoresJPComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class ConvenienceStoresJPComponentState(
     override val data: PaymentComponentData<ConvenienceStoresJPPaymentMethod>,
     override val isInputValid: Boolean,

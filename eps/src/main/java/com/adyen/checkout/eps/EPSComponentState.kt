@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
 /**
  * Represents the state of [EPSComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class EPSComponentState(
     override val data: PaymentComponentData<EPSPaymentMethod>,
     override val isInputValid: Boolean,

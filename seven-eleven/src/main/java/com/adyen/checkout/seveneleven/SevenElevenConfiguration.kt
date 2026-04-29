@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [SevenElevenComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("LongParameterList")
 @Parcelize
 class SevenElevenConfiguration private constructor(
@@ -38,6 +42,10 @@ class SevenElevenConfiguration private constructor(
     /**
      * Builder to create a [SevenElevenConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : EContextConfiguration.Builder<SevenElevenConfiguration, Builder> {
 
         /**
@@ -97,6 +105,10 @@ class SevenElevenConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.sevenEleven(
     configuration: @CheckoutConfigurationMarker SevenElevenConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

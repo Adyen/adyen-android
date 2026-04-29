@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [OnlineBankingJPComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("LongParameterList")
 @Parcelize
 class OnlineBankingJPConfiguration private constructor(
@@ -38,6 +42,10 @@ class OnlineBankingJPConfiguration private constructor(
     /**
      * Builder to create an [OnlineBankingJPConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : EContextConfiguration.Builder<OnlineBankingJPConfiguration, Builder> {
 
         /**
@@ -97,6 +105,10 @@ class OnlineBankingJPConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.onlineBankingJP(
     configuration: @CheckoutConfigurationMarker OnlineBankingJPConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

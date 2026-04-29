@@ -21,6 +21,10 @@ import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZCompo
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ONLINE_BANKING_CZ] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class OnlineBankingCZComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod, OnlineBankingCZComponentState>,
     genericActionDelegate: GenericActionDelegate,

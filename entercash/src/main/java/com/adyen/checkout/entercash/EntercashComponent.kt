@@ -20,6 +20,10 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ENTERCASH] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class EntercashComponent internal constructor(
     delegate: IssuerListDelegate<EntercashPaymentMethod, EntercashComponentState>,
     genericActionDelegate: GenericActionDelegate,

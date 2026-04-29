@@ -20,6 +20,10 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.DOTPAY] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class DotpayComponent internal constructor(
     delegate: IssuerListDelegate<DotpayPaymentMethod, DotpayComponentState>,
     genericActionDelegate: GenericActionDelegate,

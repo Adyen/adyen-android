@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.PayEasyPaymentMethod
 /**
  * Represents the state of [PayEasyComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class PayEasyComponentState(
     override val data: PaymentComponentData<PayEasyPaymentMethod>,
     override val isInputValid: Boolean,

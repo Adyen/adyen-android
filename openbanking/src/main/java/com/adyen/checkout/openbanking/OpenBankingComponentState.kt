@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.OpenBankingPaymentMethod
 /**
  * Represents the state of [OpenBankingComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class OpenBankingComponentState(
     override val data: PaymentComponentData<OpenBankingPaymentMethod>,
     override val isInputValid: Boolean,

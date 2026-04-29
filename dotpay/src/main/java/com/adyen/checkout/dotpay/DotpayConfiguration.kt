@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [DotpayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class DotpayConfiguration private constructor(
@@ -40,6 +44,10 @@ class DotpayConfiguration private constructor(
     /**
      * Builder to create a [DotpayConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : IssuerListBuilder<DotpayConfiguration, Builder> {
 
         /**
@@ -101,6 +109,10 @@ class DotpayConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.dotpay(
     configuration: @CheckoutConfigurationMarker DotpayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

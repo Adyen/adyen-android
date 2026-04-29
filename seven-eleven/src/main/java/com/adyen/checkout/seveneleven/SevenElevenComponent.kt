@@ -21,6 +21,10 @@ import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProv
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class SevenElevenComponent internal constructor(
     delegate: EContextDelegate<SevenElevenPaymentMethod, SevenElevenComponentState>,
     genericActionDelegate: GenericActionDelegate,

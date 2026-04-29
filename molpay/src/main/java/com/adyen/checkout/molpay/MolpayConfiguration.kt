@@ -22,6 +22,10 @@ import java.util.Locale
 /**
  * Configuration class for the [MolpayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class MolpayConfiguration private constructor(
@@ -39,6 +43,10 @@ class MolpayConfiguration private constructor(
     /**
      * Builder to create a [MolpayConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : IssuerListBuilder<MolpayConfiguration, Builder> {
 
         /**
@@ -100,6 +108,10 @@ class MolpayConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.molpay(
     configuration: @CheckoutConfigurationMarker MolpayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
