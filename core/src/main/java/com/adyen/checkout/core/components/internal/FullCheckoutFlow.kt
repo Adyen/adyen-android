@@ -66,6 +66,10 @@ internal class FullCheckoutFlow(
                     is PaymentComponentEvent.Error -> {
                         componentRequestDispatcher.error(event.error.toCheckoutError())
                     }
+
+                    is PaymentComponentEvent.SecondaryScreen -> {
+                        onNavigate?.invoke(CheckoutRoute.Secondary(event.identifier))
+                    }
                 }
             }
             ?.launchIn(coroutineScope)

@@ -23,4 +23,8 @@ sealed class PaymentComponentEvent<ComponentStateT : BasePaymentComponentState> 
     data class Error<ComponentStateT : BasePaymentComponentState>(
         val error: InternalCheckoutError
     ) : PaymentComponentEvent<ComponentStateT>()
+
+    data class SecondaryScreen<ComponentStateT : BasePaymentComponentState>(
+        val identifier: String,
+    ) : PaymentComponentEvent<ComponentStateT>()
 }
