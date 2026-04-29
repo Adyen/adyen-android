@@ -55,7 +55,7 @@ internal class PreselectedStoredPaymentViewModel(
         // no ops
     }
 
-    override fun onAdditionalDetails(data: ActionComponentData) {
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
         error("This event should not be used in drop-in")
     }
 

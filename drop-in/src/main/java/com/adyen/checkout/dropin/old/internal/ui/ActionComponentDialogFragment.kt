@@ -133,8 +133,8 @@ internal class ActionComponentDialogFragment :
         setMode(toolbarMode)
     }
 
-    override fun onAdditionalDetails(data: ActionComponentData) {
-        onActionComponentDataChanged(data)
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        onActionComponentDataChanged(actionComponentData)
     }
 
     override fun onError(componentError: ComponentError) {

@@ -112,7 +112,7 @@ internal class GooglePayComponentDialogFragment :
         protocol.requestPaymentsCall(state)
     }
 
-    override fun onAdditionalDetails(data: ActionComponentData) {
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
         error("This event should not be used in drop-in")
     }
 

@@ -28,11 +28,13 @@ interface ActionComponentCallback {
      * We provide inside [ActionComponentData] the whole request data expected by the /payments/details endpoint. Use
      * [ActionComponentData.SERIALIZER] to serialize this data to a [JSONObject].
      *
-     * Called when the component makes the API details call request. You should make the /payments/details call.
+     * You can dismiss the component after this API call is successful, there is no need to perform any extra actions.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param actionComponentData The data from the action component.
      */
-    fun onAdditionalDetails(data: ActionComponentData)
+    fun onAdditionalDetails(actionComponentData: ActionComponentData)
 
     /**
      * The component has encountered an error.
@@ -51,6 +53,10 @@ interface ActionComponentCallback {
      * @param requiredPermission Required runtime permission.
      * @param permissionCallback Callback to be used when passing permission result.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
         // To be optionally overridden
         permissionCallback.onPermissionRequestNotHandled(requiredPermission)

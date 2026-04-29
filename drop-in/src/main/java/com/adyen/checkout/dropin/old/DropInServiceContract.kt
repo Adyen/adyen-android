@@ -70,8 +70,10 @@ interface DropInServiceContract {
      * [sendResult] with [DropInServiceResult.Update].
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param actionComponentData The data from the action component.
      */
-    fun onAdditionalDetails(data: ActionComponentData)
+    fun onAdditionalDetails(actionComponentData: ActionComponentData)
 
     /**
      * Only applicable for partial payments flow.

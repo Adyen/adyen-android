@@ -89,10 +89,10 @@ interface SessionDropInServiceContract {
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param data The data from the action component.
+     * @param actionComponentData The data from the action component.
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
-    fun onAdditionalDetails(data: ActionComponentData): Boolean = false
+    fun onAdditionalDetails(actionComponentData: ActionComponentData): Boolean = false
 
     /**
      * Only applicable for partial payments flow.

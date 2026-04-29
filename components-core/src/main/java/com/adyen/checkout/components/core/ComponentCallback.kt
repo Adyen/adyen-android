@@ -48,11 +48,13 @@ interface ComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallbac
      * We provide inside [ActionComponentData] the whole request data expected by the /payments/details endpoint. Use
      * [ActionComponentData.SERIALIZER] to serialize this data to a [JSONObject].
      *
-     * Called when the component makes the API details call request. You should make the /payments/details call.
+     * You can dismiss the component after this API call is successful, there is no need to perform any extra actions.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param actionComponentData The data from the action component.
      */
-    fun onAdditionalDetails(data: ActionComponentData)
+    fun onAdditionalDetails(actionComponentData: ActionComponentData)
 
     /**
      * The component has encountered an error.
