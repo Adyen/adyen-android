@@ -48,7 +48,6 @@ internal class SessionComponentRequestDispatcher(
 //                    event = ErrorEvent.API_PAYMENTS,
 //                )
 //                analyticsManager.trackEvent(event)
-//                callbacks.onError(error.toCheckoutError())
                 throw error
             },
         )
@@ -66,7 +65,6 @@ internal class SessionComponentRequestDispatcher(
                 return AdditionalDetailsResult.Completion(response.resultCode.orEmpty())
             },
             onFailure = { error ->
-//                callbacks.onError(error.toCheckoutError())
                 throw error
             },
         )
