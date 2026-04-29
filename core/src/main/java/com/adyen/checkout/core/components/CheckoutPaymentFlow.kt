@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,40 +38,42 @@ fun CheckoutPaymentFlow(
         state = CheckoutPaymentFlowState.PaymentMethod
     }
 
-    when (val localeState = state) {
-        CheckoutPaymentFlowState.PaymentMethod -> {
-            CheckoutPaymentMethod(
-                controller = controller,
-                onNavigate = { route ->
-                    state = when (route) {
-                        CheckoutRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
-                        CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
-                        is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary(route.identifier)
-                    }
-                },
-                modifier = modifier,
-                theme = theme,
-                localizationProvider = localizationProvider,
-            )
-        }
+    AnimatedContent(state) { localState ->
+        when (localState) {
+            CheckoutPaymentFlowState.PaymentMethod -> {
+                CheckoutPaymentMethod(
+                    controller = controller,
+                    onNavigate = { route ->
+                        state = when (route) {
+                            CheckoutRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
+                            CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
+                            is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary(route.identifier)
+                        }
+                    },
+                    modifier = modifier,
+                    theme = theme,
+                    localizationProvider = localizationProvider,
+                )
+            }
 
-        CheckoutPaymentFlowState.Action -> {
-            CheckoutAction(
-                controller = controller,
-                modifier = modifier,
-                theme = theme,
-                localizationProvider = localizationProvider,
-            )
-        }
+            CheckoutPaymentFlowState.Action -> {
+                CheckoutAction(
+                    controller = controller,
+                    modifier = modifier,
+                    theme = theme,
+                    localizationProvider = localizationProvider,
+                )
+            }
 
-        is CheckoutPaymentFlowState.Secondary -> {
-            CheckoutSecondary(
-                identifier = localeState.identifier,
-                controller = controller,
-                modifier = modifier,
-                theme = theme,
-                localizationProvider = localizationProvider,
-            )
+            is CheckoutPaymentFlowState.Secondary -> {
+                CheckoutSecondary(
+                    identifier = localState.identifier,
+                    controller = controller,
+                    modifier = modifier,
+                    theme = theme,
+                    localizationProvider = localizationProvider,
+                )
+            }
         }
     }
 }
