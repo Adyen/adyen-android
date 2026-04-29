@@ -16,7 +16,6 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
-import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
@@ -56,11 +55,10 @@ internal class StoredCardComponent(
     viewStateProducer: StoredCardViewStateProducer,
     coroutineScope: CoroutineScope,
     private val sdkDataProvider: SdkDataProvider,
-) : PaymentComponent<CardPaymentComponentState> {
+) : PaymentComponent {
 
-    private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> =
-        eventChannel.receiveAsFlow()
+    private val eventChannel = bufferedChannel<PaymentComponentEvent>()
+    override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),

@@ -24,7 +24,6 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
-import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
@@ -42,12 +41,11 @@ internal class MBWayComponent(
     componentStateReducer: MBWayComponentStateReducer,
     viewStateProducer: MBWayViewStateProducer,
     coroutineScope: CoroutineScope,
-) : PaymentComponent<MBWayPaymentComponentState>,
+) : PaymentComponent,
     SecondaryScreenComponent {
 
-    private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
-        eventChannel.receiveAsFlow()
+    private val eventChannel = bufferedChannel<PaymentComponentEvent>()
+    override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),

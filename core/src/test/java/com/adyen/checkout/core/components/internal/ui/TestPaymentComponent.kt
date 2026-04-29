@@ -10,14 +10,13 @@ package com.adyen.checkout.core.components.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-internal class TestPaymentComponent : PaymentComponent<BasePaymentComponentState> {
+internal class TestPaymentComponent : PaymentComponent {
 
-    override val eventFlow: Flow<PaymentComponentEvent<BasePaymentComponentState>>
+    override val eventFlow: Flow<PaymentComponentEvent>
         get() = flowOf()
 
     @Composable

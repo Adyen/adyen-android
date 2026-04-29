@@ -18,7 +18,7 @@ internal class ActionOnlyCheckoutFlow(
     private val actionHandler: ActionHandler,
 ) : CheckoutFlow {
 
-    override val paymentComponent: PaymentComponent<*>? = null
+    override val paymentComponent: PaymentComponent? = null
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
 

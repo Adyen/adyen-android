@@ -13,12 +13,11 @@ import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
-import com.adyen.checkout.googlepay.internal.ui.state.GooglePayPaymentComponentState
 import kotlinx.coroutines.flow.Flow
 
-internal class GooglePayComponent : PaymentComponent<GooglePayPaymentComponentState> {
+internal class GooglePayComponent : PaymentComponent {
 
-    override val eventFlow: Flow<PaymentComponentEvent<GooglePayPaymentComponentState>>
+    override val eventFlow: Flow<PaymentComponentEvent>
         get() = TODO("Not yet implemented")
 
     @Composable

@@ -33,11 +33,10 @@ internal class StoredBlikComponent(
     private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     coroutineScope: CoroutineScope,
-) : PaymentComponent<BlikPaymentComponentState> {
+) : PaymentComponent {
 
-    private val eventChannel = bufferedChannel<PaymentComponentEvent<BlikPaymentComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<BlikPaymentComponentState>> =
-        eventChannel.receiveAsFlow()
+    private val eventChannel = bufferedChannel<PaymentComponentEvent>()
+    override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val isLoading = MutableStateFlow(false)
 

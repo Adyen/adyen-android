@@ -54,7 +54,7 @@ class CheckoutController internal constructor(
     private val flow: CheckoutFlow,
 ) {
 
-    internal val paymentComponent: PaymentComponent<*>? get() = flow.paymentComponent
+    internal val paymentComponent: PaymentComponent? get() = flow.paymentComponent
 
     internal val actionComponent: ActionComponent? get() = flow.actionComponent
 

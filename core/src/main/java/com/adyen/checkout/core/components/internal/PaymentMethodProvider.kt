@@ -23,18 +23,18 @@ import java.util.concurrent.ConcurrentHashMap
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object PaymentMethodProvider {
 
-    private val factories = ConcurrentHashMap<String, PaymentComponentFactory<*, *>>()
-    private val storedFactories = ConcurrentHashMap<String, StoredPaymentComponentFactory<*, *>>()
+    private val factories = ConcurrentHashMap<String, PaymentComponentFactory<*>>()
+    private val storedFactories = ConcurrentHashMap<String, StoredPaymentComponentFactory<*>>()
 
     fun register(
         txVariant: String,
         factory: ComponentFactory,
     ) {
-        if (factory is PaymentComponentFactory<*, *>) {
+        if (factory is PaymentComponentFactory<*>) {
             factories[txVariant] = factory
         }
 
-        if (factory is StoredPaymentComponentFactory<*, *>) {
+        if (factory is StoredPaymentComponentFactory<*>) {
             storedFactories[txVariant] = factory
         }
     }
@@ -47,10 +47,9 @@ object PaymentMethodProvider {
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
-    ): PaymentComponent<BasePaymentComponentState>? {
+    ): PaymentComponent? {
         val txVariant = paymentMethod.type
 
-        @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
@@ -58,7 +57,7 @@ object PaymentMethodProvider {
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
             additionalCallbacks = additionalCallbacks,
-        ) as? PaymentComponent<BasePaymentComponentState>
+        )
     }
 
     @Suppress("LongParameterList")
@@ -68,17 +67,16 @@ object PaymentMethodProvider {
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-    ): PaymentComponent<BasePaymentComponentState>? {
+    ): PaymentComponent? {
         val txVariant = storedPaymentMethod.type
 
-        @Suppress("UNCHECKED_CAST")
         return storedFactories[txVariant]?.create(
             storedPaymentMethod = storedPaymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
-        ) as? PaymentComponent<BasePaymentComponentState>
+        )
     }
 
     /**

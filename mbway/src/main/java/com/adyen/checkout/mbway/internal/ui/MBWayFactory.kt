@@ -18,11 +18,10 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundl
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
-import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import kotlinx.coroutines.CoroutineScope
 
-internal class MBWayFactory : PaymentComponentFactory<MBWayPaymentComponentState, MBWayComponent> {
+internal class MBWayFactory : PaymentComponentFactory<MBWayComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,
