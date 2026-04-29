@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,10 @@ fun CheckoutPaymentFlow(
             else -> CheckoutPaymentFlowState.PaymentMethod
         }
         mutableStateOf(initialState)
+    }
+
+    BackHandler(state is CheckoutPaymentFlowState.Secondary) {
+        state = CheckoutPaymentFlowState.PaymentMethod
     }
 
     when (val localeState = state) {
