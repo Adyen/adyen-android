@@ -24,17 +24,14 @@ import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.Checkout
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.error.CheckoutError
-import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -42,6 +39,7 @@ import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.UIText
+import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -53,14 +51,9 @@ internal class V6ViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
+    private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
-
-    // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
-    private val configuration = CheckoutConfiguration(
-        Environment.TEST,
-        BuildConfig.CLIENT_KEY,
-    )
 
     private lateinit var checkoutContext: CheckoutContext.Advanced
 
@@ -93,7 +86,7 @@ internal class V6ViewModel @Inject constructor(
 
         val result = Checkout.setup(
             paymentMethods = paymentMethods,
-            configuration = configuration,
+            configuration = checkoutConfigurationProvider.checkoutConfig,
         )
 
         uiState = when (result) {
