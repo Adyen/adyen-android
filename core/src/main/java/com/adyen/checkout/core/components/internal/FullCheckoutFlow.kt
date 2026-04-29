@@ -70,6 +70,10 @@ internal class FullCheckoutFlow(
                     is PaymentComponentEvent.SecondaryScreen -> {
                         onNavigate?.invoke(CheckoutRoute.Secondary(event.identifier))
                     }
+
+                    PaymentComponentEvent.CloseSecondaryScreen -> {
+                        onNavigate?.invoke(CheckoutRoute.PaymentMethod)
+                    }
                 }
             }
             ?.launchIn(coroutineScope)

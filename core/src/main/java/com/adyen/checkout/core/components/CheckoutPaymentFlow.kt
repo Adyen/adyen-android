@@ -43,6 +43,7 @@ fun CheckoutPaymentFlow(
                 controller = controller,
                 onNavigate = { route ->
                     state = when (route) {
+                        CheckoutRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
                         CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
                         is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary(route.identifier)
                     }
