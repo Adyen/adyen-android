@@ -32,14 +32,14 @@ fun CheckoutPaymentFlow(
         mutableStateOf(initialState)
     }
 
-    when (state) {
+    when (val localeState = state) {
         CheckoutPaymentFlowState.PaymentMethod -> {
             CheckoutPaymentMethod(
                 controller = controller,
                 onNavigate = { route ->
                     state = when (route) {
                         CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
-                        is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary
+                        is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary(route.identifier)
                     }
                 },
                 modifier = modifier,
@@ -57,12 +57,20 @@ fun CheckoutPaymentFlow(
             )
         }
 
-        CheckoutPaymentFlowState.Secondary -> TODO()
+        is CheckoutPaymentFlowState.Secondary -> {
+            CheckoutSecondary(
+                identifier = localeState.identifier,
+                controller = controller,
+                modifier = modifier,
+                theme = theme,
+                localizationProvider = localizationProvider,
+            )
+        }
     }
 }
 
 private sealed class CheckoutPaymentFlowState {
     data object PaymentMethod : CheckoutPaymentFlowState()
     data object Action : CheckoutPaymentFlowState()
-    data object Secondary : CheckoutPaymentFlowState()
+    data class Secondary(val identifier: String) : CheckoutPaymentFlowState()
 }
