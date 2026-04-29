@@ -53,10 +53,6 @@ interface ActionComponentCallback {
      * @param requiredPermission Required runtime permission.
      * @param permissionCallback Callback to be used when passing permission result.
      */
-    @Deprecated(
-        message = "Deprecated. This will be removed in a future release.",
-        level = DeprecationLevel.WARNING,
-    )
     fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
         // To be optionally overridden
         permissionCallback.onPermissionRequestNotHandled(requiredPermission)

@@ -62,6 +62,8 @@ class ExampleV6DropInService : DropInService() {
         return handleAdditionalDetailsResponse(response)
     }
 
+    // Uncaught exceptions thrown from onSubmit / onAdditionalDetails are mapped to
+    // CheckoutError(UNKNOWN) and surfaced to the merchant via CheckoutCallbacks.onError.
     private fun handleSubmitResponse(jsonResponse: JSONObject?): SubmitResult {
         return when {
             jsonResponse == null -> {
