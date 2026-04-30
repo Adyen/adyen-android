@@ -140,31 +140,24 @@ internal class V6ViewModel @Inject constructor(
 
     private fun handleSubmitResponse(json: JSONObject?): SubmitResult {
         return when {
-            json == null -> throw IOException("Empty payments response")
-
-            json.has("action") -> {
+            json?.has("action") == true -> {
                 val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                 SubmitResult.Action(action)
             }
 
             else -> {
                 // TODO - move to onFinished callback after it's introduced
-                uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                SubmitResult.Completion(resultCode = json.optString("resultCode"))
+                val resultCode = json?.optString("resultCode").orEmpty()
+                uiState = V6UiState.Final(ResultState.get(resultCode))
+                SubmitResult.Completion(resultCode)
             }
         }
     }
 
     private fun handleAdditionalDetailsResponse(json: JSONObject?): AdditionalDetailsResult {
-        return when {
-            json == null -> throw IOException("Empty payments/details response")
-
-            else -> {
-                // TODO - move to onFinished callback after it's introduced
-                uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                AdditionalDetailsResult.Completion(resultCode = json.optString("resultCode"))
-            }
-        }
+        val resultCode = json?.optString("resultCode").orEmpty()
+        uiState = V6UiState.Final(ResultState.get(resultCode))
+        return AdditionalDetailsResult.Completion(resultCode)
     }
 
     private fun onError(error: CheckoutError) {
