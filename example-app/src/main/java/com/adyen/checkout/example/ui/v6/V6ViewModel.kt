@@ -23,7 +23,6 @@ import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.Checkout
@@ -44,7 +43,6 @@ import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -140,14 +138,20 @@ internal class V6ViewModel @Inject constructor(
 
     private fun handleSubmitResponse(json: JSONObject?): SubmitResult {
         return when {
-            json?.has("action") == true -> {
+            json == null -> {
+                Log.e(TAG, "Empty payments response — terminating with Completion(\"Error\").")
+                uiState = V6UiState.Final(ResultState.get(RESULT_CODE_ERROR))
+                SubmitResult.Completion(RESULT_CODE_ERROR)
+            }
+
+            json.has("action") -> {
                 val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                 SubmitResult.Action(action)
             }
 
             else -> {
                 // TODO - move to onFinished callback after it's introduced
-                val resultCode = json?.optString("resultCode").orEmpty()
+                val resultCode = json.optString("resultCode")
                 uiState = V6UiState.Final(ResultState.get(resultCode))
                 SubmitResult.Completion(resultCode)
             }
@@ -155,7 +159,12 @@ internal class V6ViewModel @Inject constructor(
     }
 
     private fun handleAdditionalDetailsResponse(json: JSONObject?): AdditionalDetailsResult {
-        val resultCode = json?.optString("resultCode").orEmpty()
+        if (json == null) {
+            Log.e(TAG, "Empty payments/details response — terminating with Completion(\"Error\").")
+            uiState = V6UiState.Final(ResultState.get(RESULT_CODE_ERROR))
+            return AdditionalDetailsResult.Completion(RESULT_CODE_ERROR)
+        }
+        val resultCode = json.optString("resultCode")
         uiState = V6UiState.Final(ResultState.get(resultCode))
         return AdditionalDetailsResult.Completion(resultCode)
     }
@@ -206,5 +215,6 @@ internal class V6ViewModel @Inject constructor(
 
     companion object {
         private val TAG = getLogTag()
+        private const val RESULT_CODE_ERROR = "Error"
     }
 }

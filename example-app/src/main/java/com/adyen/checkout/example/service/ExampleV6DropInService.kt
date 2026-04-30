@@ -22,7 +22,6 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.old.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
-import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -67,8 +66,8 @@ class ExampleV6DropInService : DropInService() {
     private fun handleSubmitResponse(jsonResponse: JSONObject?): SubmitResult {
         return when {
             jsonResponse == null -> {
-                Log.e(TAG, "FAILED")
-                throw IOException("Empty payments response")
+                Log.e(TAG, "Empty payments response — terminating with Completion(\"Error\").")
+                SubmitResult.Completion(RESULT_CODE_ERROR)
             }
 
             isAction(jsonResponse) -> {
@@ -82,7 +81,7 @@ class ExampleV6DropInService : DropInService() {
                 val resultCode = if (jsonResponse.has("resultCode")) {
                     jsonResponse.get("resultCode").toString()
                 } else {
-                    "EMPTY"
+                    RESULT_CODE_ERROR
                 }
                 SubmitResult.Completion(resultCode)
             }
@@ -92,8 +91,8 @@ class ExampleV6DropInService : DropInService() {
     private fun handleAdditionalDetailsResponse(jsonResponse: JSONObject?): AdditionalDetailsResult {
         return when {
             jsonResponse == null -> {
-                Log.e(TAG, "FAILED")
-                throw IOException("Empty payments/details response")
+                Log.e(TAG, "Empty payments/details response — terminating with Completion(\"Error\").")
+                AdditionalDetailsResult.Completion(RESULT_CODE_ERROR)
             }
 
             else -> {
@@ -110,5 +109,6 @@ class ExampleV6DropInService : DropInService() {
 
     companion object {
         private val TAG = getLogTag()
+        private const val RESULT_CODE_ERROR = "Error"
     }
 }
