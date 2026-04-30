@@ -14,7 +14,9 @@ import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
+import com.adyen.checkout.core.error.toCheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
+import kotlinx.coroutines.CancellationException
 
 internal class SessionComponentRequestDispatcher(
     initialSessionData: String?,
@@ -48,7 +50,9 @@ internal class SessionComponentRequestDispatcher(
 //                    event = ErrorEvent.API_PAYMENTS,
 //                )
 //                analyticsManager.trackEvent(event)
-                throw error
+                // We should think about adding a manual retry here so the shopper can rescue the payment.
+                callbacks.onError(error.toCheckoutError())
+                throw CancellationException("Session submit failed.", error)
             },
         )
     }
@@ -65,7 +69,8 @@ internal class SessionComponentRequestDispatcher(
                 return AdditionalDetailsResult.Completion(response.resultCode.orEmpty())
             },
             onFailure = { error ->
-                throw error
+                callbacks.onError(error.toCheckoutError())
+                throw CancellationException("Session additional details failed.", error)
             },
         )
     }

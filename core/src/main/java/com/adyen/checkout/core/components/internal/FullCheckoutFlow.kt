@@ -12,7 +12,6 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
@@ -70,9 +69,8 @@ internal class FullCheckoutFlow(
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         paymentComponent.setLoading(true)
-                        runSuspendCatching { componentRequestDispatcher.submit(event.state.data) }
-                            .onSuccess { handleResult(it) }
-                            .onFailure { componentRequestDispatcher.error(it.toCheckoutError()) }
+                        val result = componentRequestDispatcher.submit(event.state.data)
+                        handleResult(result)
                         paymentComponent.setLoading(false)
                     }
 
