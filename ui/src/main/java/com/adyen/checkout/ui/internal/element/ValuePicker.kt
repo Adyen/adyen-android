@@ -10,10 +10,12 @@ package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
@@ -25,7 +27,7 @@ internal fun ValuePicker(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-        modifier = modifier,
+        modifier = modifier.heightIn(max = LocalWindowInfo.current.containerDpSize.height),
     ) {
         items(
             items = items,
