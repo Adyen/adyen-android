@@ -36,6 +36,6 @@ class TestCardEncryptor : BaseCardEncryptor {
     override fun encryptBin(bin: String, publicKey: String): String {
         if (shouldThrowException) throw EncryptionException("Failed for testing purposes", null)
 
-        return bin
+        return "bin$bin-publicKey$publicKey"
     }
 }

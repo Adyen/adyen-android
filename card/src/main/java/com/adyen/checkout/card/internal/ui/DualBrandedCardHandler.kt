@@ -8,25 +8,23 @@
 
 package com.adyen.checkout.card.internal.ui
 
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
-import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.card.internal.ui.state.CardBrandData
+import com.adyen.checkout.card.internal.ui.state.CardBrandState
 
 internal class DualBrandedCardHandler {
 
-    internal fun processDetectedCardTypes(
-        detectedCardTypes: List<DetectedCardType>,
-        selectedBrand: CardBrand?
-    ): DualBrandData? {
-        val reliableAndSupportedTypes = detectedCardTypes.filter { it.isSupported && it.isReliable }
-
-        if (!isDualBrandedFlow(reliableAndSupportedTypes)) return null
+    internal fun getDualBrandData(cardBrandState: CardBrandState): DualBrandData? {
+        if (cardBrandState !is CardBrandState.DualBrandWithShopperSelection ||
+            cardBrandState.cardBrandDataList.size < 2
+        ) {
+            return null
+        }
 
         val brandOptions = mapToCardBrandItemList(
-            reliableAndSupportedTypes = reliableAndSupportedTypes,
-            selectedBrand = selectedBrand,
+            cardBrandDataList = cardBrandState.cardBrandDataList,
+            selectedCardBrandData = cardBrandState.shopperSelectedCardBrandData,
         )
 
         return DualBrandData(
@@ -35,37 +33,20 @@ internal class DualBrandedCardHandler {
         )
     }
 
-    private fun isDualBrandedFlow(reliableAndSupportedTypes: List<DetectedCardType>) =
-        reliableAndSupportedTypes.size > 1 && hasSupportedBrands(reliableAndSupportedTypes)
-
-    private fun hasSupportedBrands(reliableAndSupportedTypes: List<DetectedCardType>) = reliableAndSupportedTypes.any {
-        it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS
-    }
-
     private fun mapToCardBrandItemList(
-        reliableAndSupportedTypes: List<DetectedCardType>,
-        selectedBrand: CardBrand?,
-    ) = reliableAndSupportedTypes.mapIndexed { index, detectedCardType ->
-        if (selectedBrand == null) {
-            detectedCardType.mapToCardBrandItem(index == 0)
-        } else {
-            detectedCardType.mapToCardBrandItem(
-                detectedCardType.cardBrand.txVariant == selectedBrand.txVariant,
+        cardBrandDataList: List<CardBrandData>,
+        selectedCardBrandData: CardBrandData,
+    ): List<CardBrandItem> {
+        return cardBrandDataList.map { cardBrandData ->
+            cardBrandData.mapToCardBrandItem(
+                isSelected = (cardBrandData == selectedCardBrandData),
             )
         }
     }
 
-    private fun DetectedCardType.mapToCardBrandItem(isSelected: Boolean) = CardBrandItem(
+    private fun CardBrandData.mapToCardBrandItem(isSelected: Boolean) = CardBrandItem(
         name = localizedBrand ?: cardBrand.txVariant,
         brand = cardBrand,
         isSelected = isSelected,
     )
-
-    companion object {
-        private val SUPPORTED_CARD_BRANDS = listOf(
-            CardType.CARTEBANCAIRE,
-            CardType.BCMC,
-            CardType.DANKORT,
-        ).map { it.txVariant }
-    }
 }

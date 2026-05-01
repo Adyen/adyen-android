@@ -12,12 +12,12 @@ import com.adyen.checkout.core.common.CardBrand
 
 internal data class DetectedCardType(
     val cardBrand: CardBrand,
-    val isReliable: Boolean,
     val enableLuhnCheck: Boolean,
     val cvcPolicy: Brand.FieldPolicy,
     val expiryDatePolicy: Brand.FieldPolicy,
     val isSupported: Boolean,
+    val isShopperSelectionAllowedInDualBranded: Boolean,
     val panLength: Int?,
     val paymentMethodVariant: String?,
-    val localizedBrand: String?
+    val localizedBrand: String?,
 )

@@ -31,7 +31,6 @@ internal class CardValidationMapper {
     ): CheckoutLocalizationKey? {
         return when (validation) {
             CardExpiryDateValidation.VALID -> null
-            CardExpiryDateValidation.VALID_NOT_REQUIRED -> null
             CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE ->
                 CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE
 

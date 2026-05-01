@@ -12,10 +12,3 @@ internal data class DualBrandData(
     val brandOptionFirst: CardBrandItem,
     val brandOptionSecond: CardBrandItem,
 )
-
-internal val DualBrandData.selectedBrand
-    get() = when {
-        brandOptionFirst.isSelected -> brandOptionFirst.brand
-        brandOptionSecond.isSelected -> brandOptionSecond.brand
-        else -> null
-    }

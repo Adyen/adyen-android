@@ -11,9 +11,14 @@ package com.adyen.checkout.card.internal.ui
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.getCardConfiguration
+import com.adyen.checkout.card.internal.data.api.BinLookupCache
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
+import com.adyen.checkout.card.internal.data.api.LocalCardBrandDetectionService
+import com.adyen.checkout.card.internal.data.api.NetworkCardBrandDetectionService
+import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
+import com.adyen.checkout.card.internal.ui.state.CardBrandIntentsHandler
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -37,6 +42,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -59,18 +65,36 @@ internal class CardFactory :
             paymentMethod = paymentMethod as? CardPaymentMethod,
         )
 
+        val detectCardTypeBinHelper = DetectCardTypeBinHelper()
+
         val cardValidationMapper = CardValidationMapper()
         val dualBrandedCardHandler = DualBrandedCardHandler()
         val componentStateFactory = CardComponentStateFactory(cardComponentParams)
-        val componentStateReducer = CardComponentStateReducer(cardComponentParams)
+        val cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams, detectCardTypeBinHelper)
+        val componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler)
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = CardViewStateProducer(dualBrandedCardHandler)
 
         val cardEncryptor = CardEncryptorFactory.provide()
         val genericEncryptor = GenericEncryptorFactory.provide()
-        val httpClient = HttpClientFactory.getHttpClient(componentParamsBundle.commonComponentParams.environment)
-        val binLookupService = BinLookupService(httpClient)
-        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
+        val httpClient = HttpClientFactory.getHttpClient(cardComponentParams.environment)
+        val binLookupService = BinLookupService(httpClient, cardComponentParams.clientKey)
+        val binLookupCache = BinLookupCache()
+        val localCardBrandDetectionService = LocalCardBrandDetectionService(cardComponentParams.supportedCardBrands)
+        val networkCardBrandDetectionService = NetworkCardBrandDetectionService(
+            cardEncryptor,
+            binLookupService,
+            cardComponentParams.publicKey,
+            cardComponentParams.supportedCardBrands,
+            // TODO ensure this is set to BCMC in the BCMC factory supported
+            paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
+        )
+        val detectCardTypeRepository = DefaultDetectCardTypeRepository(
+            detectCardTypeBinHelper,
+            binLookupCache,
+            localCardBrandDetectionService,
+            networkCardBrandDetectionService,
+        )
 
         return CardComponent(
             analyticsManager = analyticsManager,
