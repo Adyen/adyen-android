@@ -26,6 +26,10 @@ import java.util.Locale
 /**
  * Configuration class for the [PayToComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class PayToConfiguration(
@@ -41,6 +45,10 @@ class PayToConfiguration(
     /**
      * Builder to create an [PayToConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<PayToConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -116,6 +124,10 @@ class PayToConfiguration(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.payTo(
     configuration: @CheckoutConfigurationMarker PayToConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

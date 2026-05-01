@@ -6,6 +6,8 @@
  * Created by ozgur on 5/11/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.paybybankus.internal.ui
 
 import app.cash.turbine.test

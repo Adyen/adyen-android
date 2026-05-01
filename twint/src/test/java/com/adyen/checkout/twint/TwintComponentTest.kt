@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.twint
 
 import androidx.lifecycle.LifecycleOwner

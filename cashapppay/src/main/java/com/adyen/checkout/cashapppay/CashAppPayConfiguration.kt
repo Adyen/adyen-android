@@ -26,6 +26,10 @@ import java.util.Locale
 /**
  * Configuration class for the [CashAppPayComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class CashAppPayConfiguration
 @Suppress("LongParameterList")
@@ -43,6 +47,10 @@ private constructor(
     val storePaymentMethod: Boolean?,
 ) : Configuration, ButtonConfiguration {
 
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<CashAppPayConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -184,6 +192,10 @@ private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.cashAppPay(
     configuration: @CheckoutConfigurationMarker CashAppPayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

@@ -8,6 +8,10 @@
 
 package com.adyen.checkout.cashapppay
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class CashAppPayEnvironment {
     SANDBOX,
     PRODUCTION,

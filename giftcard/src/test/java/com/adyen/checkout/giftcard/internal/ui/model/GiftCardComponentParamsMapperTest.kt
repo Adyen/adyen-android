@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.giftcard.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount

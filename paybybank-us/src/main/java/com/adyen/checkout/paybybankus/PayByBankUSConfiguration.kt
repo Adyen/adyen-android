@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [PayByBankUSComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class PayByBankUSConfiguration private constructor(
     override val shopperLocale: Locale?,
@@ -33,6 +37,10 @@ class PayByBankUSConfiguration private constructor(
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<PayByBankUSConfiguration, Builder> {
 
         /**
@@ -77,6 +85,10 @@ class PayByBankUSConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.payByBankUS(
     configuration: @CheckoutConfigurationMarker PayByBankUSConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 /**
  * Represents the state of [CashAppPayComponent]
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class CashAppPayComponentState(
     override val data: PaymentComponentData<CashAppPayPaymentMethod>,
     override val isInputValid: Boolean,

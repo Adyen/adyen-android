@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [GiftCardComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class GiftCardConfiguration private constructor(
@@ -41,6 +45,10 @@ class GiftCardConfiguration private constructor(
     /**
      * Builder to create a [GiftCardConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<GiftCardConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -131,6 +139,10 @@ class GiftCardConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.giftCard(
     configuration: @CheckoutConfigurationMarker GiftCardConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

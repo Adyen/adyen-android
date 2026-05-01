@@ -6,6 +6,8 @@
  * Created by ararat on 25/2/2025.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.payto.internal.ui
 
 import com.adyen.checkout.components.core.Amount

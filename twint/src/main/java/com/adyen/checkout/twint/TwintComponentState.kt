@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 /**
  * Represents the state of [TwintComponentState]
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class TwintComponentState(
     override val data: PaymentComponentData<TwintPaymentMethod>,
     override val isInputValid: Boolean,
