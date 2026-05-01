@@ -35,6 +35,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.ACH] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class ACHDirectDebitComponent internal constructor(
     private val achDirectDebitDelegate: ACHDirectDebitDelegate,
     private val genericActionDelegate: GenericActionDelegate,

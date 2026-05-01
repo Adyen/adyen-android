@@ -26,6 +26,10 @@ import java.util.Locale
 /**
  * Configuration class for the [BcmcComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class BcmcConfiguration private constructor(
@@ -44,6 +48,10 @@ class BcmcConfiguration private constructor(
     /**
      * Builder to create a [BcmcConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BcmcConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -172,6 +180,10 @@ class BcmcConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.bcmc(
     configuration: @CheckoutConfigurationMarker BcmcConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

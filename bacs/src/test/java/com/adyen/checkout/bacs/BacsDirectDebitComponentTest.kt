@@ -6,6 +6,8 @@
  * Created by josephj on 12/12/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.bacs
 
 import androidx.lifecycle.LifecycleOwner

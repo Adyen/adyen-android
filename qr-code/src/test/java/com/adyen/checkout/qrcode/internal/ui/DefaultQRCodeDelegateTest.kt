@@ -6,6 +6,8 @@
  * Created by oscars on 15/8/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.qrcode.internal.ui
 
 import android.app.Activity

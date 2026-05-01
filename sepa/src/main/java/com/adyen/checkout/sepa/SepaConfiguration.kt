@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [SepaComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class SepaConfiguration private constructor(
@@ -40,6 +44,10 @@ class SepaConfiguration private constructor(
     /**
      * Builder to create a [SepaConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<SepaConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -115,6 +123,10 @@ class SepaConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.sepa(
     configuration: @CheckoutConfigurationMarker SepaConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

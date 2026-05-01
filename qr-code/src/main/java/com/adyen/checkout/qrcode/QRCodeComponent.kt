@@ -30,6 +30,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle the 'qrCode' action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class QRCodeComponent internal constructor(
     override val delegate: QRCodeDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,

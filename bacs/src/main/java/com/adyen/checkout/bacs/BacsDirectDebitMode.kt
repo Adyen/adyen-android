@@ -11,6 +11,10 @@ package com.adyen.checkout.bacs
 /**
  * The different modes [BacsDirectDebitComponent] can be in.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 enum class BacsDirectDebitMode {
     INPUT,
     CONFIRMATION

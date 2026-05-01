@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.upi
 
 import com.adyen.checkout.components.core.Amount

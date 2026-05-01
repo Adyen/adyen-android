@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.instant
 
 import com.adyen.checkout.components.core.ActionHandlingMethod

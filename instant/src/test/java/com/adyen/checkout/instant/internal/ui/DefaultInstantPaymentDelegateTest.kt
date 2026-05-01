@@ -6,6 +6,8 @@
  * Created by ozgur on 9/11/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.instant.internal.ui
 
 import app.cash.turbine.test

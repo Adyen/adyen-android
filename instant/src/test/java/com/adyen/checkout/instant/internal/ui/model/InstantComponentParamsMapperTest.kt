@@ -6,6 +6,8 @@
  * Created by oscars on 28/11/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.instant.internal.ui.model
 
 import com.adyen.checkout.components.core.ActionHandlingMethod

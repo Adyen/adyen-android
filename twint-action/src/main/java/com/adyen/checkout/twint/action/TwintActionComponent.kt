@@ -27,6 +27,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * An [ActionComponent] that is able to handle the 'twint' action.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class TwintActionComponent internal constructor(
     override val delegate: TwintActionDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,

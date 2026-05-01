@@ -23,6 +23,10 @@ import java.util.Locale
 /**
  * Configuration class for the [IdealComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class IdealConfiguration private constructor(
@@ -122,6 +126,10 @@ class IdealConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.ideal(
     configuration: @CheckoutConfigurationMarker IdealConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

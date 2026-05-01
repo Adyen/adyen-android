@@ -6,6 +6,8 @@
  * Created by ararat on 27/5/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.upi.internal.ui
 
 import com.adyen.checkout.components.core.AppData

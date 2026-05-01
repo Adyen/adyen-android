@@ -6,6 +6,8 @@
  * Created by josephj on 17/11/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration

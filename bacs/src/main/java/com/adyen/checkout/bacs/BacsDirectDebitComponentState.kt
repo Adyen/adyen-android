@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMe
 /**
  * Represents the state of [BacsDirectDebitComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class BacsDirectDebitComponentState(
     override val data: PaymentComponentData<BacsDirectDebitPaymentMethod>,
     override val isInputValid: Boolean,

@@ -6,6 +6,8 @@
  * Created by josephj on 21/11/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.onlinebankingcore.utils
 
 import com.adyen.checkout.components.core.Amount

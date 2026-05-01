@@ -32,6 +32,10 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.IDEAL] payment method.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class IdealComponent internal constructor(
     private val idealDelegate: IdealDelegate,
     private val genericActionDelegate: GenericActionDelegate,

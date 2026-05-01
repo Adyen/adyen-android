@@ -6,6 +6,8 @@
  * Created by ozgur on 21/7/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.sepa.internal.ui
 
 import app.cash.turbine.test

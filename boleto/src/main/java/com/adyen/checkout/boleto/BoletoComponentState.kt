@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 /**
  * Represents the state of [BoletoComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class BoletoComponentState(
     override val data: PaymentComponentData<GenericPaymentMethod>,
     override val isInputValid: Boolean,

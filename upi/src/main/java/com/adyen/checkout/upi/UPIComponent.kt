@@ -35,6 +35,10 @@ import kotlinx.coroutines.flow.Flow
  * A [PaymentComponent] that supports the [PaymentMethodTypes.UPI], [PaymentMethodTypes.UPI_COLLECT] and
  * [PaymentMethodTypes.UPI_QR] payment methods.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class UPIComponent internal constructor(
     private val upiDelegate: UPIDelegate,
     private val genericActionDelegate: GenericActionDelegate,

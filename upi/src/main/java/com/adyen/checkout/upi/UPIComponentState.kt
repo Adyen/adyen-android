@@ -15,6 +15,10 @@ import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 /**
  * Represents the state of [UPIComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 data class UPIComponentState(
     override val data: PaymentComponentData<UPIPaymentMethod>,
     override val isInputValid: Boolean,

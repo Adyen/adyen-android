@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [UPIComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class UPIConfiguration(
@@ -40,6 +44,10 @@ class UPIConfiguration(
     /**
      * Builder to create a [UPIConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<UPIConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -113,6 +121,10 @@ class UPIConfiguration(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.upi(
     configuration: @CheckoutConfigurationMarker UPIConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

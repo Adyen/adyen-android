@@ -6,6 +6,8 @@
  * Created by oscars on 28/2/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.upi
 
 import androidx.lifecycle.LifecycleOwner

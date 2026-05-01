@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [BoletoComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 @Suppress("LongParameterList")
 class BoletoConfiguration private constructor(
@@ -41,6 +45,10 @@ class BoletoConfiguration private constructor(
     /**
      * Builder to create a [BoletoConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BoletoConfiguration, Builder>,
         ButtonConfigurationBuilder {
@@ -126,6 +134,10 @@ class BoletoConfiguration private constructor(
     }
 }
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.boleto(
     configuration: @CheckoutConfigurationMarker BoletoConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {

@@ -16,11 +16,19 @@ import kotlinx.parcelize.Parcelize
  * Configuration class for Address Form in ACH Component. This class can be used define the
  * visibility of the address form.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class ACHDirectDebitAddressConfiguration : Parcelable {
     /**
      * Address Form will be hidden.
      */
     @SuppressLint("ObjectInPublicSealedClass")
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Parcelize
     object None : ACHDirectDebitAddressConfiguration()
 
@@ -29,6 +37,10 @@ sealed class ACHDirectDebitAddressConfiguration : Parcelable {
      * @param supportedCountryCodes Supported country codes to be filtered from the available country
      * options.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     @Parcelize
     data class FullAddress(
         val supportedCountryCodes: List<String>,

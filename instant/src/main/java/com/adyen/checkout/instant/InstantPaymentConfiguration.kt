@@ -25,6 +25,10 @@ import java.util.Locale
 /**
  * Configuration class for the [InstantPaymentComponent].
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class InstantPaymentConfiguration
 @Suppress("LongParameterList")
@@ -41,6 +45,10 @@ private constructor(
     /**
      * Builder to create an [InstantPaymentConfiguration].
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
 
         private var actionHandlingMethod: ActionHandlingMethod? = null
@@ -115,6 +123,10 @@ private constructor(
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 fun CheckoutConfiguration.instantPayment(
     paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
     configuration: @CheckoutConfigurationMarker InstantPaymentConfiguration.Builder.() -> Unit = {},
