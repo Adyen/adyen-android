@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.analytics.internal
 
-import android.content.Context
 import com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepository
 import com.adyen.checkout.core.analytics.internal.data.local.ErrorAnalyticsLocalDataStore
 import com.adyen.checkout.core.analytics.internal.data.local.InfoAnalyticsLocalDataStore
@@ -21,6 +20,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import java.util.Locale
 
@@ -28,7 +28,6 @@ internal class AnalyticsManagerFactory {
 
     fun provide(
         componentParams: ComponentParams,
-        applicationContext: Context,
         source: AnalyticsSource,
         sessionId: String?,
         checkoutAttemptId: String?,
@@ -39,7 +38,6 @@ internal class AnalyticsManagerFactory {
         analyticsParams = componentParams.analyticsParams,
         isCreatedByDropIn = componentParams.isCreatedByDropIn,
         amount = componentParams.amount,
-        applicationContext = applicationContext,
         source = source,
         sessionId = sessionId,
         checkoutAttemptId = checkoutAttemptId,
@@ -53,38 +51,42 @@ internal class AnalyticsManagerFactory {
         analyticsParams: AnalyticsParams,
         isCreatedByDropIn: Boolean,
         amount: Amount?,
-        applicationContext: Context,
         source: AnalyticsSource,
         sessionId: String?,
         checkoutAttemptId: String?,
-    ): AnalyticsManager = DefaultAnalyticsManager(
-        analyticsRepository = DefaultAnalyticsRepository(
-            localInfoDataStore = InfoAnalyticsLocalDataStore(),
-            localLogDataStore = LogAnalyticsLocalDataStore(),
-            localErrorDataStore = ErrorAnalyticsLocalDataStore(),
-            remoteDataStore = DefaultAnalyticsRemoteDataStore(
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(environment),
+    ): AnalyticsManager {
+        val applicationContext = ApplicationContextHolder.require()
+
+        return DefaultAnalyticsManager(
+            analyticsRepository = DefaultAnalyticsRepository(
+                localInfoDataStore = InfoAnalyticsLocalDataStore(),
+                localLogDataStore = LogAnalyticsLocalDataStore(),
+                localErrorDataStore = ErrorAnalyticsLocalDataStore(),
+                remoteDataStore = DefaultAnalyticsRemoteDataStore(
+                    analyticsService = AnalyticsService(
+                        HttpClientFactory.getAnalyticsHttpClient(environment),
+                    ),
+                    clientKey = clientKey,
+                    infoSize = INFO_SIZE,
+                    logSize = LOG_SIZE,
+                    errorSize = ERROR_SIZE,
                 ),
-                clientKey = clientKey,
-                infoSize = INFO_SIZE,
-                logSize = LOG_SIZE,
-                errorSize = ERROR_SIZE,
+                analyticsSetupProvider = DefaultAnalyticsSetupProvider(
+                    shopperLocale = shopperLocale,
+                    isCreatedByDropIn = isCreatedByDropIn,
+                    analyticsLevel = analyticsParams.level,
+                    packageName = applicationContext.packageName,
+                    screenWidth = applicationContext.resources.displayMetrics.widthPixels,
+                    amount = amount,
+                    source = source,
+                    sessionId = sessionId,
+                    checkoutAttemptId = checkoutAttemptId,
+                ),
+                analyticsTrackRequestProvider = AnalyticsTrackRequestProvider(),
             ),
-            analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-                applicationContext = applicationContext,
-                shopperLocale = shopperLocale,
-                isCreatedByDropIn = isCreatedByDropIn,
-                analyticsLevel = analyticsParams.level,
-                amount = amount,
-                source = source,
-                sessionId = sessionId,
-                checkoutAttemptId = checkoutAttemptId,
-            ),
-            analyticsTrackRequestProvider = AnalyticsTrackRequestProvider(),
-        ),
-        analyticsParams = analyticsParams,
-    )
+            analyticsParams = analyticsParams,
+        )
+    }
 
     companion object {
         private const val INFO_SIZE = 50

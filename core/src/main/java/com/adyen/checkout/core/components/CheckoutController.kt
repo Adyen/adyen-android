@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.components
 
-import android.content.Context
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
@@ -20,15 +19,12 @@ fun CheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext.Advanced,
     callbacks: AdvancedCheckoutCallbacks,
-    // TODO - find a way to not require application context in the controller
-    applicationContext: Context,
     coroutineScope: CoroutineScope,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         target = target,
         context = context,
         callbacks = callbacks,
-        applicationContext = applicationContext,
         coroutineScope = coroutineScope,
     )
 }
@@ -37,15 +33,12 @@ fun CheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext.Sessions,
     callbacks: SessionCheckoutCallbacks,
-    // TODO - find a way to not require application context in the controller
-    applicationContext: Context,
     coroutineScope: CoroutineScope,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         target = target,
         context = context,
         callbacks = callbacks,
-        applicationContext = applicationContext,
         coroutineScope = coroutineScope,
     )
 }

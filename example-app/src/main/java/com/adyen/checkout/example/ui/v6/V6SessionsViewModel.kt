@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.v6
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -32,7 +31,6 @@ import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,7 +40,6 @@ internal class V6SessionsViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
-    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private lateinit var checkoutContext: CheckoutContext.Sessions
@@ -134,7 +131,6 @@ internal class V6SessionsViewModel @Inject constructor(
                 onError = ::onError,
                 onFinished = ::onFinished,
             ),
-            applicationContext = context,
             coroutineScope = viewModelScope,
         )
     }
