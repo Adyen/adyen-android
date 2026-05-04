@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.internal.CheckoutFlow
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 
 fun CheckoutController(
     target: CheckoutTarget,
@@ -51,11 +52,9 @@ class CheckoutController internal constructor(
 
     internal val actionComponent: ActionComponent? get() = flow.actionComponent
 
-    internal var onNavigate: ((CheckoutPaymentMethodRoute) -> Unit)?
-        get() = flow.onNavigate
-        set(value) {
-            flow.onNavigate = value
-        }
+    internal val paymentMethodNavigation: Flow<CheckoutPaymentMethodRoute> get() = flow.paymentMethodNavigation
+
+    internal val secondaryNavigation: Flow<CheckoutSecondaryRoute> get() = flow.secondaryNavigation
 
     fun submit() {
         flow.submit()

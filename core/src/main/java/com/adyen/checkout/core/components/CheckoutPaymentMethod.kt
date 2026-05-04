@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.components
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
 import com.adyen.checkout.core.common.Environment
@@ -26,8 +26,8 @@ fun CheckoutPaymentMethod(
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-    SideEffect {
-        controller.onNavigate = onNavigate
+    LaunchedEffect(controller, onNavigate) {
+        controller.paymentMethodNavigation.collect(onNavigate)
     }
 
     InternalCheckoutTheme(theme) {
