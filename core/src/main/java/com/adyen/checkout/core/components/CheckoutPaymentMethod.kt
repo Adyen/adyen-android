@@ -21,7 +21,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 fun CheckoutPaymentMethod(
     controller: CheckoutController,
-    onNavigate: (CheckoutRoute) -> Unit,
+    onNavigate: (CheckoutPaymentMethodRoute) -> Unit,
     modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,

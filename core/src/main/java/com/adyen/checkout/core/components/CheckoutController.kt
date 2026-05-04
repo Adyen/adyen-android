@@ -51,7 +51,7 @@ class CheckoutController internal constructor(
 
     internal val actionComponent: ActionComponent? get() = flow.actionComponent
 
-    internal var onNavigate: ((CheckoutRoute) -> Unit)?
+    internal var onNavigate: ((CheckoutPaymentMethodRoute) -> Unit)?
         get() = flow.onNavigate
         set(value) {
             flow.onNavigate = value

@@ -13,8 +13,8 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -50,7 +50,7 @@ internal class FullCheckoutFlow(
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
 
-    override var onNavigate: ((CheckoutRoute) -> Unit)? = null
+    override var onNavigate: ((CheckoutPaymentMethodRoute) -> Unit)? = null
 
     init {
         paymentComponent?.eventFlow
@@ -68,11 +68,11 @@ internal class FullCheckoutFlow(
                     }
 
                     is PaymentComponentEvent.SecondaryScreen -> {
-                        onNavigate?.invoke(CheckoutRoute.Secondary(event.identifier))
+                        onNavigate?.invoke(CheckoutPaymentMethodRoute.Secondary(event.identifier))
                     }
 
                     PaymentComponentEvent.CloseSecondaryScreen -> {
-                        onNavigate?.invoke(CheckoutRoute.PaymentMethod)
+                        // TODO - implement secondary navigation
                     }
                 }
             }
@@ -89,7 +89,7 @@ internal class FullCheckoutFlow(
         when (checkoutResult) {
             is CheckoutResult.Action -> {
                 actionHandler.handleAction(checkoutResult.action)
-                onNavigate?.invoke(CheckoutRoute.Action)
+                onNavigate?.invoke(CheckoutPaymentMethodRoute.Action())
             }
 
             is CheckoutResult.Error -> {

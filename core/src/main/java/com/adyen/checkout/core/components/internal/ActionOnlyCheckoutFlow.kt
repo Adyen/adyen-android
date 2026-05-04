@@ -10,7 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.components.CheckoutRoute
+import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 
 internal class ActionOnlyCheckoutFlow(
@@ -22,7 +22,7 @@ internal class ActionOnlyCheckoutFlow(
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
 
-    override var onNavigate: ((CheckoutRoute) -> Unit)? = null
+    override var onNavigate: ((CheckoutPaymentMethodRoute) -> Unit)? = null
 
     init {
         actionHandler.handleAction(action)

@@ -45,10 +45,11 @@ fun CheckoutPaymentFlow(
                     controller = controller,
                     onNavigate = { route ->
                         state = when (route) {
-                            // TODO - Move PaymentMethod case to onNavigate callback in secondary composable
-                            CheckoutRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
-                            CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
-                            is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary(route.identifier)
+                            is CheckoutPaymentMethodRoute.Action -> CheckoutPaymentFlowState.Action
+                            is CheckoutPaymentMethodRoute.Secondary ->
+                                CheckoutPaymentFlowState.Secondary(route.identifier)
+
+                            else -> state
                         }
                     },
                     modifier = modifier,
