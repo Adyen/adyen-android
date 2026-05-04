@@ -757,6 +757,21 @@ public final class com/adyen/checkout/core/components/CheckoutPaymentMethodKt {
 	public static final fun CheckoutPaymentMethod (Lcom/adyen/checkout/core/components/CheckoutController;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
+public abstract class com/adyen/checkout/core/components/CheckoutPaymentMethodRoute {
+	public static final field $stable I
+}
+
+public final class com/adyen/checkout/core/components/CheckoutPaymentMethodRoute$Action : com/adyen/checkout/core/components/CheckoutPaymentMethodRoute {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/components/CheckoutPaymentMethodRoute$Secondary : com/adyen/checkout/core/components/CheckoutPaymentMethodRoute {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getIdentifier ()Ljava/lang/String;
+}
+
 public abstract interface class com/adyen/checkout/core/components/CheckoutResult {
 }
 
@@ -798,40 +813,17 @@ public final class com/adyen/checkout/core/components/CheckoutResult$Finished : 
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract class com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-}
-
-public final class com/adyen/checkout/core/components/CheckoutRoute$Action : com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/core/components/CheckoutRoute$Action;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/core/components/CheckoutRoute$PaymentMethod : com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/core/components/CheckoutRoute$PaymentMethod;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/core/components/CheckoutRoute$Secondary : com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutRoute$Secondary;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/CheckoutRoute$Secondary;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutRoute$Secondary;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getIdentifier ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/adyen/checkout/core/components/CheckoutSecondaryKt {
-	public static final fun CheckoutSecondary (Ljava/lang/String;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
+	public static final fun CheckoutSecondary (Ljava/lang/String;Lcom/adyen/checkout/core/components/CheckoutController;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
+}
+
+public abstract class com/adyen/checkout/core/components/CheckoutSecondaryRoute {
+	public static final field $stable I
+}
+
+public final class com/adyen/checkout/core/components/CheckoutSecondaryRoute$PaymentMethod : com/adyen/checkout/core/components/CheckoutSecondaryRoute {
+	public static final field $stable I
+	public fun <init> ()V
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutTarget {
