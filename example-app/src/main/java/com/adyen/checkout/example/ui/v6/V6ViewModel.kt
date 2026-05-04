@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.v6
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -41,7 +40,6 @@ import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
@@ -52,7 +50,6 @@ internal class V6ViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
-    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private lateinit var checkoutContext: CheckoutContext.Advanced
@@ -193,7 +190,6 @@ internal class V6ViewModel @Inject constructor(
                     onBinLookup(::onBinLookup)
                 }
             },
-            applicationContext = context,
             coroutineScope = viewModelScope,
         )
     }

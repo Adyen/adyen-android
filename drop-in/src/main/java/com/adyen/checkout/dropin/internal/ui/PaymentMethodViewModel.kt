@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -37,7 +36,6 @@ internal class PaymentMethodViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val checkoutContext: CheckoutContext,
     private val dropInServiceManager: DropInServiceManager,
-    private val applicationContext: Context,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(createViewState())
@@ -92,7 +90,6 @@ internal class PaymentMethodViewModel(
                         onAdditionalDetails = ::onAdditionalDetails,
                         onError = ::onError,
                     ),
-                    applicationContext = applicationContext,
                     coroutineScope = viewModelScope,
                 )
             }
@@ -106,7 +103,6 @@ internal class PaymentMethodViewModel(
                         onError = ::onError,
                         onFinished = ::onFinished,
                     ),
-                    applicationContext = applicationContext,
                     coroutineScope = viewModelScope,
                 )
             }
@@ -143,7 +139,6 @@ internal class PaymentMethodViewModel(
         private val paymentMethodRepository: PaymentMethodRepository,
         private val checkoutContext: CheckoutContext,
         private val dropInServiceManager: DropInServiceManager,
-        private val applicationContext: Context,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -152,7 +147,6 @@ internal class PaymentMethodViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 checkoutContext = checkoutContext,
                 dropInServiceManager = dropInServiceManager,
-                applicationContext = applicationContext,
             ) as T
         }
     }

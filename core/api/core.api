@@ -745,8 +745,8 @@ public final class com/adyen/checkout/core/components/CheckoutController {
 }
 
 public final class com/adyen/checkout/core/components/CheckoutControllerKt {
-	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Advanced;Lcom/adyen/checkout/core/components/AdvancedCheckoutCallbacks;Landroid/content/Context;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
-	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Sessions;Lcom/adyen/checkout/core/components/SessionCheckoutCallbacks;Landroid/content/Context;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
+	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Advanced;Lcom/adyen/checkout/core/components/AdvancedCheckoutCallbacks;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
+	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Sessions;Lcom/adyen/checkout/core/components/SessionCheckoutCallbacks;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
 }
 
 public final class com/adyen/checkout/core/components/CheckoutPaymentFlowKt {

@@ -8,10 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote
 
-import android.content.Context
-import android.content.res.Resources
 import android.os.Build
-import android.util.DisplayMetrics
 import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
@@ -19,27 +16,13 @@ import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.util.Locale
 
 internal class DefaultAnalyticsSetupProviderTest {
 
-    private lateinit var analyticsSetupProvider: DefaultAnalyticsSetupProvider
-
     @Test
     fun `when providing AnalyticsSetupRequest, then it should be mapped correctly`() {
-        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            applicationContext = createMockApplicationContext(),
-            shopperLocale = Locale.US,
-            isCreatedByDropIn = false,
-            analyticsLevel = AnalyticsParamsLevel.INITIAL,
-            amount = Amount("USD", 123),
-            source = AnalyticsSource.PaymentComponent("scheme"),
-            sessionId = "sessionId",
-            checkoutAttemptId = "checkoutAttemptId",
-        )
+        val analyticsSetupProvider = createAnalyticsSetupProvider()
 
         val result = analyticsSetupProvider.provide()
 
@@ -67,16 +50,7 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when created by drop in, then flavor should be dropin`() {
-        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            applicationContext = createMockApplicationContext(),
-            shopperLocale = Locale.US,
-            isCreatedByDropIn = true,
-            analyticsLevel = AnalyticsParamsLevel.INITIAL,
-            amount = Amount("USD", 123),
-            source = AnalyticsSource.PaymentComponent("scheme"),
-            sessionId = "sessionId",
-            checkoutAttemptId = "checkoutAttemptId",
-        )
+        val analyticsSetupProvider = createAnalyticsSetupProvider(isCreatedByDropIn = true)
 
         val result = analyticsSetupProvider.provide()
 
@@ -85,16 +59,7 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when not created by drop in, then flavor should be components`() {
-        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            applicationContext = createMockApplicationContext(),
-            shopperLocale = Locale.US,
-            isCreatedByDropIn = false,
-            analyticsLevel = AnalyticsParamsLevel.INITIAL,
-            amount = Amount("USD", 123),
-            source = AnalyticsSource.PaymentComponent("scheme"),
-            sessionId = "sessionId",
-            checkoutAttemptId = "checkoutAttemptId",
-        )
+        val analyticsSetupProvider = createAnalyticsSetupProvider(isCreatedByDropIn = false)
 
         val result = analyticsSetupProvider.provide()
 
@@ -103,16 +68,7 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when source is drop in, then component should be dropin`() {
-        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            applicationContext = createMockApplicationContext(),
-            shopperLocale = Locale.US,
-            isCreatedByDropIn = true,
-            analyticsLevel = AnalyticsParamsLevel.INITIAL,
-            amount = Amount("USD", 123),
-            source = AnalyticsSource.DropIn(listOf()),
-            sessionId = "sessionId",
-            checkoutAttemptId = "checkoutAttemptId",
-        )
+        val analyticsSetupProvider = createAnalyticsSetupProvider(source = AnalyticsSource.DropIn(listOf()))
 
         val result = analyticsSetupProvider.provide()
 
@@ -121,16 +77,7 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when source is a component, then component should be equal to it's payment method`() {
-        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            applicationContext = createMockApplicationContext(),
-            shopperLocale = Locale.US,
-            isCreatedByDropIn = true,
-            analyticsLevel = AnalyticsParamsLevel.INITIAL,
-            amount = Amount("USD", 123),
-            source = AnalyticsSource.PaymentComponent("scheme"),
-            sessionId = "sessionId",
-            checkoutAttemptId = "checkoutAttemptId",
-        )
+        val analyticsSetupProvider = createAnalyticsSetupProvider(source = AnalyticsSource.PaymentComponent("scheme"))
 
         val result = analyticsSetupProvider.provide()
 
@@ -139,16 +86,7 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when analytics params level is initial, then level should be initial`() {
-        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            applicationContext = createMockApplicationContext(),
-            shopperLocale = Locale.US,
-            isCreatedByDropIn = false,
-            analyticsLevel = AnalyticsParamsLevel.INITIAL,
-            amount = Amount("USD", 123),
-            source = AnalyticsSource.PaymentComponent("scheme"),
-            sessionId = "sessionId",
-            checkoutAttemptId = "checkoutAttemptId",
-        )
+        val analyticsSetupProvider = createAnalyticsSetupProvider(analyticsLevel = AnalyticsParamsLevel.INITIAL)
 
         val result = analyticsSetupProvider.provide()
 
@@ -157,33 +95,33 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when analytics params level is all, then level should be all`() {
-        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            applicationContext = createMockApplicationContext(),
-            shopperLocale = Locale.US,
-            isCreatedByDropIn = false,
-            analyticsLevel = AnalyticsParamsLevel.ALL,
-            amount = Amount("USD", 123),
-            source = AnalyticsSource.PaymentComponent("scheme"),
-            sessionId = "sessionId",
-            checkoutAttemptId = "checkoutAttemptId",
-        )
+        val analyticsSetupProvider = createAnalyticsSetupProvider(analyticsLevel = AnalyticsParamsLevel.ALL)
 
         val result = analyticsSetupProvider.provide()
 
         assertEquals("all", result.level)
     }
 
-    private fun createMockApplicationContext(): Context {
-        val applicationContext = mock<Context>()
-        val resources = mock<Resources>()
-        val displayMetrics = DisplayMetrics().apply {
-            widthPixels = 420
-        }
-
-        whenever(applicationContext.packageName) doReturn "com.adyen.checkout"
-        whenever(applicationContext.resources) doReturn resources
-        whenever(resources.displayMetrics) doReturn displayMetrics
-
-        return applicationContext
-    }
+    @Suppress("LongParameterList")
+    private fun createAnalyticsSetupProvider(
+        shopperLocale: Locale = Locale.US,
+        isCreatedByDropIn: Boolean = false,
+        analyticsLevel: AnalyticsParamsLevel = AnalyticsParamsLevel.INITIAL,
+        packageName: String = "com.adyen.checkout",
+        screenWidth: Int = 420,
+        amount: Amount? = Amount("USD", 123),
+        source: AnalyticsSource = AnalyticsSource.PaymentComponent("scheme"),
+        sessionId: String? = "sessionId",
+        checkoutAttemptId: String? = "checkoutAttemptId",
+    ) = DefaultAnalyticsSetupProvider(
+        shopperLocale = shopperLocale,
+        isCreatedByDropIn = isCreatedByDropIn,
+        analyticsLevel = analyticsLevel,
+        packageName = packageName,
+        screenWidth = screenWidth,
+        amount = amount,
+        source = source,
+        sessionId = sessionId,
+        checkoutAttemptId = checkoutAttemptId,
+    )
 }
