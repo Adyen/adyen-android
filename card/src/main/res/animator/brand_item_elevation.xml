@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 23/3/2026.
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="elevation"
+            android:valueTo="3dp"
+            android:valueType="floatType" />
+    </item>
+    <item>
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="elevation"
+            android:valueTo="0dp"
+            android:valueType="floatType" />
+    </item>
+</selector>

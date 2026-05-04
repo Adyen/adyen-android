@@ -89,6 +89,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -121,6 +122,8 @@ class DefaultCardDelegate(
     private val inputData: CardInputData = CardInputData()
 
     private var publicKey: String? = null
+
+    private var isCardScanningAvailable = false
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
@@ -304,14 +307,16 @@ class DefaultCardDelegate(
             }
             .launchIn(coroutineScope)
 
-        outputDataFlow.map { it.dualBrandData?.brandOptions?.map { it.brand.txVariant } }
+        outputDataFlow
+            .map { it.dualBrandData?.takeIf { data -> data.selectable } }
+            .distinctUntilChangedBy { it?.brandOptions?.map { option -> option.brand.txVariant } }
             .filterNotNull()
-            .distinctUntilChanged()
-            .map { brandOptions ->
+            .onEach { dualBrandData ->
+                val brandOptions = dualBrandData.brandOptions.map { it.brand.txVariant }
                 val event = GenericEvents.displayed(
                     component = paymentMethod.type.orEmpty(),
                     target = DUAL_BRAND_ANALYTICS_TARGET,
-                    brand = outputData.dualBrandData?.selectedBrand?.txVariant.orEmpty(),
+                    brand = dualBrandData.selectedBrand?.txVariant.orEmpty(),
                     configData = cardConfigDataGenerator.generateDualBrandConfigData(brandOptions),
                 )
                 analyticsManager.trackEvent(event)
@@ -433,6 +438,7 @@ class DefaultCardDelegate(
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
+            isCardScanningVisible = isCardScanningAvailable && inputData.cardNumber.isEmpty(),
             dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
                 detectedCardTypes,
                 inputData.selectedCardBrand,
@@ -867,9 +873,7 @@ class DefaultCardDelegate(
         return if (dualBrandData != null) {
             dualBrandData.selectedBrand?.txVariant
         } else {
-            val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
-            val firstDetectedBrand = detectedCardTypes.firstOrNull()
-            val cardType = reliableCardBrand ?: firstDetectedBrand
+            val cardType = detectedCardTypes.firstOrNull { it.isReliable }
             cardType?.cardBrand?.txVariant
         }
     }
@@ -906,6 +910,8 @@ class DefaultCardDelegate(
             CardEvents.cardScannerUnavailable(getPaymentMethodType())
         }
         analyticsManager.trackEvent(event)
+        isCardScanningAvailable = isAvailable
+        updateOutputData()
     }
 
     override fun onCardScanningDisplayed(didDisplay: Boolean) {

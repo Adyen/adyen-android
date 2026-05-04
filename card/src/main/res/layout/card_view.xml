@@ -40,33 +40,11 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <FrameLayout
-                android:id="@+id/cardBrandLogo_container_primary"
+            <com.adyen.checkout.card.internal.ui.view.brand.BrandView
+                android:id="@+id/brandView"
                 style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
-                    android:id="@+id/cardBrandLogo_imageView_primary"
-                    style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
-                    app:adyenStrokeColor="@color/stroke_color"
-                    app:adyenStrokeWidth="0dp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/cardBrandLogo_container_secondary"
-                style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
-                    android:id="@+id/cardBrandLogo_imageView_secondary"
-                    style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
-                    app:adyenStrokeColor="@color/stroke_color"
-                    app:adyenStrokeWidth="0dp" />
-            </FrameLayout>
+                android:layout_height="wrap_content" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainer_cardScanning"
@@ -78,6 +56,15 @@
         </LinearLayout>
 
     </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_dualBrandedDisclaimer"
+        style="@style/AdyenCheckout.Card.BrandSelectionDisclaimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_half_margin"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_cardList"
@@ -144,35 +131,6 @@
             android:nextFocusDown="@id/editText_postalCode"
             android:nextFocusForward="@id/editText_postalCode" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/textView_cobadgeBrandsHeader"
-        style="@style/AdyenCheckout.Card.BrandSelection.Header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:text="Card Brand" />
-
-    <TextView
-        android:id="@+id/textView_cobadgeBrandsDescription"
-        style="@style/AdyenCheckout.Card.BrandSelection.Description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_cobadgeBrands"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_half_margin"
-        android:layout_marginBottom="@dimen/standard_margin"
-        android:descendantFocusability="beforeDescendants"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:overScrollMode="never"
-        android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:visibility="visible" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_postalCode"

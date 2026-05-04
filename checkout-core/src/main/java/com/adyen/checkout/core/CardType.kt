@@ -24,19 +24,22 @@ enum class CardType(val txVariant: String, private val pattern: Pattern) {
     CARTEBANCAIRE("cartebancaire", Pattern.compile("^[4-6][0-9]{0,15}$")),
     CODENSA("codensa", Pattern.compile("^(590712)[0-9]{0,10}$")),
     CUP("cup", Pattern.compile("^(62|81)[0-9]{0,17}$")),
-    DANKORT("dankort", Pattern.compile("^(5019)[0-9]{0,12}$")),
+    DANKORT(
+        "dankort",
+        Pattern.compile("^(5|50|501|5019[0-9]{0,12}|4|45|457|4571[0-9]{0,12}|3|35|357|3571[0-9]{0,12})$"),
+    ),
     DINERS("diners", Pattern.compile("^(36)[0-9]{0,12}$")),
     DISCOVER(
         txVariant = "discover",
-        pattern = Pattern.compile("^(6011[0-9]{0,12}|(644|645|646|647|648|649)[0-9]{0,13}|65[0-9]{0,14})$")
+        pattern = Pattern.compile("^(6011[0-9]{0,12}|(644|645|646|647|648|649)[0-9]{0,13}|65[0-9]{0,14})$"),
     ),
     ELO(
         txVariant = "elo",
         pattern = Pattern.compile(
             "^((((506699)|(506770)|(506771)|(506772)|(506773)|(506774)|(506775)|(506776)|(506777)|(506778)|" +
                 "(401178)|(438935)|(451416)|(457631)|(457632)|(504175)|(627780)|(636368)|(636297))[0-9]{0,10})|" +
-                "((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|(50670))[0-9]{0," + "11})$"
-        )
+                "((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|(50670))[0-9]{0," + "11})$",
+        ),
     ),
     FORBRUGSFORENINGEN("forbrugsforeningen", Pattern.compile("^(60)(0)\\d*$")),
     VISAALPHABANKBONUS("visaalphabankbonus", Pattern.compile("^(450903)[0-9]{0,10}$")),

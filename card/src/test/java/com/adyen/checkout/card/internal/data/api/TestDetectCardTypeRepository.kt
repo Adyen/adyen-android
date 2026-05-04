@@ -41,6 +41,9 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
             TestDetectedCardType.DETECTED_LOCALLY -> getDetectedCardTypesLocal(supportedCardBrands)
             TestDetectedCardType.FETCHED_FROM_NETWORK -> getDetectedCardTypesNetwork(supportedCardBrands)
             TestDetectedCardType.DUAL_BRANDED -> getDetectedCardTypesDualBranded(supportedCardBrands)
+            TestDetectedCardType.DUAL_BRANDED_UNSELECTABLE ->
+                getDetectedCardTypesDualBranded(supportedCardBrands)
+
             TestDetectedCardType.EMPTY -> emptyList()
         } ?: return
 
@@ -116,5 +119,6 @@ internal enum class TestDetectedCardType {
     DETECTED_LOCALLY,
     FETCHED_FROM_NETWORK,
     DUAL_BRANDED,
+    DUAL_BRANDED_UNSELECTABLE,
     EMPTY,
 }

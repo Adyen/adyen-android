@@ -10,6 +10,11 @@
 <resources>
     <dimen name="brand_logo_width">24dp</dimen>
     <dimen name="brand_logo_height">16dp</dimen>
+    <dimen name="brand_logo_detected_width">27dp</dimen>
+    <dimen name="brand_logo_detected_height">18dp</dimen>
+    <dimen name="brand_logo_corner_radius">4dp</dimen>
+    <dimen name="brand_logo_item_spacing">2dp</dimen>
+    <dimen name="brand_logo_single_item_horizontal_margin">6dp</dimen>
 
     <dimen name="payment_method_margin">26dp</dimen>
 </resources>

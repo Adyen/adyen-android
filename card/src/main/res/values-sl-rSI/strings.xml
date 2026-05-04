@@ -39,7 +39,7 @@
     <string name="checkout_card_installments_option_one_time">Enkratno plačilo</string>
     <string name="checkout_card_installments_option_revolving">Revolving plačilo</string>
     <string name="checkout_card_dual_brand_title">Znamka kartice</string>
-    <string name="checkout_card_dual_brand_description">Izberite znamko kartice, s katero želite plačati. To ni obvezno.</string>
+    <string name="checkout_card_dual_brand_description">Izberete lahko znamko kartice, s katero želite plačati. To ni obvezno.</string>
 
     <string name="checkout_card_scan_button">Poskenirajte svojo kartico</string>
 

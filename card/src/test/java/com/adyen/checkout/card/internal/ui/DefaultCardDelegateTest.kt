@@ -380,6 +380,47 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
+        fun `When scanner is available and card number is empty, isCardScanningVisible should be true`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.outputDataFlow.test {
+                delegate.onCardScanningAvailability(true)
+                delegate.updateInputData { cardNumber = "" }
+                with(expectMostRecentItem()) {
+                    assertTrue(isCardScanningVisible)
+                }
+            }
+        }
+
+        @Test
+        fun `When scanner is available and card number is not empty, isCardScanningVisible should be false`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.outputDataFlow.test {
+                    delegate.onCardScanningAvailability(true)
+                    delegate.updateInputData { cardNumber = "4111" }
+                    with(expectMostRecentItem()) {
+                        assertFalse(isCardScanningVisible)
+                    }
+                }
+            }
+
+        @Test
+        fun `When scanner is not available and card number is empty, isCardScanningVisible should be false`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.outputDataFlow.test {
+                    delegate.onCardScanningAvailability(false)
+                    delegate.updateInputData { cardNumber = "" }
+                    with(expectMostRecentItem()) {
+                        assertFalse(isCardScanningVisible)
+                    }
+                }
+            }
+
+        @Test
         fun `detect card type repository returns supported cards, then output data should contain them`() = runTest {
             val supportedCardBrands = listOf(
                 CardBrand(cardType = CardType.VISA),
@@ -815,7 +856,7 @@ internal class DefaultCardDelegateTest(
                     assertEquals(TEST_EXPIRY_YEAR.trimStart('0'), encryptedExpiryYear)
                     assertEquals(TEST_SECURITY_CODE, encryptedSecurityCode)
                     assertEquals(PaymentMethodTypes.SCHEME, type)
-                    assertEquals(CardType.VISA.txVariant, brand)
+                    assertNull(brand)
                     assertNull(holderName)
                     assertNull(taxNumber)
                     assertNull(encryptedPassword)
@@ -1023,6 +1064,160 @@ internal class DefaultCardDelegateTest(
                 assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
             }
         }
+
+        @Test
+        fun `when detected card types only contain unreliable brands, then brand should be null`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                val unreliableDetectedCards = listOf(
+                    createDetectedCardType(
+                        cardBrand = CardBrand(cardType = CardType.VISA),
+                        isReliable = false,
+                    ),
+                )
+
+                delegate.updateComponentState(
+                    createOutputData(detectedCardTypes = unreliableDetectedCards),
+                )
+
+                val componentState = expectMostRecentItem()
+
+                assertNull(componentState.data.paymentMethod?.brand)
+            }
+        }
+
+        @Test
+        fun `when detected card types contain a reliable brand, then brand should be that brand`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                val reliableDetectedCards = listOf(
+                    createDetectedCardType(
+                        cardBrand = CardBrand(cardType = CardType.MASTERCARD),
+                        isReliable = true,
+                    ),
+                )
+
+                delegate.updateComponentState(
+                    createOutputData(detectedCardTypes = reliableDetectedCards),
+                )
+
+                val componentState = expectMostRecentItem()
+
+                assertEquals(CardType.MASTERCARD.txVariant, componentState.data.paymentMethod?.brand)
+            }
+        }
+
+        @Test
+        fun `when detected card types contain both unreliable and reliable brands, then brand should be the first reliable`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.componentStateFlow.test {
+                    val mixedDetectedCards = listOf(
+                        createDetectedCardType(
+                            cardBrand = CardBrand(cardType = CardType.VISA),
+                            isReliable = false,
+                        ),
+                        createDetectedCardType(
+                            cardBrand = CardBrand(cardType = CardType.MASTERCARD),
+                            isReliable = true,
+                        ),
+                    )
+
+                    delegate.updateComponentState(
+                        createOutputData(detectedCardTypes = mixedDetectedCards),
+                    )
+
+                    val componentState = expectMostRecentItem()
+
+                    assertEquals(CardType.MASTERCARD.txVariant, componentState.data.paymentMethod?.brand)
+                }
+            }
+
+        @Test
+        fun `when detected card types is empty, then brand should be null`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(
+                    createOutputData(detectedCardTypes = emptyList()),
+                )
+
+                val componentState = expectMostRecentItem()
+
+                assertNull(componentState.data.paymentMethod?.brand)
+            }
+        }
+
+        @Test
+        fun `when dual brand data has no selected brand, then brand should be null`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(
+                    createOutputData(
+                        dualBrandData = DualBrandData(
+                            selectedBrand = null,
+                            brandOptions = listOf(
+                                CardBrandItem(
+                                    name = "Visa",
+                                    brand = CardBrand(cardType = CardType.VISA),
+                                    isSelected = false,
+                                    environment = Environment.TEST,
+                                ),
+                                CardBrandItem(
+                                    name = "MasterCard",
+                                    brand = CardBrand(cardType = CardType.MASTERCARD),
+                                    isSelected = false,
+                                    environment = Environment.TEST,
+                                ),
+                            ),
+                            selectable = true,
+                        ),
+                    ),
+                )
+
+                val componentState = expectMostRecentItem()
+
+                assertNull(componentState.data.paymentMethod?.brand)
+            }
+        }
+
+        @Test
+        fun `when dual brand data has selected brand, then brand should be the selected brand`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(
+                    createOutputData(
+                        dualBrandData = DualBrandData(
+                            selectedBrand = CardBrand(cardType = CardType.MASTERCARD),
+                            brandOptions = listOf(
+                                CardBrandItem(
+                                    name = "Visa",
+                                    brand = CardBrand(cardType = CardType.VISA),
+                                    isSelected = false,
+                                    environment = Environment.TEST,
+                                ),
+                                CardBrandItem(
+                                    name = "MasterCard",
+                                    brand = CardBrand(cardType = CardType.MASTERCARD),
+                                    isSelected = true,
+                                    environment = Environment.TEST,
+                                ),
+                            ),
+                            selectable = true,
+                        ),
+                    ),
+                )
+
+                val componentState = expectMostRecentItem()
+
+                assertEquals(CardType.MASTERCARD.txVariant, componentState.data.paymentMethod?.brand)
+            }
+        }
     }
 
     @Nested
@@ -1173,6 +1368,72 @@ internal class DefaultCardDelegateTest(
 
             analyticsManager.assertIsCleared()
         }
+
+        @Test
+        fun `when selectable dual brand is shown, then displayed event is tracked`() = runTest {
+            delegate = createCardDelegate(configuration = createDualBrandSelectableConfiguration())
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+            whenever(cardConfigDataGenerator.generateDualBrandConfigData(any())) doReturn emptyMap()
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateInputData { cardNumber = "4" }
+
+            analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 1)
+        }
+
+        @Test
+        fun `when dual brand is not selectable, then displayed event is not tracked`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED_UNSELECTABLE
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateInputData { cardNumber = "4" }
+
+            analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 0)
+        }
+
+        @Test
+        fun `when dual brand data is null, then displayed event is not tracked`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateInputData { cardNumber = "4" }
+
+            analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 0)
+        }
+
+        @Test
+        fun `when same selectable dual brand is emitted consecutively, then displayed event is tracked only once`() =
+            runTest {
+                delegate = createCardDelegate(configuration = createDualBrandSelectableConfiguration())
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+                whenever(cardConfigDataGenerator.generateDualBrandConfigData(any())) doReturn emptyMap()
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.updateInputData { cardNumber = "4" }
+                delegate.updateInputData { cardNumber = "42" }
+
+                analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 1)
+            }
+
+        @Test
+        fun `when dual brand transitions through null and back to selectable, then displayed event is tracked each time`() =
+            runTest {
+                delegate = createCardDelegate(configuration = createDualBrandSelectableConfiguration())
+                whenever(cardConfigDataGenerator.generateDualBrandConfigData(any())) doReturn emptyMap()
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+                delegate.updateInputData { cardNumber = "4" }
+
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+                delegate.updateInputData { cardNumber = "42" }
+
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
+                delegate.updateInputData { cardNumber = "421" }
+
+                analyticsManager.assertEventCountEquals(createExpectedDualBrandDisplayedEvent(), 2)
+            }
     }
 
     @Nested
@@ -1550,6 +1811,7 @@ internal class DefaultCardDelegateTest(
         ),
         isCardListVisible: Boolean = true,
         dualBrandData: DualBrandData? = null,
+        isCardScanningVisible: Boolean = false,
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -1575,8 +1837,23 @@ internal class DefaultCardDelegateTest(
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             isCardListVisible = isCardListVisible,
             dualBrandData = dualBrandData,
+            isCardScanningVisible = isCardScanningVisible,
         )
     }
+
+    private fun createDualBrandSelectableConfiguration() = createCheckoutConfiguration {
+        supportedCardBrands = listOf(
+            CardBrand(cardType = CardType.BCMC),
+            CardBrand(cardType = CardType.MAESTRO),
+        )
+    }
+
+    private fun createExpectedDualBrandDisplayedEvent() = GenericEvents.displayed(
+        component = PaymentMethodTypes.SCHEME,
+        target = "dual_brand_button",
+        brand = "bcmc",
+        configData = emptyMap(),
+    )
 
     @Suppress("LongParameterList")
     private fun createDetectedCardType(
