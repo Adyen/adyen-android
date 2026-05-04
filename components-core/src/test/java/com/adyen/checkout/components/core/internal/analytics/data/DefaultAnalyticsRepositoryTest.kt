@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.internal.analytics.data
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent

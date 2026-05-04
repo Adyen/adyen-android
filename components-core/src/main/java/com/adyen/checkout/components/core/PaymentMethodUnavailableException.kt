@@ -10,6 +10,10 @@ package com.adyen.checkout.components.core
 
 import com.adyen.checkout.core.old.exception.CheckoutException
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 open class PaymentMethodUnavailableException(
     message: String,
     cause: Throwable? = null

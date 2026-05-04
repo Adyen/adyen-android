@@ -11,12 +11,20 @@ package com.adyen.checkout.components.core
 /**
  * A class that contains the result of address lookup completion call.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 sealed class AddressLookupResult {
     /**
      * An error occurred while making of the call.
      *
      * @param message Error message to be shown to shopper.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     data class Error(val message: String? = null) : AddressLookupResult()
 
     /**
@@ -24,5 +32,9 @@ sealed class AddressLookupResult {
      *
      * @param lookupAddress The complete address details.
      */
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     data class Completed(val lookupAddress: LookupAddress) : AddressLookupResult()
 }

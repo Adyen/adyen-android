@@ -12,6 +12,10 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 /**
  * Data about an error that happened inside a component.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class ComponentError(
     /**
      * Can be used to try to identify the root cause of the issue.

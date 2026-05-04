@@ -9,5 +9,9 @@ package com.adyen.checkout.components.core.action
 
 import com.adyen.checkout.core.old.internal.data.model.ModelObject
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("UnnecessaryAbstractClass")
 abstract class SdkData : ModelObject()

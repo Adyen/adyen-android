@@ -24,6 +24,10 @@ import org.json.JSONObject
  * [JSONObject]. The rest of the /payments call request data should be filled in, on your server, according to your
  * needs.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var paymentMethod: PaymentMethodDetailsT?,

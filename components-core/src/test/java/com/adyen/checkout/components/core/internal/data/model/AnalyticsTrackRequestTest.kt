@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.internal.data.model
 
 import com.adyen.checkout.core.old.internal.data.model.ModelUtils

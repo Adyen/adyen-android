@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.internal.util
 
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -11,6 +11,10 @@ package com.adyen.checkout.components.core
 /**
  * Implement this callback to be able to use Address Lookup functionality.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 interface AddressLookupCallback {
 
     /**

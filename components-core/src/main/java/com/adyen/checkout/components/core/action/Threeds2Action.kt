@@ -13,6 +13,10 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 @Parcelize
 class Threeds2Action(
     override var type: String? = null,
@@ -64,6 +68,10 @@ class Threeds2Action(
         }
     }
 
+    @Deprecated(
+        message = "Deprecated. This will be removed in a future release.",
+        level = DeprecationLevel.WARNING,
+    )
     enum class SubType(val value: String) {
         FINGERPRINT("fingerprint"),
         CHALLENGE("challenge");

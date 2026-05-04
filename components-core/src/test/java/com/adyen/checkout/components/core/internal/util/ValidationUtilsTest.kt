@@ -6,6 +6,8 @@
  * Created by oscars on 7/7/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.internal.util
 
 import com.adyen.checkout.core.old.Environment

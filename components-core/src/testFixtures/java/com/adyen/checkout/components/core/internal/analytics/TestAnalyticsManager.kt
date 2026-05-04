@@ -6,6 +6,8 @@
  * Created by josephj on 19/7/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.internal.analytics
 
 import kotlinx.coroutines.CoroutineScope

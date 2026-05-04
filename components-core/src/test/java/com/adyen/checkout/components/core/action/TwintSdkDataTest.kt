@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.components.core.action
 
 import com.adyen.checkout.core.old.exception.ModelSerializationException
