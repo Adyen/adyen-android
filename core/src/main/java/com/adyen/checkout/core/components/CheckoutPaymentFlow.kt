@@ -71,6 +71,12 @@ fun CheckoutPaymentFlow(
                 CheckoutSecondary(
                     identifier = localState.identifier,
                     controller = controller,
+                    onNavigate = { route ->
+                        state = when (route) {
+                            is CheckoutSecondaryRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
+                            else -> state
+                        }
+                    },
                     modifier = modifier,
                     theme = theme,
                     localizationProvider = localizationProvider,

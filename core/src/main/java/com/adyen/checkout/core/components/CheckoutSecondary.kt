@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
 import com.adyen.checkout.core.common.Environment
@@ -22,10 +23,15 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun CheckoutSecondary(
     identifier: String,
     controller: CheckoutController,
+    onNavigate: (CheckoutSecondaryRoute) -> Unit,
     modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
+    LaunchedEffect(controller, onNavigate) {
+        controller.secondaryNavigation.collect(onNavigate)
+    }
+
     InternalCheckoutTheme(theme) {
         // TODO - get params from controller
         CheckoutCompositionLocalProvider(
