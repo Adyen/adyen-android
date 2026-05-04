@@ -16,7 +16,6 @@ import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateFactory
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateReducer
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
 import com.adyen.checkout.blik.internal.ui.state.BlikIntent
-import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.BlikViewStateProducer
 import com.adyen.checkout.blik.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.view.BlikComponent
@@ -40,11 +39,10 @@ internal class BlikComponent(
     componentStateReducer: BlikComponentStateReducer,
     viewStateProducer: BlikViewStateProducer,
     coroutineScope: CoroutineScope,
-) : PaymentComponent<BlikPaymentComponentState> {
+) : PaymentComponent {
 
-    private val eventChannel = bufferedChannel<PaymentComponentEvent<BlikPaymentComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<BlikPaymentComponentState>> =
-        eventChannel.receiveAsFlow()
+    private val eventChannel = bufferedChannel<PaymentComponentEvent>()
+    override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),

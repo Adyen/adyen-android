@@ -36,9 +36,10 @@ dependencies {
     api libs.bundles.androidx.lifecycle
 
     implementation platform(libs.compose.bom)
-    implementation libs.bundles.compose.ui
-    implementation libs.okhttp
     implementation libs.androidx.browser
+    implementation libs.bundles.compose.ui
+    implementation libs.compose.activity
+    implementation libs.okhttp
 
     testImplementation libs.json
     testImplementation libs.bundles.junit

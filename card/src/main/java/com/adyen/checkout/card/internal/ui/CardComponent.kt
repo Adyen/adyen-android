@@ -24,7 +24,6 @@ import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.CardIntent
-import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
@@ -69,11 +68,10 @@ internal class CardComponent(
     private val sdkDataProvider: SdkDataProvider,
     private val onBinValueCallback: OnBinValueCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
-) : PaymentComponent<CardPaymentComponentState> {
+) : PaymentComponent {
 
-    private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> =
-        eventChannel.receiveAsFlow()
+    private val eventChannel = bufferedChannel<PaymentComponentEvent>()
+    override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),

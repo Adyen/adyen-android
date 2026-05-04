@@ -16,6 +16,12 @@ import android.annotation.SuppressLint
 sealed class CheckoutRoute {
 
     /**
+     * Route to display a payment method component. Use [CheckoutPaymentMethod] to display the action.
+     */
+    @SuppressLint("ObjectInPublicSealedClass")
+    data object PaymentMethod : CheckoutRoute()
+
+    /**
      * Route to display an action component. Use [CheckoutAction] to display the action.
      */
     @SuppressLint("ObjectInPublicSealedClass")

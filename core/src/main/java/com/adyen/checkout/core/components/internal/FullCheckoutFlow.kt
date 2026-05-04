@@ -38,7 +38,7 @@ internal class FullCheckoutFlow(
 ) : CheckoutFlow {
 
     // TODO - Inject paymentComponent in constructor
-    override val paymentComponent: PaymentComponent<*>? = createPaymentComponent(
+    override val paymentComponent: PaymentComponent? = createPaymentComponent(
         target = target,
         context = context,
         callbacks = callbacks,
@@ -65,6 +65,14 @@ internal class FullCheckoutFlow(
 
                     is PaymentComponentEvent.Error -> {
                         componentRequestDispatcher.error(event.error.toCheckoutError())
+                    }
+
+                    is PaymentComponentEvent.SecondaryScreen -> {
+                        onNavigate?.invoke(CheckoutRoute.Secondary(event.identifier))
+                    }
+
+                    PaymentComponentEvent.CloseSecondaryScreen -> {
+                        onNavigate?.invoke(CheckoutRoute.PaymentMethod)
                     }
                 }
             }
@@ -102,7 +110,7 @@ internal class FullCheckoutFlow(
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-    ): PaymentComponent<*>? {
+    ): PaymentComponent? {
         return when (target) {
             is CheckoutTarget.PaymentMethod -> {
                 val paymentMethod = context.getPaymentMethodResponse()

@@ -11,7 +11,6 @@ package com.adyen.checkout.blik.internal.ui
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateFactory
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateReducer
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
-import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.BlikViewStateProducer
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
@@ -25,8 +24,8 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundl
 import kotlinx.coroutines.CoroutineScope
 
 internal class BlikFactory :
-    PaymentComponentFactory<BlikPaymentComponentState, BlikComponent>,
-    StoredPaymentComponentFactory<BlikPaymentComponentState, StoredBlikComponent> {
+    PaymentComponentFactory<BlikComponent>,
+    StoredPaymentComponentFactory<StoredBlikComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,

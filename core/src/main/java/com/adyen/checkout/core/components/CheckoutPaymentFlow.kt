@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.components
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,37 +34,53 @@ fun CheckoutPaymentFlow(
         mutableStateOf(initialState)
     }
 
-    when (state) {
-        CheckoutPaymentFlowState.PaymentMethod -> {
-            CheckoutPaymentMethod(
-                controller = controller,
-                onNavigate = { route ->
-                    state = when (route) {
-                        CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
-                        is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary
-                    }
-                },
-                modifier = modifier,
-                theme = theme,
-                localizationProvider = localizationProvider,
-            )
-        }
+    BackHandler(state is CheckoutPaymentFlowState.Secondary) {
+        state = CheckoutPaymentFlowState.PaymentMethod
+    }
 
-        CheckoutPaymentFlowState.Action -> {
-            CheckoutAction(
-                controller = controller,
-                modifier = modifier,
-                theme = theme,
-                localizationProvider = localizationProvider,
-            )
-        }
+    AnimatedContent(state) { localState ->
+        when (localState) {
+            CheckoutPaymentFlowState.PaymentMethod -> {
+                CheckoutPaymentMethod(
+                    controller = controller,
+                    onNavigate = { route ->
+                        state = when (route) {
+                            // TODO - Move PaymentMethod case to onNavigate callback in secondary composable
+                            CheckoutRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
+                            CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
+                            is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary(route.identifier)
+                        }
+                    },
+                    modifier = modifier,
+                    theme = theme,
+                    localizationProvider = localizationProvider,
+                )
+            }
 
-        CheckoutPaymentFlowState.Secondary -> TODO()
+            CheckoutPaymentFlowState.Action -> {
+                CheckoutAction(
+                    controller = controller,
+                    modifier = modifier,
+                    theme = theme,
+                    localizationProvider = localizationProvider,
+                )
+            }
+
+            is CheckoutPaymentFlowState.Secondary -> {
+                CheckoutSecondary(
+                    identifier = localState.identifier,
+                    controller = controller,
+                    modifier = modifier,
+                    theme = theme,
+                    localizationProvider = localizationProvider,
+                )
+            }
+        }
     }
 }
 
 private sealed class CheckoutPaymentFlowState {
     data object PaymentMethod : CheckoutPaymentFlowState()
     data object Action : CheckoutPaymentFlowState()
-    data object Secondary : CheckoutPaymentFlowState()
+    data class Secondary(val identifier: String) : CheckoutPaymentFlowState()
 }

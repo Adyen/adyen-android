@@ -12,15 +12,23 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-sealed class PaymentComponentEvent<ComponentStateT : BasePaymentComponentState> {
+sealed class PaymentComponentEvent {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    data class Submit<ComponentStateT : BasePaymentComponentState>(
-        val state: ComponentStateT
-    ) : PaymentComponentEvent<ComponentStateT>()
+    data class Submit(
+        val state: BasePaymentComponentState
+    ) : PaymentComponentEvent()
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    data class Error<ComponentStateT : BasePaymentComponentState>(
+    data class Error(
         val error: InternalCheckoutError
-    ) : PaymentComponentEvent<ComponentStateT>()
+    ) : PaymentComponentEvent()
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    data class SecondaryScreen(
+        val identifier: String,
+    ) : PaymentComponentEvent()
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    data object CloseSecondaryScreen : PaymentComponentEvent()
 }

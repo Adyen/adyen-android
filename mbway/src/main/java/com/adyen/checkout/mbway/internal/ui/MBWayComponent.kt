@@ -17,13 +17,13 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
-import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
@@ -41,11 +41,11 @@ internal class MBWayComponent(
     componentStateReducer: MBWayComponentStateReducer,
     viewStateProducer: MBWayViewStateProducer,
     coroutineScope: CoroutineScope,
-) : PaymentComponent<MBWayPaymentComponentState> {
+) : PaymentComponent,
+    SecondaryScreenComponent {
 
-    private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
-        eventChannel.receiveAsFlow()
+    private val eventChannel = bufferedChannel<PaymentComponentEvent>()
+    override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -72,10 +72,34 @@ internal class MBWayComponent(
             modifier = modifier,
             viewState = viewState,
             onSubmitClick = ::submit,
-            onCountryCodePickerClick = {
-                // TODO - Implement
-            },
+            onCountryCodePickerClick = ::onCountryCodePickerClick,
             onIntent = ::onIntent,
+        )
+    }
+
+    @Composable
+    override fun SecondaryContent(identifier: String, modifier: Modifier) {
+        val viewState by viewState.collectAsStateWithLifecycle()
+
+        CountryCodePicker(
+            viewState = viewState,
+            onItemClick = {
+                onIntent(MBWayIntent.UpdateCountry(it))
+                eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
+            },
+            modifier = modifier,
+        )
+    }
+
+    private fun onIntent(intent: MBWayIntent) {
+        componentState.handleIntent(intent)
+    }
+
+    private fun onCountryCodePickerClick() {
+        eventChannel.trySend(
+            PaymentComponentEvent.SecondaryScreen(
+                identifier = COUNTRY_CODE_IDENTIFIER,
+            ),
         )
     }
 
@@ -100,21 +124,7 @@ internal class MBWayComponent(
         analyticsManager.clear(this)
     }
 
-    private fun onIntent(intent: MBWayIntent) {
-        componentState.handleIntent(intent)
-    }
-
-    // TODO - Move to secondary screen architecture
-    @Suppress("unused")
-    @Composable
-    private fun CountryCodePickerScreen() {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
-        CountryCodePicker(
-            viewState = viewState,
-            onItemClick = {
-                onIntent(MBWayIntent.UpdateCountry(it))
-            },
-        )
+    companion object {
+        private const val COUNTRY_CODE_IDENTIFIER = "country_code"
     }
 }

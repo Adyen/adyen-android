@@ -14,10 +14,9 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.googlepay.internal.ui.state.GooglePayPaymentComponentState
 import kotlinx.coroutines.CoroutineScope
 
-internal class GooglePayFactory : PaymentComponentFactory<GooglePayPaymentComponentState, GooglePayComponent> {
+internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
     override fun create(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,

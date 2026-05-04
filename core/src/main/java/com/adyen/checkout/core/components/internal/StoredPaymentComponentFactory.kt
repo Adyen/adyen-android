@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineScope
  * Factory interface for creating stored payment method components.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface StoredPaymentComponentFactory<CS : BasePaymentComponentState, T : PaymentComponent<CS>> : ComponentFactory {
+interface StoredPaymentComponentFactory<T : PaymentComponent> : ComponentFactory {
 
     /**
      * Creates a [PaymentComponent] for a stored payment method.

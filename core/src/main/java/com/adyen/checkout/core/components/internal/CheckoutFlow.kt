@@ -14,7 +14,7 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 
 internal interface CheckoutFlow {
 
-    val paymentComponent: PaymentComponent<*>?
+    val paymentComponent: PaymentComponent?
 
     val actionComponent: ActionComponent?
 

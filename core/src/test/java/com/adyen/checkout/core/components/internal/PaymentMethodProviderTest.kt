@@ -247,9 +247,9 @@ internal class PaymentMethodProviderTest {
         assertEquals(0, PaymentMethodProvider.getStoredFactoriesCount())
     }
 
-    private fun generateFactory(paymentComponent: PaymentComponent<BasePaymentComponentState>) =
+    private fun generateFactory(paymentComponent: PaymentComponent) =
         object :
-            PaymentComponentFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
+            PaymentComponentFactory<PaymentComponent> {
             override fun create(
                 paymentMethod: PaymentMethod,
                 coroutineScope: CoroutineScope,
@@ -260,9 +260,9 @@ internal class PaymentMethodProviderTest {
             ) = paymentComponent
         }
 
-    private fun generateStoredFactory(paymentComponent: PaymentComponent<BasePaymentComponentState>) =
+    private fun generateStoredFactory(paymentComponent: PaymentComponent) =
         object :
-            StoredPaymentComponentFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
+            StoredPaymentComponentFactory<PaymentComponent> {
             override fun create(
                 storedPaymentMethod: StoredPaymentMethod,
                 coroutineScope: CoroutineScope,

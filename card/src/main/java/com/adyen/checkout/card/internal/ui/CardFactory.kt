@@ -22,7 +22,6 @@ import com.adyen.checkout.card.internal.ui.state.CardBrandIntentsHandler
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
-import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
@@ -48,8 +47,8 @@ import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
 
 internal class CardFactory :
-    PaymentComponentFactory<CardPaymentComponentState, CardComponent>,
-    StoredPaymentComponentFactory<CardPaymentComponentState, StoredCardComponent> {
+    PaymentComponentFactory<CardComponent>,
+    StoredPaymentComponentFactory<StoredCardComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,
