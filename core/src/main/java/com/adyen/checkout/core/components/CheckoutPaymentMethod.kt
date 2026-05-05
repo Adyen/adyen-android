@@ -10,6 +10,8 @@ package com.adyen.checkout.core.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
 import com.adyen.checkout.core.common.Environment
@@ -26,8 +28,9 @@ fun CheckoutPaymentMethod(
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-    LaunchedEffect(controller, onNavigate) {
-        controller.paymentMethodNavigation.collect(onNavigate)
+    val currentOnNavigate by rememberUpdatedState(onNavigate)
+    LaunchedEffect(controller) {
+        controller.paymentMethodNavigation.collect(currentOnNavigate)
     }
 
     InternalCheckoutTheme(theme) {
