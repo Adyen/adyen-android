@@ -73,6 +73,14 @@ internal class CardComponentStateReducer(
                 kcpCardPassword = state.kcpCardPassword.updateFocus(intent.hasFocus),
             )
 
+            is CardIntent.UpdatePostalCode -> state.copy(
+                postalCode = state.postalCode.updateText(intent.postalCode)
+            )
+
+            is CardIntent.UpdatePostalCodeFocus -> state.copy(
+                postalCode = state.postalCode.updateFocus(intent.hasFocus)
+            )
+
             is CardIntent.UpdateStorePaymentMethod -> state.copy(
                 storePaymentMethod = intent.isChecked,
             )
@@ -109,6 +117,7 @@ internal class CardComponentStateReducer(
         val hasSocialSecurityNumberError = state.socialSecurityNumber.errorMessage != null
         val hasKcpBirthDateOrTaxNumberError = state.kcpBirthDateOrTaxNumber.errorMessage != null
         val hasKcpCardPasswordError = state.kcpCardPassword.errorMessage != null
+        val hasPostalCodeError = state.postalCode.errorMessage != null
 
         return state.copy(
             cardNumber = state.cardNumber.copy(
@@ -139,6 +148,10 @@ internal class CardComponentStateReducer(
                 showError = hasKcpCardPasswordError,
                 isFocused = shouldFocus(hasKcpCardPasswordError),
             ),
+            postalCode = state.postalCode.copy(
+                showError = hasPostalCodeError,
+                isFocused = shouldFocus(hasPostalCodeError)
+            )
         )
     }
 }

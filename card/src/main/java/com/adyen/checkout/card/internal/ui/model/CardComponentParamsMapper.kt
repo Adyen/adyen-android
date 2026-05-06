@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import com.adyen.checkout.card.BillingAddressConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldMode
 import com.adyen.checkout.core.common.AdyenLogLevel
@@ -37,6 +38,7 @@ internal class CardComponentParamsMapper {
             socialSecurityNumberMode = cardConfiguration?.socialSecurityNumberMode
                 ?: FieldMode.HIDE,
             koreanAuthenticationMode = cardConfiguration?.koreanAuthenticationMode ?: FieldMode.HIDE,
+            showPostalCode = cardConfiguration?.billingAddress is BillingAddressConfiguration.PostalCode,
             cvcVisibility = if (cardConfiguration?.hideSecurityCode == true) {
                 CVCVisibility.ALWAYS_HIDE
             } else {

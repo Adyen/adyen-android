@@ -86,4 +86,13 @@ internal class CardValidationMapper {
                 CheckoutLocalizationKey.CARD_KCP_CARD_PASSWORD_INVALID
         }
     }
+
+    fun mapPostalCodeValidation(
+        validation: CardPostalCodeValidation
+    ): CheckoutLocalizationKey? {
+        return when(validation) {
+            CardPostalCodeValidation.VALID -> null
+            CardPostalCodeValidation.INVALID_BLANK -> CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID
+        }
+    }
 }

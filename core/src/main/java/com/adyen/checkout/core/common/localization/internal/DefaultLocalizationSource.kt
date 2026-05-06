@@ -66,6 +66,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_KCP_CARD_PASSWORD_INVALID ->
                 R.string.checkout_card_kcp_password_invalid
 
+            CheckoutLocalizationKey.CARD_POSTAL_CODE -> R.string.checkout_card_postal_code
+            CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID -> R.string.checkout_card_postal_code_invalid
+
             // Drop-in
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->

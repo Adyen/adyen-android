@@ -23,6 +23,7 @@ internal data class CardComponentState(
     val socialSecurityNumber: TextInputComponentState,
     val kcpBirthDateOrTaxNumber: TextInputComponentState,
     val kcpCardPassword: TextInputComponentState,
+    val postalCode: TextInputComponentState,
 
     // UI configuration
     val storePaymentMethod: Boolean,

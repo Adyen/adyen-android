@@ -189,6 +189,17 @@ internal object CardValidationUtils {
         }
     }
 
+    fun validatePostalCode(
+        postalCode: TextInputComponentState
+    ): CardPostalCodeValidation {
+        if (!postalCode.requiresValidation()) return CardPostalCodeValidation.VALID
+        return if (postalCode.text.isBlank()) {
+            CardPostalCodeValidation.INVALID_BLANK
+        } else {
+            CardPostalCodeValidation.VALID
+        }
+    }
+
     // instantiate formatter here to avoid recreation on every validation call
     private val KCP_BIRTH_DATE_FORMATTER = DateUtils.getFormatter(KCP_BIRTH_DATE_FORMAT)
 }
@@ -216,6 +227,12 @@ enum class CardExpiryDateValidation {
 enum class CardSecurityCodeValidation {
     VALID,
     INVALID,
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class CardPostalCodeValidation {
+    VALID,
+    INVALID_BLANK,
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

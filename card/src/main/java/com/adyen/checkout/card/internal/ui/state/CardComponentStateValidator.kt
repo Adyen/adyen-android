@@ -39,6 +39,7 @@ internal class CardComponentStateValidator(
         val socialSecurityNumberError = validateSocialSecurityNumber(state.socialSecurityNumber)
         val kcpBirthDateOrTaxNumberError = validateKcpBirthDateOrTaxNumber(state.kcpBirthDateOrTaxNumber)
         val kcpCardPasswordError = validateKcpCardPassword(state.kcpCardPassword)
+        val postalCodeError = validatePostalCode(state.postalCode)
 
         return state.copy(
             cardNumber = state.cardNumber.copy(errorMessage = cardNumberError),
@@ -48,6 +49,7 @@ internal class CardComponentStateValidator(
             socialSecurityNumber = state.socialSecurityNumber.copy(errorMessage = socialSecurityNumberError),
             kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.copy(errorMessage = kcpBirthDateOrTaxNumberError),
             kcpCardPassword = state.kcpCardPassword.copy(errorMessage = kcpCardPasswordError),
+            postalCode = state.postalCode.copy(errorMessage = postalCodeError),
         )
     }
 
@@ -58,7 +60,8 @@ internal class CardComponentStateValidator(
             state.holderName.errorMessage == null &&
             state.socialSecurityNumber.errorMessage == null &&
             state.kcpBirthDateOrTaxNumber.errorMessage == null &&
-            state.kcpCardPassword.errorMessage == null
+            state.kcpCardPassword.errorMessage == null &&
+            state.postalCode.errorMessage == null
     }
 
     private fun validateCardNumber(
@@ -128,6 +131,14 @@ internal class CardComponentStateValidator(
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapKCPCardPasswordValidation(
             validation = CardValidationUtils.validateKCPCardPassword(kcpCardPassword = kcpCardPassword),
+        )
+    }
+
+    private fun validatePostalCode(
+        postalCode: TextInputComponentState
+    ) : CheckoutLocalizationKey? {
+        return cardValidationMapper.mapPostalCodeValidation(
+            validation = CardValidationUtils.validatePostalCode(postalCode = postalCode)
         )
     }
 }

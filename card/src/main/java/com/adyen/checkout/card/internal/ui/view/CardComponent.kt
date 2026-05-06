@@ -118,6 +118,12 @@ private fun CardDetailsSection(
                 onIntent = onIntent,
             )
         }
+        if(viewState.postalCode != null) {
+            PostalCodeField(
+                postalCodeState = viewState.postalCode,
+                onIntent = onIntent
+            )
+        }
         if (viewState.isStorePaymentFieldVisible) {
             SwitchContainer(
                 checked = viewState.storePaymentMethod,
@@ -154,6 +160,9 @@ private fun CardComponentPreview() {
             ),
             kcpCardPassword = TextInputViewState(
                 text = "12",
+            ),
+            postalCode = TextInputViewState(
+                text = "1234 AB"
             ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = true,

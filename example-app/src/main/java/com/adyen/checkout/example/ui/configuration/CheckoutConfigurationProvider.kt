@@ -2,6 +2,7 @@ package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
 import com.adyen.checkout.bcmc.bcmc
+import com.adyen.checkout.card.BillingAddressConfiguration
 import com.adyen.checkout.card.card
 import com.adyen.checkout.card.old.AddressConfiguration
 import com.adyen.checkout.card.old.CardBrand
@@ -114,8 +115,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             card {
-                // TODO - add address and installments
+                // TODO - add installments
                 shopperReference = keyValueStorage.getShopperReference()
+                billingAddress = getBillingAddressConfiguration()
             }
 
             threeDS2 {
@@ -151,6 +153,13 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         )
 
         CardAddressMode.LOOKUP -> AddressConfiguration.Lookup()
+    }
+
+    private fun getBillingAddressConfiguration(): BillingAddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
+        CardAddressMode.NONE -> BillingAddressConfiguration.None
+        CardAddressMode.POSTAL_CODE -> BillingAddressConfiguration.PostalCode()
+        CardAddressMode.FULL_ADDRESS -> TODO()
+        CardAddressMode.LOOKUP -> TODO()
     }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
