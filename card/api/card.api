@@ -41,9 +41,10 @@ public final class com/adyen/checkout/card/BuildConfig {
 }
 
 public final class com/adyen/checkout/card/CardCallbackExtKt {
-	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lkotlin/jvm/functions/Function1;)V
-	public static final fun onBinLookup (Lcom/adyen/checkout/card/internal/CardCallbacks;Lcom/adyen/checkout/card/OnBinLookupCallback;)V
-	public static final fun onBinValue (Lcom/adyen/checkout/card/internal/CardCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;)V
+	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;)V
+	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;)V
+	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;Lcom/adyen/checkout/card/OnBinLookupCallback;)V
+	public static synthetic fun card$default (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;Lcom/adyen/checkout/card/OnBinLookupCallback;ILjava/lang/Object;)V
 }
 
 public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkout/core/components/internal/Configuration {

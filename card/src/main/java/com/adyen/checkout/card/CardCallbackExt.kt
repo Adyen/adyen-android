@@ -8,21 +8,13 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.internal.CardCallbacks
 import com.adyen.checkout.core.components.CheckoutCallbacks
 
-fun CheckoutCallbacks.card(initBlock: CardCallbacks.() -> Unit) {
-    apply {
-        val callbacks = CardCallbacks().apply(initBlock)
-        callbacks.onBinValue?.let { addAdditionalCallback(it) }
-        callbacks.onBinLookup?.let { addAdditionalCallback(it) }
-    }
-}
-
-fun CardCallbacks.onBinValue(onBinValueCallback: OnBinValueCallback) {
-    onBinValue = onBinValueCallback
-}
-
-fun CardCallbacks.onBinLookup(onBinLookupCallback: OnBinLookupCallback) {
-    onBinLookup = onBinLookupCallback
+@JvmOverloads
+fun CheckoutCallbacks.card(
+    onBinValue: OnBinValueCallback? = null,
+    onBinLookup: OnBinLookupCallback? = null,
+) {
+    onBinValue?.let { addAdditionalCallback(it) }
+    onBinLookup?.let { addAdditionalCallback(it) }
 }
