@@ -50,6 +50,7 @@ sealed class BillingAddressConfiguration : Parcelable {
          * Address form fields will be optional for given [brands] and required for the other brands.
          */
         @Parcelize
+        // TODO clarify if this subtype needs to be exposed
         data class OptionalForCardTypes(val brands: List<String>) : CardBillingAddressFieldPolicy()
     }
 }

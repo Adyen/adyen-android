@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -18,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.core.common.internal.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -43,6 +46,7 @@ internal fun PostalCodeField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_POSTAL_CODE),
         initialValue = postalCodeState.text,
+        inputTransformation = InputTransformation.maxLength(PostalCodeProperties.POSTAL_CODE_MAX_LENGTH),
         isError = postalCodeState.isError,
         supportingText = supportingTextPostalCode,
         onValueChange = { value ->

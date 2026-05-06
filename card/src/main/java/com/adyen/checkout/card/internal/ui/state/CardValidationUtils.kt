@@ -23,6 +23,7 @@ import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.DateUtils
+import com.adyen.checkout.core.common.internal.properties.PostalCodeProperties
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.requiresValidation
 
@@ -195,6 +196,8 @@ internal object CardValidationUtils {
         if (!postalCode.requiresValidation()) return CardPostalCodeValidation.VALID
         return if (postalCode.text.isBlank()) {
             CardPostalCodeValidation.INVALID_BLANK
+        } else if (postalCode.text.length > PostalCodeProperties.POSTAL_CODE_MAX_LENGTH) {
+            CardPostalCodeValidation.INVALID_TOO_LONG
         } else {
             CardPostalCodeValidation.VALID
         }
@@ -233,6 +236,7 @@ enum class CardSecurityCodeValidation {
 enum class CardPostalCodeValidation {
     VALID,
     INVALID_BLANK,
+    INVALID_TOO_LONG
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.runCompileOnly
+import com.adyen.checkout.core.components.data.Address
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.getPaymentDataValue
@@ -67,6 +68,7 @@ internal fun CardComponentState.toPaymentComponentState(
         cardDetails = cardDetails,
         storePaymentMethod = storePaymentMethod(componentParams),
         socialSecurityNumber = socialSecurityNumber.getPaymentDataValue(),
+        billingAddress = getBillingAddress(),
         componentParams = componentParams,
     )
 
@@ -145,15 +147,27 @@ private fun createCardDetails(
     taxNumber = kcpBirthDateOrTaxNumber,
 )
 
+private fun CardComponentState.getBillingAddress() : Address? {
+    postalCode.getPaymentDataValue()?.let {
+        return Address(
+            postalCode = it
+        )
+    }
+
+    return null
+}
+
 private fun createPaymentComponentData(
     cardDetails: CardDetails,
     storePaymentMethod: Boolean?,
     socialSecurityNumber: String?,
+    billingAddress: Address?,
     componentParams: CardComponentParams,
 ) = PaymentComponentData(
     paymentMethod = cardDetails,
     storePaymentMethod = storePaymentMethod,
     shopperReference = componentParams.shopperReference,
+    billingAddress = billingAddress,
     order = null,
     socialSecurityNumber = socialSecurityNumber,
 )

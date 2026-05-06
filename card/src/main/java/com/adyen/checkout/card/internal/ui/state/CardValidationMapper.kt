@@ -92,7 +92,8 @@ internal class CardValidationMapper {
     ): CheckoutLocalizationKey? {
         return when(validation) {
             CardPostalCodeValidation.VALID -> null
-            CardPostalCodeValidation.INVALID_BLANK -> CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID
+            CardPostalCodeValidation.INVALID_BLANK,
+            CardPostalCodeValidation.INVALID_TOO_LONG -> CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID
         }
     }
 }
