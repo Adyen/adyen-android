@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.data.OrderResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.action.data.Action as ActionResponse
@@ -30,7 +31,12 @@ sealed interface SubmitResult {
      */
     data class Retry(val errorMessage: String? = null) : SubmitResult
 
-    /** Indicates that a partial payment has been made. */
+    /**
+     * Indicates that a partial payment has been made.
+     *
+     * Not available in alpha01.
+     */
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class PartialPayment(
         val order: OrderResponse,
         val paymentMethods: PaymentMethods,

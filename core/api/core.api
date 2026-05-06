@@ -878,20 +878,6 @@ public final class com/adyen/checkout/core/components/SubmitResult$Completion : 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/components/SubmitResult$PartialPayment : com/adyen/checkout/core/components/SubmitResult {
-	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/components/data/OrderResponse;Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethods;)V
-	public final fun component1 ()Lcom/adyen/checkout/core/components/data/OrderResponse;
-	public final fun component2 ()Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethods;
-	public final fun copy (Lcom/adyen/checkout/core/components/data/OrderResponse;Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethods;)Lcom/adyen/checkout/core/components/SubmitResult$PartialPayment;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/SubmitResult$PartialPayment;Lcom/adyen/checkout/core/components/data/OrderResponse;Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethods;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/SubmitResult$PartialPayment;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getOrder ()Lcom/adyen/checkout/core/components/data/OrderResponse;
-	public final fun getPaymentMethods ()Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethods;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/adyen/checkout/core/components/SubmitResult$Retry : com/adyen/checkout/core/components/SubmitResult {
 	public static final field $stable I
 	public fun <init> ()V

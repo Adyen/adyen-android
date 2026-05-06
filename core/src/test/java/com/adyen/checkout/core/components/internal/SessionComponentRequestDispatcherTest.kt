@@ -9,16 +9,16 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -26,24 +26,14 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 import java.io.IOException
-import kotlin.coroutines.cancellation.CancellationException
 
-/**
- * Verifies session-internal API failure routing in [SessionComponentRequestDispatcher].
- *
- * Both `submit()` and `additionalDetails()` must, on `SessionRepository` failure, route the
- * original cause to `callbacks.onError(...)` and then abort the launched coroutine via
- * `CancellationException` so the orchestrator does not invoke `handleResult`. This mirrors iOS
- * `Session.didSubmit` / `Session.didProvide` behavior. See the
- * `SUBMIT_AND_ADDITIONAL_DETAILS_RESULT_DECISION` plan for the full rationale.
- */
 @ExtendWith(MockitoExtension::class)
 internal class SessionComponentRequestDispatcherTest(
     @Mock private val sessionRepository: SessionRepository,
 ) {
 
     @Test
-    fun `when submitPayment fails, then onError is invoked with the mapped error and CancellationException is thrown`() =
+    fun `when submitPayment fails, then retry is returned and onError is invoked`() =
         runTest {
             val cause = IOException("network down")
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.failure(cause)
@@ -51,17 +41,14 @@ internal class SessionComponentRequestDispatcherTest(
             val capturedErrors = mutableListOf<CheckoutError>()
             val dispatcher = createDispatcher(onError = { capturedErrors += it })
 
-            val thrown = assertThrows<CancellationException> {
-                dispatcher.submit(emptyPaymentComponentData())
-            }
+            val result = dispatcher.submit(emptyPaymentComponentData())
 
+            assertEquals(SubmitResult.Retry("network down"), result)
             assertEquals(1, capturedErrors.size)
-            assertSame(cause, capturedErrors.single().cause)
-            assertSame(cause, thrown.cause)
         }
 
     @Test
-    fun `when submitDetails fails, then onError is invoked with the mapped error and CancellationException is thrown`() =
+    fun `when submitDetails fails, then error completion is returned and onError is invoked`() =
         runTest {
             val cause = IOException("network down")
             whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.failure(cause)
@@ -69,13 +56,10 @@ internal class SessionComponentRequestDispatcherTest(
             val capturedErrors = mutableListOf<CheckoutError>()
             val dispatcher = createDispatcher(onError = { capturedErrors += it })
 
-            val thrown = assertThrows<CancellationException> {
-                dispatcher.additionalDetails(ActionComponentData())
-            }
+            val result = dispatcher.additionalDetails(ActionComponentData())
 
+            assertEquals(AdditionalDetailsResult.Completion("Error"), result)
             assertEquals(1, capturedErrors.size)
-            assertSame(cause, capturedErrors.single().cause)
-            assertSame(cause, thrown.cause)
         }
 
     @Test
@@ -85,9 +69,7 @@ internal class SessionComponentRequestDispatcherTest(
         var onFinishedCalls = 0
         val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
 
-        assertThrows<CancellationException> {
-            dispatcher.submit(emptyPaymentComponentData())
-        }
+        dispatcher.submit(emptyPaymentComponentData())
 
         assertEquals(0, onFinishedCalls)
     }
@@ -99,9 +81,7 @@ internal class SessionComponentRequestDispatcherTest(
         var onFinishedCalls = 0
         val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
 
-        assertThrows<CancellationException> {
-            dispatcher.additionalDetails(ActionComponentData())
-        }
+        dispatcher.additionalDetails(ActionComponentData())
 
         assertEquals(0, onFinishedCalls)
     }
