@@ -23,5 +23,5 @@ abstract class CheckoutPaymentMethodRoute internal constructor() {
      *
      * @param identifier The unique identifier for the secondary screen.
      */
-    class Secondary(val identifier: String) : CheckoutPaymentMethodRoute()
+    data class Secondary(val identifier: String) : CheckoutPaymentMethodRoute()
 }
