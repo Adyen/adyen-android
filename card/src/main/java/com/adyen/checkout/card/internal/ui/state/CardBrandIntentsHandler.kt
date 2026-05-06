@@ -13,6 +13,7 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
+import com.adyen.checkout.card.internal.helper.RestrictedCardType
 import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -51,17 +52,28 @@ internal class CardBrandIntentsHandler(
     ): CardBrandState {
         val detectedCardTypes = intent.detectedCardTypeList.detectedCardTypes
         val supportedDetectedCardTypes = detectedCardTypes.filter { it.isSupported }
+        // Strip restricted brands defensively even when the backend marked them supported=true
+        // (which happens when the merchant explicitly listed them in supportedCardBrands).
+        val nonRestrictedSupported = supportedDetectedCardTypes.filterNot {
+            RestrictedCardType.isRestrictedCardType(it.cardBrand.txVariant)
+        }
+        // Check the FULL detected list (not the supported-filtered subset). The backend returns
+        // restricted brands with supported=false when the merchant didn't list them, so we'd
+        // otherwise miss them.
+        val anyRestrictedDetected = detectedCardTypes.any {
+            RestrictedCardType.isRestrictedCardType(it.cardBrand.txVariant)
+        }
 
         return when (intent.detectedCardTypeList.source) {
             DetectedCardTypeList.Source.LOCAL -> {
-                if (supportedDetectedCardTypes.isEmpty()) {
+                if (nonRestrictedSupported.isEmpty()) {
                     // local detection + no supported brands
                     CardBrandState.NoBrandsDetected
                 } else {
                     // local detection + supported brands
                     // select the first brand and discard the rest
                     CardBrandState.SingleUnreliableBrand(
-                        cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
+                        cardBrandData = nonRestrictedSupported.first().toCardBrandData(),
                     )
                 }
             }
@@ -71,19 +83,29 @@ internal class CardBrandIntentsHandler(
                     // network detection + no detected brands
                     detectedCardTypes.isEmpty() -> CardBrandState.NoBrandsDetected
 
-                    // network detection + detected brands but no supported brands
-                    supportedDetectedCardTypes.isEmpty() -> CardBrandState.UnsupportedBrand
+                    // network detection + only restricted brand(s) detected
+                    nonRestrictedSupported.isEmpty() && anyRestrictedDetected ->
+                        CardBrandState.RestrictedBrand
+
+                    // network detection + detected brands but no supported, non-restricted brands
+                    nonRestrictedSupported.isEmpty() -> CardBrandState.UnsupportedBrand
+
+                    // network detection + 1 supported non-restricted brand alongside restricted
+                    anyRestrictedDetected && nonRestrictedSupported.size == 1 ->
+                        CardBrandState.DualBrandWithRestrictedBrand(
+                            cardBrandData = nonRestrictedSupported.first().toCardBrandData(),
+                        )
 
                     // network detection + 1 detected brand
-                    supportedDetectedCardTypes.size == 1 -> {
+                    nonRestrictedSupported.size == 1 -> {
                         CardBrandState.SingleReliableBrand(
-                            cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
+                            cardBrandData = nonRestrictedSupported.first().toCardBrandData(),
                         )
                     }
 
                     // network detection + multiple detected brands
                     else -> {
-                        getDualBrandedCardBrandState(currentState.cardBrandState, supportedDetectedCardTypes)
+                        getDualBrandedCardBrandState(currentState.cardBrandState, nonRestrictedSupported)
                     }
                 }
             }
@@ -149,9 +171,11 @@ internal class CardBrandIntentsHandler(
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
             is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.DualBrandWithRestrictedBrand -> cardBrandState.cardBrandData
             is CardBrandState.NoBrandsDetected,
             is CardBrandState.SingleUnreliableBrand,
-            is CardBrandState.UnsupportedBrand -> null
+            is CardBrandState.UnsupportedBrand,
+            is CardBrandState.RestrictedBrand -> null
         }
         val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
         val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy

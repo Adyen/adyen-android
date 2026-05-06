@@ -28,11 +28,13 @@ internal class CardViewStateProducer(
         // we only show all supported card brands when we do not detect any brands for this specific card
         val isSupportedCardBrandsShown = when (state.cardBrandState) {
             is CardBrandState.UnsupportedBrand,
+            is CardBrandState.RestrictedBrand,
             is CardBrandState.NoBrandsDetected -> true
 
             is CardBrandState.SingleReliableBrand,
             is CardBrandState.SingleUnreliableBrand,
             is CardBrandState.DualBrand,
+            is CardBrandState.DualBrandWithRestrictedBrand,
             is CardBrandState.DualBrandWithShopperSelection -> false
         }
 
@@ -67,9 +69,11 @@ internal class CardViewStateProducer(
         return when (cardBrandState) {
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.map { it.cardBrand }
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList.map { it.cardBrand }
+            is CardBrandState.DualBrandWithRestrictedBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             is CardBrandState.NoBrandsDetected,
+            is CardBrandState.RestrictedBrand,
             is CardBrandState.UnsupportedBrand -> emptyList()
         }
     }

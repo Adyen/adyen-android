@@ -24,7 +24,9 @@ internal class CardComponentStateValidator(
             is CardBrandState.SingleUnreliableBrand -> cardBrandState.cardBrandData
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
+            is CardBrandState.DualBrandWithRestrictedBrand -> cardBrandState.cardBrandData
             is CardBrandState.NoBrandsDetected,
+            is CardBrandState.RestrictedBrand,
             is CardBrandState.UnsupportedBrand -> null
         }
         val isUnsupportedBrand = state.cardBrandState is CardBrandState.UnsupportedBrand

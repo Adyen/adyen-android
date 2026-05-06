@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -240,6 +242,38 @@ internal class CardComponentStateValidatorTest {
         val validatedState = validator.validate(state)
 
         assertNotNull(validatedState.cardNumber.errorMessage)
+    }
+
+    @Test
+    fun `when card brand is restricted, then card number has no unsupported error`() {
+        val state = createValidState().copy(
+            cardBrandState = CardBrandState.RestrictedBrand,
+        )
+
+        val validatedState = validator.validate(state)
+
+        assertNull(validatedState.cardNumber.errorMessage)
+    }
+
+    @Test
+    fun `when card brand is dual branded with restricted brand, then card number has no unsupported error`() {
+        val state = createValidState().copy(
+            cardBrandState = CardBrandState.DualBrandWithRestrictedBrand(
+                CardBrandData(
+                    cardBrand = CardBrand("visa"),
+                    enableLuhnCheck = true,
+                    cvcPolicy = Brand.FieldPolicy.REQUIRED,
+                    expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                    panLength = null,
+                    paymentMethodVariant = null,
+                    localizedBrand = null,
+                ),
+            ),
+        )
+
+        val validatedState = validator.validate(state)
+
+        assertNull(validatedState.cardNumber.errorMessage)
     }
 
     private fun createValidState() = CardComponentState(

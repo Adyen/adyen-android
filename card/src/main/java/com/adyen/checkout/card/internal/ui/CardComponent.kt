@@ -167,6 +167,7 @@ internal class CardComponent(
             .launchIn(coroutineScope)
     }
 
+    // TODO: Bin lookup - Adjust the returned card brands after aligning with other platforms
     /**
      * Only return the reliable card brands in the onBinLookup callback
      */
@@ -174,8 +175,10 @@ internal class CardComponent(
         return when (val cardBrandState = state.cardBrandState) {
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList
+            is CardBrandState.DualBrandWithRestrictedBrand -> listOf(cardBrandState.cardBrandData)
             is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData)
             is CardBrandState.NoBrandsDetected,
+            is CardBrandState.RestrictedBrand,
             is CardBrandState.SingleUnreliableBrand,
             is CardBrandState.UnsupportedBrand -> null
         }

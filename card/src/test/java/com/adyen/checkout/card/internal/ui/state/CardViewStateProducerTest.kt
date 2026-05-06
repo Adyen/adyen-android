@@ -76,6 +76,39 @@ internal class CardViewStateProducerTest {
         assertTrue(viewState.isSupportedCardBrandsShown)
     }
 
+    @Test
+    fun `when only restricted brand is detected, then supported card brands should be shown and detected brands list is empty`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.RestrictedBrand,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertTrue(viewState.isSupportedCardBrandsShown)
+        assertTrue(viewState.detectedCardBrands.isEmpty())
+    }
+
+    @Test
+    fun `when dual branded with restricted brand is detected, then only the supported brand logo is shown`() {
+        // GIVEN
+        val supportedBrand = CardBrand("visa")
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithRestrictedBrand(
+                getCardBrandData().copy(cardBrand = supportedBrand),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertEquals(listOf(supportedBrand), viewState.detectedCardBrands)
+    }
+
     // UC6: Error Hides Brand Logos
     @Test
     fun `when card number has error with detected brand, then trailing icon is warning and supported brands are hidden`() {
