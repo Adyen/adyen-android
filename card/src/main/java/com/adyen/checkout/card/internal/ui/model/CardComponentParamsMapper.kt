@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldMode
+import com.adyen.checkout.card.internal.helper.RestrictedCardType
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
