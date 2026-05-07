@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2026 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 7/5/2026.
+ */
+
 package com.adyen.checkout.card.internal.helper
 
 import com.adyen.checkout.card.BinLookupBrand
@@ -9,7 +17,7 @@ import com.adyen.checkout.core.common.CardBrand
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class CardBrandDataMapperTest {
+internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when single supported brand then correct BinLookupData is returned`() {
