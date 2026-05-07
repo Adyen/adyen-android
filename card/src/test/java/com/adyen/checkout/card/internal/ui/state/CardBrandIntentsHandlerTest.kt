@@ -406,7 +406,10 @@ internal class CardBrandIntentsHandlerTest(
                     ),
                     shopperSelectedCardBrandData = createCardBrandData().copy(cardBrand = CardBrand("amex")),
                 ),
-                lastNetworkBinLookup = detectedCardTypeList,
+                networkBinLookupState = NetworkBinLookupState(
+                    detectedCardTypes = detectedCardTypes,
+                    issuingCountryCode = null,
+                ),
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -673,18 +676,20 @@ internal class CardBrandIntentsHandlerTest(
                 CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
             )
 
-            assertEquals(detectedCardTypeList, actual.lastNetworkBinLookup)
+            val expected = NetworkBinLookupState(
+                detectedCardTypes = detectedCardTypes,
+                issuingCountryCode = "NL",
+            )
+            assertEquals(expected, actual.networkBinLookupState)
         }
 
         @Test
         fun `and source is LOCAL then lastNetworkBinLookup is cleared`() {
-            val previousNetworkLookup = DetectedCardTypeList(
-                listOf(createDetectedCardType()),
-                DetectedCardTypeList.Source.NETWORK,
-                "54545454",
+            val previousNetworkLookup = NetworkBinLookupState(
+                detectedCardTypes = listOf(createDetectedCardType()),
                 issuingCountryCode = "NL",
             )
-            val state = createInitialState().copy(lastNetworkBinLookup = previousNetworkLookup)
+            val state = createInitialState().copy(networkBinLookupState = previousNetworkLookup)
             val detectedCardTypeList = DetectedCardTypeList(
                 listOf(createDetectedCardType().copy(cardBrand = CardBrand("mc"))),
                 DetectedCardTypeList.Source.LOCAL,
@@ -696,19 +701,18 @@ internal class CardBrandIntentsHandlerTest(
                 CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
             )
 
-            assertEquals(null, actual.lastNetworkBinLookup)
+            assertEquals(null, actual.networkBinLookupState)
         }
 
         @Test
         fun `and intent is discarded then lastNetworkBinLookup is unchanged`() {
-            val previousNetworkLookup = DetectedCardTypeList(
-                listOf(createDetectedCardType()),
-                DetectedCardTypeList.Source.NETWORK,
-                "54545454",
+            val previousNetworkLookup = NetworkBinLookupState(
+                detectedCardTypes = listOf(createDetectedCardType()),
+                issuingCountryCode = null,
             )
             val state = createInitialState().copy(
                 cardNumber = TextInputComponentState(text = "5454545454545454"),
-                lastNetworkBinLookup = previousNetworkLookup,
+                networkBinLookupState = previousNetworkLookup,
             )
             val detectedCardTypeList = DetectedCardTypeList(
                 listOf(createDetectedCardType().copy(cardBrand = CardBrand("mc"))),
@@ -721,7 +725,7 @@ internal class CardBrandIntentsHandlerTest(
                 CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
             )
 
-            assertEquals(previousNetworkLookup, actual.lastNetworkBinLookup)
+            assertEquals(previousNetworkLookup, actual.networkBinLookupState)
         }
     }
 

@@ -4,7 +4,7 @@ import com.adyen.checkout.card.BinLookupBrand
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
+import com.adyen.checkout.card.internal.ui.state.NetworkBinLookupState
 import com.adyen.checkout.core.common.CardBrand
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -13,7 +13,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when single supported brand then correct BinLookupData is returned`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = listOf(createDetectedCardType(brand = "visa", isSupported = true)),
             issuingCountryCode = "NL",
         )
@@ -31,7 +31,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when mixed support then all brands with correct supported flags are returned`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = listOf(
                 createDetectedCardType(brand = "visa", isSupported = true),
                 createDetectedCardType(brand = "mc", isSupported = false),
@@ -53,7 +53,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when all unsupported then callback fires with supported false entries`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = listOf(
                 createDetectedCardType(brand = "visa", isSupported = false),
                 createDetectedCardType(brand = "mc", isSupported = false),
@@ -71,7 +71,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when empty response then callback fires with empty brands`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = emptyList(),
             issuingCountryCode = null,
         )
@@ -87,7 +87,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when issuingCountryCode is present then it is propagated correctly`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = listOf(createDetectedCardType(brand = "visa", isSupported = true)),
             issuingCountryCode = "FR",
         )
@@ -99,7 +99,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when issuingCountryCode is null then it is null in result`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = listOf(createDetectedCardType(brand = "visa", isSupported = true)),
             issuingCountryCode = null,
         )
@@ -111,7 +111,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when paymentMethodVariant is present then it is mapped correctly`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = listOf(
                 createDetectedCardType(brand = "visa", isSupported = true, paymentMethodVariant = "visadebit"),
             ),
@@ -124,7 +124,7 @@ internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when paymentMethodVariant is null then it is null in result`() {
-        val detectedCardTypeList = createDetectedCardTypeList(
+        val detectedCardTypeList = createNetworkBinLookupState(
             detectedCardTypes = listOf(
                 createDetectedCardType(brand = "visa", isSupported = true, paymentMethodVariant = null),
             ),
@@ -135,13 +135,11 @@ internal class DetectedCardTypeMappersTest {
         assertEquals(null, result.brands.first().paymentMethodVariant)
     }
 
-    private fun createDetectedCardTypeList(
+    private fun createNetworkBinLookupState(
         detectedCardTypes: List<DetectedCardType>,
         issuingCountryCode: String? = null,
-    ) = DetectedCardTypeList(
+    ) = NetworkBinLookupState(
         detectedCardTypes = detectedCardTypes,
-        source = DetectedCardTypeList.Source.NETWORK,
-        cardDetectionBin = "54545454",
         issuingCountryCode = issuingCountryCode,
     )
 
