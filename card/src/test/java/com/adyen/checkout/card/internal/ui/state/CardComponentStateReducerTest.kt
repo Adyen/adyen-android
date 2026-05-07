@@ -314,5 +314,6 @@ internal class CardComponentStateReducerTest {
         isLoading = false,
         isCardScanningAvailable = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
+        lastNetworkBinLookup = null,
     )
 }
