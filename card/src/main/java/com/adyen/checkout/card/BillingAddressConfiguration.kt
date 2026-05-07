@@ -1,56 +1,62 @@
 package com.adyen.checkout.card
 
 import android.os.Parcelable
-import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import kotlinx.parcelize.Parcelize
 
-// TODO Remove the RestrictTo annotation after aligning the class API with other platforms
 /**
  * Configuration class for Billing Address Form in Card Component.
  * This class is used to define the visibility of the billing address form.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-sealed class BillingAddressConfiguration : Parcelable {
+@Parcelize
+class BillingAddressConfiguration(
+    val billingAddressMode: BillingAddressMode,
+    val supportedCountryCodes: List<String>? = null,
+    val hideForCardTypes: Set<CardType> = emptySet()
+) : Parcelable {
 
-    /**
-     * Billing Address Form will be hidden.
-     */
-    @Parcelize
-    object None : BillingAddressConfiguration()
-
-    /**
-     * Only postal code will be shown as part of the billing address form.
-     */
-    @Parcelize
-    data class PostalCode(
-        val fieldPolicy: CardBillingAddressFieldPolicy = CardBillingAddressFieldPolicy.Required()
-    ) : BillingAddressConfiguration()
-
-
-    // TODO Remove the RestrictTo annotation after aligning the class API with other platforms
-    /**
-     * Configuration for requirement of the address fields.
-     */
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    sealed class CardBillingAddressFieldPolicy : Parcelable {
+    /** The display mode for the billing address form. */
+    sealed class BillingAddressMode : Parcelable {
 
         /**
-         * Address form fields will be required.
+         * Billing address form will not be shown.
          */
         @Parcelize
-        class Required : CardBillingAddressFieldPolicy()
+        data object None : BillingAddressMode()
 
         /**
-         * Address form fields will be optional.
+         * Only postal code will be shown as part of the card component
          */
         @Parcelize
-        class Optional : CardBillingAddressFieldPolicy()
+        data object PostalCode : BillingAddressMode()
 
         /**
-         * Address form fields will be optional for given [brands] and required for the other brands.
+         * Full Address Form will be shown as part of the card component.
          */
         @Parcelize
-        // TODO clarify if this subtype needs to be exposed
-        data class OptionalForCardTypes(val brands: List<String>) : CardBillingAddressFieldPolicy()
+        data object Full : BillingAddressMode()
     }
+}
+
+class BillingAddressConfigurationBuilder internal constructor() {
+
+    var billingAddressMode: BillingAddressConfiguration.BillingAddressMode =
+        BillingAddressConfiguration.BillingAddressMode.None
+    var supportedCountryCodes: List<String>? = null
+    var hideForCardTypes: Set<CardType> = emptySet()
+
+    internal fun build() = BillingAddressConfiguration(
+        billingAddressMode = billingAddressMode,
+        supportedCountryCodes = supportedCountryCodes,
+        hideForCardTypes = hideForCardTypes,
+    )
+}
+
+fun CardConfigurationBuilder.billingAddress(
+    configuration: @CheckoutConfigurationMarker BillingAddressConfigurationBuilder.() -> Unit = {},
+) {
+    billingAddressConfiguration = BillingAddressConfigurationBuilder()
+        .apply(configuration)
+        .build()
 }

@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.configuration
 import android.content.Context
 import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.BillingAddressConfiguration
+import com.adyen.checkout.card.billingAddress
 import com.adyen.checkout.card.card
 import com.adyen.checkout.card.old.AddressConfiguration
 import com.adyen.checkout.card.old.CardBrand
@@ -117,7 +118,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             card {
                 // TODO - add installments
                 shopperReference = keyValueStorage.getShopperReference()
-                billingAddress = getBillingAddressConfiguration()
+                billingAddress {
+                    billingAddressMode = getBillingAddressMode()
+                }
             }
 
             threeDS2 {
@@ -155,12 +158,13 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         CardAddressMode.LOOKUP -> AddressConfiguration.Lookup()
     }
 
-    private fun getBillingAddressConfiguration(): BillingAddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
-        CardAddressMode.NONE -> BillingAddressConfiguration.None
-        CardAddressMode.POSTAL_CODE -> BillingAddressConfiguration.PostalCode()
-        CardAddressMode.FULL_ADDRESS -> TODO()
-        CardAddressMode.LOOKUP -> TODO()
-    }
+    private fun getBillingAddressMode(): BillingAddressConfiguration.BillingAddressMode =
+        when (keyValueStorage.getCardAddressMode()) {
+            CardAddressMode.NONE -> BillingAddressConfiguration.BillingAddressMode.None
+            CardAddressMode.POSTAL_CODE -> BillingAddressConfiguration.BillingAddressMode.PostalCode
+            CardAddressMode.FULL_ADDRESS -> BillingAddressConfiguration.BillingAddressMode.Full
+            CardAddressMode.LOOKUP -> TODO()
+        }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
         when (keyValueStorage.getInstallmentOptionsMode()) {
