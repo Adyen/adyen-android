@@ -23,11 +23,12 @@ import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.error.CheckoutError
@@ -45,6 +46,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("TooManyFunctions")
 internal class V6ViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
@@ -111,10 +113,10 @@ internal class V6ViewModel @Inject constructor(
         Log.d(TAG, "Bin Lookup Data received: ${binLookupData.joinToString(",") { it.brand }}")
     }
 
-    private suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult {
-        val serializedPaymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
+    private suspend fun onSubmit(data: PaymentComponentData<*>): SubmitResult {
+        val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
         val paymentRequest = createPaymentRequest(
-            paymentComponentData = serializedPaymentComponentData,
+            paymentComponentData = paymentComponentData,
             shopperReference = keyValueStorage.getShopperReference(),
             amount = keyValueStorage.getOldAmount(),
             countryCode = keyValueStorage.getCountry(),
@@ -125,29 +127,46 @@ internal class V6ViewModel @Inject constructor(
             shopperEmail = keyValueStorage.getShopperEmail(),
         )
         val response = paymentsRepository.makePaymentsRequest(paymentRequest)
-        return handleResponse(response)
+        return handleSubmitResponse(response)
     }
 
-    private suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
-        val request = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+    private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
+        val request = ActionComponentData.SERIALIZER.serialize(data)
         val response = paymentsRepository.makeDetailsRequest(request)
-        return handleResponse(response)
+        return handleAdditionalDetailsResponse(response)
     }
 
-    private fun handleResponse(json: JSONObject?): CheckoutResult {
+    private fun handleSubmitResponse(json: JSONObject?): SubmitResult {
         return when {
-            json == null -> CheckoutResult.Error("Network error")
+            json == null -> {
+                Log.e(TAG, "Empty payments response — terminating with Completion(\"Error\").")
+                uiState = V6UiState.Final(ResultState.get(RESULT_CODE_ERROR))
+                SubmitResult.Completion(RESULT_CODE_ERROR)
+            }
+
             json.has("action") -> {
                 val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
-                CheckoutResult.Action(action)
+                SubmitResult.Action(action)
             }
 
             else -> {
                 // TODO - move to onFinished callback after it's introduced
-                uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
-                CheckoutResult.Finished()
+                val resultCode = json.optString("resultCode")
+                uiState = V6UiState.Final(ResultState.get(resultCode))
+                SubmitResult.Completion(resultCode)
             }
         }
+    }
+
+    private fun handleAdditionalDetailsResponse(json: JSONObject?): AdditionalDetailsResult {
+        if (json == null) {
+            Log.e(TAG, "Empty payments/details response — terminating with Completion(\"Error\").")
+            uiState = V6UiState.Final(ResultState.get(RESULT_CODE_ERROR))
+            return AdditionalDetailsResult.Completion(RESULT_CODE_ERROR)
+        }
+        val resultCode = json.optString("resultCode")
+        uiState = V6UiState.Final(ResultState.get(resultCode))
+        return AdditionalDetailsResult.Completion(resultCode)
     }
 
     private fun onError(error: CheckoutError) {
@@ -196,5 +215,6 @@ internal class V6ViewModel @Inject constructor(
 
     companion object {
         private val TAG = getLogTag()
+        private const val RESULT_CODE_ERROR = "Error"
     }
 }

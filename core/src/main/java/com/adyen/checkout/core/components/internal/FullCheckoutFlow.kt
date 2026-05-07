@@ -15,9 +15,9 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
 import com.adyen.checkout.core.components.CheckoutTarget
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -95,20 +95,23 @@ internal class FullCheckoutFlow(
         paymentComponent?.submit()
     }
 
-    @Suppress("unused")
-    private fun handleResult(checkoutResult: CheckoutResult) {
-        when (checkoutResult) {
-            is CheckoutResult.Action -> {
-                actionHandler.handleAction(checkoutResult.action)
+    private fun handleResult(submitResult: SubmitResult) {
+        when (submitResult) {
+            is SubmitResult.Action -> {
+                actionHandler.handleAction(submitResult.action)
                 paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Action())
             }
 
-            is CheckoutResult.Error -> {
-                // TODO - Handle error state
+            is SubmitResult.Completion -> {
+                // TODO - Handle completion state
             }
 
-            is CheckoutResult.Finished -> {
-                // TODO - Handle finished state
+            is SubmitResult.Retry -> {
+                // TODO - Handle retry state (re-prompt shopper, optionally surface errorMessage)
+            }
+
+            is SubmitResult.PartialPayment -> {
+                // TODO - Handle partial payment state
             }
         }
     }

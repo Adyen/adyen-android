@@ -112,10 +112,6 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
             )
 
             when (result) {
-                is SessionCallResult.Details.Action -> {
-                    sessionComponentCallback.onAction(result.action)
-                }
-
                 is SessionCallResult.Details.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Details.Finished -> onFinished(result.result, sessionComponentCallback)
                 SessionCallResult.Details.TakenOver -> {
