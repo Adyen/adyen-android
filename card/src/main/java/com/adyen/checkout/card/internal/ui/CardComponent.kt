@@ -183,7 +183,7 @@ internal class CardComponent(
 
     private fun updateBinLookupCallback(cardBrandDataList: List<CardBrandData>) {
         onBinLookupCallback?.onBinLookup(
-            data = cardBrandDataList.map(CardBrandData::toBinLookupData),
+            data = cardBrandDataList.toBinLookupData(),
         )
     }
 

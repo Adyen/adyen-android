@@ -1,13 +1,12 @@
 package com.adyen.checkout.card
 
 /**
- * Class that contains data about the entered card number.
+ * Data about the result of a BIN lookup for the entered card number.
  *
- * @param brand The detected brand.
- * @param paymentMethodVariant The type of payment method. See the
- * [docs](https://docs.adyen.com/development-resources/paymentmethodvariant/) for more information.
+ * @param issuingCountryCode The country code of the card issuer, or `null` if not available.
+ * @param brands The list of detected card brands.
  */
 data class BinLookupData(
-    val brand: String,
-    val paymentMethodVariant: String?,
+    val issuingCountryCode: String?,
+    val brands: List<BinLookupBrand>,
 )
