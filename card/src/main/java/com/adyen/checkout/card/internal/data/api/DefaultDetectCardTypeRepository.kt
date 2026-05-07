@@ -39,6 +39,7 @@ internal class DefaultDetectCardTypeRepository(
                         detectedCardTypes = cachedResult.detectedCardTypes,
                         source = DetectedCardTypeList.Source.NETWORK,
                         cardDetectionBin = bin,
+                        issuingCountryCode = cachedResult.issuingCountryCode,
                     ),
                 )
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
@@ -61,6 +62,7 @@ internal class DefaultDetectCardTypeRepository(
                         detectedCardTypes = localDetectedCardTypes,
                         source = DetectedCardTypeList.Source.LOCAL,
                         cardDetectionBin = bin,
+                        issuingCountryCode = null,
                     ),
                 )
                 this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
@@ -69,17 +71,18 @@ internal class DefaultDetectCardTypeRepository(
 
                 if (bin != null) {
                     // fetch from network and cache results
-                    val networkDetectedCardTypes = detectCardTypesFromNetwork(bin)
-                    if (networkDetectedCardTypes != null) {
+                    val networkResult = detectCardTypesFromNetwork(bin)
+                    if (networkResult != null) {
                         emit(
                             DetectedCardTypeList(
-                                detectedCardTypes = networkDetectedCardTypes,
+                                detectedCardTypes = networkResult.detectedCardTypes,
                                 source = DetectedCardTypeList.Source.NETWORK,
                                 cardDetectionBin = bin,
+                                issuingCountryCode = networkResult.issuingCountryCode,
                             ),
                         )
                         this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
-                            "card types fetched from network: ${networkDetectedCardTypes.toLogString()}"
+                            "card types fetched from network: ${networkResult.detectedCardTypes.toLogString()}"
                         }
                     }
                 }
@@ -87,7 +90,7 @@ internal class DefaultDetectCardTypeRepository(
         }
     }
 
-    private suspend fun detectCardTypesFromNetwork(bin: String): List<DetectedCardType>? {
+    private suspend fun detectCardTypesFromNetwork(bin: String): BinLookupNetworkResult? {
         adyenLog(AdyenLogLevel.VERBOSE) { "detectCardTypesFromNetwork" }
 
         // ensure we don't call bin lookup again while another call for the same bin is in progress
@@ -95,9 +98,13 @@ internal class DefaultDetectCardTypeRepository(
 
         val detectionResult = networkCardBrandDetectionService.getCardBrands(bin)
         return detectionResult.fold(
-            onSuccess = { detectedCardTypes ->
-                binLookupCache.setCachedResults(bin, detectedCardTypes)
-                detectedCardTypes
+            onSuccess = { networkResult ->
+                binLookupCache.setCachedResults(
+                    bin,
+                    networkResult.detectedCardTypes,
+                    networkResult.issuingCountryCode,
+                )
+                networkResult
             },
             onFailure = {
                 binLookupCache.remove(bin)

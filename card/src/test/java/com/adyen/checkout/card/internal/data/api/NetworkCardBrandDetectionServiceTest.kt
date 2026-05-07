@@ -111,8 +111,8 @@ internal class NetworkCardBrandDetectionServiceTest(
 
         val result = networkCardBrandDetectionService.getCardBrands("")
 
-        val networkDetectedCardType = result.getOrNull()
-        assertEquals(expectedDetectedCardTypes, networkDetectedCardType)
+        val networkResult = result.getOrNull()
+        assertEquals(expectedDetectedCardTypes, networkResult?.detectedCardTypes)
     }
 
     private fun initializeTest(

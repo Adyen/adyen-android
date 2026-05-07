@@ -52,6 +52,7 @@ internal class CardBrandIntentsHandlerTest(
             detectedCardTypes,
             DetectedCardTypeList.Source.NETWORK,
             "41111111111",
+            issuingCountryCode = null,
         )
 
         val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -75,6 +76,7 @@ internal class CardBrandIntentsHandlerTest(
                 emptyList(),
                 DetectedCardTypeList.Source.LOCAL,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -97,6 +99,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.LOCAL,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -119,6 +122,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.LOCAL,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -147,6 +151,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.LOCAL,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -175,6 +180,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.LOCAL,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -203,6 +209,7 @@ internal class CardBrandIntentsHandlerTest(
                 emptyList(),
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -225,6 +232,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -247,6 +255,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -275,6 +284,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -302,6 +312,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -333,6 +344,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -366,6 +378,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -406,6 +419,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
@@ -439,6 +453,7 @@ internal class CardBrandIntentsHandlerTest(
                 detectedCardTypes,
                 DetectedCardTypeList.Source.NETWORK,
                 null,
+                issuingCountryCode = null,
             )
 
             val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
