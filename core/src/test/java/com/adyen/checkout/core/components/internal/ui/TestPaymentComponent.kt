@@ -14,10 +14,9 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-internal class TestPaymentComponent : PaymentComponent {
-
-    override val eventFlow: Flow<PaymentComponentEvent>
-        get() = flowOf()
+internal class TestPaymentComponent(
+    override val eventFlow: Flow<PaymentComponentEvent> = flowOf()
+) : PaymentComponent {
 
     @Composable
     override fun Content(modifier: Modifier) = Unit

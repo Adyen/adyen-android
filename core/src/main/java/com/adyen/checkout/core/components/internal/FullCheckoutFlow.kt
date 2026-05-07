@@ -11,18 +11,23 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.CheckoutRoute
+import com.adyen.checkout.core.components.CheckoutSecondaryRoute
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("LongParameterList")
 internal class FullCheckoutFlow(
@@ -50,7 +55,13 @@ internal class FullCheckoutFlow(
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
 
-    override var onNavigate: ((CheckoutRoute) -> Unit)? = null
+    private val paymentMethodNavigationChannel: Channel<CheckoutPaymentMethodRoute> = bufferedChannel()
+    override val paymentMethodNavigation: Flow<CheckoutPaymentMethodRoute> =
+        paymentMethodNavigationChannel.receiveAsFlow()
+
+    private val secondaryNavigationChannel: Channel<CheckoutSecondaryRoute> = bufferedChannel()
+    override val secondaryNavigation: Flow<CheckoutSecondaryRoute> =
+        secondaryNavigationChannel.receiveAsFlow()
 
     init {
         paymentComponent?.eventFlow
@@ -68,11 +79,11 @@ internal class FullCheckoutFlow(
                     }
 
                     is PaymentComponentEvent.SecondaryScreen -> {
-                        onNavigate?.invoke(CheckoutRoute.Secondary(event.identifier))
+                        paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Secondary(event.identifier))
                     }
 
                     PaymentComponentEvent.CloseSecondaryScreen -> {
-                        onNavigate?.invoke(CheckoutRoute.PaymentMethod)
+                        secondaryNavigationChannel.trySend(CheckoutSecondaryRoute.PaymentMethod())
                     }
                 }
             }
@@ -89,7 +100,7 @@ internal class FullCheckoutFlow(
         when (checkoutResult) {
             is CheckoutResult.Action -> {
                 actionHandler.handleAction(checkoutResult.action)
-                onNavigate?.invoke(CheckoutRoute.Action)
+                paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Action())
             }
 
             is CheckoutResult.Error -> {
