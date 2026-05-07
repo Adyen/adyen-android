@@ -21,5 +21,6 @@ internal data class DetectedCardTypeList(
     enum class Source {
         LOCAL,
         NETWORK,
+        CACHED,
     }
 }

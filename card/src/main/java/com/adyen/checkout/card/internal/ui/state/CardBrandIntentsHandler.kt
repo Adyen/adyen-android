@@ -39,6 +39,7 @@ internal class CardBrandIntentsHandler(
 
             val networkBinLookupState = when (intent.detectedCardTypeList.source) {
                 DetectedCardTypeList.Source.NETWORK -> intent.detectedCardTypeList.toNetworkBinLookupState()
+                DetectedCardTypeList.Source.CACHED -> state.networkBinLookupState
                 DetectedCardTypeList.Source.LOCAL -> null
             }
             updatedComponentState.copy(networkBinLookupState = networkBinLookupState)
@@ -73,7 +74,8 @@ internal class CardBrandIntentsHandler(
                 }
             }
 
-            DetectedCardTypeList.Source.NETWORK -> {
+            DetectedCardTypeList.Source.NETWORK,
+            DetectedCardTypeList.Source.CACHED -> {
                 when {
                     // network detection + no detected brands
                     detectedCardTypes.isEmpty() -> CardBrandState.NoBrandsDetected

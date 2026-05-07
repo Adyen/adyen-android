@@ -128,7 +128,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
 
                 val expected = DetectedCardTypeList(
                     detectedCardTypes = cachedResult.detectedCardTypes,
-                    source = DetectedCardTypeList.Source.NETWORK,
+                    source = DetectedCardTypeList.Source.CACHED,
                     cardDetectionBin = bin,
                     issuingCountryCode = cachedResult.issuingCountryCode,
                 )

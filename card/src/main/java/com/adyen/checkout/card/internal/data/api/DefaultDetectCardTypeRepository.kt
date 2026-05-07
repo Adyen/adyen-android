@@ -37,7 +37,7 @@ internal class DefaultDetectCardTypeRepository(
                 emit(
                     DetectedCardTypeList(
                         detectedCardTypes = cachedResult.detectedCardTypes,
-                        source = DetectedCardTypeList.Source.NETWORK,
+                        source = DetectedCardTypeList.Source.CACHED,
                         cardDetectionBin = bin,
                         issuingCountryCode = cachedResult.issuingCountryCode,
                     ),

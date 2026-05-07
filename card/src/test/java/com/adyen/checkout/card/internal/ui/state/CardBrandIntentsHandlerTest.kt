@@ -705,6 +705,27 @@ internal class CardBrandIntentsHandlerTest(
         }
 
         @Test
+        fun `and source is CACHED then networkBinLookupState is unchanged`() {
+            val previousNetworkLookup = NetworkBinLookupState(
+                detectedCardTypes = listOf(createDetectedCardType()),
+                issuingCountryCode = "NL",
+            )
+            val state = createInitialState().copy(networkBinLookupState = previousNetworkLookup)
+            val detectedCardTypeList = DetectedCardTypeList(
+                listOf(createDetectedCardType().copy(cardBrand = CardBrand("visa"))),
+                DetectedCardTypeList.Source.CACHED,
+                null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            assertEquals(previousNetworkLookup, actual.networkBinLookupState)
+        }
+
+        @Test
         fun `and intent is discarded then lastNetworkBinLookup is unchanged`() {
             val previousNetworkLookup = NetworkBinLookupState(
                 detectedCardTypes = listOf(createDetectedCardType()),
