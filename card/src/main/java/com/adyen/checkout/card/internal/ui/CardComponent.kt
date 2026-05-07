@@ -17,9 +17,6 @@ import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.state.CardBrandData
-import com.adyen.checkout.card.internal.ui.state.CardBrandState
-import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -161,30 +158,11 @@ internal class CardComponent(
 
     private fun onCardBrandDataChanged() {
         componentState
-            .mapNotNull(::getReliableCardBrandDataList)
+            .map { it.lastNetworkBinLookup }
             .distinctUntilChanged()
-            .onEach(::updateBinLookupCallback)
+            .mapNotNull { it?.toBinLookupData() }
+            .onEach { onBinLookupCallback?.onBinLookup(it) }
             .launchIn(coroutineScope)
-    }
-
-    /**
-     * Only return the reliable card brands in the onBinLookup callback
-     */
-    private fun getReliableCardBrandDataList(state: CardComponentState): List<CardBrandData>? {
-        return when (val cardBrandState = state.cardBrandState) {
-            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList
-            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList
-            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData)
-            is CardBrandState.NoBrandsDetected,
-            is CardBrandState.SingleUnreliableBrand,
-            is CardBrandState.UnsupportedBrand -> null
-        }
-    }
-
-    private fun updateBinLookupCallback(cardBrandDataList: List<CardBrandData>) {
-        onBinLookupCallback?.onBinLookup(
-            data = cardBrandDataList.toBinLookupData(),
-        )
     }
 
     private fun onEncryptionError(e: EncryptionException) {

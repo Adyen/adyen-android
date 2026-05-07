@@ -34,7 +34,12 @@ internal class CardBrandIntentsHandler(
             state
         } else {
             val newCardBrandState = getCardBrandState(state, intent)
+            val lastNetworkBinLookup = when (intent.detectedCardTypeList.source) {
+                DetectedCardTypeList.Source.NETWORK -> intent.detectedCardTypeList
+                DetectedCardTypeList.Source.LOCAL -> null
+            }
             getUpdatedCardComponentState(state, newCardBrandState)
+                .copy(lastNetworkBinLookup = lastNetworkBinLookup)
         }
     }
 

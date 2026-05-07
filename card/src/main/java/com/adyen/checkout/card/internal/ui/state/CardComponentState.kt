@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.state
 
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -33,6 +34,7 @@ internal data class CardComponentState(
 
     // Component state
     val cardBrandState: CardBrandState,
+    val lastNetworkBinLookup: DetectedCardTypeList? = null,
 ) : ComponentState
 
 internal sealed class CardBrandState {
