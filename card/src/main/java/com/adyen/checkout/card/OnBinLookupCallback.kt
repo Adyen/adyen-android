@@ -12,5 +12,5 @@ import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 
 fun interface OnBinLookupCallback : CheckoutAdditionalCallback {
 
-    fun onBinLookup(data: List<BinLookupData>)
+    fun onBinLookup(data: BinLookupData)
 }

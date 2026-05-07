@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.helper
 
+import com.adyen.checkout.card.BinLookupBrand
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.state.CardBrandData
@@ -22,7 +23,13 @@ internal fun DetectedCardType.toCardBrandData() = CardBrandData(
     localizedBrand = localizedBrand,
 )
 
-internal fun CardBrandData.toBinLookupData() = BinLookupData(
-    brand = cardBrand.txVariant,
-    paymentMethodVariant = paymentMethodVariant,
+internal fun List<CardBrandData>.toBinLookupData() = BinLookupData(
+    issuingCountryCode = null,
+    brands = map { cardBrandData ->
+        BinLookupBrand(
+            brand = cardBrandData.cardBrand.txVariant,
+            supported = true,
+            paymentMethodVariant = cardBrandData.paymentMethodVariant,
+        )
+    },
 )
