@@ -30,9 +30,9 @@ internal class BinLookupCache {
         cachedBinLookupResults[key] = BinLookupCacheResult.Fetching
     }
 
-    fun setCachedResults(bin: String, detectedCardTypes: List<DetectedCardType>) {
+    fun setCachedResults(bin: String, detectedCardTypes: List<DetectedCardType>, issuingCountryCode: String? = null) {
         val key = hashBin(bin)
-        cachedBinLookupResults[key] = BinLookupCacheResult.Available(detectedCardTypes)
+        cachedBinLookupResults[key] = BinLookupCacheResult.Available(detectedCardTypes, issuingCountryCode)
     }
 
     fun remove(bin: String) {

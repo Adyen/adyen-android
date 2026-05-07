@@ -95,10 +95,12 @@ internal class DefaultDetectCardTypeRepositoryTest(
             )
             assertEquals(expectedLocal, flow.values[0])
 
+            val networkResult = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow()
             val expectedNetwork = DetectedCardTypeList(
-                detectedCardTypes = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow(),
+                detectedCardTypes = networkResult.detectedCardTypes,
                 source = DetectedCardTypeList.Source.NETWORK,
                 cardDetectionBin = bin,
+                issuingCountryCode = networkResult.issuingCountryCode,
             )
             assertEquals(expectedNetwork, flow.values[1])
         }
@@ -128,6 +130,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
                     detectedCardTypes = cachedResult.detectedCardTypes,
                     source = DetectedCardTypeList.Source.NETWORK,
                     cardDetectionBin = bin,
+                    issuingCountryCode = cachedResult.issuingCountryCode,
                 )
                 assertEquals(expected, secondFlow.values[0])
             }
@@ -178,10 +181,12 @@ internal class DefaultDetectCardTypeRepositoryTest(
             )
             assertEquals(expectedLocal, secondFlow.values[0])
 
+            val networkResult2 = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow()
             val expectedNetwork = DetectedCardTypeList(
-                detectedCardTypes = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow(),
+                detectedCardTypes = networkResult2.detectedCardTypes,
                 source = DetectedCardTypeList.Source.NETWORK,
                 cardDetectionBin = bin,
+                issuingCountryCode = networkResult2.issuingCountryCode,
             )
             assertEquals(expectedNetwork, secondFlow.values[1])
         }
@@ -217,10 +222,12 @@ internal class DefaultDetectCardTypeRepositoryTest(
                 )
                 assertEquals(expectedLocal, secondFlow.values[0])
 
+                val networkResult3 = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow()
                 val expectedNetwork = DetectedCardTypeList(
-                    detectedCardTypes = networkCardBrandDetectionService.getCardBrands(bin).getOrThrow(),
+                    detectedCardTypes = networkResult3.detectedCardTypes,
                     source = DetectedCardTypeList.Source.NETWORK,
                     cardDetectionBin = bin,
+                    issuingCountryCode = networkResult3.issuingCountryCode,
                 )
                 assertEquals(expectedNetwork, secondFlow.values[1])
             }
