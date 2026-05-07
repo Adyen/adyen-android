@@ -368,7 +368,7 @@ internal class CardViewStateProducerTest {
         isLoading = false,
         isCardScanningAvailable = isCardScanningAvailable,
         cardBrandState = cardBrandState,
-        lastNetworkBinLookup = null,
+        networkBinLookupState = null,
     )
 
     private fun getCardBrandData(): CardBrandData {

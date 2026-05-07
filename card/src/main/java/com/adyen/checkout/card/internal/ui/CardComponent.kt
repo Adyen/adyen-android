@@ -258,7 +258,7 @@ internal class CardComponent(
 
     private fun onCardBrandDataChanged() {
         componentState
-            .map { it.lastNetworkBinLookup }
+            .map { it.networkBinLookupState }
             .distinctUntilChanged()
             .mapNotNull { it?.toBinLookupData() }
             .onEach { onBinLookupCallback?.onBinLookup(it) }

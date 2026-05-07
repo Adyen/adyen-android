@@ -13,6 +13,7 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.ui.state.CardBrandData
+import com.adyen.checkout.card.internal.ui.state.NetworkBinLookupState
 
 internal fun DetectedCardType.toCardBrandData() = CardBrandData(
     cardBrand = cardBrand,
@@ -24,7 +25,12 @@ internal fun DetectedCardType.toCardBrandData() = CardBrandData(
     localizedBrand = localizedBrand,
 )
 
-internal fun DetectedCardTypeList.toBinLookupData() = BinLookupData(
+internal fun DetectedCardTypeList.toNetworkBinLookupState() = NetworkBinLookupState(
+    detectedCardTypes = detectedCardTypes,
+    issuingCountryCode = issuingCountryCode,
+)
+
+internal fun NetworkBinLookupState.toBinLookupData() = BinLookupData(
     issuingCountryCode = issuingCountryCode,
     brands = detectedCardTypes.map { detectedCardType ->
         BinLookupBrand(
