@@ -9,7 +9,7 @@ import com.adyen.checkout.core.common.CardBrand
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class CardBrandDataMapperTest {
+internal class DetectedCardTypeMappersTest {
 
     @Test
     fun `when single supported brand then correct BinLookupData is returned`() {
