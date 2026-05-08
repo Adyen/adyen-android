@@ -19,7 +19,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
-import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.internal.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -33,7 +32,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun PostalCodeField(
     postalCodeState: TextInputViewState,
-    onIntent: (CardIntent) -> Unit,
+    onFocusChanged: (Boolean) -> Unit,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextPostalCode = postalCodeState.supportingText?.let { resolveString(it) }
@@ -42,7 +42,7 @@ internal fun PostalCodeField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onIntent(CardIntent.UpdatePostalCodeFocus(focusState.isFocused))
+                onFocusChanged(focusState.isFocused)
             },
         label = resolveString(CheckoutLocalizationKey.CARD_POSTAL_CODE),
         initialValue = postalCodeState.text,
@@ -50,7 +50,7 @@ internal fun PostalCodeField(
         isError = postalCodeState.isError,
         supportingText = supportingTextPostalCode,
         onValueChange = { value ->
-            onIntent(CardIntent.UpdatePostalCode(value))
+            onValueChange(value)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
@@ -108,7 +108,8 @@ private fun PostalCodeFieldPreview(
             postalCodeState = TextInputViewState(
                 text = "1234 AB",
             ),
-            onIntent = {},
+            onFocusChanged = {},
+            onValueChange = {},
         )
     }
 }

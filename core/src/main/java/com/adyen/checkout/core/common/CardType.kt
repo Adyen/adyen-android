@@ -11,6 +11,7 @@ package com.adyen.checkout.core.common
 import androidx.annotation.RestrictTo
 import java.util.regex.Pattern
 
+// TODO - we might need to give merchants an ability to add custom txVariants
 /**
  * Predefined list of card schemes. Can be used to configure the supported card schemes with
  * [CardConfigurationBuilder.setSupportedCardTypes].

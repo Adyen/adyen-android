@@ -1,7 +1,6 @@
 package com.adyen.checkout.card
 
 import android.os.Parcelable
-import com.adyen.checkout.core.common.CardType
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -21,6 +20,9 @@ sealed class BillingAddressMode : Parcelable {
     @Parcelize
     data object PostalCode : BillingAddressMode()
 
+    /* The Full and Lookup below are for the types completeness.
+    Uncomment and refine them once implementing that flows.
+
     /**
      * Full Address Form will be shown as part of the card component.
      *
@@ -32,4 +34,10 @@ sealed class BillingAddressMode : Parcelable {
         val supportedCountryCodes: Set<String> = emptySet(),
         val hideForCardTypes: Set<CardType> = emptySet()
     ) : BillingAddressMode()
+
+    /**
+     * Address Lookup option will be shown as part of card component.
+     */
+    @Parcelize
+    data object Lookup : BillingAddressMode() */
 }
