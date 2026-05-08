@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_OR_TAX_NUMBER_MAX_LENGTH
 import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_VALID_LENGTH
-import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -30,7 +29,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun KCPBirthDateOrTaxNumberField(
     kcpBirthDateOrTaxNumberState: TextInputViewState,
-    onIntent: (CardIntent) -> Unit,
+    onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val textLength = kcpBirthDateOrTaxNumberState.text.length
@@ -53,14 +53,14 @@ internal fun KCPBirthDateOrTaxNumberField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(focusState.isFocused))
+                onFocusChange(focusState.isFocused)
             },
         label = label,
         initialValue = kcpBirthDateOrTaxNumberState.text,
         isError = kcpBirthDateOrTaxNumberState.isError,
         supportingText = supportingText,
         onValueChange = { value ->
-            onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(value))
+            onValueChange(value)
         },
         shouldFocus = kcpBirthDateOrTaxNumberState.isFocused,
         inputTransformation = inputTransformation,
@@ -77,7 +77,8 @@ private fun KCPBirthDateOrTaxNumberFieldPreview(
             kcpBirthDateOrTaxNumberState = TextInputViewState(
                 text = "230704",
             ),
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
 
         KCPBirthDateOrTaxNumberField(
@@ -85,7 +86,8 @@ private fun KCPBirthDateOrTaxNumberFieldPreview(
                 text = "1234567890",
                 isError = true,
             ),
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
     }
 }

@@ -40,8 +40,9 @@ internal fun StoredCardComponent(
             ) {
                 StoredCardSecurityCodeField(
                     securityCodeState = viewState.securityCode,
-                    onIntent = onIntent,
                     isAmex = viewState.isAmex,
+                    onValueChange = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
+                    onFocusChange = { onIntent(StoredCardIntent.UpdateSecurityCodeFocus(it)) },
                 )
             }
         }

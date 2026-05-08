@@ -23,8 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
-import com.adyen.checkout.card.internal.ui.state.CardIntent
-import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_AMEX
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_DEFAULT
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -43,14 +41,15 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 internal fun SecurityCodeField(
     securityCodeState: TextInputViewState,
     isAmex: Boolean?,
-    onIntent: (CardIntent) -> Unit,
+    onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SecurityCodeFieldInternal(
         securityCodeState = securityCodeState,
         isAmex = isAmex,
-        onSecurityCodeChanged = { onIntent(CardIntent.UpdateSecurityCode(it)) },
-        onSecurityCodeFocusChanged = { onIntent(CardIntent.UpdateSecurityCodeFocus(it)) },
+        onSecurityCodeChanged = onValueChange,
+        onSecurityCodeFocusChanged = onFocusChange,
         modifier = modifier,
     )
 }
@@ -59,14 +58,15 @@ internal fun SecurityCodeField(
 internal fun StoredCardSecurityCodeField(
     securityCodeState: TextInputViewState,
     isAmex: Boolean?,
-    onIntent: (StoredCardIntent) -> Unit,
+    onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SecurityCodeFieldInternal(
         securityCodeState = securityCodeState,
         isAmex = isAmex,
-        onSecurityCodeChanged = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
-        onSecurityCodeFocusChanged = { onIntent(StoredCardIntent.UpdateSecurityCodeFocus(it)) },
+        onSecurityCodeChanged = onValueChange,
+        onSecurityCodeFocusChanged = onFocusChange,
         modifier = modifier,
     )
 }
@@ -181,7 +181,8 @@ private fun SecurityCodeFieldPreview(
                 text = "123",
             ),
             isAmex = false,
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
 
         SecurityCodeField(
@@ -189,7 +190,8 @@ private fun SecurityCodeFieldPreview(
                 isOptional = true,
             ),
             isAmex = true,
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
     }
 }

@@ -78,44 +78,51 @@ private fun CardDetailsSection(
                 isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
                 detectedCardBrands = viewState.detectedCardBrands,
                 isAmex = viewState.isAmex,
-                onIntent = onIntent,
+                onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
             )
         }
         if (viewState.expiryDate != null) {
             ExpiryDateField(
                 expiryDateState = viewState.expiryDate,
-                onIntent = onIntent,
+                onValueChange = { onIntent(CardIntent.UpdateExpiryDate(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateExpiryDateFocus(it)) },
             )
         }
         if (viewState.securityCode != null) {
             SecurityCodeField(
                 securityCodeState = viewState.securityCode,
                 isAmex = viewState.isAmex,
-                onIntent = onIntent,
+                onValueChange = { onIntent(CardIntent.UpdateSecurityCode(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateSecurityCodeFocus(it)) },
             )
         }
         if (viewState.holderName != null) {
             HolderNameField(
                 holderNameState = viewState.holderName,
-                onIntent = onIntent,
+                onValueChange = { onIntent(CardIntent.UpdateHolderName(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateHolderNameFocus(it)) },
             )
         }
         if (viewState.socialSecurityNumber != null) {
             SocialSecurityNumberField(
                 socialSecurityNumberState = viewState.socialSecurityNumber,
-                onIntent = onIntent,
+                onValueChange = { onIntent(CardIntent.UpdateSocialSecurityNumber(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateSocialSecurityNumberFocus(it)) },
             )
         }
         if (viewState.kcpBirthDateOrTaxNumber != null) {
             KCPBirthDateOrTaxNumberField(
                 kcpBirthDateOrTaxNumberState = viewState.kcpBirthDateOrTaxNumber,
-                onIntent = onIntent,
+                onValueChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(it)) },
             )
         }
         if (viewState.kcpCardPassword != null) {
             KCPCardPasswordField(
                 kcpCardPasswordState = viewState.kcpCardPassword,
-                onIntent = onIntent,
+                onValueChange = { onIntent(CardIntent.UpdateKcpCardPassword(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateKcpCardPasswordFocus(it)) },
             )
         }
         if (viewState.postalCode != null) {
