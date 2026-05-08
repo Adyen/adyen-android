@@ -672,6 +672,7 @@ internal class CardBrandIntentsHandlerTest(
         socialSecurityNumber = TextInputComponentState(),
         kcpCardPassword = TextInputComponentState(),
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
+        postalCode = TextInputComponentState(),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

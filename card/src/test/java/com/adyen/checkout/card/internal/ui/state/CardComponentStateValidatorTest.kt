@@ -232,6 +232,48 @@ internal class CardComponentStateValidatorTest {
     }
 
     @Test
+    fun `when postal code is required and empty, then isValid returns false`() {
+        val state = createValidState().copy(
+            postalCode = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Required),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.postalCode.errorMessage)
+    }
+
+    @Test
+    fun `when postal code is required and too long, then isValid returns false`() {
+        val state = createValidState().copy(
+            postalCode = TextInputComponentState(
+                text = "12345678901",
+                requirementPolicy = RequirementPolicy.Required,
+            ),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertFalse(result)
+        assertNotNull(validatedState.postalCode.errorMessage)
+    }
+
+    @Test
+    fun `when postal code is optional and empty, then isValid returns true`() {
+        val state = createValidState().copy(
+            postalCode = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Optional),
+        )
+
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        assertTrue(result)
+        assertNull(validatedState.postalCode.errorMessage)
+    }
+
+    @Test
     fun `when card brand is unsupported, then card number has error`() {
         val state = createValidState().copy(
             cardBrandState = CardBrandState.UnsupportedBrand,
@@ -253,6 +295,7 @@ internal class CardComponentStateValidatorTest {
         ),
         kcpBirthDateOrTaxNumber = TextInputComponentState(text = "260403"),
         kcpCardPassword = TextInputComponentState(text = "12"),
+        postalCode = TextInputComponentState(text = "1234 AB", requirementPolicy = RequirementPolicy.Required),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

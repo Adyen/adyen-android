@@ -161,6 +161,24 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
+    fun `when intent is UpdatePostalCode, then postalCode state is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdatePostalCode("1234 AB"))
+
+        assertEquals("1234 AB", actual.postalCode.text)
+    }
+
+    @Test
+    fun `when intent is UpdatePostalCodeFocus, then postalCode focus is updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdatePostalCodeFocus(true))
+
+        assertTrue(actual.postalCode.isFocused)
+    }
+
+    @Test
     fun `when intent is UpdateStorePaymentMethod, then storePaymentMethod is updated`() {
         val state = createInitialState()
 
@@ -205,6 +223,7 @@ internal class CardComponentStateReducerTest {
         assertFalse(actual.expiryDate.showError)
         assertFalse(actual.securityCode.showError)
         assertFalse(actual.holderName.showError)
+        assertFalse(actual.postalCode.showError)
     }
 
     @Test
@@ -230,6 +249,7 @@ internal class CardComponentStateReducerTest {
         socialSecurityNumber = TextInputComponentState(),
         kcpCardPassword = TextInputComponentState(),
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
+        postalCode = TextInputComponentState(),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
