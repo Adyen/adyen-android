@@ -23,13 +23,13 @@ sealed class BillingAddressMode : Parcelable {
 
     /**
      * Full Address Form will be shown as part of the card component.
-     * TODO add explanation of the parameters
+     *
+     * @param supportedCountryCodes Supported country codes to be filtered from the available country options.
+     * @param hideForCardTypes The [CardType]s for which the address form will be hidden.
      */
     @Parcelize
     data class Full(
-        // TODO shall we make this a set?
-        val supportedCountryCodes: List<String> = emptyList(),
-        // TODO are we good with hideForCardTypes name?
+        val supportedCountryCodes: Set<String> = emptySet(),
         val hideForCardTypes: Set<CardType> = emptySet()
     ) : BillingAddressMode()
 }
