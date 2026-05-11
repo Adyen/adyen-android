@@ -29,7 +29,6 @@ interface SessionCallResult {
 
     sealed class Details : SessionCallResult {
         data class Finished(val result: SessionPaymentResult) : Details()
-        data class Action(val action: ActionResponse) : Details()
         data class Error(val throwable: Throwable) : Details()
         object TakenOver : Details()
     }

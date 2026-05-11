@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.components.internal
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
@@ -38,8 +37,6 @@ internal class CheckoutControllerFactory {
         target: CheckoutTarget,
         context: CheckoutContext,
         callbacks: CheckoutCallbacks,
-        // TODO - find a way to not require application contex
-        applicationContext: Context,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
         val checkoutConfiguration: CheckoutConfiguration
@@ -73,7 +70,6 @@ internal class CheckoutControllerFactory {
         )
 
         val analyticsManager = createAnalyticsManager(
-            applicationContext = applicationContext,
             componentParamsBundle = componentParamsBundle,
             sessionId = sessionSetup?.id,
             checkoutAttemptId = checkoutAttemptId,
@@ -124,13 +120,11 @@ internal class CheckoutControllerFactory {
         )
 
     private fun createAnalyticsManager(
-        applicationContext: Context,
         componentParamsBundle: ComponentParamsBundle,
         sessionId: String?,
         checkoutAttemptId: String?,
     ) = AnalyticsManagerFactory().provide(
         componentParams = componentParamsBundle.commonComponentParams,
-        applicationContext = applicationContext,
         // TODO - Analytics: Pass the correct paymentMethod type
         source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
         sessionId = sessionId,

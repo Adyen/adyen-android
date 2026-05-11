@@ -8,27 +8,24 @@
 
 package com.adyen.checkout.core.components
 
-import android.content.Context
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.internal.CheckoutFlow
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 
 fun CheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext.Advanced,
     callbacks: AdvancedCheckoutCallbacks,
-    // TODO - find a way to not require application context in the controller
-    applicationContext: Context,
     coroutineScope: CoroutineScope,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         target = target,
         context = context,
         callbacks = callbacks,
-        applicationContext = applicationContext,
         coroutineScope = coroutineScope,
     )
 }
@@ -37,15 +34,12 @@ fun CheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext.Sessions,
     callbacks: SessionCheckoutCallbacks,
-    // TODO - find a way to not require application context in the controller
-    applicationContext: Context,
     coroutineScope: CoroutineScope,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         target = target,
         context = context,
         callbacks = callbacks,
-        applicationContext = applicationContext,
         coroutineScope = coroutineScope,
     )
 }
@@ -58,11 +52,9 @@ class CheckoutController internal constructor(
 
     internal val actionComponent: ActionComponent? get() = flow.actionComponent
 
-    internal var onNavigate: ((CheckoutRoute) -> Unit)?
-        get() = flow.onNavigate
-        set(value) {
-            flow.onNavigate = value
-        }
+    internal val paymentMethodNavigation: Flow<CheckoutPaymentMethodRoute> get() = flow.paymentMethodNavigation
+
+    internal val secondaryNavigation: Flow<CheckoutSecondaryRoute> get() = flow.secondaryNavigation
 
     fun submit() {
         flow.submit()

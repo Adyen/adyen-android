@@ -129,7 +129,6 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             )
 
             val dropInServiceResult = when (result) {
-                is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Details.Error ->
                     DropInServiceResult.Error(
                         errorDialog = ErrorDialog(message = getString(R.string.payment_failed)),

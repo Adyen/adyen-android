@@ -7,6 +7,7 @@
 - [ ] If applicable, make sure Breaking change label is added.
 - [ ] Code is unit tested
 - [ ] Changes are tested manually
+- [ ] Aligned public API changes with other platforms (if applicable)
 - [ ] Related issues are linked
 
 ## Ticket Number

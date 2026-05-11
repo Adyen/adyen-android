@@ -11,7 +11,8 @@ package com.adyen.checkout.example.service
 import android.util.Log
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -32,7 +33,7 @@ class ExampleV6DropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override suspend fun onSubmit(data: PaymentComponentData<*>): CheckoutResult {
+    override suspend fun onSubmit(data: PaymentComponentData<*>): SubmitResult {
         val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(data)
         // Check out the documentation of this method on the parent DropInService class
         val paymentRequest = createPaymentRequest(
@@ -49,29 +50,30 @@ class ExampleV6DropInService : DropInService() {
 
         Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
         val response = paymentsRepository.makePaymentsRequest(paymentRequest)
-        return handleResponse(response)
+        return handleSubmitResponse(response)
     }
 
-    override suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+    override suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         Log.d(TAG, "onAdditionalDetails")
         val actionComponentJson = ActionComponentData.SERIALIZER.serialize(data)
         Log.v(TAG, "actionComponentJson - ${actionComponentJson.toStringPretty()}")
         val response = paymentsRepository.makeDetailsRequest(actionComponentJson)
-        return handleResponse(response)
+        return handleAdditionalDetailsResponse(response)
     }
 
-    private fun handleResponse(jsonResponse: JSONObject?): CheckoutResult {
+    // Uncaught exceptions thrown from onSubmit / onAdditionalDetails are mapped to
+    // CheckoutError(UNKNOWN) and surfaced to the merchant via CheckoutCallbacks.onError.
+    private fun handleSubmitResponse(jsonResponse: JSONObject?): SubmitResult {
         return when {
             jsonResponse == null -> {
-                Log.e(TAG, "FAILED")
-                // TODO - Replace with appropriate error type once error structure PRs are merged
-                CheckoutResult.Error(errorMessage = "IOException")
+                Log.e(TAG, "Empty payments response — terminating with Completion(\"Error\").")
+                SubmitResult.Completion(RESULT_CODE_ERROR)
             }
 
             isAction(jsonResponse) -> {
                 Log.d(TAG, "Received action")
                 val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
-                CheckoutResult.Action(action)
+                SubmitResult.Action(action)
             }
 
             else -> {
@@ -79,9 +81,24 @@ class ExampleV6DropInService : DropInService() {
                 val resultCode = if (jsonResponse.has("resultCode")) {
                     jsonResponse.get("resultCode").toString()
                 } else {
-                    "EMPTY"
+                    RESULT_CODE_ERROR
                 }
-                CheckoutResult.Finished(resultCode)
+                SubmitResult.Completion(resultCode)
+            }
+        }
+    }
+
+    private fun handleAdditionalDetailsResponse(jsonResponse: JSONObject?): AdditionalDetailsResult {
+        return when {
+            jsonResponse == null -> {
+                Log.e(TAG, "Empty payments/details response — terminating with Completion(\"Error\").")
+                AdditionalDetailsResult.Completion(RESULT_CODE_ERROR)
+            }
+
+            else -> {
+                Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
+                val resultCode = jsonResponse.optString("resultCode")
+                AdditionalDetailsResult.Completion(resultCode)
             }
         }
     }
@@ -92,5 +109,6 @@ class ExampleV6DropInService : DropInService() {
 
     companion object {
         private val TAG = getLogTag()
+        private const val RESULT_CODE_ERROR = "Error"
     }
 }

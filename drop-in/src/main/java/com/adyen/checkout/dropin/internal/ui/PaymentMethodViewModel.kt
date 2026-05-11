@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -17,11 +16,12 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.error.CheckoutError
@@ -37,7 +37,6 @@ internal class PaymentMethodViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val checkoutContext: CheckoutContext,
     private val dropInServiceManager: DropInServiceManager,
-    private val applicationContext: Context,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(createViewState())
@@ -92,7 +91,6 @@ internal class PaymentMethodViewModel(
                         onAdditionalDetails = ::onAdditionalDetails,
                         onError = ::onError,
                     ),
-                    applicationContext = applicationContext,
                     coroutineScope = viewModelScope,
                 )
             }
@@ -106,7 +104,6 @@ internal class PaymentMethodViewModel(
                         onError = ::onError,
                         onFinished = ::onFinished,
                     ),
-                    applicationContext = applicationContext,
                     coroutineScope = viewModelScope,
                 )
             }
@@ -117,11 +114,11 @@ internal class PaymentMethodViewModel(
         // TODO - Implement after beforeSubmit is added to DropInService
     }
 
-    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): CheckoutResult {
+    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): SubmitResult {
         return dropInServiceManager.requestOnSubmit(paymentComponentData)
     }
 
-    private suspend fun onAdditionalDetails(data: ActionComponentData): CheckoutResult {
+    private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         return dropInServiceManager.requestOnAdditionalDetails(data)
     }
 
@@ -143,7 +140,6 @@ internal class PaymentMethodViewModel(
         private val paymentMethodRepository: PaymentMethodRepository,
         private val checkoutContext: CheckoutContext,
         private val dropInServiceManager: DropInServiceManager,
-        private val applicationContext: Context,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -152,7 +148,6 @@ internal class PaymentMethodViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 checkoutContext = checkoutContext,
                 dropInServiceManager = dropInServiceManager,
-                applicationContext = applicationContext,
             ) as T
         }
     }
