@@ -136,7 +136,7 @@ internal class CardComponentStateValidator(
 
     private fun validatePostalCode(
         postalCode: TextInputComponentState
-    ) : CheckoutLocalizationKey? {
+    ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapPostalCodeValidation(
             validation = CardValidationUtils.validatePostalCode(postalCode = postalCode)
         )

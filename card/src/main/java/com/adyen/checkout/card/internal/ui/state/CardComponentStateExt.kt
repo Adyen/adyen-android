@@ -147,7 +147,7 @@ private fun createCardDetails(
     taxNumber = kcpBirthDateOrTaxNumber,
 )
 
-private fun CardComponentState.getBillingAddress() : Address? {
+private fun CardComponentState.getBillingAddress(): Address? {
     postalCode.getPaymentDataValue()?.let {
         return Address(
             postalCode = it

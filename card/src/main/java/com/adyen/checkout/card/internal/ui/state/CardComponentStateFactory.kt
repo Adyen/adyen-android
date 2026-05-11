@@ -55,7 +55,7 @@ internal class CardComponentStateFactory(
                 },
             ),
             postalCode = TextInputComponentState(
-                requirementPolicy = when(componentParams.showPostalCode) {
+                requirementPolicy = when (componentParams.showPostalCode) {
                     true -> RequirementPolicy.Required
                     false -> RequirementPolicy.Hidden
                 }

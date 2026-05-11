@@ -74,7 +74,7 @@ private fun PostalCodeIcon(
         else -> null
     }
 
-    if(resourceId != null) {
+    if (resourceId != null) {
         AnimatedContent(
             targetState = resourceId,
             modifier = modifier,
