@@ -1,3 +1,29 @@
+public abstract class com/adyen/checkout/card/BillingAddressMode : android/os/Parcelable {
+	public static final field $stable I
+}
+
+public final class com/adyen/checkout/card/BillingAddressMode$None : com/adyen/checkout/card/BillingAddressMode {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field INSTANCE Lcom/adyen/checkout/card/BillingAddressMode$None;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/card/BillingAddressMode$PostalCode : com/adyen/checkout/card/BillingAddressMode {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field INSTANCE Lcom/adyen/checkout/card/BillingAddressMode$PostalCode;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
 public final class com/adyen/checkout/card/BinLookupData {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
@@ -29,8 +55,9 @@ public final class com/adyen/checkout/card/CardCallbackExtKt {
 public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkout/core/components/internal/Configuration {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/Boolean;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldMode;Lcom/adyen/checkout/card/FieldMode;)V
+	public fun <init> (Ljava/lang/Boolean;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldMode;Lcom/adyen/checkout/card/FieldMode;Lcom/adyen/checkout/card/BillingAddressMode;)V
 	public final fun describeContents ()I
+	public final fun getBillingAddressMode ()Lcom/adyen/checkout/card/BillingAddressMode;
 	public final fun getHideSecurityCode ()Ljava/lang/Boolean;
 	public final fun getHideStoredSecurityCode ()Ljava/lang/Boolean;
 	public final fun getKoreanAuthenticationMode ()Lcom/adyen/checkout/card/FieldMode;
@@ -44,6 +71,7 @@ public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkou
 
 public final class com/adyen/checkout/card/CardConfigurationBuilder {
 	public static final field $stable I
+	public final fun getBillingAddressMode ()Lcom/adyen/checkout/card/BillingAddressMode;
 	public final fun getHideSecurityCode ()Ljava/lang/Boolean;
 	public final fun getHideStoredSecurityCode ()Ljava/lang/Boolean;
 	public final fun getKoreanAuthenticationMode ()Lcom/adyen/checkout/card/FieldMode;
@@ -52,6 +80,7 @@ public final class com/adyen/checkout/card/CardConfigurationBuilder {
 	public final fun getShowStorePayment ()Ljava/lang/Boolean;
 	public final fun getSocialSecurityNumberMode ()Lcom/adyen/checkout/card/FieldMode;
 	public final fun getSupportedCardBrands ()Ljava/util/List;
+	public final fun setBillingAddressMode (Lcom/adyen/checkout/card/BillingAddressMode;)V
 	public final fun setHideSecurityCode (Ljava/lang/Boolean;)V
 	public final fun setHideStoredSecurityCode (Ljava/lang/Boolean;)V
 	public final fun setKoreanAuthenticationMode (Lcom/adyen/checkout/card/FieldMode;)V
@@ -86,7 +115,7 @@ public abstract interface class com/adyen/checkout/card/OnBinValueCallback : com
 public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$CardComponentKt {
 	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$CardComponentKt;
 	public fun <init> ()V
-	public final fun getLambda$1552718461$card_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$284048382$card_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$CardNumberFieldKt {
@@ -117,6 +146,12 @@ public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons
 	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$KCPCardPasswordFieldKt;
 	public fun <init> ()V
 	public final fun getLambda$1151671039$card_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$PostalCodeFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/view/ComposableSingletons$PostalCodeFieldKt;
+	public fun <init> ()V
+	public final fun getLambda$2072144683$card_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/card/internal/ui/view/ComposableSingletons$SecurityCodeFieldKt {
