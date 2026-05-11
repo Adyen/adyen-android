@@ -54,6 +54,12 @@ internal class CardComponentStateFactory(
                     FieldMode.HIDE -> RequirementPolicy.Hidden
                 },
             ),
+            postalCode = TextInputComponentState(
+                requirementPolicy = when (componentParams.showPostalCode) {
+                    true -> RequirementPolicy.Required
+                    false -> RequirementPolicy.Hidden
+                }
+            ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = componentParams.showStorePayment,
             supportedCardBrands = componentParams.supportedCardBrands,

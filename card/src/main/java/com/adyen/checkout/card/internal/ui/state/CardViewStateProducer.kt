@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
+import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -52,6 +53,9 @@ internal class CardViewStateProducer(
             socialSecurityNumber = state.socialSecurityNumber.toViewState(),
             kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.toViewState(),
             kcpCardPassword = state.kcpCardPassword.toViewState(),
+            postalCode = state.postalCode.toViewState(
+                trailingIcon = getPostalCodeTrailingIcon(state.postalCode)
+            ),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
             supportedCardBrands = state.supportedCardBrands,
@@ -110,6 +114,17 @@ internal class CardViewStateProducer(
             isInvalid -> SecurityCodeTrailingIcon.Warning
             isAmex == true -> SecurityCodeTrailingIcon.PlaceholderAmex
             else -> SecurityCodeTrailingIcon.PlaceholderDefault
+        }
+    }
+
+    private fun getPostalCodeTrailingIcon(
+        postalCode: TextInputComponentState
+    ): PostalCodeTrailingIcon {
+        val isInvalid = postalCode.errorMessage != null && postalCode.showError
+
+        return when {
+            isInvalid -> PostalCodeTrailingIcon.Warning
+            else -> PostalCodeTrailingIcon.Placeholder
         }
     }
 }

@@ -597,6 +597,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID_UNSUPPORTED_BRAND Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_POSTAL_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_POSTAL_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_HINT_3_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_HINT_4_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

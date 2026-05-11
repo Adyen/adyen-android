@@ -27,3 +27,8 @@ internal sealed class SecurityCodeTrailingIcon : TrailingIcon() {
     data object Checkmark : SecurityCodeTrailingIcon()
     data object Warning : SecurityCodeTrailingIcon()
 }
+
+internal sealed class PostalCodeTrailingIcon : TrailingIcon() {
+    data object Placeholder : PostalCodeTrailingIcon()
+    data object Warning : PostalCodeTrailingIcon()
+}

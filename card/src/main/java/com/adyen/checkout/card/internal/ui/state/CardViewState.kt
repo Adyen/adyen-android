@@ -22,6 +22,7 @@ internal data class CardViewState(
     val socialSecurityNumber: TextInputViewState?,
     val kcpBirthDateOrTaxNumber: TextInputViewState?,
     val kcpCardPassword: TextInputViewState?,
+    val postalCode: TextInputViewState?,
     val storePaymentMethod: Boolean,
     val isStorePaymentFieldVisible: Boolean,
     val supportedCardBrands: List<CardBrand>,

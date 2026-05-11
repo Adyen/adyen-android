@@ -120,6 +120,21 @@ internal class CardValidationUtilsTest {
         assertEquals(expectedValidation, validation)
     }
 
+    @ParameterizedTest
+    @MethodSource("postalCodeSource")
+    fun `when validating postal code then result should match expected value`(
+        postalCode: String,
+        requirementPolicy: RequirementPolicy,
+        expectedValidation: CardPostalCodeValidation,
+    ) {
+        val textInputComponentState = TextInputComponentState(
+            text = postalCode,
+            requirementPolicy = requirementPolicy,
+        )
+        val validation = CardValidationUtils.validatePostalCode(textInputComponentState)
+        assertEquals(expectedValidation, validation)
+    }
+
     companion object {
 
         @JvmStatic
@@ -178,6 +193,25 @@ internal class CardValidationUtilsTest {
             arguments("", RequirementPolicy.Optional, KCPCardPasswordValidation.VALID),
             arguments("25", RequirementPolicy.Optional, KCPCardPasswordValidation.VALID),
             arguments("1", RequirementPolicy.Optional, KCPCardPasswordValidation.INVALID),
+        )
+
+        @JvmStatic
+        fun postalCodeSource() = listOf(
+            // postalCode, requirementPolicy, expectedValidation
+            arguments("", RequirementPolicy.Required, CardPostalCodeValidation.INVALID_BLANK),
+            arguments(" ", RequirementPolicy.Required, CardPostalCodeValidation.INVALID_BLANK),
+            // valid
+            arguments("12345", RequirementPolicy.Required, CardPostalCodeValidation.VALID),
+            arguments("1234567890", RequirementPolicy.Required, CardPostalCodeValidation.VALID),
+            // too long (max 10)
+            arguments("12345678901", RequirementPolicy.Required, CardPostalCodeValidation.INVALID_TOO_LONG),
+            // hidden
+            arguments("", RequirementPolicy.Hidden, CardPostalCodeValidation.VALID),
+            arguments("12345678901", RequirementPolicy.Hidden, CardPostalCodeValidation.VALID),
+            // optional
+            arguments("", RequirementPolicy.Optional, CardPostalCodeValidation.VALID),
+            arguments("12345", RequirementPolicy.Optional, CardPostalCodeValidation.VALID),
+            arguments("12345678901", RequirementPolicy.Optional, CardPostalCodeValidation.INVALID_TOO_LONG),
         )
     }
 }

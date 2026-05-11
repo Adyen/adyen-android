@@ -26,7 +26,8 @@ class CardConfiguration(
     val hideStoredSecurityCode: Boolean?,
     val socialSecurityNumberMode: FieldMode?,
     val koreanAuthenticationMode: FieldMode?,
-    // TODO - Card. Installments & Address
+    val billingAddressMode: BillingAddressMode?,
+    // TODO - Card. Installments
 ) : Configuration
 
 class CardConfigurationBuilder internal constructor() {
@@ -39,6 +40,7 @@ class CardConfigurationBuilder internal constructor() {
     var hideStoredSecurityCode: Boolean? = null
     var socialSecurityNumberMode: FieldMode? = null
     var koreanAuthenticationMode: FieldMode? = null
+    var billingAddressMode: BillingAddressMode? = null
 
     internal fun build() = CardConfiguration(
         supportedCardBrands = supportedCardBrands,
@@ -49,6 +51,7 @@ class CardConfigurationBuilder internal constructor() {
         hideStoredSecurityCode = hideStoredSecurityCode,
         socialSecurityNumberMode = socialSecurityNumberMode,
         koreanAuthenticationMode = koreanAuthenticationMode,
+        billingAddressMode = billingAddressMode,
     )
 }
 

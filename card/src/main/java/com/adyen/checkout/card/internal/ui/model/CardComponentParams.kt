@@ -23,6 +23,7 @@ data class CardComponentParams(
     val showStorePayment: Boolean,
     val socialSecurityNumberMode: FieldMode,
     val koreanAuthenticationMode: FieldMode,
+    val showPostalCode: Boolean,
     val cvcVisibility: CVCVisibility,
     val storedCVCVisibility: StoredCVCVisibility,
 ) : ComponentParams by commonComponentParams
