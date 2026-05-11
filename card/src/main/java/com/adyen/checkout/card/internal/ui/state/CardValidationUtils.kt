@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties
 import com.adyen.checkout.card.internal.ui.properties.KCPBirthDateOrTaxNumberProperties.KCP_BIRTH_DATE_FORMAT
 import com.adyen.checkout.card.internal.ui.properties.KCPCardPasswordProperties
+import com.adyen.checkout.card.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.CardExpiryDateValidationResult
@@ -23,7 +23,6 @@ import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.DateUtils
-import com.adyen.checkout.core.common.internal.properties.PostalCodeProperties
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.requiresValidation
 
@@ -207,8 +206,7 @@ internal object CardValidationUtils {
     private val KCP_BIRTH_DATE_FORMATTER = DateUtils.getFormatter(KCP_BIRTH_DATE_FORMAT)
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class CardNumberValidation {
+internal enum class CardNumberValidation {
     VALID,
     INVALID_ILLEGAL_CHARACTERS,
     INVALID_LUHN_CHECK,
@@ -218,47 +216,40 @@ enum class CardNumberValidation {
     INVALID_OTHER_REASON
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class CardExpiryDateValidation {
+internal enum class CardExpiryDateValidation {
     VALID,
     INVALID_TOO_FAR_IN_THE_FUTURE,
     INVALID_TOO_OLD,
     INVALID_OTHER_REASON,
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class CardSecurityCodeValidation {
+internal enum class CardSecurityCodeValidation {
     VALID,
     INVALID,
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class CardPostalCodeValidation {
+internal enum class CardPostalCodeValidation {
     VALID,
     INVALID_BLANK,
     INVALID_TOO_LONG
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class CardHolderNameValidation {
+internal enum class CardHolderNameValidation {
     VALID,
     INVALID_BLANK,
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class CardSocialSecurityNumberValidation {
+internal enum class CardSocialSecurityNumberValidation {
     VALID,
     INVALID,
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class KCPBirthDateOrTaxNumberValidation {
+internal enum class KCPBirthDateOrTaxNumberValidation {
     VALID,
     INVALID,
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class KCPCardPasswordValidation {
+internal enum class KCPCardPasswordValidation {
     VALID,
     INVALID,
 }

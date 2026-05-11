@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
-import com.adyen.checkout.core.common.internal.properties.PostalCodeProperties
+import com.adyen.checkout.card.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState

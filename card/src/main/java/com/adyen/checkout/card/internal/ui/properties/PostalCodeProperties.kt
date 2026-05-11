@@ -1,4 +1,4 @@
-package com.adyen.checkout.core.common.internal.properties
+package com.adyen.checkout.card.internal.ui.properties
 
 import androidx.annotation.RestrictTo
 
