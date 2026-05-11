@@ -157,8 +157,8 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private fun getBillingAddressMode(): BillingAddressMode =
         when (keyValueStorage.getCardAddressMode()) {
-            CardAddressMode.NONE -> BillingAddressMode.None
-            CardAddressMode.POSTAL_CODE -> BillingAddressMode.PostalCode
+            CardAddressMode.NONE -> BillingAddressMode.None()
+            CardAddressMode.POSTAL_CODE -> BillingAddressMode.PostalCode()
             CardAddressMode.FULL_ADDRESS -> TODO()
             CardAddressMode.LOOKUP -> TODO()
         }

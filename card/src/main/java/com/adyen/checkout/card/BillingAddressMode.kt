@@ -12,13 +12,13 @@ sealed class BillingAddressMode : Parcelable {
      * Billing address form will not be shown.
      */
     @Parcelize
-    data object None : BillingAddressMode()
+    class None : BillingAddressMode()
 
     /**
      * Only postal code will be shown as part of the card component
      */
     @Parcelize
-    data object PostalCode : BillingAddressMode()
+    class PostalCode : BillingAddressMode()
 
     /* The Full and Lookup below are for the types completeness.
     Uncomment and refine them once implementing that flows.
@@ -39,5 +39,5 @@ sealed class BillingAddressMode : Parcelable {
      * Address Lookup option will be shown as part of card component.
      */
     @Parcelize
-    data object Lookup : BillingAddressMode() */
+    class Lookup : BillingAddressMode() */
 }
