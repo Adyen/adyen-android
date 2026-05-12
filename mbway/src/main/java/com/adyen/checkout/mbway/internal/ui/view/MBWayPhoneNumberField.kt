@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
@@ -29,7 +28,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 internal fun MBWayPhoneNumberField(
     mbWayPhoneNumberFieldState: TextInputViewState,
     countryCode: String,
-    onIntent: (MBWayIntent) -> Unit,
+    onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextPhoneNumber = mbWayPhoneNumberFieldState.supportingText?.let { resolveString(it) }
@@ -38,16 +38,14 @@ internal fun MBWayPhoneNumberField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onIntent(MBWayIntent.UpdatePhoneNumberFocus(focusState.hasFocus))
+                onFocusChange(focusState.hasFocus)
             },
         label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
         initialValue = mbWayPhoneNumberFieldState.text,
         isError = mbWayPhoneNumberFieldState.isError,
         supportingText = supportingTextPhoneNumber,
         prefix = countryCode,
-        onValueChange = { value ->
-            onIntent(MBWayIntent.UpdatePhoneNumber(value))
-        },
+        onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         shouldFocus = mbWayPhoneNumberFieldState.isFocused,
     )
@@ -64,7 +62,8 @@ private fun MBWayPhoneNumberFieldPreview(
                 text = "12345612",
             ),
             countryCode = "+31",
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
     }
 }

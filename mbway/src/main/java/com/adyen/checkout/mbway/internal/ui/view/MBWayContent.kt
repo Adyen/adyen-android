@@ -58,7 +58,8 @@ internal fun MBWayContent(
                 MBWayPhoneNumberField(
                     mbWayPhoneNumberFieldState = viewState.phoneNumber,
                     countryCode = country.callingCode,
-                    onIntent = onIntent,
+                    onValueChange = { onIntent(MBWayIntent.UpdatePhoneNumber(it)) },
+                    onFocusChange = { onIntent(MBWayIntent.UpdatePhoneNumberFocus(it)) },
                 )
             }
         }
