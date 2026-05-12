@@ -46,7 +46,8 @@ internal fun BlikComponent(
             if (viewState.blikCode != null) {
                 BlikCodeField(
                     blikCodeState = viewState.blikCode,
-                    onIntent = onIntent,
+                    onValueChange = { onIntent(BlikIntent.UpdateBlikCode(it)) },
+                    onFocusChange = { onIntent(BlikIntent.UpdateBlikCodeFocus(it)) },
                 )
             }
         }

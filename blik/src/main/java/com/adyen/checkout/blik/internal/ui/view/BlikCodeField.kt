@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.blik.internal.ui.properties.BlikCodeProperties.BLIK_CODE_MAX_LENGTH
 import com.adyen.checkout.blik.internal.ui.properties.BlikCodeProperties.BLIK_CODE_SEPARATOR
 import com.adyen.checkout.blik.internal.ui.properties.BlikCodeProperties.BLIK_CODE_SEPARATORS
-import com.adyen.checkout.blik.internal.ui.state.BlikIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -32,7 +31,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun BlikCodeField(
     blikCodeState: TextInputViewState,
-    onIntent: (BlikIntent) -> Unit,
+    onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingText = blikCodeState.supportingText?.let { resolveString(it) }
@@ -51,15 +51,13 @@ internal fun BlikCodeField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onIntent(BlikIntent.UpdateBlikCodeFocus(focusState.hasFocus))
+                onFocusChange(focusState.hasFocus)
             },
         label = resolveString(CheckoutLocalizationKey.BLIK_CODE),
         initialValue = blikCodeState.text,
         isError = blikCodeState.isError,
         supportingText = supportingText,
-        onValueChange = { value ->
-            onIntent(BlikIntent.UpdateBlikCode(value))
-        },
+        onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
         shouldFocus = blikCodeState.isFocused,
@@ -76,7 +74,8 @@ private fun BlikCodeFieldPreview(
             blikCodeState = TextInputViewState(
                 text = "123456",
             ),
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
     }
 }
