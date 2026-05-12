@@ -128,12 +128,8 @@ private fun CardDetailsSection(
         if (viewState.postalCode != null) {
             PostalCodeField(
                 postalCodeState = viewState.postalCode,
-                onFocusChanged = { isFocused ->
-                    onIntent(CardIntent.UpdatePostalCodeFocus(isFocused))
-                },
-                onValueChange = { value ->
-                    onIntent(CardIntent.UpdatePostalCode(value))
-                },
+                onFocusChange = { onIntent(CardIntent.UpdatePostalCodeFocus(it)) },
+                onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
             )
         }
         if (viewState.isStorePaymentFieldVisible) {

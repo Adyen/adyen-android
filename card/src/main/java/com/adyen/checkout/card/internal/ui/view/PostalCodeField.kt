@@ -32,8 +32,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun PostalCodeField(
     postalCodeState: TextInputViewState,
-    onFocusChanged: (Boolean) -> Unit,
     onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextPostalCode = postalCodeState.supportingText?.let { resolveString(it) }
@@ -42,16 +42,14 @@ internal fun PostalCodeField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onFocusChanged(focusState.isFocused)
+                onFocusChange(focusState.isFocused)
             },
         label = resolveString(CheckoutLocalizationKey.CARD_POSTAL_CODE),
         initialValue = postalCodeState.text,
         inputTransformation = InputTransformation.maxLength(PostalCodeProperties.POSTAL_CODE_MAX_LENGTH),
         isError = postalCodeState.isError,
         supportingText = supportingTextPostalCode,
-        onValueChange = { value ->
-            onValueChange(value)
-        },
+        onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
             capitalization = KeyboardCapitalization.Unspecified,
@@ -108,7 +106,7 @@ private fun PostalCodeFieldPreview(
             postalCodeState = TextInputViewState(
                 text = "1234 AB",
             ),
-            onFocusChanged = {},
+            onFocusChange = {},
             onValueChange = {},
         )
     }

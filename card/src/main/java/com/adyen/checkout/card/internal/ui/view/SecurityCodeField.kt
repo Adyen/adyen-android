@@ -115,9 +115,7 @@ private fun SecurityCodeFieldInternal(
         initialValue = securityCodeState.text,
         isError = securityCodeState.isError,
         supportingText = supportingTextSecurityCode,
-        onValueChange = { value ->
-            onSecurityCodeChanged(value)
-        },
+        onValueChange = onSecurityCodeChanged,
         inputTransformation = inputTransformation,
         shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
