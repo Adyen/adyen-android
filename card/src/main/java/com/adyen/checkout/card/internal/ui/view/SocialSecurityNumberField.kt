@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties.SOCIAL_SECURITY_MAX_LENGTH
 import com.adyen.checkout.card.internal.ui.properties.SocialSecurityNumberProperties.SOCIAL_SECURITY_SEPARATORS
-import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -30,7 +29,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun SocialSecurityNumberField(
     socialSecurityNumberState: TextInputViewState,
-    onIntent: (CardIntent) -> Unit,
+    onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextSocialSecurityNumber = socialSecurityNumberState.supportingText?.let { resolveString(it) }
@@ -47,15 +47,13 @@ internal fun SocialSecurityNumberField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onIntent(CardIntent.UpdateSocialSecurityNumberFocus(focusState.isFocused))
+                onFocusChange(focusState.isFocused)
             },
         label = resolveString(CheckoutLocalizationKey.CARD_SOCIAL_SECURITY_NUMBER),
         initialValue = socialSecurityNumberState.text,
         isError = socialSecurityNumberState.isError,
         supportingText = supportingTextSocialSecurityNumber,
-        onValueChange = { value ->
-            onIntent(CardIntent.UpdateSocialSecurityNumber(value))
-        },
+        onValueChange = onValueChange,
         shouldFocus = socialSecurityNumberState.isFocused,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
@@ -72,14 +70,16 @@ private fun SocialSecurityNumberFieldPreview(
             socialSecurityNumberState = TextInputViewState(
                 text = "12312312312",
             ),
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
 
         SocialSecurityNumberField(
             socialSecurityNumberState = TextInputViewState(
                 text = "12123123123412",
             ),
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
     }
 }

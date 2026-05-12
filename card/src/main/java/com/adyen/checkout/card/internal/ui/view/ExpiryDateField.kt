@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
-import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.internal.properties.ExpiryDateProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -41,7 +40,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun ExpiryDateField(
     expiryDateState: TextInputViewState,
-    onIntent: (CardIntent) -> Unit,
+    onValueChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextExpiryDate = expiryDateState.supportingText?.let { resolveString(it) }
@@ -66,15 +66,13 @@ internal fun ExpiryDateField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onIntent(CardIntent.UpdateExpiryDateFocus(focusState.isFocused))
+                onFocusChange(focusState.isFocused)
             },
         label = resolveString(key = CheckoutLocalizationKey.CARD_EXPIRY_DATE) + labelSuffix,
         initialValue = expiryDateState.text,
         isError = expiryDateState.isError,
         supportingText = supportingTextExpiryDate,
-        onValueChange = { value ->
-            onIntent(CardIntent.UpdateExpiryDate(value))
-        },
+        onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
         shouldFocus = expiryDateState.isFocused,
@@ -135,13 +133,15 @@ private fun ExpiryDateFieldPreview(
             expiryDateState = TextInputViewState(
                 text = "0330",
             ),
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
         ExpiryDateField(
             expiryDateState = TextInputViewState(
                 isOptional = true,
             ),
-            onIntent = {},
+            onValueChange = {},
+            onFocusChange = {},
         )
     }
 }
