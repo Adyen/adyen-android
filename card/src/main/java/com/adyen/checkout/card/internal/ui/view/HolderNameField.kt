@@ -44,9 +44,7 @@ internal fun HolderNameField(
         initialValue = holderNameState.text,
         isError = holderNameState.isError,
         supportingText = supportingTextHolderName,
-        onValueChange = { value ->
-            onValueChange(value)
-        },
+        onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
             capitalization = KeyboardCapitalization.Words,

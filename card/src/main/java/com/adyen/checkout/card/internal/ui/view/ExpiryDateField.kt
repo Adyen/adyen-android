@@ -72,9 +72,7 @@ internal fun ExpiryDateField(
         initialValue = expiryDateState.text,
         isError = expiryDateState.isError,
         supportingText = supportingTextExpiryDate,
-        onValueChange = { value ->
-            onValueChange(value)
-        },
+        onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
         shouldFocus = expiryDateState.isFocused,

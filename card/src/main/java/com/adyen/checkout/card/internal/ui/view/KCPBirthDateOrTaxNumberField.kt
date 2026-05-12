@@ -59,9 +59,7 @@ internal fun KCPBirthDateOrTaxNumberField(
         initialValue = kcpBirthDateOrTaxNumberState.text,
         isError = kcpBirthDateOrTaxNumberState.isError,
         supportingText = supportingText,
-        onValueChange = { value ->
-            onValueChange(value)
-        },
+        onValueChange = onValueChange,
         shouldFocus = kcpBirthDateOrTaxNumberState.isFocused,
         inputTransformation = inputTransformation,
     )

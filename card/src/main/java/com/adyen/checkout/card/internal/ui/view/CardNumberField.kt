@@ -106,9 +106,7 @@ private fun CardNumberInputField(
         initialValue = cardNumberState.text,
         isError = cardNumberState.isError,
         supportingText = supportingTextCardNumber,
-        onValueChange = { value ->
-            onValueChange(value)
-        },
+        onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
         shouldFocus = cardNumberState.isFocused,

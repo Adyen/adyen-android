@@ -53,9 +53,7 @@ internal fun SocialSecurityNumberField(
         initialValue = socialSecurityNumberState.text,
         isError = socialSecurityNumberState.isError,
         supportingText = supportingTextSocialSecurityNumber,
-        onValueChange = { value ->
-            onValueChange(value)
-        },
+        onValueChange = onValueChange,
         shouldFocus = socialSecurityNumberState.isFocused,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,

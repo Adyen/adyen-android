@@ -50,9 +50,7 @@ internal fun KCPCardPasswordField(
         initialValue = kcpCardPasswordState.text,
         isError = kcpCardPasswordState.isError,
         supportingText = supportingText,
-        onValueChange = { value ->
-            onValueChange(value)
-        },
+        onValueChange = onValueChange,
         shouldFocus = kcpCardPasswordState.isFocused,
         inputTransformation = inputTransformation,
         isSecureField = true,
