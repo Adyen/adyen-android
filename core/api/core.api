@@ -1624,7 +1624,6 @@ public abstract class com/adyen/checkout/core/components/data/model/paymentmetho
 }
 
 public final class com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethod$Companion {
-	public final fun getChildSerializer (Ljava/lang/String;)Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
 }
 
 public abstract class com/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethodResponse : com/adyen/checkout/core/common/internal/model/ModelObject {
