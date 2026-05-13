@@ -89,7 +89,8 @@ internal class CardBrandIntentsHandler(
                     detectedCardTypes.isEmpty() -> CardBrandState.NoBrandsDetected
 
                     // network detection + only restricted brands are supported
-                    nonRestrictedSupportedBrands.isEmpty() && anyRestrictedBrandDetected -> CardBrandState.RestrictedBrand
+                    nonRestrictedSupportedBrands.isEmpty() && anyRestrictedBrandDetected ->
+                        CardBrandState.RestrictedBrand
 
                     // network detection + detected brands but no supported brands
                     nonRestrictedSupportedBrands.isEmpty() -> CardBrandState.UnsupportedBrand
