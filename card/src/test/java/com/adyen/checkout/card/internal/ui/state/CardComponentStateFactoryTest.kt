@@ -190,6 +190,7 @@ internal class CardComponentStateFactoryTest {
     }
     // endregion
 
+    @Suppress("LongParameterList")
     private fun createFactory(
         showCardholderName: Boolean = false,
         supportedCardBrands: List<CardBrand> = emptyList(),
