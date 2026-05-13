@@ -13,6 +13,7 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
+import com.adyen.checkout.card.internal.helper.RestrictedCardType
 import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
@@ -76,23 +77,40 @@ internal class CardBrandIntentsHandler(
 
             DetectedCardTypeList.Source.NETWORK,
             DetectedCardTypeList.Source.CACHED -> {
+                val nonRestrictedSupportedBrands = supportedDetectedCardTypes.filterNot {
+                    RestrictedCardType.isRestrictedCardType(it.cardBrand.txVariant)
+                }
+                val anyRestrictedBrandDetected = supportedDetectedCardTypes.any {
+                    RestrictedCardType.isRestrictedCardType(it.cardBrand.txVariant)
+                }
+
                 when {
                     // network detection + no detected brands
                     detectedCardTypes.isEmpty() -> CardBrandState.NoBrandsDetected
 
-                    // network detection + detected brands but no supported brands
-                    supportedDetectedCardTypes.isEmpty() -> CardBrandState.UnsupportedBrand
+                    // network detection + only restricted brands are supported
+                    nonRestrictedSupportedBrands.isEmpty() && anyRestrictedBrandDetected -> CardBrandState.RestrictedBrand
 
-                    // network detection + 1 detected brand
-                    supportedDetectedCardTypes.size == 1 -> {
-                        CardBrandState.SingleReliableBrand(
-                            cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
+                    // network detection + detected brands but no supported brands
+                    nonRestrictedSupportedBrands.isEmpty() -> CardBrandState.UnsupportedBrand
+
+                    // network detection + 1 non-restricted supported brand + restricted brand(s)
+                    anyRestrictedBrandDetected && nonRestrictedSupportedBrands.size == 1 -> {
+                        CardBrandState.SingleReliableWithRestrictedBrand(
+                            cardBrandData = nonRestrictedSupportedBrands.first().toCardBrandData(),
                         )
                     }
 
-                    // network detection + multiple detected brands
+                    // network detection + 1 non-restricted supported brand
+                    nonRestrictedSupportedBrands.size == 1 -> {
+                        CardBrandState.SingleReliableBrand(
+                            cardBrandData = nonRestrictedSupportedBrands.first().toCardBrandData(),
+                        )
+                    }
+
+                    // network detection + multiple non-restricted supported brands
                     else -> {
-                        getDualBrandedCardBrandState(currentState.cardBrandState, supportedDetectedCardTypes)
+                        getDualBrandedCardBrandState(currentState.cardBrandState, nonRestrictedSupportedBrands)
                     }
                 }
             }
@@ -158,8 +176,10 @@ internal class CardBrandIntentsHandler(
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
             is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.SingleReliableWithRestrictedBrand -> cardBrandState.cardBrandData
             is CardBrandState.NoBrandsDetected,
             is CardBrandState.SingleUnreliableBrand,
+            is CardBrandState.RestrictedBrand,
             is CardBrandState.UnsupportedBrand -> null
         }
         val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy

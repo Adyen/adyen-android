@@ -46,6 +46,9 @@ internal sealed class CardBrandState {
         val cardBrandDataList: List<CardBrandData>,
         val shopperSelectedCardBrandData: CardBrandData,
     ) : CardBrandState()
+
+    data object RestrictedBrand : CardBrandState()
+    data class SingleReliableWithRestrictedBrand(val cardBrandData: CardBrandData) : CardBrandState()
 }
 
 internal data class CardBrandData(
