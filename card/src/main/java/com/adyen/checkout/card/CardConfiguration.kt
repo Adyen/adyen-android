@@ -18,39 +18,39 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Suppress("LongParameterList")
 class CardConfiguration(
-    val showHolderName: Boolean?,
+    val showCardholderName: Boolean?,
     val supportedCardBrands: List<CardBrand>?,
-    val shopperReference: String?,
     val showStorePayment: Boolean?,
-    val hideSecurityCode: Boolean?,
-    val hideStoredSecurityCode: Boolean?,
-    val socialSecurityNumberMode: FieldMode?,
-    val koreanAuthenticationMode: FieldMode?,
+    val showSecurityCode: Boolean?,
+    val showSecurityCodeForStoredCard: Boolean?,
+    val showSupportedCardBrandLogos: Boolean?,
+    val socialSecurityNumberVisibility: FieldVisibility?,
+    val koreanAuthenticationVisibility: FieldVisibility?,
     val billingAddressMode: BillingAddressMode?,
     // TODO - Card. Installments
 ) : Configuration
 
 class CardConfigurationBuilder internal constructor() {
 
+    var showCardholderName: Boolean? = null
     var supportedCardBrands: List<CardBrand>? = null
-    var showHolderName: Boolean? = null
     var showStorePayment: Boolean? = null
-    var shopperReference: String? = null
-    var hideSecurityCode: Boolean? = null
-    var hideStoredSecurityCode: Boolean? = null
-    var socialSecurityNumberMode: FieldMode? = null
-    var koreanAuthenticationMode: FieldMode? = null
+    var showSecurityCode: Boolean? = null
+    var showSecurityCodeForStoredCard: Boolean? = null
+    var showSupportedCardBrandLogos: Boolean? = null
+    var socialSecurityNumberVisibility: FieldVisibility? = null
+    var koreanAuthenticationVisibility: FieldVisibility? = null
     var billingAddressMode: BillingAddressMode? = null
 
     internal fun build() = CardConfiguration(
+        showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
-        showHolderName = showHolderName,
-        shopperReference = shopperReference,
         showStorePayment = showStorePayment,
-        hideSecurityCode = hideSecurityCode,
-        hideStoredSecurityCode = hideStoredSecurityCode,
-        socialSecurityNumberMode = socialSecurityNumberMode,
-        koreanAuthenticationMode = koreanAuthenticationMode,
+        showSecurityCode = showSecurityCode,
+        showSecurityCodeForStoredCard = showSecurityCodeForStoredCard,
+        showSupportedCardBrandLogos = showSupportedCardBrandLogos,
+        socialSecurityNumberVisibility = socialSecurityNumberVisibility,
+        koreanAuthenticationVisibility = koreanAuthenticationVisibility,
         billingAddressMode = billingAddressMode,
     )
 }

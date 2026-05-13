@@ -9,7 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.card.FieldMode
+import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
@@ -17,12 +17,12 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardComponentParams(
     private val commonComponentParams: CommonComponentParams,
-    val showHolderName: Boolean,
+    val showCardholderName: Boolean,
     val supportedCardBrands: List<CardBrand>,
-    val shopperReference: String?,
     val showStorePayment: Boolean,
-    val socialSecurityNumberMode: FieldMode,
-    val koreanAuthenticationMode: FieldMode,
+    val showSupportedCardBrandLogos: Boolean,
+    val socialSecurityNumberVisibility: FieldVisibility,
+    val koreanAuthenticationVisibility: FieldVisibility,
     val showPostalCode: Boolean,
     val cvcVisibility: CVCVisibility,
     val storedCVCVisibility: StoredCVCVisibility,
