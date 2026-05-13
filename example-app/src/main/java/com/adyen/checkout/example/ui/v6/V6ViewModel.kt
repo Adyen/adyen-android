@@ -18,8 +18,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.card
-import com.adyen.checkout.card.onBinLookup
-import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
@@ -204,10 +202,10 @@ internal class V6ViewModel @Inject constructor(
                 onAdditionalDetails = ::onAdditionalDetails,
                 onError = ::onError,
             ) {
-                card {
-                    onBinValue(::onBinValue)
-                    onBinLookup(::onBinLookup)
-                }
+                card(
+                    onBinValue = ::onBinValue,
+                    onBinLookup = ::onBinLookup,
+                )
             },
             coroutineScope = viewModelScope,
         )
