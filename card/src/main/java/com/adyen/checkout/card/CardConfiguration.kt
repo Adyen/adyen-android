@@ -30,6 +30,7 @@ class CardConfiguration internal constructor(
 ) : Configuration
 
 @Suppress("LongParameterList")
+@JvmOverloads
 fun CheckoutConfiguration.card(
     billingAddressMode: BillingAddressMode? = null,
     koreanAuthenticationVisibility: FieldVisibility? = null,

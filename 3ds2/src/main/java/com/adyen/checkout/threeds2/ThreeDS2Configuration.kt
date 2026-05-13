@@ -19,6 +19,7 @@ internal class ThreeDS2Configuration internal constructor(
     val uiCustomization: UiCustomization?,
 ) : Configuration
 
+@JvmOverloads
 fun CheckoutConfiguration.threeDS2(
     threeDSRequestorAppURL: String? = null,
     uiCustomization: UiCustomization? = null,
