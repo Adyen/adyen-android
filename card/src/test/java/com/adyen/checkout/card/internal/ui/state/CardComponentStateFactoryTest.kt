@@ -127,15 +127,15 @@ internal class CardComponentStateFactoryTest {
 
     // region storePayment
     @Test
-    fun `when showStorePayment is true, then isStorePaymentFieldVisible is true`() {
-        val state = createFactory(showStorePayment = true).createInitialState()
+    fun `when showStorePaymentMethod is true, then isStorePaymentFieldVisible is true`() {
+        val state = createFactory(showStorePaymentMethod = true).createInitialState()
 
         assertTrue(state.isStorePaymentFieldVisible)
     }
 
     @Test
-    fun `when showStorePayment is false, then isStorePaymentFieldVisible is false`() {
-        val state = createFactory(showStorePayment = false).createInitialState()
+    fun `when showStorePaymentMethod is false, then isStorePaymentFieldVisible is false`() {
+        val state = createFactory(showStorePaymentMethod = false).createInitialState()
 
         assertFalse(state.isStorePaymentFieldVisible)
     }
@@ -194,7 +194,7 @@ internal class CardComponentStateFactoryTest {
     private fun createFactory(
         showCardholderName: Boolean = false,
         supportedCardBrands: List<CardBrand> = emptyList(),
-        showStorePayment: Boolean = false,
+        showStorePaymentMethod: Boolean = false,
         showSupportedCardBrandLogos: Boolean = true,
         socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
@@ -214,7 +214,7 @@ internal class CardComponentStateFactoryTest {
             ),
             showCardholderName = showCardholderName,
             supportedCardBrands = supportedCardBrands,
-            showStorePayment = showStorePayment,
+            showStorePaymentMethod = showStorePaymentMethod,
             showSupportedCardBrandLogos = showSupportedCardBrandLogos,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility,
             koreanAuthenticationVisibility = koreanAuthenticationVisibility,

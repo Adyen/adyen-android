@@ -50,7 +50,7 @@ internal class CardComponentParamsMapperTest {
             cardConfiguration = CardConfiguration(
                 showCardholderName = null,
                 supportedCardBrands = null,
-                showStorePayment = null,
+                showStorePaymentMethod = null,
                 showSecurityCode = null,
                 showSecurityCodeForStoredCard = null,
                 showSupportedCardBrandLogos = null,
@@ -76,14 +76,14 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
-    fun `when showStorePayment is null then it defaults to true`() {
+    fun `when showStorePaymentMethod is null then it defaults to true`() {
         val params = mapper.mapToParams(
             componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showStorePayment = null),
+            cardConfiguration = createCardConfiguration(showStorePaymentMethod = null),
             paymentMethod = null,
         )
 
-        assertEquals(true, params.showStorePayment)
+        assertEquals(true, params.showStorePaymentMethod)
     }
 
     @Test
@@ -285,7 +285,7 @@ internal class CardComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
-    fun `showStorePayment should match sessions value if it exists, otherwise should match configuration`(
+    fun `showStorePaymentMethod should match sessions value if it exists, otherwise should match configuration`(
         configurationValue: Boolean?,
         sessionsValue: Boolean?,
         expectedValue: Boolean,
@@ -298,11 +298,11 @@ internal class CardComponentParamsMapperTest {
 
         val params = mapper.mapToParams(
             componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
-            cardConfiguration = createCardConfiguration(showStorePayment = configurationValue),
+            cardConfiguration = createCardConfiguration(showStorePaymentMethod = configurationValue),
             paymentMethod = null,
         )
 
-        assertEquals(expectedValue, params.showStorePayment)
+        assertEquals(expectedValue, params.showStorePaymentMethod)
     }
 
     @Test
@@ -314,7 +314,7 @@ internal class CardComponentParamsMapperTest {
             cardConfiguration = CardConfiguration(
                 showCardholderName = true,
                 supportedCardBrands = customBrands,
-                showStorePayment = false,
+                showStorePaymentMethod = false,
                 showSecurityCode = false,
                 showSecurityCodeForStoredCard = false,
                 showSupportedCardBrandLogos = false,
@@ -328,7 +328,7 @@ internal class CardComponentParamsMapperTest {
         val expected = createExpectedParams(
             showCardholderName = true,
             supportedCardBrands = customBrands,
-            showStorePayment = false,
+            showStorePaymentMethod = false,
             showSupportedCardBrandLogos = false,
             socialSecurityNumberVisibility = FieldVisibility.SHOW,
             koreanAuthenticationVisibility = FieldVisibility.SHOW,
@@ -373,7 +373,7 @@ internal class CardComponentParamsMapperTest {
     private fun createCardConfiguration(
         showCardholderName: Boolean? = null,
         supportedCardBrands: List<CardBrand>? = null,
-        showStorePayment: Boolean? = null,
+        showStorePaymentMethod: Boolean? = null,
         showSecurityCode: Boolean? = null,
         showSecurityCodeForStoredCard: Boolean? = null,
         showSupportedCardBrandLogos: Boolean? = null,
@@ -383,7 +383,7 @@ internal class CardComponentParamsMapperTest {
     ) = CardConfiguration(
         showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
-        showStorePayment = showStorePayment,
+        showStorePaymentMethod = showStorePaymentMethod,
         showSecurityCode = showSecurityCode,
         showSecurityCodeForStoredCard = showSecurityCodeForStoredCard,
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
@@ -405,7 +405,7 @@ internal class CardComponentParamsMapperTest {
     private fun createExpectedParams(
         showCardholderName: Boolean = false,
         supportedCardBrands: List<CardBrand> = CardComponentParamsMapper.DEFAULT_SUPPORTED_CARDS_LIST,
-        showStorePayment: Boolean = true,
+        showStorePaymentMethod: Boolean = true,
         showSupportedCardBrandLogos: Boolean = true,
         socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
@@ -425,7 +425,7 @@ internal class CardComponentParamsMapperTest {
         ),
         showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
-        showStorePayment = showStorePayment,
+        showStorePaymentMethod = showStorePaymentMethod,
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         koreanAuthenticationVisibility = koreanAuthenticationVisibility,

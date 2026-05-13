@@ -19,7 +19,7 @@ data class CardComponentParams(
     private val commonComponentParams: CommonComponentParams,
     val showCardholderName: Boolean,
     val supportedCardBrands: List<CardBrand>,
-    val showStorePayment: Boolean,
+    val showStorePaymentMethod: Boolean,
     val showSupportedCardBrandLogos: Boolean,
     val socialSecurityNumberVisibility: FieldVisibility,
     val koreanAuthenticationVisibility: FieldVisibility,

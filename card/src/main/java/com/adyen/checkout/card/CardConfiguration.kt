@@ -20,7 +20,7 @@ import kotlinx.parcelize.Parcelize
 class CardConfiguration(
     val showCardholderName: Boolean?,
     val supportedCardBrands: List<CardBrand>?,
-    val showStorePayment: Boolean?,
+    val showStorePaymentMethod: Boolean?,
     val showSecurityCode: Boolean?,
     val showSecurityCodeForStoredCard: Boolean?,
     val showSupportedCardBrandLogos: Boolean?,
@@ -34,7 +34,7 @@ class CardConfigurationBuilder internal constructor() {
 
     var showCardholderName: Boolean? = null
     var supportedCardBrands: List<CardBrand>? = null
-    var showStorePayment: Boolean? = null
+    var showStorePaymentMethod: Boolean? = null
     var showSecurityCode: Boolean? = null
     var showSecurityCodeForStoredCard: Boolean? = null
     var showSupportedCardBrandLogos: Boolean? = null
@@ -45,7 +45,7 @@ class CardConfigurationBuilder internal constructor() {
     internal fun build() = CardConfiguration(
         showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
-        showStorePayment = showStorePayment,
+        showStorePaymentMethod = showStorePaymentMethod,
         showSecurityCode = showSecurityCode,
         showSecurityCodeForStoredCard = showSecurityCodeForStoredCard,
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,

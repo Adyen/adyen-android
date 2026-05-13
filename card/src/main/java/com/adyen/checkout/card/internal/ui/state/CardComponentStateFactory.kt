@@ -61,7 +61,7 @@ internal class CardComponentStateFactory(
                 }
             ),
             storePaymentMethod = false,
-            isStorePaymentFieldVisible = componentParams.showStorePayment,
+            isStorePaymentFieldVisible = componentParams.showStorePaymentMethod,
             supportedCardBrands = componentParams.supportedCardBrands,
             showSupportedCardBrandLogos = componentParams.showSupportedCardBrandLogos,
             isLoading = false,

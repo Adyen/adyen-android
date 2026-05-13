@@ -57,7 +57,7 @@ public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkou
 	public final fun getShowCardholderName ()Ljava/lang/Boolean;
 	public final fun getShowSecurityCode ()Ljava/lang/Boolean;
 	public final fun getShowSecurityCodeForStoredCard ()Ljava/lang/Boolean;
-	public final fun getShowStorePayment ()Ljava/lang/Boolean;
+	public final fun getShowStorePaymentMethod ()Ljava/lang/Boolean;
 	public final fun getShowSupportedCardBrandLogos ()Ljava/lang/Boolean;
 	public final fun getSocialSecurityNumberVisibility ()Lcom/adyen/checkout/card/FieldVisibility;
 	public final fun getSupportedCardBrands ()Ljava/util/List;
@@ -71,7 +71,7 @@ public final class com/adyen/checkout/card/CardConfigurationBuilder {
 	public final fun getShowCardholderName ()Ljava/lang/Boolean;
 	public final fun getShowSecurityCode ()Ljava/lang/Boolean;
 	public final fun getShowSecurityCodeForStoredCard ()Ljava/lang/Boolean;
-	public final fun getShowStorePayment ()Ljava/lang/Boolean;
+	public final fun getShowStorePaymentMethod ()Ljava/lang/Boolean;
 	public final fun getShowSupportedCardBrandLogos ()Ljava/lang/Boolean;
 	public final fun getSocialSecurityNumberVisibility ()Lcom/adyen/checkout/card/FieldVisibility;
 	public final fun getSupportedCardBrands ()Ljava/util/List;
@@ -80,7 +80,7 @@ public final class com/adyen/checkout/card/CardConfigurationBuilder {
 	public final fun setShowCardholderName (Ljava/lang/Boolean;)V
 	public final fun setShowSecurityCode (Ljava/lang/Boolean;)V
 	public final fun setShowSecurityCodeForStoredCard (Ljava/lang/Boolean;)V
-	public final fun setShowStorePayment (Ljava/lang/Boolean;)V
+	public final fun setShowStorePaymentMethod (Ljava/lang/Boolean;)V
 	public final fun setShowSupportedCardBrandLogos (Ljava/lang/Boolean;)V
 	public final fun setSocialSecurityNumberVisibility (Lcom/adyen/checkout/card/FieldVisibility;)V
 	public final fun setSupportedCardBrands (Ljava/util/List;)V

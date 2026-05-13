@@ -201,7 +201,7 @@ private fun CardComponentState.cardBrand(): CardBrand? {
 }
 
 private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams): Boolean? {
-    return storePaymentMethod.takeIf { componentParams.showStorePayment }
+    return storePaymentMethod.takeIf { componentParams.showStorePaymentMethod }
 }
 
 private fun CardComponentParams.publicKey(onPublicKeyNotFound: (InternalCheckoutError) -> Unit): String? {

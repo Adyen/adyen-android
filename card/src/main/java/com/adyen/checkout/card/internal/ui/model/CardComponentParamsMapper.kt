@@ -33,7 +33,7 @@ internal class CardComponentParamsMapper {
             commonComponentParams = commonComponentParams,
             showCardholderName = cardConfiguration?.showCardholderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
-            showStorePayment = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
+            showStorePaymentMethod = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
             showSupportedCardBrandLogos = cardConfiguration?.showSupportedCardBrandLogos ?: true,
             socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberVisibility
                 ?: FieldVisibility.HIDE,
@@ -91,7 +91,7 @@ internal class CardComponentParamsMapper {
         sessionParams: SessionParams?,
         cardConfiguration: CardConfiguration?,
     ): Boolean {
-        return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePayment ?: true
+        return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePaymentMethod ?: true
     }
 
     companion object {
