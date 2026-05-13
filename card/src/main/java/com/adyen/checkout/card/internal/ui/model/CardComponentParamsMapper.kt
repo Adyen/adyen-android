@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldMode
-import com.adyen.checkout.card.internal.helper.RestrictedCardType
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -56,7 +55,6 @@ internal class CardComponentParamsMapper {
     /**
      * Check which set of supported cards to pass to the component.
      * Priority is: Custom -> PaymentMethod.brands -> Default
-     * remove restricted card type
      */
     private fun getSupportedCardBrands(
         cardConfiguration: CardConfiguration?,
@@ -80,11 +78,7 @@ internal class CardComponentParamsMapper {
                 adyenLog(AdyenLogLevel.VERBOSE) { "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST" }
                 DEFAULT_SUPPORTED_CARDS_LIST
             }
-        }.removeRestrictedCards()
-    }
-
-    private fun List<CardBrand>.removeRestrictedCards(): List<CardBrand> {
-        return this.filter { !RestrictedCardType.isRestrictedCardType(it.txVariant) }
+        }
     }
 
     private fun getStorePaymentFieldVisible(
