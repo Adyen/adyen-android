@@ -114,10 +114,10 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             amount = keyValueStorage.getAmount(),
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
-            card {
+            card(
                 // TODO - add installments
-                billingAddressMode = getBillingAddressMode()
-            }
+                billingAddressMode = getBillingAddressMode(),
+            )
 
             threeDS2 {
                 threeDSRequestorAppURL = "https://www.adyen.com"
