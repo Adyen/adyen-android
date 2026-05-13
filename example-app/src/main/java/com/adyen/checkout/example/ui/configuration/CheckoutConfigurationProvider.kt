@@ -119,9 +119,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 billingAddressMode = getBillingAddressMode(),
             )
 
-            threeDS2 {
-                threeDSRequestorAppURL = "https://www.adyen.com"
-            }
+            threeDS2(
+                threeDSRequestorAppURL = "https://www.adyen.com",
+            )
         }
 
     private fun getOldAnalyticsConfiguration(): OldAnalyticsConfiguration {
