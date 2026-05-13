@@ -6,7 +6,7 @@
  * Created by ozgur on 6/10/2025.
  */
 
-package com.adyen.checkout.card.internal.ui.model
+package com.adyen.checkout.card.internal.helper
 
 internal enum class RestrictedCardType(val txVariant: String) {
     ACCEL("accel"),
