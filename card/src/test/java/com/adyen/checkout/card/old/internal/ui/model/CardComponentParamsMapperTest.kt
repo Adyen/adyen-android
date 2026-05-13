@@ -17,15 +17,6 @@ import com.adyen.checkout.card.old.InstallmentOptions
 import com.adyen.checkout.card.old.KCPAuthVisibility
 import com.adyen.checkout.card.old.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.old.card
-import com.adyen.checkout.card.old.internal.ui.model.AddressFieldPolicyParams
-import com.adyen.checkout.card.old.internal.ui.model.CVCVisibility
-import com.adyen.checkout.card.old.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.old.internal.ui.model.CardComponentParamsMapper
-import com.adyen.checkout.card.old.internal.ui.model.InstallmentOptionParams
-import com.adyen.checkout.card.old.internal.ui.model.InstallmentParams
-import com.adyen.checkout.card.old.internal.ui.model.InstallmentsParamsMapper
-import com.adyen.checkout.card.old.internal.ui.model.RestrictedCardType
-import com.adyen.checkout.card.old.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel

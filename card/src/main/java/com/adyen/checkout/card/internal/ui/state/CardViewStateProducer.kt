@@ -26,8 +26,9 @@ internal class CardViewStateProducer(
     override fun produce(state: CardComponentState): CardViewState {
         val dualBrandData = dualBrandedCardHandler.getDualBrandData(state.cardBrandState)
 
-        // we only show all supported card brands when we do not detect any brands for this specific card
-        val isSupportedCardBrandsShown = when (state.cardBrandState) {
+        // we only show all supported card brands when the setting is enabled
+        // and we do not detect any brands for this specific card
+        val isSupportedCardBrandsShown = state.showSupportedCardBrandLogos && when (state.cardBrandState) {
             is CardBrandState.UnsupportedBrand,
             is CardBrandState.NoBrandsDetected -> true
 

@@ -29,6 +29,7 @@ internal data class CardComponentState(
     val storePaymentMethod: Boolean,
     val isStorePaymentFieldVisible: Boolean,
     val supportedCardBrands: List<CardBrand>,
+    val showSupportedCardBrandLogos: Boolean,
     val isLoading: Boolean,
 
     // Component state

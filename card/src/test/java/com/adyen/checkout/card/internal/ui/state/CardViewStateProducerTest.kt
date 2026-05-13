@@ -250,10 +250,41 @@ internal class CardViewStateProducerTest {
         assertEquals(false, viewState.postalCode?.isError)
     }
 
+    @Test
+    fun `when showSupportedCardBrandLogos is false and no brand is detected, then supported card brands are hidden`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.NoBrandsDetected,
+            showSupportedCardBrandLogos = false,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+    }
+
+    @Test
+    fun `when showSupportedCardBrandLogos is false and unsupported brand is detected, then supported card brands are hidden`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.UnsupportedBrand,
+            showSupportedCardBrandLogos = false,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+    }
+
     private fun createComponentState(
         cardNumber: TextInputComponentState = TextInputComponentState(),
         cardBrandState: CardBrandState = CardBrandState.NoBrandsDetected,
         postalCode: TextInputComponentState = TextInputComponentState(),
+        showSupportedCardBrandLogos: Boolean = true,
     ) = CardComponentState(
         cardNumber = cardNumber,
         expiryDate = TextInputComponentState(),
@@ -266,6 +297,7 @@ internal class CardViewStateProducerTest {
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
+        showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         isLoading = false,
         cardBrandState = cardBrandState,
     )
