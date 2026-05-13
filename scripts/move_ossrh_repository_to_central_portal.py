@@ -1,14 +1,25 @@
 #!/usr/bin/env python3
+import base64
+import json
 import os
 import sys
-import requests
+import urllib.error
 import urllib.parse
+import urllib.request
 
 # --- Configuration ---
 SONATYPE_API_BASE_URL = "https://ossrh-staging-api.central.sonatype.com/manual"
 SEARCH_REPOSITORIES_URL = f"{SONATYPE_API_BASE_URL}/search/repositories"
 UPLOAD_REPO_BASE_URL = f"{SONATYPE_API_BASE_URL}/upload/repository" # Key will be appended
 TIMEOUT_SECONDS = 180 # Setting a timeout a bit higher, in case the Sonatype API takes longer to respond
+
+class _SimpleResponse:
+    def __init__(self, status_code, text):
+        self.status_code = status_code
+        self.text = text
+
+    def json(self):
+        return json.loads(self.text)
 
 def _get_env_variables():
     # Retrieves Sonatype username, password, and publishing_type from environment variables.
@@ -43,24 +54,45 @@ def _make_api_request(method, url, auth, params=None, headers=None, expected_suc
         else: # Default for GET, DELETE etc.
             expected_success_codes = [200]
 
+    # Basic auth header
+    credentials = base64.b64encode(f"{auth[0]}:{auth[1]}".encode()).decode()
+    headers["Authorization"] = f"Basic {credentials}"
+
+    # Append query params
+    if params:
+        url = f"{url}?{urllib.parse.urlencode(params)}"
+
     print(f"Making {method} request to: {url}")
     try:
-        response = requests.request(method, url, auth=auth, params=params, headers=headers, timeout=TIMEOUT_SECONDS)
+        request = urllib.request.Request(url, headers=headers, method=method)
+        with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
+            status_code = response.status
+            body = response.read().decode()
 
-        print(f"Response Status: {response.status_code}")
+        print(f"Response Status: {status_code}")
         # Optionally print response text for debugging, can be verbose
-        # print(f"Response Text: {response.text[:500]}...") # Print first 500 chars
+        # print(f"Response Text: {body[:500]}...") # Print first 500 chars
 
         # If expected_success_codes is provided, use it for validation
-        if expected_success_codes and response.status_code not in expected_success_codes:
-            print(f"Error: API request to {url} failed with status {response.status_code}.")
-            print(f"Response: {response.text}")
+        if expected_success_codes and status_code not in expected_success_codes:
+            print(f"Error: API request to {url} failed with status {status_code}.")
+            print(f"Response: {body}")
             return None # Indicate failure for unexpected status
 
         # If no expected_success_codes, or if it's in the list, return the response
-        return response
+        return _SimpleResponse(status_code, body)
 
-    except requests.exceptions.RequestException as e:
+    except urllib.error.HTTPError as e:
+        status_code = e.code
+        body = e.read().decode()
+        print(f"Response Status: {status_code}")
+        if expected_success_codes and status_code not in expected_success_codes:
+            print(f"Error: API request to {url} failed with status {status_code}.")
+            print(f"Response: {body}")
+            return None
+        return _SimpleResponse(status_code, body)
+
+    except urllib.error.URLError as e:
         print(f"Error: Request to {url} failed due to an exception: {e}")
         return None
 

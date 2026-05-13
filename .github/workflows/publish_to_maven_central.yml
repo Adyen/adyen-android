@@ -35,7 +35,6 @@ jobs:
           SONATYPE_CENTRAL_PORTAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
         run: |
           chmod +x scripts/drop_all_open_ossrh_repositories.py
-          pip install requests toml
           python scripts/drop_all_open_ossrh_repositories.py
 
   publish_to_maven_central:
@@ -100,5 +99,4 @@ jobs:
           PUBLISHING_TYPE: "portal_api"
         run: |
           chmod +x scripts/move_ossrh_repository_to_central_portal.py
-          pip install requests toml
           python scripts/move_ossrh_repository_to_central_portal.py
