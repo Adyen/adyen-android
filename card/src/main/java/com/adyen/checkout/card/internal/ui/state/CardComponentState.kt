@@ -34,6 +34,7 @@ internal data class CardComponentState(
 
     // Component state
     val cardBrandState: CardBrandState,
+    val networkBinLookupState: NetworkBinLookupState? = null,
 ) : ComponentState
 
 internal sealed class CardBrandState {

@@ -25,5 +25,8 @@ internal sealed class BinLookupCacheResult {
     /**
      * Bin Lookup Result is available in cache.
      */
-    data class Available(val detectedCardTypes: List<DetectedCardType>) : BinLookupCacheResult()
+    data class Available(
+        val detectedCardTypes: List<DetectedCardType>,
+        val issuingCountryCode: String? = null,
+    ) : BinLookupCacheResult()
 }
