@@ -69,7 +69,6 @@ internal fun CardComponentState.toPaymentComponentState(
         storePaymentMethod = storePaymentMethod(componentParams),
         socialSecurityNumber = socialSecurityNumber.getPaymentDataValue(),
         billingAddress = getBillingAddress(),
-        componentParams = componentParams,
     )
 
     return createPaymentComponentState(paymentComponentData)
@@ -162,11 +161,9 @@ private fun createPaymentComponentData(
     storePaymentMethod: Boolean?,
     socialSecurityNumber: String?,
     billingAddress: Address?,
-    componentParams: CardComponentParams,
 ) = PaymentComponentData(
     paymentMethod = cardDetails,
     storePaymentMethod = storePaymentMethod,
-    shopperReference = componentParams.shopperReference,
     billingAddress = billingAddress,
     order = null,
     socialSecurityNumber = socialSecurityNumber,
@@ -204,7 +201,7 @@ private fun CardComponentState.cardBrand(): CardBrand? {
 }
 
 private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams): Boolean? {
-    return storePaymentMethod.takeIf { componentParams.showStorePayment }
+    return storePaymentMethod.takeIf { componentParams.showStorePaymentMethod }
 }
 
 private fun CardComponentParams.publicKey(onPublicKeyNotFound: (InternalCheckoutError) -> Unit): String? {

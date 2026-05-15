@@ -116,7 +116,6 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         ) {
             card {
                 // TODO - add installments
-                shopperReference = keyValueStorage.getShopperReference()
                 billingAddressMode = getBillingAddressMode()
             }
 

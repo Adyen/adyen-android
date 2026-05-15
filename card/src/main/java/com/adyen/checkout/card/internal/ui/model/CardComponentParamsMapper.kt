@@ -10,7 +10,7 @@ package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.FieldMode
+import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -31,20 +31,21 @@ internal class CardComponentParamsMapper {
         val (commonComponentParams, sessionParams) = componentParamsBundle
         return CardComponentParams(
             commonComponentParams = commonComponentParams,
-            showHolderName = cardConfiguration?.showHolderName ?: false,
+            showCardholderName = cardConfiguration?.showCardholderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
-            shopperReference = cardConfiguration?.shopperReference,
-            showStorePayment = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
-            socialSecurityNumberMode = cardConfiguration?.socialSecurityNumberMode
-                ?: FieldMode.HIDE,
-            koreanAuthenticationMode = cardConfiguration?.koreanAuthenticationMode ?: FieldMode.HIDE,
+            showStorePaymentMethod = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
+            showSupportedCardBrandLogos = cardConfiguration?.showSupportedCardBrandLogos ?: true,
+            socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberVisibility
+                ?: FieldVisibility.HIDE,
+            koreanAuthenticationVisibility = cardConfiguration?.koreanAuthenticationVisibility
+                ?: FieldVisibility.HIDE,
             showPostalCode = cardConfiguration?.billingAddressMode is BillingAddressMode.PostalCode,
-            cvcVisibility = if (cardConfiguration?.hideSecurityCode == true) {
+            cvcVisibility = if (cardConfiguration?.showSecurityCode == false) {
                 CVCVisibility.ALWAYS_HIDE
             } else {
                 CVCVisibility.ALWAYS_SHOW
             },
-            storedCVCVisibility = if (cardConfiguration?.hideStoredSecurityCode == true) {
+            storedCVCVisibility = if (cardConfiguration?.showSecurityCodeForStoredCard == false) {
                 StoredCVCVisibility.HIDE
             } else {
                 StoredCVCVisibility.SHOW
@@ -90,7 +91,7 @@ internal class CardComponentParamsMapper {
         sessionParams: SessionParams?,
         cardConfiguration: CardConfiguration?,
     ): Boolean {
-        return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePayment ?: true
+        return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePaymentMethod ?: true
     }
 
     companion object {

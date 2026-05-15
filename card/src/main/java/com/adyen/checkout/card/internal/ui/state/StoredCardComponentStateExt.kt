@@ -46,7 +46,7 @@ internal fun StoredCardComponentState.toPaymentComponentState(
         sdkDataProvider = sdkDataProvider,
     )
 
-    val paymentComponentData = createPaymentComponentData(cardDetails, componentParams)
+    val paymentComponentData = createPaymentComponentData(cardDetails)
 
     return createPaymentComponentState(paymentComponentData)
 }
@@ -76,11 +76,9 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
 
 private fun createPaymentComponentData(
     cardDetails: CardDetails,
-    componentParams: CardComponentParams
 ) = PaymentComponentData(
     paymentMethod = cardDetails,
     storePaymentMethod = null,
-    shopperReference = componentParams.shopperReference,
     order = null,
 )
 

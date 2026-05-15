@@ -253,6 +253,7 @@ internal class CardComponentStateReducerTest {
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
+        showSupportedCardBrandLogos = true,
         isLoading = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
     )

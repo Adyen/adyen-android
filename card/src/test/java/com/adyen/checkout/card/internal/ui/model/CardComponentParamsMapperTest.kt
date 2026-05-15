@@ -1,48 +1,25 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 16/11/2022.
+ * Created by oscars on 13/5/2026.
  */
-
-@file:Suppress("DEPRECATION")
 
 package com.adyen.checkout.card.internal.ui.model
 
-import com.adyen.checkout.card.old.AddressConfiguration
-import com.adyen.checkout.card.old.CardConfiguration
-import com.adyen.checkout.card.old.InstallmentConfiguration
-import com.adyen.checkout.card.old.InstallmentOptions
-import com.adyen.checkout.card.old.KCPAuthVisibility
-import com.adyen.checkout.card.old.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.old.card
-import com.adyen.checkout.card.old.internal.ui.model.AddressFieldPolicyParams
-import com.adyen.checkout.card.old.internal.ui.model.CVCVisibility
-import com.adyen.checkout.card.old.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.old.internal.ui.model.CardComponentParamsMapper
-import com.adyen.checkout.card.old.internal.ui.model.InstallmentOptionParams
-import com.adyen.checkout.card.old.internal.ui.model.InstallmentParams
-import com.adyen.checkout.card.old.internal.ui.model.InstallmentsParamsMapper
-import com.adyen.checkout.card.old.internal.ui.model.RestrictedCardType
-import com.adyen.checkout.card.old.internal.ui.model.StoredCVCVisibility
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
-import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
-import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.core.old.CardBrand
-import com.adyen.checkout.core.old.CardType
-import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
+import com.adyen.checkout.card.BillingAddressMode
+import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.FieldVisibility
+import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -52,565 +29,413 @@ import java.util.Locale
 
 internal class CardComponentParamsMapperTest {
 
-    private val cardComponentParamsMapper = CardComponentParamsMapper(
-        CommonComponentParamsMapper(),
-        InstallmentsParamsMapper(),
-    )
+    private val mapper = CardComponentParamsMapper()
 
     @Test
-    fun `when drop-in override params are null and custom card configuration fields are null then all fields should match`() {
-        val configuration = createCheckoutConfiguration()
+    fun `when card configuration is null then default values are used`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = null,
+            paymentMethod = null,
+        )
 
-        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, PaymentMethod())
-
-        val expected = getCardComponentParams()
-
+        val expected = createExpectedParams()
         assertEquals(expected, params)
     }
 
     @Test
-    fun `when drop-in override params are null and custom card configuration fields are set then all fields should match`() {
-        val shopperReference = "SHOPPER_REFERENCE_1"
-        val installmentConfiguration = InstallmentConfiguration(
-            InstallmentOptions.DefaultInstallmentOptions(
-                maxInstallments = 3,
-                includeRevolving = true,
+    fun `when showCardholderName is null then it defaults to false`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = CardConfiguration(
+                showCardholderName = null,
+                supportedCardBrands = null,
+                showStorePaymentMethod = null,
+                showSecurityCode = null,
+                showSecurityCodeForStoredCard = null,
+                showSupportedCardBrandLogos = null,
+                socialSecurityNumberVisibility = null,
+                koreanAuthenticationVisibility = null,
+                billingAddressMode = null,
             ),
-        )
-        val expectedInstallmentParams = InstallmentParams(
-            defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
-                values = listOf(2, 3),
-                includeRevolving = true,
-            ),
-            shopperLocale = Locale.FRANCE,
+            paymentMethod = null,
         )
 
-        val addressConfiguration = AddressConfiguration.FullAddress(supportedCountryCodes = listOf("CA", "GB"))
-        val expectedAddressParams = AddressParams.FullAddress(
-            supportedCountryCodes = addressConfiguration.supportedCountryCodes,
-            addressFieldPolicy = AddressFieldPolicyParams.Required,
-        )
-
-        val configuration = CheckoutConfiguration(
-            shopperLocale = Locale.FRANCE,
-            environment = Environment.APSE,
-            clientKey = TEST_CLIENT_KEY_2,
-        ) {
-            card {
-                setHolderNameRequired(true)
-                setSupportedCardTypes(CardType.DINERS, CardType.MAESTRO)
-                setShopperReference(shopperReference)
-                setShowStorePaymentField(false)
-                setHideCvc(true)
-                setHideCvcStoredCard(true)
-                setSubmitButtonVisible(false)
-                setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
-                setKcpAuthVisibility(KCPAuthVisibility.SHOW)
-                setInstallmentConfigurations(installmentConfiguration)
-                setAddressConfiguration(addressConfiguration)
-            }
-        }
-
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = null,
-            componentSessionParams = null,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            shopperLocale = Locale.FRANCE,
-            environment = Environment.APSE,
-            clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
-            isHolderNameRequired = true,
-            supportedCardBrands = listOf(
-                CardBrand(cardType = CardType.DINERS),
-                CardBrand(cardType = CardType.MAESTRO),
-            ),
-            shopperReference = shopperReference,
-            isStorePaymentFieldVisible = false,
-            isSubmitButtonVisible = false,
-            cvcVisibility = CVCVisibility.ALWAYS_HIDE,
-            storedCVCVisibility = StoredCVCVisibility.HIDE,
-            socialSecurityNumberVisibility = SocialSecurityNumberVisibility.SHOW,
-            kcpAuthVisibility = KCPAuthVisibility.SHOW,
-            installmentParams = expectedInstallmentParams,
-            addressParams = expectedAddressParams,
-        )
-
-        assertEquals(expected, params)
+        assertEquals(false, params.showCardholderName)
     }
 
     @Test
-    fun `when drop-in override params are set then they should override card configuration fields`() {
-        val configuration = CheckoutConfiguration(
-            shopperLocale = Locale.GERMAN,
-            environment = Environment.EUROPE,
-            clientKey = TEST_CLIENT_KEY_2,
-            amount = Amount(
-                currency = "CAD",
-                value = 1235_00L,
-            ),
-            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
-        ) {
-            card {
-                setAmount(Amount("USD", 1L))
-                setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
-            }
-        }
-
-        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = dropInOverrideParams,
-            componentSessionParams = null,
-            paymentMethod = PaymentMethod(),
+    fun `when showCardholderName is true then it is passed through`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showCardholderName = true),
+            paymentMethod = null,
         )
 
-        val expected = getCardComponentParams(
-            shopperLocale = Locale.GERMAN,
-            environment = Environment.EUROPE,
-            clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.INITIAL, TEST_CLIENT_KEY_2),
-            isCreatedByDropIn = true,
-            amount = Amount(
-                currency = "EUR",
-                value = 123L,
-            ),
-        )
-
-        assertEquals(expected, params)
+        assertEquals(true, params.showCardholderName)
     }
 
     @Test
-    fun `when setSubmitButtonVisible is set to false in card configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
-        val configuration = CheckoutConfiguration(
-            environment = Environment.EUROPE,
-            clientKey = TEST_CLIENT_KEY_2,
-        ) {
-            card {
-                setSubmitButtonVisible(false)
-            }
-        }
-        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = dropInOverrideParams,
-            componentSessionParams = null,
-            paymentMethod = PaymentMethod(),
+    fun `when showStorePaymentMethod is null then it defaults to true`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showStorePaymentMethod = null),
+            paymentMethod = null,
         )
 
-        assertEquals(true, params.isSubmitButtonVisible)
+        assertEquals(true, params.showStorePaymentMethod)
     }
 
     @Test
-    fun `when supported card types are set in the card configuration then they should be used in the params`() {
-        val configuration = createCheckoutConfiguration {
-            setSupportedCardTypes(CardType.MAESTRO, CardType.BCMC)
-        }
-
-        val paymentMethod = PaymentMethod(
-            brands = listOf(
-                CardType.VISA.txVariant,
-                CardType.MASTERCARD.txVariant,
-            ),
+    fun `when showSecurityCode is null then cvcVisibility is ALWAYS_SHOW`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSecurityCode = null),
+            paymentMethod = null,
         )
 
-        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, paymentMethod)
-
-        val expected = getCardComponentParams(
-            supportedCardBrands = listOf(CardBrand(cardType = CardType.MAESTRO), CardBrand(cardType = CardType.BCMC)),
-        )
-
-        assertEquals(expected, params)
+        assertEquals(CVCVisibility.ALWAYS_SHOW, params.cvcVisibility)
     }
 
     @Test
-    fun `when there are any restricted card brand in payment method,they are removed from the params`() {
-        val configuration = createCheckoutConfiguration()
-        val paymentMethod = PaymentMethod(
+    fun `when showSecurityCode is true then cvcVisibility is ALWAYS_SHOW`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSecurityCode = true),
+            paymentMethod = null,
+        )
+
+        assertEquals(CVCVisibility.ALWAYS_SHOW, params.cvcVisibility)
+    }
+
+    @Test
+    fun `when showSecurityCode is false then cvcVisibility is ALWAYS_HIDE`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSecurityCode = false),
+            paymentMethod = null,
+        )
+
+        assertEquals(CVCVisibility.ALWAYS_HIDE, params.cvcVisibility)
+    }
+
+    @Test
+    fun `when showSecurityCodeForStoredCard is null then storedCVCVisibility is SHOW`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = null),
+            paymentMethod = null,
+        )
+
+        assertEquals(StoredCVCVisibility.SHOW, params.storedCVCVisibility)
+    }
+
+    @Test
+    fun `when showSecurityCodeForStoredCard is true then storedCVCVisibility is SHOW`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = true),
+            paymentMethod = null,
+        )
+
+        assertEquals(StoredCVCVisibility.SHOW, params.storedCVCVisibility)
+    }
+
+    @Test
+    fun `when showSecurityCodeForStoredCard is false then storedCVCVisibility is HIDE`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = false),
+            paymentMethod = null,
+        )
+
+        assertEquals(StoredCVCVisibility.HIDE, params.storedCVCVisibility)
+    }
+
+    @Test
+    fun `when showSupportedCardBrandLogos is null then it defaults to true`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSupportedCardBrandLogos = null),
+            paymentMethod = null,
+        )
+
+        assertEquals(true, params.showSupportedCardBrandLogos)
+    }
+
+    @Test
+    fun `when showSupportedCardBrandLogos is false then it is passed through`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showSupportedCardBrandLogos = false),
+            paymentMethod = null,
+        )
+
+        assertEquals(false, params.showSupportedCardBrandLogos)
+    }
+
+    @Test
+    fun `when socialSecurityNumberVisibility is null then it defaults to HIDE`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(socialSecurityNumberVisibility = null),
+            paymentMethod = null,
+        )
+
+        assertEquals(FieldVisibility.HIDE, params.socialSecurityNumberVisibility)
+    }
+
+    @Test
+    fun `when socialSecurityNumberVisibility is SHOW then it is passed through`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(socialSecurityNumberVisibility = FieldVisibility.SHOW),
+            paymentMethod = null,
+        )
+
+        assertEquals(FieldVisibility.SHOW, params.socialSecurityNumberVisibility)
+    }
+
+    @Test
+    fun `when koreanAuthenticationVisibility is null then it defaults to HIDE`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(koreanAuthenticationVisibility = null),
+            paymentMethod = null,
+        )
+
+        assertEquals(FieldVisibility.HIDE, params.koreanAuthenticationVisibility)
+    }
+
+    @Test
+    fun `when koreanAuthenticationVisibility is SHOW then it is passed through`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(koreanAuthenticationVisibility = FieldVisibility.SHOW),
+            paymentMethod = null,
+        )
+
+        assertEquals(FieldVisibility.SHOW, params.koreanAuthenticationVisibility)
+    }
+
+    @Test
+    fun `when supportedCardBrands is set in configuration then it takes priority over payment method brands`() {
+        val configBrands = listOf(CardBrand(CardType.MAESTRO.txVariant))
+        val paymentMethod = createCardPaymentMethod(
+            brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant),
+        )
+
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(supportedCardBrands = configBrands),
+            paymentMethod = paymentMethod,
+        )
+
+        assertEquals(configBrands, params.supportedCardBrands)
+    }
+
+    @Test
+    fun `when supportedCardBrands is null and payment method brands exist then payment method brands are used`() {
+        val paymentMethod = createCardPaymentMethod(
+            brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant),
+        )
+
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(supportedCardBrands = null),
+            paymentMethod = paymentMethod,
+        )
+
+        val expected = listOf(
+            CardBrand(CardType.VISA.txVariant),
+            CardBrand(CardType.MASTERCARD.txVariant),
+        )
+        assertEquals(expected, params.supportedCardBrands)
+    }
+
+    @Test
+    fun `when supportedCardBrands and payment method brands are null then default list is used`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(supportedCardBrands = null),
+            paymentMethod = null,
+        )
+
+        assertEquals(CardComponentParamsMapper.DEFAULT_SUPPORTED_CARDS_LIST, params.supportedCardBrands)
+    }
+
+    @Test
+    fun `when payment method brands contain restricted cards then they are filtered out`() {
+        val paymentMethod = createCardPaymentMethod(
             brands = listOf(
                 RestrictedCardType.NYCE.txVariant,
                 CardType.MASTERCARD.txVariant,
             ),
         )
 
-        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, paymentMethod)
-
-        val expected = getCardComponentParams(
-            supportedCardBrands = listOf(CardBrand(cardType = CardType.MASTERCARD)),
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = null,
+            paymentMethod = paymentMethod,
         )
 
-        assertEquals(expected, params)
-    }
-
-    @Test
-    fun `when supported card types are not set in the card configuration and payment method brands exist then brands should be used in the params`() {
-        val configuration = createCheckoutConfiguration()
-
-        val paymentMethod = PaymentMethod(
-            brands = listOf(
-                CardType.VISA.txVariant,
-                CardType.MASTERCARD.txVariant,
-            ),
-        )
-
-        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, paymentMethod)
-
-        val expected = getCardComponentParams(
-            supportedCardBrands = listOf(
-                CardBrand(cardType = CardType.VISA),
-                CardBrand(cardType = CardType.MASTERCARD),
-            ),
-        )
-
-        assertEquals(expected, params)
-    }
-
-    @Test
-    fun `when supported card types are not set in the card configuration and payment method brands do not exist then the default card types should be used in the params`() {
-        val configuration = createCheckoutConfiguration()
-
-        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, PaymentMethod())
-
-        val expected = getCardComponentParams(
-            supportedCardBrands = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
-        )
-
-        assertEquals(expected, params)
+        val expected = listOf(CardBrand(CardType.MASTERCARD.txVariant))
+        assertEquals(expected, params.supportedCardBrands)
     }
 
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
-    @Suppress("MaxLineLength")
-    fun `isStorePaymentFieldVisible should match value set in sessions if it exists, otherwise should match configuration`(
-        configurationValue: Boolean,
+    fun `showStorePaymentMethod should match sessions value if it exists, otherwise should match configuration`(
+        configurationValue: Boolean?,
         sessionsValue: Boolean?,
-        expectedValue: Boolean
+        expectedValue: Boolean,
     ) {
-        val configuration = createCheckoutConfiguration {
-            setShowStorePaymentField(configurationValue)
+        val sessionParams = if (sessionsValue != null) {
+            createSessionParams(enableStoreDetails = sessionsValue)
+        } else {
+            null
         }
 
-        val sessionParams = createSessionParams(
-            enableStoreDetails = sessionsValue,
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
+            cardConfiguration = createCardConfiguration(showStorePaymentMethod = configurationValue),
+            paymentMethod = null,
         )
 
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = null,
-            componentSessionParams = sessionParams,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            isStorePaymentFieldVisible = expectedValue,
-        )
-
-        assertEquals(expected, params)
+        assertEquals(expectedValue, params.showStorePaymentMethod)
     }
 
     @Test
-    fun `installmentParams should be null if set as null in sessions`() {
-        val configuration = createCheckoutConfiguration {
-            setInstallmentConfigurations(
-                InstallmentConfiguration(
-                    InstallmentOptions.DefaultInstallmentOptions(
-                        maxInstallments = 3,
-                        includeRevolving = true,
-                    ),
-                ),
-            )
-        }
+    fun `when all custom configuration fields are set then all fields should match`() {
+        val customBrands = listOf(CardBrand(CardType.DINERS.txVariant), CardBrand(CardType.MAESTRO.txVariant))
 
-        val sessionParams = createSessionParams()
-
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = null,
-            componentSessionParams = sessionParams,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            installmentParams = null,
-        )
-
-        assertEquals(expected, params)
-    }
-
-    @Test
-    fun `installmentParams should match value set in sessions`() {
-        val installmentOptions = mapOf(
-            "card" to SessionInstallmentOptionsParams(
-                plans = listOf("regular"),
-                preselectedValue = 2,
-                values = listOf(2),
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = CardConfiguration(
+                showCardholderName = true,
+                supportedCardBrands = customBrands,
+                showStorePaymentMethod = false,
+                showSecurityCode = false,
+                showSecurityCodeForStoredCard = false,
+                showSupportedCardBrandLogos = false,
+                socialSecurityNumberVisibility = FieldVisibility.SHOW,
+                koreanAuthenticationVisibility = FieldVisibility.SHOW,
+                billingAddressMode = BillingAddressMode.PostalCode(),
             ),
-        )
-        val installmentConfiguration = SessionInstallmentConfiguration(
-            installmentOptions = installmentOptions,
-            showInstallmentAmount = false,
-        )
-        val configuration = createCheckoutConfiguration {
-            setInstallmentConfigurations(
-                InstallmentConfiguration(
-                    defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
-                        maxInstallments = 3,
-                        includeRevolving = true,
-                    ),
-                ),
-            )
-        }
-
-        val installmentsParamsMapper = InstallmentsParamsMapper()
-        val sessionParams = createSessionParams(
-            installmentConfiguration = installmentConfiguration,
-        )
-        val cardComponentParamsMapper = CardComponentParamsMapper(
-            CommonComponentParamsMapper(),
-            installmentsParamsMapper,
+            paymentMethod = null,
         )
 
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = null,
-            componentSessionParams = sessionParams,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            installmentParams = installmentsParamsMapper.mapToInstallmentParams(
-                installmentConfiguration = installmentConfiguration,
-                amount = configuration.amount,
-                shopperLocale = configuration.shopperLocale ?: DEVICE_LOCALE,
-            ),
+        val expected = createExpectedParams(
+            showCardholderName = true,
+            supportedCardBrands = customBrands,
+            showStorePaymentMethod = false,
+            showSupportedCardBrandLogos = false,
+            socialSecurityNumberVisibility = FieldVisibility.SHOW,
+            koreanAuthenticationVisibility = FieldVisibility.SHOW,
+            showPostalCode = true,
+            cvcVisibility = CVCVisibility.ALWAYS_HIDE,
+            storedCVCVisibility = StoredCVCVisibility.HIDE,
         )
 
         assertEquals(expected, params)
     }
 
-    @Test
-    fun `installmentParams should match configuration if there is no session`() {
-        val installmentConfiguration = InstallmentConfiguration(
-            InstallmentOptions.DefaultInstallmentOptions(
-                maxInstallments = 3,
-                includeRevolving = true,
-            ),
-        )
-        val configuration = createCheckoutConfiguration {
-            setInstallmentConfigurations(installmentConfiguration)
-        }
+    private fun createComponentParamsBundle(
+        sessionParams: SessionParams? = null,
+    ) = ComponentParamsBundle(
+        commonComponentParams = CommonComponentParams(
+            shopperLocale = DEVICE_LOCALE,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+            isCreatedByDropIn = false,
+            amount = null,
+            showSubmitButton = true,
+            publicKey = null,
+        ),
+        sessionParams = sessionParams,
+    )
 
-        val installmentsParamsMapper = InstallmentsParamsMapper()
-        val cardComponentParamsMapper = CardComponentParamsMapper(
-            CommonComponentParamsMapper(),
-            installmentsParamsMapper,
-        )
-
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = null,
-            componentSessionParams = null,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            installmentParams = installmentsParamsMapper.mapToInstallmentParams(
-                installmentConfiguration = installmentConfiguration,
-                amount = configuration.amount,
-                shopperLocale = configuration.shopperLocale ?: DEVICE_LOCALE,
-            ),
-        )
-
-        assertEquals(expected, params)
-    }
-
-    @Test
-    fun `installmentParams should be null if not set in configuration and there is no session`() {
-        val configuration = createCheckoutConfiguration()
-
-        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, PaymentMethod())
-
-        val expected = getCardComponentParams(
-            installmentParams = null,
-        )
-
-        assertEquals(expected, params)
-    }
-
-    @ParameterizedTest
-    @MethodSource("amountSource")
-    fun `amount should match value set in sessions then drop in then component configuration`(
-        configurationValue: Amount,
-        dropInValue: Amount?,
-        sessionsValue: Amount?,
-        expectedValue: Amount
-    ) {
-        val configuration = createCheckoutConfiguration(configurationValue)
-
-        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
-
-        val sessionParams = createSessionParams(
-            amount = sessionsValue,
-        )
-
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = dropInOverrideParams,
-            componentSessionParams = sessionParams,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            amount = expectedValue,
-            isCreatedByDropIn = dropInOverrideParams != null,
-        )
-
-        assertEquals(expected, params)
-    }
-
-    @ParameterizedTest
-    @MethodSource("shopperLocaleSource")
-    fun `shopper locale should match value set in configuration then sessions then device locale`(
-        configurationValue: Locale?,
-        sessionsValue: Locale?,
-        deviceLocaleValue: Locale,
-        expectedValue: Locale,
-    ) {
-        val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
-
-        val sessionParams = createSessionParams(
-            shopperLocale = sessionsValue,
-        )
-
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = deviceLocaleValue,
-            dropInOverrideParams = null,
-            componentSessionParams = sessionParams,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            shopperLocale = expectedValue,
-        )
-
-        assertEquals(expected, params)
-    }
-
-    @Test
-    fun `environment and client key should match value set in sessions`() {
-        val configuration = createCheckoutConfiguration()
-
-        val sessionParams = createSessionParams(
-            environment = Environment.INDIA,
-            clientKey = TEST_CLIENT_KEY_2,
-        )
-
-        val params = cardComponentParamsMapper.mapToParams(
-            checkoutConfiguration = configuration,
-            deviceLocale = DEVICE_LOCALE,
-            dropInOverrideParams = null,
-            componentSessionParams = sessionParams,
-            paymentMethod = PaymentMethod(),
-        )
-
-        val expected = getCardComponentParams(
-            environment = Environment.INDIA,
-            clientKey = TEST_CLIENT_KEY_2,
-        )
-
-        assertEquals(expected, params)
-    }
-
-    private fun createCheckoutConfiguration(
-        amount: Amount? = null,
-        shopperLocale: Locale? = null,
-        configuration: CardConfiguration.Builder.() -> Unit = {},
-    ) = CheckoutConfiguration(
-        shopperLocale = shopperLocale,
-        environment = Environment.TEST,
-        clientKey = TEST_CLIENT_KEY_1,
-        amount = amount,
-    ) {
-        card(configuration)
-    }
-
-    @Suppress("LongParameterList")
     private fun createSessionParams(
-        environment: Environment = Environment.TEST,
-        clientKey: String = TEST_CLIENT_KEY_1,
         enableStoreDetails: Boolean? = null,
-        installmentConfiguration: SessionInstallmentConfiguration? = null,
-        showRemovePaymentMethodButton: Boolean? = null,
-        amount: Amount? = null,
-        returnUrl: String? = "",
-        shopperLocale: Locale? = null,
     ) = SessionParams(
-        environment = environment,
-        clientKey = clientKey,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
         enableStoreDetails = enableStoreDetails,
-        installmentConfiguration = installmentConfiguration,
-        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
-        amount = amount,
-        returnUrl = returnUrl,
-        shopperLocale = shopperLocale,
+        installmentConfiguration = null,
+        showRemovePaymentMethodButton = null,
+        amount = null,
+        returnUrl = "",
+        shopperLocale = null,
     )
 
     @Suppress("LongParameterList")
-    private fun getCardComponentParams(
-        shopperLocale: Locale = DEVICE_LOCALE,
-        environment: Environment = Environment.TEST,
-        clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
-        isCreatedByDropIn: Boolean = false,
-        amount: Amount? = null,
-        isHolderNameRequired: Boolean = false,
-        isSubmitButtonVisible: Boolean = true,
-        supportedCardBrands: List<CardBrand> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
-        shopperReference: String? = null,
-        isStorePaymentFieldVisible: Boolean = true,
-        socialSecurityNumberVisibility: SocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
-        kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE,
-        installmentParams: InstallmentParams? = null,
-        addressParams: AddressParams = AddressParams.None,
+    private fun createCardConfiguration(
+        showCardholderName: Boolean? = null,
+        supportedCardBrands: List<CardBrand>? = null,
+        showStorePaymentMethod: Boolean? = null,
+        showSecurityCode: Boolean? = null,
+        showSecurityCodeForStoredCard: Boolean? = null,
+        showSupportedCardBrandLogos: Boolean? = null,
+        socialSecurityNumberVisibility: FieldVisibility? = null,
+        koreanAuthenticationVisibility: FieldVisibility? = null,
+        billingAddressMode: BillingAddressMode? = null,
+    ) = CardConfiguration(
+        showCardholderName = showCardholderName,
+        supportedCardBrands = supportedCardBrands,
+        showStorePaymentMethod = showStorePaymentMethod,
+        showSecurityCode = showSecurityCode,
+        showSecurityCodeForStoredCard = showSecurityCodeForStoredCard,
+        showSupportedCardBrandLogos = showSupportedCardBrandLogos,
+        socialSecurityNumberVisibility = socialSecurityNumberVisibility,
+        koreanAuthenticationVisibility = koreanAuthenticationVisibility,
+        billingAddressMode = billingAddressMode,
+    )
+
+    private fun createCardPaymentMethod(
+        brands: List<String> = emptyList(),
+    ) = CardPaymentMethod(
+        type = "scheme",
+        name = "Card",
+        brands = brands,
+        fundingSource = null,
+    )
+
+    @Suppress("LongParameterList")
+    private fun createExpectedParams(
+        showCardholderName: Boolean = false,
+        supportedCardBrands: List<CardBrand> = CardComponentParamsMapper.DEFAULT_SUPPORTED_CARDS_LIST,
+        showStorePaymentMethod: Boolean = true,
+        showSupportedCardBrandLogos: Boolean = true,
+        socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
+        koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
+        showPostalCode: Boolean = false,
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
-        storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW
+        storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW,
     ) = CardComponentParams(
         commonComponentParams = CommonComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = analyticsParams,
-            isCreatedByDropIn = isCreatedByDropIn,
-            amount = amount,
+            shopperLocale = DEVICE_LOCALE,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+            isCreatedByDropIn = false,
+            amount = null,
+            showSubmitButton = true,
+            publicKey = null,
         ),
-        isHolderNameRequired = isHolderNameRequired,
-        isSubmitButtonVisible = isSubmitButtonVisible,
+        showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
-        shopperReference = shopperReference,
-        isStorePaymentFieldVisible = isStorePaymentFieldVisible,
+        showStorePaymentMethod = showStorePaymentMethod,
+        showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
-        kcpAuthVisibility = kcpAuthVisibility,
-        installmentParams = installmentParams,
-        addressParams = addressParams,
+        koreanAuthenticationVisibility = koreanAuthenticationVisibility,
+        showPostalCode = showPostalCode,
         cvcVisibility = cvcVisibility,
         storedCVCVisibility = storedCVCVisibility,
     )
 
     companion object {
-        private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-        private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
@@ -622,23 +447,9 @@ internal class CardComponentParamsMapperTest {
             arguments(true, true, true),
             arguments(false, null, false),
             arguments(true, null, true),
-        )
-
-        @JvmStatic
-        fun amountSource() = listOf(
-            // configurationValue, dropInValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
-            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
-        )
-
-        @JvmStatic
-        fun shopperLocaleSource() = listOf(
-            // configurationValue, sessionsValue, deviceLocaleValue, expectedValue
-            arguments(null, null, Locale.US, Locale.US),
-            arguments(Locale.GERMAN, null, Locale.US, Locale.GERMAN),
-            arguments(null, Locale.CHINESE, Locale.US, Locale.CHINESE),
-            arguments(Locale.GERMAN, Locale.CHINESE, Locale.US, Locale.GERMAN),
+            arguments(null, null, true),
+            arguments(null, false, false),
+            arguments(null, true, true),
         )
     }
 }
