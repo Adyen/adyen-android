@@ -8,13 +8,6 @@
 
 package com.adyen.checkout.card.internal.helper
 
-internal enum class RestrictedCardType(val txVariant: String) {
-    ACCEL("accel"),
-    PULSE("pulse"),
-    STAR("star"),
-    NYCE("nyce");
+private val RESTRICTED_BRANDS = setOf("accel", "pulse", "star", "nyce")
 
-    companion object {
-        fun isRestrictedCardType(brand: String) = entries.any { brand == it.txVariant }
-    }
-}
+internal fun isRestrictedCardType(brand: String) = brand in RESTRICTED_BRANDS

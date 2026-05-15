@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.helper.RestrictedCardType
+import com.adyen.checkout.card.internal.helper.isRestrictedCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
@@ -62,7 +62,7 @@ internal class CardViewStateProducer(
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
             supportedCardBrands = state.supportedCardBrands.filterNot {
-                RestrictedCardType.isRestrictedCardType(it.txVariant)
+                isRestrictedCardType(it.txVariant)
             },
             isSupportedCardBrandsShown = isSupportedCardBrandsShown,
             detectedCardBrands = detectedCardBrands,

@@ -13,7 +13,7 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
-import com.adyen.checkout.card.internal.helper.RestrictedCardType
+import com.adyen.checkout.card.internal.helper.isRestrictedCardType
 import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
@@ -78,10 +78,10 @@ internal class CardBrandIntentsHandler(
             DetectedCardTypeList.Source.NETWORK,
             DetectedCardTypeList.Source.CACHED -> {
                 val nonRestrictedSupportedBrands = supportedDetectedCardTypes.filterNot {
-                    RestrictedCardType.isRestrictedCardType(it.cardBrand.txVariant)
+                    isRestrictedCardType(it.cardBrand.txVariant)
                 }
                 val anyRestrictedBrandDetected = supportedDetectedCardTypes.any {
-                    RestrictedCardType.isRestrictedCardType(it.cardBrand.txVariant)
+                    isRestrictedCardType(it.cardBrand.txVariant)
                 }
 
                 when {
