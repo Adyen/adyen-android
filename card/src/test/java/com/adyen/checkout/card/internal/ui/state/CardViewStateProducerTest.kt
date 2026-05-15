@@ -77,6 +77,37 @@ internal class CardViewStateProducerTest {
         assertTrue(viewState.isSupportedCardBrandsShown)
     }
 
+    @Test
+    fun `when restricted brand is detected, then supported card brands should be shown and detected brands should be empty`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.RestrictedBrand,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertTrue(viewState.isSupportedCardBrandsShown)
+        assertTrue(viewState.detectedCardBrands.isEmpty())
+    }
+
+    @Test
+    fun `when single reliable with restricted brand is detected, then supported card brands should be hidden and detected brands should contain non-restricted brand`() {
+        // GIVEN
+        val cardBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.SingleReliableWithRestrictedBrand(cardBrandData),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertEquals(listOf(CardBrand("visa")), viewState.detectedCardBrands)
+    }
+
     // UC6: Error Hides Brand Logos
     @Test
     fun `when card number has error with detected brand, then trailing icon is warning and supported brands are hidden`() {
@@ -229,6 +260,30 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
+    fun `when supported card brands contain restricted brands, then restricted brands are excluded from view state`() {
+        // GIVEN
+        val componentState = createComponentState(
+            supportedCardBrands = listOf(
+                CardBrand("visa"),
+                CardBrand("accel"),
+                CardBrand("mc"),
+                CardBrand("pulse"),
+                CardBrand("star"),
+                CardBrand("nyce"),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(
+            listOf(CardBrand("visa"), CardBrand("mc")),
+            viewState.supportedCardBrands,
+        )
+    }
+
+    @Test
     fun `when postal code is valid, then trailing icon is placeholder`() {
         // GIVEN
         val componentState = createComponentState(
@@ -254,6 +309,7 @@ internal class CardViewStateProducerTest {
         cardNumber: TextInputComponentState = TextInputComponentState(),
         cardBrandState: CardBrandState = CardBrandState.NoBrandsDetected,
         postalCode: TextInputComponentState = TextInputComponentState(),
+        supportedCardBrands: List<CardBrand> = emptyList(),
     ) = CardComponentState(
         cardNumber = cardNumber,
         expiryDate = TextInputComponentState(),
@@ -265,7 +321,7 @@ internal class CardViewStateProducerTest {
         postalCode = postalCode,
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
-        supportedCardBrands = emptyList(),
+        supportedCardBrands = supportedCardBrands,
         isLoading = false,
         cardBrandState = cardBrandState,
     )

@@ -196,7 +196,9 @@ private fun CardComponentState.cardBrand(): CardBrand? {
         is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData.cardBrand
         is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData.cardBrand
         is CardBrandState.DualBrand,
+        is CardBrandState.SingleReliableWithRestrictedBrand,
         is CardBrandState.NoBrandsDetected,
+        is CardBrandState.RestrictedBrand,
         is CardBrandState.SingleUnreliableBrand,
         is CardBrandState.UnsupportedBrand -> null
     }

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.helper.isRestrictedCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
@@ -29,12 +30,14 @@ internal class CardViewStateProducer(
         // we only show all supported card brands when we do not detect any brands for this specific card
         val isSupportedCardBrandsShown = when (state.cardBrandState) {
             is CardBrandState.UnsupportedBrand,
+            is CardBrandState.RestrictedBrand,
             is CardBrandState.NoBrandsDetected -> true
 
             is CardBrandState.SingleReliableBrand,
             is CardBrandState.SingleUnreliableBrand,
             is CardBrandState.DualBrand,
-            is CardBrandState.DualBrandWithShopperSelection -> false
+            is CardBrandState.DualBrandWithShopperSelection,
+            is CardBrandState.SingleReliableWithRestrictedBrand -> false
         }
 
         val detectedCardBrands = getDetectedCardBrands(state.cardBrandState)
@@ -58,7 +61,9 @@ internal class CardViewStateProducer(
             ),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
-            supportedCardBrands = state.supportedCardBrands,
+            supportedCardBrands = state.supportedCardBrands.filterNot {
+                isRestrictedCardType(it.txVariant)
+            },
             isSupportedCardBrandsShown = isSupportedCardBrandsShown,
             detectedCardBrands = detectedCardBrands,
             isLoading = state.isLoading,
@@ -73,7 +78,9 @@ internal class CardViewStateProducer(
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList.map { it.cardBrand }
             is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
+            is CardBrandState.SingleReliableWithRestrictedBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             is CardBrandState.NoBrandsDetected,
+            is CardBrandState.RestrictedBrand,
             is CardBrandState.UnsupportedBrand -> emptyList()
         }
     }

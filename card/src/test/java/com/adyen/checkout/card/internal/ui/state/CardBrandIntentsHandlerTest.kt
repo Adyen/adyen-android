@@ -460,6 +460,131 @@ internal class CardBrandIntentsHandlerTest(
 
             assertEquals(expectedState, actual.cardBrandState)
         }
+
+        @Test
+        fun `and list has only restricted supported brands then state should be restricted brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("accel")),
+                createDetectedCardType().copy(cardBrand = CardBrand("pulse")),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes,
+                DetectedCardTypeList.Source.NETWORK,
+                null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            assertEquals(CardBrandState.RestrictedBrand, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has one non-restricted supported brand and a restricted brand then state should be single reliable with restricted brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("visa")),
+                createDetectedCardType().copy(cardBrand = CardBrand("accel")),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes,
+                DetectedCardTypeList.Source.NETWORK,
+                null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            val expectedState = CardBrandState.SingleReliableWithRestrictedBrand(
+                createCardBrandData().copy(cardBrand = CardBrand("visa")),
+            )
+
+            assertEquals(expectedState, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has multiple non-restricted supported brands and a restricted brand then restricted brand is ignored for dual brand logic`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(
+                    cardBrand = CardBrand("visa"),
+                    isShopperSelectionAllowedInDualBranded = true,
+                ),
+                createDetectedCardType().copy(cardBrand = CardBrand("cartebancaire")),
+                createDetectedCardType().copy(cardBrand = CardBrand("accel")),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes,
+                DetectedCardTypeList.Source.NETWORK,
+                null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            val expectedState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(
+                    createCardBrandData().copy(cardBrand = CardBrand("visa")),
+                    createCardBrandData().copy(cardBrand = CardBrand("cartebancaire")),
+                ),
+                shopperSelectedCardBrandData = createCardBrandData().copy(cardBrand = CardBrand("visa")),
+            )
+
+            assertEquals(expectedState, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has one supported brand and an unsupported restricted brand then state should be single reliable brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("visa")),
+                createDetectedCardType().copy(cardBrand = CardBrand("accel"), isSupported = false),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes,
+                DetectedCardTypeList.Source.NETWORK,
+                null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            val expectedState = CardBrandState.SingleReliableBrand(
+                createCardBrandData().copy(cardBrand = CardBrand("visa")),
+            )
+
+            assertEquals(expectedState, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has restricted supported brands and unsupported non-restricted brands then state should be restricted brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("accel")),
+                createDetectedCardType().copy(cardBrand = CardBrand("visa"), isSupported = false),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes,
+                DetectedCardTypeList.Source.NETWORK,
+                null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            assertEquals(CardBrandState.RestrictedBrand, actual.cardBrandState)
+        }
     }
 
     // CVC / expiry date policy tests
@@ -630,6 +755,31 @@ internal class CardBrandIntentsHandlerTest(
         val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
 
         assertEquals(RequirementPolicy.Hidden, actual.securityCode.requirementPolicy)
+    }
+
+    @Test
+    fun `when restricted brand is detected then expiryDate and securityCode requirementPolicy defaults to Required`() {
+        val cardBrandState = CardBrandState.RestrictedBrand
+
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
+
+        assertEquals(RequirementPolicy.Required, actual.expiryDate.requirementPolicy)
+        assertEquals(RequirementPolicy.Required, actual.securityCode.requirementPolicy)
+    }
+
+    @Test
+    fun `when single reliable with restricted brand is detected then expiryDate and securityCode use brand policies`() {
+        val cardBrandState = CardBrandState.SingleReliableWithRestrictedBrand(
+            createCardBrandData().copy(
+                cvcPolicy = Brand.FieldPolicy.OPTIONAL,
+                expiryDatePolicy = Brand.FieldPolicy.OPTIONAL,
+            ),
+        )
+
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
+
+        assertEquals(RequirementPolicy.Optional, actual.expiryDate.requirementPolicy)
+        assertEquals(RequirementPolicy.Optional, actual.securityCode.requirementPolicy)
     }
 
     @Nested

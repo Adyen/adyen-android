@@ -135,6 +135,28 @@ internal class DetectedCardTypeMappersTest {
         assertEquals(null, result.brands.first().paymentMethodVariant)
     }
 
+    @Test
+    fun `when restricted brands are present then they are included in callback output with correct supported flags`() {
+        val detectedCardTypeList = createNetworkBinLookupState(
+            detectedCardTypes = listOf(
+                createDetectedCardType(brand = "visa", isSupported = true),
+                createDetectedCardType(brand = "accel", isSupported = true),
+            ),
+            issuingCountryCode = "US",
+        )
+
+        val result = detectedCardTypeList.toBinLookupData()
+
+        val expected = BinLookupData(
+            issuingCountryCode = "US",
+            brands = listOf(
+                BinLookupBrand(brand = "visa", supported = true, paymentMethodVariant = "scheme"),
+                BinLookupBrand(brand = "accel", supported = true, paymentMethodVariant = "scheme"),
+            ),
+        )
+        assertEquals(expected, result)
+    }
+
     private fun createNetworkBinLookupState(
         detectedCardTypes: List<DetectedCardType>,
         issuingCountryCode: String? = null,
