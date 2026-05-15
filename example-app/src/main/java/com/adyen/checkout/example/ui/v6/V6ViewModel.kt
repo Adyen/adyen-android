@@ -108,7 +108,7 @@ internal class V6ViewModel @Inject constructor(
     }
 
     private fun onBinLookup(binLookupData: BinLookupData) {
-        Log.d(TAG, "Bin Lookup Data received: ${binLookupData.brands.joinToString(",") { it.brand }}")
+        Log.d(TAG, "Bin Lookup Data received: $binLookupData")
     }
 
     private suspend fun onSubmit(data: PaymentComponentData<*>): SubmitResult {

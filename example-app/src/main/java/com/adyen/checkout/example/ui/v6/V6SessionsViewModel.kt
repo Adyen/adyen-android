@@ -16,6 +16,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.card.card
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutController
@@ -93,6 +95,14 @@ internal class V6SessionsViewModel @Inject constructor(
         }
     }
 
+    private fun onBinValue(binValue: String) {
+        Log.d(TAG, "Bin value received: $binValue")
+    }
+
+    private fun onBinLookup(binLookupData: BinLookupData) {
+        Log.d(TAG, "Bin Lookup Data received: $binLookupData")
+    }
+
     private fun onError(error: CheckoutError) {
         Log.d(TAG, "onError: ${error.message}")
     }
@@ -130,7 +140,12 @@ internal class V6SessionsViewModel @Inject constructor(
             callbacks = SessionCheckoutCallbacks(
                 onError = ::onError,
                 onFinished = ::onFinished,
-            ),
+            ) {
+                card(
+                    onBinValue = ::onBinValue,
+                    onBinLookup = ::onBinLookup,
+                )
+            },
             coroutineScope = viewModelScope,
         )
     }
