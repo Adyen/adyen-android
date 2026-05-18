@@ -30,6 +30,7 @@ android {
 
 dependencies {
     api project(':checkout-core')
+    api project(':core')
 
     implementation(libs.google.pay.play.services.wallet)
 }
