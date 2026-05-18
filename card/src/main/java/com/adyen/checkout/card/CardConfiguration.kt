@@ -56,7 +56,3 @@ fun CheckoutConfiguration.card(
     addConfiguration(PaymentMethodTypes.SCHEME, config)
     return this
 }
-
-internal fun CheckoutConfiguration.getCardConfiguration(): CardConfiguration? {
-    return getConfiguration(PaymentMethodTypes.SCHEME)
-}

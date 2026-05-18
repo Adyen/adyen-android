@@ -31,7 +31,6 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
-import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.threeds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.threeds2.internal.data.api.SubmitFingerprintRepository
@@ -77,6 +76,7 @@ internal class ThreeDS2Component(
     private val paymentDataRepository: PaymentDataRepository,
     private val coroutineDispatcher: CoroutineDispatcher,
     private val application: Application,
+    private val clientKey: String,
 ) : ActionComponent, ChallengeStatusHandler, SavedStateHandleContainer {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
@@ -291,7 +291,7 @@ internal class ThreeDS2Component(
             throw RuntimeException("JSON parsing of FingerprintToken failed", e)
         }
 
-        return FingerprintToken.Companion.SERIALIZER.deserialize(fingerprintJson)
+        return FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
     }
 
     @Suppress("DestructuringDeclarationWithTooManyEntries")
@@ -334,7 +334,7 @@ internal class ThreeDS2Component(
         val event = ThreeDS2Events.threeDS2Fingerprint(
             subType = ThreeDS2Events.SubType.FINGERPRINT_DATA_SENT,
         )
-        analyticsManager?.trackEvent(event)
+        analyticsManager.trackEvent(event)
 
         return try {
             adyenLog(AdyenLogLevel.DEBUG) { "create transaction" }
@@ -403,9 +403,9 @@ internal class ThreeDS2Component(
         encodedFingerprint: String,
     ) {
         submitFingerprintRepository.submitFingerprint(
-            encodedFingerprint,
-            componentParams.clientKey,
-            paymentDataRepository.paymentData,
+            encodedFingerprint = encodedFingerprint,
+            clientKey = clientKey,
+            paymentData = paymentDataRepository.paymentData,
         )
             .fold(
                 onSuccess = { result -> onSubmitFingerprintResult(result, activity) },
@@ -450,7 +450,7 @@ internal class ThreeDS2Component(
             subType = ThreeDS2Events.SubType.FINGERPRINT_COMPLETED,
             result = result,
         )
-        analyticsManager?.trackEvent(event)
+        analyticsManager.trackEvent(event)
     }
 
     @OptIn(ExperimentalEncodingApi::class)
@@ -483,9 +483,9 @@ internal class ThreeDS2Component(
         val challengeSentEvent = ThreeDS2Events.threeDS2Challenge(
             subType = ThreeDS2Events.SubType.CHALLENGE_DATA_SENT,
         )
-        analyticsManager?.trackEvent(challengeSentEvent)
+        analyticsManager.trackEvent(challengeSentEvent)
 
-        val challengeToken = ChallengeToken.Companion.SERIALIZER.deserialize(challengeTokenJson)
+        val challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson)
         val challengeParameters = createChallengeParameters(challengeToken)
         try {
             currentTransaction?.doChallenge(
@@ -498,7 +498,7 @@ internal class ThreeDS2Component(
             val challengeDisplayedEvent = ThreeDS2Events.threeDS2Challenge(
                 subType = ThreeDS2Events.SubType.CHALLENGE_DISPLAYED,
             )
-            analyticsManager?.trackEvent(challengeDisplayedEvent)
+            analyticsManager.trackEvent(challengeDisplayedEvent)
         } catch (e: InvalidInputException) {
             trackChallengeErrorEvent(
                 errorEvent = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
@@ -532,7 +532,7 @@ internal class ThreeDS2Component(
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
             redirectHandler.launchUriRedirect(activity, url.orEmpty())
-        } catch (e: CheckoutException) {
+        } catch (e: InternalCheckoutError) {
             emitError(
                 GenericError(
                     message = e.message ?: "Redirect failed",
@@ -689,7 +689,7 @@ internal class ThreeDS2Component(
         @Suppress("SwallowedException")
         try {
             threeDS2Service.cleanup(application)
-        } catch (e: SDKNotInitializedException) {
+        } catch (_: SDKNotInitializedException) {
             // Safe to ignore
         }
     }

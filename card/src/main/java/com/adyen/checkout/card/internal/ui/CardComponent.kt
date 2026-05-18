@@ -68,6 +68,7 @@ internal class CardComponent(
     private val sdkDataProvider: SdkDataProvider,
     private val onBinValueCallback: OnBinValueCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
+    private val publicKey: String?,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -106,6 +107,7 @@ internal class CardComponent(
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
+                publicKey = publicKey,
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,

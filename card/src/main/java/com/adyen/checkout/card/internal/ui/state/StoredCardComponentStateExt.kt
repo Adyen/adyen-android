@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -24,15 +23,17 @@ import com.adyen.threeds2.ThreeDS2Service
 
 @Suppress("ReturnCount", "LongParameterList")
 internal fun StoredCardComponentState.toPaymentComponentState(
-    componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
     sdkDataProvider: SdkDataProvider,
     storedPaymentMethodId: String?,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
+    publicKey: String?,
 ): CardPaymentComponentState {
-    val publicKey = componentParams.publicKey(onPublicKeyNotFound = onPublicKeyNotFound)
-        ?: return invalidCardPaymentComponentState()
+    publicKey ?: run {
+        onPublicKeyNotFound(GenericError("Public key is missing."))
+        return invalidCardPaymentComponentState()
+    }
 
     val encryptedCard = encryptCard(
         cardEncryptor = cardEncryptor,
@@ -89,13 +90,6 @@ private fun createPaymentComponentState(
         data = paymentComponentData,
         isValid = true,
     )
-}
-
-private fun CardComponentParams.publicKey(onPublicKeyNotFound: (InternalCheckoutError) -> Unit): String? {
-    return publicKey ?: run {
-        onPublicKeyNotFound(GenericError("Public key is missing."))
-        null
-    }
 }
 
 private fun createCardDetails(

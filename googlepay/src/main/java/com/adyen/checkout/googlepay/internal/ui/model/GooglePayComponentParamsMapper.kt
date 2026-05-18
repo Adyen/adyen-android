@@ -8,13 +8,13 @@
 
 package com.adyen.checkout.googlepay.internal.ui.model
 
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutCurrency
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
@@ -24,38 +24,36 @@ import com.google.android.gms.wallet.WalletConstants
 internal class GooglePayComponentParamsMapper {
 
     fun mapToParams(
-        componentParamsBundle: ComponentParamsBundle,
-        googlePayConfiguration: GooglePayConfiguration,
-        paymentMethod: PaymentMethod,
+        params: CheckoutParams,
+        paymentMethod: GooglePayPaymentMethod,
     ): GooglePayComponentParams {
+        val googlePayConfiguration = params.getPaymentConfiguration<GooglePayConfiguration>(paymentMethod.type)
         // TODO - Pass isCreatedByDropIn
-        val commonComponentParams = componentParamsBundle.commonComponentParams
         return GooglePayComponentParams(
-            commonComponentParams = commonComponentParams,
-            amount = commonComponentParams.amount ?: DEFAULT_AMOUNT,
+            amount = params.amount ?: DEFAULT_AMOUNT,
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
             allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
             googlePayEnvironment = getGooglePayEnvironment(
-                commonComponentParams.environment,
-                googlePayConfiguration
+                params.environment,
+                googlePayConfiguration,
             ),
-            totalPriceStatus = googlePayConfiguration.totalPriceStatus
+            totalPriceStatus = googlePayConfiguration?.totalPriceStatus
                 ?: DEFAULT_TOTAL_PRICE_STATUS,
-            countryCode = googlePayConfiguration.countryCode,
-            merchantInfo = googlePayConfiguration.merchantInfo,
-            isAllowPrepaidCards = googlePayConfiguration.isAllowPrepaidCards ?: false,
-            isAllowCreditCards = googlePayConfiguration.isAllowCreditCards,
-            isAssuranceDetailsRequired = googlePayConfiguration.isAssuranceDetailsRequired,
-            isEmailRequired = googlePayConfiguration.isEmailRequired ?: false,
-            isExistingPaymentMethodRequired = googlePayConfiguration.isExistingPaymentMethodRequired
+            countryCode = googlePayConfiguration?.countryCode,
+            merchantInfo = googlePayConfiguration?.merchantInfo,
+            isAllowPrepaidCards = googlePayConfiguration?.isAllowPrepaidCards ?: false,
+            isAllowCreditCards = googlePayConfiguration?.isAllowCreditCards,
+            isAssuranceDetailsRequired = googlePayConfiguration?.isAssuranceDetailsRequired,
+            isEmailRequired = googlePayConfiguration?.isEmailRequired ?: false,
+            isExistingPaymentMethodRequired = googlePayConfiguration?.isExistingPaymentMethodRequired
                 ?: false,
-            isShippingAddressRequired = googlePayConfiguration.isShippingAddressRequired ?: false,
-            shippingAddressParameters = googlePayConfiguration.shippingAddressParameters,
-            isBillingAddressRequired = googlePayConfiguration.isBillingAddressRequired ?: false,
-            billingAddressParameters = googlePayConfiguration.billingAddressParameters,
-            checkoutOption = googlePayConfiguration.checkoutOption,
-            googlePayButtonStyling = googlePayConfiguration.googlePayButtonStyling,
+            isShippingAddressRequired = googlePayConfiguration?.isShippingAddressRequired ?: false,
+            shippingAddressParameters = googlePayConfiguration?.shippingAddressParameters,
+            isBillingAddressRequired = googlePayConfiguration?.isBillingAddressRequired ?: false,
+            billingAddressParameters = googlePayConfiguration?.billingAddressParameters,
+            checkoutOption = googlePayConfiguration?.checkoutOption,
+            googlePayButtonStyling = googlePayConfiguration?.googlePayButtonStyling,
         )
     }
 
@@ -64,7 +62,7 @@ internal class GooglePayComponentParamsMapper {
      * paymentMethod.configuration.gatewayMerchantId field returned by the API.
      */
     private fun GooglePayConfiguration?.getPreferredGatewayMerchantId(
-        paymentMethod: PaymentMethod,
+        paymentMethod: GooglePayPaymentMethod,
     ): String {
         // TODO - Error propagation - Update the code
         return this?.merchantAccount
@@ -81,15 +79,14 @@ internal class GooglePayComponentParamsMapper {
     }
 
     private fun GooglePayConfiguration?.getAvailableCardNetworks(
-        paymentMethod: PaymentMethod
+        paymentMethod: GooglePayPaymentMethod,
     ): List<String> {
         return this?.allowedCardNetworks
-            ?: getAvailableCardNetworksFromApi(paymentMethod)
-            ?: AllowedCardNetworks.allAllowedCardNetworks
+            ?: getAvailableCardNetworksFromApi(paymentMethod).ifEmpty { AllowedCardNetworks.allAllowedCardNetworks }
     }
 
-    private fun getAvailableCardNetworksFromApi(paymentMethod: PaymentMethod): List<String>? {
-        val brands = paymentMethod.brands ?: return null
+    private fun getAvailableCardNetworksFromApi(paymentMethod: GooglePayPaymentMethod): List<String> {
+        val brands = paymentMethod.brands
         return brands.mapNotNull { brand ->
             val network = mapBrandToGooglePayNetwork(brand)
             if (network == null) {
@@ -109,10 +106,10 @@ internal class GooglePayComponentParamsMapper {
 
     private fun getGooglePayEnvironment(
         environment: Environment,
-        googlePayConfiguration: GooglePayConfiguration,
+        googlePayConfiguration: GooglePayConfiguration?,
     ): Int {
         return when {
-            googlePayConfiguration.googlePayEnvironment != null -> googlePayConfiguration.googlePayEnvironment
+            googlePayConfiguration?.googlePayEnvironment != null -> googlePayConfiguration.googlePayEnvironment
             environment == Environment.TEST -> WalletConstants.ENVIRONMENT_TEST
             else -> WalletConstants.ENVIRONMENT_PRODUCTION
         }

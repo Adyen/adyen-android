@@ -9,27 +9,27 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import java.util.Locale
 
 internal class MBWayComponentStateFactory(
-    private val componentParams: ComponentParams,
+    private val shopperLocale: Locale,
 ) : ComponentStateFactory<MBWayComponentState> {
 
     override fun createInitialState() = MBWayComponentState(
-        countries = getSupportedCountries(componentParams),
-        selectedCountryCode = getInitiallySelectedCountry(componentParams),
+        countries = getSupportedCountries(shopperLocale),
+        selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
         phoneNumber = TextInputComponentState(isFocused = true),
         isLoading = false,
     )
 
-    private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =
-        CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
+    private fun getSupportedCountries(shopperLocale: Locale): List<CountryModel> =
+        CountryUtils.getLocalizedCountries(shopperLocale, SUPPORTED_COUNTRIES)
 
-    private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
-        val countries = getSupportedCountries(componentParams)
+    private fun getInitiallySelectedCountry(shopperLocale: Locale): CountryModel {
+        val countries = getSupportedCountries(shopperLocale)
         return countries.first { it.isoCode == ISO_CODE_PORTUGAL }
     }
 

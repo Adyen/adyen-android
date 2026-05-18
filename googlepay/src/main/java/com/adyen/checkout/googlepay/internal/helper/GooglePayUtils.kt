@@ -186,12 +186,15 @@ internal object GooglePayUtils {
         )
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun MerchantInfo?.addSoftwareInfo(params: GooglePayComponentParams): MerchantInfo {
-        val integrationType = if (params.isCreatedByDropIn) {
-            IntegrationType.DROP_IN
-        } else {
-            IntegrationType.COMPONENTS
-        }
+        val integrationType = IntegrationType.COMPONENTS
+        // TODO - Use this logic once the isCreatedByDropIn flag is available
+//        if (params.isCreatedByDropIn) {
+//            IntegrationType.DROP_IN
+//        } else {
+//            IntegrationType.COMPONENTS
+//        }
         val platform = CheckoutPlatformParams.platform.toGooglePayPlatform()
         val softwareInfo = SoftwareInfo(
             id = "${platform.value}/${integrationType.value}",

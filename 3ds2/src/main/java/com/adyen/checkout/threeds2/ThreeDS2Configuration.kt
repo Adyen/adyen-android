@@ -31,7 +31,3 @@ fun CheckoutConfiguration.threeDS2(
     addActionConfiguration(config)
     return this
 }
-
-internal fun CheckoutConfiguration.get3DS2Configuration(): ThreeDS2Configuration? {
-    return getActionConfiguration(ThreeDS2Configuration::class.java)
-}

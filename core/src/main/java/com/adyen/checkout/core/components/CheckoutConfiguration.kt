@@ -106,16 +106,8 @@ class CheckoutConfiguration(
         availableConfigurations[configuration::class.java.name] = configuration
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun <T : Configuration> getConfiguration(key: String): T? {
-        @Suppress("UNCHECKED_CAST")
-        return availableConfigurations[key] as? T
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun <T : Configuration> getActionConfiguration(configClass: Class<T>): T? {
-        @Suppress("UNCHECKED_CAST")
-        return availableConfigurations[configClass.name] as? T
+    internal fun getAvailableConfigurations(): Map<String, Configuration> {
+        return availableConfigurations
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
