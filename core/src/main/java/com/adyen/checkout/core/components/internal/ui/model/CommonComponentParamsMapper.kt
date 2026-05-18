@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import java.util.Locale
 
@@ -30,7 +31,7 @@ class CommonComponentParamsMapper {
             environment = sessionParams?.environment ?: checkoutConfiguration.environment,
             clientKey = sessionParams?.clientKey ?: checkoutConfiguration.clientKey,
             analyticsParams = AnalyticsParams(
-                analyticsConfiguration = checkoutConfiguration.analyticsConfiguration,
+                level = AnalyticsParamsLevel.ALL,
             ),
             isCreatedByDropIn = dropInOverrideParams != null,
             amount = sessionParams?.amount

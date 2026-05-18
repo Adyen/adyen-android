@@ -9,29 +9,14 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.AnalyticsConfiguration
-import com.adyen.checkout.core.components.AnalyticsLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsParams(
     val level: AnalyticsParamsLevel,
-) {
-
-    constructor(
-        analyticsConfiguration: AnalyticsConfiguration?,
-    ) : this(level = getLevel(analyticsConfiguration))
-}
+)
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class AnalyticsParamsLevel(val priority: Int) {
     INITIAL(1),
     ALL(2),
-}
-
-private fun getLevel(analyticsConfiguration: AnalyticsConfiguration?): AnalyticsParamsLevel {
-    return when (analyticsConfiguration?.level) {
-        null -> AnalyticsParamsLevel.ALL // default is ALL
-        AnalyticsLevel.ALL -> AnalyticsParamsLevel.ALL
-        AnalyticsLevel.NONE -> AnalyticsParamsLevel.INITIAL
-    }
 }
