@@ -6,8 +6,9 @@
  * Created by oscars on 13/2/2025.
  */
 
-package com.adyen.checkout.card.scanning
+package com.adyen.checkout.card.scanning.old
 
+@Deprecated("Use the v6 card scanning API instead.")
 data class AdyenCardScannerResult(
     val pan: String?,
     val expiryMonth: Int?,
