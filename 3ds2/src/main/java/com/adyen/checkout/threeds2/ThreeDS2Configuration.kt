@@ -8,37 +8,26 @@
 
 package com.adyen.checkout.threeds2
 
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
 import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-internal class ThreeDS2Configuration(
-    val uiCustomization: UiCustomization?,
+internal class ThreeDS2Configuration internal constructor(
     val threeDSRequestorAppURL: String?,
+    val uiCustomization: UiCustomization?,
 ) : Configuration
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ThreeDS2ConfigurationBuilder internal constructor() {
-
-    var uiCustomization: UiCustomization? = null
-    var threeDSRequestorAppURL: String? = null
-
-    internal fun build() = ThreeDS2Configuration(
-        uiCustomization = uiCustomization,
-        threeDSRequestorAppURL = threeDSRequestorAppURL,
-    )
-}
-
+@JvmOverloads
 fun CheckoutConfiguration.threeDS2(
-    configuration: @CheckoutConfigurationMarker ThreeDS2ConfigurationBuilder.() -> Unit = {}
+    threeDSRequestorAppURL: String? = null,
+    uiCustomization: UiCustomization? = null,
 ): CheckoutConfiguration {
-    val config = ThreeDS2ConfigurationBuilder()
-        .apply(configuration)
-        .build()
+    val config = ThreeDS2Configuration(
+        threeDSRequestorAppURL = threeDSRequestorAppURL,
+        uiCustomization = uiCustomization,
+    )
     addActionConfiguration(config)
     return this
 }

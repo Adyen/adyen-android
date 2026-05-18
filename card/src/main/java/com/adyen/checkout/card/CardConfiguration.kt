@@ -8,59 +8,51 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Suppress("LongParameterList")
-class CardConfiguration(
+class CardConfiguration internal constructor(
+    val billingAddressMode: BillingAddressMode?,
+    val koreanAuthenticationVisibility: FieldVisibility?,
     val showCardholderName: Boolean?,
-    val supportedCardBrands: List<CardBrand>?,
-    val showStorePaymentMethod: Boolean?,
     val showSecurityCode: Boolean?,
     val showSecurityCodeForStoredCard: Boolean?,
+    val showStorePaymentMethod: Boolean?,
     val showSupportedCardBrandLogos: Boolean?,
     val socialSecurityNumberVisibility: FieldVisibility?,
-    val koreanAuthenticationVisibility: FieldVisibility?,
-    val billingAddressMode: BillingAddressMode?,
+    val supportedCardBrands: List<CardBrand>?,
     // TODO - Card. Installments
 ) : Configuration
 
-class CardConfigurationBuilder internal constructor() {
-
-    var showCardholderName: Boolean? = null
-    var supportedCardBrands: List<CardBrand>? = null
-    var showStorePaymentMethod: Boolean? = null
-    var showSecurityCode: Boolean? = null
-    var showSecurityCodeForStoredCard: Boolean? = null
-    var showSupportedCardBrandLogos: Boolean? = null
-    var socialSecurityNumberVisibility: FieldVisibility? = null
-    var koreanAuthenticationVisibility: FieldVisibility? = null
-    var billingAddressMode: BillingAddressMode? = null
-
-    internal fun build() = CardConfiguration(
+@Suppress("LongParameterList")
+@JvmOverloads
+fun CheckoutConfiguration.card(
+    billingAddressMode: BillingAddressMode? = null,
+    koreanAuthenticationVisibility: FieldVisibility? = null,
+    showCardholderName: Boolean? = null,
+    showSecurityCode: Boolean? = null,
+    showSecurityCodeForStoredCard: Boolean? = null,
+    showStorePaymentMethod: Boolean? = null,
+    showSupportedCardBrandLogos: Boolean? = null,
+    socialSecurityNumberVisibility: FieldVisibility? = null,
+    supportedCardBrands: List<CardBrand>? = null,
+): CheckoutConfiguration {
+    val config = CardConfiguration(
+        billingAddressMode = billingAddressMode,
+        koreanAuthenticationVisibility = koreanAuthenticationVisibility,
         showCardholderName = showCardholderName,
-        supportedCardBrands = supportedCardBrands,
-        showStorePaymentMethod = showStorePaymentMethod,
         showSecurityCode = showSecurityCode,
         showSecurityCodeForStoredCard = showSecurityCodeForStoredCard,
+        showStorePaymentMethod = showStorePaymentMethod,
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
-        koreanAuthenticationVisibility = koreanAuthenticationVisibility,
-        billingAddressMode = billingAddressMode,
+        supportedCardBrands = supportedCardBrands,
     )
-}
-
-fun CheckoutConfiguration.card(
-    configuration: @CheckoutConfigurationMarker CardConfigurationBuilder.() -> Unit = {},
-): CheckoutConfiguration {
-    val config = CardConfigurationBuilder()
-        .apply(configuration)
-        .build()
     addConfiguration(PaymentMethodTypes.SCHEME, config)
     return this
 }

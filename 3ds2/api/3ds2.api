@@ -7,8 +7,10 @@ public final class com/adyen/checkout/adyen3ds2/BuildConfig {
 }
 
 public final class com/adyen/checkout/threeds2/ThreeDS2ConfigurationKt {
-	public static final fun threeDS2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static synthetic fun threeDS2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun threeDS2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun threeDS2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun threeDS2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;Lcom/adyen/threeds2/customization/UiCustomization;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun threeDS2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;Lcom/adyen/threeds2/customization/UiCustomization;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
 public final class com/adyen/checkout/threeds2/old/Adyen3DS2Component : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
