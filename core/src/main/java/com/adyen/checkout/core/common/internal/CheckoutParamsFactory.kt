@@ -43,6 +43,7 @@ internal class CheckoutParamsFactory(
             amount = session?.sessionSetupResponse?.amount ?: configuration.amount,
             showSubmitButton = configuration.showSubmitButton ?: true,
             publicKey = publicKey,
+            additionalConfigurations = configuration.getAvailableConfigurations(),
             additionalSessionParams = session?.createAdditionalSessionParams(),
         )
     }

@@ -40,6 +40,7 @@ import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -79,6 +80,7 @@ internal class CardComponent(
     private val onBinValueCallback: OnBinValueCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
     private val cardScannerWrapper: CardScannerWrapper,
+    private val checkoutParams: CheckoutParams,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -133,6 +135,7 @@ internal class CardComponent(
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
+                publicKey = checkoutParams.publicKey,
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
@@ -213,7 +216,7 @@ internal class CardComponent(
         coroutineScope.launch {
             val isAvailable = cardScannerWrapper.initialize(
                 context = context,
-                environment = componentParams.environment,
+                environment = checkoutParams.environment,
             )
             onIntent(CardIntent.UpdateCardScanningAvailability(isAvailable))
             val event = if (isAvailable) {

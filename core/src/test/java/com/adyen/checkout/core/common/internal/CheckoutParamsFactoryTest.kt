@@ -334,6 +334,7 @@ internal class CheckoutParamsFactoryTest {
         }
     }
 
+    @Suppress("LongParameterList")
     private fun createConfiguration(
         environment: Environment = Environment.TEST,
         clientKey: String = "test_qwertyuiopasdfgh",
@@ -350,6 +351,7 @@ internal class CheckoutParamsFactoryTest {
         showSubmitButton = showSubmitButton,
     )
 
+    @Suppress("LongParameterList")
     private fun createSession(
         environment: Environment = Environment.LIVE_EUROPE,
         clientKey: String = "live_qwertyuiopasdfgh",

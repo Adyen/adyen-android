@@ -13,6 +13,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -26,11 +27,10 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymen
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.components.internal.ui.model.generateComponentParamsBundle
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -47,6 +47,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class FullCheckoutFlowTest {
 
@@ -132,8 +133,7 @@ internal class FullCheckoutFlowTest {
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = TestAnalyticsManager(),
-            checkoutConfiguration = createCheckoutConfiguration(),
-            componentParamsBundle = generateComponentParamsBundle(),
+            params = generateCheckoutParams(),
             actionHandler = actionHandler,
         )
     }
@@ -146,8 +146,7 @@ internal class FullCheckoutFlowTest {
                     paymentMethod: com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod,
                     coroutineScope: CoroutineScope,
                     analyticsManager: AnalyticsManager,
-                    checkoutConfiguration: CheckoutConfiguration,
-                    componentParamsBundle: ComponentParamsBundle,
+                    params: CheckoutParams,
                     additionalCallbacks: Set<CheckoutAdditionalCallback>,
                 ) = component
             },
@@ -171,6 +170,18 @@ internal class FullCheckoutFlowTest {
         environment = Environment.TEST,
         clientKey = "test_qwertyuiopasdfgh",
         shopperLocale = Locale.US,
+    )
+
+    private fun generateCheckoutParams() = CheckoutParams(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = "test_qwertyuiopasdfgh",
+        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        amount = null,
+        showSubmitButton = true,
+        publicKey = "test_publicKey",
+        additionalConfigurations = emptyMap(),
+        additionalSessionParams = null,
     )
 
     private fun createPaymentComponentState(): PaymentComponentState<PaymentMethodDetails> {

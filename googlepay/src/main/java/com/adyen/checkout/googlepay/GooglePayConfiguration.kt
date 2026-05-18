@@ -94,9 +94,3 @@ fun CheckoutConfiguration.googlePay(
     }
     return this
 }
-
-internal fun CheckoutConfiguration.getGooglePayConfiguration(): GooglePayConfiguration? {
-    return GooglePayComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
-        getConfiguration<GooglePayConfiguration>(key)
-    }
-}
