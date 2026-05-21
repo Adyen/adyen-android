@@ -9,15 +9,11 @@
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
-import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.named
-import org.gradle.kotlin.dsl.register
 import org.jetbrains.dokka.gradle.DokkaExtension
 import org.jetbrains.dokka.gradle.engine.plugins.DokkaHtmlPluginParameters
-import org.jetbrains.dokka.gradle.tasks.DokkaGeneratePublicationTask
 import java.time.Year
 
 class DokkaConventionPlugin : Plugin<Project> {
@@ -27,18 +23,21 @@ class DokkaConventionPlugin : Plugin<Project> {
             apply(plugin = "org.jetbrains.dokka")
             apply(plugin = "org.jetbrains.dokka-javadoc")
 
+            val projectName = name
+            val mainSourceDir = file("src/main/java")
+
             extensions.configure<DokkaExtension> {
-                moduleName = project.name
+                moduleName = projectName
 
                 dokkaPublications.configureEach {
                     suppressInheritedMembers = true
                     failOnWarning = true
                 }
 
-                dokkaSourceSets.named("main") {
+                dokkaSourceSets.configureEach {
                     sourceLink {
-                        localDirectory = file("src/main/java")
-                        remoteUrl("https://github.com/Adyen/adyen-android/tree/main/${project.name}/src/main/java")
+                        localDirectory = mainSourceDir
+                        remoteUrl("https://github.com/Adyen/adyen-android/tree/main/$projectName/src/main/java")
                         remoteLineSuffix = "#L"
                     }
                 }
@@ -46,14 +45,6 @@ class DokkaConventionPlugin : Plugin<Project> {
                 (pluginsConfiguration as ExtensionAware).extensions.configure<DokkaHtmlPluginParameters>("html") {
                     footerMessage = "Copyright (c) ${Year.now()} Adyen N.V."
                 }
-            }
-
-            tasks.register<Jar>("dokkaJavadocJar") {
-                from(
-                    tasks.named<DokkaGeneratePublicationTask>("dokkaGeneratePublicationJavadoc")
-                        .flatMap { it.outputDirectory },
-                )
-                archiveClassifier = "javadoc"
             }
         }
     }
