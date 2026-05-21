@@ -31,6 +31,7 @@ internal data class CardComponentState(
     val supportedCardBrands: List<CardBrand>,
     val showSupportedCardBrandLogos: Boolean,
     val isLoading: Boolean,
+    val isCardScanningAvailable: Boolean,
 
     // Component state
     val cardBrandState: CardBrandState,

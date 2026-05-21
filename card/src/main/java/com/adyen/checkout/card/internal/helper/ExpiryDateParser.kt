@@ -18,6 +18,7 @@ internal object ExpiryDateParser {
     private val MONTH_FORMATTER = DateUtils.getFormatter("MM")
     private val SHORT_YEAR_FORMATTER = DateUtils.getFormatter("yy")
     private val FULL_YEAR_FORMATTER = DateUtils.getFormatter("yyyy")
+    private const val YEAR_MODULUS = 100
 
     /**
      * Parses digit only input into a pair of expiryMonth and expiryYear
@@ -36,6 +37,17 @@ internal object ExpiryDateParser {
         return date?.let {
             getMonthAndYear(date, returnFullYear)
         }
+    }
+
+    /**
+     * Formats month and year integers into a digit-only MMyy string.
+     * Returns an empty string if either value is null.
+     */
+    fun formatToMMyy(month: Int?, year: Int?): String {
+        if (month == null || year == null) return ""
+        val monthStr = month.toString().padStart(2, '0')
+        val yearStr = (year % YEAR_MODULUS).toString().padStart(2, '0')
+        return "$monthStr$yearStr"
     }
 
     private fun getMonthAndYear(date: Date, returnFullYear: Boolean): Pair<String, String> {
