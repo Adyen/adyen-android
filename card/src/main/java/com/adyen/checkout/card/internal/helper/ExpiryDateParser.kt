@@ -54,6 +54,4 @@ internal object ExpiryDateParser {
         val yearFormatter = if (returnFullYear) FULL_YEAR_FORMATTER else SHORT_YEAR_FORMATTER
         return MONTH_FORMATTER.format(date) to yearFormatter.format(date)
     }
-
-    private const val YEAR_MODULUS = 100
 }
