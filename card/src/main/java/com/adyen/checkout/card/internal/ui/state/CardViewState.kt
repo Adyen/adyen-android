@@ -29,6 +29,7 @@ internal data class CardViewState(
     val isSupportedCardBrandsShown: Boolean,
     val detectedCardBrands: List<CardBrand>,
     val isLoading: Boolean,
+    val isCardScanButtonVisible: Boolean,
     val dualBrandData: DualBrandData?,
 ) : ViewState
 

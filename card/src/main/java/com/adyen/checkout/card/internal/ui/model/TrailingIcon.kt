@@ -12,6 +12,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 
 internal sealed class CardNumberTrailingIcon : TrailingIcon() {
     data object BrandLogos : CardNumberTrailingIcon()
+    data object ScanButton : CardNumberTrailingIcon()
     data object Warning : CardNumberTrailingIcon()
 }
 

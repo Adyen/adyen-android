@@ -39,10 +39,11 @@ internal class CardViewStateProducer(
         }
 
         val detectedCardBrands = getDetectedCardBrands(state.cardBrandState)
+        val isCardScanButtonVisible = state.isCardScanningAvailable && state.cardNumber.text.isEmpty()
 
         return CardViewState(
             cardNumber = state.cardNumber.toViewState(
-                trailingIcon = getCardNumberTrailingIcon(state.cardNumber),
+                trailingIcon = getCardNumberTrailingIcon(state.cardNumber, isCardScanButtonVisible),
             ),
             expiryDate = state.expiryDate.toViewState(
                 trailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
@@ -63,6 +64,7 @@ internal class CardViewStateProducer(
             isSupportedCardBrandsShown = isSupportedCardBrandsShown,
             detectedCardBrands = detectedCardBrands,
             isLoading = state.isLoading,
+            isCardScanButtonVisible = isCardScanButtonVisible,
             dualBrandData = dualBrandData,
         )
     }
@@ -79,10 +81,14 @@ internal class CardViewStateProducer(
         }
     }
 
-    private fun getCardNumberTrailingIcon(cardNumber: TextInputComponentState): CardNumberTrailingIcon {
+    private fun getCardNumberTrailingIcon(
+        cardNumber: TextInputComponentState,
+        isCardScanButtonVisible: Boolean,
+    ): CardNumberTrailingIcon {
         val isInvalid = cardNumber.errorMessage != null && cardNumber.showError
         return when {
             isInvalid -> CardNumberTrailingIcon.Warning
+            isCardScanButtonVisible -> CardNumberTrailingIcon.ScanButton
             else -> CardNumberTrailingIcon.BrandLogos
         }
     }
