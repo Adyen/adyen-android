@@ -299,6 +299,7 @@ internal class CardViewStateProducerTest {
         supportedCardBrands = emptyList(),
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         isLoading = false,
+        isCardScanningAvailable = false,
         cardBrandState = cardBrandState,
     )
 

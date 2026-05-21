@@ -61,4 +61,46 @@ internal class ExpiryDateParserTest {
         val result = ExpiryDateParser.parseToMonthAndYear("1212", true)
         assertEquals("12" to "2012", result)
     }
+
+    @Test
+    fun `when formatting valid month and year then return MMyy string`() {
+        val result = ExpiryDateParser.formatToMMyy(3, 2026)
+        assertEquals("0326", result)
+    }
+
+    @Test
+    fun `when formatting single digit month then it is zero padded`() {
+        val result = ExpiryDateParser.formatToMMyy(1, 2030)
+        assertEquals("0130", result)
+    }
+
+    @Test
+    fun `when formatting double digit month then it is not padded`() {
+        val result = ExpiryDateParser.formatToMMyy(12, 2025)
+        assertEquals("1225", result)
+    }
+
+    @Test
+    fun `when formatting with two digit year then it is used directly`() {
+        val result = ExpiryDateParser.formatToMMyy(6, 30)
+        assertEquals("0630", result)
+    }
+
+    @Test
+    fun `when month is null then return empty string`() {
+        val result = ExpiryDateParser.formatToMMyy(null, 2026)
+        assertEquals("", result)
+    }
+
+    @Test
+    fun `when year is null then return empty string`() {
+        val result = ExpiryDateParser.formatToMMyy(3, null)
+        assertEquals("", result)
+    }
+
+    @Test
+    fun `when both month and year are null then return empty string`() {
+        val result = ExpiryDateParser.formatToMMyy(null, null)
+        assertEquals("", result)
+    }
 }
