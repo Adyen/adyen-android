@@ -177,6 +177,7 @@ private fun CardComponentPreview() {
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             isLoading = false,
+            isCardScanButtonVisible = false,
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
             dualBrandData = null,
         ),

@@ -255,6 +255,7 @@ internal class CardComponentStateReducerTest {
         supportedCardBrands = emptyList(),
         showSupportedCardBrandLogos = true,
         isLoading = false,
+        isCardScanningAvailable = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
     )
 }

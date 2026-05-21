@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
 
 internal class CardComponentStateReducer(
@@ -95,6 +96,17 @@ internal class CardComponentStateReducer(
 
             is CardIntent.UpdateLoading -> state.copy(
                 isLoading = intent.isLoading,
+            )
+
+            is CardIntent.UpdateCardScanningAvailability -> state.copy(
+                isCardScanningAvailable = intent.isAvailable,
+            )
+
+            is CardIntent.UpdateCardScanResult -> state.copy(
+                cardNumber = state.cardNumber.updateText(intent.pan.orEmpty()),
+                expiryDate = state.expiryDate.updateText(
+                    ExpiryDateParser.formatToMMyy(intent.expiryMonth, intent.expiryYear),
+                ),
             )
 
             is CardIntent.HighlightValidationErrors -> highlightValidationErrors(state)

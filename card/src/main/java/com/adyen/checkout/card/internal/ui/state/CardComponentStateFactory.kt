@@ -65,6 +65,7 @@ internal class CardComponentStateFactory(
             supportedCardBrands = componentParams.supportedCardBrands,
             showSupportedCardBrandLogos = componentParams.showSupportedCardBrandLogos,
             isLoading = false,
+            isCardScanningAvailable = false,
             cardBrandState = CardBrandState.NoBrandsDetected,
         )
     }
