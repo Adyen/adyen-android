@@ -28,6 +28,7 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
+import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
@@ -109,6 +110,7 @@ internal class CardFactory :
             paymentMethodType = paymentMethodType,
             onBinValueCallback = additionalCallbacks.getAdditionalCallback<OnBinValueCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
+            cardScannerWrapper = CardScannerWrapper(),
         )
     }
 
