@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -56,6 +57,7 @@ internal fun CardNumberField(
     isAmex: Boolean?,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onScanButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -67,6 +69,7 @@ internal fun CardNumberField(
             detectedCardBrands = detectedCardBrands,
             onValueChange = onValueChange,
             onFocusChange = onFocusChange,
+            onScanButtonClick = onScanButtonClick,
         )
 
         CardBrandsList(
@@ -83,6 +86,7 @@ private fun CardNumberInputField(
     detectedCardBrands: List<CardBrand>,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onScanButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextCardNumber = cardNumberState.supportingText?.let { resolveString(it) }
@@ -112,7 +116,11 @@ private fun CardNumberInputField(
         outputTransformation = outputTransformation,
         shouldFocus = cardNumberState.isFocused,
         trailingIcon = {
-            CardNumberFieldIcon(state = cardNumberState, detectedBrands = detectedCardBrands)
+            CardNumberFieldIcon(
+                state = cardNumberState,
+                detectedBrands = detectedCardBrands,
+                onScanButtonClick = onScanButtonClick,
+            )
         },
     )
 }
@@ -181,6 +189,7 @@ private fun CardBrandsList(
 private fun CardNumberFieldIcon(
     state: TextInputViewState,
     detectedBrands: List<CardBrand>,
+    onScanButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon
@@ -192,6 +201,17 @@ private fun CardNumberFieldIcon(
                 contentDescription = null,
                 tint = Color.Unspecified,
             )
+
+            CardNumberTrailingIcon.ScanButton -> IconButton(
+                onClick = onScanButtonClick,
+                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                )
+            }
 
             else -> DetectedBrandsList(detectedBrands)
         }
@@ -206,6 +226,24 @@ private fun CardNumberFieldPreview(
     CheckoutThemeWrapper(theme) {
         CardNumberField(
             cardNumberState = TextInputViewState(
+                text = "",
+                trailingIcon = CardNumberTrailingIcon.ScanButton,
+            ),
+            supportedCardBrands = listOf(
+                CardBrand(CardType.MASTERCARD.txVariant),
+                CardBrand(CardType.VISA.txVariant),
+                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            ),
+            isSupportedCardBrandsShown = true,
+            detectedCardBrands = emptyList(),
+            isAmex = false,
+            onValueChange = {},
+            onFocusChange = {},
+            onScanButtonClick = {},
+        )
+
+        CardNumberField(
+            cardNumberState = TextInputViewState(
                 text = "5555444433331111",
             ),
             supportedCardBrands = listOf(
@@ -218,6 +256,7 @@ private fun CardNumberFieldPreview(
             isAmex = false,
             onValueChange = {},
             onFocusChange = {},
+            onScanButtonClick = {},
         )
 
         CardNumberField(
@@ -233,6 +272,7 @@ private fun CardNumberFieldPreview(
             isAmex = true,
             onValueChange = {},
             onFocusChange = {},
+            onScanButtonClick = {},
         )
     }
 }
