@@ -12,9 +12,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
@@ -102,11 +108,27 @@ internal class CardComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
+        val context = LocalContext.current
+        LaunchedEffect(Unit) {
+            initializeCardScanner(context)
+        }
+
+        val scannerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartIntentSenderForResult(),
+        ) { result ->
+            onCardScannerResult(result.resultCode, result.data)
+            // Re-initialize to get a fresh PendingIntent, as Google's PaymentCardRecognitionPendingIntent is single-use
+            initializeCardScanner(context)
+        }
+
         val viewState by viewState.collectAsStateWithLifecycle()
         CardComponent(
             viewState = viewState,
             onIntent = ::handleIntent,
             onSubmitClick = ::submit,
+            onScanButtonClick = {
+                onScanButtonClick(scannerLauncher)
+            },
             modifier = modifier,
         )
     }
@@ -136,6 +158,16 @@ internal class CardComponent(
     override fun onCleared() {
         cardScannerWrapper.terminate()
         analyticsManager.clear(this)
+    }
+
+    private fun onScanButtonClick(scannerLauncher: ActivityResultLauncher<IntentSenderRequest>) {
+        val intentSender = getCardScannerIntentSender() ?: run {
+            onCardScannerPresented(didDisplay = false)
+            return
+        }
+        val request = IntentSenderRequest.Builder(intentSender).build()
+        scannerLauncher.launch(request)
+        onCardScannerPresented(didDisplay = true)
     }
 
     fun getCardScannerIntentSender(): IntentSender? {

@@ -21,7 +21,7 @@ internal class CardScannerWrapper {
     private var controller: CardScannerController? = null
 
     suspend fun initialize(context: Context, environment: Environment): Boolean {
-        controller = runCompileOnly { CardScannerInitializer.initialize(context, environment) }.getOrNull()
+        runCompileOnly { controller = CardScannerInitializer.initialize(context, environment) }
         return controller != null
     }
 
