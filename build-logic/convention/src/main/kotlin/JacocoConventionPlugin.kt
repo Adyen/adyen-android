@@ -9,10 +9,10 @@
 import com.adyen.checkout.coverageExclusions
 import com.adyen.checkout.libs
 import com.android.build.api.artifact.ScopedArtifact
+import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.api.variant.ScopedArtifacts
 import com.android.build.api.variant.SourceDirectories
-import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
@@ -45,7 +45,7 @@ class JacocoConventionPlugin : Plugin<Project> {
             }
 
             extensions.getByType<LibraryAndroidComponentsExtension>().onVariants { variant ->
-                val objFactory = project.objects
+                val objFactory = objects
                 val allJars: ListProperty<RegularFile> = objFactory.listProperty(RegularFile::class.java)
                 val allDirectories: ListProperty<Directory> = objFactory.listProperty(Directory::class.java)
 
@@ -70,7 +70,6 @@ class JacocoConventionPlugin : Plugin<Project> {
 
                     val javaSources = variant.sources.java.toFilePaths()
 
-                    @Suppress("UnstableApiUsage")
                     val kotlinSources = variant.sources.kotlin.toFilePaths()
                     sourceDirectories.setFrom(files(javaSources, kotlinSources))
 
@@ -103,7 +102,9 @@ class JacocoConventionPlugin : Plugin<Project> {
             tasks.withType<Test>().configureEach {
                 configure<JacocoTaskExtension> {
                     isIncludeNoLocationClasses = true
-                    excludes = excludes.orEmpty() + coverageExclusions
+                    // Only jdk.internal.* is needed here to fix a JaCoCo/JDK compatibility issue.
+                    // Other exclusions are already applied via classDirectories file tree filtering.
+                    excludes = excludes.orEmpty() + listOf("jdk.internal.*")
                 }
             }
         }

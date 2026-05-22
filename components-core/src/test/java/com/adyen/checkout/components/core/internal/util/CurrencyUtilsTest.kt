@@ -37,7 +37,7 @@ internal class CurrencyUtilsTest {
 
         val formattedAmount = CurrencyUtils.formatAmount(amount, locale)
 
-        assertEquals("ل.ل.\u200F ١٠٠٫٥٠", formattedAmount)
+        assertEquals("\u200F١٠٠٫٥٠ ل.ل.\u200F", formattedAmount)
     }
 
     @Test

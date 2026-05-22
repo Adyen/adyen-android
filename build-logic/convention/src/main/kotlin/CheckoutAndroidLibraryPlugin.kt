@@ -19,7 +19,6 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.library")
-            apply(plugin = "org.jetbrains.kotlin.android")
             apply(plugin = "checkout.dependency.list.generate")
             apply(plugin = "checkout.detekt")
             apply(plugin = "checkout.dokka")

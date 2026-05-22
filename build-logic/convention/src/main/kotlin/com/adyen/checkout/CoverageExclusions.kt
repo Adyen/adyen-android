@@ -70,9 +70,6 @@ val coverageExclusions = listOf(
     "**/*Test.*",
     "**/Test*.*",
 
-    // Fix issue with JaCoCo on JDK
-    "jdk.internal.*",
-
     // Custom views not following *View naming
     "**/AddressFormInput*.*",
     "**/AdyenSwipeToRevealLayout*.*",
