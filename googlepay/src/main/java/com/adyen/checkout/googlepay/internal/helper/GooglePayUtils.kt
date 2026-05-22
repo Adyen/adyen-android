@@ -160,7 +160,7 @@ internal object GooglePayUtils {
             sdkData = sdkData,
             googlePayToken = googlePayToken,
             googlePayCardNetwork = googlePayCardNetwork,
-            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull()
         )
     }
 

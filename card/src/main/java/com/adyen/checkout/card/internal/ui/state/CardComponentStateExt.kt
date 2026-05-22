@@ -134,7 +134,7 @@ private fun createCardDetails(
 ) = CardDetails(
     type = CardDetails.PAYMENT_METHOD_TYPE,
     sdkData = sdkDataProvider.createEncodedSdkData(
-        threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+        threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull(),
     ),
     encryptedCardNumber = encryptedCard.encryptedCardNumber,
     encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
