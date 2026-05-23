@@ -12,6 +12,7 @@ import android.os.Build
 import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -50,7 +51,7 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when created by drop in, then flavor should be dropin`() {
-        val analyticsSetupProvider = createAnalyticsSetupProvider(isCreatedByDropIn = true)
+        val analyticsSetupProvider = createAnalyticsSetupProvider(integrationType = IntegrationType.DROP_IN)
 
         val result = analyticsSetupProvider.provide()
 
@@ -59,7 +60,7 @@ internal class DefaultAnalyticsSetupProviderTest {
 
     @Test
     fun `when not created by drop in, then flavor should be components`() {
-        val analyticsSetupProvider = createAnalyticsSetupProvider(isCreatedByDropIn = false)
+        val analyticsSetupProvider = createAnalyticsSetupProvider(integrationType = IntegrationType.COMPONENTS)
 
         val result = analyticsSetupProvider.provide()
 
@@ -105,7 +106,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Suppress("LongParameterList")
     private fun createAnalyticsSetupProvider(
         shopperLocale: Locale = Locale.US,
-        isCreatedByDropIn: Boolean = false,
+        integrationType: IntegrationType = IntegrationType.COMPONENTS,
         analyticsLevel: AnalyticsParamsLevel = AnalyticsParamsLevel.INITIAL,
         packageName: String = "com.adyen.checkout",
         screenWidth: Int = 420,
@@ -115,7 +116,7 @@ internal class DefaultAnalyticsSetupProviderTest {
         checkoutAttemptId: String? = "checkoutAttemptId",
     ) = DefaultAnalyticsSetupProvider(
         shopperLocale = shopperLocale,
-        isCreatedByDropIn = isCreatedByDropIn,
+        integrationType = integrationType,
         analyticsLevel = analyticsLevel,
         packageName = packageName,
         screenWidth = screenWidth,

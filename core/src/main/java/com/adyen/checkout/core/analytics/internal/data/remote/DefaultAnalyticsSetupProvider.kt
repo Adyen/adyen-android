@@ -12,6 +12,7 @@ import android.os.Build
 import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import java.util.Locale
@@ -19,7 +20,7 @@ import java.util.Locale
 @Suppress("LongParameterList")
 internal class DefaultAnalyticsSetupProvider(
     private val shopperLocale: Locale,
-    private val isCreatedByDropIn: Boolean,
+    private val integrationType: IntegrationType,
     private val analyticsLevel: AnalyticsParamsLevel,
     private val packageName: String,
     private val screenWidth: Int,
@@ -36,7 +37,7 @@ internal class DefaultAnalyticsSetupProvider(
             platform = AnalyticsPlatformParams.platform,
             locale = shopperLocale.toLanguageTag(),
             component = getComponentQueryParameter(source),
-            flavor = getFlavorQueryParameter(isCreatedByDropIn),
+            flavor = getFlavorQueryParameter(integrationType),
             level = getLevelQueryParameter(analyticsLevel),
             deviceBrand = Build.BRAND,
             deviceModel = Build.MODEL,
@@ -52,10 +53,9 @@ internal class DefaultAnalyticsSetupProvider(
         )
     }
 
-    private fun getFlavorQueryParameter(isCreatedByDropIn: Boolean) = if (isCreatedByDropIn) {
-        DROP_IN
-    } else {
-        COMPONENTS
+    private fun getFlavorQueryParameter(integrationType: IntegrationType) = when (integrationType) {
+        IntegrationType.COMPONENTS -> COMPONENTS
+        IntegrationType.DROP_IN -> DROP_IN
     }
 
     private fun getComponentQueryParameter(source: AnalyticsSource) = when (source) {

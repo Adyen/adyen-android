@@ -18,6 +18,7 @@ import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSe
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParams
@@ -36,8 +37,7 @@ internal class AnalyticsManagerFactory {
         environment = params.environment,
         clientKey = params.clientKey,
         analyticsParams = params.analyticsParams,
-        // TODO - Figure out how drop-in should work with analytics
-        isCreatedByDropIn = false,
+        integrationType = params.integrationType,
         amount = params.amount,
         source = source,
         sessionId = sessionId,
@@ -50,7 +50,7 @@ internal class AnalyticsManagerFactory {
         environment: Environment,
         clientKey: String,
         analyticsParams: AnalyticsParams,
-        isCreatedByDropIn: Boolean,
+        integrationType: IntegrationType,
         amount: Amount?,
         source: AnalyticsSource,
         sessionId: String?,
@@ -74,7 +74,7 @@ internal class AnalyticsManagerFactory {
                 ),
                 analyticsSetupProvider = DefaultAnalyticsSetupProvider(
                     shopperLocale = shopperLocale,
-                    isCreatedByDropIn = isCreatedByDropIn,
+                    integrationType = integrationType,
                     analyticsLevel = analyticsParams.level,
                     packageName = applicationContext.packageName,
                     screenWidth = applicationContext.resources.displayMetrics.widthPixels,
