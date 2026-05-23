@@ -9,6 +9,8 @@ package com.adyen.checkout.googlepay.internal.helper
 
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.helper.runCompileOnly
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.common.internal.helper.AmountFormat
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
@@ -89,15 +91,11 @@ internal object GooglePayUtils {
         return IsReadyToPayRequest.fromJson(requestJsonString)
     }
 
-    /**
-     * Create a [PaymentDataRequest] based on the component configuration that can be used to start the Google Pay
-     * payment.
-     *
-     * @param params The parameters based on the Google Pay component configuration.
-     * @return The PaymentDataRequest to start the Google Pay payment flow.
-     */
-    fun createPaymentDataRequest(params: GooglePayComponentParams): PaymentDataRequest {
-        val paymentDataRequestModel = createPaymentDataRequestModel(params)
+    fun createPaymentDataRequest(
+        checkoutParams: CheckoutParams,
+        componentParams: GooglePayComponentParams
+    ): PaymentDataRequest {
+        val paymentDataRequestModel = createPaymentDataRequestModel(checkoutParams, componentParams)
         val requestJsonString = PaymentDataRequestModel.SERIALIZER.serialize(paymentDataRequestModel).toString()
         return PaymentDataRequest.fromJson(requestJsonString)
     }
@@ -160,7 +158,7 @@ internal object GooglePayUtils {
             sdkData = sdkData,
             googlePayToken = googlePayToken,
             googlePayCardNetwork = googlePayCardNetwork,
-            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
         )
     }
 
@@ -173,31 +171,31 @@ internal object GooglePayUtils {
         )
     }
 
-    private fun createPaymentDataRequestModel(params: GooglePayComponentParams): PaymentDataRequestModel {
+    private fun createPaymentDataRequestModel(
+        checkoutParams: CheckoutParams,
+        componentParams: GooglePayComponentParams,
+    ): PaymentDataRequestModel {
         return PaymentDataRequestModel(
             apiVersion = MAJOR_API_VERSION,
             apiVersionMinor = MINOT_API_VERSION,
-            merchantInfo = params.merchantInfo.addSoftwareInfo(params),
-            transactionInfo = createTransactionInfo(params),
-            allowedPaymentMethods = getAllowedPaymentMethods(params),
-            isEmailRequired = params.isEmailRequired,
-            isShippingAddressRequired = params.isShippingAddressRequired,
-            shippingAddressParameters = params.shippingAddressParameters,
+            merchantInfo = componentParams.merchantInfo.addSoftwareInfo(checkoutParams),
+            transactionInfo = createTransactionInfo(componentParams),
+            allowedPaymentMethods = getAllowedPaymentMethods(componentParams),
+            isEmailRequired = componentParams.isEmailRequired,
+            isShippingAddressRequired = componentParams.isShippingAddressRequired,
+            shippingAddressParameters = componentParams.shippingAddressParameters,
         )
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun MerchantInfo?.addSoftwareInfo(params: GooglePayComponentParams): MerchantInfo {
-        val integrationType = IntegrationType.COMPONENTS
-        // TODO - Use this logic once the isCreatedByDropIn flag is available
-//        if (params.isCreatedByDropIn) {
-//            IntegrationType.DROP_IN
-//        } else {
-//            IntegrationType.COMPONENTS
-//        }
+    private fun MerchantInfo?.addSoftwareInfo(params: CheckoutParams): MerchantInfo {
+        val integrationType = when (params.integrationType) {
+            IntegrationType.COMPONENTS -> "adyen-components"
+            IntegrationType.DROP_IN -> "adyen-dropin"
+        }
         val platform = CheckoutPlatformParams.platform.toGooglePayPlatform()
         val softwareInfo = SoftwareInfo(
-            id = "${platform.value}/${integrationType.value}",
+            id = "${platform.value}/$integrationType",
             version = CheckoutPlatformParams.version,
         )
         return this?.copy(softwareInfo = softwareInfo) ?: MerchantInfo(softwareInfo = softwareInfo)
@@ -264,11 +262,6 @@ internal object GooglePayUtils {
             checkoutOption = params.checkoutOption,
             totalPrice = displayAmount,
         )
-    }
-
-    private enum class IntegrationType(val value: String) {
-        DROP_IN("adyen-dropin"),
-        COMPONENTS("adyen-components"),
     }
 
     private enum class GooglePayPlatform(val value: String) {
