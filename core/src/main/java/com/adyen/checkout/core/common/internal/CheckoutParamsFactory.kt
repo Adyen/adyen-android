@@ -32,6 +32,7 @@ internal class CheckoutParamsFactory(
         configuration: CheckoutConfiguration,
         session: CheckoutSession?,
         publicKey: String?,
+        integrationType: IntegrationType,
     ): CheckoutParams {
         return CheckoutParams(
             shopperLocale = configuration.shopperLocale ?: session?.getShopperLocale() ?: deviceLocaleProvider(),
@@ -43,6 +44,7 @@ internal class CheckoutParamsFactory(
             amount = session?.sessionSetupResponse?.amount ?: configuration.amount,
             showSubmitButton = configuration.showSubmitButton ?: true,
             publicKey = publicKey,
+            integrationType = integrationType,
             additionalConfigurations = configuration.getAvailableConfigurations(),
             additionalSessionParams = session?.createAdditionalSessionParams(),
         )

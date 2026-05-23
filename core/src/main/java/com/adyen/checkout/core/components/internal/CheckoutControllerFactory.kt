@@ -14,6 +14,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -35,6 +36,7 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext,
         callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
+        integrationType: IntegrationType,
     ): CheckoutController {
         val checkoutConfiguration: CheckoutConfiguration
         val checkoutAttemptId: String?
@@ -61,6 +63,7 @@ internal class CheckoutControllerFactory {
             configuration = checkoutConfiguration,
             session = session,
             publicKey = publicKey,
+            integrationType = integrationType,
         )
 
         val analyticsManager = createAnalyticsManager(

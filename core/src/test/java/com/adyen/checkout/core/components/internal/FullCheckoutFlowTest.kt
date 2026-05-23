@@ -14,6 +14,7 @@ import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -180,6 +181,7 @@ internal class FullCheckoutFlowTest {
         amount = null,
         showSubmitButton = true,
         publicKey = "test_publicKey",
+        integrationType = IntegrationType.COMPONENTS,
         additionalConfigurations = emptyMap(),
         additionalSessionParams = null,
     )

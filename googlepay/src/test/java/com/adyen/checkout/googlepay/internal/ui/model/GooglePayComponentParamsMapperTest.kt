@@ -11,6 +11,7 @@ package com.adyen.checkout.googlepay.internal.ui.model
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.LoggingExtension
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.Configuration
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
@@ -341,6 +342,7 @@ internal class GooglePayComponentParamsMapperTest {
         amount = amount,
         showSubmitButton = showSubmitButton,
         publicKey = publicKey,
+        integrationType = IntegrationType.COMPONENTS,
         additionalConfigurations = mapOf(PaymentMethodTypes.GOOGLE_PAY to configuration),
         additionalSessionParams = null,
     )

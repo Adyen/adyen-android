@@ -15,6 +15,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import kotlinx.coroutines.CoroutineScope
@@ -158,6 +159,7 @@ internal class ActionComponentProviderTest {
         amount = null,
         showSubmitButton = true,
         publicKey = "test_publicKey",
+        integrationType = IntegrationType.COMPONENTS,
         additionalConfigurations = emptyMap(),
         additionalSessionParams = null,
     )

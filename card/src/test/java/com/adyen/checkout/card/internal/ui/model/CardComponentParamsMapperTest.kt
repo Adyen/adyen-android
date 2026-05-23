@@ -16,6 +16,7 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
@@ -367,6 +368,7 @@ internal class CardComponentParamsMapperTest {
         amount = null,
         showSubmitButton = true,
         publicKey = "test_publicKey",
+        integrationType = IntegrationType.COMPONENTS,
         additionalConfigurations = buildMap {
             cardConfiguration?.let { this[PaymentMethodTypes.SCHEME] = it }
         },

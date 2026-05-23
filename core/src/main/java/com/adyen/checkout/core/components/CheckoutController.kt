@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.internal.IntegrationType
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.internal.CheckoutFlow
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -27,6 +28,7 @@ fun CheckoutController(
         context = context,
         callbacks = callbacks,
         coroutineScope = coroutineScope,
+        integrationType = IntegrationType.COMPONENTS,
     )
 }
 
@@ -41,6 +43,7 @@ fun CheckoutController(
         context = context,
         callbacks = callbacks,
         coroutineScope = coroutineScope,
+        integrationType = IntegrationType.COMPONENTS,
     )
 }
 
