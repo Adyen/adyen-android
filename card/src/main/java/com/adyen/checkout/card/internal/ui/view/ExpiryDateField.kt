@@ -31,6 +31,7 @@ import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -69,7 +70,7 @@ internal fun ExpiryDateField(
                 onFocusChange(focusState.isFocused)
             },
         label = resolveString(key = CheckoutLocalizationKey.CARD_EXPIRY_DATE) + labelSuffix,
-        initialValue = expiryDateState.text,
+        state = rememberTextFieldStateWithCurrentValue(expiryDateState.text),
         isError = expiryDateState.isError,
         supportingText = supportingTextExpiryDate,
         onValueChange = onValueChange,

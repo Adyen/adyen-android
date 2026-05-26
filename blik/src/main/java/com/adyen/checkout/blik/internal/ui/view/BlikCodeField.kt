@@ -25,6 +25,7 @@ import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -54,7 +55,7 @@ internal fun BlikCodeField(
                 onFocusChange(focusState.hasFocus)
             },
         label = resolveString(CheckoutLocalizationKey.BLIK_CODE),
-        initialValue = blikCodeState.text,
+        state = rememberTextFieldStateWithCurrentValue(blikCodeState.text),
         isError = blikCodeState.isError,
         supportingText = supportingText,
         onValueChange = onValueChange,
