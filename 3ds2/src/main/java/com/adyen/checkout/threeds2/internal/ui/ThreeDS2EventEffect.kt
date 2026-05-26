@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.threeds2.internal.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,9 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import kotlinx.coroutines.flow.Flow
 
-@SuppressLint("ComposableNaming")
 @Composable
-internal fun threeDsEvent(
+internal fun ThreeDS2EventEffect(
     handleAction: (Context) -> Unit,
     viewEventFlow: Flow<ThreeDS2Event>,
     onError: (InternalCheckoutError) -> Unit,
