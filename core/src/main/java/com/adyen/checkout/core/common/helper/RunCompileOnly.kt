@@ -13,14 +13,14 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-inline fun <R : Any> runCompileOnly(block: () -> R): R? {
+inline fun <R> runCompileOnly(block: () -> R): CompileOnlyResult<R> {
     try {
-        return block()
+        return CompileOnlyResult.Available(block())
     } catch (e: ClassNotFoundException) {
         adyenLog(AdyenLogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
     } catch (e: NoClassDefFoundError) {
         adyenLog(AdyenLogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
     }
 
-    return null
+    return CompileOnlyResult.Unavailable
 }
