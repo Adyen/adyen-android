@@ -87,6 +87,31 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
                 inputClassesDirs.from(tasks.named("compileReleaseJavaWithJavac").map { it.outputs.files })
                 outputApiFile.set(layout.buildDirectory.file("$apiDirName/$dumpFileName"))
                 runtimeClasspath.from(configurations.named("bcv-rt-jvm-cp-resolver"))
+
+                // Strip Compose-generated ComposableSingletons classes from the API dump.
+                // These are compiler-generated, not real public API, and their names are unstable
+                // (they change between KGP and AGP 9 built-in Kotlin compilation).
+                doLast {
+                    val apiFile = outputApiFile.get().asFile
+                    if (!apiFile.exists()) return@doLast
+                    val lines = apiFile.readLines()
+                    val result = StringBuilder()
+                    var skip = false
+                    for (line in lines) {
+                        if (!skip && line.contains("class ") && line.contains("ComposableSingletons$")) {
+                            skip = true
+                            continue
+                        }
+                        if (skip) {
+                            if (line == "}") {
+                                skip = false
+                            }
+                            continue
+                        }
+                        result.append(line).append('\n')
+                    }
+                    apiFile.writeText(result.toString().replace(Regex("\n{3,}"), "\n\n"))
+                }
             }
 
             val apiCheck = tasks.register<KotlinApiCompareTask>("apiCheck") {
