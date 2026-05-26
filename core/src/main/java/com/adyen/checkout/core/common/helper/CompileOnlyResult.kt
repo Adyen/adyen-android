@@ -12,7 +12,11 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed interface CompileOnlyResult<out R> {
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class Available<R>(val value: R) : CompileOnlyResult<R>
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data object Unavailable : CompileOnlyResult<Nothing>
 
     fun getOrNull(): R? = when (this) {
