@@ -11,21 +11,23 @@ package com.adyen.checkout.threeds2.internal.ui
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import kotlinx.coroutines.flow.Flow
 
 @Composable
 internal fun ThreeDS2EventEffect(
     handleAction: (Context) -> Unit,
     viewEventFlow: Flow<ThreeDS2Event>,
-    onError: (InternalCheckoutError) -> Unit,
 ) {
+    val currentHandleAction by rememberUpdatedState(handleAction)
     val context = LocalContext.current
-    LaunchedEffect(handleAction, viewEventFlow, onError) {
+
+    LaunchedEffect(viewEventFlow) {
         viewEventFlow.collect { event ->
             when (event) {
-                is ThreeDS2Event.HandleAction -> handleAction(context)
+                is ThreeDS2Event.HandleAction -> currentHandleAction(context)
             }
         }
     }

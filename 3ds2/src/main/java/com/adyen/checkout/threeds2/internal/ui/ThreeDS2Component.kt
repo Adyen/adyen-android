@@ -95,7 +95,6 @@ internal class ThreeDS2Component(
         ThreeDS2EventEffect(
             handleAction = ::handleAction,
             viewEventFlow = threeDsEventFlow,
-            onError = ::emitError,
         )
     }
 
