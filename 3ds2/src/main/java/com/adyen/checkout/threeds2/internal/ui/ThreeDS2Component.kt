@@ -92,7 +92,7 @@ internal class ThreeDS2Component(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        threeDsEvent(
+        ThreeDS2EventEffect(
             handleAction = ::handleAction,
             viewEventFlow = threeDsEventFlow,
             onError = ::emitError,
