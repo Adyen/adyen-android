@@ -52,7 +52,7 @@ fun CheckoutController(
     coroutineScope: CoroutineScope,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
-        target = CheckoutTarget.Action(action),
+        action = action,
         context = context,
         callbacks = callbacks,
         coroutineScope = coroutineScope,

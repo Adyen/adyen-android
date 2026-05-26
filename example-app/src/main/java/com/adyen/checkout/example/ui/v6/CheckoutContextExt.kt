@@ -25,6 +25,7 @@ internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
         is CheckoutContext.Advanced -> this.paymentMethods.paymentMethods
         is CheckoutContext.Sessions ->
             this.checkoutSession.sessionSetupResponse.paymentMethods?.paymentMethods
+        is CheckoutContext.ActionOnly -> error("Unsupported context: $this")
     }
 
     return paymentMethods

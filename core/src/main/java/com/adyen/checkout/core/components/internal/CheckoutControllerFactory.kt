@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
@@ -15,16 +16,13 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.components.ActionOnlyCheckoutCallbacks
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
-import com.adyen.checkout.core.components.CheckoutCallbacks
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
-import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
-import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import kotlinx.coroutines.CoroutineScope
 
 internal class CheckoutControllerFactory {
@@ -32,38 +30,62 @@ internal class CheckoutControllerFactory {
     @Suppress("LongMethod")
     fun create(
         target: CheckoutTarget,
-        context: CheckoutContext,
-        callbacks: CheckoutCallbacks,
+        context: CheckoutContext.Advanced,
+        callbacks: AdvancedCheckoutCallbacks,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
-        val checkoutConfiguration: CheckoutConfiguration
-        val checkoutAttemptId: String?
-        val publicKey: String?
-        val session: CheckoutSession?
+        val checkoutConfiguration = context.checkoutConfiguration
+        val checkoutAttemptId = context.checkoutAttemptId
+        val publicKey = context.publicKey
 
-        when (context) {
-            is CheckoutContext.Advanced -> {
-                checkoutConfiguration = context.checkoutConfiguration
-                checkoutAttemptId = context.checkoutAttemptId
-                publicKey = context.publicKey
-                session = null
-            }
+        val checkoutParams = CheckoutParamsFactory().create(
+            configuration = checkoutConfiguration,
+            session = null,
+            publicKey = publicKey,
+        )
 
-            is CheckoutContext.Sessions -> {
-                checkoutConfiguration = context.checkoutConfiguration
-                checkoutAttemptId = context.checkoutAttemptId
-                publicKey = context.publicKey
-                session = context.checkoutSession
-            }
+        val analyticsManager = createAnalyticsManager(
+            params = checkoutParams,
+            sessionId = null,
+            checkoutAttemptId = checkoutAttemptId,
+        )
 
-            is CheckoutContext.ActionOnly -> {
-                checkoutConfiguration = context.checkoutConfiguration
-                checkoutAttemptId = context.checkoutAttemptId
-                publicKey = context.publicKey
-                componentSessionParams = null
-                sessionSetup = null
-            }
-        }
+        val componentRequestDispatcher = AdvancedComponentRequestDispatcher(callbacks)
+
+        val actionHandler = createActionHandler(
+            componentRequestDispatcher = componentRequestDispatcher,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            params = checkoutParams,
+        )
+
+        val flow = FullCheckoutFlow(
+            target = target,
+            context = context,
+            callbacks = callbacks,
+            componentRequestDispatcher = componentRequestDispatcher,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            params = checkoutParams,
+            actionHandler = actionHandler,
+        )
+
+        return CheckoutController(
+            flow = flow,
+        )
+    }
+
+    @Suppress("LongMethod")
+    fun create(
+        target: CheckoutTarget,
+        context: CheckoutContext.Sessions,
+        callbacks: SessionCheckoutCallbacks,
+        coroutineScope: CoroutineScope,
+    ): CheckoutController {
+        val checkoutConfiguration = context.checkoutConfiguration
+        val checkoutAttemptId = context.checkoutAttemptId
+        val publicKey = context.publicKey
+        val session = context.checkoutSession
 
         val checkoutParams = CheckoutParamsFactory().create(
             configuration = checkoutConfiguration,
@@ -73,14 +95,18 @@ internal class CheckoutControllerFactory {
 
         val analyticsManager = createAnalyticsManager(
             params = checkoutParams,
-            sessionId = session?.sessionSetupResponse?.id,
+            sessionId = session.sessionSetupResponse.id,
             checkoutAttemptId = checkoutAttemptId,
         )
 
-        val componentRequestDispatcher = createComponentRequestDispatcher(
+        val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
+        val sessionService = SessionService(httpClient)
+        val sessionRepository = SessionRepository(sessionService, checkoutConfiguration.clientKey)
+        val componentRequestDispatcher = SessionComponentRequestDispatcher(
+            initialSessionData = session.sessionSetupResponse.sessionData,
+            sessionId = session.sessionSetupResponse.id,
             callbacks = callbacks,
-            sessionSetup = session?.sessionSetupResponse,
-            params = checkoutParams,
+            sessionRepository = sessionRepository,
         )
 
         val actionHandler = createActionHandler(
@@ -90,7 +116,7 @@ internal class CheckoutControllerFactory {
             params = checkoutParams,
         )
 
-        val flow = createFlow(
+        val flow = FullCheckoutFlow(
             target = target,
             context = context,
             callbacks = callbacks,
@@ -98,6 +124,47 @@ internal class CheckoutControllerFactory {
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
+            actionHandler = actionHandler,
+        )
+
+        return CheckoutController(
+            flow = flow,
+        )
+    }
+
+    fun create(
+        action: Action,
+        context: CheckoutContext.ActionOnly,
+        callbacks: ActionOnlyCheckoutCallbacks,
+        coroutineScope: CoroutineScope,
+    ): CheckoutController {
+        val checkoutConfiguration = context.checkoutConfiguration
+        val checkoutAttemptId = context.checkoutAttemptId
+        val publicKey = context.publicKey
+
+        val checkoutParams = CheckoutParamsFactory().create(
+            configuration = checkoutConfiguration,
+            session = null,
+            publicKey = publicKey,
+        )
+
+        val analyticsManager = createAnalyticsManager(
+            params = checkoutParams,
+            sessionId = null,
+            checkoutAttemptId = checkoutAttemptId,
+        )
+
+        val componentRequestDispatcher = ActionOnlyComponentRequestDispatcher(callbacks)
+
+        val actionHandler = createActionHandler(
+            componentRequestDispatcher = componentRequestDispatcher,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            params = checkoutParams,
+        )
+
+        val flow = ActionOnlyCheckoutFlow(
+            action = action,
             actionHandler = actionHandler,
         )
 
@@ -118,33 +185,6 @@ internal class CheckoutControllerFactory {
         checkoutAttemptId = checkoutAttemptId,
     )
 
-    private fun createComponentRequestDispatcher(
-        callbacks: CheckoutCallbacks,
-        sessionSetup: SessionSetupResponse?,
-        params: CheckoutParams,
-    ): ComponentRequestDispatcher {
-        return when (callbacks) {
-            is AdvancedCheckoutCallbacks -> {
-                AdvancedComponentRequestDispatcher(callbacks)
-            }
-
-            is SessionCheckoutCallbacks -> {
-                requireNotNull(sessionSetup)
-                val httpClient = HttpClientFactory.getHttpClient(params.environment)
-                val sessionService = SessionService(httpClient)
-                val sessionRepository = SessionRepository(sessionService, params.clientKey)
-                SessionComponentRequestDispatcher(
-                    initialSessionData = sessionSetup.sessionData,
-                    sessionId = sessionSetup.id,
-                    callbacks = callbacks,
-                    sessionRepository = sessionRepository,
-                )
-            }
-
-            else -> error("Unsupported callbacks: $callbacks")
-        }
-    }
-
     private fun createActionHandler(
         componentRequestDispatcher: ComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
@@ -156,35 +196,4 @@ internal class CheckoutControllerFactory {
         analyticsManager = analyticsManager,
         params = params,
     )
-
-    @Suppress("LongParameterList")
-    private fun createFlow(
-        target: CheckoutTarget,
-        context: CheckoutContext,
-        callbacks: CheckoutCallbacks,
-        componentRequestDispatcher: ComponentRequestDispatcher,
-        coroutineScope: CoroutineScope,
-        analyticsManager: AnalyticsManager,
-        params: CheckoutParams,
-        actionHandler: ActionHandler,
-    ): CheckoutFlow = when (target) {
-        is CheckoutTarget.PaymentMethod,
-        is CheckoutTarget.StoredPaymentMethod -> FullCheckoutFlow(
-            target = target,
-            context = context,
-            callbacks = callbacks,
-            componentRequestDispatcher = componentRequestDispatcher,
-            coroutineScope = coroutineScope,
-            analyticsManager = analyticsManager,
-            params = params,
-            actionHandler = actionHandler,
-        )
-
-        is CheckoutTarget.Action -> ActionOnlyCheckoutFlow(
-            action = target.action,
-            actionHandler = actionHandler,
-        )
-
-        else -> error("Unsupported target: $target")
-    }
 }

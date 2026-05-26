@@ -17,7 +17,7 @@ import com.adyen.checkout.core.error.CheckoutError
 
 internal class AdvancedComponentRequestDispatcher(
     private val callbacks: AdvancedCheckoutCallbacks,
-) : ComponentRequestDispatcher {
+) : SubmittableComponentRequestDispatcher {
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
         return callbacks.onSubmit(data)

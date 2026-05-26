@@ -33,7 +33,7 @@ internal class FullCheckoutFlow(
     target: CheckoutTarget,
     context: CheckoutContext,
     callbacks: CheckoutCallbacks,
-    componentRequestDispatcher: ComponentRequestDispatcher,
+    componentRequestDispatcher: SubmittableComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
     analyticsManager: AnalyticsManager,
     params: CheckoutParams,

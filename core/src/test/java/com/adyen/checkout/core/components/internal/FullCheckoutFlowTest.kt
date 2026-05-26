@@ -54,7 +54,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class FullCheckoutFlowTest(
-    @param:Mock private val componentRequestDispatcher: ComponentRequestDispatcher,
+    @param:Mock private val componentRequestDispatcher: SubmittableComponentRequestDispatcher,
     @param:Mock private val actionHandler: ActionHandler,
 ) {
 
