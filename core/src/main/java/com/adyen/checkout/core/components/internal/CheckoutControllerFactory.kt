@@ -55,6 +55,14 @@ internal class CheckoutControllerFactory {
                 publicKey = context.publicKey
                 session = context.checkoutSession
             }
+
+            is CheckoutContext.ActionOnly -> {
+                checkoutConfiguration = context.checkoutConfiguration
+                checkoutAttemptId = context.checkoutAttemptId
+                publicKey = context.publicKey
+                componentSessionParams = null
+                sessionSetup = null
+            }
         }
 
         val checkoutParams = CheckoutParamsFactory().create(

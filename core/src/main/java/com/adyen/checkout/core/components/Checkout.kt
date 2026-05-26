@@ -72,6 +72,27 @@ object Checkout {
         )
     }
 
+    suspend fun setup(
+        configuration: CheckoutConfiguration,
+    ): Result<CheckoutContext.ActionOnly> {
+        configuration.validate()?.let { error ->
+            return Result.Error(error)
+        }
+
+        val initializationData = CheckoutInitializer.initialize(
+            checkoutConfiguration = configuration,
+            sessionResponse = null,
+        )
+
+        return Result.Success(
+            CheckoutContext.ActionOnly(
+                checkoutConfiguration = configuration,
+                checkoutAttemptId = initializationData.checkoutAttemptId,
+                publicKey = initializationData.publicKey,
+            ),
+        )
+    }
+
     sealed interface Result<T : CheckoutContext> {
         data class Success<T : CheckoutContext>(val checkoutContext: T) : Result<T>
         data class Error<T : CheckoutContext>(val error: CheckoutError) : Result<T>

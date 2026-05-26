@@ -165,6 +165,7 @@ internal class FullCheckoutFlow(
         return when (this) {
             is CheckoutContext.Advanced -> paymentMethods
             is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods
+            is CheckoutContext.ActionOnly -> error("Unsupported context: $this")
         }
     }
 }

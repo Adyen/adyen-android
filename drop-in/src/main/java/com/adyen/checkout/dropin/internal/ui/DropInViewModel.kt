@@ -59,6 +59,7 @@ internal class DropInViewModel(
         val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethods
             is CheckoutContext.Advanced -> context.paymentMethods
+            is CheckoutContext.ActionOnly -> error("Unsupported context: $context")
         }
 
         if (paymentMethods == null) {
@@ -100,6 +101,7 @@ internal class DropInViewModel(
         return when (this) {
             is CheckoutContext.Sessions -> checkoutConfiguration
             is CheckoutContext.Advanced -> checkoutConfiguration
+            is CheckoutContext.ActionOnly -> error("Unsupported context: $this")
         }
     }
 

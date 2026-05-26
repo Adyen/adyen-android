@@ -32,4 +32,11 @@ sealed interface CheckoutContext : Parcelable {
         internal val checkoutAttemptId: String?,
         internal val publicKey: String?,
     ) : CheckoutContext
+
+    @Parcelize
+    data class ActionOnly internal constructor(
+        val checkoutConfiguration: CheckoutConfiguration,
+        internal val checkoutAttemptId: String?,
+        internal val publicKey: String?,
+    ) : CheckoutContext
 }

@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -24,6 +23,7 @@ import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
@@ -107,6 +107,8 @@ internal class PaymentMethodViewModel(
                     coroutineScope = viewModelScope,
                 )
             }
+
+            is CheckoutContext.ActionOnly -> error("Unsupported context: $checkoutContext")
         }
     }
 
