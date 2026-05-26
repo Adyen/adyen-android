@@ -35,7 +35,6 @@ import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
-import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
@@ -114,6 +113,7 @@ internal class StoredCardComponent(
                 cardEncryptor = cardEncryptor,
                 sdkDataProvider = sdkDataProvider,
                 storedPaymentMethodId = storedPaymentMethod.id,
+                paymentMethodType = storedPaymentMethod.type,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,
             )
@@ -138,14 +138,14 @@ internal class StoredCardComponent(
 
     @Suppress("UNUSED_PARAMETER")
     private fun onEncryptionError(e: EncryptionException) {
-        val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+        val event = GenericEvents.error(storedPaymentMethod.type, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
         // exceptionChannel.trySend(e)
     }
 
     @Suppress("UNUSED_PARAMETER")
     private fun onPublicKeyNotFound(e: InternalCheckoutError) {
-        val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+        val event = GenericEvents.error(storedPaymentMethod.type, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         // exceptionChannel.trySend(e)
     }

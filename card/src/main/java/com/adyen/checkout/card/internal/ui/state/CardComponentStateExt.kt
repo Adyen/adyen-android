@@ -34,6 +34,7 @@ internal fun CardComponentState.toPaymentComponentState(
     cardEncryptor: BaseCardEncryptor,
     genericEncryptor: BaseGenericEncryptor,
     sdkDataProvider: SdkDataProvider,
+    paymentMethodType: String,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
 ): CardPaymentComponentState {
@@ -60,6 +61,7 @@ internal fun CardComponentState.toPaymentComponentState(
         holderName = holderName.getPaymentDataValue(),
         cardBrand = cardBrand(),
         sdkDataProvider = sdkDataProvider,
+        paymentMethodType = paymentMethodType,
         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber.getPaymentDataValue(),
         encryptedKcpCardPassword = encryptedKcpCardPassword,
     )
@@ -129,10 +131,11 @@ private fun createCardDetails(
     sdkDataProvider: SdkDataProvider,
     holderName: String?,
     cardBrand: CardBrand?,
+    paymentMethodType: String,
     encryptedKcpCardPassword: String?,
     kcpBirthDateOrTaxNumber: String?,
 ) = CardDetails(
-    type = CardDetails.PAYMENT_METHOD_TYPE,
+    type = paymentMethodType,
     sdkData = sdkDataProvider.createEncodedSdkData(
         threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull(),
     ),

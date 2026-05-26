@@ -37,7 +37,6 @@ import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
-import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptionException
@@ -66,6 +65,7 @@ internal class CardComponent(
     viewStateProducer: CardViewStateProducer,
     private val coroutineScope: CoroutineScope,
     private val sdkDataProvider: SdkDataProvider,
+    private val paymentMethodType: String,
     private val onBinValueCallback: OnBinValueCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
 ) : PaymentComponent {
@@ -110,6 +110,7 @@ internal class CardComponent(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 sdkDataProvider = sdkDataProvider,
+                paymentMethodType = paymentMethodType,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,
             )
@@ -188,7 +189,7 @@ internal class CardComponent(
     }
 
     private fun onEncryptionError(e: EncryptionException) {
-        val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+        val event = GenericEvents.error(paymentMethodType, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
 
         // TODO - Error propagation. Change after EncryptionException extends from CheckoutError
@@ -203,7 +204,7 @@ internal class CardComponent(
 
     // TODO - Error propagation. Change after implementation of specific error for this case
     private fun onPublicKeyNotFound(e: InternalCheckoutError) {
-        val event = GenericEvents.error(CardDetails.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+        val event = GenericEvents.error(paymentMethodType, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
     }

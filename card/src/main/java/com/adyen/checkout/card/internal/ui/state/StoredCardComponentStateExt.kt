@@ -28,6 +28,7 @@ internal fun StoredCardComponentState.toPaymentComponentState(
     cardEncryptor: BaseCardEncryptor,
     sdkDataProvider: SdkDataProvider,
     storedPaymentMethodId: String?,
+    paymentMethodType: String,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
 ): CardPaymentComponentState {
@@ -44,6 +45,7 @@ internal fun StoredCardComponentState.toPaymentComponentState(
         storedCardId = storedPaymentMethodId,
         encryptedCard = encryptedCard,
         sdkDataProvider = sdkDataProvider,
+        paymentMethodType = paymentMethodType,
     )
 
     val paymentComponentData = createPaymentComponentData(cardDetails)
@@ -102,8 +104,9 @@ private fun createCardDetails(
     storedCardId: String?,
     encryptedCard: EncryptedCard,
     sdkDataProvider: SdkDataProvider,
+    paymentMethodType: String,
 ) = CardDetails(
-    type = CardDetails.PAYMENT_METHOD_TYPE,
+    type = paymentMethodType,
     sdkData = sdkDataProvider.createEncodedSdkData(
         threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull(),
     ),

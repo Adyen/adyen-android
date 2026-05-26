@@ -41,7 +41,6 @@ import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -80,13 +79,13 @@ internal class CardFactory :
         val binLookupService = BinLookupService(httpClient, cardComponentParams.clientKey)
         val binLookupCache = BinLookupCache()
         val localCardBrandDetectionService = LocalCardBrandDetectionService(cardComponentParams.supportedCardBrands)
+        val paymentMethodType = paymentMethod.type
         val networkCardBrandDetectionService = NetworkCardBrandDetectionService(
             cardEncryptor,
             binLookupService,
             cardComponentParams.publicKey,
             cardComponentParams.supportedCardBrands,
-            // TODO ensure this is set to BCMC in the BCMC factory supported
-            paymentMethodType = CardDetails.PAYMENT_METHOD_TYPE,
+            paymentMethodType,
         )
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(
             detectCardTypeBinHelper,
@@ -107,6 +106,7 @@ internal class CardFactory :
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            paymentMethodType = paymentMethodType,
             onBinValueCallback = additionalCallbacks.getAdditionalCallback<OnBinValueCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
         )
