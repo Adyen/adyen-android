@@ -22,6 +22,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -47,7 +48,7 @@ internal fun KCPCardPasswordField(
                 onFocusChange(focusState.isFocused)
             },
         label = resolveString(CheckoutLocalizationKey.CARD_KCP_CARD_PASSWORD),
-        initialValue = kcpCardPasswordState.text,
+        state = rememberTextFieldStateWithCurrentValue(kcpCardPasswordState.text),
         isError = kcpCardPasswordState.isError,
         supportingText = supportingText,
         onValueChange = onValueChange,

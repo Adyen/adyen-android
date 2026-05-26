@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.input.TextFieldDecorator
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,7 +55,8 @@ import kotlinx.coroutines.flow.collectLatest
  *
  * @param label The label text to be displayed for the text field.
  * @param modifier Optional [Modifier] to be applied to this composable.
- * @param initialValue The initial text to be displayed in the text field.
+ * @param state The [TextFieldState] to be used for the text field. Use [rememberTextFieldStateWithCurrentValue]
+ * to create a state that syncs with external value changes.
  * @param onValueChange A callback that is triggered when the text in the field changes.
  * @param enabled Controls the enabled state of the text field. When `false`, the text field
  * is not interactable.
@@ -76,9 +78,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CheckoutTextField(
     label: String?,
+    state: TextFieldState,
     modifier: Modifier = Modifier,
-    initialValue: String = "",
-    state: TextFieldState = rememberTextFieldState(initialValue),
     onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
     supportingText: String? = null,
@@ -164,6 +165,18 @@ fun CheckoutTextField(
     }
 }
 
+@Composable
+fun rememberTextFieldStateWithCurrentValue(currentText: String): TextFieldState {
+    val state = rememberTextFieldState(currentText)
+    LaunchedEffect(currentText) {
+        // this allows external state changes to be reflected in the text field
+        if (state.text.toString() != currentText) {
+            state.setTextAndPlaceCursorAtEnd(currentText)
+        }
+    }
+    return state
+}
+
 @Preview
 @Composable
 private fun CheckoutTextFieldPreview(
@@ -173,12 +186,14 @@ private fun CheckoutTextFieldPreview(
         CheckoutTextField(
             onValueChange = {},
             label = "Label",
+            state = rememberTextFieldStateWithCurrentValue(""),
             supportingText = "Description",
         )
 
         CheckoutTextField(
             onValueChange = {},
             label = "Label",
+            state = rememberTextFieldStateWithCurrentValue(""),
             prefix = "Prefix",
         )
 
@@ -186,7 +201,7 @@ private fun CheckoutTextFieldPreview(
         CheckoutTextField(
             onValueChange = {},
             label = "Label",
-            initialValue = "Value",
+            state = rememberTextFieldStateWithCurrentValue("Value"),
             trailingIcon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
@@ -202,7 +217,7 @@ private fun CheckoutTextFieldPreview(
 
         CheckoutTextField(
             onValueChange = {},
-            initialValue = "Value",
+            state = rememberTextFieldStateWithCurrentValue("Value"),
             label = "Label",
             supportingText = "Invalid input",
             isError = true,
@@ -210,7 +225,7 @@ private fun CheckoutTextFieldPreview(
 
         CheckoutTextField(
             onValueChange = {},
-            initialValue = "Value",
+            state = rememberTextFieldStateWithCurrentValue("Value"),
             label = "Password",
             isSecureField = true,
             modifier = Modifier.focusRequester(focusRequester),
