@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components
 
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
@@ -38,6 +39,20 @@ fun CheckoutController(
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         target = target,
+        context = context,
+        callbacks = callbacks,
+        coroutineScope = coroutineScope,
+    )
+}
+
+fun CheckoutController(
+    action: Action,
+    context: CheckoutContext.ActionOnly,
+    callbacks: ActionOnlyCheckoutCallbacks,
+    coroutineScope: CoroutineScope,
+): CheckoutController {
+    return CheckoutControllerFactory().create(
+        target = CheckoutTarget.Action(action),
         context = context,
         callbacks = callbacks,
         coroutineScope = coroutineScope,
