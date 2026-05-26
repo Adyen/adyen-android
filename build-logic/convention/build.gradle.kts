@@ -18,6 +18,7 @@ dependencies {
     compileOnly(libs.dokka.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
     compileOnly(libs.sonarqube.gradle.plugin)
+    compileOnly(libs.binary.compatibility.validator.gradle.plugin)
 
     // Workaround to make libs available in the project
     // This error can be safely ignored

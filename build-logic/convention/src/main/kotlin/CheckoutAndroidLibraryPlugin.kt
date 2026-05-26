@@ -8,10 +8,14 @@
 
 import com.adyen.checkout.libs
 import com.android.build.api.dsl.LibraryExtension
+import kotlinx.validation.ApiValidationExtension
+import kotlinx.validation.KotlinApiBuildTask
+import kotlinx.validation.KotlinApiCompareTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.plugin.extraProperties
 
 class CheckoutAndroidLibraryPlugin : Plugin<Project> {
@@ -50,6 +54,69 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
                     }
                 }
             }
+
+            configureBcvWorkaround()
+        }
+    }
+
+    /**
+     * Workaround for BCV + AGP 9 incompatibility.
+     * See: https://github.com/Kotlin/binary-compatibility-validator/issues/312
+     *
+     * AGP 9 blocks the kotlin-android plugin, which BCV relies on to register apiDump/apiCheck tasks
+     * for Android library modules. We manually register the BCV tasks by hooking into the compilation
+     * output directly. Once BCV is updated to support AGP 9, this workaround can be removed.
+     */
+    private fun Project.configureBcvWorkaround() {
+        val apiValidation = rootProject.extensions.findByType(ApiValidationExtension::class.java) ?: return
+        if (name in apiValidation.ignoredProjects) return
+
+        val kotlinVersion = libs.versions.kotlin.get()
+
+        // BCV's prepareJvmValidationClasspath() adds ASM but skips kotlin-metadata-jvm because
+        // the kotlin-android withPlugin callback never fires under AGP 9.
+        dependencies.add("bcv-rt-jvm-cp", "org.jetbrains.kotlin:kotlin-metadata-jvm:$kotlinVersion")
+
+        afterEvaluate {
+            val dumpFileName = "$name.api"
+            val apiDirName = "api"
+
+            val apiBuild = tasks.register<KotlinApiBuildTask>("apiBuild") {
+                description = "Builds Kotlin API for 'release' compilation of $name"
+                inputClassesDirs.from(tasks.named("compileReleaseKotlin").map { it.outputs.files })
+                inputClassesDirs.from(tasks.named("compileReleaseJavaWithJavac").map { it.outputs.files })
+                outputApiFile.set(layout.buildDirectory.file("$apiDirName/$dumpFileName"))
+                runtimeClasspath.from(configurations.named("bcv-rt-jvm-cp-resolver"))
+            }
+
+            val apiCheck = tasks.register<KotlinApiCompareTask>("apiCheck") {
+                group = "verification"
+                description =
+                    "Checks signatures of public API against the golden value in API folder for $name"
+                projectApiFile.set(file("$apiDirName/$dumpFileName"))
+                generatedApiFile.set(apiBuild.flatMap { it.outputApiFile })
+            }
+
+            tasks.register("apiDump") {
+                group = "other"
+                description = "Syncs the API file for $name"
+                dependsOn(apiBuild)
+                val fromProvider = apiBuild.flatMap { it.outputApiFile }
+                val toFile = file("$apiDirName/$dumpFileName")
+                inputs.file(fromProvider)
+                outputs.file(toFile)
+                doLast {
+                    val source = fromProvider.get().asFile
+                    if (source.exists()) {
+                        toFile.parentFile.mkdirs()
+                        source.copyTo(toFile, overwrite = true)
+                    } else {
+                        toFile.delete()
+                    }
+                }
+            }
+
+            tasks.named("check") { dependsOn(apiCheck) }
         }
     }
 }
