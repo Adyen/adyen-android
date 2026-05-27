@@ -183,25 +183,32 @@ internal class CardComponent(
     }
 
     fun onCardScannerResult(resultCode: Int, intent: Intent?) {
-        if (resultCode == Activity.RESULT_CANCELED) {
-            analyticsManager.trackEvent(CardScannerEvents.cardScannerCancelled(paymentMethodType))
-            return
-        }
+        when (resultCode) {
+            Activity.RESULT_CANCELED -> {
+                analyticsManager.trackEvent(CardScannerEvents.cardScannerCancelled(paymentMethodType))
+            }
 
-        val scanResult = cardScannerWrapper.parseResult(intent)
-        if (scanResult == null) {
-            analyticsManager.trackEvent(CardScannerEvents.cardScannerFailure(paymentMethodType))
-            return
-        }
+            Activity.RESULT_OK -> {
+                val scanResult = cardScannerWrapper.parseResult(intent)
+                if (scanResult == null) {
+                    analyticsManager.trackEvent(CardScannerEvents.cardScannerFailure(paymentMethodType))
+                    return
+                }
 
-        analyticsManager.trackEvent(CardScannerEvents.cardScannerSuccess(paymentMethodType))
-        onIntent(
-            CardIntent.UpdateCardScanResult(
-                pan = scanResult.pan,
-                expiryMonth = scanResult.expiryMonth,
-                expiryYear = scanResult.expiryYear,
-            ),
-        )
+                analyticsManager.trackEvent(CardScannerEvents.cardScannerSuccess(paymentMethodType))
+                onIntent(
+                    CardIntent.UpdateCardScanResult(
+                        pan = scanResult.pan,
+                        expiryMonth = scanResult.expiryMonth,
+                        expiryYear = scanResult.expiryYear,
+                    ),
+                )
+            }
+
+            else -> {
+                analyticsManager.trackEvent(CardScannerEvents.cardScannerFailure(paymentMethodType))
+            }
+        }
     }
 
     fun initializeCardScanner(context: Context) {
