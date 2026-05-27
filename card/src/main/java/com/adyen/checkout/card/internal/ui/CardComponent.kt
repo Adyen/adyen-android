@@ -156,7 +156,6 @@ internal class CardComponent(
     }
 
     override fun onCleared() {
-        cardScannerWrapper.terminate()
         analyticsManager.clear(this)
     }
 
