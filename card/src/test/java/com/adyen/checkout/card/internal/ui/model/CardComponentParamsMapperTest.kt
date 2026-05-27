@@ -57,6 +57,7 @@ internal class CardComponentParamsMapperTest {
                 socialSecurityNumberVisibility = null,
                 koreanAuthenticationVisibility = null,
                 billingAddressMode = null,
+                showCardScanner = null,
             ),
             paymentMethod = null,
         )
@@ -321,6 +322,7 @@ internal class CardComponentParamsMapperTest {
                 socialSecurityNumberVisibility = FieldVisibility.SHOW,
                 koreanAuthenticationVisibility = FieldVisibility.SHOW,
                 billingAddressMode = BillingAddressMode.PostalCode(),
+                showCardScanner = null,
             ),
             paymentMethod = null,
         )
@@ -380,6 +382,7 @@ internal class CardComponentParamsMapperTest {
         socialSecurityNumberVisibility: FieldVisibility? = null,
         koreanAuthenticationVisibility: FieldVisibility? = null,
         billingAddressMode: BillingAddressMode? = null,
+        showCardScanner: Boolean? = null,
     ) = CardConfiguration(
         showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
@@ -390,6 +393,7 @@ internal class CardComponentParamsMapperTest {
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         koreanAuthenticationVisibility = koreanAuthenticationVisibility,
         billingAddressMode = billingAddressMode,
+        showCardScanner = showCardScanner,
     )
 
     private fun createCardPaymentMethod(
@@ -412,6 +416,7 @@ internal class CardComponentParamsMapperTest {
         showPostalCode: Boolean = false,
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW,
+        showCardScanner: Boolean = true,
     ) = CardComponentParams(
         commonComponentParams = CommonComponentParams(
             shopperLocale = DEVICE_LOCALE,
@@ -432,6 +437,7 @@ internal class CardComponentParamsMapperTest {
         showPostalCode = showPostalCode,
         cvcVisibility = cvcVisibility,
         storedCVCVisibility = storedCVCVisibility,
+        showCardScanner = showCardScanner,
     )
 
     companion object {

@@ -50,6 +50,7 @@ internal class CardComponentParamsMapper {
             } else {
                 StoredCVCVisibility.SHOW
             },
+            showCardScanner = cardConfiguration?.showCardScanner ?: true,
         )
     }
 
