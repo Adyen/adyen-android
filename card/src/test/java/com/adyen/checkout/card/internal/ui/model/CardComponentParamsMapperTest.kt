@@ -21,6 +21,8 @@ import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -151,6 +153,39 @@ internal class CardComponentParamsMapperTest {
         )
 
         assertEquals(StoredCVCVisibility.HIDE, params.storedCVCVisibility)
+    }
+
+    @Test
+    fun `when showCardScanner is null then it defaults to true`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showCardScanner = null),
+            paymentMethod = null,
+        )
+
+        assertTrue(params.showCardScanner)
+    }
+
+    @Test
+    fun `when showCardScanner is true then it is passed through`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showCardScanner = true),
+            paymentMethod = null,
+        )
+
+        assertTrue(params.showCardScanner)
+    }
+
+    @Test
+    fun `when showCardScanner is false then it is passed through`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(showCardScanner = false),
+            paymentMethod = null,
+        )
+
+        assertFalse(params.showCardScanner)
     }
 
     @Test
@@ -322,7 +357,7 @@ internal class CardComponentParamsMapperTest {
                 socialSecurityNumberVisibility = FieldVisibility.SHOW,
                 koreanAuthenticationVisibility = FieldVisibility.SHOW,
                 billingAddressMode = BillingAddressMode.PostalCode(),
-                showCardScanner = null,
+                showCardScanner = false,
             ),
             paymentMethod = null,
         )
@@ -337,6 +372,7 @@ internal class CardComponentParamsMapperTest {
             showPostalCode = true,
             cvcVisibility = CVCVisibility.ALWAYS_HIDE,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
+            showCardScanner = false,
         )
 
         assertEquals(expected, params)
