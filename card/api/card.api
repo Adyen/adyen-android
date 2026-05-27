@@ -53,6 +53,7 @@ public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkou
 	public final fun describeContents ()I
 	public final fun getBillingAddressMode ()Lcom/adyen/checkout/card/BillingAddressMode;
 	public final fun getKoreanAuthenticationVisibility ()Lcom/adyen/checkout/card/FieldVisibility;
+	public final fun getShowCardScanner ()Ljava/lang/Boolean;
 	public final fun getShowCardholderName ()Ljava/lang/Boolean;
 	public final fun getShowSecurityCode ()Ljava/lang/Boolean;
 	public final fun getShowSecurityCodeForStoredCard ()Ljava/lang/Boolean;
@@ -74,7 +75,8 @@ public final class com/adyen/checkout/card/CardConfigurationKt {
 	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lcom/adyen/checkout/card/BillingAddressMode;Lcom/adyen/checkout/card/FieldVisibility;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lcom/adyen/checkout/card/BillingAddressMode;Lcom/adyen/checkout/card/FieldVisibility;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldVisibility;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lcom/adyen/checkout/card/BillingAddressMode;Lcom/adyen/checkout/card/FieldVisibility;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldVisibility;Ljava/util/List;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static synthetic fun card$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lcom/adyen/checkout/card/BillingAddressMode;Lcom/adyen/checkout/card/FieldVisibility;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldVisibility;Ljava/util/List;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lcom/adyen/checkout/card/BillingAddressMode;Lcom/adyen/checkout/card/FieldVisibility;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldVisibility;Ljava/util/List;Ljava/lang/Boolean;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun card$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lcom/adyen/checkout/card/BillingAddressMode;Lcom/adyen/checkout/card/FieldVisibility;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/FieldVisibility;Ljava/util/List;Ljava/lang/Boolean;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
 public final class com/adyen/checkout/card/FieldVisibility : java/lang/Enum {

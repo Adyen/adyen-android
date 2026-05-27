@@ -26,4 +26,5 @@ data class CardComponentParams(
     val showPostalCode: Boolean,
     val cvcVisibility: CVCVisibility,
     val storedCVCVisibility: StoredCVCVisibility,
+    val showCardScanner: Boolean,
 ) : ComponentParams by commonComponentParams
