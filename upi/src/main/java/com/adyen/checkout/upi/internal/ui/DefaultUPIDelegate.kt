@@ -61,8 +61,13 @@ internal class DefaultUPIDelegate(
 
     private val detectedApps by lazy {
         val intent = Intent(Intent.ACTION_VIEW, GENERIC_UPI_URI)
-        val localApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-            .map { it.activityInfo.packageName }
+        val localApps = runCatching {
+            packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                .map { it.activityInfo.packageName }
+        }.getOrElse { error ->
+            adyenLog(AdyenLogLevel.WARN, error) { "Failed to get local apps" }
+            emptyList()
+        }
         paymentMethod.apps.orEmpty()
             .filter { it.appIdentifierInfo?.androidPackageId in localApps }
     }
