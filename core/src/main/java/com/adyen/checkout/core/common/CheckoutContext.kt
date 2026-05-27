@@ -17,25 +17,30 @@ import kotlinx.parcelize.Parcelize
 // TODO - Kdocs
 sealed interface CheckoutContext : Parcelable {
 
+    val checkoutConfiguration: CheckoutConfiguration
+
     @Parcelize
+    @ConsistentCopyVisibility
     data class Sessions internal constructor(
         val checkoutSession: CheckoutSession,
-        val checkoutConfiguration: CheckoutConfiguration,
+        override val checkoutConfiguration: CheckoutConfiguration,
         internal val checkoutAttemptId: String?,
         internal val publicKey: String?,
     ) : CheckoutContext
 
     @Parcelize
+    @ConsistentCopyVisibility
     data class Advanced internal constructor(
         val paymentMethods: PaymentMethods,
-        val checkoutConfiguration: CheckoutConfiguration,
+        override val checkoutConfiguration: CheckoutConfiguration,
         internal val checkoutAttemptId: String?,
         internal val publicKey: String?,
     ) : CheckoutContext
 
     @Parcelize
+    @ConsistentCopyVisibility
     data class ActionOnly internal constructor(
-        val checkoutConfiguration: CheckoutConfiguration,
+        override val checkoutConfiguration: CheckoutConfiguration,
         internal val checkoutAttemptId: String?,
         internal val publicKey: String?,
     ) : CheckoutContext
