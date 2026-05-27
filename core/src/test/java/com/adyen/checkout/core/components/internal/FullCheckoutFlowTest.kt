@@ -11,21 +11,13 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
-import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutCallbacks
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
-import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
@@ -49,7 +41,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -145,8 +136,9 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when payment component is null, then returns false`() = runTest {
-            val flow = createFullCheckoutFlowWithoutPaymentComponent(
-                CoroutineScope(UnconfinedTestDispatcher()),
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = null,
             )
 
             assertFalse(flow.requiresUserInteraction())
@@ -166,18 +158,14 @@ internal class FullCheckoutFlowTest(
     private fun createFullCheckoutFlow(
         coroutineScope: CoroutineScope,
         requiresUserInteraction: Boolean = true,
+        component: PaymentComponent? = TestPaymentComponent(eventFlow, requiresUserInteraction),
     ): FullCheckoutFlow {
-        val testComponent = TestPaymentComponent(eventFlow, requiresUserInteraction)
-        registerComponent(testComponent)
+        component?.let { registerComponent(it) }
 
         return FullCheckoutFlow(
-            target = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
-            context = createCheckoutContext(),
-            callbacks = TestCheckoutCallbacks(),
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
-            analyticsManager = TestAnalyticsManager(),
-            params = generateCheckoutParams(),
+            paymentComponent = component,
             actionHandler = actionHandler,
         )
     }
@@ -197,59 +185,11 @@ internal class FullCheckoutFlowTest(
         )
     }
 
-    private fun createCheckoutContext(): CheckoutContext.Advanced {
-        return CheckoutContext.Advanced(
-            paymentMethods = PaymentMethods(
-                paymentMethods = listOf(
-                    GenericPaymentMethod(type = TEST_PAYMENT_METHOD_TYPE, name = "Test"),
-                ),
-            ),
-            checkoutConfiguration = createCheckoutConfiguration(),
-            checkoutAttemptId = null,
-            publicKey = null,
-        )
-    }
-
-    private fun createCheckoutConfiguration() = CheckoutConfiguration(
-        environment = Environment.TEST,
-        clientKey = "test_qwertyuiopasdfgh",
-        shopperLocale = Locale.US,
-    )
-
-    private fun generateCheckoutParams() = CheckoutParams(
-        shopperLocale = Locale.US,
-        environment = Environment.TEST,
-        clientKey = "test_qwertyuiopasdfgh",
-        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-        amount = null,
-        showSubmitButton = true,
-        publicKey = "test_publicKey",
-        additionalConfigurations = emptyMap(),
-        additionalSessionParams = null,
-    )
-
     private fun createPaymentComponentState(): PaymentComponentState<PaymentMethodDetails> {
         return object : PaymentComponentState<PaymentMethodDetails> {
             override val data = PaymentComponentData<PaymentMethodDetails>(paymentMethod = null, order = null)
             override val isValid = true
         }
-    }
-
-    private class TestCheckoutCallbacks : CheckoutCallbacks(additionalCallbacksBlock = {})
-
-    private fun createFullCheckoutFlowWithoutPaymentComponent(
-        coroutineScope: CoroutineScope,
-    ): FullCheckoutFlow {
-        return FullCheckoutFlow(
-            target = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
-            context = createCheckoutContext(),
-            callbacks = TestCheckoutCallbacks(),
-            componentRequestDispatcher = componentRequestDispatcher,
-            coroutineScope = coroutineScope,
-            analyticsManager = TestAnalyticsManager(),
-            params = generateCheckoutParams(),
-            actionHandler = actionHandler,
-        )
     }
 
     companion object {

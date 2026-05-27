@@ -9,16 +9,10 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
-import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
@@ -28,27 +22,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
-@Suppress("LongParameterList")
 internal class FullCheckoutFlow(
-    target: CheckoutTarget,
-    context: CheckoutContext,
-    callbacks: CheckoutCallbacks,
     componentRequestDispatcher: SubmittableComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
-    analyticsManager: AnalyticsManager,
-    params: CheckoutParams,
+    override val paymentComponent: PaymentComponent?,
     private val actionHandler: ActionHandler,
 ) : CheckoutFlow {
-
-    // TODO - Inject paymentComponent in constructor
-    override val paymentComponent: PaymentComponent? = createPaymentComponent(
-        target = target,
-        context = context,
-        callbacks = callbacks,
-        coroutineScope = coroutineScope,
-        analyticsManager = analyticsManager,
-        params = params,
-    )
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
 
@@ -110,62 +89,6 @@ internal class FullCheckoutFlow(
             is SubmitResult.PartialPayment -> {
                 // TODO - Handle partial payment state
             }
-        }
-    }
-
-    private fun createPaymentComponent(
-        target: CheckoutTarget,
-        context: CheckoutContext,
-        callbacks: CheckoutCallbacks,
-        coroutineScope: CoroutineScope,
-        analyticsManager: AnalyticsManager,
-        params: CheckoutParams,
-    ): PaymentComponent? {
-        return when (target) {
-            is CheckoutTarget.PaymentMethod -> {
-                val paymentMethod = context.getPaymentMethodResponse()
-                    ?.paymentMethods
-                    ?.find { it.type == target.type }
-
-                if (paymentMethod == null) {
-                    null
-                } else {
-                    PaymentMethodProvider.getPaymentComponent(
-                        paymentMethod = paymentMethod,
-                        coroutineScope = coroutineScope,
-                        analyticsManager = analyticsManager,
-                        params = params,
-                        additionalCallbacks = callbacks.additionalCallbacks,
-                    )
-                }
-            }
-
-            is CheckoutTarget.StoredPaymentMethod -> {
-                val storedPaymentMethod = context.getPaymentMethodResponse()
-                    ?.storedPaymentMethods
-                    ?.find { it.id == target.id }
-
-                if (storedPaymentMethod == null) {
-                    null
-                } else {
-                    PaymentMethodProvider.getStoredPaymentComponent(
-                        storedPaymentMethod = storedPaymentMethod,
-                        coroutineScope = coroutineScope,
-                        analyticsManager = analyticsManager,
-                        params = params,
-                    )
-                }
-            }
-
-            else -> null
-        }
-    }
-
-    private fun CheckoutContext.getPaymentMethodResponse(): PaymentMethods? {
-        return when (this) {
-            is CheckoutContext.Advanced -> paymentMethods
-            is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods
-            is CheckoutContext.ActionOnly -> error("Unsupported context: $this")
         }
     }
 }

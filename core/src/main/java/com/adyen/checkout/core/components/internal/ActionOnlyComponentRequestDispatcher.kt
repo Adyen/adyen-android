@@ -18,10 +18,10 @@ internal class ActionOnlyComponentRequestDispatcher(
 ) : ComponentRequestDispatcher {
 
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
-        return callbacks.onAdditionalDetails.invoke(data)
+        return callbacks.onAdditionalDetails(data)
     }
 
     override fun error(error: CheckoutError) {
-        callbacks.onError.invoke(error)
+        callbacks.onError(error)
     }
 }

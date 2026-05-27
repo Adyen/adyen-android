@@ -24,6 +24,8 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineScope
@@ -100,16 +102,23 @@ internal class CheckoutControllerFactory {
             analyticsManager = analyticsManager,
             params = checkoutParams,
         )
-        val flow = FullCheckoutFlow(
+
+        val paymentComponent = createPaymentComponent(
             target = target,
             context = context,
             callbacks = callbacks,
-            componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
-            params = checkoutParams,
+            checkoutParams = checkoutParams,
+        )
+
+        val flow = FullCheckoutFlow(
+            componentRequestDispatcher = componentRequestDispatcher,
+            coroutineScope = coroutineScope,
+            paymentComponent = paymentComponent,
             actionHandler = actionHandler,
         )
+
         return CheckoutController(flow = flow)
     }
 
@@ -166,4 +175,55 @@ internal class CheckoutControllerFactory {
         val checkoutParams: CheckoutParams,
         val analyticsManager: AnalyticsManager,
     )
+
+    @Suppress("LongParameterList")
+    private fun createPaymentComponent(
+        target: CheckoutTarget,
+        context: CheckoutContext,
+        callbacks: CheckoutCallbacks,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutParams: CheckoutParams,
+    ): PaymentComponent? {
+        return when (target) {
+            is CheckoutTarget.PaymentMethod -> {
+                context.getPaymentMethodResponse()
+                    ?.paymentMethods
+                    ?.find { it.type == target.type }
+                    ?.let { paymentMethod ->
+                        PaymentMethodProvider.getPaymentComponent(
+                            paymentMethod = paymentMethod,
+                            coroutineScope = coroutineScope,
+                            analyticsManager = analyticsManager,
+                            params = checkoutParams,
+                            additionalCallbacks = callbacks.additionalCallbacks,
+                        )
+                    }
+            }
+
+            is CheckoutTarget.StoredPaymentMethod -> {
+                context.getPaymentMethodResponse()
+                    ?.storedPaymentMethods
+                    ?.find { it.id == target.id }
+                    ?.let { storedPaymentMethod ->
+                        PaymentMethodProvider.getStoredPaymentComponent(
+                            storedPaymentMethod = storedPaymentMethod,
+                            coroutineScope = coroutineScope,
+                            analyticsManager = analyticsManager,
+                            params = checkoutParams,
+                        )
+                    }
+            }
+
+            else -> null
+        }
+    }
+
+    private fun CheckoutContext.getPaymentMethodResponse(): PaymentMethods? {
+        return when (this) {
+            is CheckoutContext.Advanced -> paymentMethods
+            is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods
+            is CheckoutContext.ActionOnly -> null
+        }
+    }
 }
