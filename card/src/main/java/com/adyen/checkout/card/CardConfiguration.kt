@@ -26,6 +26,7 @@ class CardConfiguration internal constructor(
     val showSupportedCardBrandLogos: Boolean?,
     val socialSecurityNumberVisibility: FieldVisibility?,
     val supportedCardBrands: List<CardBrand>?,
+    val showCardScanner: Boolean?,
     // TODO - Card. Installments
 ) : Configuration
 
@@ -41,6 +42,7 @@ fun CheckoutConfiguration.card(
     showSupportedCardBrandLogos: Boolean? = null,
     socialSecurityNumberVisibility: FieldVisibility? = null,
     supportedCardBrands: List<CardBrand>? = null,
+    showCardScanner: Boolean? = null,
 ): CheckoutConfiguration {
     val config = CardConfiguration(
         billingAddressMode = billingAddressMode,
@@ -52,6 +54,7 @@ fun CheckoutConfiguration.card(
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         supportedCardBrands = supportedCardBrands,
+        showCardScanner = showCardScanner,
     )
     addConfiguration(PaymentMethodTypes.SCHEME, config)
     return this

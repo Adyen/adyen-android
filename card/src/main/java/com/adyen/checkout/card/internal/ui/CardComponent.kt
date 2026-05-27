@@ -206,6 +206,7 @@ internal class CardComponent(
     }
 
     fun initializeCardScanner(context: Context) {
+        if (!componentParams.showCardScanner) return
         coroutineScope.launch {
             val isAvailable = cardScannerWrapper.initialize(
                 context = context,
