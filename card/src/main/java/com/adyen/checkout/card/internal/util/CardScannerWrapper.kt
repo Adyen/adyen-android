@@ -21,8 +21,16 @@ internal class CardScannerWrapper {
     private var controller: CardScannerController? = null
 
     suspend fun initialize(context: Context, environment: Environment): Boolean {
-        runCompileOnly { controller = CardScannerInitializer.initialize(context, environment) }
-        return controller != null
+        // we can't use getOrNull() here because CardScannerController is defined inside the card-scanning module
+        // so the JVM will try to resolve the type outside runCompileOnly which will throw a NoClassDefFoundError
+        runCompileOnly {
+            controller = CardScannerInitializer.initialize(context, environment)
+            return controller != null
+        }
+
+        // runCompileOnly didn't return which means the card-scanning module is not included
+        controller = null
+        return false
     }
 
     fun getIntentSender(): IntentSender? {
