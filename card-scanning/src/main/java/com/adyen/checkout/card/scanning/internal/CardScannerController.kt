@@ -12,38 +12,25 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentSender
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.google.android.gms.wallet.PaymentCardRecognitionResult
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardScannerController internal constructor(
-    pendingIntent: PendingIntent,
+    private val paymentCardRecognitionPendingIntent: PendingIntent,
 ) {
 
-    private var paymentCardRecognitionPendingIntent: PendingIntent? = pendingIntent
-
-    fun getIntentSender(): IntentSender? {
-        if (paymentCardRecognitionPendingIntent == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "CardScannerController has been terminated." }
-            return null
-        }
-        return paymentCardRecognitionPendingIntent?.intentSender
+    fun getIntentSender(): IntentSender {
+        return paymentCardRecognitionPendingIntent.intentSender
     }
 
     fun parseResult(intent: Intent?): CardScanResult? {
         intent ?: return null
-        return PaymentCardRecognitionResult.getFromIntent(intent)
-            ?.let { result ->
-                CardScanResult(
-                    pan = result.pan,
-                    expiryMonth = result.creditCardExpirationDate?.month,
-                    expiryYear = result.creditCardExpirationDate?.year,
-                )
-            }
-    }
-
-    fun terminate() {
-        paymentCardRecognitionPendingIntent = null
+        return PaymentCardRecognitionResult.getFromIntent(intent)?.let { result ->
+            CardScanResult(
+                pan = result.pan,
+                expiryMonth = result.creditCardExpirationDate?.month,
+                expiryYear = result.creditCardExpirationDate?.year,
+            )
+        }
     }
 }

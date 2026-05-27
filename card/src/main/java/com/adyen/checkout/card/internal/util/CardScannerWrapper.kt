@@ -38,11 +38,6 @@ internal class CardScannerWrapper {
         )
     }
 
-    fun terminate() {
-        controller?.terminate()
-        controller = null
-    }
-
     internal data class ScanResult(
         val pan: String?,
         val expiryMonth: Int?,
