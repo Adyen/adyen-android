@@ -16,6 +16,7 @@ internal data class DetectedCardType(
     val cvcPolicy: Brand.FieldPolicy,
     val expiryDatePolicy: Brand.FieldPolicy,
     val isSupported: Boolean,
+    val isHidden: Boolean,
     val isShopperSelectionAllowedInDualBranded: Boolean,
     val panLength: Int?,
     val paymentMethodVariant: String?,

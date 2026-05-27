@@ -152,7 +152,7 @@ private fun createCardDetails(
 private fun CardComponentState.getBillingAddress(): Address? {
     postalCode.getPaymentDataValue()?.let {
         return Address(
-            postalCode = it
+            postalCode = it,
         )
     }
 
@@ -193,12 +193,15 @@ private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
  */
 private fun CardComponentState.cardBrand(): CardBrand? {
     val selectedOrReliableCardBrandData = when (cardBrandState) {
+        is CardBrandState.NoBrandsDetected,
+        is CardBrandState.UnsupportedBrand,
+        is CardBrandState.HiddenBrand,
+        is CardBrandState.SingleUnreliableBrand,
+        is CardBrandState.SingleReliableWithHiddenBrand,
+        is CardBrandState.DualBrand -> null
+
         is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData.cardBrand
         is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData.cardBrand
-        is CardBrandState.DualBrand,
-        is CardBrandState.NoBrandsDetected,
-        is CardBrandState.SingleUnreliableBrand,
-        is CardBrandState.UnsupportedBrand -> null
     }
     return selectedOrReliableCardBrandData
 }

@@ -124,6 +124,7 @@ internal class StoredCardComponentStateReducerTest {
         cvcPolicy = Brand.FieldPolicy.REQUIRED,
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
         isSupported = true,
+        isHidden = false,
         isShopperSelectionAllowedInDualBranded = false,
         panLength = 16,
         paymentMethodVariant = null,

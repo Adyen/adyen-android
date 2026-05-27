@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.helper.isHiddenCardType
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -74,6 +75,8 @@ internal class NetworkCardBrandDetectionService(
                     brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value,
                 ),
                 isSupported = brandResponse.supported != false,
+                // in the future this flag should come directly from the backend
+                isHidden = isHiddenCardType(brandResponse.brand),
                 // in the future this flag should come directly from the backend
                 isShopperSelectionAllowedInDualBranded = brandResponse.brand
                     in SUPPORTED_CARD_BRANDS_FOR_DUAL_BRANDED_SELECTION,
