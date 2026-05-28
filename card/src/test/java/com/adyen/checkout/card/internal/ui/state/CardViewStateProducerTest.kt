@@ -280,11 +280,78 @@ internal class CardViewStateProducerTest {
         assertFalse(viewState.isSupportedCardBrandsShown)
     }
 
+    @Test
+    fun `when card scanning is available and card number is empty, then scan button is visible and trailing icon is ScanButton`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(text = ""),
+            isCardScanningAvailable = true,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertTrue(viewState.isCardScanButtonVisible)
+        assertEquals(CardNumberTrailingIcon.ScanButton, viewState.cardNumber?.trailingIcon)
+    }
+
+    @Test
+    fun `when card scanning is available and card number is not empty, then scan button is not visible`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(text = "4111"),
+            isCardScanningAvailable = true,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isCardScanButtonVisible)
+    }
+
+    @Test
+    fun `when card scanning is not available and card number is empty, then scan button is not visible`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(text = ""),
+            isCardScanningAvailable = false,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isCardScanButtonVisible)
+    }
+
+    @Test
+    fun `when card scanning is available and card number has error, then trailing icon is Warning not ScanButton`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(
+                text = "",
+                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                showError = true,
+            ),
+            isCardScanningAvailable = true,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertTrue(viewState.isCardScanButtonVisible)
+        assertEquals(CardNumberTrailingIcon.Warning, viewState.cardNumber?.trailingIcon)
+    }
+
     private fun createComponentState(
         cardNumber: TextInputComponentState = TextInputComponentState(),
         cardBrandState: CardBrandState = CardBrandState.NoBrandsDetected,
         postalCode: TextInputComponentState = TextInputComponentState(),
         showSupportedCardBrandLogos: Boolean = true,
+        isCardScanningAvailable: Boolean = false,
     ) = CardComponentState(
         cardNumber = cardNumber,
         expiryDate = TextInputComponentState(),
@@ -299,6 +366,7 @@ internal class CardViewStateProducerTest {
         supportedCardBrands = emptyList(),
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         isLoading = false,
+        isCardScanningAvailable = isCardScanningAvailable,
         cardBrandState = cardBrandState,
     )
 

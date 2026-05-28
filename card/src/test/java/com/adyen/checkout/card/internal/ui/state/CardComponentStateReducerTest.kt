@@ -241,6 +241,63 @@ internal class CardComponentStateReducerTest {
         assertFalse(actual.securityCode.isFocused)
     }
 
+    @Test
+    fun `when intent is UpdateCardScanningAvailability with true, then isCardScanningAvailable is true`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.UpdateCardScanningAvailability(true))
+
+        assertTrue(actual.isCardScanningAvailable)
+    }
+
+    @Test
+    fun `when intent is UpdateCardScanningAvailability with false, then isCardScanningAvailable is false`() {
+        val state = createInitialState().copy(isCardScanningAvailable = true)
+
+        val actual = reducer.reduce(state, CardIntent.UpdateCardScanningAvailability(false))
+
+        assertFalse(actual.isCardScanningAvailable)
+    }
+
+    @Test
+    fun `when intent is UpdateCardScanResult with pan and expiry, then cardNumber and expiryDate are updated`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
+        )
+
+        assertEquals("4111111111111111", actual.cardNumber.text)
+        assertEquals("1225", actual.expiryDate.text)
+    }
+
+    @Test
+    fun `when intent is UpdateCardScanResult with null pan, then cardNumber is empty`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = null, expiryMonth = 3, expiryYear = 2026),
+        )
+
+        assertEquals("", actual.cardNumber.text)
+        assertEquals("0326", actual.expiryDate.text)
+    }
+
+    @Test
+    fun `when intent is UpdateCardScanResult with null expiry, then expiryDate is empty`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = "5500000000000004", expiryMonth = null, expiryYear = null),
+        )
+
+        assertEquals("5500000000000004", actual.cardNumber.text)
+        assertEquals("", actual.expiryDate.text)
+    }
+
     private fun createInitialState() = CardComponentState(
         cardNumber = TextInputComponentState(),
         expiryDate = TextInputComponentState(),
@@ -255,6 +312,7 @@ internal class CardComponentStateReducerTest {
         supportedCardBrands = emptyList(),
         showSupportedCardBrandLogos = true,
         isLoading = false,
+        isCardScanningAvailable = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
     )
 }

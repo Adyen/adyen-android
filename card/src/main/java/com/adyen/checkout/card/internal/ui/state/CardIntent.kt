@@ -56,5 +56,9 @@ internal sealed interface CardIntent : ComponentStateIntent {
 
     data class UpdateLoading(val isLoading: Boolean) : CardIntent
 
+    data class UpdateCardScanningAvailability(val isAvailable: Boolean) : CardIntent
+
+    data class UpdateCardScanResult(val pan: String?, val expiryMonth: Int?, val expiryYear: Int?) : CardIntent
+
     data object HighlightValidationErrors : CardIntent
 }

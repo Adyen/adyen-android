@@ -33,6 +33,7 @@ internal fun CardComponent(
     viewState: CardViewState,
     onIntent: (CardIntent) -> Unit,
     onSubmitClick: () -> Unit,
+    onScanButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ComponentScaffold(
@@ -48,6 +49,7 @@ internal fun CardComponent(
             CardDetailsSection(
                 viewState = viewState,
                 onIntent = onIntent,
+                onScanButtonClick = onScanButtonClick,
             )
 
             viewState.dualBrandData?.let { dualBrandData ->
@@ -65,6 +67,7 @@ internal fun CardComponent(
 private fun CardDetailsSection(
     viewState: CardViewState,
     onIntent: (CardIntent) -> Unit,
+    onScanButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -80,6 +83,7 @@ private fun CardDetailsSection(
                 isAmex = viewState.isAmex,
                 onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
                 onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
+                onScanButtonClick = onScanButtonClick,
             )
         }
         if (viewState.expiryDate != null) {
@@ -177,10 +181,12 @@ private fun CardComponentPreview() {
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             isLoading = false,
+            isCardScanButtonVisible = false,
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
             dualBrandData = null,
         ),
         onIntent = {},
         onSubmitClick = {},
+        onScanButtonClick = {},
     )
 }

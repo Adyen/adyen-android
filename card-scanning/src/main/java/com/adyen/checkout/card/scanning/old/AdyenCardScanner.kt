@@ -6,7 +6,7 @@
  * Created by oscars on 10/12/2024.
  */
 
-package com.adyen.checkout.card.scanning
+package com.adyen.checkout.card.scanning.old
 
 import android.app.Activity
 import android.app.PendingIntent
@@ -26,6 +26,7 @@ import com.google.android.gms.wallet.WalletConstants
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
+@Deprecated("Use the v6 card scanning API instead.")
 class AdyenCardScanner {
 
     private var paymentCardRecognitionPendingIntent: PendingIntent? = null

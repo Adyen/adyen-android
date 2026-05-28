@@ -38,9 +38,10 @@ dependencies {
     api project(':cse')
     api project(':ui-core')
     api project(':sessions-core')
-    compileOnly project(':card-scanning')
+    implementation project(':card-scanning')
 
     // Dependencies
+    implementation libs.compose.activity
     implementation libs.androidx.startup
     implementation libs.material
 

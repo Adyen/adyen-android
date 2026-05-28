@@ -221,6 +221,7 @@ internal class CardComponentStateFactoryTest {
             showPostalCode = showPostalCode,
             cvcVisibility = cvcVisibility,
             storedCVCVisibility = StoredCVCVisibility.SHOW,
+            showCardScanner = true,
         ),
     )
 }

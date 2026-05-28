@@ -8,12 +8,23 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
+import com.adyen.checkout.card.internal.analytics.CardScannerEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -28,6 +39,7 @@ import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.CardComponent
+import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -51,6 +63,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class CardComponent(
@@ -68,6 +81,7 @@ internal class CardComponent(
     private val paymentMethodType: String,
     private val onBinValueCallback: OnBinValueCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
+    private val cardScannerWrapper: CardScannerWrapper,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -94,11 +108,27 @@ internal class CardComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
+        val context = LocalContext.current
+        LaunchedEffect(Unit) {
+            initializeCardScanner(context)
+        }
+
+        val scannerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartIntentSenderForResult(),
+        ) { result ->
+            onCardScannerResult(result.resultCode, result.data)
+            // Re-initialize to get a fresh PendingIntent, as Google's PaymentCardRecognitionPendingIntent is single-use
+            initializeCardScanner(context)
+        }
+
         val viewState by viewState.collectAsStateWithLifecycle()
         CardComponent(
             viewState = viewState,
             onIntent = ::handleIntent,
             onSubmitClick = ::submit,
+            onScanButtonClick = {
+                onScanButtonClick(scannerLauncher)
+            },
             modifier = modifier,
         )
     }
@@ -127,6 +157,75 @@ internal class CardComponent(
 
     override fun onCleared() {
         analyticsManager.clear(this)
+    }
+
+    private fun onScanButtonClick(scannerLauncher: ActivityResultLauncher<IntentSenderRequest>) {
+        val intentSender = getCardScannerIntentSender() ?: run {
+            onCardScannerPresented(didDisplay = false)
+            return
+        }
+        val request = IntentSenderRequest.Builder(intentSender).build()
+        scannerLauncher.launch(request)
+        onCardScannerPresented(didDisplay = true)
+    }
+
+    fun getCardScannerIntentSender(): IntentSender? {
+        return cardScannerWrapper.getIntentSender()
+    }
+
+    fun onCardScannerPresented(didDisplay: Boolean) {
+        val event = if (didDisplay) {
+            CardScannerEvents.cardScannerPresented(paymentMethodType)
+        } else {
+            CardScannerEvents.cardScannerFailure(paymentMethodType)
+        }
+        analyticsManager.trackEvent(event)
+    }
+
+    fun onCardScannerResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_CANCELED -> {
+                analyticsManager.trackEvent(CardScannerEvents.cardScannerCancelled(paymentMethodType))
+            }
+
+            Activity.RESULT_OK -> {
+                val scanResult = cardScannerWrapper.parseResult(intent)
+                if (scanResult == null) {
+                    analyticsManager.trackEvent(CardScannerEvents.cardScannerFailure(paymentMethodType))
+                    return
+                }
+
+                analyticsManager.trackEvent(CardScannerEvents.cardScannerSuccess(paymentMethodType))
+                onIntent(
+                    CardIntent.UpdateCardScanResult(
+                        pan = scanResult.pan,
+                        expiryMonth = scanResult.expiryMonth,
+                        expiryYear = scanResult.expiryYear,
+                    ),
+                )
+            }
+
+            else -> {
+                analyticsManager.trackEvent(CardScannerEvents.cardScannerFailure(paymentMethodType))
+            }
+        }
+    }
+
+    fun initializeCardScanner(context: Context) {
+        if (!componentParams.showCardScanner) return
+        coroutineScope.launch {
+            val isAvailable = cardScannerWrapper.initialize(
+                context = context,
+                environment = componentParams.environment,
+            )
+            onIntent(CardIntent.UpdateCardScanningAvailability(isAvailable))
+            val event = if (isAvailable) {
+                CardScannerEvents.cardScannerAvailable(paymentMethodType)
+            } else {
+                CardScannerEvents.cardScannerUnavailable(paymentMethodType)
+            }
+            analyticsManager.trackEvent(event)
+        }
     }
 
     private fun onIntent(intent: CardIntent) {
