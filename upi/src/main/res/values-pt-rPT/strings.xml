@@ -14,8 +14,10 @@
     <string name="checkout_upi_id_label">ID da UPI</string>
     <string name="checkout_upi_app_other_upi">Outras UPI</string>
     <string name="checkout_upi_no_app_selected">Para continuar, selecione a aplicação de UPI de sua preferência</string>
-    <string name="checkout_upi_app_tab_title">Aplicação de UPI</string>
+    <string name="checkout_upi_app_tab_title">Aplicações de UPI</string>
     <string name="checkout_upi_id_tab_title">ID da UPI</string>
     <string name="checkout_upi_id_instruction">Introduza o seu ID de UPI</string>
     <string name="checkout_upi_app_instruction">Selecione a aplicação de UPI que prefere</string>
+    <string name="checkout_upi_app_list_title_detected">No seu dispositivo</string>
+    <string name="checkout_upi_app_list_title_not_detected">Opções</string>
 </resources>

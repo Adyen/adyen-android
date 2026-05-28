@@ -104,6 +104,7 @@ constructor(
                 order = order,
                 componentParams = componentParams,
                 sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+                packageManager = application.packageManager,
             )
 
             val genericActionDelegate =
@@ -193,6 +194,7 @@ constructor(
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+                packageManager = application.packageManager,
             )
 
             val genericActionDelegate =

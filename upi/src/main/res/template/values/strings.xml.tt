@@ -18,4 +18,6 @@
     <string name="checkout_upi_id_tab_title">%%upi.mode.enterUpiId%%</string>
     <string name="checkout_upi_id_instruction">%%upi.collect.instruction%%</string>
     <string name="checkout_upi_app_instruction">%%upi.intent.instruction%%</string>
+    <string name="checkout_upi_app_list_title_detected">%%upi.intent.apps.title.onDevice%%</string>
+    <string name="checkout_upi_app_list_title_not_detected">%%upi.intent.apps.title%%</string>
 </resources>

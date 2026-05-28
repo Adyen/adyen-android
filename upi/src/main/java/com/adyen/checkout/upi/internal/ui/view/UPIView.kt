@@ -13,7 +13,6 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import androidx.autofill.HintConstants
 import androidx.core.view.isVisible
@@ -166,12 +165,20 @@ internal class UPIView @JvmOverloads constructor(
 
     private fun updateUpiIntentViews(isChecked: Boolean) {
         binding.textViewIntentInstruction.isVisible = isChecked
+        binding.textViewListTitle.isVisible = isChecked
         binding.recyclerViewUpiIntent.isVisible = isChecked
         if (isChecked) {
             binding.editTextVpa.clearFocus()
             hideKeyboard()
             delegate.updateInputData { selectedMode = UPISelectedMode.INTENT }
         }
+
+        val listTitleId = if (delegate.outputData.didDetectApps) {
+            R.string.checkout_upi_app_list_title_detected
+        } else {
+            R.string.checkout_upi_app_list_title_not_detected
+        }
+        binding.textViewListTitle.text = localizedContext.getString(listTitleId)
     }
 
     private fun onIntentItemClicked(item: UPIIntentItem) {
