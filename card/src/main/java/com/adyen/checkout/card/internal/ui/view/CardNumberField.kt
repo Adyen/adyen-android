@@ -209,7 +209,7 @@ private fun CardNumberFieldIcon(
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = CheckoutThemeProvider.colors.primary,
                 )
             }
 
