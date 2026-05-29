@@ -340,13 +340,6 @@ Before considering work complete:
 ## Resources
 [Public Documentation](https://docs.adyen.com/online-payments/build-your-integration/?platform=Android)
 
-## Additional Agent Guides
-
-For specific workflows, refer to these detailed guides in the `.agents/` directory:
-
-- **[Branch Naming](.agents/BRANCH_NAMING.md)** - Branch prefixes, base branches (`main` vs `v5`), branch chaining conventions
-- **[PR Reviews](.agents/PR_REVIEWS.md)** - Addressing review comments, resolving conversations
-
 ---
 
 **Remember:** The goal is to maintain consistency with the existing codebase and ensure all changes are correct and tested. Taking time to verify and ask questions prevents technical debt and bugs.
