@@ -8,17 +8,13 @@
 
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 
-/**
- * Configuration class for the GooglePayComponent.
- */
 @Parcelize
 @Suppress("LongParameterList")
-class GooglePayConfiguration(
+class GooglePayConfiguration internal constructor(
     val merchantAccount: String?,
     val googlePayEnvironment: Int?,
     val totalPriceStatus: String?,
@@ -39,28 +35,28 @@ class GooglePayConfiguration(
     val googlePayButtonStyling: GooglePayButtonStyling?,
 ) : Configuration
 
-class GooglePayConfigurationBuilder internal constructor() {
-
-    var merchantAccount: String? = null
-    var googlePayEnvironment: Int? = null
-    var totalPriceStatus: String? = null
-    var countryCode: String? = null
-    var merchantInfo: MerchantInfo? = null
-    var allowedAuthMethods: List<String>? = null
-    var allowedCardNetworks: List<String>? = null
-    var isAllowPrepaidCards: Boolean? = null
-    var isAllowCreditCards: Boolean? = null
-    var isAssuranceDetailsRequired: Boolean? = null
-    var isEmailRequired: Boolean? = null
-    var isExistingPaymentMethodRequired: Boolean? = null
-    var isShippingAddressRequired: Boolean? = null
-    var shippingAddressParameters: ShippingAddressParameters? = null
-    var isBillingAddressRequired: Boolean? = null
-    var billingAddressParameters: BillingAddressParameters? = null
-    var checkoutOption: String? = null
-    var googlePayButtonStyling: GooglePayButtonStyling? = null
-
-    internal fun build() = GooglePayConfiguration(
+@Suppress("LongParameterList")
+fun CheckoutConfiguration.googlePay(
+    merchantAccount: String? = null,
+    googlePayEnvironment: Int? = null,
+    totalPriceStatus: String? = null,
+    countryCode: String? = null,
+    merchantInfo: MerchantInfo? = null,
+    allowedAuthMethods: List<String>? = null,
+    allowedCardNetworks: List<String>? = null,
+    isAllowPrepaidCards: Boolean? = null,
+    isAllowCreditCards: Boolean? = null,
+    isAssuranceDetailsRequired: Boolean? = null,
+    isEmailRequired: Boolean? = null,
+    isExistingPaymentMethodRequired: Boolean? = null,
+    isShippingAddressRequired: Boolean? = null,
+    shippingAddressParameters: ShippingAddressParameters? = null,
+    isBillingAddressRequired: Boolean? = null,
+    billingAddressParameters: BillingAddressParameters? = null,
+    checkoutOption: String? = null,
+    googlePayButtonStyling: GooglePayButtonStyling? = null,
+): CheckoutConfiguration {
+    val config = GooglePayConfiguration(
         merchantAccount = merchantAccount,
         googlePayEnvironment = googlePayEnvironment,
         totalPriceStatus = totalPriceStatus,
@@ -80,14 +76,6 @@ class GooglePayConfigurationBuilder internal constructor() {
         checkoutOption = checkoutOption,
         googlePayButtonStyling = googlePayButtonStyling,
     )
-}
-
-fun CheckoutConfiguration.googlePay(
-    configuration: @CheckoutConfigurationMarker GooglePayConfigurationBuilder.() -> Unit = {},
-): CheckoutConfiguration {
-    val config = GooglePayConfigurationBuilder()
-        .apply(configuration)
-        .build()
     addConfiguration(config)
     return this
 }
