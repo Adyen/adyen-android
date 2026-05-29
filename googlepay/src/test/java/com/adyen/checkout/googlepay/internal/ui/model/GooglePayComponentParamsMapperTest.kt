@@ -341,7 +341,7 @@ internal class GooglePayComponentParamsMapperTest {
         amount = amount,
         showSubmitButton = showSubmitButton,
         publicKey = publicKey,
-        additionalConfigurations = mapOf(PaymentMethodTypes.GOOGLE_PAY to configuration),
+        additionalConfigurations = mapOf(GooglePayConfiguration::class.java.name to configuration),
         additionalSessionParams = null,
     )
 

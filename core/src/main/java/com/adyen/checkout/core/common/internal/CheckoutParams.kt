@@ -29,12 +29,7 @@ data class CheckoutParams(
 ) {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    inline fun <reified T : Configuration> getPaymentConfiguration(key: String): T? {
-        return additionalConfigurations[key] as? T
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    inline fun <reified T : Configuration> getActionConfiguration(configClass: Class<T>): T? {
-        return additionalConfigurations[configClass.name] as? T
+    inline fun <reified T : Configuration> getConfiguration(): T? {
+        return additionalConfigurations[T::class.java.name] as? T
     }
 }

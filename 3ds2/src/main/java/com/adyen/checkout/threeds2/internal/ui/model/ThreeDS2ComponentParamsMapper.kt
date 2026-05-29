@@ -17,7 +17,7 @@ internal class ThreeDS2ComponentParamsMapper {
     fun mapToParams(
         params: CheckoutParams,
     ): ThreeDS2ComponentParams {
-        val adyen3ds2Configuration = params.getActionConfiguration(ThreeDS2Configuration::class.java)
+        val adyen3ds2Configuration = params.getConfiguration<ThreeDS2Configuration>()
         return ThreeDS2ComponentParams(
             uiCustomization = adyen3ds2Configuration?.uiCustomization,
             threeDSRequestorAppURL = adyen3ds2Configuration?.threeDSRequestorAppURL,

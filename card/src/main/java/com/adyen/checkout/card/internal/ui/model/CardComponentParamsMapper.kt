@@ -18,7 +18,6 @@ import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 
 // TODO - Card Component Mapper Tests.
 internal class CardComponentParamsMapper {
@@ -27,7 +26,7 @@ internal class CardComponentParamsMapper {
         params: CheckoutParams,
         paymentMethod: CardPaymentMethod?,
     ): CardComponentParams {
-        val cardConfiguration = params.getPaymentConfiguration<CardConfiguration>(PaymentMethodTypes.SCHEME)
+        val cardConfiguration = params.getConfiguration<CardConfiguration>()
         return CardComponentParams(
             showCardholderName = cardConfiguration?.showCardholderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),

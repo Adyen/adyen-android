@@ -97,12 +97,7 @@ class CheckoutConfiguration(
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun addConfiguration(key: String, configuration: Configuration) {
-        availableConfigurations[key] = configuration
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun addActionConfiguration(configuration: Configuration) {
+    fun addConfiguration(configuration: Configuration) {
         availableConfigurations[configuration::class.java.name] = configuration
     }
 

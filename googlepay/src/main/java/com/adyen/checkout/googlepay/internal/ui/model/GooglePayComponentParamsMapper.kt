@@ -27,7 +27,7 @@ internal class GooglePayComponentParamsMapper {
         params: CheckoutParams,
         paymentMethod: GooglePayPaymentMethod,
     ): GooglePayComponentParams {
-        val googlePayConfiguration = params.getPaymentConfiguration<GooglePayConfiguration>(paymentMethod.type)
+        val googlePayConfiguration = params.getConfiguration<GooglePayConfiguration>()
         // TODO - Pass isCreatedByDropIn
         return GooglePayComponentParams(
             amount = params.amount ?: DEFAULT_AMOUNT,

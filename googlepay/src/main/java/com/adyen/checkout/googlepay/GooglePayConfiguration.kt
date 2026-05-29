@@ -11,7 +11,6 @@ package com.adyen.checkout.googlepay
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
-import com.adyen.checkout.googlepay.internal.ui.GooglePayComponent
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -89,8 +88,6 @@ fun CheckoutConfiguration.googlePay(
     val config = GooglePayConfigurationBuilder()
         .apply(configuration)
         .build()
-    GooglePayComponent.PAYMENT_METHOD_TYPES.forEach { key ->
-        addConfiguration(key, config)
-    }
+    addConfiguration(config)
     return this
 }

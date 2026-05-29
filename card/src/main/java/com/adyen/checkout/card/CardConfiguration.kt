@@ -11,7 +11,6 @@ package com.adyen.checkout.card
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -56,6 +55,6 @@ fun CheckoutConfiguration.card(
         supportedCardBrands = supportedCardBrands,
         showCardScanner = showCardScanner,
     )
-    addConfiguration(PaymentMethodTypes.SCHEME, config)
+    addConfiguration(config)
     return this
 }

@@ -19,7 +19,6 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -391,7 +390,7 @@ internal class CardComponentParamsMapperTest {
         showSubmitButton = true,
         publicKey = "test_publicKey",
         additionalConfigurations = buildMap {
-            cardConfiguration?.let { this[PaymentMethodTypes.SCHEME] = it }
+            cardConfiguration?.let { this[CardConfiguration::class.java.name] = it }
         },
         additionalSessionParams = additionalSessionParams,
     )

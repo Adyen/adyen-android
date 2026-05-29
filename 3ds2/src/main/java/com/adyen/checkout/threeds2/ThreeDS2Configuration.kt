@@ -28,6 +28,6 @@ fun CheckoutConfiguration.threeDS2(
         threeDSRequestorAppURL = threeDSRequestorAppURL,
         uiCustomization = uiCustomization,
     )
-    addActionConfiguration(config)
+    addConfiguration(config)
     return this
 }
