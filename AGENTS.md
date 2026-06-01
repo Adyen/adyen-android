@@ -79,31 +79,6 @@ fun `when holder name is empty then validation fails`() {
 - Ensure all tests that cover your code changes pass before proceeding
 - Don't accumulate too many changes without verification
 
-### 4. Always Run Checks Before Committing
-After completing a phase of work and before each commit, **ALWAYS run these commands in order**:
-
-```bash
-./gradlew apiDump
-./gradlew check
-```
-
-**Why these commands:**
-- `apiDump` - Updates the public API files to capture any API changes
-- `check` - Ensures all code compiles correctly, all tests pass, and no lint errors are introduced
-
-**IMPORTANT: Include generated `.api` files in commits**
-- After running `apiDump`, the command generates `.api` files in module `api/` directories (e.g., `core/api/core.api`)
-- These files MUST be included in your commit along with the code changes
-- They document the public API surface and are used for API compatibility checks
-
-This ensures:
-- All public API changes are documented
-- API files are kept in sync with code changes
-- All code compiles correctly
-- All tests pass
-- No lint errors are introduced
-- The codebase remains in a healthy state
-
 ## Implementation Guidelines
 
 ### Public API Changes
