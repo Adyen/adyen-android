@@ -38,11 +38,7 @@ This document outlines important patterns, practices, and rules to follow when w
 
 **Commit workflow - CRITICAL:**
 - **Complete one phase fully before moving to the next**
-- After completing a phase:
-  1. Run `./gradlew apiDump`
-  2. Run `./gradlew check` (or module-specific check)
-  3. Commit the phase with a descriptive message
-  4. Only then proceed to the next phase
+- After completing a phase, use the `android-commit` skill (`.agents/skills/android-commit.md`) to commit
 - Never accumulate multiple phases in a single commit
 - Each commit should represent a logical, complete unit of work
 - This ensures work can be reviewed incrementally and rolled back if needed
@@ -103,6 +99,11 @@ class CardConfiguration { }
 ```
 
 **When making public API changes:**
+
+**Update API dump files:**
+- When you intentionally change the public API, run `./gradlew apiDump` (or `./gradlew :<module>:apiDump`) to regenerate the `.api` files
+- These files document the public API surface and must be included in your commit
+- Do **not** run `apiDump` automatically — only run it after confirming the API change is intentional. This ensures accidental API changes are caught by `apiCheck` during verification.
 
 **Carefully review all changes:**
 - Review each change carefully to ensure it's necessary and correct. If in doubt, ask questions.
@@ -284,37 +285,6 @@ if (checkCompileOnly("com.external.sdk.SomeClass")) {
 }
 ```
 
-## Commit Guidelines
-
-### Staging Files for Commit
-**NEVER use `git add -A` or `git add .`**
-- Only stage the specific files that were modified and are necessary for the commit
-- Use `git add <file1> <file2> ...` to add individual files
-- This prevents accidentally committing unrelated changes or generated files that shouldn't be included
-
-### Commit Message Format
-All commits must follow this format:
-```
-Short commit message describing the change.
-
-COSDK-XXX
-```
-
-**Important:**
-- **ALWAYS ask the user for the ticket number** before making a commit
-- For each task/plan, the ticket number should be the same. Remember the number once provided for the rest of the commits.
-- Replace `XXX` with the actual ticket number (e.g., `COSDK-1234`)
-- **Verify the commit message with the user** before executing the commit
-- The first line should be a concise description of the change
-- Leave a blank line between the description and the ticket reference
-
-### Example Commit Messages
-```
-Add holder name localization keys and strings.
-
-COSDK-1234
-```
-
 ## Verification Checklist
 
 Before considering work complete:
@@ -335,7 +305,6 @@ Before considering work complete:
 2. **Ask questions** rather than making assumptions
 3. **Run `./gradlew check`** to catch issues early
 4. **Read compiler error messages carefully** - they often tell you exactly what's wrong
-5. **Ask for the ticket number** before making any commits
 
 ## Resources
 [Public Documentation](https://docs.adyen.com/online-payments/build-your-integration/?platform=Android)
