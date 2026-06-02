@@ -16,6 +16,7 @@ internal data class DetectedCardTypeList(
      * in the public API.
      */
     val cardDetectionBin: String?,
+    val issuingCountryCode: String?,
 ) {
     enum class Source {
         LOCAL,

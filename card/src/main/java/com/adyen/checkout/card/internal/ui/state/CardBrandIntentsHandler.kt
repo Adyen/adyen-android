@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.helper.toCardBrandData
+import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -34,7 +35,13 @@ internal class CardBrandIntentsHandler(
             state
         } else {
             val newCardBrandState = getCardBrandState(state, intent)
-            getUpdatedCardComponentState(state, newCardBrandState)
+            val updatedComponentState = getUpdatedCardComponentState(state, newCardBrandState)
+
+            val networkBinLookupState = when (intent.detectedCardTypeList.source) {
+                DetectedCardTypeList.Source.NETWORK -> intent.detectedCardTypeList.toNetworkBinLookupState()
+                DetectedCardTypeList.Source.LOCAL -> null
+            }
+            updatedComponentState.copy(networkBinLookupState = networkBinLookupState)
         }
     }
 

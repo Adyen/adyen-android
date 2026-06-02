@@ -29,7 +29,7 @@ internal class NetworkCardBrandDetectionService(
     private val paymentMethodType: String?,
 ) {
 
-    suspend fun getCardBrands(bin: String): Result<List<DetectedCardType>> {
+    suspend fun getCardBrands(bin: String): Result<BinLookupNetworkResult> {
         adyenLog(AdyenLogLevel.DEBUG) { "fetching card brands from network - bin lookup" }
         val publicKey = publicKey
         if (publicKey == null) {
@@ -49,7 +49,12 @@ internal class NetworkCardBrandDetectionService(
                 adyenLog(AdyenLogLevel.ERROR, e) { "getCardBrands - Error calling bin lookup" }
             }
 
-        return binLookupResult.map(::mapResponse)
+        return binLookupResult.map { response ->
+            BinLookupNetworkResult(
+                detectedCardTypes = mapResponse(response),
+                issuingCountryCode = response.issuingCountryCode,
+            )
+        }
     }
 
     private fun mapResponse(binLookupResponse: BinLookupResponse): List<DetectedCardType> {
