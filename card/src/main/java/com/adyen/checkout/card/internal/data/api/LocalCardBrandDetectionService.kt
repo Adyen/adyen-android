@@ -38,6 +38,7 @@ internal class LocalCardBrandDetectionService(
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
             isSupported = supportedCardBrands.contains(cardBrand),
+            isHidden = false,
             isShopperSelectionAllowedInDualBranded = false,
             panLength = null,
             paymentMethodVariant = null,

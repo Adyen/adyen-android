@@ -475,6 +475,136 @@ internal class CardBrandIntentsHandlerTest(
 
             assertEquals(expectedState, actual.cardBrandState)
         }
+
+        @Test
+        fun `and list has only hidden supported brands then state should be hidden brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("accel"), isHidden = true),
+                createDetectedCardType().copy(cardBrand = CardBrand("pulse"), isHidden = true),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes = detectedCardTypes,
+                source = DetectedCardTypeList.Source.NETWORK,
+                cardDetectionBin = null,
+                issuingCountryCode = null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            assertEquals(CardBrandState.HiddenBrand, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has one non-hidden supported brand and a hidden brand then state should be single reliable with hidden brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("visa")),
+                createDetectedCardType().copy(cardBrand = CardBrand("accel"), isHidden = true),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes = detectedCardTypes,
+                source = DetectedCardTypeList.Source.NETWORK,
+                cardDetectionBin = null,
+                issuingCountryCode = null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            val expectedState = CardBrandState.SingleReliableWithHiddenBrand(
+                createCardBrandData().copy(cardBrand = CardBrand("visa")),
+            )
+
+            assertEquals(expectedState, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has multiple non-hidden supported brands and a hidden brand then hidden brand is ignored for dual brand logic`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(
+                    cardBrand = CardBrand("visa"),
+                    isShopperSelectionAllowedInDualBranded = true,
+                ),
+                createDetectedCardType().copy(cardBrand = CardBrand("cartebancaire")),
+                createDetectedCardType().copy(cardBrand = CardBrand("accel"), isHidden = true),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes = detectedCardTypes,
+                source = DetectedCardTypeList.Source.NETWORK,
+                cardDetectionBin = null,
+                issuingCountryCode = null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            val expectedState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(
+                    createCardBrandData().copy(cardBrand = CardBrand("visa")),
+                    createCardBrandData().copy(cardBrand = CardBrand("cartebancaire")),
+                ),
+                shopperSelectedCardBrandData = createCardBrandData().copy(cardBrand = CardBrand("visa")),
+            )
+
+            assertEquals(expectedState, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has one supported brand and an unsupported hidden brand then state should be single reliable brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("visa")),
+                createDetectedCardType().copy(cardBrand = CardBrand("accel"), isHidden = true, isSupported = false),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes = detectedCardTypes,
+                source = DetectedCardTypeList.Source.NETWORK,
+                cardDetectionBin = null,
+                issuingCountryCode = null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            val expectedState = CardBrandState.SingleReliableBrand(
+                createCardBrandData().copy(cardBrand = CardBrand("visa")),
+            )
+
+            assertEquals(expectedState, actual.cardBrandState)
+        }
+
+        @Test
+        fun `and list has hidden supported brands and unsupported non-hidden brands then state should be hidden brand`() {
+            val state = createInitialState()
+            val detectedCardTypes = listOf(
+                createDetectedCardType().copy(cardBrand = CardBrand("accel"), isHidden = true),
+                createDetectedCardType().copy(cardBrand = CardBrand("visa"), isSupported = false),
+            )
+            val detectedCardTypeList = DetectedCardTypeList(
+                detectedCardTypes = detectedCardTypes,
+                source = DetectedCardTypeList.Source.NETWORK,
+                cardDetectionBin = null,
+                issuingCountryCode = null,
+            )
+
+            val actual = cardBrandIntentsHandler.onUpdateDetectedCardTypes(
+                state,
+                CardIntent.UpdateDetectedCardTypes(detectedCardTypeList),
+            )
+
+            assertEquals(CardBrandState.HiddenBrand, actual.cardBrandState)
+        }
     }
 
     // CVC / expiry date policy tests
@@ -647,6 +777,31 @@ internal class CardBrandIntentsHandlerTest(
         assertEquals(RequirementPolicy.Hidden, actual.securityCode.requirementPolicy)
     }
 
+    @Test
+    fun `when hidden brand is detected then expiryDate and securityCode requirementPolicy defaults to Required`() {
+        val cardBrandState = CardBrandState.HiddenBrand
+
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
+
+        assertEquals(RequirementPolicy.Required, actual.expiryDate.requirementPolicy)
+        assertEquals(RequirementPolicy.Required, actual.securityCode.requirementPolicy)
+    }
+
+    @Test
+    fun `when single reliable with hidden brand is detected then expiryDate and securityCode use brand policies`() {
+        val cardBrandState = CardBrandState.SingleReliableWithHiddenBrand(
+            createCardBrandData().copy(
+                cvcPolicy = Brand.FieldPolicy.OPTIONAL,
+                expiryDatePolicy = Brand.FieldPolicy.OPTIONAL,
+            ),
+        )
+
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
+
+        assertEquals(RequirementPolicy.Optional, actual.expiryDate.requirementPolicy)
+        assertEquals(RequirementPolicy.Optional, actual.securityCode.requirementPolicy)
+    }
+
     @Nested
     @DisplayName("when intent is SelectBrand")
     inner class SelectBrandTest {
@@ -753,6 +908,7 @@ internal class CardBrandIntentsHandlerTest(
             cvcPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
             isSupported = true,
+            isHidden = false,
             isShopperSelectionAllowedInDualBranded = false,
             panLength = null,
             paymentMethodVariant = null,

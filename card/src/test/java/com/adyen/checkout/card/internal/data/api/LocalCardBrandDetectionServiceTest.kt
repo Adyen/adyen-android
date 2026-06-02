@@ -44,6 +44,7 @@ internal class LocalCardBrandDetectionServiceTest {
             cvcPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
             isSupported = true,
+            isHidden = false,
             isShopperSelectionAllowedInDualBranded = false,
             panLength = null,
             paymentMethodVariant = null,

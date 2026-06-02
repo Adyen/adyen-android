@@ -20,12 +20,15 @@ internal class CardComponentStateValidator(
     override fun validate(state: CardComponentState): CardComponentState {
         // the single / selected / first brand can be used for this validation, regardless whether reliable or not
         val selectedOrFirstCardBrandData = when (val cardBrandState = state.cardBrandState) {
-            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
-            is CardBrandState.SingleUnreliableBrand -> cardBrandState.cardBrandData
-            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
-            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
             is CardBrandState.NoBrandsDetected,
-            is CardBrandState.UnsupportedBrand -> null
+            is CardBrandState.UnsupportedBrand,
+            is CardBrandState.HiddenBrand -> null
+
+            is CardBrandState.SingleUnreliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandState.cardBrandData
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
         }
         val isUnsupportedBrand = state.cardBrandState is CardBrandState.UnsupportedBrand
         val cardNumberError = validateCardNumber(

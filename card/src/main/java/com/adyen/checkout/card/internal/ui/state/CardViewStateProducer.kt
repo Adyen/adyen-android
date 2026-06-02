@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.helper.isHiddenCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
@@ -29,11 +30,13 @@ internal class CardViewStateProducer(
         // we only show all supported card brands when the setting is enabled
         // and we do not detect any brands for this specific card
         val isSupportedCardBrandsShown = state.showSupportedCardBrandLogos && when (state.cardBrandState) {
+            is CardBrandState.NoBrandsDetected,
             is CardBrandState.UnsupportedBrand,
-            is CardBrandState.NoBrandsDetected -> true
+            is CardBrandState.HiddenBrand -> true
 
-            is CardBrandState.SingleReliableBrand,
             is CardBrandState.SingleUnreliableBrand,
+            is CardBrandState.SingleReliableBrand,
+            is CardBrandState.SingleReliableWithHiddenBrand,
             is CardBrandState.DualBrand,
             is CardBrandState.DualBrandWithShopperSelection -> false
         }
@@ -60,7 +63,9 @@ internal class CardViewStateProducer(
             ),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
-            supportedCardBrands = state.supportedCardBrands,
+            supportedCardBrands = state.supportedCardBrands.filterNot {
+                isHiddenCardType(it.txVariant)
+            },
             isSupportedCardBrandsShown = isSupportedCardBrandsShown,
             detectedCardBrands = detectedCardBrands,
             isLoading = state.isLoading,
@@ -72,12 +77,15 @@ internal class CardViewStateProducer(
     // detected card brands are shown on the UI in all flows
     private fun getDetectedCardBrands(cardBrandState: CardBrandState): List<CardBrand> {
         return when (cardBrandState) {
+            is CardBrandState.NoBrandsDetected,
+            is CardBrandState.UnsupportedBrand,
+            is CardBrandState.HiddenBrand -> emptyList()
+
+            is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
+            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
+            is CardBrandState.SingleReliableWithHiddenBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
             is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.map { it.cardBrand }
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList.map { it.cardBrand }
-            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
-            is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
-            is CardBrandState.NoBrandsDetected,
-            is CardBrandState.UnsupportedBrand -> emptyList()
         }
     }
 

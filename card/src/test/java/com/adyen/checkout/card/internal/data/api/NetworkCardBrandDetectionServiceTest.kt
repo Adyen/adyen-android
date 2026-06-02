@@ -232,6 +232,21 @@ internal class NetworkCardBrandDetectionServiceTest(
                 ),
             ),
             arguments(
+                listOf(
+                    mockBrand(brand = "accel"),
+                    mockBrand(brand = "visa"),
+                ),
+                listOf(
+                    mockDetectedCardType(
+                        cardBrand = CardBrand("accel"),
+                        isHidden = true,
+                    ),
+                    mockDetectedCardType(
+                        cardBrand = CardBrand(CardType.VISA.txVariant),
+                    ),
+                ),
+            ),
+            arguments(
                 null,
                 emptyList<DetectedCardType>(),
             ),
@@ -267,6 +282,7 @@ internal class NetworkCardBrandDetectionServiceTest(
             cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
             isSupported: Boolean = true,
+            isHidden: Boolean = false,
             isShopperSelectionAllowedInDualBranded: Boolean = false,
             panLength: Int? = 16,
             paymentMethodVariant: String? = PaymentMethodTypes.SCHEME,
@@ -278,6 +294,7 @@ internal class NetworkCardBrandDetectionServiceTest(
                 cvcPolicy,
                 expiryDatePolicy,
                 isSupported,
+                isHidden,
                 isShopperSelectionAllowedInDualBranded,
                 panLength,
                 paymentMethodVariant,

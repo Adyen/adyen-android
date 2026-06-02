@@ -74,23 +74,42 @@ internal class CardBrandIntentsHandler(
             }
 
             DetectedCardTypeList.Source.NETWORK -> {
+                val nonHiddenSupportedBrands = supportedDetectedCardTypes.filterNot {
+                    it.isHidden
+                }
+                val anyHiddenBrandDetected = supportedDetectedCardTypes.any {
+                    it.isHidden
+                }
+
                 when {
                     // network detection + no detected brands
                     detectedCardTypes.isEmpty() -> CardBrandState.NoBrandsDetected
 
-                    // network detection + detected brands but no supported brands
-                    supportedDetectedCardTypes.isEmpty() -> CardBrandState.UnsupportedBrand
-
-                    // network detection + 1 detected brand
-                    supportedDetectedCardTypes.size == 1 -> {
-                        CardBrandState.SingleReliableBrand(
-                            cardBrandData = supportedDetectedCardTypes.first().toCardBrandData(),
-                        )
+                    // network detection + no non-hidden supported brands
+                    nonHiddenSupportedBrands.isEmpty() -> {
+                        if (anyHiddenBrandDetected) {
+                            CardBrandState.HiddenBrand
+                        } else {
+                            CardBrandState.UnsupportedBrand
+                        }
                     }
 
-                    // network detection + multiple detected brands
+                    // network detection + 1 non-hidden supported brand
+                    nonHiddenSupportedBrands.size == 1 -> {
+                        if (anyHiddenBrandDetected) {
+                            CardBrandState.SingleReliableWithHiddenBrand(
+                                cardBrandData = nonHiddenSupportedBrands.first().toCardBrandData(),
+                            )
+                        } else {
+                            CardBrandState.SingleReliableBrand(
+                                cardBrandData = nonHiddenSupportedBrands.first().toCardBrandData(),
+                            )
+                        }
+                    }
+
+                    // network detection + multiple non-hidden supported brands
                     else -> {
-                        getDualBrandedCardBrandState(currentState.cardBrandState, supportedDetectedCardTypes)
+                        getDualBrandedCardBrandState(currentState.cardBrandState, nonHiddenSupportedBrands)
                     }
                 }
             }
@@ -153,12 +172,15 @@ internal class CardBrandIntentsHandler(
         // We should only override the default behavior of the CVC / expiry date if the identified brand is reliable
         // With DualBrand (no shopper selection) we can rely on the first brand
         val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
-            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
-            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
-            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
             is CardBrandState.NoBrandsDetected,
-            is CardBrandState.SingleUnreliableBrand,
-            is CardBrandState.UnsupportedBrand -> null
+            is CardBrandState.UnsupportedBrand,
+            is CardBrandState.HiddenBrand,
+            is CardBrandState.SingleUnreliableBrand -> null
+
+            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandState.cardBrandData
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
         }
         val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
         val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy

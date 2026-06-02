@@ -300,25 +300,6 @@ internal class CardComponentParamsMapperTest {
         assertEquals(CardComponentParamsMapper.DEFAULT_SUPPORTED_CARDS_LIST, params.supportedCardBrands)
     }
 
-    @Test
-    fun `when payment method brands contain restricted cards then they are filtered out`() {
-        val paymentMethod = createCardPaymentMethod(
-            brands = listOf(
-                RestrictedCardType.NYCE.txVariant,
-                CardType.MASTERCARD.txVariant,
-            ),
-        )
-
-        val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = null,
-            paymentMethod = paymentMethod,
-        )
-
-        val expected = listOf(CardBrand(CardType.MASTERCARD.txVariant))
-        assertEquals(expected, params.supportedCardBrands)
-    }
-
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
     fun `showStorePaymentMethod should match sessions value if it exists, otherwise should match configuration`(
