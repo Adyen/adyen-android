@@ -16,9 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.adyen.checkout.ui.internal.element.InternalElements
 import com.adyen.checkout.ui.internal.text.InternalTextStyles
-import com.adyen.checkout.ui.theme.CheckoutAttributes
 import com.adyen.checkout.ui.theme.CheckoutColors
-import com.adyen.checkout.ui.theme.CheckoutTextStyles
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -28,8 +26,8 @@ fun InternalCheckoutTheme(
     content: @Composable () -> Unit,
 ) {
     val colors = remember(theme.colors) { InternalColors.from(theme.colors) }
-    val textStyles = remember(theme.textStyles) { InternalTextStyles.from(theme.textStyles) }
-    val attributes = remember(theme.attributes) { InternalAttributes.from(CheckoutAttributes.default()) }
+    val textStyles = remember { InternalTextStyles.from(CheckoutTextStyles.default()) }
+    val attributes = remember { InternalAttributes.from(CheckoutAttributes.default()) }
     val elements = remember(colors, attributes) { InternalElements.from(colors, attributes) }
     CompositionLocalProvider(
         LocalColors provides colors,

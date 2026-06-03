@@ -6,12 +6,13 @@
  * Created by oscars on 23/7/2025.
  */
 
-package com.adyen.checkout.ui.theme
+package com.adyen.checkout.ui.internal.theme
 
 import androidx.compose.runtime.Immutable
 
+// This class is internal for now, but if we will support customizing this in the future, it should be public.
 @Immutable
-data class CheckoutAttributes(
+internal data class CheckoutAttributes(
     val cornerRadius: Int,
 ) {
 

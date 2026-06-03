@@ -10,7 +10,6 @@ package com.adyen.checkout.ui.internal.theme
 
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
-import com.adyen.checkout.ui.theme.CheckoutAttributes
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Immutable
