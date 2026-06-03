@@ -10,7 +10,13 @@ package com.adyen.checkout.ui.theme
 
 import androidx.compose.runtime.Immutable
 
-// TODO - Add KDocs
+/**
+ * The theme configuration for the Checkout UI.
+ *
+ * Use this class to customize the visual appearance of the checkout components.
+ *
+ * @param colors The color palette to apply to the UI components. Defaults to [CheckoutColors.light].
+ */
 @Immutable
 data class CheckoutTheme(
     val colors: CheckoutColors = CheckoutColors.light(),
