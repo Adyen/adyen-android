@@ -6,15 +6,15 @@
  * Created by oscars on 10/4/2025.
  */
 
-package com.adyen.checkout.ui.theme
+package com.adyen.checkout.ui.internal.theme
 
 import androidx.annotation.FontRes
 import androidx.compose.runtime.Immutable
 
-// TODO - Add KDocs
+// This class is internal for now, but if we will support customizing this in the future, it should be public.
 @Immutable
-data class CheckoutTextStyles(
-    @FontRes val font: Int?,
+internal data class CheckoutTextStyles(
+    @field:FontRes val font: Int?,
 ) {
 
     companion object {

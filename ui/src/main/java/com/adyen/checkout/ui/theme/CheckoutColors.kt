@@ -12,11 +12,35 @@ import androidx.compose.runtime.Immutable
 import com.adyen.checkout.ui.internal.theme.DefaultColorsDark
 import com.adyen.checkout.ui.internal.theme.DefaultColorsLight
 
-// TODO - Add KDocs
+/**
+ * Represents a color value used by the Checkout UI.
+ *
+ * @param value The color value encoded as an ARGB [Long]. For example, `0xFF000000` represents black.
+ */
 @Immutable
 @JvmInline
 value class CheckoutColor(val value: Long)
 
+/**
+ * The color palette for the Checkout UI.
+ *
+ * Use the [light] and [dark] factory methods to create an instance with default colors that can be selectively
+ * overridden.
+ *
+ * @param background The main background color.
+ * @param container The background color for container elements.
+ * @param containerOutline The outline color for container elements.
+ * @param primary The primary color used for prominent UI elements.
+ * @param textOnPrimary The text color displayed on top of [primary].
+ * @param highlight The color used for highlighted elements.
+ * @param destructive The color used for destructive actions.
+ * @param textOnDestructive The text color displayed on top of [destructive].
+ * @param disabled The background color for disabled elements.
+ * @param textOnDisabled The text color displayed on top of [disabled].
+ * @param separator The color used for separators and dividers.
+ * @param text The primary text color.
+ * @param textSecondary The secondary text color.
+ */
 @Immutable
 data class CheckoutColors(
     val background: CheckoutColor,
@@ -36,6 +60,9 @@ data class CheckoutColors(
 
     companion object {
 
+        /**
+         * Creates a [CheckoutColors] instance with light theme defaults. Each color can be individually overridden.
+         */
         @Suppress("LongParameterList")
         fun light(
             background: CheckoutColor = DefaultColorsLight.BackgroundPrimary,
@@ -67,6 +94,9 @@ data class CheckoutColors(
             textSecondary = textSecondary,
         )
 
+        /**
+         * Creates a [CheckoutColors] instance with dark theme defaults. Each color can be individually overridden.
+         */
         @Suppress("LongParameterList")
         fun dark(
             background: CheckoutColor = DefaultColorsDark.BackgroundPrimary,
