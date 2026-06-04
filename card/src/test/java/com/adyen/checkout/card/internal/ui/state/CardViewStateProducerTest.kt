@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
@@ -27,9 +26,7 @@ internal class CardViewStateProducerTest {
 
     @BeforeEach
     fun beforeEach() {
-        producer = CardViewStateProducer(
-            dualBrandedCardHandler = DualBrandedCardHandler(),
-        )
+        producer = CardViewStateProducer()
     }
 
     // UC5: Brand Detection Hides Placeholder (No Error)

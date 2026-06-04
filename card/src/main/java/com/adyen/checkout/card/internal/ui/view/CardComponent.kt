@@ -42,23 +42,11 @@ internal fun CardComponent(
             PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
         },
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
-        ) {
-            CardDetailsSection(
-                viewState = viewState,
-                onIntent = onIntent,
-                onScanButtonClick = onScanButtonClick,
-            )
-
-            viewState.dualBrandData?.let { dualBrandData ->
-                DualBrandSelector(
-                    dualBrandData = dualBrandData,
-                    onBrandSelected = { onIntent(CardIntent.SelectBrand(it)) },
-                )
-            }
-        }
+        CardDetailsSection(
+            viewState = viewState,
+            onIntent = onIntent,
+            onScanButtonClick = onScanButtonClick,
+        )
     }
 }
 
@@ -183,7 +171,6 @@ private fun CardComponentPreview() {
             isLoading = false,
             isCardScanButtonVisible = false,
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
-            dualBrandData = null,
         ),
         onIntent = {},
         onSubmitClick = {},

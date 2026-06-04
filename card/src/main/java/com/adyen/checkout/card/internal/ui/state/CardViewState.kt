@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
@@ -30,7 +29,6 @@ internal data class CardViewState(
     val detectedCardBrands: List<CardBrand>,
     val isLoading: Boolean,
     val isCardScanButtonVisible: Boolean,
-    val dualBrandData: DualBrandData?,
 ) : ViewState
 
 internal val CardViewState.isAmex: Boolean?

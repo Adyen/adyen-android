@@ -67,12 +67,11 @@ internal class CardFactory :
         val detectCardTypeBinHelper = DetectCardTypeBinHelper()
 
         val cardValidationMapper = CardValidationMapper()
-        val dualBrandedCardHandler = DualBrandedCardHandler()
         val componentStateFactory = CardComponentStateFactory(cardComponentParams)
         val cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams, detectCardTypeBinHelper)
         val componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler)
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
-        val viewStateProducer = CardViewStateProducer(dualBrandedCardHandler)
+        val viewStateProducer = CardViewStateProducer()
 
         val cardEncryptor = CardEncryptorFactory.provide()
         val genericEncryptor = GenericEncryptorFactory.provide()

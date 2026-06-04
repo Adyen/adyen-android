@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.helper.isHiddenCardType
-import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
@@ -20,13 +19,9 @@ import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
-internal class CardViewStateProducer(
-    private val dualBrandedCardHandler: DualBrandedCardHandler,
-) : ViewStateProducer<CardComponentState, CardViewState> {
+internal class CardViewStateProducer : ViewStateProducer<CardComponentState, CardViewState> {
 
     override fun produce(state: CardComponentState): CardViewState {
-        val dualBrandData = dualBrandedCardHandler.getDualBrandData(state.cardBrandState)
-
         // we only show all supported card brands when the setting is enabled
         // and we do not detect any brands for this specific card
         val isSupportedCardBrandsShown = state.showSupportedCardBrandLogos && when (state.cardBrandState) {
@@ -70,7 +65,6 @@ internal class CardViewStateProducer(
             detectedCardBrands = detectedCardBrands,
             isLoading = state.isLoading,
             isCardScanButtonVisible = isCardScanButtonVisible,
-            dualBrandData = dualBrandData,
         )
     }
 
