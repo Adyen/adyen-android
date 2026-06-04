@@ -1,3 +1,8 @@
+---
+name: android-branch-create
+description: Create a branch with correct prefix and base.
+---
+
 # android-branch-create
 
 Create a new branch for the Adyen Android SDK following project naming conventions.

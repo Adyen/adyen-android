@@ -1,3 +1,8 @@
+---
+name: android-check
+description: Run compile, lint, and unit test checks.
+---
+
 # android-check
 
 Run verification checks for the Adyen Android SDK.

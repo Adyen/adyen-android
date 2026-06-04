@@ -1,3 +1,8 @@
+---
+name: android-pr-create
+description: Create a draft PR with title, body, and checklist.
+---
+
 # android-pr-create
 
 Create a draft Pull Request for the Adyen Android SDK following project conventions.

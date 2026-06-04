@@ -1,3 +1,8 @@
+---
+name: android-commit
+description: Create a commit with pre-commit checks and conventions.
+---
+
 # android-commit
 
 Create a verified, properly formatted commit for the Adyen Android SDK.
