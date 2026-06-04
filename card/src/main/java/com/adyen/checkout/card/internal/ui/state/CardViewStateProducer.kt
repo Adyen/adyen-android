@@ -13,7 +13,6 @@ import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -36,7 +35,8 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             is CardBrandState.DualBrandWithShopperSelection -> false
         }
 
-        val detectedCardBrands = getDetectedCardBrands(state.cardBrandState)
+        val cardBrandViewState = getCardBrandViewState(state.cardBrandState)
+        val isAmex = getIsAmex(state.cardBrandState)
         val isCardScanButtonVisible = state.isCardScanningAvailable && state.cardNumber.text.isEmpty()
 
         return CardViewState(
@@ -47,14 +47,14 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
                 trailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
             ),
             securityCode = state.securityCode.toViewState(
-                trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, detectedCardBrands),
+                trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, isAmex),
             ),
             holderName = state.holderName.toViewState(),
             socialSecurityNumber = state.socialSecurityNumber.toViewState(),
             kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.toViewState(),
             kcpCardPassword = state.kcpCardPassword.toViewState(),
             postalCode = state.postalCode.toViewState(
-                trailingIcon = getPostalCodeTrailingIcon(state.postalCode)
+                trailingIcon = getPostalCodeTrailingIcon(state.postalCode),
             ),
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
@@ -62,25 +62,56 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
                 isHiddenCardType(it.txVariant)
             },
             isSupportedCardBrandsShown = isSupportedCardBrandsShown,
-            detectedCardBrands = detectedCardBrands,
+            cardBrandViewState = cardBrandViewState,
+            isAmex = isAmex,
             isLoading = state.isLoading,
             isCardScanButtonVisible = isCardScanButtonVisible,
         )
     }
 
-    // detected card brands are shown on the UI in all flows
-    private fun getDetectedCardBrands(cardBrandState: CardBrandState): List<CardBrand> {
+    private fun getCardBrandViewState(cardBrandState: CardBrandState): CardBrandViewState {
         return when (cardBrandState) {
             is CardBrandState.NoBrandsDetected,
             is CardBrandState.UnsupportedBrand,
-            is CardBrandState.HiddenBrand -> emptyList()
+            is CardBrandState.HiddenBrand -> CardBrandViewState.Placeholder
 
-            is CardBrandState.SingleUnreliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
-            is CardBrandState.SingleReliableBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
-            is CardBrandState.SingleReliableWithHiddenBrand -> listOf(cardBrandState.cardBrandData.cardBrand)
-            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.map { it.cardBrand }
-            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.cardBrandDataList.map { it.cardBrand }
+            is CardBrandState.SingleUnreliableBrand ->
+                CardBrandViewState.SingleBrand(cardBrandState.cardBrandData.cardBrand)
+
+            is CardBrandState.SingleReliableBrand ->
+                CardBrandViewState.SingleBrand(cardBrandState.cardBrandData.cardBrand)
+
+            is CardBrandState.SingleReliableWithHiddenBrand ->
+                CardBrandViewState.SingleBrand(cardBrandState.cardBrandData.cardBrand)
+
+            is CardBrandState.DualBrand -> CardBrandViewState.DualBrand(
+                cardBrandState.cardBrandDataList.map { it.cardBrand },
+            )
+
+            is CardBrandState.DualBrandWithShopperSelection -> CardBrandViewState.SelectableDualBrand(
+                cardBrandState.cardBrandDataList.map { cardBrandData ->
+                    SelectableCardBrandItem(
+                        brand = cardBrandData.cardBrand,
+                        isSelected = cardBrandData == cardBrandState.shopperSelectedCardBrandData,
+                    )
+                },
+            )
         }
+    }
+
+    private fun getIsAmex(cardBrandState: CardBrandState): Boolean {
+        val cardBrandData = when (cardBrandState) {
+            is CardBrandState.NoBrandsDetected,
+            is CardBrandState.UnsupportedBrand,
+            is CardBrandState.HiddenBrand -> null
+
+            is CardBrandState.SingleUnreliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
+            is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandState.cardBrandData
+            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.firstOrNull()
+            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
+        }
+        return cardBrandData?.cardBrand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant
     }
 
     private fun getCardNumberTrailingIcon(
@@ -110,18 +141,15 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
 
     private fun getSecurityCodeTrailingIcon(
         securityCode: TextInputComponentState,
-        detectedCardBrands: List<CardBrand>
+        isAmex: Boolean,
     ): SecurityCodeTrailingIcon {
         val isValid = securityCode.errorMessage == null && securityCode.text.isNotEmpty()
         val isInvalid = securityCode.errorMessage != null && securityCode.showError
-        val isAmex = detectedCardBrands.firstOrNull()?.let { detectedCard ->
-            detectedCard.txVariant == CardType.AMERICAN_EXPRESS.txVariant
-        }
 
         return when {
             isValid -> SecurityCodeTrailingIcon.Checkmark
             isInvalid -> SecurityCodeTrailingIcon.Warning
-            isAmex == true -> SecurityCodeTrailingIcon.PlaceholderAmex
+            isAmex -> SecurityCodeTrailingIcon.PlaceholderAmex
             else -> SecurityCodeTrailingIcon.PlaceholderDefault
         }
     }

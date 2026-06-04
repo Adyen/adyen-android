@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -75,7 +76,7 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
-    fun `when hidden brand is detected, then supported card brands should be shown and detected brands should be empty`() {
+    fun `when hidden brand is detected, then supported card brands should be shown and card brand view state should be placeholder`() {
         // GIVEN
         val componentState = createComponentState(
             cardBrandState = CardBrandState.HiddenBrand,
@@ -86,11 +87,11 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertTrue(viewState.isSupportedCardBrandsShown)
-        assertTrue(viewState.detectedCardBrands.isEmpty())
+        assertEquals(CardBrandViewState.Placeholder, viewState.cardBrandViewState)
     }
 
     @Test
-    fun `when single reliable with hidden brand is detected, then supported card brands should be hidden and detected brands should contain non-hidden brand`() {
+    fun `when single reliable with hidden brand is detected, then supported card brands should be hidden and card brand view state should be single brand`() {
         // GIVEN
         val cardBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
         val componentState = createComponentState(
@@ -102,7 +103,144 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertFalse(viewState.isSupportedCardBrandsShown)
-        assertEquals(listOf(CardBrand("visa")), viewState.detectedCardBrands)
+        assertEquals(CardBrandViewState.SingleBrand(CardBrand("visa")), viewState.cardBrandViewState)
+    }
+
+    @Test
+    fun `when dual brand is detected, then card brand view state should be dual brand`() {
+        // GIVEN
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val mcBrandData = getCardBrandData().copy(cardBrand = CardBrand("mc"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrand(listOf(visaBrandData, mcBrandData)),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertEquals(
+            CardBrandViewState.DualBrand(listOf(CardBrand("visa"), CardBrand("mc"))),
+            viewState.cardBrandViewState,
+        )
+    }
+
+    @Test
+    fun `when dual brand with shopper selection is detected, then card brand view state should be selectable dual brand`() {
+        // GIVEN
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val mcBrandData = getCardBrandData().copy(cardBrand = CardBrand("mc"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(visaBrandData, mcBrandData),
+                shopperSelectedCardBrandData = visaBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertEquals(
+            CardBrandViewState.SelectableDualBrand(
+                listOf(
+                    SelectableCardBrandItem(brand = CardBrand("visa"), isSelected = true),
+                    SelectableCardBrandItem(brand = CardBrand("mc"), isSelected = false),
+                ),
+            ),
+            viewState.cardBrandViewState,
+        )
+    }
+
+    @Test
+    fun `when amex brand is detected, then isAmex should be true`() {
+        // GIVEN
+        val amexBrandData = getCardBrandData().copy(
+            cardBrand = CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+        )
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.SingleReliableBrand(amexBrandData),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertTrue(viewState.isAmex)
+    }
+
+    @Test
+    fun `when non-amex brand is detected, then isAmex should be false`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.SingleReliableBrand(
+                getCardBrandData().copy(cardBrand = CardBrand("visa")),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isAmex)
+    }
+
+    @Test
+    fun `when no brand is detected, then isAmex should be false`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.NoBrandsDetected,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isAmex)
+    }
+
+    @Test
+    fun `when dual brand with amex selected, then isAmex should be true`() {
+        // GIVEN
+        val amexBrandData = getCardBrandData().copy(
+            cardBrand = CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+        )
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(amexBrandData, visaBrandData),
+                shopperSelectedCardBrandData = amexBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertTrue(viewState.isAmex)
+    }
+
+    @Test
+    fun `when dual brand with non-amex selected, then isAmex should be false`() {
+        // GIVEN
+        val amexBrandData = getCardBrandData().copy(
+            cardBrand = CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+        )
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(amexBrandData, visaBrandData),
+                shopperSelectedCardBrandData = visaBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isAmex)
     }
 
     // UC6: Error Hides Brand Logos
