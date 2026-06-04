@@ -130,20 +130,36 @@ private fun SecurityCodeIcon(
     state: TextInputViewState,
     modifier: Modifier = Modifier,
 ) {
-    val resourceId = when (state.trailingIcon as? SecurityCodeTrailingIcon) {
-        SecurityCodeTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
-        SecurityCodeTrailingIcon.Checkmark -> com.adyen.checkout.test.R.drawable.ic_checkmark
-        SecurityCodeTrailingIcon.PlaceholderAmex -> getThemedIcon(
-            backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-            lightDrawableId = R.drawable.ic_card_cvc_front_light,
-            darkDrawableId = R.drawable.ic_card_cvc_front_dark,
-        )
+    val resourceId: Int
+    val tint: Color
+    when (state.trailingIcon as? SecurityCodeTrailingIcon) {
+        SecurityCodeTrailingIcon.Warning -> {
+            resourceId = com.adyen.checkout.test.R.drawable.ic_warning
+            tint = CheckoutThemeProvider.colors.destructive
+        }
 
-        else -> getThemedIcon(
-            backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-            lightDrawableId = R.drawable.ic_card_cvc_back_light,
-            darkDrawableId = R.drawable.ic_card_cvc_back_dark,
-        )
+        SecurityCodeTrailingIcon.Checkmark -> {
+            resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark
+            tint = CheckoutThemeProvider.colors.primary
+        }
+
+        SecurityCodeTrailingIcon.PlaceholderAmex -> {
+            resourceId = getThemedIcon(
+                backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+                lightDrawableId = R.drawable.ic_card_cvc_front_light,
+                darkDrawableId = R.drawable.ic_card_cvc_front_dark,
+            )
+            tint = Color.Unspecified
+        }
+
+        else -> {
+            resourceId = getThemedIcon(
+                backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+                lightDrawableId = R.drawable.ic_card_cvc_back_light,
+                darkDrawableId = R.drawable.ic_card_cvc_back_dark,
+            )
+            tint = Color.Unspecified
+        }
     }
 
     AnimatedContent(
@@ -155,7 +171,7 @@ private fun SecurityCodeIcon(
             modifier = Modifier.size(Dimensions.LogoSize.small),
             imageVector = ImageVector.vectorResource(targetResourceId),
             contentDescription = null,
-            tint = Color.Unspecified,
+            tint = tint,
         )
     }
 }

@@ -26,6 +26,7 @@ import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -66,22 +67,31 @@ private fun PostalCodeIcon(
     state: TextInputViewState,
     modifier: Modifier = Modifier,
 ) {
-    val resourceId = when (state.trailingIcon as? PostalCodeTrailingIcon) {
-        PostalCodeTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
-        else -> null
+    val resourceId: Int?
+    val tint: Color
+    when (state.trailingIcon as? PostalCodeTrailingIcon) {
+        PostalCodeTrailingIcon.Warning -> {
+            resourceId = com.adyen.checkout.test.R.drawable.ic_warning
+            tint = CheckoutThemeProvider.colors.destructive
+        }
+
+        else -> {
+            resourceId = null
+            tint = Color.Unspecified
+        }
     }
 
-    if (resourceId != null) {
-        AnimatedContent(
-            targetState = resourceId,
-            modifier = modifier,
-            label = "PostalCodeIcon",
-        ) { targetResourceId ->
+    AnimatedContent(
+        targetState = resourceId,
+        modifier = modifier,
+        label = "PostalCodeIcon",
+    ) { targetResourceId ->
+        if (targetResourceId != null) {
             Icon(
                 modifier = Modifier.size(Dimensions.LogoSize.small),
                 imageVector = ImageVector.vectorResource(targetResourceId),
                 contentDescription = null,
-                tint = Color.Unspecified,
+                tint = tint,
             )
         }
     }
