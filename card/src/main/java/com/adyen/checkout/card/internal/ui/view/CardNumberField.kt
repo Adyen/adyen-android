@@ -196,7 +196,7 @@ private fun CardNumberFieldIcon(
     AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
         when (trailingIcon) {
             CardNumberTrailingIcon.Warning -> Icon(
-                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
+                modifier = Modifier.size(Dimensions.LogoSize.small),
                 imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
                 contentDescription = null,
                 tint = Color.Unspecified,
@@ -267,6 +267,21 @@ private fun CardNumberFieldPreview(
                 CardBrand(CardType.MASTERCARD.txVariant),
                 CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
             ),
+            isSupportedCardBrandsShown = false,
+            detectedCardBrands = emptyList(),
+            isAmex = true,
+            onValueChange = {},
+            onFocusChange = {},
+            onScanButtonClick = {},
+        )
+
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "1234",
+                isError = true,
+                trailingIcon = CardNumberTrailingIcon.Warning,
+            ),
+            supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             detectedCardBrands = emptyList(),
             isAmex = true,

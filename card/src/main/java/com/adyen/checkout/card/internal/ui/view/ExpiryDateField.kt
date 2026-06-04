@@ -100,23 +100,13 @@ private fun ExpiryDateIcon(
         )
     }
 
-    val isInvalid = trailingIcon == ExpiryDateTrailingIcon.Warning
-
     AnimatedContent(
         targetState = resourceId,
         modifier = modifier,
         label = "ExpiryDateIcon",
     ) { targetResourceId ->
-        val iconSize = remember(isInvalid) {
-            if (isInvalid) {
-                Dimensions.LogoSize.smallSquare
-            } else {
-                Dimensions.LogoSize.small
-            }
-        }
-
         Icon(
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(Dimensions.LogoSize.small),
             imageVector = ImageVector.vectorResource(targetResourceId),
             contentDescription = null,
             tint = Color.Unspecified,
@@ -140,6 +130,15 @@ private fun ExpiryDateFieldPreview(
         ExpiryDateField(
             expiryDateState = TextInputViewState(
                 isOptional = true,
+            ),
+            onValueChange = {},
+            onFocusChange = {},
+        )
+
+        ExpiryDateField(
+            expiryDateState = TextInputViewState(
+                isError = true,
+                trailingIcon = ExpiryDateTrailingIcon.Warning,
             ),
             onValueChange = {},
             onFocusChange = {},

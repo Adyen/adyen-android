@@ -130,7 +130,6 @@ private fun SecurityCodeIcon(
     state: TextInputViewState,
     modifier: Modifier = Modifier,
 ) {
-    val isInvalid = state.trailingIcon == SecurityCodeTrailingIcon.Warning
     val resourceId = when (state.trailingIcon as? SecurityCodeTrailingIcon) {
         SecurityCodeTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
         SecurityCodeTrailingIcon.Checkmark -> com.adyen.checkout.test.R.drawable.ic_checkmark
@@ -152,16 +151,8 @@ private fun SecurityCodeIcon(
         modifier = modifier,
         label = "SecurityCodeIcon",
     ) { targetResourceId ->
-        val iconSize = remember(isInvalid) {
-            if (isInvalid) {
-                Dimensions.LogoSize.smallSquare
-            } else {
-                Dimensions.LogoSize.small
-            }
-        }
-
         Icon(
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(Dimensions.LogoSize.small),
             imageVector = ImageVector.vectorResource(targetResourceId),
             contentDescription = null,
             tint = Color.Unspecified,
@@ -189,6 +180,17 @@ private fun SecurityCodeFieldPreview(
                 isOptional = true,
             ),
             isAmex = true,
+            onValueChange = {},
+            onFocusChange = {},
+        )
+
+        SecurityCodeField(
+            securityCodeState = TextInputViewState(
+                text = "123",
+                isError = true,
+                trailingIcon = SecurityCodeTrailingIcon.Warning,
+            ),
+            isAmex = false,
             onValueChange = {},
             onFocusChange = {},
         )

@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -58,7 +57,7 @@ internal fun PostalCodeField(
         shouldFocus = postalCodeState.isFocused,
         trailingIcon = {
             PostalCodeIcon(state = postalCodeState)
-        }
+        },
     )
 }
 
@@ -67,7 +66,6 @@ private fun PostalCodeIcon(
     state: TextInputViewState,
     modifier: Modifier = Modifier,
 ) {
-    val isInvalid = state.trailingIcon == PostalCodeTrailingIcon.Warning
     val resourceId = when (state.trailingIcon as? PostalCodeTrailingIcon) {
         PostalCodeTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
         else -> null
@@ -79,16 +77,8 @@ private fun PostalCodeIcon(
             modifier = modifier,
             label = "PostalCodeIcon",
         ) { targetResourceId ->
-            val iconSize = remember(isInvalid) {
-                if (isInvalid) {
-                    Dimensions.LogoSize.smallSquare
-                } else {
-                    Dimensions.LogoSize.small
-                }
-            }
-
             Icon(
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(Dimensions.LogoSize.small),
                 imageVector = ImageVector.vectorResource(targetResourceId),
                 contentDescription = null,
                 tint = Color.Unspecified,
@@ -106,6 +96,16 @@ private fun PostalCodeFieldPreview(
         PostalCodeField(
             postalCodeState = TextInputViewState(
                 text = "1234 AB",
+            ),
+            onFocusChange = {},
+            onValueChange = {},
+        )
+
+        PostalCodeField(
+            postalCodeState = TextInputViewState(
+                text = "12",
+                isError = true,
+                trailingIcon = PostalCodeTrailingIcon.Warning,
             ),
             onFocusChange = {},
             onValueChange = {},
