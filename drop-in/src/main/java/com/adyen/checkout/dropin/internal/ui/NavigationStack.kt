@@ -22,7 +22,7 @@ internal fun NavigationStack(
 ) {
     NavDisplay(
         backStack = viewModel.navigator.backStack,
-        sceneStrategy = remember { BottomSheetSceneStrategy() },
+        sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
         onBack = { viewModel.navigator.back() },
         entryProvider = { key ->
             when (key) {
