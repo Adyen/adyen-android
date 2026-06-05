@@ -86,6 +86,10 @@ internal class CardComponentStateReducer(
                 storePaymentMethod = intent.isChecked,
             )
 
+            is CardIntent.UpdateInstallment -> state.copy(
+                selectedInstallment = intent.installmentModel,
+            )
+
             is CardIntent.SelectBrand -> {
                 cardBrandIntentsHandler.onBrandSelected(state, intent)
             }

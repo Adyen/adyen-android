@@ -933,6 +933,8 @@ internal class CardBrandIntentsHandlerTest(
         isCardScanningAvailable = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
         networkBinLookupState = null,
+        installmentOptions = emptyList(),
+        selectedInstallment = null,
     )
 
     private fun createCardBrandData() = CardBrandData(

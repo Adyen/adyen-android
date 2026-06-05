@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -29,4 +30,10 @@ internal data class CardViewState(
     val cardNumberFormat: CardNumberFormat,
     val isLoading: Boolean,
     val isCardScanButtonVisible: Boolean,
+    val installmentState: InstallmentViewState?,
 ) : ViewState
+
+internal data class InstallmentViewState(
+    val options: List<InstallmentModel>,
+    val selectedOption: InstallmentModel?,
+)

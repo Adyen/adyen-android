@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.InstallmentOption
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
+import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -35,6 +38,7 @@ internal fun CardComponent(
     onIntent: (CardIntent) -> Unit,
     onSubmitClick: () -> Unit,
     onScanButtonClick: () -> Unit,
+    onInstallmentPickerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ComponentScaffold(
@@ -47,6 +51,7 @@ internal fun CardComponent(
             viewState = viewState,
             onIntent = onIntent,
             onScanButtonClick = onScanButtonClick,
+            onInstallmentPickerClick = onInstallmentPickerClick,
         )
     }
 }
@@ -57,6 +62,7 @@ private fun CardDetailsSection(
     viewState: CardViewState,
     onIntent: (CardIntent) -> Unit,
     onScanButtonClick: () -> Unit,
+    onInstallmentPickerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -133,6 +139,13 @@ private fun CardDetailsSection(
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
             }
         }
+        viewState.installmentState?.let { installmentState ->
+            InstallmentField(
+                installmentState = installmentState,
+                onClick = onInstallmentPickerClick,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
@@ -173,9 +186,18 @@ private fun CardComponentPreview() {
             isCardScanButtonVisible = false,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
+            installmentState = InstallmentViewState(
+                options = listOf(
+                    InstallmentModel(null, InstallmentOption.ONE_TIME, null, java.util.Locale.US, false),
+                    InstallmentModel(2, InstallmentOption.REGULAR, null, java.util.Locale.US, false),
+                    InstallmentModel(3, InstallmentOption.REGULAR, null, java.util.Locale.US, false),
+                ),
+                selectedOption = null,
+            ),
         ),
         onIntent = {},
         onSubmitClick = {},
         onScanButtonClick = {},
+        onInstallmentPickerClick = {},
     )
 }

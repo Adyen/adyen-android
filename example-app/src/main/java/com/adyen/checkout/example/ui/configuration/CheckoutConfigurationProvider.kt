@@ -5,10 +5,10 @@ import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.card
 import com.adyen.checkout.card.old.AddressConfiguration
-import com.adyen.checkout.card.old.CardBrand
-import com.adyen.checkout.card.old.CardType
-import com.adyen.checkout.card.old.InstallmentConfiguration
-import com.adyen.checkout.card.old.InstallmentOptions
+import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.card.InstallmentConfiguration
+import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.old.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.cashAppPay
@@ -37,6 +37,10 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration as OldAnalytics
 import com.adyen.checkout.components.core.AnalyticsLevel as OldAnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
 import com.adyen.checkout.core.old.Environment as OldEnvironment
+import com.adyen.checkout.card.old.CardBrand as OldCardBrand
+import com.adyen.checkout.card.old.CardType as OldCardType
+import com.adyen.checkout.card.old.InstallmentConfiguration as OldInstallmentConfiguration
+import com.adyen.checkout.card.old.InstallmentOptions as OldInstallmentOptions
 
 @Suppress("TooManyFunctions")
 @Singleton
@@ -75,7 +79,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             card {
                 setShopperReference(keyValueStorage.getShopperReference())
                 setAddressConfiguration(getAddressConfiguration())
-                setInstallmentConfigurations(getInstallmentConfiguration())
+                setInstallmentConfigurations(getOldInstallmentConfiguration())
             }
 
             cashAppPay {
@@ -115,8 +119,8 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             card(
-                // TODO - add installments
                 billingAddressMode = getBillingAddressMode(),
+                installmentConfiguration = getInstallmentConfiguration(),
             )
 
             threeDS2(
@@ -124,6 +128,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             )
         }
 
+    @Deprecated("Use getAnalyticsConfiguration() instead")
     private fun getOldAnalyticsConfiguration(): OldAnalyticsConfiguration {
         val analyticsLevel = when (keyValueStorage.getAnalyticsMode()) {
             AnalyticsMode.ALL -> OldAnalyticsLevel.ALL
@@ -140,6 +145,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         return AnalyticsConfiguration(level = analyticsLevel)
     }
 
+    @Deprecated("Use getBillingAddressMode() instead")
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
         CardAddressMode.NONE -> AddressConfiguration.None
         CardAddressMode.POSTAL_CODE -> AddressConfiguration.PostalCode()
@@ -162,32 +168,59 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             CardAddressMode.LOOKUP -> TODO()
         }
 
-    private fun getInstallmentConfiguration(): InstallmentConfiguration =
+    @Deprecated("Use getInstallmentConfiguration() instead")
+    private fun getOldInstallmentConfiguration(): OldInstallmentConfiguration =
         when (keyValueStorage.getInstallmentOptionsMode()) {
-            CardInstallmentOptionsMode.NONE -> InstallmentConfiguration()
+            CardInstallmentOptionsMode.NONE -> OldInstallmentConfiguration()
             CardInstallmentOptionsMode.DEFAULT -> getDefaultInstallmentOptions()
             CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> getDefaultInstallmentOptions(includeRevolving = true)
             CardInstallmentOptionsMode.CARD_BASED_VISA -> getCardBasedInstallmentOptions()
         }
 
+    private fun getInstallmentConfiguration(): InstallmentConfiguration? =
+        when (keyValueStorage.getInstallmentOptionsMode()) {
+            CardInstallmentOptionsMode.NONE -> null
+            CardInstallmentOptionsMode.DEFAULT -> InstallmentConfiguration(
+                defaultOptions = InstallmentOptions(maxInstallments = 3),
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+            )
+
+            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> InstallmentConfiguration(
+                defaultOptions = InstallmentOptions(
+                    maxInstallments = 3,
+                    plans = listOf(InstallmentOptions.Plan.REGULAR, InstallmentOptions.Plan.REVOLVING),
+                ),
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+            )
+
+            CardInstallmentOptionsMode.CARD_BASED_VISA -> InstallmentConfiguration(
+                cardBasedOptions = mapOf(
+                    CardBrand(CardType.VISA.txVariant) to InstallmentOptions(maxInstallments = 3),
+                ),
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+            )
+        }
+
+    @Deprecated("Use getInstallmentConfiguration() instead")
     private fun getDefaultInstallmentOptions(
         maxInstallments: Int = 3,
         includeRevolving: Boolean = false
-    ) = InstallmentConfiguration(
-        defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
+    ) = OldInstallmentConfiguration(
+        defaultOptions = OldInstallmentOptions.DefaultInstallmentOptions(
             maxInstallments = maxInstallments,
             includeRevolving = includeRevolving,
         ),
         showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
     )
 
+    @Deprecated("Use getInstallmentConfiguration() instead")
     private fun getCardBasedInstallmentOptions(
         maxInstallments: Int = 3,
         includeRevolving: Boolean = false,
-        cardBrand: CardBrand = CardBrand(CardType.VISA)
-    ) = InstallmentConfiguration(
+        cardBrand: OldCardBrand = OldCardBrand(OldCardType.VISA)
+    ) = OldInstallmentConfiguration(
         cardBasedOptions = listOf(
-            InstallmentOptions.CardBasedInstallmentOptions(
+            OldInstallmentOptions.CardBasedInstallmentOptions(
                 maxInstallments = maxInstallments,
                 includeRevolving = includeRevolving,
                 cardBrand = cardBrand,

@@ -17,6 +17,9 @@ import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.util.InstallmentUtils
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal class CardBrandIntentsHandler(
@@ -185,6 +188,16 @@ internal class CardBrandIntentsHandler(
         val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
         val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
 
+        val newInstallmentOptions = getUpdatedInstallmentOptions(cardBrandState)
+        val selectedInstallment = if (newInstallmentOptions.contains(state.selectedInstallment)) {
+            state.selectedInstallment
+        } else {
+            InstallmentUtils.findPreselectedInstallment(
+                options = newInstallmentOptions,
+                preselectedValue = componentParams.installmentParams?.defaultOptions?.preselectedValue,
+            )
+        }
+
         return state.copy(
             cardBrandState = cardBrandState,
             securityCode = state.securityCode.copy(
@@ -193,7 +206,32 @@ internal class CardBrandIntentsHandler(
             expiryDate = state.expiryDate.copy(
                 requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
             ),
+            installmentOptions = newInstallmentOptions,
+            selectedInstallment = selectedInstallment,
         )
+    }
+
+    private fun getUpdatedInstallmentOptions(cardBrandState: CardBrandState): List<InstallmentModel> {
+        val (cardBrand, isReliable) = getCardBrandForInstallments(cardBrandState)
+        return InstallmentUtils.makeInstallmentOptions(
+            installmentParams = componentParams.installmentParams,
+            cardBrand = cardBrand,
+            isCardTypeReliable = isReliable,
+        )
+    }
+
+    private fun getCardBrandForInstallments(cardBrandState: CardBrandState): Pair<CardBrand?, Boolean> {
+        return when (cardBrandState) {
+            is CardBrandState.SingleReliableBrand ->
+                Pair(cardBrandState.cardBrandData.cardBrand, true)
+            is CardBrandState.SingleReliableWithHiddenBrand ->
+                Pair(cardBrandState.cardBrandData.cardBrand, true)
+            is CardBrandState.DualBrand ->
+                Pair(cardBrandState.cardBrandDataList.first().cardBrand, true)
+            is CardBrandState.DualBrandWithShopperSelection ->
+                Pair(cardBrandState.shopperSelectedCardBrandData.cardBrand, true)
+            else -> Pair(null, false)
+        }
     }
 
     private fun getExpiryDateRequirementPolicy(expiryDatePolicy: Brand.FieldPolicy?): RequirementPolicy {

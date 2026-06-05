@@ -12,9 +12,11 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.components.data.Address
+import com.adyen.checkout.core.components.data.Installments
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.getPaymentDataValue
@@ -74,6 +76,7 @@ internal fun CardComponentState.toPaymentComponentState(
         storePaymentMethod = storePaymentMethod(componentParams),
         socialSecurityNumber = socialSecurityNumber.getPaymentDataValue(),
         billingAddress = getBillingAddress(),
+        installments = InstallmentUtils.makeInstallmentObject(selectedInstallment),
     )
 
     return createPaymentComponentState(paymentComponentData)
@@ -167,12 +170,14 @@ private fun createPaymentComponentData(
     storePaymentMethod: Boolean?,
     socialSecurityNumber: String?,
     billingAddress: Address?,
+    installments: Installments?,
 ) = PaymentComponentData(
     paymentMethod = cardDetails,
     storePaymentMethod = storePaymentMethod,
     billingAddress = billingAddress,
     order = null,
     socialSecurityNumber = socialSecurityNumber,
+    installments = installments,
 )
 
 private fun createPaymentComponentState(

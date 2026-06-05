@@ -17,10 +17,14 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
+import java.util.Locale
 
 // TODO - Card Component Mapper Tests.
-internal class CardComponentParamsMapper {
+internal class CardComponentParamsMapper(
+    private val installmentsParamsMapper: InstallmentsParamsMapper = InstallmentsParamsMapper(),
+) {
 
     fun mapToParams(
         params: CheckoutParams,
@@ -48,6 +52,12 @@ internal class CardComponentParamsMapper {
                 StoredCVCVisibility.SHOW
             },
             showCardScanner = cardConfiguration?.showCardScanner ?: true,
+            installmentParams = getInstallmentParams(
+                sessionParams,
+                cardConfiguration,
+                commonComponentParams.amount,
+                commonComponentParams.shopperLocale,
+            ),
         )
     }
 
@@ -85,6 +95,27 @@ internal class CardComponentParamsMapper {
         cardConfiguration: CardConfiguration?,
     ): Boolean {
         return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePaymentMethod ?: true
+    }
+
+    private fun getInstallmentParams(
+        sessionParams: SessionParams?,
+        cardConfiguration: CardConfiguration?,
+        amount: Amount?,
+        shopperLocale: Locale,
+    ): InstallmentParams? {
+        return if (sessionParams != null) {
+            installmentsParamsMapper.mapToInstallmentParams(
+                sessionInstallmentConfiguration = sessionParams.installmentConfiguration,
+                amount = amount,
+                shopperLocale = shopperLocale,
+            )
+        } else {
+            installmentsParamsMapper.mapToInstallmentParams(
+                installmentConfiguration = cardConfiguration?.installmentConfiguration,
+                amount = amount,
+                shopperLocale = shopperLocale,
+            )
+        }
     }
 
     companion object {
