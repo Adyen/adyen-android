@@ -24,7 +24,7 @@ import java.util.Locale
 
 internal class CheckoutParamsFactory(
     private val deviceLocaleProvider: () -> Locale = {
-        AppCompatDelegate.getApplicationLocales()[0] ?: Locale.getDefault()
+        AppCompatDelegate.getApplicationLocales().takeUnless { it.isEmpty }?.get(0) ?: Locale.getDefault()
     },
 ) {
 
