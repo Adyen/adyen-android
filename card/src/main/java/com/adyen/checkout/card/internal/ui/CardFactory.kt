@@ -106,7 +106,8 @@ internal class CardFactory :
             onBinValueCallback = additionalCallbacks.getAdditionalCallback<OnBinValueCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
             cardScannerWrapper = CardScannerWrapper(),
-            checkoutParams = params,
+            publicKey = params.publicKey,
+            environment = params.environment,
         )
     }
 

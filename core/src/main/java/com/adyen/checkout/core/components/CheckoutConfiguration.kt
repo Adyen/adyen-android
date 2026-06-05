@@ -98,6 +98,8 @@ class CheckoutConfiguration(
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun addConfiguration(configuration: Configuration) {
+        // In the future if we might need to support multiple configurations of the same type we should use the payment
+        // method type as the key instead of the class name.
         availableConfigurations[configuration::class.java.name] = configuration
     }
 
