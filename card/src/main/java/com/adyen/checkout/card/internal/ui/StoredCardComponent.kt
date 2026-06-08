@@ -34,6 +34,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptionException
@@ -126,7 +127,8 @@ internal class StoredCardComponent(
         }
     }
 
-    override fun requiresUserInteraction(): Boolean = true
+    override fun requiresUserInteraction(): Boolean =
+        componentState.value.securityCode.requirementPolicy == RequirementPolicy.Required
 
     override fun setLoading(isLoading: Boolean) {
         onIntent(StoredCardIntent.UpdateLoading(isLoading))
