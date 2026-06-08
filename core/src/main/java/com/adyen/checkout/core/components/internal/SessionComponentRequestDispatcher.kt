@@ -39,7 +39,10 @@ internal class SessionComponentRequestDispatcher(
                 // TODO - Check if we need to support partial payment flow
                 return when {
                     response.action != null -> SubmitResult.Action(response.action)
-                    else -> SubmitResult.Completion(response.resultCode.orEmpty())
+                    else -> {
+                        callbacks.onFinished()
+                        SubmitResult.Completion(response.resultCode.orEmpty())
+                    }
                 }
             },
             onFailure = { error ->
