@@ -126,6 +126,8 @@ internal class StoredCardComponent(
         }
     }
 
+    override fun requiresUserInteraction(): Boolean = true
+
     override fun setLoading(isLoading: Boolean) {
         onIntent(StoredCardIntent.UpdateLoading(isLoading))
     }

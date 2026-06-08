@@ -59,4 +59,6 @@ class CheckoutController internal constructor(
     fun submit() {
         flow.submit()
     }
+
+    fun requiresUserInteraction(): Boolean = flow.requiresUserInteraction()
 }

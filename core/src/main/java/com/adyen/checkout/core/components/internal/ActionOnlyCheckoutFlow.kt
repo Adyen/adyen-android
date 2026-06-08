@@ -36,4 +36,7 @@ internal class ActionOnlyCheckoutFlow(
     override fun submit() {
         // No-op: action-only flow does not support submit
     }
+
+    // Action only flows do not require user interaction
+    override fun requiresUserInteraction(): Boolean = false
 }

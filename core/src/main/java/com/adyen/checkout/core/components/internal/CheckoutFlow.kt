@@ -25,4 +25,6 @@ internal interface CheckoutFlow {
     val secondaryNavigation: Flow<CheckoutSecondaryRoute>
 
     fun submit()
+
+    fun requiresUserInteraction(): Boolean
 }

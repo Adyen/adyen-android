@@ -23,6 +23,8 @@ internal class TestPaymentComponent(
 
     override fun submit() = Unit
 
+    override fun requiresUserInteraction(): Boolean = true
+
     override fun setLoading(isLoading: Boolean) = Unit
 
     override fun onCleared() = Unit

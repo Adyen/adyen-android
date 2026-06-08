@@ -21,6 +21,8 @@ interface PaymentComponent : EventComponent<PaymentComponentEvent> {
 
     fun submit()
 
+    fun requiresUserInteraction(): Boolean
+
     fun setLoading(isLoading: Boolean)
 
     fun onCleared()

@@ -92,6 +92,9 @@ internal class FullCheckoutFlow(
         paymentComponent?.submit()
     }
 
+    override fun requiresUserInteraction(): Boolean =
+        actionComponent == null && paymentComponent?.requiresUserInteraction() == true
+
     private fun handleResult(submitResult: SubmitResult) {
         when (submitResult) {
             is SubmitResult.Action -> {
