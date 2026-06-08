@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -196,10 +195,10 @@ private fun CardNumberFieldIcon(
     AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
         when (trailingIcon) {
             CardNumberTrailingIcon.Warning -> Icon(
-                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
+                modifier = Modifier.size(Dimensions.LogoSize.small),
                 imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
                 contentDescription = null,
-                tint = Color.Unspecified,
+                tint = CheckoutThemeProvider.colors.destructive,
             )
 
             CardNumberTrailingIcon.ScanButton -> IconButton(
@@ -218,6 +217,7 @@ private fun CardNumberFieldIcon(
     }
 }
 
+@Suppress("LongMethod")
 @Preview
 @Composable
 private fun CardNumberFieldPreview(
@@ -267,6 +267,21 @@ private fun CardNumberFieldPreview(
                 CardBrand(CardType.MASTERCARD.txVariant),
                 CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
             ),
+            isSupportedCardBrandsShown = false,
+            detectedCardBrands = emptyList(),
+            isAmex = true,
+            onValueChange = {},
+            onFocusChange = {},
+            onScanButtonClick = {},
+        )
+
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "1234",
+                isError = true,
+                trailingIcon = CardNumberTrailingIcon.Warning,
+            ),
+            supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             detectedCardBrands = emptyList(),
             isAmex = true,

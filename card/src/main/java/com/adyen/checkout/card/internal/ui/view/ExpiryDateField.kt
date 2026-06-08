@@ -90,36 +90,39 @@ private fun ExpiryDateIcon(
 ) {
     val trailingIcon = state.trailingIcon as? ExpiryDateTrailingIcon
 
-    val resourceId = when (trailingIcon) {
-        ExpiryDateTrailingIcon.Checkmark -> com.adyen.checkout.test.R.drawable.ic_checkmark
-        ExpiryDateTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
-        else -> getThemedIcon(
-            backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-            lightDrawableId = R.drawable.ic_card_expiry_date_light,
-            darkDrawableId = R.drawable.ic_card_expiry_date_dark,
-        )
-    }
+    val resourceId: Int
+    val tint: Color
+    when (trailingIcon) {
+        ExpiryDateTrailingIcon.Checkmark -> {
+            resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark
+            tint = CheckoutThemeProvider.colors.primary
+        }
 
-    val isInvalid = trailingIcon == ExpiryDateTrailingIcon.Warning
+        ExpiryDateTrailingIcon.Warning -> {
+            resourceId = com.adyen.checkout.test.R.drawable.ic_warning
+            tint = CheckoutThemeProvider.colors.destructive
+        }
+
+        else -> {
+            resourceId = getThemedIcon(
+                backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+                lightDrawableId = R.drawable.ic_card_expiry_date_light,
+                darkDrawableId = R.drawable.ic_card_expiry_date_dark,
+            )
+            tint = Color.Unspecified
+        }
+    }
 
     AnimatedContent(
         targetState = resourceId,
         modifier = modifier,
         label = "ExpiryDateIcon",
     ) { targetResourceId ->
-        val iconSize = remember(isInvalid) {
-            if (isInvalid) {
-                Dimensions.LogoSize.smallSquare
-            } else {
-                Dimensions.LogoSize.small
-            }
-        }
-
         Icon(
-            modifier = Modifier.size(iconSize),
+            modifier = Modifier.size(Dimensions.LogoSize.small),
             imageVector = ImageVector.vectorResource(targetResourceId),
             contentDescription = null,
-            tint = Color.Unspecified,
+            tint = tint,
         )
     }
 }
@@ -140,6 +143,15 @@ private fun ExpiryDateFieldPreview(
         ExpiryDateField(
             expiryDateState = TextInputViewState(
                 isOptional = true,
+            ),
+            onValueChange = {},
+            onFocusChange = {},
+        )
+
+        ExpiryDateField(
+            expiryDateState = TextInputViewState(
+                isError = true,
+                trailingIcon = ExpiryDateTrailingIcon.Warning,
             ),
             onValueChange = {},
             onFocusChange = {},
