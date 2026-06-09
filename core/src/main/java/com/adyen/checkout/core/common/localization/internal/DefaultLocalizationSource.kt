@@ -69,6 +69,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_POSTAL_CODE -> R.string.checkout_card_postal_code
             CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID -> R.string.checkout_card_postal_code_invalid
 
+            CheckoutLocalizationKey.CARD_INSTALLMENTS -> R.string.checkout_card_installments
             CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE -> R.string.checkout_card_installments_title
             CheckoutLocalizationKey.CARD_INSTALLMENTS_SUBTITLE -> R.string.checkout_card_installments_subtitle
             CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME ->

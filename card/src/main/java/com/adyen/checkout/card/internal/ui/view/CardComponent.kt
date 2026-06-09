@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
+import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
@@ -29,7 +30,9 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.SwitchContainer
 import com.adyen.checkout.ui.internal.element.button.PayButton
+import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
@@ -139,9 +142,11 @@ private fun CardDetailsSection(
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
             }
         }
-        viewState.installmentState?.let { installmentState ->
-            InstallmentField(
-                installmentState = installmentState,
+        if (viewState.installmentState != null) {
+            Subtitle(resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS))
+            ValuePickerField(
+                value = viewState.installmentState.selectedOption?.toDisplayText() ?: "",
+                label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
                 onClick = onInstallmentPickerClick,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -192,7 +197,7 @@ private fun CardComponentPreview() {
                     InstallmentModel(2, InstallmentOption.REGULAR, null, java.util.Locale.US, false),
                     InstallmentModel(3, InstallmentOption.REGULAR, null, java.util.Locale.US, false),
                 ),
-                selectedOption = null,
+                selectedOption = InstallmentModel(2, InstallmentOption.REGULAR, null, java.util.Locale.US, false),
             ),
         ),
         onIntent = {},

@@ -112,26 +112,6 @@ constructor(
     }
 
     @Composable
-    override fun SecondaryContent(identifier: String, modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
-        when (identifier) {
-            INSTALLMENTS_IDENTIFIER -> {
-                viewState.installmentState?.let { installmentState ->
-                    InstallmentPicker(
-                        installmentState = installmentState,
-                        onInstallmentSelected = { installmentModel ->
-                            onIntent(CardIntent.UpdateInstallment(installmentModel))
-                            eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
-                        },
-                        modifier = modifier,
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
     override fun Content(modifier: Modifier) {
         val context = LocalContext.current
         LaunchedEffect(Unit) {
@@ -157,6 +137,26 @@ constructor(
             onInstallmentPickerClick = ::onInstallmentPickerClick,
             modifier = modifier,
         )
+    }
+
+    @Composable
+    override fun SecondaryContent(identifier: String, modifier: Modifier) {
+        val viewState by viewState.collectAsStateWithLifecycle()
+
+        when (identifier) {
+            INSTALLMENT_IDENTIFIER -> {
+                viewState.installmentState?.let { installmentState ->
+                    InstallmentPicker(
+                        installmentState = installmentState,
+                        onInstallmentSelected = { installmentModel ->
+                            onIntent(CardIntent.UpdateInstallment(installmentModel))
+                            eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
+                        },
+                        modifier = modifier,
+                    )
+                }
+            }
+        }
     }
 
     override fun submit() {
@@ -259,7 +259,9 @@ constructor(
 
     private fun onInstallmentPickerClick() {
         eventChannel.trySend(
-            PaymentComponentEvent.SecondaryScreen(identifier = INSTALLMENTS_IDENTIFIER),
+            PaymentComponentEvent.SecondaryScreen(
+                identifier = INSTALLMENT_IDENTIFIER,
+            ),
         )
     }
 
@@ -325,6 +327,6 @@ constructor(
     }
 
     companion object {
-        private const val INSTALLMENTS_IDENTIFIER = "installments"
+        private const val INSTALLMENT_IDENTIFIER = "installment"
     }
 }
