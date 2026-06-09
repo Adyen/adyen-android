@@ -17,12 +17,11 @@ See also:
 ```kotlin
 val checkoutConfiguration = CheckoutConfiguration(
     environment = environment,
-    clientKey = clientKey,
     shopperLocale = shopperLocale,
-) {
-    card {
-        setHolderNameRequired(true)
-    }
+    private fun setupCardView(
+        paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
+    ) {
 }
 
 when (val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)) {
@@ -66,7 +65,25 @@ For a complete card example, see [docs/v6/card-session-flow.md](docs/v6/card-ses
 ##### Before (v5)
 
 ```kotlin
-class ExampleViewModel : ComponentCallback<CardComponentState> {
+class CardActivity : AppCompatActivity() {
+    private val viewModel: ExampleViewModel by viewModels()
+
+    private fun setupCardView(
+        paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
+    ) {
+        val cardComponent = CardComponent.PROVIDER.get(
+            activity = this,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = checkoutConfiguration,
+            callback = viewModel,
+        )
+
+        binding.cardView.attach(cardComponent, this)
+    }
+}
+
+class ExampleViewModel : ViewModel(), ComponentCallback<CardComponentState> {
     override fun onSubmit(state: CardComponentState) {
         makePayment(state.data)
     }
@@ -84,8 +101,30 @@ lifecycleScope.launch {
     when (val result = Checkout.setup(paymentMethods = paymentMethods, configuration = configuration)) {
         is Checkout.Result.Error -> showError(result.error.message.orEmpty())
         is Checkout.Result.Success -> {
-            val advancedContext = result.checkoutContext
-            // Use advancedContext with your payment-method-specific integration.
+            val controller = CheckoutController(
+                target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
+                context = result.checkoutContext,
+                callbacks = AdvancedCheckoutCallbacks(
+                    onSubmit = { data ->
+                        callPayments(data)
+                    },
+                    onAdditionalDetails = { data ->
+                        callDetails(data)
+                    },
+                    onError = { error ->
+                        showError(error.message.orEmpty())
+                    },
+                ) {
+                    card()
+                },
+                coroutineScope = lifecycleScope,
+            )
+
+            renderCheckout(
+                controller = controller,
+                theme = theme,
+                localizationProvider = localizationProvider,
+            )
         }
     }
 }
