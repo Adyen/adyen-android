@@ -36,6 +36,8 @@ data class CheckoutError(
 
         // General Errors
         const val HTTP = "HttpError"
-        const val UNKNOWN = "Unknown"
+        const val GENERIC = "Generic"
+        const val PAYMENT_METHOD_FAILURE = "PaymentMethodFailure"
+        const val INVALID_CONFIGURATION = "InvalidConfiguration"
     }
 }

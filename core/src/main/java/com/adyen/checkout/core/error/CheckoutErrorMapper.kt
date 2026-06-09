@@ -18,7 +18,7 @@ import com.adyen.checkout.core.error.internal.InternalCheckoutError
 internal fun InternalCheckoutError.toCheckoutError(): CheckoutError {
     val errorCode = when (this) {
         is HttpError -> CheckoutError.ErrorCode.HTTP
-        is GenericError -> CheckoutError.ErrorCode.UNKNOWN
+        is GenericError -> CheckoutError.ErrorCode.GENERIC
     }
 
     return CheckoutError(
@@ -31,12 +31,12 @@ internal fun InternalCheckoutError.toCheckoutError(): CheckoutError {
 /**
  * Maps an arbitrary [Throwable] to a public [CheckoutError]. Delegates to the
  * [InternalCheckoutError] mapping when applicable; otherwise wraps the throwable as an
- * [CheckoutError.ErrorCode.UNKNOWN] error preserving the original cause and message.
+ * [CheckoutError.ErrorCode.GENERIC] error preserving the original cause and message.
  */
 internal fun Throwable.toCheckoutError(): CheckoutError = when (this) {
     is InternalCheckoutError -> toCheckoutError()
     else -> CheckoutError(
-        code = CheckoutError.ErrorCode.UNKNOWN,
+        code = CheckoutError.ErrorCode.GENERIC,
         message = message,
         cause = this,
     )
