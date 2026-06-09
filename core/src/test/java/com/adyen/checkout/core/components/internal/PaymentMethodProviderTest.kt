@@ -11,16 +11,14 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.components.internal.ui.model.generateComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -112,8 +110,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod = InstantPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
-                componentParamsBundle = generateComponentParamsBundle(),
+                params = generateCheckoutParams(),
                 additionalCallbacks = emptySet(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
@@ -141,8 +138,7 @@ internal class PaymentMethodProviderTest {
                 ),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
-                componentParamsBundle = generateComponentParamsBundle(),
+                params = generateCheckoutParams(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -174,8 +170,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod = InstantPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
-                componentParamsBundle = generateComponentParamsBundle(),
+                params = generateCheckoutParams(),
                 additionalCallbacks = emptySet(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
@@ -196,8 +191,7 @@ internal class PaymentMethodProviderTest {
                 ),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
-                componentParamsBundle = generateComponentParamsBundle(),
+                params = generateCheckoutParams(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
             assertSame(component, actualComponent)
@@ -209,8 +203,7 @@ internal class PaymentMethodProviderTest {
             paymentMethod = InstantPaymentMethod(type = "unregistered_txVariant", name = "name"),
             coroutineScope = this,
             analyticsManager = TestAnalyticsManager(),
-            checkoutConfiguration = generateCheckoutConfiguration(),
-            componentParamsBundle = generateComponentParamsBundle(),
+            params = generateCheckoutParams(),
             additionalCallbacks = emptySet(),
         )
         assertNull(actualComponent)
@@ -227,8 +220,7 @@ internal class PaymentMethodProviderTest {
             ),
             coroutineScope = this,
             analyticsManager = TestAnalyticsManager(),
-            checkoutConfiguration = generateCheckoutConfiguration(),
-            componentParamsBundle = generateComponentParamsBundle(),
+            params = generateCheckoutParams(),
         )
         assertNull(actualComponent)
     }
@@ -254,8 +246,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod: PaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
-                checkoutConfiguration: CheckoutConfiguration,
-                componentParamsBundle: ComponentParamsBundle,
+                params: CheckoutParams,
                 additionalCallbacks: Set<CheckoutAdditionalCallback>,
             ) = paymentComponent
         }
@@ -267,14 +258,19 @@ internal class PaymentMethodProviderTest {
                 storedPaymentMethod: StoredPaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
-                checkoutConfiguration: CheckoutConfiguration,
-                componentParamsBundle: ComponentParamsBundle,
+                params: CheckoutParams,
             ) = paymentComponent
         }
 
-    private fun generateCheckoutConfiguration() = CheckoutConfiguration(
+    private fun generateCheckoutParams() = CheckoutParams(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = "test_qwertyuiopasdfgh",
+        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        amount = null,
+        showSubmitButton = true,
+        publicKey = "test_publicKey",
+        additionalConfigurations = emptyMap(),
+        additionalSessionParams = null,
     )
 }

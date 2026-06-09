@@ -15,8 +15,7 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -27,8 +26,7 @@ internal class ActionHandler(
     private val componentRequestDispatcher: ComponentRequestDispatcher,
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
-    private val checkoutConfiguration: CheckoutConfiguration,
-    private val componentParamsBundle: ComponentParamsBundle,
+    private val params: CheckoutParams,
 ) {
 
     var actionComponent: ActionComponent? = null
@@ -43,11 +41,9 @@ internal class ActionHandler(
             action = action,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
+            params = params,
             // TODO - Check if we really need saved state handle
             savedStateHandle = @SuppressLint("VisibleForTests") SavedStateHandle(),
-            // TODO - Check if session params should be taken into account
-            commonComponentParams = componentParamsBundle.commonComponentParams,
         )
         this.actionComponent = actionComponent
 

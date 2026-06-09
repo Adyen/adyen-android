@@ -17,27 +17,28 @@ import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsRe
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSetupProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import java.util.Locale
 
 internal class AnalyticsManagerFactory {
 
     fun provide(
-        componentParams: ComponentParams,
+        params: CheckoutParams,
         source: AnalyticsSource,
         sessionId: String?,
         checkoutAttemptId: String?,
     ): AnalyticsManager = provide(
-        shopperLocale = componentParams.shopperLocale,
-        environment = componentParams.environment,
-        clientKey = componentParams.clientKey,
-        analyticsParams = componentParams.analyticsParams,
-        isCreatedByDropIn = componentParams.isCreatedByDropIn,
-        amount = componentParams.amount,
+        shopperLocale = params.shopperLocale,
+        environment = params.environment,
+        clientKey = params.clientKey,
+        analyticsParams = params.analyticsParams,
+        // TODO - Figure out how drop-in should work with analytics
+        isCreatedByDropIn = false,
+        amount = params.amount,
         source = source,
         sessionId = sessionId,
         checkoutAttemptId = checkoutAttemptId,

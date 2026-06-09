@@ -10,7 +10,6 @@ package com.adyen.checkout.card.internal.ui
 
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.OnBinValueCallback
-import com.adyen.checkout.card.getCardConfiguration
 import com.adyen.checkout.card.internal.data.api.BinLookupCache
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
@@ -30,9 +29,9 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidat
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
@@ -41,7 +40,6 @@ import com.adyen.checkout.core.components.getAdditionalCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -54,13 +52,11 @@ internal class CardFactory :
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): CardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
-            componentParamsBundle = componentParamsBundle,
-            cardConfiguration = checkoutConfiguration.getCardConfiguration(),
+            params = params,
             paymentMethod = paymentMethod as? CardPaymentMethod,
         )
 
@@ -75,16 +71,16 @@ internal class CardFactory :
 
         val cardEncryptor = CardEncryptorFactory.provide()
         val genericEncryptor = GenericEncryptorFactory.provide()
-        val httpClient = HttpClientFactory.getHttpClient(cardComponentParams.environment)
-        val binLookupService = BinLookupService(httpClient, cardComponentParams.clientKey)
+        val httpClient = HttpClientFactory.getHttpClient(params.environment)
+        val binLookupService = BinLookupService(httpClient, params.clientKey)
         val binLookupCache = BinLookupCache()
         val localCardBrandDetectionService = LocalCardBrandDetectionService(cardComponentParams.supportedCardBrands)
         val paymentMethodType = paymentMethod.type
         val networkCardBrandDetectionService = NetworkCardBrandDetectionService(
-            cardEncryptor,
-            binLookupService,
-            cardComponentParams.publicKey,
-            cardComponentParams.supportedCardBrands,
+            cardEncryptor = cardEncryptor,
+            binLookupService = binLookupService,
+            publicKey = params.publicKey,
+            supportedCardBrands = cardComponentParams.supportedCardBrands,
             paymentMethodType,
         )
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(
@@ -110,6 +106,8 @@ internal class CardFactory :
             onBinValueCallback = additionalCallbacks.getAdditionalCallback<OnBinValueCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
             cardScannerWrapper = CardScannerWrapper(),
+            publicKey = params.publicKey,
+            environment = params.environment,
         )
     }
 
@@ -117,12 +115,10 @@ internal class CardFactory :
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
     ): StoredCardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
-            componentParamsBundle = componentParamsBundle,
-            cardConfiguration = checkoutConfiguration.getCardConfiguration(),
+            params = params,
             paymentMethod = null,
         )
 
@@ -146,6 +142,7 @@ internal class CardFactory :
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            publicKey = params.publicKey,
         )
     }
 }

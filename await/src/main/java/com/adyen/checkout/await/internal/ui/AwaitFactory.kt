@@ -13,12 +13,11 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.AwaitAction
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusService
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 
@@ -29,9 +28,8 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
         action: Action,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
+        params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
-        commonComponentParams: CommonComponentParams,
     ): AwaitComponent {
         if (action !is AwaitAction) {
 //          TODO - Error Propagation
@@ -40,9 +38,9 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
         }
 
         val redirectHandler = DefaultRedirectHandler()
-        val httpClient = HttpClientFactory.getHttpClient(commonComponentParams.environment)
+        val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val statusService = StatusService(httpClient)
-        val statusRepository = DefaultStatusRepository(statusService, commonComponentParams.clientKey)
+        val statusRepository = DefaultStatusRepository(statusService, params.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
 
         return AwaitComponent(

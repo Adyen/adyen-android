@@ -14,15 +14,15 @@ import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.components.internal.ui.model.generateCommonComponentParams
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotSame
+import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -64,7 +64,7 @@ internal class ActionComponentProviderTest {
         executor.shutdown()
         // Giving it a generous timeout to finish all tasks
         val completed = executor.awaitTermination(5, TimeUnit.SECONDS)
-        assertTrue("Executor tasks did not complete in time.", completed)
+        assertTrue(completed, "Executor tasks did not complete in time.")
         assertEquals(totalRegistrations, ActionComponentProvider.getFactoriesCount())
     }
 
@@ -83,9 +83,8 @@ internal class ActionComponentProviderTest {
                 action = TestAction(type = "actionType"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
+                params = generateCheckoutParams(),
                 savedStateHandle = SavedStateHandle(),
-                commonComponentParams = generateCommonComponentParams(),
             )
             assertEquals(1, ActionComponentProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -109,12 +108,11 @@ internal class ActionComponentProviderTest {
                 action = TestAction(type = "actionType"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
+                params = generateCheckoutParams(),
                 savedStateHandle = SavedStateHandle(),
-                commonComponentParams = generateCommonComponentParams(),
             )
             assertEquals(1, ActionComponentProvider.getFactoriesCount())
-            Assert.assertSame(component, actualComponent)
+            assertSame(component, actualComponent)
         }
 
     @Test
@@ -124,9 +122,8 @@ internal class ActionComponentProviderTest {
                 action = TestAction(type = "unregistered_actionType"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
-                checkoutConfiguration = generateCheckoutConfiguration(),
+                params = generateCheckoutParams(),
                 savedStateHandle = SavedStateHandle(),
-                commonComponentParams = generateCommonComponentParams(),
             )
         }
     }
@@ -148,15 +145,20 @@ internal class ActionComponentProviderTest {
                 action: Action,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
-                checkoutConfiguration: CheckoutConfiguration,
+                params: CheckoutParams,
                 savedStateHandle: SavedStateHandle,
-                commonComponentParams: CommonComponentParams,
             ) = actionComponent
         }
 
-    private fun generateCheckoutConfiguration() = CheckoutConfiguration(
+    private fun generateCheckoutParams() = CheckoutParams(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = "test_qwertyuiopasdfgh",
+        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        amount = null,
+        showSubmitButton = true,
+        publicKey = "test_publicKey",
+        additionalConfigurations = emptyMap(),
+        additionalSessionParams = null,
     )
 }

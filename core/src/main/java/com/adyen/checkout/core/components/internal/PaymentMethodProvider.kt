@@ -11,12 +11,11 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
 
@@ -39,13 +38,11 @@ object PaymentMethodProvider {
         }
     }
 
-    @Suppress("LongParameterList")
     fun getPaymentComponent(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): PaymentComponent? {
         val txVariant = paymentMethod.type
@@ -54,19 +51,16 @@ object PaymentMethodProvider {
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
-            componentParamsBundle = componentParamsBundle,
+            params = params,
             additionalCallbacks = additionalCallbacks,
         )
     }
 
-    @Suppress("LongParameterList")
     fun getStoredPaymentComponent(
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
     ): PaymentComponent? {
         val txVariant = storedPaymentMethod.type
 
@@ -74,8 +68,7 @@ object PaymentMethodProvider {
             storedPaymentMethod = storedPaymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
-            componentParamsBundle = componentParamsBundle,
+            params = params,
         )
     }
 

@@ -10,12 +10,9 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -24,23 +21,10 @@ import kotlinx.coroutines.CoroutineScope
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface StoredPaymentComponentFactory<T : PaymentComponent> : ComponentFactory {
 
-    /**
-     * Creates a [PaymentComponent] for a stored payment method.
-     *
-     * @param storedPaymentMethod The stored payment method to create a component for.
-     * @param coroutineScope Coroutine Scope.
-     * @param analyticsManager Analytics manager for tracking component events.
-     * @param checkoutConfiguration Checkout Configuration.
-     * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
-     *
-     * @return A [PaymentComponent] instance for the stored payment method.
-     */
-    @Suppress("LongParameterList")
     fun create(
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
     ): T
 }

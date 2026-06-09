@@ -9,11 +9,10 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 
 internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
@@ -21,8 +20,7 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): GooglePayComponent {
         return GooglePayComponent()

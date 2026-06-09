@@ -47,13 +47,14 @@ internal class StoredCardComponent(
     private val storedPaymentMethod: StoredCardPaymentMethod,
     private val analyticsManager: AnalyticsManager,
     private val cardEncryptor: BaseCardEncryptor,
-    private val componentParams: CardComponentParams,
+    componentParams: CardComponentParams,
     private val componentStateValidator: StoredCardComponentStateValidator,
     componentStateFactory: StoredCardComponentStateFactory,
     componentStateReducer: StoredCardComponentStateReducer,
     viewStateProducer: StoredCardViewStateProducer,
     coroutineScope: CoroutineScope,
     private val sdkDataProvider: SdkDataProvider,
+    private val publicKey: String?,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -110,13 +111,13 @@ internal class StoredCardComponent(
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
-                componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 sdkDataProvider = sdkDataProvider,
                 storedPaymentMethodId = storedPaymentMethod.id,
                 paymentMethodType = storedPaymentMethod.type,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,
+                publicKey = publicKey,
             )
             val event = PaymentComponentEvent.Submit(paymentComponentState)
             eventChannel.trySend(event)

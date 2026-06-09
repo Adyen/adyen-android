@@ -30,6 +30,7 @@ import com.adyen.threeds2.ThreeDS2Service
 
 @Suppress("ReturnCount", "LongParameterList")
 internal fun CardComponentState.toPaymentComponentState(
+    publicKey: String?,
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
     genericEncryptor: BaseGenericEncryptor,
@@ -38,8 +39,10 @@ internal fun CardComponentState.toPaymentComponentState(
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
 ): CardPaymentComponentState {
-    val publicKey = componentParams.publicKey(onPublicKeyNotFound = onPublicKeyNotFound)
-        ?: return invalidCardPaymentComponentState()
+    publicKey ?: run {
+        onPublicKeyNotFound(GenericError("Public key is missing."))
+        return invalidCardPaymentComponentState()
+    }
 
     val encryptedCard = encryptCard(
         cardEncryptor = cardEncryptor,
@@ -208,13 +211,6 @@ private fun CardComponentState.cardBrand(): CardBrand? {
 
 private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams): Boolean? {
     return storePaymentMethod.takeIf { componentParams.showStorePaymentMethod }
-}
-
-private fun CardComponentParams.publicKey(onPublicKeyNotFound: (InternalCheckoutError) -> Unit): String? {
-    return publicKey ?: run {
-        onPublicKeyNotFound(GenericError("Public key is missing."))
-        null
-    }
 }
 
 private const val ENCRYPTION_KEY_FOR_KCP_PASSWORD = "password"
