@@ -30,10 +30,6 @@ internal data class CardViewState(
     val cardNumberFormat: CardNumberFormat,
     val isLoading: Boolean,
     val isCardScanButtonVisible: Boolean,
-    val installmentState: InstallmentViewState?,
+    val installmentOptions: List<InstallmentModel>,
+    val selectedInstallmentOption: InstallmentModel?,
 ) : ViewState
-
-internal data class InstallmentViewState(
-    val options: List<InstallmentModel>,
-    val selectedOption: InstallmentModel?,
-)

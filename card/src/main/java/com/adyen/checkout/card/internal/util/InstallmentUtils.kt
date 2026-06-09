@@ -9,7 +9,7 @@
 package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
-import com.adyen.checkout.card.internal.ui.model.InstallmentOption
+import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.InstallmentOptionParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.core.common.CardBrand
@@ -57,18 +57,18 @@ internal object InstallmentUtils {
         result.add(
             InstallmentModel(
                 numberOfInstallments = null,
-                option = InstallmentOption.ONE_TIME,
+                plan = InstallmentPlan.NONE,
                 amount = amount,
                 shopperLocale = shopperLocale,
                 showAmount = showAmount,
             ),
         )
 
-        if (installmentOptions.plans.contains(InstallmentOption.REVOLVING)) {
+        if (installmentOptions.plans.contains(InstallmentPlan.REVOLVING)) {
             result.add(
                 InstallmentModel(
                     numberOfInstallments = REVOLVING_INSTALLMENT_VALUE,
-                    option = InstallmentOption.REVOLVING,
+                    plan = InstallmentPlan.REVOLVING,
                     amount = amount,
                     shopperLocale = shopperLocale,
                     showAmount = showAmount,
@@ -82,7 +82,7 @@ internal object InstallmentUtils {
             }
             InstallmentModel(
                 numberOfInstallments = count,
-                option = InstallmentOption.REGULAR,
+                plan = InstallmentPlan.REGULAR,
                 amount = amountPerInstallment,
                 shopperLocale = shopperLocale,
                 showAmount = showAmount,
@@ -98,14 +98,14 @@ internal object InstallmentUtils {
     ): InstallmentModel? {
         preselectedValue ?: return null
         return options.firstOrNull {
-            it.option == InstallmentOption.REGULAR && it.numberOfInstallments == preselectedValue
+            it.plan == InstallmentPlan.REGULAR && it.numberOfInstallments == preselectedValue
         }
     }
 
     fun makeInstallmentObject(installmentModel: InstallmentModel?): Installments? {
-        return when (installmentModel?.option) {
-            InstallmentOption.REGULAR, InstallmentOption.REVOLVING ->
-                Installments(installmentModel.option.type, installmentModel.numberOfInstallments)
+        return when (installmentModel?.plan) {
+            InstallmentPlan.REGULAR, InstallmentPlan.REVOLVING ->
+                Installments(installmentModel.plan.type, installmentModel.numberOfInstallments)
             else -> null
         }
     }

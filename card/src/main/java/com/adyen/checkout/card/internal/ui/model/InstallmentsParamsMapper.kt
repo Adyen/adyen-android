@@ -72,18 +72,18 @@ internal class InstallmentsParamsMapper {
 
     private fun SessionInstallmentOptionsParams.toParams() = InstallmentOptionParams(
         values = values ?: emptyList(),
-        plans = plans?.mapNotNull { it.toInstallmentOption() } ?: listOf(InstallmentOption.REGULAR),
+        plans = plans?.mapNotNull { it.toInstallmentOption() } ?: listOf(InstallmentPlan.REGULAR),
         preselectedValue = preselectedValue,
     )
 
     private fun InstallmentOptions.Plan.toInstallmentOption() = when (this) {
-        InstallmentOptions.Plan.REGULAR -> InstallmentOption.REGULAR
-        InstallmentOptions.Plan.REVOLVING -> InstallmentOption.REVOLVING
+        InstallmentOptions.Plan.REGULAR -> InstallmentPlan.REGULAR
+        InstallmentOptions.Plan.REVOLVING -> InstallmentPlan.REVOLVING
     }
 
     private fun String.toInstallmentOption() = when (this) {
-        InstallmentOption.REGULAR.type -> InstallmentOption.REGULAR
-        InstallmentOption.REVOLVING.type -> InstallmentOption.REVOLVING
+        InstallmentPlan.REGULAR.type -> InstallmentPlan.REGULAR
+        InstallmentPlan.REVOLVING.type -> InstallmentPlan.REVOLVING
         else -> null
     }
 

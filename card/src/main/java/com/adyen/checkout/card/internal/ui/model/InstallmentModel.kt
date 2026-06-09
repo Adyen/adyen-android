@@ -17,7 +17,7 @@ import java.util.Locale
 
 internal data class InstallmentModel(
     val numberOfInstallments: Int?,
-    val option: InstallmentOption,
+    val plan: InstallmentPlan,
     val amount: Amount?,
     val shopperLocale: Locale,
     val showAmount: Boolean,
@@ -25,14 +25,14 @@ internal data class InstallmentModel(
 
 @Composable
 internal fun InstallmentModel.toDisplayText(): String {
-    return when (option) {
-        InstallmentOption.ONE_TIME ->
+    return when (plan) {
+        InstallmentPlan.NONE ->
             resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME)
 
-        InstallmentOption.REVOLVING ->
+        InstallmentPlan.REVOLVING ->
             resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REVOLVING)
 
-        InstallmentOption.REGULAR -> {
+        InstallmentPlan.REGULAR -> {
             val count = numberOfInstallments ?: 1
             if (showAmount && amount != null) {
                 resolveString(

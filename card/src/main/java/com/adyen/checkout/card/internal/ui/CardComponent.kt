@@ -145,16 +145,15 @@ constructor(
 
         when (identifier) {
             INSTALLMENT_IDENTIFIER -> {
-                viewState.installmentState?.let { installmentState ->
-                    InstallmentPicker(
-                        installmentState = installmentState,
-                        onInstallmentSelected = { installmentModel ->
-                            onIntent(CardIntent.UpdateInstallment(installmentModel))
-                            eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
-                        },
-                        modifier = modifier,
-                    )
-                }
+                InstallmentPicker(
+                    installmentOptions = viewState.installmentOptions,
+                    selectedInstallmentOption = viewState.selectedInstallmentOption,
+                    onInstallmentSelected = { installmentModel ->
+                        onIntent(CardIntent.UpdateInstallment(installmentModel))
+                        eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
+                    },
+                    modifier = modifier,
+                )
             }
         }
     }

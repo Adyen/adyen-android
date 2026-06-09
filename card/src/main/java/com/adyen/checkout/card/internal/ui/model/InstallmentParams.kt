@@ -42,6 +42,6 @@ data class InstallmentParams(
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class InstallmentOptionParams(
     val values: List<Int>,
-    val plans: List<InstallmentOption>,
+    val plans: List<InstallmentPlan>,
     val preselectedValue: Int? = null,
 )
