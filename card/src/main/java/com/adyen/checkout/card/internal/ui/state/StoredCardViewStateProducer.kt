@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
@@ -17,7 +16,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 internal class StoredCardViewStateProducer : ViewStateProducer<StoredCardComponentState, StoredCardViewState> {
 
     override fun produce(state: StoredCardComponentState): StoredCardViewState {
-        val cardNumberFormat = getCardNumberFormat(state)
+        val cardNumberFormat = state.detectedCardType?.cardBrand.toCardNumberFormat()
 
         return StoredCardViewState(
             securityCode = state.securityCode.toViewState(
@@ -27,14 +26,6 @@ internal class StoredCardViewStateProducer : ViewStateProducer<StoredCardCompone
             cardNumberFormat = cardNumberFormat,
             isLoading = state.isLoading,
         )
-    }
-
-    private fun getCardNumberFormat(state: StoredCardComponentState): CardNumberFormat {
-        return if (state.detectedCardType?.cardBrand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant) {
-            CardNumberFormat.AMEX
-        } else {
-            CardNumberFormat.DEFAULT
-        }
     }
 
     private fun getSecurityCodeTrailingIcon(

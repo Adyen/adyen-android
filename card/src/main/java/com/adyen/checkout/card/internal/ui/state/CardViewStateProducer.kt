@@ -13,7 +13,6 @@ import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
@@ -112,11 +111,7 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
         }
 
-        return if (cardBrandData?.cardBrand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant) {
-            CardNumberFormat.AMEX
-        } else {
-            CardNumberFormat.DEFAULT
-        }
+        return cardBrandData?.cardBrand.toCardNumberFormat()
     }
 
     private fun getCardNumberTrailingIcon(
