@@ -14,9 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
-import com.adyen.checkout.card.internal.ui.state.isAmex
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -67,8 +68,8 @@ private fun CardDetailsSection(
                 cardNumberState = viewState.cardNumber,
                 supportedCardBrands = viewState.supportedCardBrands,
                 isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
-                detectedCardBrands = viewState.detectedCardBrands,
-                isAmex = viewState.isAmex,
+                cardBrandViewState = viewState.cardBrandViewState,
+                cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
                 onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
                 onScanButtonClick = onScanButtonClick,
@@ -84,7 +85,7 @@ private fun CardDetailsSection(
         if (viewState.securityCode != null) {
             SecurityCodeField(
                 securityCodeState = viewState.securityCode,
-                isAmex = viewState.isAmex,
+                cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateSecurityCode(it)) },
                 onFocusChange = { onIntent(CardIntent.UpdateSecurityCodeFocus(it)) },
             )
@@ -170,7 +171,8 @@ private fun CardComponentPreview() {
             isSupportedCardBrandsShown = false,
             isLoading = false,
             isCardScanButtonVisible = false,
-            detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
+            cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
         ),
         onIntent = {},
         onSubmitClick = {},

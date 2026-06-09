@@ -75,7 +75,7 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
-    fun `when hidden brand is detected, then supported card brands should be shown and detected brands should be empty`() {
+    fun `when hidden brand is detected, then supported card brands should be shown and card brand view state should be placeholder`() {
         // GIVEN
         val componentState = createComponentState(
             cardBrandState = CardBrandState.HiddenBrand,
@@ -86,11 +86,11 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertTrue(viewState.isSupportedCardBrandsShown)
-        assertTrue(viewState.detectedCardBrands.isEmpty())
+        assertEquals(CardBrandViewState.Placeholder, viewState.cardBrandViewState)
     }
 
     @Test
-    fun `when single reliable with hidden brand is detected, then supported card brands should be hidden and detected brands should contain non-hidden brand`() {
+    fun `when single reliable with hidden brand is detected, then supported card brands should be hidden and card brand view state should be single brand`() {
         // GIVEN
         val cardBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
         val componentState = createComponentState(
@@ -102,7 +102,144 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertFalse(viewState.isSupportedCardBrandsShown)
-        assertEquals(listOf(CardBrand("visa")), viewState.detectedCardBrands)
+        assertEquals(CardBrandViewState.SingleBrand(CardBrand("visa")), viewState.cardBrandViewState)
+    }
+
+    @Test
+    fun `when dual brand is detected, then card brand view state should be dual brand`() {
+        // GIVEN
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val mcBrandData = getCardBrandData().copy(cardBrand = CardBrand("mc"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrand(listOf(visaBrandData, mcBrandData)),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertEquals(
+            CardBrandViewState.DualBrand(listOf(CardBrand("visa"), CardBrand("mc"))),
+            viewState.cardBrandViewState,
+        )
+    }
+
+    @Test
+    fun `when dual brand with shopper selection is detected, then card brand view state should be selectable dual brand`() {
+        // GIVEN
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val mcBrandData = getCardBrandData().copy(cardBrand = CardBrand("mc"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(visaBrandData, mcBrandData),
+                shopperSelectedCardBrandData = visaBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertEquals(
+            CardBrandViewState.SelectableDualBrand(
+                listOf(
+                    SelectableCardBrandItem(brand = CardBrand("visa"), isSelected = true),
+                    SelectableCardBrandItem(brand = CardBrand("mc"), isSelected = false),
+                ),
+            ),
+            viewState.cardBrandViewState,
+        )
+    }
+
+    @Test
+    fun `when amex brand is detected, then cardNumberFormat should be Amex`() {
+        // GIVEN
+        val amexBrandData = getCardBrandData().copy(
+            cardBrand = CardBrand("amex"),
+        )
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.SingleReliableBrand(amexBrandData),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CardNumberFormat.AMEX, viewState.cardNumberFormat)
+    }
+
+    @Test
+    fun `when non-amex brand is detected, then cardNumberFormat should be Default`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.SingleReliableBrand(
+                getCardBrandData().copy(cardBrand = CardBrand("visa")),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
+    }
+
+    @Test
+    fun `when no brand is detected, then cardNumberFormat should be Default`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.NoBrandsDetected,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
+    }
+
+    @Test
+    fun `when dual brand with amex selected, then cardNumberFormat should be Amex`() {
+        // GIVEN
+        val amexBrandData = getCardBrandData().copy(
+            cardBrand = CardBrand("amex"),
+        )
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(amexBrandData, visaBrandData),
+                shopperSelectedCardBrandData = amexBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CardNumberFormat.AMEX, viewState.cardNumberFormat)
+    }
+
+    @Test
+    fun `when dual brand with non-amex selected, then cardNumberFormat should be Default`() {
+        // GIVEN
+        val amexBrandData = getCardBrandData().copy(
+            cardBrand = CardBrand("amex"),
+        )
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(amexBrandData, visaBrandData),
+                shopperSelectedCardBrandData = visaBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
     }
 
     // UC6: Error Hides Brand Logos

@@ -13,10 +13,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.old.DispatcherProvider
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import com.adyen.checkout.threeds2.internal.data.api.SubmitFingerprintRepository
@@ -31,19 +30,17 @@ internal class ThreeDS2Factory(private val application: Application) : ActionFac
         action: Action,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
+        params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
-        commonComponentParams: CommonComponentParams,
     ): ThreeDS2Component {
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        val httpClient = HttpClientFactory.getHttpClient(commonComponentParams.environment)
+        val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
         val threeDS2Serializer = ThreeDS2Serializer()
 
-        val threeDS2ComponentParams =
-            ThreeDS2ComponentParamsMapper().mapToParams(checkoutConfiguration, commonComponentParams)
+        val threeDS2ComponentParams = ThreeDS2ComponentParamsMapper().mapToParams(params)
 
         return ThreeDS2Component(
             action = action,
@@ -57,6 +54,7 @@ internal class ThreeDS2Factory(private val application: Application) : ActionFac
             coroutineDispatcher = DispatcherProvider.Default,
             threeDS2Serializer = threeDS2Serializer,
             application = application,
+            clientKey = params.clientKey,
         ).apply {
             initialize(coroutineScope)
         }

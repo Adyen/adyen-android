@@ -14,12 +14,11 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.AdditionalSessionParams
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -36,8 +35,7 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when card configuration is null then default values are used`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = null,
+            params = generateCheckoutParams(cardConfiguration = null),
             paymentMethod = null,
         )
 
@@ -48,18 +46,19 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showCardholderName is null then it defaults to false`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = CardConfiguration(
-                showCardholderName = null,
-                supportedCardBrands = null,
-                showStorePaymentMethod = null,
-                showSecurityCode = null,
-                showSecurityCodeForStoredCard = null,
-                showSupportedCardBrandLogos = null,
-                socialSecurityNumberVisibility = null,
-                koreanAuthenticationVisibility = null,
-                billingAddressMode = null,
-                showCardScanner = null,
+            params = generateCheckoutParams(
+                cardConfiguration = CardConfiguration(
+                    showCardholderName = null,
+                    supportedCardBrands = null,
+                    showStorePaymentMethod = null,
+                    showSecurityCode = null,
+                    showSecurityCodeForStoredCard = null,
+                    showSupportedCardBrandLogos = null,
+                    socialSecurityNumberVisibility = null,
+                    koreanAuthenticationVisibility = null,
+                    billingAddressMode = null,
+                    showCardScanner = null,
+                ),
             ),
             paymentMethod = null,
         )
@@ -70,8 +69,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showCardholderName is true then it is passed through`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showCardholderName = true),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showCardholderName = true),
+            ),
             paymentMethod = null,
         )
 
@@ -81,8 +81,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showStorePaymentMethod is null then it defaults to true`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showStorePaymentMethod = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showStorePaymentMethod = null),
+            ),
             paymentMethod = null,
         )
 
@@ -92,8 +93,7 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSecurityCode is null then cvcVisibility is ALWAYS_SHOW`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSecurityCode = null),
+            params = generateCheckoutParams(cardConfiguration = createCardConfiguration(showSecurityCode = null)),
             paymentMethod = null,
         )
 
@@ -103,8 +103,7 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSecurityCode is true then cvcVisibility is ALWAYS_SHOW`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSecurityCode = true),
+            params = generateCheckoutParams(cardConfiguration = createCardConfiguration(showSecurityCode = true)),
             paymentMethod = null,
         )
 
@@ -114,8 +113,7 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSecurityCode is false then cvcVisibility is ALWAYS_HIDE`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSecurityCode = false),
+            params = generateCheckoutParams(cardConfiguration = createCardConfiguration(showSecurityCode = false)),
             paymentMethod = null,
         )
 
@@ -125,8 +123,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSecurityCodeForStoredCard is null then storedCVCVisibility is SHOW`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = null),
+            ),
             paymentMethod = null,
         )
 
@@ -136,8 +135,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSecurityCodeForStoredCard is true then storedCVCVisibility is SHOW`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = true),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = true),
+            ),
             paymentMethod = null,
         )
 
@@ -147,8 +147,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSecurityCodeForStoredCard is false then storedCVCVisibility is HIDE`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = false),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showSecurityCodeForStoredCard = false),
+            ),
             paymentMethod = null,
         )
 
@@ -158,8 +159,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showCardScanner is null then it defaults to true`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showCardScanner = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showCardScanner = null),
+            ),
             paymentMethod = null,
         )
 
@@ -169,8 +171,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showCardScanner is true then it is passed through`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showCardScanner = true),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showCardScanner = true),
+            ),
             paymentMethod = null,
         )
 
@@ -180,8 +183,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showCardScanner is false then it is passed through`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showCardScanner = false),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showCardScanner = false),
+            ),
             paymentMethod = null,
         )
 
@@ -191,8 +195,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSupportedCardBrandLogos is null then it defaults to true`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSupportedCardBrandLogos = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showSupportedCardBrandLogos = null),
+            ),
             paymentMethod = null,
         )
 
@@ -202,8 +207,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when showSupportedCardBrandLogos is false then it is passed through`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(showSupportedCardBrandLogos = false),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showSupportedCardBrandLogos = false),
+            ),
             paymentMethod = null,
         )
 
@@ -213,8 +219,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when socialSecurityNumberVisibility is null then it defaults to HIDE`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(socialSecurityNumberVisibility = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(socialSecurityNumberVisibility = null),
+            ),
             paymentMethod = null,
         )
 
@@ -224,8 +231,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when socialSecurityNumberVisibility is SHOW then it is passed through`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(socialSecurityNumberVisibility = FieldVisibility.SHOW),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(socialSecurityNumberVisibility = FieldVisibility.SHOW),
+            ),
             paymentMethod = null,
         )
 
@@ -235,8 +243,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when koreanAuthenticationVisibility is null then it defaults to HIDE`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(koreanAuthenticationVisibility = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(koreanAuthenticationVisibility = null),
+            ),
             paymentMethod = null,
         )
 
@@ -246,8 +255,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when koreanAuthenticationVisibility is SHOW then it is passed through`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(koreanAuthenticationVisibility = FieldVisibility.SHOW),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(koreanAuthenticationVisibility = FieldVisibility.SHOW),
+            ),
             paymentMethod = null,
         )
 
@@ -262,8 +272,9 @@ internal class CardComponentParamsMapperTest {
         )
 
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(supportedCardBrands = configBrands),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(supportedCardBrands = configBrands),
+            ),
             paymentMethod = paymentMethod,
         )
 
@@ -277,8 +288,9 @@ internal class CardComponentParamsMapperTest {
         )
 
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(supportedCardBrands = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(supportedCardBrands = null),
+            ),
             paymentMethod = paymentMethod,
         )
 
@@ -292,8 +304,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when supportedCardBrands and payment method brands are null then default list is used`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(supportedCardBrands = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(supportedCardBrands = null),
+            ),
             paymentMethod = null,
         )
 
@@ -307,15 +320,11 @@ internal class CardComponentParamsMapperTest {
         sessionsValue: Boolean?,
         expectedValue: Boolean,
     ) {
-        val sessionParams = if (sessionsValue != null) {
-            createSessionParams(enableStoreDetails = sessionsValue)
-        } else {
-            null
-        }
-
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
-            cardConfiguration = createCardConfiguration(showStorePaymentMethod = configurationValue),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showStorePaymentMethod = configurationValue),
+                additionalSessionParams = createAdditionalSessionParams(enableStoreDetails = sessionsValue),
+            ),
             paymentMethod = null,
         )
 
@@ -327,18 +336,19 @@ internal class CardComponentParamsMapperTest {
         val customBrands = listOf(CardBrand(CardType.DINERS.txVariant), CardBrand(CardType.MAESTRO.txVariant))
 
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = CardConfiguration(
-                showCardholderName = true,
-                supportedCardBrands = customBrands,
-                showStorePaymentMethod = false,
-                showSecurityCode = false,
-                showSecurityCodeForStoredCard = false,
-                showSupportedCardBrandLogos = false,
-                socialSecurityNumberVisibility = FieldVisibility.SHOW,
-                koreanAuthenticationVisibility = FieldVisibility.SHOW,
-                billingAddressMode = BillingAddressMode.PostalCode(),
-                showCardScanner = false,
+            params = generateCheckoutParams(
+                cardConfiguration = CardConfiguration(
+                    showCardholderName = true,
+                    supportedCardBrands = customBrands,
+                    showStorePaymentMethod = false,
+                    showSecurityCode = false,
+                    showSecurityCodeForStoredCard = false,
+                    showSupportedCardBrandLogos = false,
+                    socialSecurityNumberVisibility = FieldVisibility.SHOW,
+                    koreanAuthenticationVisibility = FieldVisibility.SHOW,
+                    billingAddressMode = BillingAddressMode.PostalCode(),
+                    showCardScanner = false,
+                ),
             ),
             paymentMethod = null,
         )
@@ -359,33 +369,30 @@ internal class CardComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
-    private fun createComponentParamsBundle(
-        sessionParams: SessionParams? = null,
-    ) = ComponentParamsBundle(
-        commonComponentParams = CommonComponentParams(
-            shopperLocale = DEVICE_LOCALE,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-            isCreatedByDropIn = false,
-            amount = null,
-            showSubmitButton = true,
-            publicKey = null,
-        ),
-        sessionParams = sessionParams,
-    )
-
-    private fun createSessionParams(
+    private fun createAdditionalSessionParams(
         enableStoreDetails: Boolean? = null,
-    ) = SessionParams(
-        environment = Environment.TEST,
-        clientKey = TEST_CLIENT_KEY,
+    ) = AdditionalSessionParams(
         enableStoreDetails = enableStoreDetails,
         installmentConfiguration = null,
         showRemovePaymentMethodButton = null,
-        amount = null,
         returnUrl = "",
-        shopperLocale = null,
+    )
+
+    private fun generateCheckoutParams(
+        cardConfiguration: CardConfiguration? = createCardConfiguration(),
+        additionalSessionParams: AdditionalSessionParams? = null,
+    ) = CheckoutParams(
+        shopperLocale = DEVICE_LOCALE,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        amount = null,
+        showSubmitButton = true,
+        publicKey = "test_publicKey",
+        additionalConfigurations = buildMap {
+            cardConfiguration?.let { this[CardConfiguration::class.java.name] = it }
+        },
+        additionalSessionParams = additionalSessionParams,
     )
 
     @Suppress("LongParameterList")
@@ -435,16 +442,6 @@ internal class CardComponentParamsMapperTest {
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW,
         showCardScanner: Boolean = true,
     ) = CardComponentParams(
-        commonComponentParams = CommonComponentParams(
-            shopperLocale = DEVICE_LOCALE,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-            isCreatedByDropIn = false,
-            amount = null,
-            showSubmitButton = true,
-            publicKey = null,
-        ),
         showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
         showStorePaymentMethod = showStorePaymentMethod,
@@ -459,7 +456,7 @@ internal class CardComponentParamsMapperTest {
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-        private val DEVICE_LOCALE = Locale("nl", "NL")
+        private val DEVICE_LOCALE = Locale.forLanguageTag("nl-NL")
 
         @JvmStatic
         fun enableStoreDetailsSource() = listOf(

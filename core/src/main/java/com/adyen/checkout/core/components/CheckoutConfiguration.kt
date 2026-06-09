@@ -97,25 +97,14 @@ class CheckoutConfiguration(
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun addConfiguration(key: String, configuration: Configuration) {
-        availableConfigurations[key] = configuration
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun addActionConfiguration(configuration: Configuration) {
+    fun addConfiguration(configuration: Configuration) {
+        // In the future if we might need to support multiple configurations of the same type we should use the payment
+        // method type as the key instead of the class name.
         availableConfigurations[configuration::class.java.name] = configuration
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun <T : Configuration> getConfiguration(key: String): T? {
-        @Suppress("UNCHECKED_CAST")
-        return availableConfigurations[key] as? T
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun <T : Configuration> getActionConfiguration(configClass: Class<T>): T? {
-        @Suppress("UNCHECKED_CAST")
-        return availableConfigurations[configClass.name] as? T
+    internal fun getAvailableConfigurations(): Map<String, Configuration> {
+        return availableConfigurations
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

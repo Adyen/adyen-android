@@ -28,10 +28,6 @@ fun CheckoutConfiguration.threeDS2(
         threeDSRequestorAppURL = threeDSRequestorAppURL,
         uiCustomization = uiCustomization,
     )
-    addActionConfiguration(config)
+    addConfiguration(config)
     return this
-}
-
-internal fun CheckoutConfiguration.get3DS2Configuration(): ThreeDS2Configuration? {
-    return getActionConfiguration(ThreeDS2Configuration::class.java)
 }

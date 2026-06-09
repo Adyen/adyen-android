@@ -13,8 +13,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
 
@@ -30,33 +29,19 @@ object ActionComponentProvider {
         factories[actionType] = factory
     }
 
-    /**
-     * Create an [ActionComponent] using an [ActionFactory].
-     *
-     * @param action The action to be handled.
-     * @param coroutineScope The [CoroutineScope] to be used by the component.
-     * @param checkoutConfiguration The global checkout configuration.
-     * @param savedStateHandle The [SavedStateHandle] to be used by the component.
-     *
-     * @return [ActionComponent] for given action type.
-     * @throws IllegalStateException If a factory for the provided action type is not registered.
-     */
-    @Suppress("LongParameterList")
     fun get(
         action: Action,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
+        params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
-        commonComponentParams: CommonComponentParams,
     ): ActionComponent {
         return factories[action.type]?.create(
             action = action,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
+            params = params,
             savedStateHandle = savedStateHandle,
-            commonComponentParams = commonComponentParams,
         ) ?: run {
             error("Factory for action type: ${action.type} is not registered.")
         }

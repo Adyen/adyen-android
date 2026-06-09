@@ -14,16 +14,11 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
-import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.internal.AnalyticsParams
-import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.Locale
 
 internal class CardComponentStateFactoryTest {
 
@@ -202,16 +197,6 @@ internal class CardComponentStateFactoryTest {
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
     ) = CardComponentStateFactory(
         componentParams = CardComponentParams(
-            commonComponentParams = CommonComponentParams(
-                shopperLocale = Locale("nl", "NL"),
-                environment = Environment.TEST,
-                clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
-                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-                isCreatedByDropIn = false,
-                amount = null,
-                showSubmitButton = true,
-                publicKey = null,
-            ),
             showCardholderName = showCardholderName,
             supportedCardBrands = supportedCardBrands,
             showStorePaymentMethod = showStorePaymentMethod,

@@ -11,16 +11,15 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.CheckoutCallbacks
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -37,8 +36,7 @@ internal class FullCheckoutFlow(
     componentRequestDispatcher: ComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
     analyticsManager: AnalyticsManager,
-    checkoutConfiguration: CheckoutConfiguration,
-    componentParamsBundle: ComponentParamsBundle,
+    params: CheckoutParams,
     private val actionHandler: ActionHandler,
 ) : CheckoutFlow {
 
@@ -49,8 +47,7 @@ internal class FullCheckoutFlow(
         callbacks = callbacks,
         coroutineScope = coroutineScope,
         analyticsManager = analyticsManager,
-        checkoutConfiguration = checkoutConfiguration,
-        componentParamsBundle = componentParamsBundle,
+        params = params,
     )
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
@@ -122,8 +119,7 @@ internal class FullCheckoutFlow(
         callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
     ): PaymentComponent? {
         return when (target) {
             is CheckoutTarget.PaymentMethod -> {
@@ -138,8 +134,7 @@ internal class FullCheckoutFlow(
                         paymentMethod = paymentMethod,
                         coroutineScope = coroutineScope,
                         analyticsManager = analyticsManager,
-                        checkoutConfiguration = checkoutConfiguration,
-                        componentParamsBundle = componentParamsBundle,
+                        params = params,
                         additionalCallbacks = callbacks.additionalCallbacks,
                     )
                 }
@@ -157,8 +152,7 @@ internal class FullCheckoutFlow(
                         storedPaymentMethod = storedPaymentMethod,
                         coroutineScope = coroutineScope,
                         analyticsManager = analyticsManager,
-                        checkoutConfiguration = checkoutConfiguration,
-                        componentParamsBundle = componentParamsBundle,
+                        params = params,
                     )
                 }
             }
