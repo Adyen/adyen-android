@@ -9,19 +9,16 @@
 package com.adyen.checkout.threeds2.internal.ui.model
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.threeds2.get3DS2Configuration
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.threeds2.ThreeDS2Configuration
 
 internal class ThreeDS2ComponentParamsMapper {
 
     fun mapToParams(
-        checkoutConfiguration: CheckoutConfiguration,
-        commonComponentParams: CommonComponentParams,
+        params: CheckoutParams,
     ): ThreeDS2ComponentParams {
-        val adyen3ds2Configuration = checkoutConfiguration.get3DS2Configuration()
+        val adyen3ds2Configuration = params.getConfiguration<ThreeDS2Configuration>()
         return ThreeDS2ComponentParams(
-            commonComponentParams = commonComponentParams,
             uiCustomization = adyen3ds2Configuration?.uiCustomization,
             threeDSRequestorAppURL = adyen3ds2Configuration?.threeDSRequestorAppURL,
             // Hardcoded for now, but in the feature we could make this configurable

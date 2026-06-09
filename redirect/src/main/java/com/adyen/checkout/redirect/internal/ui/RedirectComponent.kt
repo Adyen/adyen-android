@@ -25,7 +25,6 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
@@ -48,7 +47,7 @@ internal class RedirectComponent(
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
-    private val componentParams: ComponentParams,
+    private val clientKey: String,
 ) : ActionComponent, IntentHandlingComponent {
 
     private var _coroutineScope: CoroutineScope? = null
@@ -134,7 +133,7 @@ internal class RedirectComponent(
                     .orEmpty(),
             )
             try {
-                val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)
+                val response = nativeRedirectService.makeNativeRedirect(request, clientKey)
                 val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
                 emitDetails(detailsJson)
             } catch (e: HttpError) {

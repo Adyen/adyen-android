@@ -14,26 +14,23 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.core.common.internal.AdditionalSessionParams
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.sessions.internal.model.SessionParams
-import kotlin.collections.isNullOrEmpty
 
 // TODO - Card Component Mapper Tests.
 internal class CardComponentParamsMapper {
 
     fun mapToParams(
-        componentParamsBundle: ComponentParamsBundle,
-        cardConfiguration: CardConfiguration?,
+        params: CheckoutParams,
         paymentMethod: CardPaymentMethod?,
     ): CardComponentParams {
-        val (commonComponentParams, sessionParams) = componentParamsBundle
+        val cardConfiguration = params.getConfiguration<CardConfiguration>()
         return CardComponentParams(
-            commonComponentParams = commonComponentParams,
             showCardholderName = cardConfiguration?.showCardholderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
-            showStorePaymentMethod = getStorePaymentFieldVisible(sessionParams, cardConfiguration),
+            showStorePaymentMethod = getStorePaymentFieldVisible(params.additionalSessionParams, cardConfiguration),
             showSupportedCardBrandLogos = cardConfiguration?.showSupportedCardBrandLogos ?: true,
             socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberVisibility
                 ?: FieldVisibility.HIDE,
@@ -84,7 +81,7 @@ internal class CardComponentParamsMapper {
     }
 
     private fun getStorePaymentFieldVisible(
-        sessionParams: SessionParams?,
+        sessionParams: AdditionalSessionParams?,
         cardConfiguration: CardConfiguration?,
     ): Boolean {
         return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePaymentMethod ?: true

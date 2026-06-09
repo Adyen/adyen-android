@@ -13,10 +13,9 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import kotlinx.coroutines.CoroutineScope
@@ -28,9 +27,8 @@ internal class RedirectFactory : ActionFactory<RedirectComponent> {
         action: Action,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
+        params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
-        commonComponentParams: CommonComponentParams
     ): RedirectComponent {
         if (action !is RedirectAction) {
 //          TODO - Error Propagation
@@ -40,7 +38,7 @@ internal class RedirectFactory : ActionFactory<RedirectComponent> {
 
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        val httpClient = HttpClientFactory.getHttpClient(commonComponentParams.environment)
+        val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val nativeRedirectService = NativeRedirectService(httpClient)
 
         return RedirectComponent(
@@ -49,7 +47,7 @@ internal class RedirectFactory : ActionFactory<RedirectComponent> {
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
             nativeRedirectService = nativeRedirectService,
-            componentParams = commonComponentParams,
+            clientKey = params.clientKey,
         )
     }
 }

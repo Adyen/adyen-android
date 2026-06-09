@@ -9,12 +9,11 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
@@ -27,15 +26,13 @@ internal class MBWayFactory : PaymentComponentFactory<MBWayComponent> {
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
+        params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): MBWayComponent {
-        val componentParams = componentParamsBundle.commonComponentParams
         return MBWayComponent(
             analyticsManager = analyticsManager,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
-            componentStateFactory = MBWayComponentStateFactory(componentParams),
+            componentStateFactory = MBWayComponentStateFactory(params.shopperLocale),
             componentStateReducer = MBWayComponentStateReducer(),
             componentStateValidator = MBWayComponentStateValidator(),
             viewStateProducer = MBWayViewStateProducer(),

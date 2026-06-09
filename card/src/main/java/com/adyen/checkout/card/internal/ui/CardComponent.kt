@@ -40,6 +40,7 @@ import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
+import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -62,8 +63,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-@Suppress("TooManyFunctions", "LongParameterList")
-internal class CardComponent(
+@Suppress("TooManyFunctions")
+internal class CardComponent
+@Suppress("LongParameterList")
+constructor(
     private val analyticsManager: AnalyticsManager,
     private val cardEncryptor: BaseCardEncryptor,
     private val genericEncryptor: BaseGenericEncryptor,
@@ -79,6 +82,8 @@ internal class CardComponent(
     private val onBinValueCallback: OnBinValueCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
     private val cardScannerWrapper: CardScannerWrapper,
+    private val publicKey: String?,
+    private val environment: Environment,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -133,6 +138,7 @@ internal class CardComponent(
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
             val paymentComponentState = componentState.value.toPaymentComponentState(
+                publicKey = publicKey,
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
@@ -213,7 +219,7 @@ internal class CardComponent(
         coroutineScope.launch {
             val isAvailable = cardScannerWrapper.initialize(
                 context = context,
-                environment = componentParams.environment,
+                environment = environment,
             )
             onIntent(CardIntent.UpdateCardScanningAvailability(isAvailable))
             val event = if (isAvailable) {

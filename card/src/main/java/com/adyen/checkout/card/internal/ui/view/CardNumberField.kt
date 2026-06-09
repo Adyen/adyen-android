@@ -29,6 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
+import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
+import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
@@ -52,8 +54,8 @@ internal fun CardNumberField(
     cardNumberState: TextInputViewState,
     supportedCardBrands: List<CardBrand>,
     isSupportedCardBrandsShown: Boolean,
-    detectedCardBrands: List<CardBrand>,
-    isAmex: Boolean?,
+    cardBrandViewState: CardBrandViewState,
+    cardNumberFormat: CardNumberFormat,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     onScanButtonClick: () -> Unit,
@@ -64,8 +66,8 @@ internal fun CardNumberField(
     ) {
         CardNumberInputField(
             cardNumberState = cardNumberState,
-            isAmex = isAmex,
-            detectedCardBrands = detectedCardBrands,
+            cardNumberFormat = cardNumberFormat,
+            cardBrandViewState = cardBrandViewState,
             onValueChange = onValueChange,
             onFocusChange = onFocusChange,
             onScanButtonClick = onScanButtonClick,
@@ -81,8 +83,8 @@ internal fun CardNumberField(
 @Composable
 private fun CardNumberInputField(
     cardNumberState: TextInputViewState,
-    isAmex: Boolean?,
-    detectedCardBrands: List<CardBrand>,
+    cardNumberFormat: CardNumberFormat,
+    cardBrandViewState: CardBrandViewState,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     onScanButtonClick: () -> Unit,
@@ -96,8 +98,8 @@ private fun CardNumberInputField(
             maxLengthWithoutSeparators = CARD_NUMBER_MAXIMUM_LENGTH,
         )
     }
-    val outputTransformation = remember(isAmex) {
-        CardNumberOutputTransformation(isAmex = isAmex ?: false)
+    val outputTransformation = remember(cardNumberFormat) {
+        CardNumberOutputTransformation(cardNumberFormat = cardNumberFormat)
     }
 
     CheckoutTextField(
@@ -117,7 +119,7 @@ private fun CardNumberInputField(
         trailingIcon = {
             CardNumberFieldIcon(
                 state = cardNumberState,
-                detectedBrands = detectedCardBrands,
+                cardBrandViewState = cardBrandViewState,
                 onScanButtonClick = onScanButtonClick,
             )
         },
@@ -126,18 +128,22 @@ private fun CardNumberInputField(
 
 @Composable
 private fun DetectedBrandsList(
-    detectedCardBrands: List<CardBrand>,
+    cardBrandViewState: CardBrandViewState,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
     ) {
-        if (detectedCardBrands.isEmpty()) {
-            BrandLogo(txVariant = null)
-        } else {
-            detectedCardBrands.take(2).forEach { cardBrand ->
-                BrandLogo(cardBrand.txVariant)
+        when (cardBrandViewState) {
+            is CardBrandViewState.Placeholder -> BrandLogo(txVariant = null)
+            is CardBrandViewState.SingleBrand -> BrandLogo(cardBrandViewState.brand.txVariant)
+            is CardBrandViewState.DualBrand -> cardBrandViewState.brands.forEach { brand ->
+                BrandLogo(brand.txVariant)
+            }
+            // TODO - Co-badged selectable cards [COSDK-1193]
+            is CardBrandViewState.SelectableDualBrand -> cardBrandViewState.brands.forEach { brandItem ->
+                BrandLogo(brandItem.brand.txVariant)
             }
         }
     }
@@ -187,7 +193,7 @@ private fun CardBrandsList(
 @Composable
 private fun CardNumberFieldIcon(
     state: TextInputViewState,
-    detectedBrands: List<CardBrand>,
+    cardBrandViewState: CardBrandViewState,
     onScanButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -212,7 +218,7 @@ private fun CardNumberFieldIcon(
                 )
             }
 
-            else -> DetectedBrandsList(detectedBrands)
+            else -> DetectedBrandsList(cardBrandViewState)
         }
     }
 }
@@ -235,8 +241,8 @@ private fun CardNumberFieldPreview(
                 CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
             ),
             isSupportedCardBrandsShown = true,
-            detectedCardBrands = emptyList(),
-            isAmex = false,
+            cardBrandViewState = CardBrandViewState.Placeholder,
+            cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
@@ -252,8 +258,8 @@ private fun CardNumberFieldPreview(
                 CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
             ),
             isSupportedCardBrandsShown = true,
-            detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
-            isAmex = false,
+            cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
@@ -268,8 +274,8 @@ private fun CardNumberFieldPreview(
                 CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
             ),
             isSupportedCardBrandsShown = false,
-            detectedCardBrands = emptyList(),
-            isAmex = true,
+            cardBrandViewState = CardBrandViewState.Placeholder,
+            cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
@@ -283,8 +289,8 @@ private fun CardNumberFieldPreview(
             ),
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
-            detectedCardBrands = emptyList(),
-            isAmex = true,
+            cardBrandViewState = CardBrandViewState.Placeholder,
+            cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
