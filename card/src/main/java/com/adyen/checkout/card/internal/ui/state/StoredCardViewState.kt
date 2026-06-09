@@ -9,19 +9,12 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 internal data class StoredCardViewState(
     val securityCode: TextInputViewState?,
     val brand: CardBrand?,
+    val cardNumberFormat: CardNumberFormat,
     val isLoading: Boolean,
 ) : ViewState
-
-internal val StoredCardViewState.cardNumberFormat: CardNumberFormat
-    get() = if (brand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant) {
-        CardNumberFormat.AMEX
-    } else {
-        CardNumberFormat.DEFAULT
-    }

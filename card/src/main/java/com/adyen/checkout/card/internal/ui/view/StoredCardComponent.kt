@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
-import com.adyen.checkout.card.internal.ui.state.cardNumberFormat
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.theme.Dimensions

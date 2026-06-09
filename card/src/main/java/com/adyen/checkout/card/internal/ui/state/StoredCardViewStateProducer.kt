@@ -17,20 +17,29 @@ import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 internal class StoredCardViewStateProducer : ViewStateProducer<StoredCardComponentState, StoredCardViewState> {
 
     override fun produce(state: StoredCardComponentState): StoredCardViewState {
-        val isAmex = state.detectedCardType?.cardBrand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant
+        val cardNumberFormat = getCardNumberFormat(state)
 
         return StoredCardViewState(
             securityCode = state.securityCode.toViewState(
-                trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, isAmex),
+                trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
             ),
             brand = state.detectedCardType?.cardBrand,
+            cardNumberFormat = cardNumberFormat,
             isLoading = state.isLoading,
         )
     }
 
+    private fun getCardNumberFormat(state: StoredCardComponentState): CardNumberFormat {
+        return if (state.detectedCardType?.cardBrand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant) {
+            CardNumberFormat.AMEX
+        } else {
+            CardNumberFormat.DEFAULT
+        }
+    }
+
     private fun getSecurityCodeTrailingIcon(
         securityCode: TextInputComponentState,
-        isAmex: Boolean,
+        cardNumberFormat: CardNumberFormat,
     ): SecurityCodeTrailingIcon {
         val isValid = securityCode.errorMessage == null && securityCode.text.isNotEmpty()
         val isInvalid = securityCode.errorMessage != null && securityCode.showError
@@ -38,7 +47,7 @@ internal class StoredCardViewStateProducer : ViewStateProducer<StoredCardCompone
         return when {
             isValid -> SecurityCodeTrailingIcon.Checkmark
             isInvalid -> SecurityCodeTrailingIcon.Warning
-            isAmex -> SecurityCodeTrailingIcon.PlaceholderAmex
+            cardNumberFormat == CardNumberFormat.AMEX -> SecurityCodeTrailingIcon.PlaceholderAmex
             else -> SecurityCodeTrailingIcon.PlaceholderDefault
         }
     }
