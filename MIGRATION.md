@@ -52,19 +52,14 @@ lifecycleScope.launch {
     when (val result = Checkout.setup(sessionResponse = sessionResponse, configuration = configuration)) {
         is Checkout.Result.Error -> showError(result.error.message.orEmpty())
         is Checkout.Result.Success -> {
-            val controller = CheckoutController(
-                target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
-                context = result.checkoutContext,
-                callbacks = SessionCheckoutCallbacks(
-                    onFinished = { showSuccess() },
-                    onError = { error -> showError(error.message.orEmpty()) },
-                ),
-                coroutineScope = lifecycleScope,
-            )
+            val sessionsContext = result.checkoutContext
+            // Use sessionsContext with your payment-method-specific integration.
         }
     }
 }
 ```
+
+For a complete card example, see [docs/v6/card-session-flow.md](docs/v6/card-session-flow.md).
 
 #### Advanced flow
 
@@ -89,26 +84,14 @@ lifecycleScope.launch {
     when (val result = Checkout.setup(paymentMethods = paymentMethods, configuration = configuration)) {
         is Checkout.Result.Error -> showError(result.error.message.orEmpty())
         is Checkout.Result.Success -> {
-            val controller = CheckoutController(
-                target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
-                context = result.checkoutContext,
-                callbacks = AdvancedCheckoutCallbacks(
-                    onSubmit = { data ->
-                        callPayments(data)
-                    },
-                    onAdditionalDetails = { data ->
-                        callDetails(data)
-                    },
-                    onError = { error ->
-                        showError(error.message.orEmpty())
-                    },
-                ),
-                coroutineScope = lifecycleScope,
-            )
+            val advancedContext = result.checkoutContext
+            // Use advancedContext with your payment-method-specific integration.
         }
     }
 }
 ```
+
+For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-advanced-flow.md).
 
 #### Summary
 
@@ -152,38 +135,10 @@ val configuration = CheckoutConfiguration(
 
 #### Callback migration
 
-##### Before (v5)
-
-```kotlin
-class ExampleViewModel : ComponentCallback<CardComponentState> {
-    override fun onSubmit(state: CardComponentState) {
-        makePayment(state.data)
-    }
-
-    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        sendPaymentDetails(actionComponentData)
-    }
-}
-```
-
-##### After (v6)
-
-```kotlin
-val callbacks = AdvancedCheckoutCallbacks(
-    onSubmit = { data -> callPayments(data) },
-    onAdditionalDetails = { data -> callDetails(data) },
-    onError = { error -> showError(error.message.orEmpty()) },
-) {
-    card(
-        onBinValue = OnBinValueCallback { bin ->
-            println("BIN: $bin")
-        },
-        onBinLookup = OnBinLookupCallback { data ->
-            println("BIN lookup: $data")
-        },
-    )
-}
-```
+- `ComponentCallback<CardComponentState>.onSubmit(...)` moves to `AdvancedCheckoutCallbacks(onSubmit = { ... })`.
+- `ComponentCallback<CardComponentState>.onAdditionalDetails(...)` moves to `AdvancedCheckoutCallbacks(onAdditionalDetails = { ... })`.
+- Card-specific callbacks such as BIN events are registered inside the `card(...)` block on your checkout callbacks.
+- For end-to-end callback examples, see [docs/v6/card-session-flow.md](docs/v6/card-session-flow.md) and [docs/v6/card-advanced-flow.md](docs/v6/card-advanced-flow.md).
 
 #### Rendering migration
 
@@ -219,7 +174,7 @@ CheckoutPaymentFlow(
 | v5 style | v6 style |
 | --- | --- |
 | `com.adyen.checkout.components.core.CheckoutConfiguration` | `com.adyen.checkout.core.components.CheckoutConfiguration` |
-| `com.adyen.checkout.card.*` | `com.adyen.checkout.card.*` |
+| `com.adyen.checkout.card.*` | `com.adyen.checkout.card.*` (package unchanged) |
 | `CheckoutSessionProvider.createSession(...)` | `Checkout.setup(sessionResponse = ..., configuration = ...)` |
 | `ComponentCallback<CardComponentState>` | `AdvancedCheckoutCallbacks` |
 | `SessionComponentCallback<CardComponentState>` | `SessionCheckoutCallbacks` |

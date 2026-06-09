@@ -32,26 +32,18 @@ Import the APIs used by these examples:
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.card.BillingAddressMode
-import com.adyen.checkout.card.OnBinLookupCallback
-import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.card
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.StringResourceLocalizationProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
-import com.adyen.checkout.core.components.AdditionalDetailsResult
-import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.AnalyticsConfiguration
 import com.adyen.checkout.core.components.AnalyticsLevel
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutPaymentFlow
-import com.adyen.checkout.core.components.CheckoutTarget
-import com.adyen.checkout.core.components.SessionCheckoutCallbacks
-import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.threeds2.threeDS2
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import java.util.Locale
@@ -112,34 +104,14 @@ lifecycleScope.launch {
             showError(result.error.message.orEmpty())
         }
         is Checkout.Result.Success -> {
-            val controller = CheckoutController(
-                target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
-                context = result.checkoutContext,
-                callbacks = SessionCheckoutCallbacks(
-                    onFinished = {
-                        showSuccess()
-                    },
-                    onError = { error ->
-                        showError(error.message.orEmpty())
-                    },
-                ) {
-                    card(
-                        onBinValue = OnBinValueCallback { bin ->
-                            println("BIN: $bin")
-                        },
-                        onBinLookup = OnBinLookupCallback { data ->
-                            println("BIN lookup: $data")
-                        },
-                    )
-                },
-                coroutineScope = lifecycleScope,
-            )
-
-            renderCheckout(controller)
+            val sessionsContext = result.checkoutContext
+            // Pass sessionsContext to your payment-method-specific integration.
         }
     }
 }
 ```
+
+For a complete card example that creates `CheckoutController(...)` and renders `CheckoutPaymentFlow(...)`, see [card-session-flow.md](card-session-flow.md).
 
 ## Advanced flow
 
@@ -152,39 +124,14 @@ lifecycleScope.launch {
             showError(result.error.message.orEmpty())
         }
         is Checkout.Result.Success -> {
-            val controller = CheckoutController(
-                target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
-                context = result.checkoutContext,
-                callbacks = AdvancedCheckoutCallbacks(
-                    onSubmit = { data ->
-                        callPayments(data)
-                    },
-                    onAdditionalDetails = { data ->
-                        callDetails(data)
-                    },
-                    onError = { error ->
-                        showError(error.message.orEmpty())
-                    },
-                ) {
-                    card(
-                        onBinValue = OnBinValueCallback { bin ->
-                            println("BIN: $bin")
-                        },
-                        onBinLookup = OnBinLookupCallback { data ->
-                            println("BIN lookup: $data")
-                        },
-                    )
-                },
-                coroutineScope = lifecycleScope,
-            )
-
-            renderCheckout(controller)
+            val advancedContext = result.checkoutContext
+            // Pass advancedContext to your payment-method-specific integration.
         }
     }
 }
 ```
 
-`callPayments(...)` should return `SubmitResult`, and `callDetails(...)` should return `AdditionalDetailsResult`.
+For a complete card example that wires `AdvancedCheckoutCallbacks(...)` and renders `CheckoutPaymentFlow(...)`, see [card-advanced-flow.md](card-advanced-flow.md).
 
 ## Rendering the Compose flow
 
