@@ -68,6 +68,17 @@ Find out what the latest version is [here](https://github.com/Adyen/adyen-androi
 
 * [Additional documentation for payment methods][docs.github.paymentMethods]
 
+### v6 alpha documentation
+
+The Android v6 API documented in this repository is currently alpha and Compose-first. These guides describe the current public v6 API.
+
+* [v6 foundations][docs.github.v6.readme]
+* [v6 card component overview][docs.github.v6.card]
+* [v6 card component: session flow][docs.github.v6.cardSession]
+* [v6 card component: advanced flow][docs.github.v6.cardAdvanced]
+* [v6 checkout theme][docs.github.v6.theme]
+* [v5 to v6 migration notes][docs.github.v6.migration]
+
 ## Migrate from v4
 
 If you are upgrading from 4.x.x to a current release, check out our [migration guide][migration.guide].
@@ -125,6 +136,12 @@ This repository is available under the [MIT license](LICENSE).
 [docs.components]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Components
 [docs.github.uiCustomization]: docs/UI_CUSTOMIZATION.md
 [docs.github.paymentMethods]: docs/payment-methods
+[docs.github.v6.readme]: docs/v6/README.md
+[docs.github.v6.card]: docs/v6/card.md
+[docs.github.v6.cardSession]: docs/v6/card-session-flow.md
+[docs.github.v6.cardAdvanced]: docs/v6/card-advanced-flow.md
+[docs.github.v6.theme]: docs/v6/theme.md
+[docs.github.v6.migration]: MIGRATION.md
 [mavenRepo]: https://repo1.maven.org/maven2/com/adyen/checkout/
 [migration.guide]: https://docs.adyen.com/online-payments/build-your-integration/migrate-to-android-5-0-0
 [github.newIssue]: https://github.com/Adyen/adyen-android/issues/new/choose
