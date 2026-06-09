@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.foundation.text.input.TextFieldState
+import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -22,7 +23,7 @@ class CardNumberOutputTransformationTest {
         rawText: String,
         formattedText: String
     ) {
-        val outputTransformation = CardNumberOutputTransformation(isAmex = false)
+        val outputTransformation = CardNumberOutputTransformation(cardNumberFormat = CardNumberFormat.DEFAULT)
         val state = TextFieldState(rawText)
         state.edit {
             with(outputTransformation) { transformOutput() }
@@ -37,7 +38,7 @@ class CardNumberOutputTransformationTest {
         rawText: String,
         formattedText: String
     ) {
-        val outputTransformation = CardNumberOutputTransformation(isAmex = true)
+        val outputTransformation = CardNumberOutputTransformation(cardNumberFormat = CardNumberFormat.AMEX)
         val state = TextFieldState(rawText)
         state.edit {
             with(outputTransformation) { transformOutput() }

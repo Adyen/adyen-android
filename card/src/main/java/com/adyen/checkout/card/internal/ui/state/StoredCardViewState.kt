@@ -19,5 +19,9 @@ internal data class StoredCardViewState(
     val isLoading: Boolean,
 ) : ViewState
 
-internal val StoredCardViewState.isAmex: Boolean
-    get() = brand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant
+internal val StoredCardViewState.cardNumberFormat: CardNumberFormat
+    get() = if (brand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant) {
+        CardNumberFormat.AMEX
+    } else {
+        CardNumberFormat.DEFAULT
+    }

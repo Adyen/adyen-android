@@ -12,7 +12,6 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -155,10 +154,10 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
-    fun `when amex brand is detected, then isAmex should be true`() {
+    fun `when amex brand is detected, then cardNumberFormat should be Amex`() {
         // GIVEN
         val amexBrandData = getCardBrandData().copy(
-            cardBrand = CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            cardBrand = CardBrand("amex"),
         )
         val componentState = createComponentState(
             cardBrandState = CardBrandState.SingleReliableBrand(amexBrandData),
@@ -168,11 +167,11 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertTrue(viewState.isAmex)
+        assertEquals(CardNumberFormat.AMEX, viewState.cardNumberFormat)
     }
 
     @Test
-    fun `when non-amex brand is detected, then isAmex should be false`() {
+    fun `when non-amex brand is detected, then cardNumberFormat should be Default`() {
         // GIVEN
         val componentState = createComponentState(
             cardBrandState = CardBrandState.SingleReliableBrand(
@@ -184,11 +183,11 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isAmex)
+        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
     }
 
     @Test
-    fun `when no brand is detected, then isAmex should be false`() {
+    fun `when no brand is detected, then cardNumberFormat should be Default`() {
         // GIVEN
         val componentState = createComponentState(
             cardBrandState = CardBrandState.NoBrandsDetected,
@@ -198,14 +197,14 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isAmex)
+        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
     }
 
     @Test
-    fun `when dual brand with amex selected, then isAmex should be true`() {
+    fun `when dual brand with amex selected, then cardNumberFormat should be Amex`() {
         // GIVEN
         val amexBrandData = getCardBrandData().copy(
-            cardBrand = CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            cardBrand = CardBrand("amex"),
         )
         val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
         val componentState = createComponentState(
@@ -219,14 +218,14 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertTrue(viewState.isAmex)
+        assertEquals(CardNumberFormat.AMEX, viewState.cardNumberFormat)
     }
 
     @Test
-    fun `when dual brand with non-amex selected, then isAmex should be false`() {
+    fun `when dual brand with non-amex selected, then cardNumberFormat should be Default`() {
         // GIVEN
         val amexBrandData = getCardBrandData().copy(
-            cardBrand = CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            cardBrand = CardBrand("amex"),
         )
         val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
         val componentState = createComponentState(
@@ -240,7 +239,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isAmex)
+        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
     }
 
     // UC6: Error Hides Brand Logos

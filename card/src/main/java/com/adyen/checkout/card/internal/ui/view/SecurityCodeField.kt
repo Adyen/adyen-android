@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
+import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_AMEX
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_DEFAULT
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -41,14 +42,14 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun SecurityCodeField(
     securityCodeState: TextInputViewState,
-    isAmex: Boolean?,
+    cardNumberFormat: CardNumberFormat,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SecurityCodeFieldInternal(
         securityCodeState = securityCodeState,
-        isAmex = isAmex,
+        cardNumberFormat = cardNumberFormat,
         onSecurityCodeChanged = onValueChange,
         onSecurityCodeFocusChanged = onFocusChange,
         modifier = modifier,
@@ -58,14 +59,14 @@ internal fun SecurityCodeField(
 @Composable
 internal fun StoredCardSecurityCodeField(
     securityCodeState: TextInputViewState,
-    isAmex: Boolean?,
+    cardNumberFormat: CardNumberFormat,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SecurityCodeFieldInternal(
         securityCodeState = securityCodeState,
-        isAmex = isAmex,
+        cardNumberFormat = cardNumberFormat,
         onSecurityCodeChanged = onValueChange,
         onSecurityCodeFocusChanged = onFocusChange,
         modifier = modifier,
@@ -75,17 +76,16 @@ internal fun StoredCardSecurityCodeField(
 @Composable
 private fun SecurityCodeFieldInternal(
     securityCodeState: TextInputViewState,
-    isAmex: Boolean?,
+    cardNumberFormat: CardNumberFormat,
     onSecurityCodeChanged: (String) -> Unit,
     onSecurityCodeFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
         ?: resolveString(
-            if (isAmex == null || !isAmex) {
-                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
-            } else {
-                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
+            when (cardNumberFormat) {
+                CardNumberFormat.AMEX -> CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
+                CardNumberFormat.DEFAULT -> CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
             },
         )
 
@@ -95,11 +95,10 @@ private fun SecurityCodeFieldInternal(
         ""
     }
 
-    val inputTransformation = remember(isAmex) {
-        val maxLength = if (isAmex == true) {
-            SECURITY_CODE_MAX_LENGTH_AMEX
-        } else {
-            SECURITY_CODE_MAX_LENGTH_DEFAULT
+    val inputTransformation = remember(cardNumberFormat) {
+        val maxLength = when (cardNumberFormat) {
+            CardNumberFormat.AMEX -> SECURITY_CODE_MAX_LENGTH_AMEX
+            CardNumberFormat.DEFAULT -> SECURITY_CODE_MAX_LENGTH_DEFAULT
         }
         DigitOnlyInputTransformation(
             maxLengthWithoutSeparators = maxLength,
@@ -186,7 +185,7 @@ private fun SecurityCodeFieldPreview(
             securityCodeState = TextInputViewState(
                 text = "123",
             ),
-            isAmex = false,
+            cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
         )
@@ -195,7 +194,7 @@ private fun SecurityCodeFieldPreview(
             securityCodeState = TextInputViewState(
                 isOptional = true,
             ),
-            isAmex = true,
+            cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
         )
@@ -206,7 +205,7 @@ private fun SecurityCodeFieldPreview(
                 isError = true,
                 trailingIcon = SecurityCodeTrailingIcon.Warning,
             ),
-            isAmex = false,
+            cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
         )

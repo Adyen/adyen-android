@@ -26,8 +26,7 @@ internal data class CardViewState(
     val supportedCardBrands: List<CardBrand>,
     val isSupportedCardBrandsShown: Boolean,
     val cardBrandViewState: CardBrandViewState,
-    // TODO - Move isAmex to another layer if necessary/possible
-    val isAmex: Boolean,
+    val cardNumberFormat: CardNumberFormat,
     val isLoading: Boolean,
     val isCardScanButtonVisible: Boolean,
 ) : ViewState
