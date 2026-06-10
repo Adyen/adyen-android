@@ -7,6 +7,7 @@ Theme customization in Android v6 is intentionally scoped to the public Compose 
 ## Imports
 
 ```kotlin
+import androidx.compose.foundation.isSystemInDarkTheme
 import com.adyen.checkout.ui.theme.CheckoutColor
 import com.adyen.checkout.ui.theme.CheckoutColors
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -37,6 +38,24 @@ CheckoutPaymentFlow(
 ```
 
 The same theme is used for the payment component, action handling, and any secondary screens rendered by `CheckoutPaymentFlow(...)`.
+
+## Light and dark mode
+
+Choose `CheckoutColors.light()` or `CheckoutColors.dark()` in the same place where your app decides which palette to render:
+
+```kotlin
+val useDarkTheme = isSystemInDarkTheme()
+
+val theme = CheckoutTheme(
+    colors = if (useDarkTheme) {
+        CheckoutColors.dark()
+    } else {
+        CheckoutColors.light()
+    },
+)
+```
+
+If your app has its own theme toggle, use that state instead of `isSystemInDarkTheme()`. This applies the default Adyen light or dark palette automatically. If you need custom tokens on top of that, see [Color overrides](#color-overrides).
 
 ## Color overrides
 
