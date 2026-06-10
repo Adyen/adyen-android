@@ -15,7 +15,7 @@ import org.json.JSONObject
 @Parcelize
 data class GenericDetails(
     override val type: String?,
-    override val sdkData: String? = null,
+    override val sdkData: String?,
     val subtype: String?,
 ) : PaymentMethodDetails() {
 
