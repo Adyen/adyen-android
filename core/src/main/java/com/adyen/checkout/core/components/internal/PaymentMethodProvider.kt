@@ -13,8 +13,10 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
+import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
@@ -47,7 +49,13 @@ object PaymentMethodProvider {
     ): PaymentComponent? {
         val txVariant = paymentMethod.type
 
-        return factories[txVariant]?.create(
+        val registeredFactory = factories[txVariant] ?: if (paymentMethod is InstantPaymentMethod) {
+            GenericPaymentComponentFactory()
+        } else {
+            null
+        }
+
+        return registeredFactory?.create(
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
