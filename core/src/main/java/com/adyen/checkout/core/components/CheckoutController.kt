@@ -56,9 +56,29 @@ class CheckoutController internal constructor(
 
     internal val secondaryNavigation: Flow<CheckoutSecondaryRoute> get() = flow.secondaryNavigation
 
+    /**
+     * Submits the current payment data.
+     *
+     * After calling this method, the input data is validated. If validation fails, the corresponding errors
+     * are displayed in the UI and the submission is aborted.
+     *
+     * If [requiresUserInteraction] returns `false`, this can be called directly without waiting for
+     * user input.
+     */
     fun submit() {
         flow.submit()
     }
 
+    /**
+     * Indicates whether the payment method requires user interaction before submitting.
+     *
+     * When this returns `false`, no UI needs to be rendered and [submit] can be called directly
+     * without requiring a user action (e.g. a button click).
+     *
+     * When this returns `true`, the payment method UI should be displayed so the user can provide
+     * the required input before calling [submit].
+     *
+     * @return `true` if user interaction is needed, `false` otherwise.
+     */
     fun requiresUserInteraction(): Boolean = flow.requiresUserInteraction()
 }
