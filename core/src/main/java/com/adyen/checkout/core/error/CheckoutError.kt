@@ -30,12 +30,14 @@ data class CheckoutError(
         const val INVALID_LOCALE = "InvalidLocale"
         const val INVALID_CURRENCY_CODE = "InvalidCurrencyCode"
         const val INVALID_AMOUNT_VALUE = "InvalidAmountValue"
+        const val INVALID_CONFIGURATION = "InvalidConfiguration"
 
         // Session Setup Errors
         const val SESSION_SETUP_FAILURE = "SessionSetupFailure"
 
         // General Errors
         const val HTTP = "HttpError"
-        const val UNKNOWN = "Unknown"
+        const val PAYMENT_METHOD_FAILURE = "PaymentMethodFailure"
+        const val GENERIC = "Generic"
     }
 }
