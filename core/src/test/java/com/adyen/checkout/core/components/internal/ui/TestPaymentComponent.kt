@@ -15,13 +15,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 internal class TestPaymentComponent(
-    override val eventFlow: Flow<PaymentComponentEvent> = flowOf()
+    override val eventFlow: Flow<PaymentComponentEvent> = flowOf(),
+    private val requiresUserInteraction: Boolean = true,
 ) : PaymentComponent {
 
     @Composable
     override fun Content(modifier: Modifier) = Unit
 
     override fun submit() = Unit
+
+    override fun requiresUserInteraction(): Boolean = requiresUserInteraction
 
     override fun setLoading(isLoading: Boolean) = Unit
 

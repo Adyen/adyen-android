@@ -116,6 +116,8 @@ internal class MBWayComponent(
         }
     }
 
+    override fun requiresUserInteraction(): Boolean = true
+
     override fun setLoading(isLoading: Boolean) {
         componentState.handleIntent(MBWayIntent.UpdateLoading(isLoading))
     }

@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.RedirectAction
+import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
@@ -35,6 +36,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -44,20 +47,18 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class FullCheckoutFlowTest {
+internal class FullCheckoutFlowTest(
+    @param:Mock private val componentRequestDispatcher: ComponentRequestDispatcher,
+    @param:Mock private val actionHandler: ActionHandler,
+) {
 
     private val eventFlow = MutableSharedFlow<PaymentComponentEvent>()
-
-    @Mock
-    private lateinit var componentRequestDispatcher: ComponentRequestDispatcher
-
-    @Mock
-    private lateinit var actionHandler: ActionHandler
 
     @BeforeEach
     fun setUp() {
@@ -122,8 +123,51 @@ internal class FullCheckoutFlowTest {
             }
     }
 
-    private fun createFullCheckoutFlow(coroutineScope: CoroutineScope): FullCheckoutFlow {
-        val testComponent = TestPaymentComponent(eventFlow)
+    @Nested
+    inner class RequiresUserInteractionTest {
+
+        @Test
+        fun `when action component is null and payment component requires user interaction, then returns true`() =
+            runTest {
+                val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+                assertTrue(flow.requiresUserInteraction())
+            }
+
+        @Test
+        fun `when action component is not null, then returns false`() = runTest {
+            whenever(actionHandler.actionComponent) doReturn mock<ActionComponent>()
+
+            val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertFalse(flow.requiresUserInteraction())
+        }
+
+        @Test
+        fun `when payment component is null, then returns false`() = runTest {
+            val flow = createFullCheckoutFlowWithoutPaymentComponent(
+                CoroutineScope(UnconfinedTestDispatcher()),
+            )
+
+            assertFalse(flow.requiresUserInteraction())
+        }
+
+        @Test
+        fun `when payment component does not require user interaction, then returns false`() = runTest {
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                requiresUserInteraction = false,
+            )
+
+            assertFalse(flow.requiresUserInteraction())
+        }
+    }
+
+    private fun createFullCheckoutFlow(
+        coroutineScope: CoroutineScope,
+        requiresUserInteraction: Boolean = true,
+    ): FullCheckoutFlow {
+        val testComponent = TestPaymentComponent(eventFlow, requiresUserInteraction)
         registerComponent(testComponent)
 
         return FullCheckoutFlow(
@@ -192,6 +236,21 @@ internal class FullCheckoutFlowTest {
     }
 
     private class TestCheckoutCallbacks : CheckoutCallbacks(additionalCallbacksBlock = {})
+
+    private fun createFullCheckoutFlowWithoutPaymentComponent(
+        coroutineScope: CoroutineScope,
+    ): FullCheckoutFlow {
+        return FullCheckoutFlow(
+            target = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
+            context = createCheckoutContext(),
+            callbacks = TestCheckoutCallbacks(),
+            componentRequestDispatcher = componentRequestDispatcher,
+            coroutineScope = coroutineScope,
+            analyticsManager = TestAnalyticsManager(),
+            params = generateCheckoutParams(),
+            actionHandler = actionHandler,
+        )
+    }
 
     companion object {
         private const val TEST_PAYMENT_METHOD_TYPE = "test_payment_method"
