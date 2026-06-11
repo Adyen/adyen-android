@@ -16,17 +16,17 @@ import com.adyen.checkout.core.components.data.model.format
 import java.util.Locale
 
 internal data class InstallmentModel(
-    val numberOfInstallments: Int?,
     val plan: InstallmentPlan,
+    val numberOfInstallments: Int?,
     val amount: Amount?,
-    val shopperLocale: Locale,
     val showAmount: Boolean,
+    val shopperLocale: Locale,
 )
 
 @Composable
 internal fun InstallmentModel.toDisplayText(): String {
     return when (plan) {
-        InstallmentPlan.NONE ->
+        InstallmentPlan.ONE_TIME ->
             resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME)
 
         InstallmentPlan.REVOLVING ->
@@ -34,11 +34,18 @@ internal fun InstallmentModel.toDisplayText(): String {
 
         InstallmentPlan.REGULAR -> {
             val count = numberOfInstallments ?: 1
-            if (showAmount && amount != null) {
+
+            val amountValue = amount?.value ?: 0L
+            val amountPerInstallment: Amount? = when {
+                amountValue > 0 -> amount?.copy(value = amountValue.div(count))
+                else -> null
+            }
+
+            if (showAmount && amountPerInstallment != null) {
                 resolveString(
                     CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_WITH_PRICE,
                     count,
-                    amount.format(shopperLocale),
+                    amountPerInstallment.format(shopperLocale),
                 )
             } else {
                 resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR, count)

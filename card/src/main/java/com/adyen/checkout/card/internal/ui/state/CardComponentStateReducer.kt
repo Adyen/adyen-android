@@ -87,7 +87,7 @@ internal class CardComponentStateReducer(
             )
 
             is CardIntent.UpdateInstallment -> state.copy(
-                selectedInstallment = intent.installmentModel,
+                selectedInstallment = intent.installment,
             )
 
             is CardIntent.SelectBrand -> {

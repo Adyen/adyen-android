@@ -18,6 +18,7 @@ import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -192,10 +193,10 @@ internal class CardBrandIntentsHandler(
         val selectedInstallment = if (newInstallmentOptions.contains(state.selectedInstallment)) {
             state.selectedInstallment
         } else {
-            InstallmentUtils.findPreselectedInstallment(
-                options = newInstallmentOptions,
-                preselectedValue = componentParams.installmentParams?.defaultOptions?.preselectedValue,
-            )
+            val preselectedValue = componentParams.installmentParams?.defaultOptions?.preselectedValue
+            newInstallmentOptions.firstOrNull {
+                it.plan == InstallmentPlan.REGULAR && it.numberOfInstallments == preselectedValue
+            }
         }
 
         return state.copy(

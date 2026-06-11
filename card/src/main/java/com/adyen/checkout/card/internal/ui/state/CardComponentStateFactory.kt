@@ -11,6 +11,8 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -21,11 +23,8 @@ internal class CardComponentStateFactory(
 ) : ComponentStateFactory<CardComponentState> {
 
     override fun createInitialState(): CardComponentState {
-        val initialInstallmentOptions = InstallmentUtils.makeInstallmentOptions(
-            installmentParams = componentParams.installmentParams,
-            cardBrand = null,
-            isCardTypeReliable = false,
-        )
+        val installmentOptions = getInstallmentOptions()
+
         return CardComponentState(
             cardNumber = TextInputComponentState(isFocused = true),
             expiryDate = TextInputComponentState(),
@@ -74,11 +73,25 @@ internal class CardComponentStateFactory(
             isCardScanningAvailable = false,
             cardBrandState = CardBrandState.NoBrandsDetected,
             networkBinLookupState = null,
-            installmentOptions = initialInstallmentOptions,
-            selectedInstallment = InstallmentUtils.findPreselectedInstallment(
-                options = initialInstallmentOptions,
-                preselectedValue = componentParams.installmentParams?.defaultOptions?.preselectedValue,
-            ),
+            installmentOptions = installmentOptions,
+            selectedInstallment = getPreselectedInstallment(installmentOptions),
         )
+    }
+
+    private fun getInstallmentOptions(): List<InstallmentModel> {
+        return InstallmentUtils.makeInstallmentOptions(
+            installmentParams = componentParams.installmentParams,
+        )
+    }
+
+    private fun getPreselectedInstallment(installmentOptions: List<InstallmentModel>) : InstallmentModel? {
+        val preselectedNumberOfInstallments = componentParams.installmentParams
+            ?.defaultOptions
+            ?.preselectedValue
+            ?: return null
+
+        return installmentOptions.firstOrNull {
+            it.plan == InstallmentPlan.REGULAR && it.numberOfInstallments == preselectedNumberOfInstallments
+        }
     }
 }

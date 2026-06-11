@@ -29,8 +29,8 @@ import java.util.Locale
 @Composable
 internal fun InstallmentPicker(
     installmentOptions: List<InstallmentModel>,
-    selectedInstallmentOption: InstallmentModel?,
-    onInstallmentSelected: (InstallmentModel) -> Unit,
+    selectedInstallment: InstallmentModel?,
+    onItemClick: (InstallmentModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -43,8 +43,8 @@ internal fun InstallmentPicker(
             installmentOptions.forEach { option ->
                 SelectableListItem(
                     title = option.toDisplayText(),
-                    isSelected = option == selectedInstallmentOption,
-                    onClick = { onInstallmentSelected(option) },
+                    isSelected = option == selectedInstallment,
+                    onClick = { onItemClick(option) },
                 )
             }
         }
@@ -55,14 +55,14 @@ internal fun InstallmentPicker(
 @Composable
 private fun InstallmentPickerPreview() {
     val options = listOf(
-        InstallmentModel(null, InstallmentPlan.NONE, null, Locale.US, false),
-        InstallmentModel(1, InstallmentPlan.REVOLVING, null, Locale.US, false),
-        InstallmentModel(2, InstallmentPlan.REGULAR, null, Locale.US, false),
-        InstallmentModel(3, InstallmentPlan.REGULAR, null, Locale.US, false),
+        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false, Locale.US),
+        InstallmentModel(InstallmentPlan.REVOLVING, 1, null, false, Locale.US),
+        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false, Locale.US),
+        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false, Locale.US),
     )
     InstallmentPicker(
         installmentOptions = options,
-        selectedInstallmentOption =  InstallmentModel(2, InstallmentPlan.REGULAR, null, Locale.US, false),
-        onInstallmentSelected = {},
+        selectedInstallment = options.first(),
+        onItemClick = {},
     )
 }

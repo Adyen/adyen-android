@@ -33,6 +33,7 @@ import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import java.util.Locale
 
 @Composable
 internal fun CardComponent(
@@ -144,7 +145,7 @@ private fun CardDetailsSection(
         if (viewState.installmentOptions.isNotEmpty()) {
             Subtitle(resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS))
             ValuePickerField(
-                value = viewState.selectedInstallmentOption?.toDisplayText() ?: "",
+                value = viewState.selectedInstallment?.toDisplayText() ?: "",
                 label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
                 onClick = onInstallmentPickerClick,
                 modifier = Modifier.fillMaxWidth(),
@@ -156,6 +157,12 @@ private fun CardDetailsSection(
 @Preview(showBackground = true)
 @Composable
 private fun CardComponentPreview() {
+    val installmentOptions = listOf(
+        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false, Locale.US),
+        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false, Locale.US),
+        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false, Locale.US),
+    )
+
     CardComponent(
         viewState = CardViewState(
             cardNumber = TextInputViewState(
@@ -190,12 +197,8 @@ private fun CardComponentPreview() {
             isCardScanButtonVisible = false,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
-            installmentOptions = listOf(
-                InstallmentModel(null, InstallmentPlan.NONE, null, java.util.Locale.US, false),
-                InstallmentModel(2, InstallmentPlan.REGULAR, null, java.util.Locale.US, false),
-                InstallmentModel(3, InstallmentPlan.REGULAR, null, java.util.Locale.US, false),
-            ),
-            selectedInstallmentOption = InstallmentModel(2, InstallmentPlan.REGULAR, null, java.util.Locale.US, false),
+            installmentOptions = installmentOptions,
+            selectedInstallment = installmentOptions.first(),
         ),
         onIntent = {},
         onSubmitClick = {},

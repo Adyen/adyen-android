@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.Amount
 import java.util.Locale
@@ -23,8 +22,7 @@ import java.util.Locale
  * @param shopperLocale The [Locale] of the shopper.
  * @param showInstallmentAmount Whether to show the per-installment amount in the installment dropdown.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class InstallmentParams(
+internal data class InstallmentParams(
     val defaultOptions: InstallmentOptionParams? = null,
     val cardBasedOptions: Map<CardBrand, InstallmentOptionParams> = emptyMap(),
     val amount: Amount? = null,
@@ -39,8 +37,7 @@ data class InstallmentParams(
  * @param plans The plan types available.
  * @param preselectedValue The installment count pre-selected in the UI.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class InstallmentOptionParams(
+internal data class InstallmentOptionParams(
     val values: List<Int>,
     val plans: List<InstallmentPlan>,
     val preselectedValue: Int? = null,

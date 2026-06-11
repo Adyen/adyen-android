@@ -8,11 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class InstallmentPlan(val type: String?) {
-    NONE(null),
+internal enum class InstallmentPlan(val type: String?) {
+    ONE_TIME(null),
     REGULAR("regular"),
     REVOLVING("revolving"),
 }
