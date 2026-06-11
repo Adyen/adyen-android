@@ -24,7 +24,6 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.element.SelectableListItem
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import java.util.Locale
 
 @Composable
 internal fun InstallmentPicker(
@@ -55,10 +54,10 @@ internal fun InstallmentPicker(
 @Composable
 private fun InstallmentPickerPreview() {
     val options = listOf(
-        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false, Locale.US),
-        InstallmentModel(InstallmentPlan.REVOLVING, 1, null, false, Locale.US),
-        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false, Locale.US),
-        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false, Locale.US),
+        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false),
+        InstallmentModel(InstallmentPlan.REVOLVING, 1, null, false),
+        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false),
+        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false),
     )
     InstallmentPicker(
         installmentOptions = options,

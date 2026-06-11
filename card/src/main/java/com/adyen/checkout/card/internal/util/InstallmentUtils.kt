@@ -14,7 +14,6 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.Amount
-import java.util.Locale
 
 internal object InstallmentUtils {
 
@@ -38,7 +37,6 @@ internal object InstallmentUtils {
         return makeInstallmentModelList(
             installmentOptions = options,
             amount = installmentParams.amount,
-            shopperLocale = installmentParams.shopperLocale,
             showAmount = installmentParams.showInstallmentAmount,
         )
     }
@@ -46,7 +44,6 @@ internal object InstallmentUtils {
     private fun makeInstallmentModelList(
         installmentOptions: InstallmentOptionParams?,
         amount: Amount?,
-        shopperLocale: Locale,
         showAmount: Boolean,
     ): List<InstallmentModel> {
         installmentOptions ?: return emptyList()
@@ -59,7 +56,6 @@ internal object InstallmentUtils {
                 plan = InstallmentPlan.ONE_TIME,
                 amountPerInstallment = null,
                 showAmount = showAmount,
-                shopperLocale = shopperLocale,
             ),
         )
 
@@ -70,7 +66,6 @@ internal object InstallmentUtils {
                     plan = InstallmentPlan.REVOLVING,
                     amountPerInstallment = null,
                     showAmount = showAmount,
-                    shopperLocale = shopperLocale,
                 ),
             )
         }
@@ -81,7 +76,6 @@ internal object InstallmentUtils {
                 plan = InstallmentPlan.REGULAR,
                 amountPerInstallment = getInstallmentPerAmount(amount, count),
                 showAmount = showAmount,
-                shopperLocale = shopperLocale,
             )
         }
 

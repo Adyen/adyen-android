@@ -10,7 +10,6 @@ package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.Amount
-import java.util.Locale
 
 /**
  * Internal installment params for the Card Component. Holds resolved installment options derived
@@ -19,14 +18,12 @@ import java.util.Locale
  * @param defaultOptions Options applied to all card brands not present in [cardBasedOptions].
  * @param cardBasedOptions Brand-specific options. Overrides [defaultOptions] for matching brands.
  * @param amount Amount of the transaction.
- * @param shopperLocale The [Locale] of the shopper.
  * @param showInstallmentAmount Whether to show the per-installment amount in the installment dropdown.
  */
 internal data class InstallmentParams(
     val defaultOptions: InstallmentOptionParams? = null,
     val cardBasedOptions: Map<CardBrand, InstallmentOptionParams> = emptyMap(),
     val amount: Amount? = null,
-    val shopperLocale: Locale,
     val showInstallmentAmount: Boolean = false,
 )
 

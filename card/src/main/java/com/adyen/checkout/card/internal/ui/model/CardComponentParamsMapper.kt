@@ -56,7 +56,6 @@ internal class CardComponentParamsMapper(
                 sessionParams,
                 cardConfiguration,
                 commonComponentParams.amount,
-                commonComponentParams.shopperLocale,
             ),
         )
     }
@@ -101,19 +100,16 @@ internal class CardComponentParamsMapper(
         sessionParams: SessionParams?,
         cardConfiguration: CardConfiguration?,
         amount: Amount?,
-        shopperLocale: Locale,
     ): InstallmentParams? {
         return if (sessionParams != null) {
             installmentsParamsMapper.mapToInstallmentParams(
                 sessionInstallmentConfiguration = sessionParams.installmentConfiguration,
                 amount = amount,
-                shopperLocale = shopperLocale,
             )
         } else {
             installmentsParamsMapper.mapToInstallmentParams(
                 installmentConfiguration = cardConfiguration?.installmentConfiguration,
                 amount = amount,
-                shopperLocale = shopperLocale,
             )
         }
     }

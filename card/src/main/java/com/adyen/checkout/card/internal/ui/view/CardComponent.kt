@@ -33,7 +33,6 @@ import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import java.util.Locale
 
 @Composable
 internal fun CardComponent(
@@ -158,9 +157,9 @@ private fun CardDetailsSection(
 @Composable
 private fun CardComponentPreview() {
     val installmentOptions = listOf(
-        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false, Locale.US),
-        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false, Locale.US),
-        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false, Locale.US),
+        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false),
+        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false),
+        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false),
     )
 
     CardComponent(

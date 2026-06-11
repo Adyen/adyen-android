@@ -14,14 +14,12 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfiguration
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentOptionsParams
-import java.util.Locale
 
 internal class InstallmentsParamsMapper {
 
     fun mapToInstallmentParams(
         installmentConfiguration: InstallmentConfiguration?,
         amount: Amount?,
-        shopperLocale: Locale,
     ): InstallmentParams? {
         installmentConfiguration ?: return null
         return InstallmentParams(
@@ -30,7 +28,6 @@ internal class InstallmentsParamsMapper {
                 options.toParams()
             },
             amount = amount,
-            shopperLocale = shopperLocale,
             showInstallmentAmount = installmentConfiguration.showInstallmentAmount,
         )
     }
@@ -38,7 +35,6 @@ internal class InstallmentsParamsMapper {
     fun mapToInstallmentParams(
         sessionInstallmentConfiguration: SessionInstallmentConfiguration?,
         amount: Amount?,
-        shopperLocale: Locale,
     ): InstallmentParams? {
         sessionInstallmentConfiguration?.installmentOptions ?: return null
 
@@ -59,7 +55,6 @@ internal class InstallmentsParamsMapper {
             defaultOptions = defaultOptions,
             cardBasedOptions = cardBasedOptions,
             amount = amount,
-            shopperLocale = shopperLocale,
             showInstallmentAmount = showInstallmentAmount,
         )
     }
