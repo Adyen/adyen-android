@@ -126,7 +126,10 @@ private fun Component(
         var showButton by remember { mutableStateOf(true) }
         if (!uiState.checkoutController.requiresUserInteraction() && showButton) {
             Button(
-                onClick = { uiState.checkoutController.submit() },
+                onClick = {
+                    showButton = false
+                    uiState.checkoutController.submit()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(ExampleTheme.dimensions.grid_2),
