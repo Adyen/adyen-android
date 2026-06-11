@@ -92,6 +92,9 @@ internal class FullCheckoutFlow(
         paymentComponent?.submit()
     }
 
+    override fun requiresUserInteraction(): Boolean =
+        actionComponent == null && paymentComponent?.requiresUserInteraction() == true
+
     private fun handleResult(submitResult: SubmitResult) {
         when (submitResult) {
             is SubmitResult.Action -> {
@@ -99,12 +102,9 @@ internal class FullCheckoutFlow(
                 paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Action())
             }
 
-            is SubmitResult.Completion -> {
-                // TODO - Handle completion state
-            }
-
+            is SubmitResult.Completion,
             is SubmitResult.Retry -> {
-                // TODO - Handle retry state (re-prompt shopper, optionally surface errorMessage)
+                // No-op: there is nothing we should do in these cases
             }
 
             is SubmitResult.PartialPayment -> {

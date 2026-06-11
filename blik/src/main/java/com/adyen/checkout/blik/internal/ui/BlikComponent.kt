@@ -86,6 +86,8 @@ internal class BlikComponent(
         }
     }
 
+    override fun requiresUserInteraction(): Boolean = true
+
     override fun setLoading(isLoading: Boolean) {
         componentState.handleIntent(BlikIntent.UpdateLoading(isLoading))
     }

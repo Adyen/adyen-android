@@ -29,6 +29,10 @@ internal class GooglePayComponent : PaymentComponent {
         TODO("Not yet implemented")
     }
 
+    override fun requiresUserInteraction(): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun setLoading(isLoading: Boolean) {
         TODO("Not yet implemented")
     }

@@ -63,6 +63,8 @@ internal class StoredBlikComponent(
         eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
     }
 
+    override fun requiresUserInteraction(): Boolean = false
+
     override fun setLoading(isLoading: Boolean) {
         this.isLoading.value = isLoading
     }

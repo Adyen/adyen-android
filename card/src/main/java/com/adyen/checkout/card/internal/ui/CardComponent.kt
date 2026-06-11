@@ -154,6 +154,8 @@ constructor(
         }
     }
 
+    override fun requiresUserInteraction(): Boolean = true
+
     override fun setLoading(isLoading: Boolean) {
         onIntent(CardIntent.UpdateLoading(isLoading))
     }
