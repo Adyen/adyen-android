@@ -57,9 +57,9 @@ internal object InstallmentUtils {
             InstallmentModel(
                 numberOfInstallments = null,
                 plan = InstallmentPlan.ONE_TIME,
-                amount = amount,
-                shopperLocale = shopperLocale,
+                amountPerInstallment = null,
                 showAmount = showAmount,
+                shopperLocale = shopperLocale,
             ),
         )
 
@@ -68,9 +68,9 @@ internal object InstallmentUtils {
                 InstallmentModel(
                     numberOfInstallments = REVOLVING_INSTALLMENT_VALUE,
                     plan = InstallmentPlan.REVOLVING,
-                    amount = amount,
-                    shopperLocale = shopperLocale,
+                    amountPerInstallment = null,
                     showAmount = showAmount,
+                    shopperLocale = shopperLocale,
                 ),
             )
         }
@@ -79,13 +79,20 @@ internal object InstallmentUtils {
             InstallmentModel(
                 numberOfInstallments = count,
                 plan = InstallmentPlan.REGULAR,
-                amount = amount,
-                shopperLocale = shopperLocale,
+                amountPerInstallment = getInstallmentPerAmount(amount, count),
                 showAmount = showAmount,
+                shopperLocale = shopperLocale,
             )
         }
 
         return result
+    }
+
+    private fun getInstallmentPerAmount(totalAmount: Amount?, numberOfInstallments: Int): Amount? {
+        if (totalAmount == null || numberOfInstallments <= 0) {
+            return null
+        }
+        return totalAmount.copy(value = totalAmount.value / numberOfInstallments)
     }
 
     private const val REVOLVING_INSTALLMENT_VALUE = 1
