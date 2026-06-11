@@ -17,21 +17,24 @@ See also:
 ```kotlin
 val checkoutConfiguration = CheckoutConfiguration(
     environment = environment,
+    clientKey = clientKey,
     shopperLocale = shopperLocale,
-    private fun setupCardView(
-        paymentMethod: PaymentMethod,
-        checkoutConfiguration: CheckoutConfiguration,
-    ) {
+) {
+    card {
+        setHolderNameRequired(true)
+    }
+
+    adyen3DS2 {
+        setThreeDSRequestorAppURL("https://your-app.example/adyen")
+    }
 }
 
 when (val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)) {
     is CheckoutSessionResult.Success -> {
         val checkoutSession = result.checkoutSession
-        // Build the payment component with the session and payment method.
+        // Pass checkoutSession to your payment-method-specific integration.
     }
-    is CheckoutSessionResult.Error -> {
-        showError()
-    }
+    is CheckoutSessionResult.Error -> showError()
 }
 ```
 
@@ -91,42 +94,70 @@ class ExampleViewModel : ViewModel(), ComponentCallback<CardComponentState> {
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
         sendPaymentDetails(actionComponentData)
     }
+
+    override fun onError(componentError: ComponentError) {
+        showError(componentError.errorMessage)
+    }
 }
 ```
 
 ##### After (v6)
 
 ```kotlin
-lifecycleScope.launch {
-    when (val result = Checkout.setup(paymentMethods = paymentMethods, configuration = configuration)) {
-        is Checkout.Result.Error -> showError(result.error.message.orEmpty())
-        is Checkout.Result.Success -> {
-            val controller = CheckoutController(
-                target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
-                context = result.checkoutContext,
-                callbacks = AdvancedCheckoutCallbacks(
-                    onSubmit = { data ->
-                        callPayments(data)
-                    },
-                    onAdditionalDetails = { data ->
-                        callDetails(data)
-                    },
-                    onError = { error ->
-                        showError(error.message.orEmpty())
-                    },
-                ) {
-                    card()
-                },
-                coroutineScope = lifecycleScope,
-            )
+class CardActivity : AppCompatActivity() {
 
-            renderCheckout(
-                controller = controller,
-                theme = theme,
-                localizationProvider = localizationProvider,
-            )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            when (val result = Checkout.setup(paymentMethods = paymentMethods, configuration = configuration)) {
+                is Checkout.Result.Error -> showError(result.error.message.orEmpty())
+                is Checkout.Result.Success -> {
+                    setContent {
+                        CheckoutScreen(
+                            controller = createCheckoutController(result.checkoutContext),
+                            theme = theme,
+                            localizationProvider = localizationProvider,
+                        )
+                    }
+                }
+            }
         }
     }
+
+    private fun createCheckoutController(checkoutContext: CheckoutContext.Advanced): CheckoutController {
+        return CheckoutController(
+            target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
+            context = checkoutContext,
+            callbacks = AdvancedCheckoutCallbacks(
+                onSubmit = { data ->
+                    callPayments(data)
+                },
+                onAdditionalDetails = { data ->
+                    callDetails(data)
+                },
+                onError = { error ->
+                    showError(error.message.orEmpty())
+                },
+            ) {
+                card()
+            },
+            coroutineScope = lifecycleScope,
+        )
+    }
+}
+
+@Composable
+private fun CheckoutScreen(
+    controller: CheckoutController,
+    theme: CheckoutTheme,
+    localizationProvider: CheckoutLocalizationProvider?,
+) {
+    CheckoutPaymentFlow(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
 }
 ```
 
@@ -147,11 +178,16 @@ For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-ad
 ##### Before (v5)
 
 ```kotlin
-checkoutConfiguration.card {
-    setHolderNameRequired(true)
-    setShowStorePaymentField(true)
-    setHideCvcStoredCard(false)
-    setAddressConfiguration(AddressConfiguration.PostalCode())
+val checkoutConfiguration = CheckoutConfiguration(
+    environment = environment,
+    clientKey = clientKey,
+) {
+    card {
+        setHolderNameRequired(true)
+        setShowStorePaymentField(true)
+        setHideCvcStoredCard(false)
+        setAddressConfiguration(AddressConfiguration.PostalCode())
+    }
 }
 ```
 
@@ -190,16 +226,27 @@ val cardComponent = CardComponent.PROVIDER.get(
     checkoutConfiguration = checkoutConfiguration,
     callback = callback,
 )
+
+binding.cardView.attach(cardComponent, activity)
 ```
 
 ##### After (v6)
 
+Rendering now happens from your Compose UI layer:
+
 ```kotlin
-CheckoutPaymentFlow(
-    controller = controller,
-    theme = theme,
-    localizationProvider = localizationProvider,
-)
+@Composable
+fun CheckoutScreen(
+    controller: CheckoutController,
+    theme: CheckoutTheme,
+    localizationProvider: CheckoutLocalizationProvider?,
+) {
+    CheckoutPaymentFlow(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+}
 ```
 
 #### Theme and localization migration
