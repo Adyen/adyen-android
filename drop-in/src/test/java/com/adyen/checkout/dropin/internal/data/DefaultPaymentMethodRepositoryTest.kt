@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.data
 
-import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import kotlinx.coroutines.flow.first
@@ -20,7 +20,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with payment methods, then regulars are set`() {
-        val paymentMethods = listOf(InstantPaymentMethod(type = "scheme", name = "Cards"))
+        val paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Cards"))
         val response = PaymentMethods(paymentMethods = paymentMethods)
 
         val repository = DefaultPaymentMethodRepository(response)
@@ -34,7 +34,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         val repository = DefaultPaymentMethodRepository(response)
 
-        assertEquals(emptyList<InstantPaymentMethod>(), repository.paymentMethods)
+        assertEquals(emptyList<GenericPaymentMethod>(), repository.paymentMethods)
     }
 
     @Test

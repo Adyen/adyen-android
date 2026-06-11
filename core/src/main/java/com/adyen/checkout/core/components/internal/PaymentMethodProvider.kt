@@ -13,7 +13,7 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponentFactory
@@ -49,7 +49,7 @@ object PaymentMethodProvider {
     ): PaymentComponent? {
         val txVariant = paymentMethod.type
 
-        val registeredFactory = factories[txVariant] ?: if (paymentMethod is InstantPaymentMethod) {
+        val registeredFactory = factories[txVariant] ?: if (paymentMethod is GenericPaymentMethod) {
             GenericPaymentComponentFactory()
         } else {
             null

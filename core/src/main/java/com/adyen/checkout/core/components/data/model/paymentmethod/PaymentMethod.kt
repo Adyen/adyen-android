@@ -18,7 +18,7 @@ import org.json.JSONObject
  *
  * Specific payment method types extend this class with their own fields.
  * Explicitly unsupported payment methods are deserialized as [UnsupportedPaymentMethod],
- * while other unknown types fall back to [InstantPaymentMethod].
+ * while other unknown types fall back to [GenericPaymentMethod].
  */
 abstract class PaymentMethod
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -110,7 +110,7 @@ constructor() : PaymentMethodResponse() {
                 PaymentMethodTypes.UPI_QR -> UPIPaymentMethod.SERIALIZER
 
                 in PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS -> UnsupportedPaymentMethod.SERIALIZER
-                else -> InstantPaymentMethod.SERIALIZER
+                else -> GenericPaymentMethod.SERIALIZER
             }
 
             @Suppress("UNCHECKED_CAST")

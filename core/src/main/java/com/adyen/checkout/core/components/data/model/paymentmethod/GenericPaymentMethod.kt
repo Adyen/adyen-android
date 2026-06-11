@@ -18,24 +18,24 @@ import org.json.JSONObject
  * It contains only the base fields.
  */
 @Parcelize
-data class InstantPaymentMethod(
+data class GenericPaymentMethod(
     override val type: String,
     override val name: String,
 ) : PaymentMethod() {
 
     companion object {
         @JvmField
-        val SERIALIZER: Serializer<InstantPaymentMethod> =
-            object : Serializer<InstantPaymentMethod> {
-                override fun serialize(modelObject: InstantPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<GenericPaymentMethod> =
+            object : Serializer<GenericPaymentMethod> {
+                override fun serialize(modelObject: GenericPaymentMethod): JSONObject {
                     return JSONObject().apply {
                         put(TYPE, modelObject.type)
                         put(NAME, modelObject.name)
                     }
                 }
 
-                override fun deserialize(jsonObject: JSONObject): InstantPaymentMethod {
-                    return InstantPaymentMethod(
+                override fun deserialize(jsonObject: JSONObject): GenericPaymentMethod {
+                    return GenericPaymentMethod(
                         type = jsonObject.getString(TYPE),
                         name = jsonObject.getString(NAME),
                     )

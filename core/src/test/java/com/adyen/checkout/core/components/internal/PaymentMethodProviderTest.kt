@@ -13,7 +13,7 @@ import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -107,7 +107,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
-                paymentMethod = InstantPaymentMethod(type = "txVariant", name = "name"),
+                paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 params = generateCheckoutParams(),
@@ -167,7 +167,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", factory)
 
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
-                paymentMethod = InstantPaymentMethod(type = "txVariant", name = "name"),
+                paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 params = generateCheckoutParams(),
@@ -200,7 +200,7 @@ internal class PaymentMethodProviderTest {
     @Test
     fun `when get is called for an unregistered factory, then null is returned`() = runTest {
         val actualComponent = PaymentMethodProvider.getPaymentComponent(
-            paymentMethod = InstantPaymentMethod(type = "unregistered_txVariant", name = "name"),
+            paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
             coroutineScope = this,
             analyticsManager = TestAnalyticsManager(),
             params = generateCheckoutParams(),
