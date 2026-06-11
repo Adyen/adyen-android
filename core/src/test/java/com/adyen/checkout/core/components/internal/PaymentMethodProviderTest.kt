@@ -17,6 +17,8 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymen
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethod
+import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -198,16 +201,30 @@ internal class PaymentMethodProviderTest {
         }
 
     @Test
-    fun `when get is called for an unregistered factory, then null is returned`() = runTest {
-        val actualComponent = PaymentMethodProvider.getPaymentComponent(
-            paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
-            coroutineScope = this,
-            analyticsManager = TestAnalyticsManager(),
-            params = generateCheckoutParams(),
-            additionalCallbacks = emptySet(),
-        )
-        assertNull(actualComponent)
-    }
+    fun `when get is called for an unregistered and unknown payment method, then GenericPaymentComponent is returned`() =
+        runTest {
+            val actualComponent = PaymentMethodProvider.getPaymentComponent(
+                paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
+                coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
+                params = generateCheckoutParams(),
+                additionalCallbacks = emptySet(),
+            )
+            assertInstanceOf<GenericPaymentComponent>(actualComponent)
+        }
+
+    @Test
+    fun `when get is called for an unregistered and unsupported payment method, then GenericPaymentComponent is returned`() =
+        runTest {
+            val actualComponent = PaymentMethodProvider.getPaymentComponent(
+                paymentMethod = UnsupportedPaymentMethod(type = "unregistered_txVariant", name = "name"),
+                coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
+                params = generateCheckoutParams(),
+                additionalCallbacks = emptySet(),
+            )
+            assertNull(actualComponent)
+        }
 
     @Test
     fun `when get is called for an unregistered stored factory, then null is returned`() = runTest {
