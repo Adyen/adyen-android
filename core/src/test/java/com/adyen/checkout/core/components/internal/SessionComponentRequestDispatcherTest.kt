@@ -12,6 +12,7 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
@@ -54,16 +55,16 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when submit succeeds with action, then onFinished is not invoked`() = runTest {
+        fun `when submit succeeds with action, then onComplete is not invoked`() = runTest {
             val response = createPaymentsResponse(action = mock())
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
-            assertEquals(0, onFinishedCalls)
+            assertEquals(0, onCompleteCalls)
         }
 
         @Test
@@ -79,16 +80,16 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when submit succeeds without action, then onFinished is invoked`() = runTest {
+        fun `when submit succeeds without action, then onComplete is invoked`() = runTest {
             val response = createPaymentsResponse()
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
-            assertEquals(1, onFinishedCalls)
+            assertEquals(1, onCompleteCalls)
         }
 
         @Test
@@ -107,15 +108,15 @@ internal class SessionComponentRequestDispatcherTest(
             }
 
         @Test
-        fun `when submit fails, then onFinished is not invoked`() = runTest {
+        fun `when submit fails, then onComplete is not invoked`() = runTest {
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.failure(IOException())
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
-            assertEquals(0, onFinishedCalls)
+            assertEquals(0, onCompleteCalls)
         }
     }
 
@@ -135,16 +136,16 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when additionalDetails succeeds, then onFinished is invoked`() = runTest {
+        fun `when additionalDetails succeeds, then onComplete is invoked`() = runTest {
             val response = createDetailsResponse()
             whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.additionalDetails(ActionComponentData())
 
-            assertEquals(1, onFinishedCalls)
+            assertEquals(1, onCompleteCalls)
         }
 
         @Test
@@ -163,15 +164,15 @@ internal class SessionComponentRequestDispatcherTest(
             }
 
         @Test
-        fun `when additionalDetails fails, then onFinished is not invoked`() = runTest {
+        fun `when additionalDetails fails, then onComplete is not invoked`() = runTest {
             whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.failure(IOException())
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.additionalDetails(ActionComponentData())
 
-            assertEquals(0, onFinishedCalls)
+            assertEquals(0, onCompleteCalls)
         }
     }
 
@@ -191,7 +192,7 @@ internal class SessionComponentRequestDispatcherTest(
     }
 
     private fun createDispatcher(
-        onComplete: () -> Unit = {},
+        onComplete: (SessionCheckoutResult) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
         initialSessionData = "session-data",
@@ -204,7 +205,7 @@ internal class SessionComponentRequestDispatcherTest(
     )
 
     private fun createPaymentsResponse(
-        resultCode: String? = null,
+        resultCode: String = "",
         action: Action? = null,
     ) = SessionPaymentsResponse(
         sessionData = "session-data",
@@ -216,7 +217,7 @@ internal class SessionComponentRequestDispatcherTest(
     )
 
     private fun createDetailsResponse(
-        resultCode: String? = null,
+        resultCode: String = "",
     ) = SessionDetailsResponse(
         sessionData = "session-data",
         status = null,

@@ -12,7 +12,7 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 
 class SessionCheckoutCallbacks(
-    internal val onComplete: () -> Unit,
+    internal val onComplete: (result: SessionCheckoutResult) -> Unit,
     internal val onFailure: (CheckoutError) -> Unit,
     internal val beforeSubmit: (suspend (data: PaymentComponentData<*>) -> Unit)? = null,
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},
