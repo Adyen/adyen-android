@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SessionCheckoutResult
@@ -93,6 +94,24 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
+        fun `when submit succeeds without action, then onComplete receives correct result`() = runTest {
+            val response = createPaymentsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val capturedResults = mutableListOf<SessionCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.submit(emptyPaymentComponentData())
+
+            val expected = SessionCheckoutResult(
+                resultCode = CheckoutResultCode("Authorised"),
+                sessionId = "session-id",
+                sessionData = "session-data",
+            )
+            assertEquals(expected, capturedResults.single())
+        }
+
+        @Test
         fun `when submit fails, then retry is returned and onFailure is invoked`() =
             runTest {
                 val cause = IOException("network down")
@@ -146,6 +165,24 @@ internal class SessionComponentRequestDispatcherTest(
             dispatcher.additionalDetails(ActionComponentData())
 
             assertEquals(1, onCompleteCalls)
+        }
+
+        @Test
+        fun `when additionalDetails succeeds, then onComplete receives correct result`() = runTest {
+            val response = createDetailsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
+
+            val capturedResults = mutableListOf<SessionCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.additionalDetails(ActionComponentData())
+
+            val expected = SessionCheckoutResult(
+                resultCode = CheckoutResultCode("Authorised"),
+                sessionId = "session-id",
+                sessionData = "session-data",
+            )
+            assertEquals(expected, capturedResults.single())
         }
 
         @Test
