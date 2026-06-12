@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin.internal.service
 import android.content.Context
 import android.content.Intent
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.common.PaymentResult
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -25,8 +25,8 @@ internal class DropInServiceManager(
     private val serviceClass: Class<out DropInService>,
 ) {
 
-    private val _paymentResultFlow = MutableSharedFlow<PaymentResult>()
-    val paymentResultFlow: SharedFlow<PaymentResult> = _paymentResultFlow.asSharedFlow()
+    private val _paymentResultFlow = MutableSharedFlow<CheckoutResultCode>()
+    val paymentResultFlow: SharedFlow<CheckoutResultCode> = _paymentResultFlow.asSharedFlow()
 
     private val _errorFlow = MutableSharedFlow<CheckoutError>()
     val errorFlow: SharedFlow<CheckoutError> = _errorFlow.asSharedFlow()
@@ -49,8 +49,8 @@ internal class DropInServiceManager(
         return DropInServiceRegistry.awaitService().onAdditionalDetails(data)
     }
 
-    suspend fun onPaymentFinished(paymentResult: PaymentResult) {
-        _paymentResultFlow.emit(paymentResult)
+    suspend fun onPaymentCompleted(resultCode: CheckoutResultCode) {
+        _paymentResultFlow.emit(resultCode)
     }
 
     suspend fun onFailure(error: CheckoutError) {

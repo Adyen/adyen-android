@@ -325,7 +325,7 @@ internal class MainViewModel @Inject constructor(
         val message = when (dropInResult) {
             is DropInResult.Cancelled -> "Canceled by user"
             is DropInResult.Failed -> dropInResult.error
-            is DropInResult.Completed -> dropInResult.result.resultCode
+            is DropInResult.Completed -> dropInResult.resultCode.value
             null -> "DropInResult is null"
         }
         _eventFlow.tryEmit(MainEvent.Toast(message))

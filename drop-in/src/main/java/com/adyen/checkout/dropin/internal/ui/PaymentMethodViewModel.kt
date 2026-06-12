@@ -20,6 +20,7 @@ import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
@@ -130,10 +131,10 @@ internal class PaymentMethodViewModel(
         }
     }
 
-    private fun onComplete() {
+    private fun onComplete(result: SessionCheckoutResult) {
         // TODO - Implement after signature of onFinished is updated
         viewModelScope.launch {
-//            dropInServiceManager.onPaymentFinished(paymentResult)
+            dropInServiceManager.onPaymentCompleted(result.resultCode)
         }
     }
 
