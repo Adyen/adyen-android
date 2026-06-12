@@ -40,7 +40,7 @@ internal class SessionComponentRequestDispatcher(
                 return when {
                     response.action != null -> SubmitResult.Action(response.action)
                     else -> {
-                        callbacks.onFinished()
+                        callbacks.onComplete()
                         SubmitResult.Completion(response.resultCode.orEmpty())
                     }
                 }
@@ -66,7 +66,7 @@ internal class SessionComponentRequestDispatcher(
         ).fold(
             onSuccess = { response ->
                 sessionData = response.sessionData
-                callbacks.onFinished()
+                callbacks.onComplete()
                 return AdditionalDetailsResult.Completion(response.resultCode.orEmpty())
             },
             onFailure = { error ->

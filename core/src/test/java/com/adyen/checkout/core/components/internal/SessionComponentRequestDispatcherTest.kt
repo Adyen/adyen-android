@@ -59,7 +59,7 @@ internal class SessionComponentRequestDispatcherTest(
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
 
             var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
@@ -84,7 +84,7 @@ internal class SessionComponentRequestDispatcherTest(
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
 
             var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
@@ -111,7 +111,7 @@ internal class SessionComponentRequestDispatcherTest(
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.failure(IOException())
 
             var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
@@ -140,7 +140,7 @@ internal class SessionComponentRequestDispatcherTest(
             whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
 
             var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
 
             dispatcher.additionalDetails(ActionComponentData())
 
@@ -167,7 +167,7 @@ internal class SessionComponentRequestDispatcherTest(
             whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.failure(IOException())
 
             var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            val dispatcher = createDispatcher(onComplete = { onFinishedCalls++ })
 
             dispatcher.additionalDetails(ActionComponentData())
 
@@ -191,13 +191,13 @@ internal class SessionComponentRequestDispatcherTest(
     }
 
     private fun createDispatcher(
-        onFinished: () -> Unit = {},
+        onComplete: () -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
         initialSessionData = "session-data",
         sessionId = "session-id",
         callbacks = SessionCheckoutCallbacks(
-            onFinished = onFinished,
+            onComplete = onComplete,
             onFailure = onFailure,
         ),
         sessionRepository = sessionRepository,

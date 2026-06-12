@@ -102,7 +102,7 @@ internal class PaymentMethodViewModel(
                     callbacks = SessionCheckoutCallbacks(
                         beforeSubmit = ::beforeSubmit,
                         onFailure = ::onFailure,
-                        onFinished = ::onFinished,
+                        onComplete = ::onComplete,
                     ),
                     coroutineScope = viewModelScope,
                 )
@@ -130,7 +130,7 @@ internal class PaymentMethodViewModel(
         }
     }
 
-    private fun onFinished() {
+    private fun onComplete() {
         // TODO - Implement after signature of onFinished is updated
         viewModelScope.launch {
 //            dropInServiceManager.onPaymentFinished(paymentResult)

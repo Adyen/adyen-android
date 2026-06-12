@@ -107,8 +107,8 @@ internal class V6SessionsViewModel @Inject constructor(
         Log.d(TAG, "onFailure: ${error.message}")
     }
 
-    private fun onFinished() {
-        Log.d(TAG, "onFinished")
+    private fun onComplete() {
+        Log.d(TAG, "onComplete")
     }
 
     @Suppress("unused")
@@ -139,7 +139,7 @@ internal class V6SessionsViewModel @Inject constructor(
             context = checkoutContext,
             callbacks = SessionCheckoutCallbacks(
                 onFailure = ::onFailure,
-                onFinished = ::onFinished,
+                onComplete = ::onComplete,
             ) {
                 card(
                     onBinValue = ::onBinValue,
