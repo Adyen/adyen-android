@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components
 
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
@@ -73,6 +74,7 @@ object Checkout {
     }
 
     suspend fun setup(
+        action: Action,
         configuration: CheckoutConfiguration,
     ): Result<CheckoutContext.ActionOnly> {
         configuration.validate()?.let { error ->
@@ -86,6 +88,7 @@ object Checkout {
 
         return Result.Success(
             CheckoutContext.ActionOnly(
+                action = action,
                 checkoutConfiguration = configuration,
                 checkoutAttemptId = initializationData.checkoutAttemptId,
                 publicKey = initializationData.publicKey,

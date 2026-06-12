@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
@@ -68,7 +67,6 @@ internal class CheckoutControllerFactory {
     }
 
     fun create(
-        action: Action,
         context: CheckoutContext.ActionOnly,
         callbacks: ActionOnlyCheckoutCallbacks,
         coroutineScope: CoroutineScope,
@@ -82,7 +80,7 @@ internal class CheckoutControllerFactory {
             params = checkoutParams,
         )
         val flow = ActionOnlyCheckoutFlow(
-            action = action,
+            action = context.action,
             actionHandler = actionHandler,
         )
         return CheckoutController(flow = flow)
