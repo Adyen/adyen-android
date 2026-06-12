@@ -62,6 +62,7 @@ internal class AwaitComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
+        // Await redirects do not return back to the app, so we do not need to handle new intents
         redirectEvent(
             redirectHandler = redirectHandler,
             viewEventFlow = redirectEventFlow,
