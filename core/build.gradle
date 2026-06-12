@@ -51,4 +51,5 @@ dependencies {
     testFixturesImplementation libs.bundles.androidx.lifecycle
     testFixturesImplementation libs.bundles.junit
     testFixturesImplementation libs.bundles.kotlin.coroutines.test
+    testFixturesImplementation libs.bundles.mockito
 }
