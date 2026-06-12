@@ -240,7 +240,7 @@ internal class DefaultRedirectDelegateTest(
         }
 
         @ParameterizedTest
-        @MethodSource("com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegateTest#errorSource")
+        @MethodSource("com.adyen.checkout.redirect.old.internal.ui.DefaultRedirectDelegateTest#errorSource")
         fun `when native redirect is handled and error is thrown, then an error event is tracked`(error: Exception) =
             runTest {
                 whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }

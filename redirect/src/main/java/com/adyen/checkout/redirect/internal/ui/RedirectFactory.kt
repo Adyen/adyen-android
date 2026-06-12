@@ -48,6 +48,7 @@ internal class RedirectFactory : ActionFactory<RedirectComponent> {
             paymentDataRepository = paymentDataRepository,
             nativeRedirectService = nativeRedirectService,
             clientKey = params.clientKey,
+            coroutineScope = coroutineScope,
         )
     }
 }

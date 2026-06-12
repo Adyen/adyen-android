@@ -9,6 +9,7 @@
 package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.action.data.ActionComponentData
@@ -40,7 +41,9 @@ import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 
-internal class RedirectComponent(
+internal class RedirectComponent
+@Suppress("LongParameterList")
+constructor(
     private val action: RedirectAction,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
@@ -78,7 +81,28 @@ internal class RedirectComponent(
         launchAction(action.url)
     }
 
-    private fun onNewIntent(intent: Intent) {
+    private fun initState() {
+        when (action.type) {
+            ActionTypes.NATIVE_REDIRECT -> {
+                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
+            }
+
+            else -> {
+                paymentDataRepository.paymentData = action.paymentData
+            }
+        }
+    }
+
+    private fun launchAction(url: String?) {
+        adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+        // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
+        //  status when the app resumes. Currently we have no way of doing that but we can create something like
+        //  PaymentComponentState for actions.
+        redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
+    }
+
+    @VisibleForTesting
+    internal fun onNewIntent(intent: Intent) {
         adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
@@ -101,26 +125,6 @@ internal class RedirectComponent(
 
             emitError(e)
         }
-    }
-
-    private fun initState() {
-        when (action.type) {
-            ActionTypes.NATIVE_REDIRECT -> {
-                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
-            }
-
-            else -> {
-                paymentDataRepository.paymentData = action.paymentData
-            }
-        }
-    }
-
-    private fun launchAction(url: String?) {
-        adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
-        // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
-        //  status when the app resumes. Currently we have no way of doing that but we can create something like
-        //  PaymentComponentState for actions.
-        redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
     }
 
     private fun handleNativeRedirect(nativeRedirectData: String?, details: JSONObject) {
