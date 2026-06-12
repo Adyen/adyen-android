@@ -16,5 +16,6 @@ class AdvancedCheckoutCallbacks(
     internal val onSubmit: suspend (data: PaymentComponentData<*>) -> SubmitResult,
     internal val onAdditionalDetails: suspend (data: ActionComponentData) -> AdditionalDetailsResult,
     internal val onFailure: (CheckoutError) -> Unit,
+    internal val onComplete: (result: AdvancedCheckoutResult) -> Unit = {},
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},
 ) : CheckoutCallbacks(additionalCallbacksBlock)
