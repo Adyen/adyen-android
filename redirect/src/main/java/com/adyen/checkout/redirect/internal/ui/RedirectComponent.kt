@@ -47,10 +47,8 @@ internal class RedirectComponent(
     private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
     private val clientKey: String,
+    private val coroutineScope: CoroutineScope,
 ) : ActionComponent {
-
-    private var _coroutineScope: CoroutineScope? = null
-    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
