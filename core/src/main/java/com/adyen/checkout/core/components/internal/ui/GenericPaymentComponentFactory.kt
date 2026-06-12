@@ -16,7 +16,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import kotlinx.coroutines.CoroutineScope
 
-internal class GenericPaymentComponentFactory : PaymentComponentFactory<GenericPaymentComponent> {
+internal object GenericPaymentComponentFactory : PaymentComponentFactory<GenericPaymentComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,

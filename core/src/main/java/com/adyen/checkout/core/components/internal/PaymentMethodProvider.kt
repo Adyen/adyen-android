@@ -50,7 +50,7 @@ object PaymentMethodProvider {
         val txVariant = paymentMethod.type
 
         val registeredFactory = factories[txVariant] ?: if (paymentMethod is GenericPaymentMethod) {
-            GenericPaymentComponentFactory()
+            GenericPaymentComponentFactory
         } else {
             null
         }

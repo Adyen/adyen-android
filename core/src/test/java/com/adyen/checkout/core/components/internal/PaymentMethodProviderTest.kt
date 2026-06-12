@@ -214,7 +214,7 @@ internal class PaymentMethodProviderTest {
         }
 
     @Test
-    fun `when get is called for an unregistered and unsupported payment method, then GenericPaymentComponent is returned`() =
+    fun `when get is called for an unregistered and unsupported payment method, then null is returned`() =
         runTest {
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
                 paymentMethod = UnsupportedPaymentMethod(type = "unregistered_txVariant", name = "name"),
