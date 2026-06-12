@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.v6
 
-import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -119,11 +118,6 @@ internal class V6SessionsViewModel @Inject constructor(
     private fun onComplete(result: SessionCheckoutResult) {
         Log.d(TAG, "onComplete - Result code: ${result.resultCode}")
         uiState = V6UiState.Final(ResultState.get(result.resultCode.value))
-    }
-
-    @Suppress("unused")
-    fun handleIntent(intent: Intent) {
-        // TODO - Check if the controller should handle the intent or if we can do this inside a component
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethodResponse) {

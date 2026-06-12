@@ -24,7 +24,6 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
-import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
@@ -48,7 +47,7 @@ internal class RedirectComponent(
     private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
     private val clientKey: String,
-) : ActionComponent, IntentHandlingComponent {
+) : ActionComponent {
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -79,7 +78,7 @@ internal class RedirectComponent(
         launchAction(action.url)
     }
 
-    override fun handleIntent(intent: Intent) {
+    private fun onNewIntent(intent: Intent) {
         adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
