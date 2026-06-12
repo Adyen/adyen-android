@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -207,6 +208,7 @@ internal class CardComponentStateFactoryTest {
             cvcVisibility = cvcVisibility,
             storedCVCVisibility = StoredCVCVisibility.SHOW,
             showCardScanner = true,
+            installmentParams = InstallmentParams(),
         ),
     )
 }

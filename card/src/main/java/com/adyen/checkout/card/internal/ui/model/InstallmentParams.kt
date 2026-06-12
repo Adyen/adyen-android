@@ -11,31 +11,60 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.Amount
 
-/**
- * Internal installment params for the Card Component. Holds resolved installment options derived
- * from either merchant [com.adyen.checkout.card.InstallmentConfiguration] or session configuration.
- *
- * @param defaultOptions Options applied to all card brands not present in [cardBasedOptions].
- * @param cardBasedOptions Brand-specific options. Overrides [defaultOptions] for matching brands.
- * @param amount Amount of the transaction.
- * @param showInstallmentAmount Whether to show the per-installment amount in the installment dropdown.
- */
 internal data class InstallmentParams(
-    val defaultOptions: InstallmentOptionParams? = null,
-    val cardBasedOptions: Map<CardBrand, InstallmentOptionParams> = emptyMap(),
-    val amount: Amount? = null,
+    val defaultOptions: InstallmentOptionsParams? = null,
+    val cardBasedOptions: Map<CardBrand, InstallmentOptionsParams> = emptyMap(),
     val showInstallmentAmount: Boolean = false,
 )
 
-/**
- * Internal installment option params for a specific brand or as a default.
- *
- * @param values List of available installment counts.
- * @param plans The plan types available.
- * @param preselectedValue The installment count pre-selected in the UI.
- */
-internal data class InstallmentOptionParams(
+internal data class InstallmentOptionsParams(
     val values: List<Int>,
     val plans: List<InstallmentPlan>,
     val preselectedValue: Int? = null,
 )
+
+internal fun InstallmentParams.toInstallmentModels(
+    amount: Amount?,
+    cardBrand: CardBrand? = null,
+): List<InstallmentModel> {
+    val hasOptionsForBrand = cardBrand != null &&
+        cardBasedOptions.containsKey(cardBrand)
+
+    val availableInstallmentOptions = when {
+        hasOptionsForBrand -> cardBasedOptions[cardBrand]
+        !defaultOptions?.values.isNullOrEmpty() -> defaultOptions
+        else -> null
+    }
+
+    return availableInstallmentOptions
+        ?.toInstallmentModels(amount, showInstallmentAmount)
+        ?: emptyList()
+}
+
+private fun InstallmentOptionsParams.toInstallmentModels(
+    amount: Amount?,
+    showInstallmentAmount: Boolean,
+): List<InstallmentModel> {
+    val result = mutableListOf<InstallmentModel>()
+
+    result.add(OneTimeInstallmentModel())
+
+    if (plans.contains(InstallmentPlan.REVOLVING)) {
+        result.add(RevolvingInstallmentModel())
+    }
+
+    values.mapTo(result) { numberOfInstallments ->
+        val amountPerInstallment = when {
+            numberOfInstallments <= 0 -> null
+            else -> amount?.copy(value = amount.value / numberOfInstallments)
+        }
+        InstallmentModel(
+            plan = InstallmentPlan.REGULAR,
+            numberOfInstallments = numberOfInstallments,
+            amountPerInstallment = amountPerInstallment,
+            showAmount = showInstallmentAmount,
+        )
+    }
+
+    return result
+}

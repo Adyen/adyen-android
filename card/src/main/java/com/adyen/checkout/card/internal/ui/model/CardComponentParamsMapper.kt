@@ -17,14 +17,11 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import java.util.Locale
 
 // TODO - Card Component Mapper Tests.
-internal class CardComponentParamsMapper(
-    private val installmentsParamsMapper: InstallmentsParamsMapper = InstallmentsParamsMapper(),
-) {
+internal class CardComponentParamsMapper {
 
     fun mapToParams(
         params: CheckoutParams,
@@ -52,10 +49,9 @@ internal class CardComponentParamsMapper(
                 StoredCVCVisibility.SHOW
             },
             showCardScanner = cardConfiguration?.showCardScanner ?: true,
-            installmentParams = getInstallmentParams(
-                sessionParams,
-                cardConfiguration,
-                commonComponentParams.amount,
+            installmentParams = makeInstallmentParams(
+                sessionParams = sessionParams,
+                cardConfiguration = cardConfiguration,
             ),
         )
     }
@@ -96,21 +92,15 @@ internal class CardComponentParamsMapper(
         return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePaymentMethod ?: true
     }
 
-    private fun getInstallmentParams(
+    private fun makeInstallmentParams(
         sessionParams: SessionParams?,
         cardConfiguration: CardConfiguration?,
-        amount: Amount?,
     ): InstallmentParams? {
         return if (sessionParams != null) {
-            installmentsParamsMapper.mapToInstallmentParams(
-                sessionInstallmentConfiguration = sessionParams.installmentConfiguration,
-                amount = amount,
-            )
+            // if sessionParams.installmentOptions is null we want installmentParams to be also null
+            sessionParams.installmentConfiguration?.mapToInstallmentParams()
         } else {
-            installmentsParamsMapper.mapToInstallmentParams(
-                installmentConfiguration = cardConfiguration?.installmentConfiguration,
-                amount = amount,
-            )
+            cardConfiguration?.installmentConfiguration?.mapToInstallmentParams()
         }
     }
 

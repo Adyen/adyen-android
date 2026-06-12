@@ -22,6 +22,26 @@ internal data class InstallmentModel(
     val showAmount: Boolean,
 )
 
+@Suppress("FunctionName")
+internal fun OneTimeInstallmentModel(): InstallmentModel {
+    return InstallmentModel(
+        plan = InstallmentPlan.ONE_TIME,
+        numberOfInstallments = null,
+        amountPerInstallment = null,
+        showAmount = false,
+    )
+}
+
+@Suppress("FunctionName")
+internal fun RevolvingInstallmentModel() : InstallmentModel {
+    return InstallmentModel(
+        plan = InstallmentPlan.REVOLVING,
+        numberOfInstallments = 1, // The number of installments for revolving is always 1
+        amountPerInstallment = null,
+        showAmount = false,
+    )
+}
+
 @Composable
 internal fun InstallmentModel.toDisplayText(): String {
     return when (plan) {

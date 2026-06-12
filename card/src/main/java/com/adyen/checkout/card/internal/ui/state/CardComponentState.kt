@@ -37,8 +37,7 @@ internal data class CardComponentState(
     // Component state
     val cardBrandState: CardBrandState,
     val networkBinLookupState: NetworkBinLookupState?,
-    val installmentOptions: List<InstallmentModel>,
-    val selectedInstallment: InstallmentModel?,
+    val installmentState: InstallmentState,
 ) : ComponentState
 
 internal sealed class CardBrandState {
@@ -68,6 +67,11 @@ internal data class CardBrandData(
     val panLength: Int?,
     val paymentMethodVariant: String?,
     val localizedBrand: String?
+)
+
+internal data class InstallmentState(
+    val installments: List<InstallmentModel>,
+    val selectedInstallment: InstallmentModel?,
 )
 
 internal val CardComponentState.binValue: String

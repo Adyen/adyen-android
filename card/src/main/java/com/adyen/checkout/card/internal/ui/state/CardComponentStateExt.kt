@@ -166,11 +166,11 @@ private fun CardComponentState.getBillingAddress(): Address? {
 }
 
 private fun CardComponentState.getInstallments(): Installments? {
-    return when (selectedInstallment?.plan) {
+    return when (installmentState.selectedInstallment?.plan) {
         InstallmentPlan.REGULAR, InstallmentPlan.REVOLVING ->
             Installments(
-                plan = selectedInstallment.plan.type,
-                value = selectedInstallment.numberOfInstallments,
+                plan = installmentState.selectedInstallment.plan.type,
+                value = installmentState.selectedInstallment.numberOfInstallments,
             )
 
         else -> null

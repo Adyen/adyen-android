@@ -13,7 +13,7 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
-import com.adyen.checkout.card.internal.util.InstallmentUtils
+import com.adyen.checkout.card.internal.ui.model.toInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -23,7 +23,9 @@ internal class CardComponentStateFactory(
 ) : ComponentStateFactory<CardComponentState> {
 
     override fun createInitialState(): CardComponentState {
-        val installmentOptions = getInstallmentOptions()
+        val installmentOptions = componentParams.installmentParams
+            ?.toInstallmentModels(componentParams.amount)
+            ?: emptyList()
 
         return CardComponentState(
             cardNumber = TextInputComponentState(isFocused = true),
@@ -73,14 +75,10 @@ internal class CardComponentStateFactory(
             isCardScanningAvailable = false,
             cardBrandState = CardBrandState.NoBrandsDetected,
             networkBinLookupState = null,
-            installmentOptions = installmentOptions,
-            selectedInstallment = getPreselectedInstallment(installmentOptions),
-        )
-    }
-
-    private fun getInstallmentOptions(): List<InstallmentModel> {
-        return InstallmentUtils.makeInstallmentOptions(
-            installmentParams = componentParams.installmentParams,
+            installmentState = InstallmentState(
+                installments = installmentOptions,
+                selectedInstallment = getPreselectedInstallment(installmentOptions)
+            ),
         )
     }
 
