@@ -87,17 +87,9 @@ Use the builder block to register payment-method and action configuration that s
 ## Session flow
 
 Use the session flow when your backend starts checkout with `/sessions`.
+The example below reuses the shared `configuration` from [CheckoutConfiguration](#checkoutconfiguration).
 
 ```kotlin
-val configuration = CheckoutConfiguration(
-    environment = Environment.TEST,
-    clientKey = clientKey,
-    shopperLocale = Locale.forLanguageTag("en-US"),
-) {
-    card(showCardholderName = true)
-    threeDS2(threeDSRequestorAppURL = "https://your-app.example/adyen")
-}
-
 lifecycleScope.launch {
     when (val result = Checkout.setup(sessionResponse = sessionResponse, configuration = configuration)) {
         is Checkout.Result.Error -> {
