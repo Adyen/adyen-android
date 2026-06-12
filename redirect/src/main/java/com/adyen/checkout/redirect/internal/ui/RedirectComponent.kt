@@ -65,6 +65,8 @@ internal class RedirectComponent(
             viewEventFlow = redirectEventFlow,
             onError = ::emitError,
         )
+
+        NewIntentHandler(onNewIntent = ::onNewIntent)
     }
 
     override fun handleAction() {

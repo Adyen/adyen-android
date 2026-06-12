@@ -38,6 +38,7 @@ dependencies {
 
     // Dependencies
     implementation libs.androidx.startup
+    implementation libs.compose.activity
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
