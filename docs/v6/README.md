@@ -127,21 +127,14 @@ For a complete card example that wires `AdvancedCheckoutCallbacks(...)` and rend
 
 ## Rendering the Compose flow
 
-Render the public Compose UI with `CheckoutPaymentFlow(...)`.
+Render the public Compose UI with `CheckoutPaymentFlow(...)` from your `@Composable` UI:
 
 ```kotlin
-@Composable
-fun CheckoutScreen(
-    controller: CheckoutController,
-    theme: CheckoutTheme,
-    localizationProvider: CheckoutLocalizationProvider?,
-) {
-    CheckoutPaymentFlow(
-        controller = controller,
-        theme = theme,
-        localizationProvider = localizationProvider,
-    )
-}
+CheckoutPaymentFlow(
+    controller = controller,
+    theme = theme,
+    localizationProvider = localizationProvider,
+)
 ```
 
 ## Theme
