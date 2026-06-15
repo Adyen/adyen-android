@@ -70,6 +70,7 @@ fun getSessionRequest(
     allowedPaymentMethods: List<String>? = null,
     storePaymentMethodMode: String? = StorePaymentMethodMode.ASK_FOR_CONSENT.mode,
     recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
+    payable: Boolean = true,
 ): SessionRequest {
     return SessionRequest(
         merchantAccount = merchantAccount.takeIf { it.isNotEmpty() },
@@ -92,6 +93,7 @@ fun getSessionRequest(
         installmentOptions = installmentOptions,
         showInstallmentAmount = showInstallmentAmount,
         showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        payable = payable,
     )
 }
 

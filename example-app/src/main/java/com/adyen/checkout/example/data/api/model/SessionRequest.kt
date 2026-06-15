@@ -34,4 +34,5 @@ data class SessionRequest(
     val installmentOptions: Map<String, SessionSetupInstallmentOptions>?,
     val showInstallmentAmount: Boolean,
     val showRemovePaymentMethodButton: Boolean,
+    val payable: Boolean = true,
 )

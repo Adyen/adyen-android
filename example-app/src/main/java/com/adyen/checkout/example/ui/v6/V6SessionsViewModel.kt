@@ -19,15 +19,19 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.card
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SessionCheckoutResult
+import com.adyen.checkout.core.components.data.BeforeSubmitData
+import com.adyen.checkout.core.components.data.ShopperName
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.data.storage.OnBeforeSubmitMode
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
@@ -48,6 +52,8 @@ internal class V6SessionsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var checkoutContext: CheckoutContext.Sessions
+    private lateinit var sessionId: String
+    private lateinit var sessionData: String
 
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
@@ -73,6 +79,7 @@ internal class V6SessionsViewModel @Inject constructor(
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
                 showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
                 showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
+                payable = keyValueStorage.getOnBeforeSubmitMode() != OnBeforeSubmitMode.PATCH_SESSION_AMOUNT,
             ),
         ) ?: return
 
@@ -85,6 +92,8 @@ internal class V6SessionsViewModel @Inject constructor(
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.error.message.orEmpty()))
             is Checkout.Result.Success -> {
                 checkoutContext = result.checkoutContext
+                sessionId = checkoutContext.checkoutSession.sessionSetupResponse.id
+                sessionData = checkoutContext.checkoutSession.sessionSetupResponse.sessionData
                 val paymentMethods = checkoutContext.getPaymentMethods()
                 V6UiState.Component(
                     paymentMethods = paymentMethods,
@@ -152,6 +161,7 @@ internal class V6SessionsViewModel @Inject constructor(
             callbacks = SessionCheckoutCallbacks(
                 onFailure = ::onFailure,
                 onComplete = ::onComplete,
+                onBeforeSubmit = ::onBeforeSubmit,
             ) {
                 card(
                     onBinChange = ::onBinChange,
@@ -160,6 +170,43 @@ internal class V6SessionsViewModel @Inject constructor(
             },
             coroutineScope = viewModelScope,
         )
+    }
+
+    private suspend fun onBeforeSubmit(data: BeforeSubmitData): BeforeSubmitResult {
+        val mode = keyValueStorage.getOnBeforeSubmitMode()
+        Log.d(TAG, "onBeforeSubmit called with mode: $mode")
+        return when (mode) {
+            OnBeforeSubmitMode.UPDATE_SHOPPER_DATA -> {
+                BeforeSubmitResult.Proceed(
+                    data = data.copy(
+                        shopperEmail = "modified@example.com",
+                        shopperName = ShopperName(
+                            firstName = "John",
+                            lastName = "Doe",
+                        ),
+                    ),
+                )
+            }
+
+            OnBeforeSubmitMode.PATCH_SESSION_AMOUNT -> patchSession(data)
+            OnBeforeSubmitMode.ABORT -> BeforeSubmitResult.Abort()
+        }
+    }
+
+    private suspend fun patchSession(data: BeforeSubmitData): BeforeSubmitResult {
+        val currentAmount = keyValueStorage.getAmount()
+        val patchedAmount = currentAmount.copy(value = currentAmount.value + 100L)
+        val patchResponse = paymentsRepository.patchSession(
+            sessionId = sessionId,
+            sessionData = sessionData,
+            amount = patchedAmount,
+        )
+        return if (patchResponse != null) {
+            sessionData = patchResponse.sessionData
+            BeforeSubmitResult.Proceed(data, patchResponse.sessionData)
+        } else {
+            BeforeSubmitResult.Abort()
+        }
     }
 
     companion object {

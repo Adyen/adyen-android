@@ -132,3 +132,15 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
             }
     }
 }
+
+@Suppress("UNCHECKED_CAST")
+internal fun <T : PaymentMethodDetails> PaymentComponentData<T>.applyBeforeSubmitData(
+    beforeSubmitData: BeforeSubmitData,
+): PaymentComponentData<T> {
+    return copy(
+        billingAddress = beforeSubmitData.billingAddress ?: billingAddress,
+        deliveryAddress = beforeSubmitData.deliveryAddress ?: deliveryAddress,
+        shopperName = beforeSubmitData.shopperName ?: shopperName,
+        shopperEmail = beforeSubmitData.shopperEmail ?: shopperEmail,
+    )
+}

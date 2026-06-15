@@ -12,10 +12,14 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
+import com.adyen.checkout.core.components.data.Address
+import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.data.ShopperName
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
@@ -29,8 +33,11 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.io.IOException
 
@@ -221,15 +228,170 @@ internal class SessionComponentRequestDispatcherTest(
         }
     }
 
+    @Nested
+    inner class OnBeforeSubmitTest {
+
+        @Test
+        fun `when onBeforeSubmit is null then submission proceeds directly`() = runTest {
+            val response = createPaymentsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val dispatcher = createDispatcher(onBeforeSubmit = null)
+
+            val result = dispatcher.submit(emptyPaymentComponentData())
+
+            assertEquals(SubmitResult.Completion("Authorised"), result)
+        }
+
+        @Test
+        fun `when onBeforeSubmit returns Proceed with modified data then data is applied`() = runTest {
+            val response = createPaymentsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val modifiedName = ShopperName(firstName = "Modified", lastName = "Name")
+            val dispatcher = createDispatcher(
+                onBeforeSubmit = { data ->
+                    BeforeSubmitResult.Proceed(
+                        data = data.copy(shopperName = modifiedName, shopperEmail = "modified@test.com"),
+                    )
+                },
+            )
+
+            val inputData = emptyPaymentComponentData()
+            dispatcher.submit(inputData)
+
+            val capturedData = argumentCaptor<PaymentComponentData<*>>()
+            verify(sessionRepository).submitPayment(any(), any(), capturedData.capture())
+            assertEquals(modifiedName, capturedData.firstValue.shopperName)
+            assertEquals("modified@test.com", capturedData.firstValue.shopperEmail)
+        }
+
+        @Test
+        fun `when onBeforeSubmit returns Proceed with sessionData then session state is updated`() = runTest {
+            val response = createPaymentsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val dispatcher = createDispatcher(
+                onBeforeSubmit = { data ->
+                    BeforeSubmitResult.Proceed(
+                        data = data,
+                        sessionData = "patched-session-data",
+                    )
+                },
+            )
+
+            dispatcher.submit(emptyPaymentComponentData())
+
+            val capturedSessionData = argumentCaptor<String>()
+            verify(sessionRepository).submitPayment(any(), capturedSessionData.capture(), any())
+            assertEquals("patched-session-data", capturedSessionData.firstValue)
+        }
+
+        @Test
+        fun `when onBeforeSubmit returns Abort then submission stops and onError is not called`() = runTest {
+            var onErrorCalls = 0
+            val dispatcher = createDispatcher(
+                onFailure = { onErrorCalls++ },
+                onBeforeSubmit = { BeforeSubmitResult.Abort() },
+            )
+
+            val result = dispatcher.submit(emptyPaymentComponentData())
+
+            assertEquals(SubmitResult.Retry(), result)
+            assertEquals(0, onErrorCalls)
+            verify(sessionRepository, never()).submitPayment(any(), any(), any())
+        }
+
+        @Test
+        fun `when applyBeforeSubmitData has null fields then original values are preserved`() = runTest {
+            val response = createPaymentsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val originalName = ShopperName(firstName = "Original", lastName = "Name")
+            val originalEmail = "original@test.com"
+            val dispatcher = createDispatcher(
+                onBeforeSubmit = { data ->
+                    // Return data with null shopperName — should keep original
+                    BeforeSubmitResult.Proceed(
+                        data = data.copy(shopperName = null),
+                    )
+                },
+            )
+
+            val inputData = PaymentComponentData<PaymentMethodDetails>(
+                paymentMethod = null,
+                order = null,
+                shopperName = originalName,
+                shopperEmail = originalEmail,
+            )
+            dispatcher.submit(inputData)
+
+            val capturedData = argumentCaptor<PaymentComponentData<*>>()
+            verify(sessionRepository).submitPayment(any(), any(), capturedData.capture())
+            assertEquals(originalName, capturedData.firstValue.shopperName)
+            assertEquals(originalEmail, capturedData.firstValue.shopperEmail)
+        }
+
+        @Test
+        fun `when applyBeforeSubmitData has non-null fields then they override originals`() = runTest {
+            val response = createPaymentsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val newAddress = Address()
+            val dispatcher = createDispatcher(
+                onBeforeSubmit = { data ->
+                    BeforeSubmitResult.Proceed(
+                        data = data.copy(billingAddress = newAddress),
+                    )
+                },
+            )
+
+            val inputData = PaymentComponentData<PaymentMethodDetails>(
+                paymentMethod = null,
+                order = null,
+                billingAddress = null,
+            )
+            dispatcher.submit(inputData)
+
+            val capturedData = argumentCaptor<PaymentComponentData<*>>()
+            verify(sessionRepository).submitPayment(any(), any(), capturedData.capture())
+            assertEquals(newAddress, capturedData.firstValue.billingAddress)
+        }
+
+        @Test
+        fun `when onBeforeSubmit throws exception then onError is called and submission stops`() = runTest {
+            var onErrorCalls = 0
+            val capturedErrors = mutableListOf<CheckoutError>()
+            val dispatcher = createDispatcher(
+                onFailure = { error ->
+                    onErrorCalls++
+                    capturedErrors.add(error)
+                },
+                onBeforeSubmit = {
+                    throw IllegalStateException("Merchant callback error")
+                },
+            )
+
+            val result = dispatcher.submit(emptyPaymentComponentData())
+
+            assertEquals(SubmitResult.Retry(), result)
+            assertEquals(1, onErrorCalls)
+            assertEquals(1, capturedErrors.size)
+            verify(sessionRepository, never()).submitPayment(any(), any(), any())
+        }
+    }
+
     private fun createDispatcher(
         onComplete: (SessionCheckoutResult) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
+        onBeforeSubmit: (suspend (BeforeSubmitData) -> BeforeSubmitResult)? = null,
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
         initialSessionData = "session-data",
         sessionId = "session-id",
         callbacks = SessionCheckoutCallbacks(
             onComplete = onComplete,
             onFailure = onFailure,
+            onBeforeSubmit = onBeforeSubmit,
         ),
         sessionRepository = sessionRepository,
     )

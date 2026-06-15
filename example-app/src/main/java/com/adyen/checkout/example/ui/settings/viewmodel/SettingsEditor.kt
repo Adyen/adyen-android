@@ -14,6 +14,7 @@ import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.IntegrationRegion
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.data.storage.OnBeforeSubmitMode
 import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.ui.settings.model.EditSettingData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
@@ -101,6 +102,11 @@ internal class SettingsEditor @Inject constructor(
                 val integrationRegion = newValue as IntegrationRegion
                 keyValueStorage.setCountry(integrationRegion.countryCode)
                 keyValueStorage.setCurrency(integrationRegion.currency)
+            }
+
+            SettingsIdentifier.ON_BEFORE_SUBMIT_MODE -> {
+                val onBeforeSubmitMode = newValue as OnBeforeSubmitMode
+                keyValueStorage.setOnBeforeSubmitMode(onBeforeSubmitMode)
             }
 
             else -> error("This edit mode is only supported with list type settings")

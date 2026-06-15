@@ -11,10 +11,13 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
+import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.data.applyBeforeSubmitData
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
@@ -29,12 +32,12 @@ internal class SessionComponentRequestDispatcher(
     private var sessionData: String = initialSessionData
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
-        // TODO - Session patching
-        callbacks.beforeSubmit?.invoke(data)
-        sessionRepository.submitPayment(
+        val finalData = handleBeforeSubmit(data) ?: return SubmitResult.Retry()
+
+        return sessionRepository.submitPayment(
             sessionId = sessionId,
             sessionData = sessionData,
-            paymentComponentData = data,
+            paymentComponentData = finalData,
         ).fold(
             onSuccess = { response ->
                 sessionData = response.sessionData
@@ -54,9 +57,35 @@ internal class SessionComponentRequestDispatcher(
 //                )
 //                analyticsManager.trackEvent(event)
                 callbacks.onFailure(error.toCheckoutError())
-                return SubmitResult.Retry(error.message)
+                SubmitResult.Retry(error.message)
             },
         )
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun handleBeforeSubmit(data: PaymentComponentData<*>): PaymentComponentData<*>? {
+        val callback = callbacks.onBeforeSubmit ?: return data
+
+        val inputData = BeforeSubmitData(
+            billingAddress = data.billingAddress,
+            deliveryAddress = data.deliveryAddress,
+            shopperName = data.shopperName,
+            shopperEmail = data.shopperEmail,
+        )
+
+        return try {
+            when (val result = callback(inputData)) {
+                is BeforeSubmitResult.Proceed -> {
+                    result.sessionData?.let { sessionData = it }
+                    data.applyBeforeSubmitData(result.data)
+                }
+                is BeforeSubmitResult.Abort -> null
+                else -> data
+            }
+        } catch (e: Exception) {
+            callbacks.onFailure(e.toCheckoutError())
+            null
+        }
     }
 
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
