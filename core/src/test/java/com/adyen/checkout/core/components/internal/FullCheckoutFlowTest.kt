@@ -24,7 +24,7 @@ import com.adyen.checkout.core.components.CheckoutSecondaryRoute
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.paymentmethod.InstantPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
@@ -201,7 +201,7 @@ internal class FullCheckoutFlowTest(
         return CheckoutContext.Advanced(
             paymentMethods = PaymentMethods(
                 paymentMethods = listOf(
-                    InstantPaymentMethod(type = TEST_PAYMENT_METHOD_TYPE, name = "Test"),
+                    GenericPaymentMethod(type = TEST_PAYMENT_METHOD_TYPE, name = "Test"),
                 ),
             ),
             checkoutConfiguration = createCheckoutConfiguration(),
