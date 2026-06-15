@@ -117,13 +117,19 @@ internal class CardFactory :
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,
     ): StoredCardComponent {
+        // TODO - Remove casting when paymentMethod object is typed
+        val storedCardPaymentMethod = storedPaymentMethod as? StoredCardPaymentMethod
+            ?: throw IllegalArgumentException("Incorrect paymentMethod")
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             params = params,
             paymentMethod = null,
         )
 
         val cardValidationMapper = CardValidationMapper()
-        val componentStateFactory = StoredCardComponentStateFactory(cardComponentParams)
+        val componentStateFactory = StoredCardComponentStateFactory(
+            storedPaymentMethod = storedCardPaymentMethod,
+            componentParams = cardComponentParams,
+        )
         val componentStateReducer = StoredCardComponentStateReducer()
         val componentStateValidator = StoredCardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = StoredCardViewStateProducer()
@@ -131,12 +137,9 @@ internal class CardFactory :
         val cardEncryptor = CardEncryptorFactory.provide()
 
         return StoredCardComponent(
-            // TODO - Remove casting when paymentMethod object is typed
-            storedPaymentMethod = storedPaymentMethod as? StoredCardPaymentMethod
-                ?: throw IllegalArgumentException("Incorrect paymentMethod"),
+            storedPaymentMethod = storedCardPaymentMethod,
             analyticsManager = analyticsManager,
             cardEncryptor = cardEncryptor,
-            componentParams = cardComponentParams,
             componentStateValidator = componentStateValidator,
             componentStateFactory = componentStateFactory,
             componentStateReducer = componentStateReducer,

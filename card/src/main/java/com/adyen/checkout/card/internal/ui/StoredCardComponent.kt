@@ -10,10 +10,6 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
@@ -25,8 +21,6 @@ import com.adyen.checkout.card.internal.ui.view.StoredCardContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
-import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -57,7 +51,6 @@ constructor(
     private val storedPaymentMethod: StoredCardPaymentMethod,
     private val analyticsManager: AnalyticsManager,
     private val cardEncryptor: BaseCardEncryptor,
-    componentParams: CardComponentParams,
     private val componentStateValidator: StoredCardComponentStateValidator,
     componentStateFactory: StoredCardComponentStateFactory,
     componentStateReducer: StoredCardComponentStateReducer,
@@ -78,30 +71,6 @@ constructor(
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
-
-    init {
-        val cardType = CardBrand(txVariant = storedPaymentMethod.brand)
-
-        val storedDetectedCardType = DetectedCardType(
-            cardBrand = cardType,
-            enableLuhnCheck = true,
-            cvcPolicy = when {
-                componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||
-                    NO_CVC_BRANDS.contains(cardType) -> Brand.FieldPolicy.HIDDEN
-
-                else -> Brand.FieldPolicy.REQUIRED
-            },
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = true,
-            isHidden = false,
-            isShopperSelectionAllowedInDualBranded = false,
-            panLength = null,
-            paymentMethodVariant = null,
-            localizedBrand = null,
-        )
-
-        onIntent(StoredCardIntent.UpdateDetectedCardType(storedDetectedCardType))
-    }
 
     @Composable
     override fun Content(modifier: Modifier) {
@@ -203,8 +172,4 @@ constructor(
     }
 
     override fun onCleared() = Unit
-
-    companion object {
-        private val NO_CVC_BRANDS: Set<CardBrand> = setOf(CardBrand(txVariant = CardType.BCMC.txVariant))
-    }
 }
