@@ -44,6 +44,18 @@ fun CheckoutController(
     )
 }
 
+fun CheckoutController(
+    context: CheckoutContext.ActionOnly,
+    callbacks: ActionOnlyCheckoutCallbacks,
+    coroutineScope: CoroutineScope,
+): CheckoutController {
+    return CheckoutControllerFactory().create(
+        context = context,
+        callbacks = callbacks,
+        coroutineScope = coroutineScope,
+    )
+}
+
 class CheckoutController internal constructor(
     private val flow: CheckoutFlow,
 ) {

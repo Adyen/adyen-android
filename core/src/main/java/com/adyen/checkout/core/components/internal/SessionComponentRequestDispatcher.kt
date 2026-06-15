@@ -22,7 +22,7 @@ internal class SessionComponentRequestDispatcher(
     private val sessionId: String,
     private val callbacks: SessionCheckoutCallbacks,
     private val sessionRepository: SessionRepository,
-) : ComponentRequestDispatcher {
+) : SubmittableComponentRequestDispatcher {
 
     private var sessionData: String? = initialSessionData
 

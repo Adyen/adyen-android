@@ -16,9 +16,11 @@ import com.adyen.checkout.core.error.CheckoutError
 
 internal interface ComponentRequestDispatcher {
 
-    suspend fun submit(data: PaymentComponentData<*>): SubmitResult
-
     suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult
 
     fun error(error: CheckoutError)
+}
+
+internal interface SubmittableComponentRequestDispatcher : ComponentRequestDispatcher {
+    suspend fun submit(data: PaymentComponentData<*>): SubmitResult
 }
