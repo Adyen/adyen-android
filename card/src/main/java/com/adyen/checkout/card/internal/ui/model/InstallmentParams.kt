@@ -32,7 +32,7 @@ internal fun InstallmentParams.mapToInstallmentModels(
 
     val availableInstallmentOptions = when {
         hasOptionsForBrand -> cardBasedOptions[cardBrand]
-        !defaultOptions?.values.isNullOrEmpty() -> defaultOptions
+        defaultOptions != null -> defaultOptions
         else -> null
     }
 
@@ -56,7 +56,9 @@ private fun InstallmentOptionsParams.mapToInstallmentModels(
     values.mapTo(result) { numberOfInstallments ->
         val amountPerInstallment = when {
             numberOfInstallments <= 0 -> null
-            else -> amount?.copy(value = amount.value / numberOfInstallments)
+            else -> amount?.let {
+                amount.copy(value = amount.value / numberOfInstallments)
+            }
         }
         InstallmentModel(
             plan = InstallmentPlan.REGULAR,
