@@ -12,6 +12,7 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.ActionOnlyCheckoutCallbacks
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.AdvancedCheckoutResult
 import com.adyen.checkout.core.error.CheckoutError
 
 internal class ActionOnlyComponentRequestDispatcher(
@@ -27,7 +28,6 @@ internal class ActionOnlyComponentRequestDispatcher(
     }
 
     override fun complete(resultCode: CheckoutResultCode) {
-        // TODO
-//        callbacks.onComplete(resultCode)
+        callbacks.onComplete(AdvancedCheckoutResult(resultCode))
     }
 }
