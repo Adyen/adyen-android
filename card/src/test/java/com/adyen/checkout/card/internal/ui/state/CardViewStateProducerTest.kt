@@ -10,6 +10,8 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -535,6 +537,25 @@ internal class CardViewStateProducerTest {
         assertEquals(CardNumberTrailingIcon.Warning, viewState.cardNumber?.trailingIcon)
     }
 
+    @Test
+    fun `when installment state has options and selection, then viewState contains same options and selection`() {
+        // GIVEN
+        val options = listOf(
+            InstallmentModel(InstallmentPlan.REGULAR, 3, amountPerInstallment = null, showAmount = false)
+        )
+        val selection = options.first()
+        val componentState = createComponentState(
+            installmentState = InstallmentState(options, selection)
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(options, viewState.installmentOptions)
+        assertEquals(selection, viewState.selectedInstallment)
+    }
+
     @Suppress("LongParameterList")
     private fun createComponentState(
         cardNumber: TextInputComponentState = TextInputComponentState(),
@@ -543,6 +564,7 @@ internal class CardViewStateProducerTest {
         supportedCardBrands: List<CardBrand> = emptyList(),
         showSupportedCardBrandLogos: Boolean = true,
         isCardScanningAvailable: Boolean = false,
+        installmentState: InstallmentState = InstallmentState(emptyList(), null),
     ) = CardComponentState(
         cardNumber = cardNumber,
         expiryDate = TextInputComponentState(),
@@ -560,10 +582,7 @@ internal class CardViewStateProducerTest {
         isCardScanningAvailable = isCardScanningAvailable,
         cardBrandState = cardBrandState,
         networkBinLookupState = null,
-        installmentState = InstallmentState(
-            installmentOptions = emptyList(),
-            selectedInstallment = null,
-        ),
+        installmentState = installmentState,
     )
 
     private fun getCardBrandData(): CardBrandData {

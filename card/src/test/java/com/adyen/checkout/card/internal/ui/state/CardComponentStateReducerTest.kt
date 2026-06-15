@@ -10,6 +10,8 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -296,6 +298,21 @@ internal class CardComponentStateReducerTest {
 
         assertEquals("5500000000000004", actual.cardNumber.text)
         assertEquals("", actual.expiryDate.text)
+    }
+
+    @Test
+    fun `when intent is UpdateInstallment, then selectedInstallment is updated`() {
+        val state = createInitialState()
+        val installment = InstallmentModel(
+            plan = InstallmentPlan.REGULAR,
+            numberOfInstallments = 3,
+            amountPerInstallment = null,
+            showAmount = false,
+        )
+
+        val actual = reducer.reduce(state, CardIntent.UpdateInstallment(installment))
+
+        assertEquals(installment, actual.installmentState.selectedInstallment)
     }
 
     private fun createInitialState() = CardComponentState(
