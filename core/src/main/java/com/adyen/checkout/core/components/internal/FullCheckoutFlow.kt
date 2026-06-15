@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
@@ -23,7 +24,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class FullCheckoutFlow(
-    componentRequestDispatcher: SubmittableComponentRequestDispatcher,
+    private val componentRequestDispatcher: SubmittableComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
     override val paymentComponent: PaymentComponent?,
     private val actionHandler: ActionHandler,
@@ -81,7 +82,10 @@ internal class FullCheckoutFlow(
                 paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Action())
             }
 
-            is SubmitResult.Completion,
+            is SubmitResult.Completion -> {
+                componentRequestDispatcher.complete(CheckoutResultCode(submitResult.resultCode))
+            }
+
             is SubmitResult.Retry -> {
                 // No-op: there is nothing we should do in these cases
             }

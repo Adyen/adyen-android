@@ -15,7 +15,9 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -51,7 +53,8 @@ internal class ActionHandler(
             .onEach { event ->
                 when (event) {
                     is ActionComponentEvent.ActionDetails -> {
-                        componentRequestDispatcher.additionalDetails(event.data)
+                        val result = componentRequestDispatcher.additionalDetails(event.data)
+                        handleResult(result)
                     }
 
                     is ActionComponentEvent.Error -> {
@@ -62,5 +65,13 @@ internal class ActionHandler(
             .launchIn(coroutineScope)
 
         actionComponent.handleAction()
+    }
+
+    private fun handleResult(result: AdditionalDetailsResult) {
+        when (result) {
+            is AdditionalDetailsResult.Completion -> {
+                componentRequestDispatcher.complete(CheckoutResultCode(result.resultCode))
+            }
+        }
     }
 }

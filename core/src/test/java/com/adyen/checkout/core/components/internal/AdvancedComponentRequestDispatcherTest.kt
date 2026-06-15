@@ -39,20 +39,6 @@ internal class AdvancedComponentRequestDispatcherTest {
         }
 
         @Test
-        fun `when onSubmit returns Completion, then onComplete is invoked with correct result`() = runTest {
-            val capturedResults = mutableListOf<AdvancedCheckoutResult>()
-            val dispatcher = createDispatcher(
-                onSubmit = { SubmitResult.Completion("Authorised") },
-                onComplete = { capturedResults += it },
-            )
-
-            dispatcher.submit(emptyPaymentComponentData())
-
-            val expected = AdvancedCheckoutResult(resultCode = CheckoutResultCode("Authorised"))
-            assertEquals(expected, capturedResults.single())
-        }
-
-        @Test
         fun `when onSubmit returns Action, then Action is returned`() = runTest {
             val action = mock<Action>()
             val dispatcher = createDispatcher(onSubmit = { SubmitResult.Action(action) })
@@ -63,38 +49,12 @@ internal class AdvancedComponentRequestDispatcherTest {
         }
 
         @Test
-        fun `when onSubmit returns Action, then onComplete is not invoked`() = runTest {
-            var onCompleteCalls = 0
-            val dispatcher = createDispatcher(
-                onSubmit = { SubmitResult.Action(mock()) },
-                onComplete = { onCompleteCalls++ },
-            )
-
-            dispatcher.submit(emptyPaymentComponentData())
-
-            assertEquals(0, onCompleteCalls)
-        }
-
-        @Test
         fun `when onSubmit returns Retry, then Retry is returned`() = runTest {
             val dispatcher = createDispatcher(onSubmit = { SubmitResult.Retry("try again") })
 
             val result = dispatcher.submit(emptyPaymentComponentData())
 
             assertEquals(SubmitResult.Retry("try again"), result)
-        }
-
-        @Test
-        fun `when onSubmit returns Retry, then onComplete is not invoked`() = runTest {
-            var onCompleteCalls = 0
-            val dispatcher = createDispatcher(
-                onSubmit = { SubmitResult.Retry() },
-                onComplete = { onCompleteCalls++ },
-            )
-
-            dispatcher.submit(emptyPaymentComponentData())
-
-            assertEquals(0, onCompleteCalls)
         }
     }
 
@@ -111,21 +71,30 @@ internal class AdvancedComponentRequestDispatcherTest {
 
             assertEquals(AdditionalDetailsResult.Completion("Authorised"), result)
         }
+    }
+
+    @Nested
+    inner class CompleteTest {
 
         @Test
-        fun `when onAdditionalDetails returns Completion, then onComplete is invoked with correct result`() =
-            runTest {
-                val capturedResults = mutableListOf<AdvancedCheckoutResult>()
-                val dispatcher = createDispatcher(
-                    onAdditionalDetails = { AdditionalDetailsResult.Completion("Authorised") },
-                    onComplete = { capturedResults += it },
-                )
+        fun `when complete is called, then onComplete callback is invoked with AdvancedCheckoutResult`() {
+            val capturedResults = mutableListOf<AdvancedCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
 
-                dispatcher.additionalDetails(ActionComponentData())
+            dispatcher.complete(CheckoutResultCode.AUTHORISED)
 
-                val expected = AdvancedCheckoutResult(resultCode = CheckoutResultCode("Authorised"))
-                assertEquals(expected, capturedResults.single())
-            }
+            assertEquals(listOf(AdvancedCheckoutResult(CheckoutResultCode.AUTHORISED)), capturedResults)
+        }
+
+        @Test
+        fun `when complete is called with a custom result code, then the result code is wrapped correctly`() {
+            val capturedResults = mutableListOf<AdvancedCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.complete(CheckoutResultCode("CustomResultCode"))
+
+            assertEquals(CheckoutResultCode("CustomResultCode"), capturedResults.single().resultCode)
+        }
     }
 
     @Nested

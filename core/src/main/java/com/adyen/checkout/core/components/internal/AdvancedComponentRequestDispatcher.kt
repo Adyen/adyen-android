@@ -22,19 +22,15 @@ internal class AdvancedComponentRequestDispatcher(
 ) : SubmittableComponentRequestDispatcher {
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
-        val result = callbacks.onSubmit(data)
-        if (result is SubmitResult.Completion) {
-            callbacks.onComplete(AdvancedCheckoutResult(CheckoutResultCode(result.resultCode)))
-        }
-        return result
+        return callbacks.onSubmit(data)
     }
 
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
-        val result = callbacks.onAdditionalDetails(data)
-        if (result is AdditionalDetailsResult.Completion) {
-            callbacks.onComplete(AdvancedCheckoutResult(CheckoutResultCode(result.resultCode)))
-        }
-        return result
+        return callbacks.onAdditionalDetails(data)
+    }
+
+    override fun complete(resultCode: CheckoutResultCode) {
+        callbacks.onComplete(AdvancedCheckoutResult(resultCode))
     }
 
     override fun failure(error: CheckoutError) {
