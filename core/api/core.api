@@ -426,39 +426,35 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency$Companion {
 }
 
 public final class com/adyen/checkout/core/common/CheckoutResultCode : android/os/Parcelable {
+	public static final field $stable I
+	public static final field AUTHENTICATION_FINISHED Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field AUTHENTICATION_NOT_REQUIRED Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field AUTHORISED Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field CANCELLED Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field CHALLENGE_SHOPPER Lcom/adyen/checkout/core/common/CheckoutResultCode;
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/core/common/CheckoutResultCode$Companion;
-	public static final synthetic fun box-impl (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CheckoutResultCode;
-	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public static final field ERROR Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field IDENTIFY_SHOPPER Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field PARTIALLY_AUTHORISED Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field PENDING Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field PRESENT_TO_SHOPPER Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field RECEIVED Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field REDIRECT_SHOPPER Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static final field REFUSED Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/common/CheckoutResultCode;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/CheckoutResultCode;
 	public final fun describeContents ()I
-	public static final fun describeContents-impl (Ljava/lang/String;)I
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
 	public final fun getValue ()Ljava/lang/String;
 	public fun hashCode ()I
-	public static fun hashCode-impl (Ljava/lang/String;)I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
-	public static final fun writeToParcel-impl (Ljava/lang/String;Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/core/common/CheckoutResultCode$Companion {
-	public final fun getAuthenticationFinished-WHmaYNI ()Ljava/lang/String;
-	public final fun getAuthenticationNotRequired-WHmaYNI ()Ljava/lang/String;
-	public final fun getAuthorised-WHmaYNI ()Ljava/lang/String;
-	public final fun getCancelled-WHmaYNI ()Ljava/lang/String;
-	public final fun getChallengeShopper-WHmaYNI ()Ljava/lang/String;
-	public final fun getError-WHmaYNI ()Ljava/lang/String;
-	public final fun getIdentifyShopper-WHmaYNI ()Ljava/lang/String;
-	public final fun getPartiallyAuthorised-WHmaYNI ()Ljava/lang/String;
-	public final fun getPending-WHmaYNI ()Ljava/lang/String;
-	public final fun getPresentToShopper-WHmaYNI ()Ljava/lang/String;
-	public final fun getReceived-WHmaYNI ()Ljava/lang/String;
-	public final fun getRedirectShopper-WHmaYNI ()Ljava/lang/String;
-	public final fun getRefused-WHmaYNI ()Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/common/Environment : android/os/Parcelable {
@@ -874,14 +870,14 @@ public final class com/adyen/checkout/core/components/SessionCheckoutCallbacks :
 
 public final class com/adyen/checkout/core/components/SessionCheckoutResult {
 	public static final field $stable I
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-WHmaYNI ()Ljava/lang/String;
+	public fun <init> (Lcom/adyen/checkout/core/common/CheckoutResultCode;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/common/CheckoutResultCode;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun copy-bxF_50g (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/SessionCheckoutResult;
-	public static synthetic fun copy-bxF_50g$default (Lcom/adyen/checkout/core/components/SessionCheckoutResult;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/SessionCheckoutResult;
+	public final fun copy (Lcom/adyen/checkout/core/common/CheckoutResultCode;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/SessionCheckoutResult;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/SessionCheckoutResult;Lcom/adyen/checkout/core/common/CheckoutResultCode;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/SessionCheckoutResult;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getResultCode-WHmaYNI ()Ljava/lang/String;
+	public final fun getResultCode ()Lcom/adyen/checkout/core/common/CheckoutResultCode;
 	public final fun getSessionData ()Ljava/lang/String;
 	public final fun getSessionId ()Ljava/lang/String;
 	public fun hashCode ()I

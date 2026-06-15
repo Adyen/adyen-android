@@ -37,12 +37,12 @@ public final class com/adyen/checkout/dropin/DropInResult$Cancelled : com/adyen/
 public final class com/adyen/checkout/dropin/DropInResult$Completed : com/adyen/checkout/dropin/DropInResult {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public final fun component1-WHmaYNI ()Ljava/lang/String;
-	public final fun copy-n3ltiCI (Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInResult$Completed;
-	public static synthetic fun copy-n3ltiCI$default (Lcom/adyen/checkout/dropin/DropInResult$Completed;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/DropInResult$Completed;
+	public final fun component1 ()Lcom/adyen/checkout/core/common/CheckoutResultCode;
+	public final fun copy (Lcom/adyen/checkout/core/common/CheckoutResultCode;)Lcom/adyen/checkout/dropin/DropInResult$Completed;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/DropInResult$Completed;Lcom/adyen/checkout/core/common/CheckoutResultCode;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/DropInResult$Completed;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getResultCode-WHmaYNI ()Ljava/lang/String;
+	public final fun getResultCode ()Lcom/adyen/checkout/core/common/CheckoutResultCode;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V

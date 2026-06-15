@@ -23,21 +23,45 @@ import kotlinx.parcelize.Parcelize
  * @property value The raw result code string as returned by the backend.
  */
 @Parcelize
-@JvmInline
-value class CheckoutResultCode(val value: String) : Parcelable {
+data class CheckoutResultCode(val value: String) : Parcelable {
     companion object {
-        val AuthenticationNotRequired = CheckoutResultCode("AuthenticationNotRequired")
-        val AuthenticationFinished = CheckoutResultCode("AuthenticationFinished")
-        val ChallengeShopper = CheckoutResultCode("ChallengeShopper")
-        val IdentifyShopper = CheckoutResultCode("IdentifyShopper")
-        val RedirectShopper = CheckoutResultCode("RedirectShopper")
-        val Received = CheckoutResultCode("Received")
-        val Pending = CheckoutResultCode("Pending")
-        val PresentToShopper = CheckoutResultCode("PresentToShopper")
-        val PartiallyAuthorised = CheckoutResultCode("PartiallyAuthorised")
-        val Authorised = CheckoutResultCode("Authorised")
-        val Cancelled = CheckoutResultCode("Cancelled")
-        val Error = CheckoutResultCode("Error")
-        val Refused = CheckoutResultCode("Refused")
+        @JvmField
+        val AUTHENTICATION_NOT_REQUIRED = CheckoutResultCode("AuthenticationNotRequired")
+
+        @JvmField
+        val AUTHENTICATION_FINISHED = CheckoutResultCode("AuthenticationFinished")
+
+        @JvmField
+        val CHALLENGE_SHOPPER = CheckoutResultCode("ChallengeShopper")
+
+        @JvmField
+        val IDENTIFY_SHOPPER = CheckoutResultCode("IdentifyShopper")
+
+        @JvmField
+        val REDIRECT_SHOPPER = CheckoutResultCode("RedirectShopper")
+
+        @JvmField
+        val RECEIVED = CheckoutResultCode("Received")
+
+        @JvmField
+        val PENDING = CheckoutResultCode("Pending")
+
+        @JvmField
+        val PRESENT_TO_SHOPPER = CheckoutResultCode("PresentToShopper")
+
+        @JvmField
+        val PARTIALLY_AUTHORISED = CheckoutResultCode("PartiallyAuthorised")
+
+        @JvmField
+        val AUTHORISED = CheckoutResultCode("Authorised")
+
+        @JvmField
+        val CANCELLED = CheckoutResultCode("Cancelled")
+
+        @JvmField
+        val ERROR = CheckoutResultCode("Error")
+
+        @JvmField
+        val REFUSED = CheckoutResultCode("Refused")
     }
 }
