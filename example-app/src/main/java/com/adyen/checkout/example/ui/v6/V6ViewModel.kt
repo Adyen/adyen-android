@@ -167,7 +167,7 @@ internal class V6ViewModel @Inject constructor(
         return AdditionalDetailsResult.Completion(resultCode)
     }
 
-    private fun onError(error: CheckoutError) {
+    private fun onFailure(error: CheckoutError) {
         uiState = V6UiState.Error(UIText.String(error.message.orEmpty()))
     }
 
@@ -200,7 +200,7 @@ internal class V6ViewModel @Inject constructor(
             callbacks = AdvancedCheckoutCallbacks(
                 onSubmit = ::onSubmit,
                 onAdditionalDetails = ::onAdditionalDetails,
-                onError = ::onError,
+                onFailure = ::onFailure,
             ) {
                 card(
                     onBinValue = ::onBinValue,

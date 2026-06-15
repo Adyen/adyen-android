@@ -103,8 +103,8 @@ internal class V6SessionsViewModel @Inject constructor(
         Log.d(TAG, "Bin Lookup Data received: $binLookupData")
     }
 
-    private fun onError(error: CheckoutError) {
-        Log.d(TAG, "onError: ${error.message}")
+    private fun onFailure(error: CheckoutError) {
+        Log.d(TAG, "onFailure: ${error.message}")
     }
 
     private fun onFinished() {
@@ -138,7 +138,7 @@ internal class V6SessionsViewModel @Inject constructor(
             target = CheckoutTarget.PaymentMethod(paymentMethod.type),
             context = checkoutContext,
             callbacks = SessionCheckoutCallbacks(
-                onError = ::onError,
+                onFailure = ::onFailure,
                 onFinished = ::onFinished,
             ) {
                 card(

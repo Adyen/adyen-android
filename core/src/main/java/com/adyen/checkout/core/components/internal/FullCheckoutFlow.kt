@@ -51,7 +51,7 @@ internal class FullCheckoutFlow(
                     }
 
                     is PaymentComponentEvent.Error -> {
-                        componentRequestDispatcher.error(event.error.toCheckoutError())
+                        componentRequestDispatcher.failure(event.error.toCheckoutError())
                     }
 
                     is PaymentComponentEvent.SecondaryScreen -> {

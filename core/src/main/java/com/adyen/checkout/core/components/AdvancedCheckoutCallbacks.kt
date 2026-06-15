@@ -15,6 +15,6 @@ import com.adyen.checkout.core.error.CheckoutError
 class AdvancedCheckoutCallbacks(
     internal val onSubmit: suspend (data: PaymentComponentData<*>) -> SubmitResult,
     internal val onAdditionalDetails: suspend (data: ActionComponentData) -> AdditionalDetailsResult,
-    internal val onError: (CheckoutError) -> Unit,
+    internal val onFailure: (CheckoutError) -> Unit,
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},
 ) : CheckoutCallbacks(additionalCallbacksBlock)

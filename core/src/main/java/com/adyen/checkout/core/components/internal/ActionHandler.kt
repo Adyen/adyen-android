@@ -55,7 +55,7 @@ internal class ActionHandler(
                     }
 
                     is ActionComponentEvent.Error -> {
-                        componentRequestDispatcher.error(event.error.toCheckoutError())
+                        componentRequestDispatcher.failure(event.error.toCheckoutError())
                     }
                 }
             }

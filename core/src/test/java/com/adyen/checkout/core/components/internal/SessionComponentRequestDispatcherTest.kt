@@ -92,13 +92,13 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when submit fails, then retry is returned and onError is invoked`() =
+        fun `when submit fails, then retry is returned and onFailure is invoked`() =
             runTest {
                 val cause = IOException("network down")
                 whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.failure(cause)
 
                 val capturedErrors = mutableListOf<CheckoutError>()
-                val dispatcher = createDispatcher(onError = { capturedErrors += it })
+                val dispatcher = createDispatcher(onFailure = { capturedErrors += it })
 
                 val result = dispatcher.submit(emptyPaymentComponentData())
 
@@ -148,13 +148,13 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when additionalDetails fails, then error completion is returned and onError is invoked`() =
+        fun `when additionalDetails fails, then error completion is returned and onFailure is invoked`() =
             runTest {
                 val cause = IOException("network down")
                 whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.failure(cause)
 
                 val capturedErrors = mutableListOf<CheckoutError>()
-                val dispatcher = createDispatcher(onError = { capturedErrors += it })
+                val dispatcher = createDispatcher(onFailure = { capturedErrors += it })
 
                 val result = dispatcher.additionalDetails(ActionComponentData())
 
@@ -179,12 +179,12 @@ internal class SessionComponentRequestDispatcherTest(
     inner class ErrorTest {
 
         @Test
-        fun `when error is called, then onError is invoked`() {
+        fun `when error is called, then onFailure is invoked`() {
             val capturedErrors = mutableListOf<CheckoutError>()
-            val dispatcher = createDispatcher(onError = { capturedErrors += it })
+            val dispatcher = createDispatcher(onFailure = { capturedErrors += it })
 
             val error = CheckoutError(code = "test", message = "test error")
-            dispatcher.error(error)
+            dispatcher.failure(error)
 
             assertEquals(listOf(error), capturedErrors)
         }
@@ -192,13 +192,13 @@ internal class SessionComponentRequestDispatcherTest(
 
     private fun createDispatcher(
         onFinished: () -> Unit = {},
-        onError: (CheckoutError) -> Unit = {},
+        onFailure: (CheckoutError) -> Unit = {},
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
         initialSessionData = "session-data",
         sessionId = "session-id",
         callbacks = SessionCheckoutCallbacks(
             onFinished = onFinished,
-            onError = onError,
+            onFailure = onFailure,
         ),
         sessionRepository = sessionRepository,
     )
