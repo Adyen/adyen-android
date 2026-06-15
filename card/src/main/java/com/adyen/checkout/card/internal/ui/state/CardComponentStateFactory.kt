@@ -65,7 +65,7 @@ internal class CardComponentStateFactory(
                 requirementPolicy = when (componentParams.showPostalCode) {
                     true -> RequirementPolicy.Required
                     false -> RequirementPolicy.Hidden
-                }
+                },
             ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = componentParams.showStorePaymentMethod,
@@ -77,19 +77,19 @@ internal class CardComponentStateFactory(
             networkBinLookupState = null,
             installmentState = InstallmentState(
                 installmentOptions = installmentOptions,
-                selectedInstallment = getPreselectedInstallment(installmentOptions)
+                selectedInstallment = getPreselectedInstallment(installmentOptions),
             ),
         )
     }
 
-    private fun getPreselectedInstallment(installmentOptions: List<InstallmentModel>) : InstallmentModel? {
+    private fun getPreselectedInstallment(installmentOptions: List<InstallmentModel>): InstallmentModel? {
         val preselectedNumberOfInstallments = componentParams.installmentParams
             ?.defaultOptions
             ?.preselectedValue
-            ?: return null
+            ?: return installmentOptions.firstOrNull()
 
         return installmentOptions.firstOrNull {
             it.plan == InstallmentPlan.REGULAR && it.numberOfInstallments == preselectedNumberOfInstallments
-        }
+        } ?: installmentOptions.firstOrNull()
     }
 }

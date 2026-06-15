@@ -247,7 +247,8 @@ internal class CardBrandIntentsHandler(
             updatedInstallmentOptions.firstOrNull {
                 it.plan == InstallmentPlan.REGULAR && it.numberOfInstallments == preselectedValue
             }
-        }
+        } ?: updatedInstallmentOptions.firstOrNull()
+
         return InstallmentState(updatedInstallmentOptions, selectedInstallment)
     }
 
