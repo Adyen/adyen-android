@@ -55,6 +55,7 @@ internal class StoredBlikComponent(
         StoredBlikComponent(
             viewState = StoredBlikViewState(isLoading = isLoading),
             onSubmitClick = ::submit,
+            modifier = modifier,
         )
     }
 

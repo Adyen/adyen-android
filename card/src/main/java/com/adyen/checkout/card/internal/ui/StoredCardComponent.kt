@@ -106,6 +106,7 @@ internal class StoredCardComponent(
             viewState = viewState,
             onIntent = ::onIntent,
             onSubmitClick = ::submit,
+            modifier = modifier,
         )
     }
 
