@@ -52,18 +52,20 @@ lifecycleScope.launch {
                 },
                 coroutineScope = lifecycleScope,
             )
-
-            renderCheckout(
-                controller = controller,
-                theme = theme,
-                localizationProvider = localizationProvider,
-            )
         }
     }
 }
 ```
 
-`renderCheckout(...)` should render `CheckoutPaymentFlow(...)` from your Compose UI layer. Pass a `CheckoutTheme` and optional `CheckoutLocalizationProvider` when you render the flow. See [theme.md](theme.md) and [README.md](README.md#localization).
+Once you have the controller, render it from your `@Composable` UI with `CheckoutPaymentFlow(...)`. Pass a `CheckoutTheme` and optional `CheckoutLocalizationProvider` when you render the flow. See [theme.md](theme.md) and [README.md](README.md#localization).
+
+```kotlin
+CheckoutPaymentFlow(
+    controller = controller,
+    theme = theme,
+    localizationProvider = localizationProvider,
+)
+```
 
 ## Complete working example
 
