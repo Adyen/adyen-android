@@ -24,7 +24,8 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SessionCheckoutResult
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -87,6 +88,7 @@ internal class V6SessionsViewModel @Inject constructor(
                 val paymentMethods = checkoutContext.getPaymentMethods()
                 V6UiState.Component(
                     paymentMethods = paymentMethods,
+                    storedPaymentMethods = checkoutContext.getStoredPaymentMethods(),
                     selectedPaymentMethod = paymentMethods.first(),
                     checkoutController = createCheckoutController(
                         paymentMethod = paymentMethods.first(),
@@ -120,7 +122,7 @@ internal class V6SessionsViewModel @Inject constructor(
         // TODO - Check if the controller should handle the intent or if we can do this inside a component
     }
 
-    fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
+    fun onPaymentMethodSelected(paymentMethod: PaymentMethodResponse) {
         val newState = (uiState as? V6UiState.Component)?.copy(
             selectedPaymentMethod = paymentMethod,
             checkoutController = createCheckoutController(
@@ -135,11 +137,17 @@ internal class V6SessionsViewModel @Inject constructor(
     }
 
     private fun createCheckoutController(
-        paymentMethod: PaymentMethod,
+        paymentMethod: PaymentMethodResponse,
         checkoutContext: CheckoutContext.Sessions,
     ): CheckoutController {
+        val target = if (paymentMethod is StoredPaymentMethod) {
+            CheckoutTarget.StoredPaymentMethod(paymentMethod.id)
+        } else {
+            CheckoutTarget.PaymentMethod(paymentMethod.type)
+        }
+
         return CheckoutController(
-            target = CheckoutTarget.PaymentMethod(paymentMethod.type),
+            target = target,
             context = checkoutContext,
             callbacks = SessionCheckoutCallbacks(
                 onFailure = ::onFailure,

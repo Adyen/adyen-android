@@ -11,6 +11,7 @@ package com.adyen.checkout.example.ui.v6
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 
 private val SUPPORTED_V6_PAYMENT_METHODS = listOf(
@@ -19,16 +20,26 @@ private val SUPPORTED_V6_PAYMENT_METHODS = listOf(
     PaymentMethodTypes.SCHEME,
 )
 
-@Suppress("RestrictedApi")
 internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
     val paymentMethods = when (this) {
         is CheckoutContext.Advanced -> this.paymentMethods.paymentMethods
         is CheckoutContext.Sessions ->
             this.checkoutSession.sessionSetupResponse.paymentMethods?.paymentMethods
+
         is CheckoutContext.ActionOnly -> error("Unsupported context: $this")
     }
 
     return paymentMethods
         .orEmpty()
         .filter { SUPPORTED_V6_PAYMENT_METHODS.contains(it.type) || it is GenericPaymentMethod }
+}
+
+internal fun CheckoutContext.getStoredPaymentMethods(): List<StoredPaymentMethod> {
+    return when (this) {
+        is CheckoutContext.Advanced -> this.paymentMethods.storedPaymentMethods.orEmpty()
+        is CheckoutContext.Sessions ->
+            this.checkoutSession.sessionSetupResponse.paymentMethods?.storedPaymentMethods.orEmpty()
+
+        is CheckoutContext.ActionOnly -> emptyList()
+    }
 }

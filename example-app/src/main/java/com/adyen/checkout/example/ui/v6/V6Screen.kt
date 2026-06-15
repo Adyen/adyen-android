@@ -47,12 +47,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.core.components.CheckoutPaymentFlow
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.stringFromUIText
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.SubHeadline
+import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +63,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun V6Screen(
     theme: CheckoutTheme,
     uiState: V6UiState,
-    onPaymentMethodSelected: (PaymentMethod) -> Unit,
+    onPaymentMethodSelected: (PaymentMethodResponse) -> Unit,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
@@ -98,7 +101,7 @@ fun V6Screen(
 private fun Component(
     theme: CheckoutTheme,
     uiState: V6UiState.Component,
-    onPaymentMethodSelected: (PaymentMethod) -> Unit,
+    onPaymentMethodSelected: (PaymentMethodResponse) -> Unit,
     modifier: Modifier,
 ) {
     Column(
@@ -117,7 +120,11 @@ private fun Component(
         if (shouldShowDialog) {
             PaymentMethodOptionsDialog(
                 paymentMethods = uiState.paymentMethods,
-                onItemClick = onPaymentMethodSelected,
+                storedPaymentMethods = uiState.storedPaymentMethods,
+                onItemClick = {
+                    onPaymentMethodSelected(it)
+                    shouldShowDialog = false
+                },
                 onDismissRequest = { shouldShowDialog = false },
                 theme = theme,
             )
@@ -180,7 +187,8 @@ private fun DropDownButton(
 @Composable
 private fun PaymentMethodOptionsDialog(
     paymentMethods: List<PaymentMethod>,
-    onItemClick: (PaymentMethod) -> Unit,
+    storedPaymentMethods: List<StoredPaymentMethod>,
+    onItemClick: (PaymentMethodResponse) -> Unit,
     onDismissRequest: () -> Unit,
     theme: CheckoutTheme,
 ) {
@@ -194,30 +202,47 @@ private fun PaymentMethodOptionsDialog(
             LazyColumn(
                 modifier = Modifier.padding(vertical = ExampleTheme.dimensions.grid_1),
             ) {
+                item {
+                    Subtitle("Regular", Modifier.padding(ExampleTheme.dimensions.grid_2))
+                }
                 items(paymentMethods) { paymentMethod ->
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onItemClick(paymentMethod)
-                                onDismissRequest()
-                            }
-                            .padding(
-                                horizontal = ExampleTheme.dimensions.grid_2,
-                                vertical = ExampleTheme.dimensions.grid_1_5,
-                            ),
-                    ) {
-                        @Suppress("RestrictedApi")
-                        (Body(paymentMethod.name))
-                        @Suppress("RestrictedApi")
-                        SubHeadline(
-                            paymentMethod.type,
-                            color = Color(theme.colors.textSecondary.value),
-                        )
-                    }
+                    PaymentMethodItem(paymentMethod, onItemClick, theme)
+                }
+                item {
+                    Subtitle("Stored", Modifier.padding(ExampleTheme.dimensions.grid_2))
+                }
+                items(storedPaymentMethods) { paymentMethod ->
+                    PaymentMethodItem(paymentMethod, onItemClick, theme)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PaymentMethodItem(
+    paymentMethod: PaymentMethodResponse,
+    onClick: (PaymentMethodResponse) -> Unit,
+    theme: CheckoutTheme,
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick(paymentMethod)
+            }
+            .padding(
+                horizontal = ExampleTheme.dimensions.grid_2,
+                vertical = ExampleTheme.dimensions.grid_1_5,
+            ),
+    ) {
+        @Suppress("RestrictedApi")
+        (Body(paymentMethod.name))
+        @Suppress("RestrictedApi")
+        SubHeadline(
+            paymentMethod.type,
+            color = Color(theme.colors.textSecondary.value),
+        )
     }
 }
 
