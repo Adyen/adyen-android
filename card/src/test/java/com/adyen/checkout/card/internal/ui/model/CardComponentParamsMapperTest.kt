@@ -21,6 +21,8 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
+import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfiguration
+import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentOptionsParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -43,93 +45,6 @@ internal class CardComponentParamsMapperTest {
 
         val expected = createExpectedParams()
         assertEquals(expected, params)
-    }
-
-    @Test
-    fun `when installmentConfiguration is null then installmentParams is null`() {
-        val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = null),
-            paymentMethod = null,
-        )
-
-        assertEquals(null, params.installmentParams)
-    }
-
-    @Test
-    fun `when installmentConfiguration has defaultOptions then installmentParams has defaultOptions`() {
-        val installmentConfiguration = InstallmentConfiguration(
-            defaultOptions = InstallmentOptions(
-                values = listOf(2, 3, 6),
-                plans = listOf(InstallmentOptions.Plan.REGULAR),
-            ),
-            showInstallmentAmount = true,
-        )
-
-        val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
-            paymentMethod = null,
-        )
-
-        assertEquals(listOf(2, 3, 6), params.installmentParams?.defaultOptions?.values)
-        assertEquals(true, params.installmentParams?.showInstallmentAmount)
-    }
-
-    @Test
-    fun `when installmentConfiguration has cardBasedOptions then installmentParams has cardBasedOptions`() {
-        val mcBrand = CardBrand(CardType.MASTERCARD.txVariant)
-        val installmentConfiguration = InstallmentConfiguration(
-            cardBasedOptions = mapOf(
-                mcBrand to InstallmentOptions(
-                    values = listOf(3, 6, 9),
-                    plans = listOf(InstallmentOptions.Plan.REGULAR, InstallmentOptions.Plan.REVOLVING),
-                ),
-            ),
-        )
-
-        val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
-            paymentMethod = null,
-        )
-
-        assertEquals(listOf(3, 6, 9), params.installmentParams?.cardBasedOptions?.get(mcBrand)?.values)
-    }
-
-    @Test
-    fun `when session has installmentConfiguration then it takes priority over merchant installmentConfiguration`() {
-        val sessionParams = createSessionParams(
-            sessionInstallmentPlans = listOf("regular"),
-            sessionInstallmentValues = listOf(2, 3),
-        )
-        val merchantInstallmentConfiguration = InstallmentConfiguration(
-            defaultOptions = InstallmentOptions(maxInstallments = 12),
-        )
-
-        val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
-            paymentMethod = null,
-        )
-
-        assertEquals(listOf(2, 3), params.installmentParams?.defaultOptions?.values)
-    }
-
-    @Test
-    fun `when session has null installmentConfiguration then installmentParams is null regardless of merchant config`() {
-        val sessionParams = createSessionParams()
-        val merchantInstallmentConfiguration = InstallmentConfiguration(
-            defaultOptions = InstallmentOptions(maxInstallments = 6),
-        )
-
-        val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
-            paymentMethod = null,
-        )
-
-        assertEquals(null, params.installmentParams)
     }
 
     @Test
@@ -422,6 +337,93 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
+    fun `when installmentConfiguration is null then installmentParams is null`() {
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(installmentConfiguration = null),
+            paymentMethod = null,
+        )
+
+        assertEquals(null, params.installmentParams)
+    }
+
+    @Test
+    fun `when installmentConfiguration has defaultOptions then installmentParams has defaultOptions`() {
+        val installmentConfiguration = InstallmentConfiguration(
+            defaultOptions = InstallmentOptions(
+                values = listOf(2, 3, 6),
+                plans = listOf(InstallmentOptions.Plan.REGULAR),
+            ),
+            showInstallmentAmount = true,
+        )
+
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            paymentMethod = null,
+        )
+
+        assertEquals(listOf(2, 3, 6), params.installmentParams?.defaultOptions?.values)
+        assertEquals(true, params.installmentParams?.showInstallmentAmount)
+    }
+
+    @Test
+    fun `when installmentConfiguration has cardBasedOptions then installmentParams has cardBasedOptions`() {
+        val mcBrand = CardBrand(CardType.MASTERCARD.txVariant)
+        val installmentConfiguration = InstallmentConfiguration(
+            cardBasedOptions = mapOf(
+                mcBrand to InstallmentOptions(
+                    values = listOf(3, 6, 9),
+                    plans = listOf(InstallmentOptions.Plan.REGULAR, InstallmentOptions.Plan.REVOLVING),
+                ),
+            ),
+        )
+
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(),
+            cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            paymentMethod = null,
+        )
+
+        assertEquals(listOf(3, 6, 9), params.installmentParams?.cardBasedOptions?.get(mcBrand)?.values)
+    }
+
+    @Test
+    fun `when session has installmentConfiguration then it takes priority over merchant installmentConfiguration`() {
+        val sessionParams = createSessionParams(
+            installmentPlans = listOf("regular"),
+            installmentValues = listOf(2, 3),
+        )
+        val merchantInstallmentConfiguration = InstallmentConfiguration(
+            defaultOptions = InstallmentOptions(maxInstallments = 12),
+        )
+
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
+            cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+            paymentMethod = null,
+        )
+
+        assertEquals(listOf(2, 3), params.installmentParams?.defaultOptions?.values)
+    }
+
+    @Test
+    fun `when session has null installmentConfiguration then installmentParams is null regardless of merchant config`() {
+        val sessionParams = createSessionParams()
+        val merchantInstallmentConfiguration = InstallmentConfiguration(
+            defaultOptions = InstallmentOptions(maxInstallments = 6),
+        )
+
+        val params = mapper.mapToParams(
+            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
+            cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+            paymentMethod = null,
+        )
+
+        assertEquals(null, params.installmentParams)
+    }
+
+    @Test
     fun `when all custom configuration fields are set then all fields should match`() {
         val customBrands = listOf(CardBrand(CardType.DINERS.txVariant), CardBrand(CardType.MAESTRO.txVariant))
 
@@ -438,7 +440,13 @@ internal class CardComponentParamsMapperTest {
                     koreanAuthenticationVisibility = FieldVisibility.SHOW,
                     billingAddressMode = BillingAddressMode.PostalCode(),
                     showCardScanner = false,
-                    installmentConfiguration = null,
+                    installmentConfiguration = InstallmentConfiguration(
+                    defaultOptions = InstallmentOptions(
+                        values = listOf(2, 3, 6),
+                        plans = listOf(InstallmentOptions.Plan.REGULAR),
+                    ),
+                    showInstallmentAmount = true,
+                ),
                 ),
             ),
             paymentMethod = null,
@@ -455,7 +463,13 @@ internal class CardComponentParamsMapperTest {
             cvcVisibility = CVCVisibility.ALWAYS_HIDE,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
             showCardScanner = false,
-            installmentParams = null,
+            installmentParams = InstallmentParams(
+                defaultOptions = InstallmentOptionsParams(
+                    values = listOf(2, 3, 6),
+                    plans = listOf(InstallmentPlan.REGULAR)
+                ),
+                showInstallmentAmount = true
+            ),
         )
 
         assertEquals(expected, params)
@@ -463,20 +477,20 @@ internal class CardComponentParamsMapperTest {
 
     private fun createAdditionalSessionParams(
         enableStoreDetails: Boolean? = null,
-        sessionInstallmentPlans: List<String>? = null,
-        sessionInstallmentValues: List<Int>? = null,
+        installmentPlans: List<String> = emptyList(),
+        installmentValues: List<Int> = emptyList(),
     ) = AdditionalSessionParams(
         enableStoreDetails = enableStoreDetails,
         installmentConfiguration = null,
         showRemovePaymentMethodButton = null,
         returnUrl = "",
-        installmentConfiguration = if (sessionInstallmentPlans != null || sessionInstallmentValues != null) {
-            com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfiguration(
+        installmentConfiguration = if (installmentPlans.isNotEmpty() || installmentValues.isNotEmpty()) {
+            SessionInstallmentConfiguration(
                 installmentOptions = mapOf(
-                    "card" to com.adyen.checkout.core.sessions.internal.model.SessionInstallmentOptionsParams(
-                        plans = sessionInstallmentPlans,
+                    "card" to SessionInstallmentOptionsParams(
+                        plans = installmentPlans,
                         preselectedValue = null,
-                        values = sessionInstallmentValues,
+                        values = installmentValues,
                     ),
                 ),
                 showInstallmentAmount = null,

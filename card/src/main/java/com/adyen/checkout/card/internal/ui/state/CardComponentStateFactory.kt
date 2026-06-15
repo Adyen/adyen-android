@@ -76,7 +76,7 @@ internal class CardComponentStateFactory(
             cardBrandState = CardBrandState.NoBrandsDetected,
             networkBinLookupState = null,
             installmentState = InstallmentState(
-                installments = installmentOptions,
+                installmentOptions = installmentOptions,
                 selectedInstallment = getPreselectedInstallment(installmentOptions)
             ),
         )

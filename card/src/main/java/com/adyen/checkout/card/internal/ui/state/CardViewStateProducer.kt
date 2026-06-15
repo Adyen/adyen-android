@@ -65,7 +65,7 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             cardNumberFormat = cardNumberFormat,
             isLoading = state.isLoading,
             isCardScanButtonVisible = isCardScanButtonVisible,
-            installmentOptions = state.installmentState.installments,
+            installmentOptions = state.installmentState.installmentOptions,
             selectedInstallment = state.installmentState.selectedInstallment,
         )
     }

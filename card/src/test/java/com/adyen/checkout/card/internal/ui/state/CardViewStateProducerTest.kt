@@ -560,8 +560,10 @@ internal class CardViewStateProducerTest {
         isCardScanningAvailable = isCardScanningAvailable,
         cardBrandState = cardBrandState,
         networkBinLookupState = null,
-        installmentOptions = emptyList(),
-        selectedInstallment = null,
+        installmentState = InstallmentState(
+            installmentOptions = emptyList(),
+            selectedInstallment = null,
+        ),
     )
 
     private fun getCardBrandData(): CardBrandData {

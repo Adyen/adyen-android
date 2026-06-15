@@ -70,7 +70,7 @@ internal data class CardBrandData(
 )
 
 internal data class InstallmentState(
-    val installments: List<InstallmentModel>,
+    val installmentOptions: List<InstallmentModel>,
     val selectedInstallment: InstallmentModel?,
 )
 

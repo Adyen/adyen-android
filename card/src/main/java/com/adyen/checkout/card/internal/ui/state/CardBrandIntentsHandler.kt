@@ -190,8 +190,6 @@ internal class CardBrandIntentsHandler(
         val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
         val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
 
-        val cardBrand = cardBrandState.getReliableCardBrand()
-
         return state.copy(
             cardBrandState = cardBrandState,
             securityCode = state.securityCode.copy(
@@ -200,7 +198,7 @@ internal class CardBrandIntentsHandler(
             expiryDate = state.expiryDate.copy(
                 requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
             ),
-            installmentState = getUpdatedInstallmentState(state, cardBrand),
+            installmentState = getUpdatedInstallmentState(state, cardBrandState.asReliableCardBrand()),
         )
     }
 
@@ -235,20 +233,11 @@ internal class CardBrandIntentsHandler(
         }
     }
 
-    private fun CardBrandState.getReliableCardBrand(): CardBrand? {
-        return when (this) {
-            is CardBrandState.SingleReliableBrand -> cardBrandData.cardBrand
-            is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandData.cardBrand
-            is CardBrandState.DualBrand -> cardBrandDataList.first().cardBrand
-            is CardBrandState.DualBrandWithShopperSelection -> shopperSelectedCardBrandData.cardBrand
-            else -> null
-        }
-    }
-
     private fun getUpdatedInstallmentState(
-        state: CardComponentState, cardBrand: CardBrand?
+        state: CardComponentState,
+        cardBrand: CardBrand?
     ): InstallmentState {
-        val updatedInstallmentOptions = getUpdatedInstallmentModels(cardBrand)
+        val updatedInstallmentOptions = getUpdatedInstallmentOptions(cardBrand)
         val selectedInstallment = if (updatedInstallmentOptions.contains(state.installmentState.selectedInstallment)) {
             state.installmentState.selectedInstallment
         } else {
@@ -262,10 +251,20 @@ internal class CardBrandIntentsHandler(
         return InstallmentState(updatedInstallmentOptions, selectedInstallment)
     }
 
-    private fun getUpdatedInstallmentModels(cardBrand: CardBrand?): List<InstallmentModel> {
+    private fun getUpdatedInstallmentOptions(cardBrand: CardBrand?): List<InstallmentModel> {
         return componentParams.installmentParams?.toInstallmentModels(
             amount = componentParams.amount,
             cardBrand = cardBrand,
         ) ?: emptyList()
+    }
+
+    private fun CardBrandState.asReliableCardBrand(): CardBrand? {
+        return when (this) {
+            is CardBrandState.SingleReliableBrand -> cardBrandData.cardBrand
+            is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandData.cardBrand
+            is CardBrandState.DualBrand -> cardBrandDataList.first().cardBrand
+            is CardBrandState.DualBrandWithShopperSelection -> shopperSelectedCardBrandData.cardBrand
+            else -> null
+        }
     }
 }

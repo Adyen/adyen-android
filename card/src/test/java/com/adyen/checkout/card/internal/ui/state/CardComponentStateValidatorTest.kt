@@ -304,7 +304,9 @@ internal class CardComponentStateValidatorTest {
         isCardScanningAvailable = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
         networkBinLookupState = null,
-        installmentOptions = emptyList(),
-        selectedInstallment = null,
+        installmentState = InstallmentState(
+            installmentOptions = emptyList(),
+            selectedInstallment = null,
+        ),
     )
 }

@@ -144,7 +144,7 @@ constructor(
         val viewState by viewState.collectAsStateWithLifecycle()
 
         when (identifier) {
-            INSTALLMENT_IDENTIFIER -> {
+            INSTALLMENTS_IDENTIFIER -> {
                 InstallmentPicker(
                     installmentOptions = viewState.installmentOptions,
                     selectedInstallment = viewState.selectedInstallment,
@@ -256,14 +256,6 @@ constructor(
         }
     }
 
-    private fun onInstallmentPickerClick() {
-        eventChannel.trySend(
-            PaymentComponentEvent.SecondaryScreen(
-                identifier = INSTALLMENT_IDENTIFIER,
-            ),
-        )
-    }
-
     private fun onIntent(intent: CardIntent) {
         componentState.handleIntent(intent)
     }
@@ -304,6 +296,14 @@ constructor(
             .launchIn(coroutineScope)
     }
 
+    private fun onInstallmentPickerClick() {
+        eventChannel.trySend(
+            PaymentComponentEvent.SecondaryScreen(
+                identifier = INSTALLMENTS_IDENTIFIER,
+            ),
+        )
+    }
+
     private fun onEncryptionError(e: EncryptionException) {
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
@@ -326,6 +326,6 @@ constructor(
     }
 
     companion object {
-        private const val INSTALLMENT_IDENTIFIER = "installment"
+        private const val INSTALLMENTS_IDENTIFIER = "installments"
     }
 }

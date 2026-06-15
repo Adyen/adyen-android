@@ -14,8 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.adyen.checkout.card.internal.ui.model.InstallmentModel
-import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
+import com.adyen.checkout.card.internal.ui.model.OneTimeInstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
@@ -156,12 +155,6 @@ private fun CardDetailsSection(
 @Preview(showBackground = true)
 @Composable
 private fun CardComponentPreview() {
-    val installmentOptions = listOf(
-        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false),
-        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false),
-        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false),
-    )
-
     CardComponent(
         viewState = CardViewState(
             cardNumber = TextInputViewState(
@@ -196,8 +189,8 @@ private fun CardComponentPreview() {
             isCardScanButtonVisible = false,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
-            installmentOptions = installmentOptions,
-            selectedInstallment = installmentOptions.first(),
+            installmentOptions = listOf(OneTimeInstallmentModel()),
+            selectedInstallment = OneTimeInstallmentModel(),
         ),
         onIntent = {},
         onSubmitClick = {},

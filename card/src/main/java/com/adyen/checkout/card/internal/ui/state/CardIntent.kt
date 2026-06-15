@@ -50,9 +50,9 @@ internal sealed interface CardIntent : ComponentStateIntent {
 
     data class UpdateStorePaymentMethod(val isChecked: Boolean) : CardIntent
 
-    data class UpdateInstallment(val installment: InstallmentModel) : CardIntent
-
     data class SelectBrand(val cardBrand: CardBrand) : CardIntent
+
+    data class UpdateInstallment(val installment: InstallmentModel) : CardIntent
 
     // System intents
     data class UpdateDetectedCardTypes(val detectedCardTypeList: DetectedCardTypeList) : CardIntent

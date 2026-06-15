@@ -19,7 +19,7 @@ import kotlinx.parcelize.Parcelize
  *
  * @param defaultOptions Options applied to all card brands.
  * @param cardBasedOptions Brand-specific options. Overrides [defaultOptions] for matching brands.
- * @param showInstallmentAmount Whether to show the per-installment amount in the installment dropdown.
+ * @param showInstallmentAmount Whether to show the per-installment amount.
  */
 @Parcelize
 data class InstallmentConfiguration(

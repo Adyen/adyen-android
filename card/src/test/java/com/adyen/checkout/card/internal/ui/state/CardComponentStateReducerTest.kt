@@ -315,7 +315,9 @@ internal class CardComponentStateReducerTest {
         isCardScanningAvailable = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
         networkBinLookupState = null,
-        installmentOptions = emptyList(),
-        selectedInstallment = null,
+        installmentState = InstallmentState(
+            installmentOptions = emptyList(),
+            selectedInstallment = null,
+        ),
     )
 }

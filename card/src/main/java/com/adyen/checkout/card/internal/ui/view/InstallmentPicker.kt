@@ -18,9 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
+import com.adyen.checkout.card.internal.ui.model.OneTimeInstallmentModel
+import com.adyen.checkout.card.internal.ui.model.RevolvingInstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.ui.internal.element.SelectableListItem
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -54,10 +57,20 @@ internal fun InstallmentPicker(
 @Composable
 private fun InstallmentPickerPreview() {
     val options = listOf(
-        InstallmentModel(InstallmentPlan.ONE_TIME, null, null, false),
-        InstallmentModel(InstallmentPlan.REVOLVING, 1, null, false),
-        InstallmentModel(InstallmentPlan.REGULAR, 2, null, false),
-        InstallmentModel(InstallmentPlan.REGULAR, 3, null, false),
+        OneTimeInstallmentModel(),
+        RevolvingInstallmentModel(),
+        InstallmentModel(
+            plan = InstallmentPlan.REGULAR,
+            numberOfInstallments = 2,
+            amountPerInstallment = null,
+            showAmount = false,
+        ),
+        InstallmentModel(
+            plan =InstallmentPlan.REGULAR,
+            numberOfInstallments = 3,
+            amountPerInstallment = Amount("EUR", 100),
+            showAmount = true,
+        ),
     )
     InstallmentPicker(
         installmentOptions = options,

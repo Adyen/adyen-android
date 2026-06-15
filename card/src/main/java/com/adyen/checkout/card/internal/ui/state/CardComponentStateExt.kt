@@ -165,18 +165,6 @@ private fun CardComponentState.getBillingAddress(): Address? {
     return null
 }
 
-private fun CardComponentState.getInstallments(): Installments? {
-    return when (installmentState.selectedInstallment?.plan) {
-        InstallmentPlan.REGULAR, InstallmentPlan.REVOLVING ->
-            Installments(
-                plan = installmentState.selectedInstallment.plan.type,
-                value = installmentState.selectedInstallment.numberOfInstallments,
-            )
-
-        else -> null
-    }
-}
-
 private fun createPaymentComponentData(
     cardDetails: CardDetails,
     storePaymentMethod: Boolean?,
@@ -191,6 +179,18 @@ private fun createPaymentComponentData(
     socialSecurityNumber = socialSecurityNumber,
     installments = installments,
 )
+
+private fun CardComponentState.getInstallments(): Installments? {
+    return when (installmentState.selectedInstallment?.plan) {
+        InstallmentPlan.REGULAR, InstallmentPlan.REVOLVING ->
+            Installments(
+                plan = installmentState.selectedInstallment.plan.type,
+                value = installmentState.selectedInstallment.numberOfInstallments,
+            )
+
+        else -> null
+    }
+}
 
 private fun createPaymentComponentState(
     paymentComponentData: PaymentComponentData<CardDetails>,
