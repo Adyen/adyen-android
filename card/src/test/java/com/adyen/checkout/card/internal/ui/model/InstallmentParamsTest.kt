@@ -20,7 +20,7 @@ internal class InstallmentParamsTest {
     @Test
     fun `when installmentParams is empty, then toInstallmentModels returns empty list`() {
         val params = InstallmentParams()
-        val models = params.toInstallmentModels(amount)
+        val models = params.mapToInstallmentModels(amount)
         assertEquals(emptyList<InstallmentModel>(), models)
     }
 
@@ -34,7 +34,7 @@ internal class InstallmentParamsTest {
             showInstallmentAmount = true
         )
 
-        val models = params.toInstallmentModels(amount)
+        val models = params.mapToInstallmentModels(amount)
 
         val expected = listOf(
             OneTimeInstallmentModel(),
@@ -54,7 +54,7 @@ internal class InstallmentParamsTest {
             showInstallmentAmount = false
         )
 
-        val models = params.toInstallmentModels(amount)
+        val models = params.mapToInstallmentModels(amount)
 
         val expected = listOf(
             OneTimeInstallmentModel(),
@@ -83,7 +83,7 @@ internal class InstallmentParamsTest {
         )
 
         // Matching brand
-        val visaModels = params.toInstallmentModels(amount, visaBrand)
+        val visaModels = params.mapToInstallmentModels(amount, visaBrand)
         val expectedVisa = listOf(
             OneTimeInstallmentModel(),
             InstallmentModel(InstallmentPlan.REGULAR, 3, Amount("EUR", 40), showAmount = true),
@@ -92,7 +92,7 @@ internal class InstallmentParamsTest {
         assertEquals(expectedVisa, visaModels)
 
         // Non-matching brand falls back to default options
-        val mcModels = params.toInstallmentModels(amount, mcBrand)
+        val mcModels = params.mapToInstallmentModels(amount, mcBrand)
         val expectedMc = listOf(
             OneTimeInstallmentModel(),
             InstallmentModel(InstallmentPlan.REGULAR, 2, Amount("EUR", 60), showAmount = true)
@@ -110,7 +110,7 @@ internal class InstallmentParamsTest {
             showInstallmentAmount = true
         )
 
-        val models = params.toInstallmentModels(amount = null)
+        val models = params.mapToInstallmentModels(amount = null)
 
         val expected = listOf(
             OneTimeInstallmentModel(),

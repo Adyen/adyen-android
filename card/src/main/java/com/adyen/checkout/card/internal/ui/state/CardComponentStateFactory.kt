@@ -13,7 +13,7 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
-import com.adyen.checkout.card.internal.ui.model.toInstallmentModels
+import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -24,7 +24,7 @@ internal class CardComponentStateFactory(
 
     override fun createInitialState(): CardComponentState {
         val installmentOptions = componentParams.installmentParams
-            ?.toInstallmentModels(componentParams.amount)
+            ?.mapToInstallmentModels()
             ?: emptyList()
 
         return CardComponentState(

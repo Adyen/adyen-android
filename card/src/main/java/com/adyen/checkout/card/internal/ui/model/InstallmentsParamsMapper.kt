@@ -11,10 +11,11 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfiguration
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentOptionsParams
 
-internal fun SessionInstallmentConfiguration.mapToInstallmentParams(): InstallmentParams {
+internal fun SessionInstallmentConfiguration.mapToInstallmentParams(amount: Amount?): InstallmentParams {
     var defaultOptions: InstallmentOptionsParams? = null
     val cardBasedOptions = mutableMapOf<CardBrand, InstallmentOptionsParams>()
 
@@ -31,16 +32,18 @@ internal fun SessionInstallmentConfiguration.mapToInstallmentParams(): Installme
         defaultOptions = defaultOptions,
         cardBasedOptions = cardBasedOptions,
         showInstallmentAmount = showInstallmentAmount ?: false,
+        amount = amount,
     )
 }
 
-internal fun InstallmentConfiguration.mapToInstallmentParams(): InstallmentParams {
+internal fun InstallmentConfiguration.mapToInstallmentParams(amount: Amount?): InstallmentParams {
     return InstallmentParams(
         defaultOptions = defaultOptions?.toParams(),
         cardBasedOptions = cardBasedOptions.mapValues { (_, options) ->
             options.toParams()
         },
         showInstallmentAmount = showInstallmentAmount,
+        amount = amount,
     )
 }
 

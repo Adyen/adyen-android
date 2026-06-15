@@ -37,7 +37,7 @@ internal class InstallmentsParamsMapperTest {
             showInstallmentAmount = true
         )
 
-        val params = configuration.mapToInstallmentParams()
+        val params = configuration.mapToInstallmentParams(amount)
 
         assertEquals(listOf(2, 3), params.defaultOptions?.values)
         assertEquals(listOf(InstallmentPlan.REGULAR), params.defaultOptions?.plans)
@@ -69,7 +69,7 @@ internal class InstallmentsParamsMapperTest {
             showInstallmentAmount = true
         )
 
-        val params = sessionConfig.mapToInstallmentParams()
+        val params = sessionConfig.mapToInstallmentParams(amount)
 
         assertEquals(listOf(2, 3), params.defaultOptions?.values)
         assertEquals(listOf(InstallmentPlan.REGULAR), params.defaultOptions?.plans)

@@ -17,8 +17,8 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import java.util.Locale
 
 // TODO - Card Component Mapper Tests.
 internal class CardComponentParamsMapper {
@@ -50,8 +50,9 @@ internal class CardComponentParamsMapper {
             },
             showCardScanner = cardConfiguration?.showCardScanner ?: true,
             installmentParams = makeInstallmentParams(
-                sessionParams = sessionParams,
+                sessionParams = params.additionalSessionParams,
                 cardConfiguration = cardConfiguration,
+                amount = params.amount,
             ),
         )
     }
@@ -93,14 +94,15 @@ internal class CardComponentParamsMapper {
     }
 
     private fun makeInstallmentParams(
-        sessionParams: SessionParams?,
+        sessionParams: AdditionalSessionParams?,
         cardConfiguration: CardConfiguration?,
+        amount: Amount?
     ): InstallmentParams? {
         return if (sessionParams != null) {
             // if sessionParams.installmentOptions is null we want installmentParams to be also null
-            sessionParams.installmentConfiguration?.mapToInstallmentParams()
+            sessionParams.installmentConfiguration?.mapToInstallmentParams(amount)
         } else {
-            cardConfiguration?.installmentConfiguration?.mapToInstallmentParams()
+            cardConfiguration?.installmentConfiguration?.mapToInstallmentParams(amount)
         }
     }
 

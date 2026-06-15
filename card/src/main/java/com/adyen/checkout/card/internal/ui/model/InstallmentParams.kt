@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.data.model.Amount
 internal data class InstallmentParams(
     val defaultOptions: InstallmentOptionsParams? = null,
     val cardBasedOptions: Map<CardBrand, InstallmentOptionsParams> = emptyMap(),
+    val amount: Amount? = null,
     val showInstallmentAmount: Boolean = false,
 )
 
@@ -23,8 +24,7 @@ internal data class InstallmentOptionsParams(
     val preselectedValue: Int? = null,
 )
 
-internal fun InstallmentParams.toInstallmentModels(
-    amount: Amount?,
+internal fun InstallmentParams.mapToInstallmentModels(
     cardBrand: CardBrand? = null,
 ): List<InstallmentModel> {
     val hasOptionsForBrand = cardBrand != null &&
@@ -37,11 +37,11 @@ internal fun InstallmentParams.toInstallmentModels(
     }
 
     return availableInstallmentOptions
-        ?.toInstallmentModels(amount, showInstallmentAmount)
+        ?.mapToInstallmentModels(amount, showInstallmentAmount)
         ?: emptyList()
 }
 
-private fun InstallmentOptionsParams.toInstallmentModels(
+private fun InstallmentOptionsParams.mapToInstallmentModels(
     amount: Amount?,
     showInstallmentAmount: Boolean,
 ): List<InstallmentModel> {

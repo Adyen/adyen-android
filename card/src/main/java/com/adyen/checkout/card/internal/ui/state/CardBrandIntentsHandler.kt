@@ -19,7 +19,7 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
-import com.adyen.checkout.card.internal.ui.model.toInstallmentModels
+import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import kotlin.collections.contains
@@ -252,8 +252,7 @@ internal class CardBrandIntentsHandler(
     }
 
     private fun getUpdatedInstallmentOptions(cardBrand: CardBrand?): List<InstallmentModel> {
-        return componentParams.installmentParams?.toInstallmentModels(
-            amount = componentParams.amount,
+        return componentParams.installmentParams?.mapToInstallmentModels(
             cardBrand = cardBrand,
         ) ?: emptyList()
     }
