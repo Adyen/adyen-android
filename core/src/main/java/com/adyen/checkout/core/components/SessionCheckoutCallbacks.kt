@@ -16,7 +16,9 @@ import com.adyen.checkout.core.error.CheckoutError
  *
  * @param onComplete Called when the payment is completed.
  * @param onFailure Called when an error occurs.
- * @param onBeforeSubmit Called before the payment is submitted.
+ * @param onBeforeSubmit Called after component validation and before the SDK submits the sessions `/payments` request.
+ * Return [BeforeSubmitResult.Proceed] to continue, optionally with modified shopper data or patched session data.
+ * Return [BeforeSubmitResult.Abort] to stop submission without triggering [onFailure].
  */
 class SessionCheckoutCallbacks(
     internal val onComplete: (result: SessionCheckoutResult) -> Unit,

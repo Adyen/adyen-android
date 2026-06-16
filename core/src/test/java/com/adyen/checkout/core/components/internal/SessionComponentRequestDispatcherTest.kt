@@ -25,8 +25,10 @@ import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsResponse
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -377,6 +379,27 @@ internal class SessionComponentRequestDispatcherTest(
             assertEquals(SubmitResult.Retry(), result)
             assertEquals(1, onErrorCalls)
             assertEquals(1, capturedErrors.size)
+            verify(sessionRepository, never()).submitPayment(any(), any(), any())
+        }
+
+        @Test
+        fun `when onBeforeSubmit is cancelled then cancellation is rethrown`() = runTest {
+            var onErrorCalls = 0
+            val dispatcher = createDispatcher(
+                onFailure = { onErrorCalls++ },
+                onBeforeSubmit = {
+                    throw CancellationException("cancelled")
+                },
+            )
+
+            try {
+                dispatcher.submit(emptyPaymentComponentData())
+                fail("Expected CancellationException to be rethrown")
+            } catch (e: CancellationException) {
+                assertEquals("cancelled", e.message)
+            }
+
+            assertEquals(0, onErrorCalls)
             verify(sessionRepository, never()).submitPayment(any(), any(), any())
         }
     }

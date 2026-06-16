@@ -21,6 +21,7 @@ import com.adyen.checkout.core.components.data.applyBeforeSubmitData
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
+import kotlinx.coroutines.CancellationException
 
 internal class SessionComponentRequestDispatcher(
     initialSessionData: String,
@@ -82,6 +83,8 @@ internal class SessionComponentRequestDispatcher(
                 is BeforeSubmitResult.Abort -> null
                 else -> data
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             callbacks.onFailure(e.toCheckoutError())
             null

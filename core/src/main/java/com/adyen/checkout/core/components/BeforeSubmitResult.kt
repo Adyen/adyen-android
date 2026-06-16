@@ -12,14 +12,23 @@ import com.adyen.checkout.core.components.data.BeforeSubmitData
 
 /**
  * The result of the [SessionCheckoutCallbacks.onBeforeSubmit] callback.
+ *
+ * Return [Proceed] to continue the session submission, or [Abort] to stop it. Aborting the submission does not trigger
+ * the error callback.
  */
 abstract class BeforeSubmitResult internal constructor() {
 
     /**
      * Continue the submission flow with the provided data.
      *
-     * @param data The data to continue with.
-     * @param sessionData The patched session data, if the session was updated.
+     * Use [data] to return shopper data unchanged or with modified fields. Null fields in [BeforeSubmitData] preserve
+     * the values collected by the component.
+     *
+     * When you patch the session on your server, pass the returned [sessionData] so the SDK can use the updated session
+     * state for the following sessions `/payments` request. Leave it null when the session was not patched.
+     *
+     * @param data The shopper data to continue with.
+     * @param sessionData The session data returned by your server after patching the session, if any.
      */
     class Proceed(
         val data: BeforeSubmitData,
@@ -27,7 +36,9 @@ abstract class BeforeSubmitResult internal constructor() {
     ) : BeforeSubmitResult()
 
     /**
-     * Stop the submission flow.
+     * Stop the submission flow and reset the component to the ready state.
+     *
+     * This does not call the error callback.
      */
     class Abort : BeforeSubmitResult()
 }
