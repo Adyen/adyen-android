@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.ui.v6
 
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 
@@ -24,9 +25,10 @@ internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
         is CheckoutContext.Advanced -> this.paymentMethods.paymentMethods
         is CheckoutContext.Sessions ->
             this.checkoutSession.sessionSetupResponse.paymentMethods?.paymentMethods
+        is CheckoutContext.ActionOnly -> error("Unsupported context: $this")
     }
 
     return paymentMethods
         .orEmpty()
-        .filter { SUPPORTED_V6_PAYMENT_METHODS.contains(it.type) }
+        .filter { SUPPORTED_V6_PAYMENT_METHODS.contains(it.type) || it is GenericPaymentMethod }
 }

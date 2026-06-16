@@ -16,7 +16,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
@@ -59,6 +58,7 @@ internal class DropInViewModel(
         val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethods
             is CheckoutContext.Advanced -> context.paymentMethods
+            is CheckoutContext.ActionOnly -> error("Unsupported context: $context")
         }
 
         if (paymentMethods == null) {
@@ -75,7 +75,7 @@ internal class DropInViewModel(
                 SessionParamsFactory.create(it)
             }
             dropInParams = DropInParamsMapper().map(
-                checkoutConfiguration = input.checkoutContext.getCheckoutConfiguration(),
+                checkoutConfiguration = input.checkoutContext.checkoutConfiguration,
                 sessionParams = sessionParams,
             )
         } catch (e: IllegalStateException) {
@@ -94,13 +94,6 @@ internal class DropInViewModel(
             PreselectedPaymentMethodNavKey(storedPaymentMethods.first().id)
         }
         navigator.navigateTo(startingPoint)
-    }
-
-    private fun CheckoutContext.getCheckoutConfiguration(): CheckoutConfiguration {
-        return when (this) {
-            is CheckoutContext.Sessions -> checkoutConfiguration
-            is CheckoutContext.Advanced -> checkoutConfiguration
-        }
     }
 
     fun startDropInService(context: Context) {
