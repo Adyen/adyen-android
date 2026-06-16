@@ -45,13 +45,14 @@ private fun StoredCardContent(
     onSubmitClick: () -> Unit,
     modifier: Modifier,
 ) {
-    ComponentScaffold(
-        modifier = modifier,
-        footer = {
-            PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
-        },
-    ) {
-        if (viewState.securityCode != null) {
+    // If security code is not displayed, we should not display anything
+    if (viewState.securityCode != null) {
+        ComponentScaffold(
+            modifier = modifier,
+            footer = {
+                PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+            },
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
