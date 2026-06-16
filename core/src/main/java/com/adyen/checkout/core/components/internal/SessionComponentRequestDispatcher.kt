@@ -43,11 +43,9 @@ internal class SessionComponentRequestDispatcher(
             onSuccess = { response ->
                 sessionData = response.sessionData
                 // TODO - Check if we need to support partial payment flow
-                return when {
+                when {
                     response.action != null -> SubmitResult.Action(response.action)
-                    else -> {
-                        SubmitResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
-                    }
+                    else -> SubmitResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
                 }
             },
             onFailure = { error ->
@@ -80,6 +78,7 @@ internal class SessionComponentRequestDispatcher(
                     result.sessionData?.let { sessionData = it }
                     data.applyBeforeSubmitData(result.data)
                 }
+
                 is BeforeSubmitResult.Abort -> null
                 else -> data
             }

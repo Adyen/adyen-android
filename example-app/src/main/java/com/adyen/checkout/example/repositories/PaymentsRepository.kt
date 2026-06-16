@@ -27,6 +27,7 @@ import org.json.JSONObject
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse as OldPaymentMethodsApiResponse
 import com.adyen.checkout.sessions.core.SessionModel as OldSessionModel
 
+@Suppress("TooManyFunctions")
 interface PaymentsRepository {
     suspend fun createSessionOld(sessionRequest: SessionRequest): OldSessionModel?
     suspend fun createSession(sessionRequest: SessionRequest): SessionResponse?
