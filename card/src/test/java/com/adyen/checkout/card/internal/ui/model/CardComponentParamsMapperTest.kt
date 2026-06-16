@@ -403,7 +403,9 @@ internal class CardComponentParamsMapperTest {
 
         val params = mapper.mapToParams(
             params = generateCheckoutParams(
-                cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+                cardConfiguration = createCardConfiguration(
+                    installmentConfiguration = merchantInstallmentConfiguration
+                ),
                 additionalSessionParams = additionalSessionParams,
             ),
             paymentMethod = null,
@@ -421,7 +423,9 @@ internal class CardComponentParamsMapperTest {
 
         val params = mapper.mapToParams(
             params = generateCheckoutParams(
-                cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+                cardConfiguration = createCardConfiguration(
+                    installmentConfiguration = merchantInstallmentConfiguration
+                ),
                 additionalSessionParams = additionalSessionParams,
             ),
             paymentMethod = null,
