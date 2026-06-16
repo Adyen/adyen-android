@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
-import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -541,7 +540,7 @@ internal class CardViewStateProducerTest {
     fun `when installment state has options and selection, then viewState contains same options and selection`() {
         // GIVEN
         val options = listOf(
-            InstallmentModel(InstallmentPlan.REGULAR, 3, amountPerInstallment = null, showAmount = false)
+            InstallmentModel.Regular(3, amountPerInstallment = null, showAmount = false)
         )
         val selection = options.first()
         val componentState = createComponentState(

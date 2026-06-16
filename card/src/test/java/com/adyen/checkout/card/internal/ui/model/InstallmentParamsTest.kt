@@ -38,9 +38,9 @@ internal class InstallmentParamsTest {
         val models = params.mapToInstallmentModels()
 
         val expected = listOf(
-            OneTimeInstallmentModel(),
-            InstallmentModel(InstallmentPlan.REGULAR, 2, Amount("EUR", 60), showAmount = true),
-            InstallmentModel(InstallmentPlan.REGULAR, 3, Amount("EUR", 40), showAmount = true)
+            InstallmentModel.OneTime,
+            InstallmentModel.Regular(2, Amount("EUR", 60), showAmount = true),
+            InstallmentModel.Regular(3, Amount("EUR", 40), showAmount = true)
         )
         assertEquals(expected, models)
     }
@@ -59,9 +59,9 @@ internal class InstallmentParamsTest {
         val models = params.mapToInstallmentModels()
 
         val expected = listOf(
-            OneTimeInstallmentModel(),
-            RevolvingInstallmentModel(),
-            InstallmentModel(InstallmentPlan.REGULAR, 3, Amount("EUR", 40), showAmount = false)
+            InstallmentModel.OneTime,
+            InstallmentModel.Revolving,
+            InstallmentModel.Regular(3, Amount("EUR", 40), showAmount = false)
         )
         assertEquals(expected, models)
     }
@@ -88,17 +88,17 @@ internal class InstallmentParamsTest {
         // Matching brand
         val visaModels = params.mapToInstallmentModels(visaBrand)
         val expectedVisa = listOf(
-            OneTimeInstallmentModel(),
-            InstallmentModel(InstallmentPlan.REGULAR, 3, Amount("EUR", 40), showAmount = true),
-            InstallmentModel(InstallmentPlan.REGULAR, 4, Amount("EUR", 30), showAmount = true)
+            InstallmentModel.OneTime,
+            InstallmentModel.Regular(3, Amount("EUR", 40), showAmount = true),
+            InstallmentModel.Regular(4, Amount("EUR", 30), showAmount = true)
         )
         assertEquals(expectedVisa, visaModels)
 
         // Non-matching brand falls back to default options
         val mcModels = params.mapToInstallmentModels(mcBrand)
         val expectedMc = listOf(
-            OneTimeInstallmentModel(),
-            InstallmentModel(InstallmentPlan.REGULAR, 2, Amount("EUR", 60), showAmount = true)
+            InstallmentModel.OneTime,
+            InstallmentModel.Regular(2, Amount("EUR", 60), showAmount = true)
         )
         assertEquals(expectedMc, mcModels)
     }
@@ -117,8 +117,8 @@ internal class InstallmentParamsTest {
         val models = params.mapToInstallmentModels()
 
         val expected = listOf(
-            OneTimeInstallmentModel(),
-            InstallmentModel(InstallmentPlan.REGULAR, 2, amountPerInstallment = null, showAmount = true)
+            InstallmentModel.OneTime,
+            InstallmentModel.Regular(2, amountPerInstallment = null, showAmount = true)
         )
         assertEquals(expected, models)
     }

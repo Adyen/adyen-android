@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.adyen.checkout.card.internal.ui.model.OneTimeInstallmentModel
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
@@ -191,8 +191,8 @@ private fun CardComponentPreview() {
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             installmentViewState = InstallmentViewState(
-                installmentOptions = listOf(OneTimeInstallmentModel()),
-                selectedInstallment = OneTimeInstallmentModel(),
+                installmentOptions = listOf(InstallmentModel.OneTime),
+                selectedInstallment = InstallmentModel.OneTime,
             ),
         ),
         onIntent = {},

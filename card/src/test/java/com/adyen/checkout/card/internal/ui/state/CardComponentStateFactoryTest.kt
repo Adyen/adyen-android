@@ -11,10 +11,10 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentOptionsParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
-import com.adyen.checkout.card.internal.ui.model.OneTimeInstallmentModel
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 
 internal class CardComponentStateFactoryTest {
 
@@ -202,7 +203,7 @@ internal class CardComponentStateFactoryTest {
         val state = createFactory(installmentParams = installmentParams).createInitialState()
 
         assertEquals(3, state.installmentState.installmentOptions.size) // OneTime, 2, 3
-        assertEquals(OneTimeInstallmentModel(), state.installmentState.selectedInstallment)
+        assertEquals(InstallmentModel.OneTime, state.installmentState.selectedInstallment)
     }
 
     @Test
@@ -218,8 +219,8 @@ internal class CardComponentStateFactoryTest {
         val state = createFactory(installmentParams = installmentParams).createInitialState()
 
         assertEquals(3, state.installmentState.installmentOptions.size)
-        assertEquals(InstallmentPlan.REGULAR, state.installmentState.selectedInstallment?.plan)
-        assertEquals(3, state.installmentState.selectedInstallment?.numberOfInstallments)
+        assertInstanceOf<InstallmentModel.Regular>(state.installmentState.selectedInstallment)
+        assertEquals(3, state.installmentState.selectedInstallment.numberOfInstallments)
     }
     // endregion
 

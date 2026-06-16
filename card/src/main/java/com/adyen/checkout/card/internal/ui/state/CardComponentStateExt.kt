@@ -12,6 +12,7 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.helper.runCompileOnly
@@ -181,15 +182,19 @@ private fun createPaymentComponentData(
 )
 
 private fun CardComponentState.getInstallments(): Installments? {
-    return when (installmentState.selectedInstallment?.plan) {
-        InstallmentPlan.ONE_TIME -> null
-        InstallmentPlan.REGULAR, InstallmentPlan.REVOLVING ->
-            Installments(
-                plan = installmentState.selectedInstallment.plan.type,
-                value = installmentState.selectedInstallment.numberOfInstallments,
-            )
+    val selectedInstallment = installmentState.selectedInstallment ?: return null
 
-        null -> null
+    return when (selectedInstallment) {
+        InstallmentModel.OneTime -> null
+        InstallmentModel.Revolving -> Installments(
+            plan = InstallmentPlan.REVOLVING.type,
+            value = 1, // The number of installments for revolving is always 1
+        )
+        is InstallmentModel.Regular ->
+            Installments(
+                plan = InstallmentPlan.REGULAR.type,
+                value = selectedInstallment.numberOfInstallments,
+            )
     }
 }
 

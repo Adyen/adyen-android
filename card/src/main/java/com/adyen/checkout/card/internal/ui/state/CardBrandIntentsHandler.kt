@@ -18,7 +18,6 @@ import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
-import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -234,7 +233,7 @@ internal class CardBrandIntentsHandler(
             val preselectedValue = installmentParams?.cardBasedOptions?.get(cardBrand)
                 ?: installmentParams?.defaultOptions?.preselectedValue
             updatedInstallmentOptions.firstOrNull {
-                it.plan == InstallmentPlan.REGULAR && it.numberOfInstallments == preselectedValue
+                it is InstallmentModel.Regular && it.numberOfInstallments == preselectedValue
             }
         } ?: updatedInstallmentOptions.firstOrNull()
 

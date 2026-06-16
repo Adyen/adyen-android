@@ -12,7 +12,6 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
-import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -107,7 +106,7 @@ internal class CardComponentStateFactory(
             ?: return installmentOptions.firstOrNull()
 
         return installmentOptions.firstOrNull {
-            it.plan == InstallmentPlan.REGULAR && it.numberOfInstallments == preselectedNumberOfInstallments
+            it is InstallmentModel.Regular && it.numberOfInstallments == preselectedNumberOfInstallments
         } ?: installmentOptions.firstOrNull()
     }
 }

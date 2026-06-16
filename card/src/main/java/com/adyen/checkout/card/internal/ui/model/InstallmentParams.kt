@@ -45,28 +45,25 @@ private fun InstallmentOptionsParams.mapToInstallmentModels(
     amount: Amount?,
     showInstallmentAmount: Boolean,
 ): List<InstallmentModel> {
-    val result = mutableListOf<InstallmentModel>()
+    return buildList {
+        add(InstallmentModel.OneTime)
 
-    result.add(OneTimeInstallmentModel())
-
-    if (plans.contains(InstallmentPlan.REVOLVING)) {
-        result.add(RevolvingInstallmentModel())
-    }
-
-    values.mapTo(result) { numberOfInstallments ->
-        val amountPerInstallment = when {
-            numberOfInstallments <= 0 -> null
-            else -> amount?.let {
-                amount.copy(value = amount.value / numberOfInstallments)
-            }
+        if (plans.contains(InstallmentPlan.REVOLVING)) {
+            add(InstallmentModel.Revolving)
         }
-        InstallmentModel(
-            plan = InstallmentPlan.REGULAR,
-            numberOfInstallments = numberOfInstallments,
-            amountPerInstallment = amountPerInstallment,
-            showAmount = showInstallmentAmount,
-        )
-    }
 
-    return result
+        values.mapTo(this) { numberOfInstallments ->
+            val amountPerInstallment = when {
+                numberOfInstallments <= 0 -> null
+                else -> amount?.let {
+                    amount.copy(value = amount.value / numberOfInstallments)
+                }
+            }
+            InstallmentModel.Regular(
+                numberOfInstallments = numberOfInstallments,
+                amountPerInstallment = amountPerInstallment,
+                showAmount = showInstallmentAmount,
+            )
+        }
+    }
 }

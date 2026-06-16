@@ -15,52 +15,34 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.format
 
-internal data class InstallmentModel(
-    val plan: InstallmentPlan,
-    val numberOfInstallments: Int?,
-    val amountPerInstallment: Amount?,
-    val showAmount: Boolean,
-)
-
-@Suppress("FunctionName")
-internal fun OneTimeInstallmentModel(): InstallmentModel {
-    return InstallmentModel(
-        plan = InstallmentPlan.ONE_TIME,
-        numberOfInstallments = null,
-        amountPerInstallment = null,
-        showAmount = false,
-    )
-}
-
-@Suppress("FunctionName")
-internal fun RevolvingInstallmentModel(): InstallmentModel {
-    return InstallmentModel(
-        plan = InstallmentPlan.REVOLVING,
-        numberOfInstallments = 1, // The number of installments for revolving is always 1
-        amountPerInstallment = null,
-        showAmount = false,
-    )
+internal sealed interface InstallmentModel {
+    data object OneTime : InstallmentModel
+    data object Revolving : InstallmentModel
+    data class Regular(
+        val numberOfInstallments: Int,
+        val amountPerInstallment: Amount?,
+        val showAmount: Boolean,
+    ) : InstallmentModel
 }
 
 @Composable
 internal fun InstallmentModel.toDisplayText(): String {
-    return when (plan) {
-        InstallmentPlan.ONE_TIME ->
+    return when (this) {
+        InstallmentModel.OneTime ->
             resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME)
 
-        InstallmentPlan.REVOLVING ->
+        InstallmentModel.Revolving ->
             resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REVOLVING)
 
-        InstallmentPlan.REGULAR -> {
-            val count = numberOfInstallments ?: 1
+        is InstallmentModel.Regular -> {
             if (showAmount && amountPerInstallment != null) {
                 resolveString(
                     CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_WITH_PRICE,
-                    count,
+                    numberOfInstallments,
                     amountPerInstallment.format(LocalLocale.current),
                 )
             } else {
-                resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR, count)
+                resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR, numberOfInstallments)
             }
         }
     }
