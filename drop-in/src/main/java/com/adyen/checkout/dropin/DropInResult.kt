@@ -9,14 +9,15 @@
 package com.adyen.checkout.dropin
 
 import android.os.Parcelable
-import com.adyen.checkout.core.common.PaymentResult
+import com.adyen.checkout.core.common.CheckoutResultCode
 import kotlinx.parcelize.Parcelize
 
 // TODO - KDocs
 sealed interface DropInResult : Parcelable {
 
+    // TODO - Reconsider result type
     @Parcelize
-    data class Completed internal constructor(val result: PaymentResult) : DropInResult
+    data class Completed internal constructor(val resultCode: CheckoutResultCode) : DropInResult
 
     // TODO - Replace type after error propagation
     @Parcelize

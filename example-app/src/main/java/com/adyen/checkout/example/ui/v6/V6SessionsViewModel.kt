@@ -23,6 +23,7 @@ import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -30,6 +31,7 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
+import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -105,10 +107,12 @@ internal class V6SessionsViewModel @Inject constructor(
 
     private fun onFailure(error: CheckoutError) {
         Log.d(TAG, "onFailure: ${error.message}")
+        uiState = V6UiState.Final(ResultState.FAILURE)
     }
 
-    private fun onFinished() {
-        Log.d(TAG, "onFinished")
+    private fun onComplete(result: SessionCheckoutResult) {
+        Log.d(TAG, "onComplete - Result code: ${result.resultCode}")
+        uiState = V6UiState.Final(ResultState.get(result.resultCode.value))
     }
 
     @Suppress("unused")
@@ -139,7 +143,7 @@ internal class V6SessionsViewModel @Inject constructor(
             context = checkoutContext,
             callbacks = SessionCheckoutCallbacks(
                 onFailure = ::onFailure,
-                onFinished = ::onFinished,
+                onComplete = ::onComplete,
             ) {
                 card(
                     onBinValue = ::onBinValue,

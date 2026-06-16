@@ -9,8 +9,10 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
@@ -40,8 +42,14 @@ internal class SessionComponentRequestDispatcher(
                 return when {
                     response.action != null -> SubmitResult.Action(response.action)
                     else -> {
-                        callbacks.onFinished()
-                        SubmitResult.Completion(response.resultCode.orEmpty())
+                        val resultCode = response.resultCode ?: RESULT_CODE_MISSING
+                        val result = SessionCheckoutResult(
+                            resultCode = CheckoutResultCode(resultCode),
+                            sessionId = sessionId,
+                            sessionData = response.sessionData,
+                        )
+                        callbacks.onComplete(result)
+                        SubmitResult.Completion(resultCode)
                     }
                 }
             },
@@ -66,8 +74,14 @@ internal class SessionComponentRequestDispatcher(
         ).fold(
             onSuccess = { response ->
                 sessionData = response.sessionData
-                callbacks.onFinished()
-                return AdditionalDetailsResult.Completion(response.resultCode.orEmpty())
+                val resultCode = response.resultCode ?: RESULT_CODE_MISSING
+                val result = SessionCheckoutResult(
+                    resultCode = CheckoutResultCode(resultCode),
+                    sessionId = sessionId,
+                    sessionData = response.sessionData,
+                )
+                callbacks.onComplete(result)
+                return AdditionalDetailsResult.Completion(resultCode)
             },
             onFailure = { error ->
                 callbacks.onFailure(error.toCheckoutError())
@@ -78,5 +92,9 @@ internal class SessionComponentRequestDispatcher(
 
     override fun failure(error: CheckoutError) {
         callbacks.onFailure(error)
+    }
+
+    companion object {
+        private const val RESULT_CODE_MISSING = "Unknown"
     }
 }

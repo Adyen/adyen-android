@@ -10,8 +10,10 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
@@ -54,16 +56,16 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when submit succeeds with action, then onFinished is not invoked`() = runTest {
+        fun `when submit succeeds with action, then onComplete is not invoked`() = runTest {
             val response = createPaymentsResponse(action = mock())
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
-            assertEquals(0, onFinishedCalls)
+            assertEquals(0, onCompleteCalls)
         }
 
         @Test
@@ -79,17 +81,48 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when submit succeeds without action, then onFinished is invoked`() = runTest {
+        fun `when submit succeeds without action, then onComplete is invoked`() = runTest {
             val response = createPaymentsResponse()
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
-            assertEquals(1, onFinishedCalls)
+            assertEquals(1, onCompleteCalls)
         }
+
+        @Test
+        fun `when submit succeeds without action, then onComplete receives correct result`() = runTest {
+            val response = createPaymentsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val capturedResults = mutableListOf<SessionCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.submit(emptyPaymentComponentData())
+
+            val expected = SessionCheckoutResult(
+                resultCode = CheckoutResultCode("Authorised"),
+                sessionId = "session-id",
+                sessionData = "session-data",
+            )
+            assertEquals(expected, capturedResults.single())
+        }
+
+        @Test
+        fun `when submit succeeds without result code, then Completion is returned with unknown result code`() =
+            runTest {
+                val response = createPaymentsResponse(resultCode = null)
+                whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+                val dispatcher = createDispatcher()
+
+                val result = dispatcher.submit(emptyPaymentComponentData())
+
+                assertEquals(SubmitResult.Completion("Unknown"), result)
+            }
 
         @Test
         fun `when submit fails, then retry is returned and onFailure is invoked`() =
@@ -107,15 +140,15 @@ internal class SessionComponentRequestDispatcherTest(
             }
 
         @Test
-        fun `when submit fails, then onFinished is not invoked`() = runTest {
+        fun `when submit fails, then onComplete is not invoked`() = runTest {
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.failure(IOException())
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.submit(emptyPaymentComponentData())
 
-            assertEquals(0, onFinishedCalls)
+            assertEquals(0, onCompleteCalls)
         }
     }
 
@@ -135,17 +168,48 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when additionalDetails succeeds, then onFinished is invoked`() = runTest {
+        fun `when additionalDetails succeeds, then onComplete is invoked`() = runTest {
             val response = createDetailsResponse()
             whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.additionalDetails(ActionComponentData())
 
-            assertEquals(1, onFinishedCalls)
+            assertEquals(1, onCompleteCalls)
         }
+
+        @Test
+        fun `when additionalDetails succeeds, then onComplete receives correct result`() = runTest {
+            val response = createDetailsResponse(resultCode = "Authorised")
+            whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
+
+            val capturedResults = mutableListOf<SessionCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.additionalDetails(ActionComponentData())
+
+            val expected = SessionCheckoutResult(
+                resultCode = CheckoutResultCode("Authorised"),
+                sessionId = "session-id",
+                sessionData = "session-data",
+            )
+            assertEquals(expected, capturedResults.single())
+        }
+
+        @Test
+        fun `when additionalDetails succeeds without result code, then Completion is returned with unknown result code`() =
+            runTest {
+                val response = createDetailsResponse(resultCode = null)
+                whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
+
+                val dispatcher = createDispatcher()
+
+                val result = dispatcher.additionalDetails(ActionComponentData())
+
+                assertEquals(AdditionalDetailsResult.Completion("Unknown"), result)
+            }
 
         @Test
         fun `when additionalDetails fails, then error completion is returned and onFailure is invoked`() =
@@ -163,15 +227,15 @@ internal class SessionComponentRequestDispatcherTest(
             }
 
         @Test
-        fun `when additionalDetails fails, then onFinished is not invoked`() = runTest {
+        fun `when additionalDetails fails, then onComplete is not invoked`() = runTest {
             whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.failure(IOException())
 
-            var onFinishedCalls = 0
-            val dispatcher = createDispatcher(onFinished = { onFinishedCalls++ })
+            var onCompleteCalls = 0
+            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
 
             dispatcher.additionalDetails(ActionComponentData())
 
-            assertEquals(0, onFinishedCalls)
+            assertEquals(0, onCompleteCalls)
         }
     }
 
@@ -191,20 +255,20 @@ internal class SessionComponentRequestDispatcherTest(
     }
 
     private fun createDispatcher(
-        onFinished: () -> Unit = {},
+        onComplete: (SessionCheckoutResult) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
         initialSessionData = "session-data",
         sessionId = "session-id",
         callbacks = SessionCheckoutCallbacks(
-            onFinished = onFinished,
+            onComplete = onComplete,
             onFailure = onFailure,
         ),
         sessionRepository = sessionRepository,
     )
 
     private fun createPaymentsResponse(
-        resultCode: String? = null,
+        resultCode: String? = "",
         action: Action? = null,
     ) = SessionPaymentsResponse(
         sessionData = "session-data",
@@ -216,7 +280,7 @@ internal class SessionComponentRequestDispatcherTest(
     )
 
     private fun createDetailsResponse(
-        resultCode: String? = null,
+        resultCode: String? = "",
     ) = SessionDetailsResponse(
         sessionData = "session-data",
         status = null,
