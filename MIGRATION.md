@@ -105,61 +105,51 @@ class ExampleViewModel : ViewModel(), ComponentCallback<CardComponentState> {
 
 ```kotlin
 class CardActivity : AppCompatActivity() {
+    private var checkoutController by mutableStateOf<CheckoutController?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setContent {
+            checkoutController?.let { controller ->
+                CheckoutPaymentFlow(
+                    controller = controller,
+                    theme = theme,
+                    localizationProvider = localizationProvider,
+                )
+            }
+        }
 
         lifecycleScope.launch {
             when (val result = Checkout.setup(paymentMethods = paymentMethods, configuration = configuration)) {
                 is Checkout.Result.Error -> showError(result.error.message.orEmpty())
                 is Checkout.Result.Success -> {
-                    setContent {
-                        CheckoutScreen(
-                            controller = createCheckoutController(result.checkoutContext),
-                            theme = theme,
-                            localizationProvider = localizationProvider,
-                        )
-                    }
+                    checkoutController = CheckoutController(
+                        target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
+                        context = result.checkoutContext,
+                        callbacks = AdvancedCheckoutCallbacks(
+                            onSubmit = { data ->
+                                callPayments(data)
+                            },
+                            onAdditionalDetails = { data ->
+                                callDetails(data)
+                            },
+                            onError = { error ->
+                                showError(error.message.orEmpty())
+                            },
+                        ) {
+                            card()
+                        },
+                        coroutineScope = lifecycleScope,
+                    )
                 }
             }
         }
     }
-
-    private fun createCheckoutController(checkoutContext: CheckoutContext.Advanced): CheckoutController {
-        return CheckoutController(
-            target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
-            context = checkoutContext,
-            callbacks = AdvancedCheckoutCallbacks(
-                onSubmit = { data ->
-                    callPayments(data)
-                },
-                onAdditionalDetails = { data ->
-                    callDetails(data)
-                },
-                onError = { error ->
-                    showError(error.message.orEmpty())
-                },
-            ) {
-                card()
-            },
-            coroutineScope = lifecycleScope,
-        )
-    }
-}
-
-@Composable
-private fun CheckoutScreen(
-    controller: CheckoutController,
-    theme: CheckoutTheme,
-    localizationProvider: CheckoutLocalizationProvider?,
-) {
-    CheckoutPaymentFlow(
-        controller = controller,
-        theme = theme,
-        localizationProvider = localizationProvider,
-    )
 }
 ```
+
+This is one minimal host pattern. Keep the `CheckoutController` in state, then render `CheckoutPaymentFlow(...)` from your `@Composable` UI once setup succeeds.
 
 For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-advanced-flow.md).
 
@@ -232,21 +222,14 @@ binding.cardView.attach(cardComponent, activity)
 
 ##### After (v6)
 
-Rendering now happens from your Compose UI layer:
+Rendering now happens from your Compose UI layer once your state holder has a `CheckoutController`:
 
 ```kotlin
-@Composable
-fun CheckoutScreen(
-    controller: CheckoutController,
-    theme: CheckoutTheme,
-    localizationProvider: CheckoutLocalizationProvider?,
-) {
-    CheckoutPaymentFlow(
-        controller = controller,
-        theme = theme,
-        localizationProvider = localizationProvider,
-    )
-}
+CheckoutPaymentFlow(
+    controller = controller,
+    theme = theme,
+    localizationProvider = localizationProvider,
+)
 ```
 
 #### Theme and localization migration
