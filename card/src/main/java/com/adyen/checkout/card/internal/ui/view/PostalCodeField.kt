@@ -82,16 +82,16 @@ private fun PostalCodeIcon(
     }
 
     AnimatedContent(
-        targetState = resourceId,
+        targetState = resourceId to tint,
         modifier = modifier,
         label = "PostalCodeIcon",
-    ) { targetResourceId ->
+    ) { (targetResourceId, targetTint) ->
         if (targetResourceId != null) {
             Icon(
                 modifier = Modifier.size(Dimensions.LogoSize.small),
                 imageVector = ImageVector.vectorResource(targetResourceId),
                 contentDescription = null,
-                tint = tint,
+                tint = targetTint,
             )
         }
     }
