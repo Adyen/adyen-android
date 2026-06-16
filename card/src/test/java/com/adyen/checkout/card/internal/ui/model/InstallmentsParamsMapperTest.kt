@@ -11,12 +11,15 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfiguration
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentOptionsParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class InstallmentsParamsMapperTest {
+
+    private val amount = Amount(currency = "EUR", value = 120)
 
     @Test
     fun `when InstallmentConfiguration is mapped, then InstallmentParams has same values`() {
@@ -49,6 +52,7 @@ internal class InstallmentsParamsMapperTest {
         assertEquals(3, mcOptions?.preselectedValue)
 
         assertEquals(true, params.showInstallmentAmount)
+        assertEquals(amount, params.amount)
     }
 
     @Test
@@ -81,5 +85,26 @@ internal class InstallmentsParamsMapperTest {
         assertEquals(3, visaOptions?.preselectedValue)
 
         assertEquals(true, params.showInstallmentAmount)
+        assertEquals(amount, params.amount)
+    }
+
+    @Test
+    fun `when SessionInstallmentConfiguration has empty plans, then params get values mapped to Regular plan`() {
+        val sessionConfig = SessionInstallmentConfiguration(
+            installmentOptions = mapOf(
+                "card" to SessionInstallmentOptionsParams(
+                    values = listOf(2, 3),
+                    plans = null,
+                    preselectedValue = null
+                )
+            ),
+            showInstallmentAmount = false
+        )
+
+        val params = sessionConfig.mapToInstallmentParams(amount)
+
+        assertEquals(listOf(InstallmentPlan.REGULAR), params.defaultOptions?.plans)
+        assertEquals(false, params.showInstallmentAmount)
+        assertEquals(amount, params.amount)
     }
 }

@@ -339,8 +339,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when installmentConfiguration is null then installmentParams is null`() {
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = null),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = null),
+            ),
             paymentMethod = null,
         )
 
@@ -358,8 +359,9 @@ internal class CardComponentParamsMapperTest {
         )
 
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            ),
             paymentMethod = null,
         )
 
@@ -380,8 +382,9 @@ internal class CardComponentParamsMapperTest {
         )
 
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            ),
             paymentMethod = null,
         )
 
@@ -390,7 +393,7 @@ internal class CardComponentParamsMapperTest {
 
     @Test
     fun `when session has installmentConfiguration then it takes priority over merchant installmentConfiguration`() {
-        val sessionParams = createSessionParams(
+        val additionalSessionParams = createAdditionalSessionParams(
             installmentPlans = listOf("regular"),
             installmentValues = listOf(2, 3),
         )
@@ -399,8 +402,10 @@ internal class CardComponentParamsMapperTest {
         )
 
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+                additionalSessionParams = additionalSessionParams,
+            ),
             paymentMethod = null,
         )
 
@@ -409,14 +414,16 @@ internal class CardComponentParamsMapperTest {
 
     @Test
     fun `when session has null installmentConfiguration then installmentParams is null regardless of merchant config`() {
-        val sessionParams = createSessionParams()
+        val additionalSessionParams = createAdditionalSessionParams()
         val merchantInstallmentConfiguration = InstallmentConfiguration(
             defaultOptions = InstallmentOptions(maxInstallments = 6),
         )
 
         val params = mapper.mapToParams(
-            componentParamsBundle = createComponentParamsBundle(sessionParams = sessionParams),
-            cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = merchantInstallmentConfiguration),
+                additionalSessionParams = additionalSessionParams,
+            ),
             paymentMethod = null,
         )
 
@@ -481,7 +488,6 @@ internal class CardComponentParamsMapperTest {
         installmentValues: List<Int> = emptyList(),
     ) = AdditionalSessionParams(
         enableStoreDetails = enableStoreDetails,
-        installmentConfiguration = null,
         showRemovePaymentMethodButton = null,
         returnUrl = "",
         installmentConfiguration = if (installmentPlans.isNotEmpty() || installmentValues.isNotEmpty()) {

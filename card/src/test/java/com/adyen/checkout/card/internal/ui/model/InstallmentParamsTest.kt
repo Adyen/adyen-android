@@ -18,23 +18,24 @@ internal class InstallmentParamsTest {
     private val amount = Amount(currency = "EUR", value = 120)
 
     @Test
-    fun `when installmentParams is empty, then toInstallmentModels returns empty list`() {
-        val params = InstallmentParams()
-        val models = params.mapToInstallmentModels(amount)
+    fun `when installmentParams is empty, then mapToInstallmentModels returns empty list`() {
+        val params = InstallmentParams(amount = amount)
+        val models = params.mapToInstallmentModels()
         assertEquals(emptyList<InstallmentModel>(), models)
     }
 
     @Test
-    fun `when installmentParams has defaultOptions, then toInstallmentModels returns options with OneTime first`() {
+    fun `when installmentParams has defaultOptions, then mapToInstallmentModels returns options with OneTime first`() {
         val params = InstallmentParams(
             defaultOptions = InstallmentOptionsParams(
                 values = listOf(2, 3),
                 plans = listOf(InstallmentPlan.REGULAR)
             ),
-            showInstallmentAmount = true
+            amount = amount,
+            showInstallmentAmount = true,
         )
 
-        val models = params.mapToInstallmentModels(amount)
+        val models = params.mapToInstallmentModels()
 
         val expected = listOf(
             OneTimeInstallmentModel(),
@@ -45,16 +46,17 @@ internal class InstallmentParamsTest {
     }
 
     @Test
-    fun `when installmentParams has defaultOptions with revolving, then toInstallmentModels returns revolving model`() {
+    fun `when installmentParams has defaultOptions with revolving, then mapToInstallmentModels returns revolving model`() {
         val params = InstallmentParams(
             defaultOptions = InstallmentOptionsParams(
                 values = listOf(3),
                 plans = listOf(InstallmentPlan.REGULAR, InstallmentPlan.REVOLVING)
             ),
-            showInstallmentAmount = false
+            amount = amount,
+            showInstallmentAmount = false,
         )
 
-        val models = params.mapToInstallmentModels(amount)
+        val models = params.mapToInstallmentModels()
 
         val expected = listOf(
             OneTimeInstallmentModel(),
@@ -79,11 +81,12 @@ internal class InstallmentParamsTest {
                     plans = listOf(InstallmentPlan.REGULAR)
                 )
             ),
-            showInstallmentAmount = true
+            amount = amount,
+            showInstallmentAmount = true,
         )
 
         // Matching brand
-        val visaModels = params.mapToInstallmentModels(amount, visaBrand)
+        val visaModels = params.mapToInstallmentModels(visaBrand)
         val expectedVisa = listOf(
             OneTimeInstallmentModel(),
             InstallmentModel(InstallmentPlan.REGULAR, 3, Amount("EUR", 40), showAmount = true),
@@ -92,7 +95,7 @@ internal class InstallmentParamsTest {
         assertEquals(expectedVisa, visaModels)
 
         // Non-matching brand falls back to default options
-        val mcModels = params.mapToInstallmentModels(amount, mcBrand)
+        val mcModels = params.mapToInstallmentModels(mcBrand)
         val expectedMc = listOf(
             OneTimeInstallmentModel(),
             InstallmentModel(InstallmentPlan.REGULAR, 2, Amount("EUR", 60), showAmount = true)
@@ -101,16 +104,17 @@ internal class InstallmentParamsTest {
     }
 
     @Test
-    fun `when amount is null, then toInstallmentModels has null amountPerInstallment`() {
+    fun `when amount is null, then mapToInstallmentModels has null amountPerInstallment`() {
         val params = InstallmentParams(
             defaultOptions = InstallmentOptionsParams(
                 values = listOf(2),
                 plans = listOf(InstallmentPlan.REGULAR)
             ),
-            showInstallmentAmount = true
+            amount = null,
+            showInstallmentAmount = true,
         )
 
-        val models = params.mapToInstallmentModels(amount = null)
+        val models = params.mapToInstallmentModels()
 
         val expected = listOf(
             OneTimeInstallmentModel(),

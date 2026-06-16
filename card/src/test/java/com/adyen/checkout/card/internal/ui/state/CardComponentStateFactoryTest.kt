@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentOptionsParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
+import com.adyen.checkout.card.internal.ui.model.OneTimeInstallmentModel
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -201,7 +202,7 @@ internal class CardComponentStateFactoryTest {
         val state = createFactory(installmentParams = installmentParams).createInitialState()
 
         assertEquals(3, state.installmentState.installmentOptions.size) // OneTime, 2, 3
-        assertEquals(null, state.installmentState.selectedInstallment)
+        assertEquals(OneTimeInstallmentModel(), state.installmentState.selectedInstallment)
     }
 
     @Test
