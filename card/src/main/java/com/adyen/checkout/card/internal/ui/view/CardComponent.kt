@@ -20,6 +20,7 @@ import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
+import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -140,10 +141,10 @@ private fun CardDetailsSection(
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
             }
         }
-        if (viewState.installmentOptions.isNotEmpty()) {
+        if (viewState.installmentViewState.installmentOptions.isNotEmpty()) {
             Subtitle(resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS))
             ValuePickerField(
-                value = viewState.selectedInstallment?.toDisplayText() ?: "",
+                value = viewState.installmentViewState.selectedInstallment?.toDisplayText() ?: "",
                 label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
                 onClick = onInstallmentPickerClick,
                 modifier = Modifier.fillMaxWidth(),
@@ -189,8 +190,10 @@ private fun CardComponentPreview() {
             isCardScanButtonVisible = false,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
-            installmentOptions = listOf(OneTimeInstallmentModel()),
-            selectedInstallment = OneTimeInstallmentModel(),
+            installmentViewState = InstallmentViewState(
+                installmentOptions = listOf(OneTimeInstallmentModel()),
+                selectedInstallment = OneTimeInstallmentModel(),
+            ),
         ),
         onIntent = {},
         onSubmitClick = {},

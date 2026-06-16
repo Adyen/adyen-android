@@ -552,8 +552,8 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(options, viewState.installmentOptions)
-        assertEquals(selection, viewState.selectedInstallment)
+        assertEquals(options, viewState.installmentViewState.installmentOptions)
+        assertEquals(selection, viewState.installmentViewState.selectedInstallment)
     }
 
     @Suppress("LongParameterList")

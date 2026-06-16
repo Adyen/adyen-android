@@ -146,8 +146,8 @@ constructor(
         when (identifier) {
             INSTALLMENTS_IDENTIFIER -> {
                 InstallmentPicker(
-                    installmentOptions = viewState.installmentOptions,
-                    selectedInstallment = viewState.selectedInstallment,
+                    installmentOptions = viewState.installmentViewState.installmentOptions,
+                    selectedInstallment = viewState.installmentViewState.selectedInstallment,
                     onItemClick = { installment ->
                         onIntent(CardIntent.UpdateInstallment(installment))
                         eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
