@@ -22,7 +22,7 @@ import org.json.JSONObject
 data class SessionPaymentsResponse(
     val sessionData: String,
     val status: String?,
-    val resultCode: String,
+    val resultCode: String?,
     val action: Action?,
     val order: OrderResponse?,
     val sessionResult: String?,
@@ -53,7 +53,7 @@ data class SessionPaymentsResponse(
                 return SessionPaymentsResponse(
                     sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                     status = jsonObject.getStringOrNull(STATUS),
-                    resultCode = jsonObject.getStringOrNull(RESULT_CODE).orEmpty(),
+                    resultCode = jsonObject.getStringOrNull(RESULT_CODE),
                     action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
                     order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderResponse.SERIALIZER),
                     sessionResult = jsonObject.getStringOrNull(SESSION_RESULT),

@@ -42,13 +42,14 @@ internal class SessionComponentRequestDispatcher(
                 return when {
                     response.action != null -> SubmitResult.Action(response.action)
                     else -> {
+                        val resultCode = response.resultCode ?: RESULT_CODE_MISSING
                         val result = SessionCheckoutResult(
-                            resultCode = CheckoutResultCode(response.resultCode),
+                            resultCode = CheckoutResultCode(resultCode),
                             sessionId = sessionId,
                             sessionData = response.sessionData,
                         )
                         callbacks.onComplete(result)
-                        SubmitResult.Completion(response.resultCode)
+                        SubmitResult.Completion(resultCode)
                     }
                 }
             },
@@ -73,13 +74,14 @@ internal class SessionComponentRequestDispatcher(
         ).fold(
             onSuccess = { response ->
                 sessionData = response.sessionData
+                val resultCode = response.resultCode ?: RESULT_CODE_MISSING
                 val result = SessionCheckoutResult(
-                    resultCode = CheckoutResultCode(response.resultCode),
+                    resultCode = CheckoutResultCode(resultCode),
                     sessionId = sessionId,
                     sessionData = response.sessionData,
                 )
                 callbacks.onComplete(result)
-                return AdditionalDetailsResult.Completion(response.resultCode)
+                return AdditionalDetailsResult.Completion(resultCode)
             },
             onFailure = { error ->
                 callbacks.onFailure(error.toCheckoutError())
@@ -90,5 +92,9 @@ internal class SessionComponentRequestDispatcher(
 
     override fun failure(error: CheckoutError) {
         callbacks.onFailure(error)
+    }
+
+    companion object {
+        private const val RESULT_CODE_MISSING = "Unknown"
     }
 }

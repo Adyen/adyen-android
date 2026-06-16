@@ -112,6 +112,19 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
+        fun `when submit succeeds without result code, then Completion is returned with unknown result code`() =
+            runTest {
+                val response = createPaymentsResponse(resultCode = null)
+                whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+                val dispatcher = createDispatcher()
+
+                val result = dispatcher.submit(emptyPaymentComponentData())
+
+                assertEquals(SubmitResult.Completion("Unknown"), result)
+            }
+
+        @Test
         fun `when submit fails, then retry is returned and onFailure is invoked`() =
             runTest {
                 val cause = IOException("network down")
@@ -186,6 +199,19 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
+        fun `when additionalDetails succeeds without result code, then Completion is returned with unknown result code`() =
+            runTest {
+                val response = createDetailsResponse(resultCode = null)
+                whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
+
+                val dispatcher = createDispatcher()
+
+                val result = dispatcher.additionalDetails(ActionComponentData())
+
+                assertEquals(AdditionalDetailsResult.Completion("Unknown"), result)
+            }
+
+        @Test
         fun `when additionalDetails fails, then error completion is returned and onFailure is invoked`() =
             runTest {
                 val cause = IOException("network down")
@@ -242,7 +268,7 @@ internal class SessionComponentRequestDispatcherTest(
     )
 
     private fun createPaymentsResponse(
-        resultCode: String = "",
+        resultCode: String? = "",
         action: Action? = null,
     ) = SessionPaymentsResponse(
         sessionData = "session-data",
@@ -254,7 +280,7 @@ internal class SessionComponentRequestDispatcherTest(
     )
 
     private fun createDetailsResponse(
-        resultCode: String = "",
+        resultCode: String? = "",
     ) = SessionDetailsResponse(
         sessionData = "session-data",
         status = null,
