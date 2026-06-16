@@ -53,11 +53,8 @@ private fun SessionInstallmentOptionsParams.toParams() = InstallmentOptionsParam
     preselectedValue = preselectedValue,
 )
 
-private fun String.toInstallmentPlan() = when (this) {
-    InstallmentPlan.REGULAR.type -> InstallmentPlan.REGULAR
-    InstallmentPlan.REVOLVING.type -> InstallmentPlan.REVOLVING
-    else -> null
-}
+private fun String.toInstallmentPlan() =
+    InstallmentPlan.entries.firstOrNull { it.type == this }
 
 private fun InstallmentOptions.toParams() = InstallmentOptionsParams(
     values = values,
