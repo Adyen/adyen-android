@@ -182,13 +182,14 @@ private fun createPaymentComponentData(
 
 private fun CardComponentState.getInstallments(): Installments? {
     return when (installmentState.selectedInstallment?.plan) {
+        InstallmentPlan.ONE_TIME -> null
         InstallmentPlan.REGULAR, InstallmentPlan.REVOLVING ->
             Installments(
                 plan = installmentState.selectedInstallment.plan.type,
                 value = installmentState.selectedInstallment.numberOfInstallments,
             )
 
-        else -> null
+        null -> null
     }
 }
 
