@@ -23,6 +23,7 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
+import com.adyen.checkout.core.components.AdvancedCheckoutResult
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
@@ -148,9 +149,7 @@ internal class V6ViewModel @Inject constructor(
             }
 
             else -> {
-                // TODO - move to onFinished callback after it's introduced
                 val resultCode = json.optString("resultCode")
-                uiState = V6UiState.Final(ResultState.get(resultCode))
                 SubmitResult.Completion(resultCode)
             }
         }
@@ -163,12 +162,15 @@ internal class V6ViewModel @Inject constructor(
             return AdditionalDetailsResult.Completion(RESULT_CODE_ERROR)
         }
         val resultCode = json.optString("resultCode")
-        uiState = V6UiState.Final(ResultState.get(resultCode))
         return AdditionalDetailsResult.Completion(resultCode)
     }
 
     private fun onFailure(error: CheckoutError) {
         uiState = V6UiState.Error(UIText.String(error.message.orEmpty()))
+    }
+
+    private fun onComplete(result: AdvancedCheckoutResult) {
+        uiState = V6UiState.Final(ResultState.get(result.resultCode.value))
     }
 
     @Suppress("unused")
@@ -201,6 +203,7 @@ internal class V6ViewModel @Inject constructor(
                 onSubmit = ::onSubmit,
                 onAdditionalDetails = ::onAdditionalDetails,
                 onFailure = ::onFailure,
+                onComplete = ::onComplete,
             ) {
                 card(
                     onBinValue = ::onBinValue,

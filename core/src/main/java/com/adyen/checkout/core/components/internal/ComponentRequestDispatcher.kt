@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -17,6 +18,8 @@ import com.adyen.checkout.core.error.CheckoutError
 internal interface ComponentRequestDispatcher {
 
     suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult
+
+    fun complete(resultCode: CheckoutResultCode)
 
     fun failure(error: CheckoutError)
 }

@@ -81,37 +81,6 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when submit succeeds without action, then onComplete is invoked`() = runTest {
-            val response = createPaymentsResponse()
-            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
-
-            var onCompleteCalls = 0
-            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
-
-            dispatcher.submit(emptyPaymentComponentData())
-
-            assertEquals(1, onCompleteCalls)
-        }
-
-        @Test
-        fun `when submit succeeds without action, then onComplete receives correct result`() = runTest {
-            val response = createPaymentsResponse(resultCode = "Authorised")
-            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
-
-            val capturedResults = mutableListOf<SessionCheckoutResult>()
-            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
-
-            dispatcher.submit(emptyPaymentComponentData())
-
-            val expected = SessionCheckoutResult(
-                resultCode = CheckoutResultCode("Authorised"),
-                sessionId = "session-id",
-                sessionData = "session-data",
-            )
-            assertEquals(expected, capturedResults.single())
-        }
-
-        @Test
         fun `when submit succeeds without result code, then Completion is returned with unknown result code`() =
             runTest {
                 val response = createPaymentsResponse(resultCode = null)
@@ -165,37 +134,6 @@ internal class SessionComponentRequestDispatcherTest(
             val result = dispatcher.additionalDetails(ActionComponentData())
 
             assertEquals(AdditionalDetailsResult.Completion("Authorised"), result)
-        }
-
-        @Test
-        fun `when additionalDetails succeeds, then onComplete is invoked`() = runTest {
-            val response = createDetailsResponse()
-            whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
-
-            var onCompleteCalls = 0
-            val dispatcher = createDispatcher(onComplete = { onCompleteCalls++ })
-
-            dispatcher.additionalDetails(ActionComponentData())
-
-            assertEquals(1, onCompleteCalls)
-        }
-
-        @Test
-        fun `when additionalDetails succeeds, then onComplete receives correct result`() = runTest {
-            val response = createDetailsResponse(resultCode = "Authorised")
-            whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
-
-            val capturedResults = mutableListOf<SessionCheckoutResult>()
-            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
-
-            dispatcher.additionalDetails(ActionComponentData())
-
-            val expected = SessionCheckoutResult(
-                resultCode = CheckoutResultCode("Authorised"),
-                sessionId = "session-id",
-                sessionData = "session-data",
-            )
-            assertEquals(expected, capturedResults.single())
         }
 
         @Test
@@ -254,6 +192,35 @@ internal class SessionComponentRequestDispatcherTest(
         }
     }
 
+    @Nested
+    inner class CompleteTest {
+
+        @Test
+        fun `when complete is called, then onComplete callback is invoked with AdvancedCheckoutResult`() {
+            val capturedResults = mutableListOf<SessionCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.complete(CheckoutResultCode.AUTHORISED)
+
+            val expected = SessionCheckoutResult(
+                CheckoutResultCode.AUTHORISED,
+                sessionId = "session-id",
+                sessionData = "session-data",
+            )
+            assertEquals(listOf(expected), capturedResults)
+        }
+
+        @Test
+        fun `when complete is called with a custom result code, then the result code is wrapped correctly`() {
+            val capturedResults = mutableListOf<SessionCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.complete(CheckoutResultCode("CustomResultCode"))
+
+            assertEquals(CheckoutResultCode("CustomResultCode"), capturedResults.single().resultCode)
+        }
+    }
+
     private fun createDispatcher(
         onComplete: (SessionCheckoutResult) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
@@ -280,7 +247,7 @@ internal class SessionComponentRequestDispatcherTest(
     )
 
     private fun createDetailsResponse(
-        resultCode: String? = "",
+        resultCode: String?,
     ) = SessionDetailsResponse(
         sessionData = "session-data",
         status = null,

@@ -9,8 +9,10 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.ActionOnlyCheckoutCallbacks
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.AdvancedCheckoutResult
 import com.adyen.checkout.core.error.CheckoutError
 
 internal class ActionOnlyComponentRequestDispatcher(
@@ -23,5 +25,9 @@ internal class ActionOnlyComponentRequestDispatcher(
 
     override fun failure(error: CheckoutError) {
         callbacks.onFailure(error)
+    }
+
+    override fun complete(resultCode: CheckoutResultCode) {
+        callbacks.onComplete(AdvancedCheckoutResult(resultCode))
     }
 }

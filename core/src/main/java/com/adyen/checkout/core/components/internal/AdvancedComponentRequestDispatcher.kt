@@ -9,8 +9,10 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
+import com.adyen.checkout.core.components.AdvancedCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
@@ -25,6 +27,10 @@ internal class AdvancedComponentRequestDispatcher(
 
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         return callbacks.onAdditionalDetails(data)
+    }
+
+    override fun complete(resultCode: CheckoutResultCode) {
+        callbacks.onComplete(AdvancedCheckoutResult(resultCode))
     }
 
     override fun failure(error: CheckoutError) {

@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
@@ -40,6 +41,8 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -152,6 +155,58 @@ internal class FullCheckoutFlowTest(
             )
 
             assertFalse(flow.requiresUserInteraction())
+        }
+    }
+
+    @Nested
+    inner class HandleResultTest {
+
+        @Test
+        fun `when submit results in Action, then actionHandler handleAction is called`() = runTest {
+            val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            verify(actionHandler).handleAction(action)
+        }
+
+        @Test
+        fun `when submit results in Completion, then componentRequestDispatcher complete is called`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            verify(componentRequestDispatcher).complete(CheckoutResultCode("Authorised"))
+        }
+
+        @Test
+        fun `when submit results in Retry, then no further interactions occur`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            verifyNoInteractions(actionHandler)
+        }
+
+        @Test
+        fun `when submit results in PartialPayment, then no further interactions occur`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.PartialPayment(
+                order = mock(),
+                paymentMethods = mock(),
+            )
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            verifyNoInteractions(actionHandler)
         }
     }
 
