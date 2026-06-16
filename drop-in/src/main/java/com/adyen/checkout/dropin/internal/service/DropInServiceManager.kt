@@ -53,7 +53,7 @@ internal class DropInServiceManager(
         _paymentResultFlow.emit(paymentResult)
     }
 
-    suspend fun onError(error: CheckoutError) {
+    suspend fun onFailure(error: CheckoutError) {
         _errorFlow.emit(error)
     }
 }

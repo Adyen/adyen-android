@@ -27,7 +27,7 @@ internal class AdvancedComponentRequestDispatcher(
         return callbacks.onAdditionalDetails(data)
     }
 
-    override fun error(error: CheckoutError) {
-        callbacks.onError(error)
+    override fun failure(error: CheckoutError) {
+        callbacks.onFailure(error)
     }
 }

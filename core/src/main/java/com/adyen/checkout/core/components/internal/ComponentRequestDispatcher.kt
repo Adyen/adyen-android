@@ -18,7 +18,7 @@ internal interface ComponentRequestDispatcher {
 
     suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult
 
-    fun error(error: CheckoutError)
+    fun failure(error: CheckoutError)
 }
 
 internal interface SubmittableComponentRequestDispatcher : ComponentRequestDispatcher {

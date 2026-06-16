@@ -52,7 +52,7 @@ internal class SessionComponentRequestDispatcher(
 //                    event = ErrorEvent.API_PAYMENTS,
 //                )
 //                analyticsManager.trackEvent(event)
-                callbacks.onError(error.toCheckoutError())
+                callbacks.onFailure(error.toCheckoutError())
                 return SubmitResult.Retry(error.message)
             },
         )
@@ -70,13 +70,13 @@ internal class SessionComponentRequestDispatcher(
                 return AdditionalDetailsResult.Completion(response.resultCode.orEmpty())
             },
             onFailure = { error ->
-                callbacks.onError(error.toCheckoutError())
+                callbacks.onFailure(error.toCheckoutError())
                 return AdditionalDetailsResult.Completion("Error")
             },
         )
     }
 
-    override fun error(error: CheckoutError) {
-        callbacks.onError(error)
+    override fun failure(error: CheckoutError) {
+        callbacks.onFailure(error)
     }
 }

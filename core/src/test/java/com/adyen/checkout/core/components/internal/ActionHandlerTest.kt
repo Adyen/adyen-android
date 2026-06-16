@@ -120,7 +120,7 @@ internal class ActionHandlerTest(
             eventFlow.emit(ActionComponentEvent.Error(internalError))
 
             val captor = argumentCaptor<CheckoutError>()
-            verify(componentRequestDispatcher).error(captor.capture())
+            verify(componentRequestDispatcher).failure(captor.capture())
             assertEquals("test error message", captor.firstValue.message)
         }
     }

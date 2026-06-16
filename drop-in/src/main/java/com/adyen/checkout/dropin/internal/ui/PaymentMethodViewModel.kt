@@ -89,7 +89,7 @@ internal class PaymentMethodViewModel(
                     callbacks = AdvancedCheckoutCallbacks(
                         onSubmit = ::onSubmit,
                         onAdditionalDetails = ::onAdditionalDetails,
-                        onError = ::onError,
+                        onFailure = ::onFailure,
                     ),
                     coroutineScope = viewModelScope,
                 )
@@ -101,7 +101,7 @@ internal class PaymentMethodViewModel(
                     context = checkoutContext,
                     callbacks = SessionCheckoutCallbacks(
                         beforeSubmit = ::beforeSubmit,
-                        onError = ::onError,
+                        onFailure = ::onFailure,
                         onFinished = ::onFinished,
                     ),
                     coroutineScope = viewModelScope,
@@ -124,9 +124,9 @@ internal class PaymentMethodViewModel(
         return dropInServiceManager.requestOnAdditionalDetails(data)
     }
 
-    private fun onError(error: CheckoutError) {
+    private fun onFailure(error: CheckoutError) {
         viewModelScope.launch {
-            dropInServiceManager.onError(error)
+            dropInServiceManager.onFailure(error)
         }
     }
 
