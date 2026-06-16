@@ -3,16 +3,16 @@ package com.adyen.checkout.example.ui.configuration
 import android.content.Context
 import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.BillingAddressMode
-import com.adyen.checkout.card.card
-import com.adyen.checkout.card.old.AddressConfiguration
-import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.card.card
+import com.adyen.checkout.card.old.AddressConfiguration
 import com.adyen.checkout.card.old.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.components.core.ActionHandlingMethod
+import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AnalyticsConfiguration
 import com.adyen.checkout.core.components.AnalyticsLevel
@@ -33,14 +33,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.adyen.checkout.components.core.AnalyticsConfiguration as OldAnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel as OldAnalyticsLevel
-import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
-import com.adyen.checkout.core.old.Environment as OldEnvironment
 import com.adyen.checkout.card.old.CardBrand as OldCardBrand
 import com.adyen.checkout.card.old.CardType as OldCardType
 import com.adyen.checkout.card.old.InstallmentConfiguration as OldInstallmentConfiguration
 import com.adyen.checkout.card.old.InstallmentOptions as OldInstallmentOptions
+import com.adyen.checkout.components.core.AnalyticsConfiguration as OldAnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel as OldAnalyticsLevel
+import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
+import com.adyen.checkout.core.old.Environment as OldEnvironment
 
 @Suppress("TooManyFunctions")
 @Singleton

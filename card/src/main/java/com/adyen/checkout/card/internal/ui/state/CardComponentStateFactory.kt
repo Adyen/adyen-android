@@ -31,41 +31,22 @@ internal class CardComponentStateFactory(
             cardNumber = TextInputComponentState(isFocused = true),
             expiryDate = TextInputComponentState(),
             securityCode = TextInputComponentState(
-                requirementPolicy = when (componentParams.cvcVisibility) {
-                    CVCVisibility.ALWAYS_SHOW -> RequirementPolicy.Required
-                    CVCVisibility.HIDE_FIRST -> RequirementPolicy.Hidden
-                    CVCVisibility.ALWAYS_HIDE -> RequirementPolicy.Hidden
-                },
+                requirementPolicy = getSecurityCodeRequirementPolicy(),
             ),
             holderName = TextInputComponentState(
-                requirementPolicy = when (componentParams.showCardholderName) {
-                    true -> RequirementPolicy.Required
-                    false -> RequirementPolicy.Hidden
-                },
+                requirementPolicy = getHolderNameRequirementPolicy(),
             ),
             socialSecurityNumber = TextInputComponentState(
-                requirementPolicy = when (componentParams.socialSecurityNumberVisibility) {
-                    FieldVisibility.SHOW -> RequirementPolicy.Required
-                    FieldVisibility.HIDE -> RequirementPolicy.Hidden
-                },
+                requirementPolicy = getSocialSecurityNumberRequirementPolicy(),
             ),
             kcpBirthDateOrTaxNumber = TextInputComponentState(
-                requirementPolicy = when (componentParams.koreanAuthenticationVisibility) {
-                    FieldVisibility.SHOW -> RequirementPolicy.Required
-                    FieldVisibility.HIDE -> RequirementPolicy.Hidden
-                },
+                requirementPolicy = getKcpBirthDateOrTaxNumberRequirementPolicy(),
             ),
             kcpCardPassword = TextInputComponentState(
-                requirementPolicy = when (componentParams.koreanAuthenticationVisibility) {
-                    FieldVisibility.SHOW -> RequirementPolicy.Required
-                    FieldVisibility.HIDE -> RequirementPolicy.Hidden
-                },
+                requirementPolicy = getKcpCardPasswordRequirementPolicy(),
             ),
             postalCode = TextInputComponentState(
-                requirementPolicy = when (componentParams.showPostalCode) {
-                    true -> RequirementPolicy.Required
-                    false -> RequirementPolicy.Hidden
-                },
+                requirementPolicy = getPostalCodeRequirementPolicy(),
             ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = componentParams.showStorePaymentMethod,
@@ -81,6 +62,43 @@ internal class CardComponentStateFactory(
             ),
         )
     }
+
+    private fun getSecurityCodeRequirementPolicy(): RequirementPolicy =
+        when (componentParams.cvcVisibility) {
+            CVCVisibility.ALWAYS_SHOW -> RequirementPolicy.Required
+            CVCVisibility.HIDE_FIRST -> RequirementPolicy.Hidden
+            CVCVisibility.ALWAYS_HIDE -> RequirementPolicy.Hidden
+        }
+
+    private fun getHolderNameRequirementPolicy(): RequirementPolicy =
+        when (componentParams.showCardholderName) {
+            true -> RequirementPolicy.Required
+            false -> RequirementPolicy.Hidden
+        }
+
+    private fun getSocialSecurityNumberRequirementPolicy(): RequirementPolicy =
+        when (componentParams.socialSecurityNumberVisibility) {
+            FieldVisibility.SHOW -> RequirementPolicy.Required
+            FieldVisibility.HIDE -> RequirementPolicy.Hidden
+        }
+
+    private fun getKcpBirthDateOrTaxNumberRequirementPolicy(): RequirementPolicy =
+        when (componentParams.koreanAuthenticationVisibility) {
+            FieldVisibility.SHOW -> RequirementPolicy.Required
+            FieldVisibility.HIDE -> RequirementPolicy.Hidden
+        }
+
+    private fun getKcpCardPasswordRequirementPolicy(): RequirementPolicy =
+        when (componentParams.koreanAuthenticationVisibility) {
+            FieldVisibility.SHOW -> RequirementPolicy.Required
+            FieldVisibility.HIDE -> RequirementPolicy.Hidden
+        }
+
+    private fun getPostalCodeRequirementPolicy(): RequirementPolicy =
+        when (componentParams.showPostalCode) {
+            true -> RequirementPolicy.Required
+            false -> RequirementPolicy.Hidden
+        }
 
     private fun getPreselectedInstallment(installmentOptions: List<InstallmentModel>): InstallmentModel? {
         val preselectedNumberOfInstallments = componentParams.installmentParams

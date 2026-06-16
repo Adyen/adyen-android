@@ -257,14 +257,14 @@ internal class CardBrandIntentsHandler(
             cardBrand = cardBrand,
         ) ?: emptyList()
     }
+}
 
-    private fun CardBrandState.asReliableCardBrand(): CardBrand? {
-        return when (this) {
-            is CardBrandState.SingleReliableBrand -> cardBrandData.cardBrand
-            is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandData.cardBrand
-            is CardBrandState.DualBrand -> cardBrandDataList.first().cardBrand
-            is CardBrandState.DualBrandWithShopperSelection -> shopperSelectedCardBrandData.cardBrand
-            else -> null
-        }
+private fun CardBrandState.asReliableCardBrand(): CardBrand? {
+    return when (this) {
+        is CardBrandState.SingleReliableBrand -> cardBrandData.cardBrand
+        is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandData.cardBrand
+        is CardBrandState.DualBrand -> cardBrandDataList.first().cardBrand
+        is CardBrandState.DualBrandWithShopperSelection -> shopperSelectedCardBrandData.cardBrand
+        else -> null
     }
 }

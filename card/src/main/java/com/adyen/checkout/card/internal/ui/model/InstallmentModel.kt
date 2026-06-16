@@ -33,7 +33,7 @@ internal fun OneTimeInstallmentModel(): InstallmentModel {
 }
 
 @Suppress("FunctionName")
-internal fun RevolvingInstallmentModel() : InstallmentModel {
+internal fun RevolvingInstallmentModel(): InstallmentModel {
     return InstallmentModel(
         plan = InstallmentPlan.REVOLVING,
         numberOfInstallments = 1, // The number of installments for revolving is always 1

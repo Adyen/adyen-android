@@ -441,12 +441,12 @@ internal class CardComponentParamsMapperTest {
                     billingAddressMode = BillingAddressMode.PostalCode(),
                     showCardScanner = false,
                     installmentConfiguration = InstallmentConfiguration(
-                    defaultOptions = InstallmentOptions(
-                        values = listOf(2, 3, 6),
-                        plans = listOf(InstallmentOptions.Plan.REGULAR),
+                        defaultOptions = InstallmentOptions(
+                            values = listOf(2, 3, 6),
+                            plans = listOf(InstallmentOptions.Plan.REGULAR),
+                        ),
+                        showInstallmentAmount = true,
                     ),
-                    showInstallmentAmount = true,
-                ),
                 ),
             ),
             paymentMethod = null,

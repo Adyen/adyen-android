@@ -53,6 +53,7 @@ internal fun InstallmentPicker(
     }
 }
 
+@Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
 private fun InstallmentPickerPreview() {
@@ -66,7 +67,7 @@ private fun InstallmentPickerPreview() {
             showAmount = false,
         ),
         InstallmentModel(
-            plan =InstallmentPlan.REGULAR,
+            plan = InstallmentPlan.REGULAR,
             numberOfInstallments = 3,
             amountPerInstallment = Amount("EUR", 100),
             showAmount = true,
