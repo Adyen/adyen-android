@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -55,16 +52,6 @@ internal class StoredCardComponentStateReducerTest {
         val actual = reducer.reduce(state, StoredCardIntent.UpdateSecurityCodeFocus(false))
 
         assertFalse(actual.securityCode.isFocused)
-    }
-
-    @Test
-    fun `when intent is UpdateDetectedCardType, then detectedCardType is updated`() {
-        val state = createInitialState()
-        val detectedCardType = createDetectedCardType()
-
-        val actual = reducer.reduce(state, StoredCardIntent.UpdateDetectedCardType(detectedCardType))
-
-        assertEquals(detectedCardType, actual.detectedCardType)
     }
 
     @Test
@@ -116,18 +103,5 @@ internal class StoredCardComponentStateReducerTest {
         securityCode = TextInputComponentState(),
         isLoading = false,
         detectedCardType = null,
-    )
-
-    private fun createDetectedCardType() = DetectedCardType(
-        cardBrand = CardBrand("visa"),
-        enableLuhnCheck = true,
-        cvcPolicy = Brand.FieldPolicy.REQUIRED,
-        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-        isSupported = true,
-        isHidden = false,
-        isShopperSelectionAllowedInDualBranded = false,
-        panLength = 16,
-        paymentMethodVariant = null,
-        localizedBrand = null,
     )
 }
