@@ -9,9 +9,7 @@
 package com.adyen.checkout.blik.internal.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateFactory
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateReducer
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
@@ -63,10 +61,8 @@ internal class BlikComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
         BlikContent(
-            viewState = viewState,
+            viewStateFlow = viewState,
             onSubmitClick = ::submit,
             onIntent = ::onIntent,
             modifier = modifier,

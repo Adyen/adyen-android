@@ -9,13 +9,30 @@
 package com.adyen.checkout.blik.internal.ui.view
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 internal fun StoredBlikContent(
+    viewStateFlow: StateFlow<StoredBlikViewState>,
+    onSubmitClick: () -> Unit,
+    modifier: Modifier,
+) {
+    val viewState by viewStateFlow.collectAsStateWithLifecycle()
+    StoredBlikContent(
+        viewState = viewState,
+        onSubmitClick = onSubmitClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun StoredBlikContent(
     viewState: StoredBlikViewState,
     onSubmitClick: () -> Unit,
     modifier: Modifier,

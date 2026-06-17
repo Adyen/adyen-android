@@ -9,9 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -26,8 +24,8 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
-import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
 import com.adyen.checkout.mbway.internal.ui.view.MBWayContent
+import com.adyen.checkout.mbway.internal.ui.view.MBWaySecondaryContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -66,11 +64,9 @@ internal class MBWayComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
         MBWayContent(
             modifier = modifier,
-            viewState = viewState,
+            viewStateFlow = viewState,
             onSubmitClick = ::submit,
             onCountryCodePickerClick = ::onCountryCodePickerClick,
             onIntent = ::onIntent,
@@ -79,15 +75,12 @@ internal class MBWayComponent(
 
     @Composable
     override fun SecondaryContent(identifier: String, modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
-        CountryCodePicker(
-            viewState = viewState,
-            onItemClick = {
-                onIntent(MBWayIntent.UpdateCountry(it))
-                eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
-            },
+        MBWaySecondaryContent(
             modifier = modifier,
+            identifier = identifier,
+            viewState = viewState,
+            onIntent = ::onIntent,
+            onDismissRequest = { eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen) },
         )
     }
 
@@ -127,6 +120,6 @@ internal class MBWayComponent(
     }
 
     companion object {
-        private const val COUNTRY_CODE_IDENTIFIER = "country_code"
+        internal const val COUNTRY_CODE_IDENTIFIER = "country_code"
     }
 }

@@ -12,19 +12,38 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 internal fun StoredCardContent(
-    viewState: StoredCardViewState,
+    viewStateFlow: StateFlow<StoredCardViewState>,
     onIntent: (StoredCardIntent) -> Unit,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier,
+) {
+    val viewState by viewStateFlow.collectAsStateWithLifecycle()
+    StoredCardContent(
+        viewState = viewState,
+        onIntent = onIntent,
+        onSubmitClick = onSubmitClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun StoredCardContent(
+    viewState: StoredCardViewState,
+    onIntent: (StoredCardIntent) -> Unit,
+    onSubmitClick: () -> Unit,
+    modifier: Modifier,
 ) {
     ComponentScaffold(
         modifier = modifier,

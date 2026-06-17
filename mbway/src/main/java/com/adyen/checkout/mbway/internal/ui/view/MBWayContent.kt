@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
@@ -24,9 +26,29 @@ import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 internal fun MBWayContent(
+    modifier: Modifier,
+    viewStateFlow: StateFlow<MBWayViewState>,
+    onIntent: (MBWayIntent) -> Unit,
+    onSubmitClick: () -> Unit,
+    onCountryCodePickerClick: () -> Unit,
+) {
+    val viewState by viewStateFlow.collectAsStateWithLifecycle()
+
+    MBWayContent(
+        modifier = modifier,
+        viewState = viewState,
+        onIntent = onIntent,
+        onSubmitClick = onSubmitClick,
+        onCountryCodePickerClick = onCountryCodePickerClick,
+    )
+}
+
+@Composable
+private fun MBWayContent(
     viewState: MBWayViewState,
     onIntent: (MBWayIntent) -> Unit,
     onSubmitClick: () -> Unit,
