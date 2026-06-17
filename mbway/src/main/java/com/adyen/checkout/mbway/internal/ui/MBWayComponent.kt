@@ -26,6 +26,7 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.view.MBWayContent
 import com.adyen.checkout.mbway.internal.ui.view.MBWaySecondaryContent
+import com.adyen.checkout.mbway.internal.ui.view.MBWaySecondaryContentEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -91,7 +92,7 @@ internal class MBWayComponent(
     private fun onCountryCodePickerClick() {
         eventChannel.trySend(
             PaymentComponentEvent.SecondaryScreen(
-                identifier = COUNTRY_CODE_IDENTIFIER,
+                identifier = MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER,
             ),
         )
     }
@@ -117,9 +118,5 @@ internal class MBWayComponent(
 
     override fun onCleared() {
         analyticsManager.clear(this)
-    }
-
-    companion object {
-        internal const val COUNTRY_CODE_IDENTIFIER = "country_code"
     }
 }

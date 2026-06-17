@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.adyen.checkout.mbway.internal.ui.MBWayComponent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +27,7 @@ internal fun MBWaySecondaryContent(
     val viewState by viewState.collectAsStateWithLifecycle()
 
     when (identifier) {
-        MBWayComponent.COUNTRY_CODE_IDENTIFIER -> {
+        MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER -> {
             CountryCodePicker(
                 viewState = viewState,
                 onItemClick = {
@@ -39,4 +38,8 @@ internal fun MBWaySecondaryContent(
             )
         }
     }
+}
+
+internal object MBWaySecondaryContentEntry {
+    const val COUNTRY_CODE_PICKER = "COUNTRY_CODE_PICKER"
 }

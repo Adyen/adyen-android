@@ -31,6 +31,7 @@ import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.CardContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContent
+import com.adyen.checkout.card.internal.ui.view.CardSecondaryContentEntry
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
@@ -273,7 +274,7 @@ constructor(
     private fun onInstallmentPickerClick() {
         eventChannel.trySend(
             PaymentComponentEvent.SecondaryScreen(
-                identifier = INSTALLMENTS_IDENTIFIER,
+                identifier = CardSecondaryContentEntry.INSTALLMENTS,
             ),
         )
     }
@@ -297,9 +298,5 @@ constructor(
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
-    }
-
-    companion object {
-        internal const val INSTALLMENTS_IDENTIFIER = "installments"
     }
 }

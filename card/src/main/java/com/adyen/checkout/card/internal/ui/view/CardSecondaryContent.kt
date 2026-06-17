@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.adyen.checkout.card.internal.ui.CardComponent
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
@@ -29,7 +28,7 @@ internal fun CardSecondaryContent(
     val viewState by viewState.collectAsStateWithLifecycle()
 
     when (identifier) {
-        CardComponent.INSTALLMENTS_IDENTIFIER -> {
+        CardSecondaryContentEntry.INSTALLMENTS -> {
             Installments(
                 modifier = modifier,
                 installmentViewState = viewState.installmentViewState,
@@ -41,7 +40,7 @@ internal fun CardSecondaryContent(
 }
 
 @Composable
-internal fun Installments(
+private fun Installments(
     modifier: Modifier,
     installmentViewState: InstallmentViewState?,
     onIntent: (CardIntent) -> Unit,
@@ -57,4 +56,8 @@ internal fun Installments(
         },
         modifier = modifier,
     )
+}
+
+internal object CardSecondaryContentEntry {
+    const val INSTALLMENTS: String = "INSTALLMENTS"
 }
