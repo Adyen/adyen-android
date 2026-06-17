@@ -22,7 +22,7 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidat
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
-import com.adyen.checkout.card.internal.ui.view.StoredCardComponent
+import com.adyen.checkout.card.internal.ui.view.StoredCardContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -102,7 +102,7 @@ internal class StoredCardComponent(
     @Composable
     override fun Content(modifier: Modifier) {
         val viewState by viewState.collectAsStateWithLifecycle()
-        StoredCardComponent(
+        StoredCardContent(
             viewState = viewState,
             onIntent = ::onIntent,
             onSubmitClick = ::submit,

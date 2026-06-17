@@ -11,6 +11,6 @@ package com.adyen.checkout.googlepay.internal.ui.view
 import androidx.compose.runtime.Composable
 
 @Composable
-internal fun GooglePayComponent() {
+internal fun GooglePayContent() {
     TODO("Not yet implemented")
 }

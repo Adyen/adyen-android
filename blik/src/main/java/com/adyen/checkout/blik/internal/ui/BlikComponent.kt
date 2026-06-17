@@ -18,7 +18,7 @@ import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
 import com.adyen.checkout.blik.internal.ui.state.BlikIntent
 import com.adyen.checkout.blik.internal.ui.state.BlikViewStateProducer
 import com.adyen.checkout.blik.internal.ui.state.toPaymentComponentState
-import com.adyen.checkout.blik.internal.ui.view.BlikComponent
+import com.adyen.checkout.blik.internal.ui.view.BlikContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -65,7 +65,7 @@ internal class BlikComponent(
     override fun Content(modifier: Modifier) {
         val viewState by viewState.collectAsStateWithLifecycle()
 
-        BlikComponent(
+        BlikContent(
             viewState = viewState,
             onSubmitClick = ::submit,
             onIntent = ::onIntent,

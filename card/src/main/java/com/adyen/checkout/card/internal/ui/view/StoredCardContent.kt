@@ -20,7 +20,7 @@ import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
-internal fun StoredCardComponent(
+internal fun StoredCardContent(
     viewState: StoredCardViewState,
     onIntent: (StoredCardIntent) -> Unit,
     onSubmitClick: () -> Unit,

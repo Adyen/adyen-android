@@ -15,7 +15,7 @@ import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
 
 @Composable
-internal fun StoredBlikComponent(
+internal fun StoredBlikContent(
     viewState: StoredBlikViewState,
     onSubmitClick: () -> Unit,
     modifier: Modifier,

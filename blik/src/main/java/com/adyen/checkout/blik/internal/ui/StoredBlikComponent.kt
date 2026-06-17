@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
-import com.adyen.checkout.blik.internal.ui.view.StoredBlikComponent
+import com.adyen.checkout.blik.internal.ui.view.StoredBlikContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -52,7 +52,7 @@ internal class StoredBlikComponent(
     override fun Content(modifier: Modifier) {
         val isLoading by this.isLoading.collectAsStateWithLifecycle()
 
-        StoredBlikComponent(
+        StoredBlikContent(
             viewState = StoredBlikViewState(isLoading = isLoading),
             onSubmitClick = ::submit,
             modifier = modifier,

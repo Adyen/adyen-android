@@ -35,7 +35,7 @@ import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
-internal fun CardComponent(
+internal fun CardContent(
     viewState: CardViewState,
     onIntent: (CardIntent) -> Unit,
     onSubmitClick: () -> Unit,
@@ -155,8 +155,8 @@ private fun CardDetailsSection(
 
 @Preview(showBackground = true)
 @Composable
-private fun CardComponentPreview() {
-    CardComponent(
+private fun CardContentPreview() {
+    CardContent(
         viewState = CardViewState(
             cardNumber = TextInputViewState(
                 text = "5555444433331111",

@@ -24,7 +24,7 @@ import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
-internal fun BlikComponent(
+internal fun BlikContent(
     viewState: BlikViewState,
     onSubmitClick: () -> Unit,
     onIntent: (BlikIntent) -> Unit,
@@ -56,8 +56,8 @@ internal fun BlikComponent(
 
 @Preview(showBackground = true)
 @Composable
-private fun BlikComponentPreview() {
-    BlikComponent(
+private fun BlikContentPreview() {
+    BlikContent(
         viewState = BlikViewState(
             blikCode = TextInputViewState(),
             isLoading = false,

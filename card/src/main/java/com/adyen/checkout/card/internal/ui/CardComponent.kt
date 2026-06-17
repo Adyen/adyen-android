@@ -35,7 +35,7 @@ import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
-import com.adyen.checkout.card.internal.ui.view.CardComponent
+import com.adyen.checkout.card.internal.ui.view.CardContent
 import com.adyen.checkout.card.internal.ui.view.InstallmentPicker
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -127,7 +127,7 @@ constructor(
         }
 
         val viewState by viewState.collectAsStateWithLifecycle()
-        CardComponent(
+        CardContent(
             viewState = viewState,
             onIntent = ::handleIntent,
             onSubmitClick = ::submit,
