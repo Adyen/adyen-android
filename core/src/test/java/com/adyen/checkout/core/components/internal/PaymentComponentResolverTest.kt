@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
@@ -23,9 +24,12 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymen
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
+import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -169,6 +173,63 @@ internal class PaymentComponentResolverTest {
         assertEquals(PaymentComponentResult.Success(component), result)
     }
 
+    @Test
+    fun `when stored payment method is supported, then Success with the component is returned`() = runTest {
+        val component = TestPaymentComponent()
+        registerStoredFactory(type = "blik", component = component)
+
+        val result = resolve(
+            target = CheckoutTarget.StoredPaymentMethod("test_id"),
+            paymentMethods = PaymentMethods(
+                storedPaymentMethods = listOf(
+                    StoredBLIKPaymentMethod(
+                        type = "blik",
+                        name = "BLIK",
+                        id = "test_id",
+                        supportedShopperInteractions = emptyList(),
+                    ),
+                ),
+            ),
+        )
+
+        assertEquals(PaymentComponentResult.Success(component), result)
+    }
+
+    @Test
+    fun `when context is ActionOnly, then Failure is returned`() = runTest {
+        val result = PaymentComponentResolver.resolve(
+            target = CheckoutTarget.PaymentMethod("scheme"),
+            context = actionOnlyContext(),
+            callbacks = advancedCallbacks(),
+            coroutineScope = this,
+            analyticsManager = TestAnalyticsManager(),
+            checkoutParams = checkoutParams(),
+        )
+
+        assertEquals(PaymentComponentResult.Failure("No payment methods response available."), result)
+    }
+
+    @Test
+    fun `when context is Sessions, then payment methods are resolved from the session setup response`() = runTest {
+        val component = TestPaymentComponent()
+        registerFactory(type = "scheme", component = component)
+
+        val result = PaymentComponentResolver.resolve(
+            target = CheckoutTarget.PaymentMethod("scheme"),
+            context = sessionsContext(
+                PaymentMethods(
+                    paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Card")),
+                ),
+            ),
+            callbacks = advancedCallbacks(),
+            coroutineScope = this,
+            analyticsManager = TestAnalyticsManager(),
+            checkoutParams = checkoutParams(),
+        )
+
+        assertEquals(PaymentComponentResult.Success(component), result)
+    }
+
     private fun CoroutineScope.resolve(
         target: CheckoutTarget,
         paymentMethods: PaymentMethods,
@@ -183,6 +244,46 @@ internal class PaymentComponentResolverTest {
 
     private fun advancedContext(paymentMethods: PaymentMethods) = CheckoutContext.Advanced(
         paymentMethods = paymentMethods,
+        checkoutConfiguration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+            shopperLocale = Locale.US,
+        ),
+        checkoutAttemptId = null,
+        publicKey = null,
+    )
+
+    private fun actionOnlyContext() = CheckoutContext.ActionOnly(
+        action = RedirectAction(
+            type = "redirect",
+            paymentData = "test_data",
+            paymentMethodType = "scheme",
+        ),
+        checkoutConfiguration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+            shopperLocale = Locale.US,
+        ),
+        checkoutAttemptId = null,
+        publicKey = null,
+    )
+
+    private fun sessionsContext(paymentMethods: PaymentMethods) = CheckoutContext.Sessions(
+        checkoutSession = CheckoutSession(
+            sessionSetupResponse = SessionSetupResponse(
+                id = "test_session_id",
+                sessionData = "test_session_data",
+                amount = null,
+                expiresAt = "2026-12-31T23:59:59Z",
+                paymentMethods = paymentMethods,
+                returnUrl = null,
+                configuration = null,
+                shopperLocale = null,
+            ),
+            order = null,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+        ),
         checkoutConfiguration = CheckoutConfiguration(
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY,
@@ -220,6 +321,20 @@ internal class PaymentComponentResolverTest {
                     analyticsManager: AnalyticsManager,
                     params: CheckoutParams,
                     additionalCallbacks: Set<CheckoutAdditionalCallback>,
+                ): PaymentComponent = component
+            },
+        )
+    }
+
+    private fun registerStoredFactory(type: String, component: PaymentComponent) {
+        PaymentMethodProvider.register(
+            type,
+            object : StoredPaymentComponentFactory<PaymentComponent> {
+                override fun create(
+                    storedPaymentMethod: StoredPaymentMethod,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
                 ): PaymentComponent = component
             },
         )
