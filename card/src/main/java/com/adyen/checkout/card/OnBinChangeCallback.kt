@@ -3,14 +3,14 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 18/11/2025.
+ * Created by ararat on 18/07/2026.
  */
 
 package com.adyen.checkout.card
 
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 
-fun interface OnBinValueCallback : CheckoutAdditionalCallback {
+fun interface OnBinChangeCallback : CheckoutAdditionalCallback {
 
-    fun onBinValue(binValue: String)
+    fun onBinChange(binValue: String)
 }

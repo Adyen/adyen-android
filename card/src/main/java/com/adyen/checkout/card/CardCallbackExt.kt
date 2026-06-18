@@ -12,9 +12,9 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 
 @JvmOverloads
 fun CheckoutCallbacks.card(
-    onBinValue: OnBinValueCallback? = null,
+    onBinChange: OnBinChangeCallback? = null,
     onBinLookup: OnBinLookupCallback? = null,
 ) {
-    onBinValue?.let { addAdditionalCallback(it) }
+    onBinChange?.let { addAdditionalCallback(it) }
     onBinLookup?.let { addAdditionalCallback(it) }
 }

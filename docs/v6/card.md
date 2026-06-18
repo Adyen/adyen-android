@@ -14,8 +14,8 @@ Import the APIs used by the card guides:
 ```kotlin
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.FieldVisibility
+import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
-import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.card
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
@@ -85,7 +85,7 @@ val callbacks = AdvancedCheckoutCallbacks(
     onError = { error -> showError(error.message.orEmpty()) },
 ) {
     card(
-        onBinValue = OnBinValueCallback { bin ->
+        onBinChange = OnBinChangeCallback { bin ->
             println("BIN: $bin")
         },
         onBinLookup = OnBinLookupCallback { data ->
@@ -99,7 +99,7 @@ val callbacks = AdvancedCheckoutCallbacks(
 
 | API | Purpose |
 | --- | --- |
-| `OnBinValueCallback` | Receives BIN updates while the shopper types. |
+| `OnBinChangeCallback` | Receives BIN updates while the shopper types. |
 | `OnBinLookupCallback` | Receives the card-brand lookup result for the current input. |
 
 ## 3D Secure configuration

@@ -42,7 +42,7 @@ lifecycleScope.launch {
                     },
                 ) {
                     card(
-                        onBinValue = OnBinValueCallback { bin ->
+                        onBinChange = OnBinChangeCallback { bin ->
                             println("BIN: $bin")
                         },
                         onBinLookup = OnBinLookupCallback { data ->

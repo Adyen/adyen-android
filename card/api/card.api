@@ -58,9 +58,9 @@ public final class com/adyen/checkout/card/BuildConfig {
 
 public final class com/adyen/checkout/card/CardCallbackExtKt {
 	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;)V
-	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;)V
-	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;Lcom/adyen/checkout/card/OnBinLookupCallback;)V
-	public static synthetic fun card$default (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;Lcom/adyen/checkout/card/OnBinLookupCallback;ILjava/lang/Object;)V
+	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinChangeCallback;)V
+	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinChangeCallback;Lcom/adyen/checkout/card/OnBinLookupCallback;)V
+	public static synthetic fun card$default (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinChangeCallback;Lcom/adyen/checkout/card/OnBinLookupCallback;ILjava/lang/Object;)V
 }
 
 public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkout/core/components/internal/Configuration {
@@ -152,12 +152,12 @@ public final class com/adyen/checkout/card/InstallmentOptions$Plan : java/lang/E
 	public static fun values ()[Lcom/adyen/checkout/card/InstallmentOptions$Plan;
 }
 
-public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : com/adyen/checkout/core/components/CheckoutAdditionalCallback {
-	public abstract fun onBinLookup (Lcom/adyen/checkout/card/BinLookupData;)V
+public abstract interface class com/adyen/checkout/card/OnBinChangeCallback : com/adyen/checkout/core/components/CheckoutAdditionalCallback {
+	public abstract fun onBinChange (Ljava/lang/String;)V
 }
 
-public abstract interface class com/adyen/checkout/card/OnBinValueCallback : com/adyen/checkout/core/components/CheckoutAdditionalCallback {
-	public abstract fun onBinValue (Ljava/lang/String;)V
+public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : com/adyen/checkout/core/components/CheckoutAdditionalCallback {
+	public abstract fun onBinLookup (Lcom/adyen/checkout/card/BinLookupData;)V
 }
 
 public abstract class com/adyen/checkout/card/old/AddressConfiguration : android/os/Parcelable {
