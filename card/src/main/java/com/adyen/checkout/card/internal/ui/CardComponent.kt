@@ -279,20 +279,22 @@ constructor(
     }
 
     private fun onBinChanged() {
+        val callback = onBinChangeCallback ?: return
         componentState
             .map { it.binValue }
             .distinctUntilChanged()
             .drop(1)
-            .onEach { newBinValue -> onBinChangeCallback?.onBinChange(newBinValue) }
+            .onEach { newBinValue -> callback.onBinChange(newBinValue) }
             .launchIn(coroutineScope)
     }
 
     private fun onCardBrandDataChanged() {
+        val callback = onBinLookupCallback ?: return
         componentState
             .map { it.networkBinLookupState }
             .distinctUntilChanged()
             .mapNotNull { it?.toBinLookupData() }
-            .onEach { onBinLookupCallback?.onBinLookup(it) }
+            .onEach { binLookupData -> callback.onBinLookup(binLookupData) }
             .launchIn(coroutineScope)
     }
 
