@@ -17,7 +17,9 @@ import kotlinx.parcelize.Parcelize
  * to the shopper. [defaultOptions] and [cardBasedOptions] can be combined. In that case [InstallmentOptions]
  * from [cardBasedOptions] will override the option defined in [defaultOptions].
  *
- * @param defaultOptions Options applied to all card brands.
+ * @param defaultOptions Options applied to all card brands. If null, installment options are only
+ * shown for card brands explicitly configured in [cardBasedOptions]; any brand not covered by
+ * [cardBasedOptions] will have no installment options displayed.
  * @param cardBasedOptions Brand-specific options. Overrides [defaultOptions] for matching brands.
  * @param showInstallmentAmount Whether to show the per-installment amount.
  */
@@ -35,7 +37,8 @@ data class InstallmentConfiguration(
  *
  * @param values List of available installment counts (e.g. [2, 3, 6]).
  * @param plans The plan types to offer. Defaults to [Plan.REGULAR] only.
- * @param preselectedValue The installment count pre-selected in the UI.
+ * @param preselectedValue The installment count pre-selected in the UI. If null, or if the value
+ * does not match any of the available [values], the one-time full payment (first option) is pre-selected by default.
  */
 @Parcelize
 data class InstallmentOptions(
