@@ -141,7 +141,7 @@ private fun CardDetailsSection(
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
             }
         }
-        if (viewState.installmentViewState.installmentOptions.isNotEmpty()) {
+        if (viewState.installmentViewState != null) {
             Subtitle(resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS))
             ValuePickerField(
                 value = viewState.installmentViewState.selectedInstallment?.toDisplayText() ?: "",

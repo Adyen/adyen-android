@@ -29,5 +29,5 @@ internal data class CardViewState(
     val cardNumberFormat: CardNumberFormat,
     val isLoading: Boolean,
     val isCardScanButtonVisible: Boolean,
-    val installmentViewState: InstallmentViewState,
+    val installmentViewState: InstallmentViewState?,
 ) : ViewState

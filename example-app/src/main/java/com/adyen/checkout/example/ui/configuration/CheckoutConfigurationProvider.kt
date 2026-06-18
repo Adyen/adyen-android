@@ -180,25 +180,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     private fun getInstallmentConfiguration(): InstallmentConfiguration? =
         when (keyValueStorage.getInstallmentOptionsMode()) {
             CardInstallmentOptionsMode.NONE -> null
-            CardInstallmentOptionsMode.DEFAULT -> InstallmentConfiguration(
-                defaultOptions = InstallmentOptions(maxInstallments = 3),
-                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
-            )
-
-            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> InstallmentConfiguration(
-                defaultOptions = InstallmentOptions(
-                    maxInstallments = 3,
-                    plans = listOf(InstallmentOptions.Plan.REGULAR, InstallmentOptions.Plan.REVOLVING),
-                ),
-                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
-            )
-
-            CardInstallmentOptionsMode.CARD_BASED_VISA -> InstallmentConfiguration(
-                cardBasedOptions = mapOf(
-                    CardBrand(CardType.VISA.txVariant) to InstallmentOptions(maxInstallments = 3),
-                ),
-                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
-            )
+            CardInstallmentOptionsMode.DEFAULT -> getDefaultInstallmentConfiguration()
+            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> getDefaultWithRevolvingInstallmentConfiguration()
+            CardInstallmentOptionsMode.CARD_BASED_VISA -> getCardBasedInstallmentConfiguration()
         }
 
     @Deprecated("Use getInstallmentConfiguration() instead")
@@ -224,6 +208,40 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 maxInstallments = maxInstallments,
                 includeRevolving = includeRevolving,
                 cardBrand = cardBrand,
+            ),
+        ),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+    )
+
+    private fun getDefaultInstallmentConfiguration() = InstallmentConfiguration(
+        defaultOptions = InstallmentOptions(
+            maxInstallments = 3,
+            plans = emptyList(),
+            preselectedValue = null,
+        ),
+        cardBasedOptions = emptyMap(),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+    )
+
+    private fun getDefaultWithRevolvingInstallmentConfiguration() = InstallmentConfiguration(
+        defaultOptions = InstallmentOptions(
+            maxInstallments = 3,
+            plans = listOf(InstallmentOptions.Plan.REGULAR, InstallmentOptions.Plan.REVOLVING),
+            preselectedValue = null,
+        ),
+        cardBasedOptions = emptyMap(),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+    )
+
+    private fun getCardBasedInstallmentConfiguration(
+        cardType: CardType = CardType.VISA
+    ) = InstallmentConfiguration(
+        defaultOptions = null,
+        cardBasedOptions = mapOf(
+            CardBrand(cardType.txVariant) to InstallmentOptions(
+                maxInstallments = 3,
+                plans = emptyList(),
+                preselectedValue = null,
             ),
         ),
         showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),

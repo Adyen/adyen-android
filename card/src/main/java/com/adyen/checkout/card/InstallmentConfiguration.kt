@@ -23,9 +23,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class InstallmentConfiguration(
-    val defaultOptions: InstallmentOptions? = null,
-    val cardBasedOptions: Map<CardBrand, InstallmentOptions> = emptyMap(),
-    val showInstallmentAmount: Boolean = false,
+    val defaultOptions: InstallmentOptions?,
+    val cardBasedOptions: Map<CardBrand, InstallmentOptions>,
+    val showInstallmentAmount: Boolean,
 ) : Parcelable
 
 /**
@@ -40,8 +40,8 @@ data class InstallmentConfiguration(
 @Parcelize
 data class InstallmentOptions(
     val values: List<Int>,
-    val plans: List<Plan> = listOf(Plan.REGULAR),
-    val preselectedValue: Int? = null,
+    val plans: List<Plan>,
+    val preselectedValue: Int?,
 ) : Parcelable {
 
     /** An installment plan type. */
@@ -56,7 +56,7 @@ data class InstallmentOptions(
      */
     constructor(
         maxInstallments: Int,
-        plans: List<Plan> = listOf(Plan.REGULAR),
-        preselectedValue: Int? = null,
+        plans: List<Plan>,
+        preselectedValue: Int?,
     ) : this((2..maxInstallments).toList(), plans, preselectedValue)
 }

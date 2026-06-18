@@ -15,7 +15,10 @@ internal data class InstallmentViewState(
     val selectedInstallment: InstallmentModel?,
 )
 
-internal fun InstallmentState.toViewState() = InstallmentViewState(
-    installmentOptions = installmentOptions,
-    selectedInstallment = selectedInstallment,
-)
+internal fun InstallmentState.toViewState(): InstallmentViewState? {
+    if (installmentOptions.isEmpty()) return null
+    return InstallmentViewState(
+        installmentOptions = installmentOptions,
+        selectedInstallment = selectedInstallment,
+    )
+}
