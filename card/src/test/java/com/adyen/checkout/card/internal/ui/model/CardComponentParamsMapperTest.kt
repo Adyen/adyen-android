@@ -350,11 +350,8 @@ internal class CardComponentParamsMapperTest {
 
     @Test
     fun `when installmentConfiguration has defaultOptions then installmentParams has defaultOptions`() {
-        val installmentConfiguration = InstallmentConfiguration(
-            defaultOptions = InstallmentOptions(
-                values = listOf(2, 3, 6),
-                plans = listOf(InstallmentOptions.Plan.REGULAR),
-            ),
+        val installmentConfiguration = createInstallmentConfiguration(
+            defaultOptions = createInstallmentOptions(values = listOf(2, 3, 6)),
             showInstallmentAmount = true,
         )
 
@@ -372,9 +369,9 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when installmentConfiguration has cardBasedOptions then installmentParams has cardBasedOptions`() {
         val mcBrand = CardBrand(CardType.MASTERCARD.txVariant)
-        val installmentConfiguration = InstallmentConfiguration(
+        val installmentConfiguration = createInstallmentConfiguration(
             cardBasedOptions = mapOf(
-                mcBrand to InstallmentOptions(
+                mcBrand to createInstallmentOptions(
                     values = listOf(3, 6, 9),
                     plans = listOf(InstallmentOptions.Plan.REGULAR, InstallmentOptions.Plan.REVOLVING),
                 ),
@@ -397,8 +394,12 @@ internal class CardComponentParamsMapperTest {
             installmentPlans = listOf("regular"),
             installmentValues = listOf(2, 3),
         )
-        val merchantInstallmentConfiguration = InstallmentConfiguration(
-            defaultOptions = InstallmentOptions(maxInstallments = 12),
+        val merchantInstallmentConfiguration = createInstallmentConfiguration(
+            defaultOptions = InstallmentOptions(
+                maxInstallments = 12,
+                plans = listOf(InstallmentOptions.Plan.REGULAR),
+                preselectedValue = null,
+            ),
         )
 
         val params = mapper.mapToParams(
@@ -417,8 +418,12 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when session has null installmentConfiguration then installmentParams is null regardless of merchant config`() {
         val additionalSessionParams = createAdditionalSessionParams()
-        val merchantInstallmentConfiguration = InstallmentConfiguration(
-            defaultOptions = InstallmentOptions(maxInstallments = 6),
+        val merchantInstallmentConfiguration = createInstallmentConfiguration(
+            defaultOptions = InstallmentOptions(
+                maxInstallments = 6,
+                plans = listOf(InstallmentOptions.Plan.REGULAR),
+                preselectedValue = null,
+            ),
         )
 
         val params = mapper.mapToParams(
@@ -451,11 +456,8 @@ internal class CardComponentParamsMapperTest {
                     koreanAuthenticationVisibility = FieldVisibility.SHOW,
                     billingAddressMode = BillingAddressMode.PostalCode(),
                     showCardScanner = false,
-                    installmentConfiguration = InstallmentConfiguration(
-                        defaultOptions = InstallmentOptions(
-                            values = listOf(2, 3, 6),
-                            plans = listOf(InstallmentOptions.Plan.REGULAR),
-                        ),
+                    installmentConfiguration = createInstallmentConfiguration(
+                        defaultOptions = createInstallmentOptions(values = listOf(2, 3, 6)),
                         showInstallmentAmount = true,
                     ),
                 ),
@@ -588,6 +590,26 @@ internal class CardComponentParamsMapperTest {
         storedCVCVisibility = storedCVCVisibility,
         showCardScanner = showCardScanner,
         installmentParams = installmentParams,
+    )
+
+    private fun createInstallmentConfiguration(
+        defaultOptions: InstallmentOptions? = null,
+        cardBasedOptions: Map<CardBrand, InstallmentOptions> = emptyMap(),
+        showInstallmentAmount: Boolean = false,
+    ) = InstallmentConfiguration(
+        defaultOptions = defaultOptions,
+        cardBasedOptions = cardBasedOptions,
+        showInstallmentAmount = showInstallmentAmount,
+    )
+
+    private fun createInstallmentOptions(
+        values: List<Int>,
+        plans: List<InstallmentOptions.Plan> = listOf(InstallmentOptions.Plan.REGULAR),
+        preselectedValue: Int? = null,
+    ) = InstallmentOptions(
+        values = values,
+        plans = plans,
+        preselectedValue = preselectedValue,
     )
 
     companion object {
