@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.state
 
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -36,6 +37,7 @@ internal data class CardComponentState(
     // Component state
     val cardBrandState: CardBrandState,
     val networkBinLookupState: NetworkBinLookupState?,
+    val installmentState: InstallmentState,
 ) : ComponentState
 
 internal sealed class CardBrandState {
@@ -65,6 +67,11 @@ internal data class CardBrandData(
     val panLength: Int?,
     val paymentMethodVariant: String?,
     val localizedBrand: String?
+)
+
+internal data class InstallmentState(
+    val installmentOptions: List<InstallmentModel>,
+    val selectedInstallment: InstallmentModel?,
 )
 
 internal val CardComponentState.binValue: String

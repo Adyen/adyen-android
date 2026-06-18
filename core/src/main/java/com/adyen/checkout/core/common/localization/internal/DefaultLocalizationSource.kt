@@ -69,6 +69,21 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_POSTAL_CODE -> R.string.checkout_card_postal_code
             CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID -> R.string.checkout_card_postal_code_invalid
 
+            CheckoutLocalizationKey.CARD_INSTALLMENTS -> R.string.checkout_card_installments
+            CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE -> R.string.checkout_card_installments_title
+            CheckoutLocalizationKey.CARD_INSTALLMENTS_SUBTITLE -> R.string.checkout_card_installments_subtitle
+            CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME ->
+                R.string.checkout_card_installments_option_one_time
+
+            CheckoutLocalizationKey.CARD_INSTALLMENTS_REVOLVING ->
+                R.string.checkout_card_installments_option_revolving
+
+            CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR ->
+                R.string.checkout_card_installments_option_regular
+
+            CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_WITH_PRICE ->
+                R.string.checkout_card_installments_option_regular_with_price
+
             // Drop-in
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->

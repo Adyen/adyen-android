@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2026 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by temirlan on 4/6/2026.
+ */
+
+package com.adyen.checkout.card
+
+import android.os.Parcelable
+import com.adyen.checkout.core.common.CardBrand
+import kotlinx.parcelize.Parcelize
+
+/**
+ * Installment configuration for the Card Component. Defines which installment plans are available
+ * to the shopper. [defaultOptions] and [cardBasedOptions] can be combined. In that case [InstallmentOptions]
+ * from [cardBasedOptions] will override the option defined in [defaultOptions].
+ *
+ * @param defaultOptions Options applied to all card brands. If null, installment options are only
+ * shown for card brands explicitly configured in [cardBasedOptions]; any brand not covered by
+ * [cardBasedOptions] will have no installment options displayed.
+ * @param cardBasedOptions Brand-specific options. Overrides [defaultOptions] for matching brands.
+ * @param showInstallmentAmount Whether to show the per-installment amount.
+ */
+@Parcelize
+data class InstallmentConfiguration(
+    val defaultOptions: InstallmentOptions?,
+    val cardBasedOptions: Map<CardBrand, InstallmentOptions>,
+    val showInstallmentAmount: Boolean,
+) : Parcelable
+
+/**
+ * Defines the available installment options details.
+ *
+ * Note: All values in [values] must be greater than 1.
+ *
+ * @param values List of available installment counts (e.g. [2, 3, 6]).
+ * @param plans The plan types to offer. Defaults to [Plan.REGULAR] only.
+ * @param preselectedValue The installment count pre-selected in the UI. If null, or if the value
+ * does not match any of the available [values], the one-time full payment (first option) is pre-selected by default.
+ */
+@Parcelize
+data class InstallmentOptions(
+    val values: List<Int>,
+    val plans: List<Plan>,
+    val preselectedValue: Int?,
+) : Parcelable {
+
+    /** An installment plan type. */
+    enum class Plan { REGULAR, REVOLVING }
+
+    /**
+     * @param maxInstallments Maximum number of installments
+     * @param plans see [InstallmentOptions.plans].
+     * @param preselectedValue see [InstallmentOptions.preselectedValue].
+     *
+     * Creates an [InstallmentOptions] instance with values in range [2, maxInstallments]
+     */
+    constructor(
+        maxInstallments: Int,
+        plans: List<Plan>,
+        preselectedValue: Int?,
+    ) : this((2..maxInstallments).toList(), plans, preselectedValue)
+}

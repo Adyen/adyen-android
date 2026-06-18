@@ -42,9 +42,10 @@ fun CheckoutCompositionLocalProvider(
     }
 }
 
-internal val LocalEnvironment = staticCompositionLocalOf { Environment.TEST }
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+val LocalLocale = staticCompositionLocalOf<Locale> { Locale.getDefault() }
 
-internal val LocalLocale = staticCompositionLocalOf<Locale> { Locale.getDefault() }
+internal val LocalEnvironment = staticCompositionLocalOf { Environment.TEST }
 
 internal val LocalLocalizationResolver = staticCompositionLocalOf { LocalizationResolver(null) }
 

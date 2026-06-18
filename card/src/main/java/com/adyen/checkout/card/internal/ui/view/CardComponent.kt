@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
+import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -26,7 +29,9 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.SwitchContainer
 import com.adyen.checkout.ui.internal.element.button.PayButton
+import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
@@ -35,6 +40,7 @@ internal fun CardComponent(
     onIntent: (CardIntent) -> Unit,
     onSubmitClick: () -> Unit,
     onScanButtonClick: () -> Unit,
+    onInstallmentPickerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ComponentScaffold(
@@ -47,6 +53,7 @@ internal fun CardComponent(
             viewState = viewState,
             onIntent = onIntent,
             onScanButtonClick = onScanButtonClick,
+            onInstallmentPickerClick = onInstallmentPickerClick,
         )
     }
 }
@@ -57,6 +64,7 @@ private fun CardDetailsSection(
     viewState: CardViewState,
     onIntent: (CardIntent) -> Unit,
     onScanButtonClick: () -> Unit,
+    onInstallmentPickerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -133,6 +141,15 @@ private fun CardDetailsSection(
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
             }
         }
+        if (viewState.installmentViewState != null) {
+            Subtitle(resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS))
+            ValuePickerField(
+                value = viewState.installmentViewState.selectedInstallment?.toDisplayText() ?: "",
+                label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
+                onClick = onInstallmentPickerClick,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
@@ -173,9 +190,14 @@ private fun CardComponentPreview() {
             isCardScanButtonVisible = false,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
+            installmentViewState = InstallmentViewState(
+                installmentOptions = listOf(InstallmentModel.OneTime),
+                selectedInstallment = InstallmentModel.OneTime,
+            ),
         ),
         onIntent = {},
         onSubmitClick = {},
         onScanButtonClick = {},
+        onInstallmentPickerClick = {},
     )
 }

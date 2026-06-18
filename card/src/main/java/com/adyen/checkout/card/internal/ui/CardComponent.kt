@@ -36,6 +36,7 @@ import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.CardComponent
+import com.adyen.checkout.card.internal.ui.view.InstallmentPicker
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
@@ -45,6 +46,7 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.error.internal.GenericError
@@ -84,7 +86,8 @@ constructor(
     private val cardScannerWrapper: CardScannerWrapper,
     private val publicKey: String?,
     private val environment: Environment,
-) : PaymentComponent {
+) : PaymentComponent,
+    SecondaryScreenComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
@@ -131,8 +134,28 @@ constructor(
             onScanButtonClick = {
                 onScanButtonClick(scannerLauncher)
             },
+            onInstallmentPickerClick = ::onInstallmentPickerClick,
             modifier = modifier,
         )
+    }
+
+    @Composable
+    override fun SecondaryContent(identifier: String, modifier: Modifier) {
+        val viewState by viewState.collectAsStateWithLifecycle()
+
+        when (identifier) {
+            INSTALLMENTS_IDENTIFIER -> {
+                InstallmentPicker(
+                    installmentOptions = viewState.installmentViewState?.installmentOptions ?: emptyList(),
+                    selectedInstallment = viewState.installmentViewState?.selectedInstallment,
+                    onItemClick = { installment ->
+                        onIntent(CardIntent.UpdateInstallment(installment))
+                        eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
+                    },
+                    modifier = modifier,
+                )
+            }
+        }
     }
 
     override fun submit() {
@@ -273,6 +296,14 @@ constructor(
             .launchIn(coroutineScope)
     }
 
+    private fun onInstallmentPickerClick() {
+        eventChannel.trySend(
+            PaymentComponentEvent.SecondaryScreen(
+                identifier = INSTALLMENTS_IDENTIFIER,
+            ),
+        )
+    }
+
     private fun onEncryptionError(e: EncryptionException) {
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
@@ -292,5 +323,9 @@ constructor(
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
+    }
+
+    companion object {
+        private const val INSTALLMENTS_IDENTIFIER = "installments"
     }
 }

@@ -94,6 +94,10 @@ internal class CardComponentStateReducer(
                 cardBrandIntentsHandler.onUpdateDetectedCardTypes(state, intent)
             }
 
+            is CardIntent.UpdateInstallment -> state.copy(
+                installmentState = state.installmentState.copy(selectedInstallment = intent.installment),
+            )
+
             is CardIntent.UpdateLoading -> state.copy(
                 isLoading = intent.isLoading,
             )

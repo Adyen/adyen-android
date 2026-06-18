@@ -11,6 +11,10 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.InstallmentOptionsParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -19,6 +23,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 
 internal class CardComponentStateFactoryTest {
 
@@ -185,6 +190,40 @@ internal class CardComponentStateFactoryTest {
     }
     // endregion
 
+    // region installments
+    @Test
+    fun `when initial state is created and installmentParams is provided, then installmentState is populated`() {
+        val installmentParams = InstallmentParams(
+            defaultOptions = InstallmentOptionsParams(
+                values = listOf(2, 3),
+                plans = listOf(InstallmentPlan.REGULAR)
+            ),
+            showInstallmentAmount = true
+        )
+        val state = createFactory(installmentParams = installmentParams).createInitialState()
+
+        assertEquals(3, state.installmentState.installmentOptions.size) // OneTime, 2, 3
+        assertEquals(InstallmentModel.OneTime, state.installmentState.selectedInstallment)
+    }
+
+    @Test
+    fun `when initial state is created and installmentParams has preselectedValue, then selectedInstallment is set`() {
+        val installmentParams = InstallmentParams(
+            defaultOptions = InstallmentOptionsParams(
+                values = listOf(2, 3),
+                plans = listOf(InstallmentPlan.REGULAR),
+                preselectedValue = 3
+            ),
+            showInstallmentAmount = true
+        )
+        val state = createFactory(installmentParams = installmentParams).createInitialState()
+
+        assertEquals(3, state.installmentState.installmentOptions.size)
+        assertInstanceOf<InstallmentModel.Regular>(state.installmentState.selectedInstallment)
+        assertEquals(3, state.installmentState.selectedInstallment.numberOfInstallments)
+    }
+    // endregion
+
     @Suppress("LongParameterList")
     private fun createFactory(
         showCardholderName: Boolean = false,
@@ -195,6 +234,7 @@ internal class CardComponentStateFactoryTest {
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
         showPostalCode: Boolean = false,
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
+        installmentParams: InstallmentParams = InstallmentParams(),
     ) = CardComponentStateFactory(
         componentParams = CardComponentParams(
             showCardholderName = showCardholderName,
@@ -207,6 +247,7 @@ internal class CardComponentStateFactoryTest {
             cvcVisibility = cvcVisibility,
             storedCVCVisibility = StoredCVCVisibility.SHOW,
             showCardScanner = true,
+            installmentParams = installmentParams,
         ),
     )
 }

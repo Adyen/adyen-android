@@ -17,7 +17,11 @@ import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
+import kotlin.collections.contains
 
 internal class CardBrandIntentsHandler(
     private val componentParams: CardComponentParams,
@@ -170,20 +174,9 @@ internal class CardBrandIntentsHandler(
         cardBrandState: CardBrandState
     ): CardComponentState {
         // We should only override the default behavior of the CVC / expiry date if the identified brand is reliable
-        // With DualBrand (no shopper selection) we can rely on the first brand
-        val selectedOrFirstOrReliableCardBrandData = when (cardBrandState) {
-            is CardBrandState.NoBrandsDetected,
-            is CardBrandState.UnsupportedBrand,
-            is CardBrandState.HiddenBrand,
-            is CardBrandState.SingleUnreliableBrand -> null
-
-            is CardBrandState.SingleReliableBrand -> cardBrandState.cardBrandData
-            is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandState.cardBrandData
-            is CardBrandState.DualBrand -> cardBrandState.cardBrandDataList.first()
-            is CardBrandState.DualBrandWithShopperSelection -> cardBrandState.shopperSelectedCardBrandData
-        }
-        val cvcPolicy = selectedOrFirstOrReliableCardBrandData?.cvcPolicy
-        val expiryDatePolicy = selectedOrFirstOrReliableCardBrandData?.expiryDatePolicy
+        val reliableCardBrandData = cardBrandState.asReliableCardBrandData()
+        val cvcPolicy = reliableCardBrandData?.cvcPolicy
+        val expiryDatePolicy = reliableCardBrandData?.expiryDatePolicy
 
         return state.copy(
             cardBrandState = cardBrandState,
@@ -193,6 +186,7 @@ internal class CardBrandIntentsHandler(
             expiryDate = state.expiryDate.copy(
                 requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
             ),
+            installmentState = getUpdatedInstallmentState(state, reliableCardBrandData?.cardBrand),
         )
     }
 
@@ -225,5 +219,44 @@ internal class CardBrandIntentsHandler(
                 CVCVisibility.HIDE_FIRST, CVCVisibility.ALWAYS_HIDE -> RequirementPolicy.Hidden
             }
         }
+    }
+
+    private fun getUpdatedInstallmentState(
+        state: CardComponentState,
+        cardBrand: CardBrand?
+    ): InstallmentState {
+        val updatedInstallmentOptions = getUpdatedInstallmentOptions(cardBrand)
+        val selectedInstallment = if (updatedInstallmentOptions.contains(state.installmentState.selectedInstallment)) {
+            state.installmentState.selectedInstallment
+        } else {
+            val installmentParams = componentParams.installmentParams
+            val preselectedValue = installmentParams?.cardBasedOptions?.get(cardBrand)?.preselectedValue
+                ?: installmentParams?.defaultOptions?.preselectedValue
+            updatedInstallmentOptions.firstOrNull {
+                it is InstallmentModel.Regular && it.numberOfInstallments == preselectedValue
+            }
+        } ?: updatedInstallmentOptions.firstOrNull()
+
+        return InstallmentState(updatedInstallmentOptions, selectedInstallment)
+    }
+
+    private fun getUpdatedInstallmentOptions(cardBrand: CardBrand?): List<InstallmentModel> {
+        return componentParams.installmentParams?.mapToInstallmentModels(
+            cardBrand = cardBrand,
+        ) ?: emptyList()
+    }
+}
+
+private fun CardBrandState.asReliableCardBrandData(): CardBrandData? {
+    return when (this) {
+        is CardBrandState.SingleReliableBrand -> cardBrandData
+        is CardBrandState.SingleReliableWithHiddenBrand -> cardBrandData
+        is CardBrandState.DualBrand ->
+            cardBrandDataList.first() // With DualBrand (no shopper selection) we can rely on the first brand
+        is CardBrandState.DualBrandWithShopperSelection -> shopperSelectedCardBrandData
+        CardBrandState.HiddenBrand,
+        CardBrandState.NoBrandsDetected,
+        is CardBrandState.SingleUnreliableBrand,
+        CardBrandState.UnsupportedBrand -> null
     }
 }

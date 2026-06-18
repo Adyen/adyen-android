@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateIntent
 
@@ -50,6 +51,8 @@ internal sealed interface CardIntent : ComponentStateIntent {
     data class UpdateStorePaymentMethod(val isChecked: Boolean) : CardIntent
 
     data class SelectBrand(val cardBrand: CardBrand) : CardIntent
+
+    data class UpdateInstallment(val installment: InstallmentModel) : CardIntent
 
     // System intents
     data class UpdateDetectedCardTypes(val detectedCardTypeList: DetectedCardTypeList) : CardIntent

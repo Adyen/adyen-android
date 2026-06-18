@@ -14,6 +14,9 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentOptionsParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -802,6 +805,32 @@ internal class CardBrandIntentsHandlerTest(
         assertEquals(RequirementPolicy.Optional, actual.securityCode.requirementPolicy)
     }
 
+    @Test
+    fun `when brand-specific installment options are set, then installmentState matches detected brand options`() {
+        val visaBrand = CardBrand("visa")
+        val installmentParams = InstallmentParams(
+            defaultOptions = InstallmentOptionsParams(
+                values = listOf(2),
+                plans = listOf(InstallmentPlan.REGULAR)
+            ),
+            cardBasedOptions = mapOf(
+                visaBrand to InstallmentOptionsParams(
+                    values = listOf(3, 4),
+                    plans = listOf(InstallmentPlan.REGULAR)
+                )
+            )
+        )
+        whenever(cardComponentParams.installmentParams).thenReturn(installmentParams)
+
+        val cardBrandState = CardBrandState.SingleReliableBrand(
+            createCardBrandData().copy(cardBrand = visaBrand),
+        )
+
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
+
+        assertEquals(3, actual.installmentState.installmentOptions.size) // OneTime, 3, 4
+    }
+
     @Nested
     @DisplayName("when intent is SelectBrand")
     inner class SelectBrandTest {
@@ -933,6 +962,10 @@ internal class CardBrandIntentsHandlerTest(
         isCardScanningAvailable = false,
         cardBrandState = CardBrandState.NoBrandsDetected,
         networkBinLookupState = null,
+        installmentState = InstallmentState(
+            installmentOptions = emptyList(),
+            selectedInstallment = null,
+        ),
     )
 
     private fun createCardBrandData() = CardBrandData(

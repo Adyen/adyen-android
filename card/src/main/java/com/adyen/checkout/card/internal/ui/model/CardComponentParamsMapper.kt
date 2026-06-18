@@ -17,6 +17,7 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 
 // TODO - Card Component Mapper Tests.
@@ -48,6 +49,11 @@ internal class CardComponentParamsMapper {
                 StoredCVCVisibility.SHOW
             },
             showCardScanner = cardConfiguration?.showCardScanner ?: true,
+            installmentParams = makeInstallmentParams(
+                sessionParams = params.additionalSessionParams,
+                cardConfiguration = cardConfiguration,
+                amount = params.amount,
+            ),
         )
     }
 
@@ -85,6 +91,19 @@ internal class CardComponentParamsMapper {
         cardConfiguration: CardConfiguration?,
     ): Boolean {
         return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePaymentMethod ?: true
+    }
+
+    private fun makeInstallmentParams(
+        sessionParams: AdditionalSessionParams?,
+        cardConfiguration: CardConfiguration?,
+        amount: Amount?
+    ): InstallmentParams? {
+        return if (sessionParams != null) {
+            // if sessionParams.installmentOptions is null we want installmentParams to be also null
+            sessionParams.installmentConfiguration?.mapToInstallmentParams(amount)
+        } else {
+            cardConfiguration?.installmentConfiguration?.mapToInstallmentParams(amount)
+        }
     }
 
     companion object {

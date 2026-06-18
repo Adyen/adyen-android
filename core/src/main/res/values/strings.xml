@@ -38,6 +38,13 @@
     <string name="checkout_card_kcp_password_invalid" translatable="false">Invalid password</string>
     <string name="checkout_card_postal_code" translatable="false">Postal code</string>
     <string name="checkout_card_postal_code_invalid" translatable="false">Invalid postal code</string>
+    <string name="checkout_card_installments" translatable="false">Installments</string>
+    <string name="checkout_card_installments_title" translatable="false">Number of installments</string>
+    <string name="checkout_card_installments_subtitle" translatable="false">Select the number of installments you would like to use</string>
+    <string name="checkout_card_installments_option_one_time" translatable="false">One time payment</string>
+    <string name="checkout_card_installments_option_revolving" translatable="false">Revolving payment</string>
+    <string name="checkout_card_installments_option_regular" translatable="false">%s months</string>
+    <string name="checkout_card_installments_option_regular_with_price" translatable="false">%1$sx %2$s</string>
     <string name="checkout_drop_in_manage_favorites_title" translatable="false">Manage your favorite payment options</string>
     <string name="checkout_drop_in_manage_favorites_cards_section_title" translatable="false">Cards</string>
     <string name="checkout_drop_in_manage_favorites_others_section_title" translatable="false">Others</string>
