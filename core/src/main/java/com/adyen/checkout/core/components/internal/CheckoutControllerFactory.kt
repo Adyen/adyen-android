@@ -24,11 +24,12 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineScope
 
+@Suppress("TooManyFunctions")
 internal class CheckoutControllerFactory {
 
     fun create(
@@ -101,7 +102,7 @@ internal class CheckoutControllerFactory {
             params = checkoutParams,
         )
 
-        val paymentComponent = createPaymentComponent(
+        val paymentComponentResult = createPaymentComponent(
             target = target,
             context = context,
             callbacks = callbacks,
@@ -109,6 +110,19 @@ internal class CheckoutControllerFactory {
             analyticsManager = analyticsManager,
             checkoutParams = checkoutParams,
         )
+
+        val paymentComponent = when (paymentComponentResult) {
+            is PaymentComponentResult.Success -> paymentComponentResult.component
+            is PaymentComponentResult.Failure -> {
+                componentRequestDispatcher.failure(
+                    CheckoutError(
+                        code = CheckoutError.ErrorCode.PAYMENT_METHOD_FAILURE,
+                        message = paymentComponentResult.message,
+                    ),
+                )
+                null
+            }
+        }
 
         val flow = FullCheckoutFlow(
             componentRequestDispatcher = componentRequestDispatcher,
@@ -182,39 +196,87 @@ internal class CheckoutControllerFactory {
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutParams: CheckoutParams,
-    ): PaymentComponent? {
+    ): PaymentComponentResult {
         return when (target) {
-            is CheckoutTarget.PaymentMethod -> {
-                context.getPaymentMethodResponse()
-                    ?.paymentMethods
-                    ?.find { it.type == target.type }
-                    ?.let { paymentMethod ->
-                        PaymentMethodProvider.getPaymentComponent(
-                            paymentMethod = paymentMethod,
-                            coroutineScope = coroutineScope,
-                            analyticsManager = analyticsManager,
-                            params = checkoutParams,
-                            additionalCallbacks = callbacks.additionalCallbacks,
-                        )
-                    }
-            }
+            is CheckoutTarget.PaymentMethod -> createPaymentComponent(
+                target = target,
+                context = context,
+                callbacks = callbacks,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                checkoutParams = checkoutParams,
+            )
 
-            is CheckoutTarget.StoredPaymentMethod -> {
-                context.getPaymentMethodResponse()
-                    ?.storedPaymentMethods
-                    ?.find { it.id == target.id }
-                    ?.let { storedPaymentMethod ->
-                        PaymentMethodProvider.getStoredPaymentComponent(
-                            storedPaymentMethod = storedPaymentMethod,
-                            coroutineScope = coroutineScope,
-                            analyticsManager = analyticsManager,
-                            params = checkoutParams,
-                        )
-                    }
-            }
+            is CheckoutTarget.StoredPaymentMethod -> createStoredPaymentComponent(
+                target = target,
+                context = context,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                checkoutParams = checkoutParams,
+            )
 
-            else -> null
+            else -> PaymentComponentResult.Failure("Unsupported checkout target.")
         }
+    }
+
+    @Suppress("LongParameterList", "ReturnCount")
+    private fun createPaymentComponent(
+        target: CheckoutTarget.PaymentMethod,
+        context: CheckoutContext,
+        callbacks: CheckoutCallbacks,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutParams: CheckoutParams,
+    ): PaymentComponentResult {
+        val paymentMethods = context.getPaymentMethodResponse()?.paymentMethods
+            ?: return PaymentComponentResult.Failure("No payment methods response available.")
+
+        val paymentMethod = paymentMethods.find { it.type == target.type }
+            ?: return PaymentComponentResult.Failure(
+                "Payment method '${target.type}' was not found in the payment methods response.",
+            )
+
+        val component = PaymentMethodProvider.getPaymentComponent(
+            paymentMethod = paymentMethod,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            params = checkoutParams,
+            additionalCallbacks = callbacks.additionalCallbacks,
+        ) ?: return PaymentComponentResult.Failure(
+            "Payment method '${target.type}' is not supported. " +
+                "Ensure the corresponding module is included in your build dependencies.",
+        )
+
+        return PaymentComponentResult.Success(component)
+    }
+
+    @Suppress("ReturnCount")
+    private fun createStoredPaymentComponent(
+        target: CheckoutTarget.StoredPaymentMethod,
+        context: CheckoutContext,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutParams: CheckoutParams,
+    ): PaymentComponentResult {
+        val storedPaymentMethods = context.getPaymentMethodResponse()?.storedPaymentMethods
+            ?: return PaymentComponentResult.Failure("No payment methods response available.")
+
+        val storedPaymentMethod = storedPaymentMethods.find { it.id == target.id }
+            ?: return PaymentComponentResult.Failure(
+                "Stored payment method with id '${target.id}' was not found in the payment methods response.",
+            )
+
+        val component = PaymentMethodProvider.getStoredPaymentComponent(
+            storedPaymentMethod = storedPaymentMethod,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            params = checkoutParams,
+        ) ?: return PaymentComponentResult.Failure(
+            "Stored payment method type '${storedPaymentMethod.type}' is not supported. " +
+                "Ensure the corresponding module is included in your build dependencies.",
+        )
+
+        return PaymentComponentResult.Success(component)
     }
 
     private fun CheckoutContext.getPaymentMethodResponse(): PaymentMethods? {
