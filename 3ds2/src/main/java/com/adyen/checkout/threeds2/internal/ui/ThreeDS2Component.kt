@@ -46,6 +46,7 @@ import com.adyen.threeds2.InitializeResult
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
 import com.adyen.threeds2.TransactionResult
+import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.exception.InvalidInputException
 import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
@@ -108,11 +109,11 @@ internal class ThreeDS2Component(
         threeDsEventChannel.trySend(ThreeDS2Event.HandleAction)
     }
 
-    private fun handleAction(context: Context) {
-        handleAction(action, context as Activity)
+    private fun handleAction(context: Context, uiCustomization: UiCustomization) {
+        handleAction(action, context as Activity, uiCustomization)
     }
 
-    private fun handleAction(action: Action, activity: Activity) {
+    private fun handleAction(action: Action, activity: Activity, uiCustomization: UiCustomization) {
         if (action !is Threeds2Action) {
             emitError(
                 GenericError("Unsupported action"),
@@ -122,13 +123,14 @@ internal class ThreeDS2Component(
 
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
-        handleThreeds2Action(action, activity)
+        handleThreeds2Action(action, activity, uiCustomization)
     }
 
     private fun handleThreeds2ActionSubtype(
         action: Threeds2Action,
         activity: Activity,
         subtype: Threeds2Action.SubType,
+        uiCustomization: UiCustomization,
     ) {
         val token = action.token
         if (token.isNullOrEmpty()) {
@@ -159,6 +161,7 @@ internal class ThreeDS2Component(
                     activity = activity,
                     encodedFingerprintToken = token,
                     submitFingerprintAutomatically = true,
+                    uiCustomization = uiCustomization,
                 )
             }
 
@@ -173,6 +176,7 @@ internal class ThreeDS2Component(
     private fun handleThreeds2Action(
         action: Threeds2Action,
         activity: Activity,
+        uiCustomization: UiCustomization,
     ) {
         if (action.subtype == null) {
             emitError(
@@ -181,7 +185,7 @@ internal class ThreeDS2Component(
             return
         }
         val subtype = Threeds2Action.SubType.parse(action.subtype.orEmpty())
-        handleThreeds2ActionSubtype(action, activity, subtype)
+        handleThreeds2ActionSubtype(action, activity, subtype, uiCustomization)
     }
 
     @Suppress("LongMethod", "TooGenericExceptionCaught")
@@ -190,6 +194,7 @@ internal class ThreeDS2Component(
         activity: Activity,
         encodedFingerprintToken: String,
         submitFingerprintAutomatically: Boolean,
+        uiCustomization: UiCustomization,
     ) {
         adyenLog(AdyenLogLevel.DEBUG) {
             "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically"
@@ -243,7 +248,7 @@ internal class ThreeDS2Component(
                     activity,
                     configParameters,
                     null,
-                    componentParams.uiCustomization,
+                    uiCustomization,
                 )
 
             if (initializeResult is InitializeResult.Failure) {
@@ -272,7 +277,7 @@ internal class ThreeDS2Component(
             val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)
 
             if (submitFingerprintAutomatically) {
-                submitFingerprintAutomatically(activity, encodedFingerprint)
+                submitFingerprintAutomatically(activity, encodedFingerprint, uiCustomization)
             } else {
                 emitDetails(threeDS2Serializer.createFingerprintDetails(encodedFingerprint), shouldClearState = false)
             }
@@ -401,6 +406,7 @@ internal class ThreeDS2Component(
     private suspend fun submitFingerprintAutomatically(
         activity: Activity,
         encodedFingerprint: String,
+        uiCustomization: UiCustomization,
     ) {
         submitFingerprintRepository.submitFingerprint(
             encodedFingerprint = encodedFingerprint,
@@ -408,7 +414,7 @@ internal class ThreeDS2Component(
             paymentData = paymentDataRepository.paymentData,
         )
             .fold(
-                onSuccess = { result -> onSubmitFingerprintResult(result, activity) },
+                onSuccess = { result -> onSubmitFingerprintResult(result, activity, uiCustomization) },
                 onFailure = { e ->
                     trackFingerprintErrorEvent(ErrorEvent.API_THREEDS2)
                     emitError(
@@ -421,7 +427,11 @@ internal class ThreeDS2Component(
             )
     }
 
-    private fun onSubmitFingerprintResult(result: SubmitFingerprintResult, activity: Activity) {
+    private fun onSubmitFingerprintResult(
+        result: SubmitFingerprintResult,
+        activity: Activity,
+        uiCustomization: UiCustomization,
+    ) {
         // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData
         // back to the merchant. Setting it to null ensures that when the flow ends and notifyDetails is called,
         // paymentData will not be included in the response.
@@ -440,7 +450,7 @@ internal class ThreeDS2Component(
 
             is SubmitFingerprintResult.Threeds2 -> {
                 trackFingerprintCompletedEvent(ThreeDS2Events.Result.THREEDS2)
-                handleAction(result.action, activity)
+                handleAction(result.action, activity, uiCustomization)
             }
         }
     }

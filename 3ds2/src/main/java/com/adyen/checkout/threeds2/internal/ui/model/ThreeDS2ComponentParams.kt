@@ -8,10 +8,7 @@
 
 package com.adyen.checkout.threeds2.internal.ui.model
 
-import com.adyen.threeds2.customization.UiCustomization
-
 internal data class ThreeDS2ComponentParams(
-    val uiCustomization: UiCustomization?,
     val threeDSRequestorAppURL: String?,
     val deviceParameterBlockList: Set<String>?,
 )

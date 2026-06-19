@@ -19,7 +19,6 @@ internal class ThreeDS2ComponentParamsMapper {
     ): ThreeDS2ComponentParams {
         val adyen3ds2Configuration = params.getConfiguration<ThreeDS2Configuration>()
         return ThreeDS2ComponentParams(
-            uiCustomization = adyen3ds2Configuration?.uiCustomization,
             threeDSRequestorAppURL = adyen3ds2Configuration?.threeDSRequestorAppURL,
             // Hardcoded for now, but in the feature we could make this configurable
             deviceParameterBlockList = DEVICE_PARAMETER_BLOCK_LIST,
