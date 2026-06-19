@@ -10,6 +10,8 @@ package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -31,6 +34,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
+import com.adyen.checkout.card.internal.ui.state.SelectableCardBrandItem
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
@@ -59,6 +63,7 @@ internal fun CardNumberField(
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     onScanButtonClick: () -> Unit,
+    onBrandSelected: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -71,6 +76,7 @@ internal fun CardNumberField(
             onValueChange = onValueChange,
             onFocusChange = onFocusChange,
             onScanButtonClick = onScanButtonClick,
+            onBrandSelected = onBrandSelected,
         )
 
         CardBrandsList(
@@ -88,6 +94,7 @@ private fun CardNumberInputField(
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     onScanButtonClick: () -> Unit,
+    onBrandSelected: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextCardNumber = cardNumberState.supportingText?.let { resolveString(it) }
@@ -121,6 +128,7 @@ private fun CardNumberInputField(
                 state = cardNumberState,
                 cardBrandViewState = cardBrandViewState,
                 onScanButtonClick = onScanButtonClick,
+                onBrandSelected = onBrandSelected,
             )
         },
     )
@@ -129,6 +137,7 @@ private fun CardNumberInputField(
 @Composable
 private fun DetectedBrandsList(
     cardBrandViewState: CardBrandViewState,
+    onBrandSelected: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -138,13 +147,65 @@ private fun DetectedBrandsList(
         when (cardBrandViewState) {
             is CardBrandViewState.Placeholder -> BrandLogo(txVariant = null)
             is CardBrandViewState.SingleBrand -> BrandLogo(cardBrandViewState.brand.txVariant)
-            is CardBrandViewState.DualBrand -> cardBrandViewState.brands.forEach { brand ->
-                BrandLogo(brand.txVariant)
-            }
-            // TODO - Co-badged selectable cards [COSDK-1193]
-            is CardBrandViewState.SelectableDualBrand -> cardBrandViewState.brands.forEach { brandItem ->
-                BrandLogo(brandItem.brand.txVariant)
-            }
+            is CardBrandViewState.DualBrand -> DualBrandLogos(cardBrandViewState.brands)
+
+            is CardBrandViewState.SelectableDualBrand -> SelectableDualBrandLogos(
+                selectableBrandItems = cardBrandViewState.brands,
+                onBrandSelected = onBrandSelected,
+            )
+        }
+    }
+}
+
+@Composable
+private fun DualBrandLogos(
+    cardBrands: List<CardBrand>,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .padding(Dimensions.Spacing.ExtraSmall),
+    ) {
+        cardBrands.forEach { brand ->
+            BrandLogo(
+                txVariant = brand.txVariant,
+                modifier = Modifier.padding(Dimensions.Spacing.ExtraSmall),
+            )
+        }
+    }
+}
+
+@Composable
+private fun SelectableDualBrandLogos(
+    selectableBrandItems: List<SelectableCardBrandItem>,
+    onBrandSelected: (CardBrand) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .background(
+                color = CheckoutThemeProvider.colors.container,
+                shape = RoundedCornerShape(Dimensions.CornerRadius),
+            )
+            .padding(Dimensions.Spacing.ExtraSmall),
+    ) {
+        selectableBrandItems.forEach { brandItem ->
+            BrandLogo(
+                txVariant = brandItem.brand.txVariant,
+                modifier = Modifier
+                    .then(
+                        if (brandItem.isSelected) {
+                            Modifier.background(
+                                color = CheckoutThemeProvider.colors.background,
+                                shape = RoundedCornerShape(Dimensions.CornerRadius),
+                            )
+                        } else {
+                            Modifier
+                        },
+                    )
+                    .clickable(onClick = { onBrandSelected(brandItem.brand) })
+                    .padding(Dimensions.Spacing.ExtraSmall),
+            )
         }
     }
 }
@@ -195,6 +256,7 @@ private fun CardNumberFieldIcon(
     state: TextInputViewState,
     cardBrandViewState: CardBrandViewState,
     onScanButtonClick: () -> Unit,
+    onBrandSelected: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon
@@ -218,7 +280,7 @@ private fun CardNumberFieldIcon(
                 )
             }
 
-            else -> DetectedBrandsList(cardBrandViewState)
+            else -> DetectedBrandsList(cardBrandViewState, onBrandSelected)
         }
     }
 }
@@ -246,6 +308,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
+            onBrandSelected = {},
         )
 
         CardNumberField(
@@ -263,6 +326,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
+            onBrandSelected = {},
         )
 
         CardNumberField(
@@ -279,6 +343,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
+            onBrandSelected = {},
         )
 
         CardNumberField(
@@ -294,6 +359,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
+            onBrandSelected = {},
         )
     }
 }

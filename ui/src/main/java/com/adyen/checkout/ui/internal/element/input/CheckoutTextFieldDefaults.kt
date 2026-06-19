@@ -18,7 +18,7 @@ internal object CheckoutTextFieldDefaults {
         attributes: InternalAttributes,
     ): InternalTextFieldStyle {
         return InternalTextFieldStyle(
-            backgroundColor = colors.container,
+            backgroundColor = colors.background,
             textColor = colors.text,
             activeColor = colors.primary,
             errorColor = colors.destructive,
