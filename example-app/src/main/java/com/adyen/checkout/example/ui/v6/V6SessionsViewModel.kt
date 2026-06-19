@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,9 @@ internal class V6SessionsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var checkoutContext: CheckoutContext.Sessions
+
+    private var checkoutController: CheckoutController? = null
+
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
     init {
@@ -158,7 +162,21 @@ internal class V6SessionsViewModel @Inject constructor(
                 )
             },
             coroutineScope = viewModelScope,
-        )
+        ).also {
+            checkoutController = it
+        }
+    }
+
+    fun onNewIntent(intent: Intent) {
+        val returnUrl = savedStateHandle.get<String>(V6Activity.RETURN_URL_EXTRA) ?: return
+        if (intent.data?.toString()?.startsWith(returnUrl) == true) {
+            checkoutController?.handleReturn(intent)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        checkoutController = null
     }
 
     private suspend fun onBeforeSubmit(data: BeforeSubmitData): BeforeSubmitResult {

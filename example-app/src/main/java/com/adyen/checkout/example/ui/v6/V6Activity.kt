@@ -57,6 +57,11 @@ class V6Activity : AppCompatActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        viewModel.onNewIntent(intent)
+    }
+
     companion object {
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
