@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
@@ -27,4 +28,6 @@ internal interface CheckoutFlow {
     fun submit()
 
     fun requiresUserInteraction(): Boolean
+
+    fun handleReturn(intent: Intent)
 }

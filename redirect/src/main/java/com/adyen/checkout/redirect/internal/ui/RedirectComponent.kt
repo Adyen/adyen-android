@@ -9,7 +9,6 @@
 package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Intent
-import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.action.data.ActionComponentData
@@ -17,6 +16,7 @@ import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -51,7 +51,7 @@ constructor(
     private val nativeRedirectService: NativeRedirectService,
     private val clientKey: String,
     private val coroutineScope: CoroutineScope,
-) : ActionComponent {
+) : ActionComponent, ReturningActionComponent {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
@@ -99,8 +99,7 @@ constructor(
         redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
     }
 
-    @VisibleForTesting
-    internal fun onNewIntent(intent: Intent) {
+    override fun handleReturn(intent: Intent) {
         adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)

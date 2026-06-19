@@ -9,11 +9,13 @@
 package com.adyen.checkout.core.components.internal
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
+import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -73,5 +75,9 @@ internal class ActionHandler(
                 componentRequestDispatcher.complete(CheckoutResultCode(result.resultCode))
             }
         }
+    }
+
+    fun handleReturn(intent: Intent) {
+        (actionComponent as? ReturningActionComponent)?.handleReturn(intent)
     }
 }

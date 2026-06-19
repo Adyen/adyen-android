@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -94,5 +95,9 @@ internal class FullCheckoutFlow(
                 // TODO - Handle partial payment state
             }
         }
+    }
+
+    override fun handleReturn(intent: Intent) {
+        actionHandler.handleReturn(intent)
     }
 }

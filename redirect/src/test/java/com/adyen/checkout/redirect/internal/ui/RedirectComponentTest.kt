@@ -10,7 +10,6 @@ package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
-import app.cash.turbine.test
 import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
@@ -24,9 +23,10 @@ import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.test.LoggingExtension
+import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.json.JSONException
 import org.json.JSONObject
@@ -65,7 +65,7 @@ internal class RedirectComponentTest(
     inner class HandleActionTest {
 
         @Test
-        fun `when handleAction is called, then analytics action event is tracked`() = runTest {
+        fun `when handleAction is called, then analytics action event is tracked`() {
             // GIVEN
             val component = createComponent(
                 action = RedirectAction(
@@ -73,7 +73,6 @@ internal class RedirectComponentTest(
                     type = TEST_ACTION_TYPE,
                     paymentData = "paymentData",
                 ),
-                coroutineScope = this,
             )
 
             // WHEN
@@ -88,14 +87,13 @@ internal class RedirectComponentTest(
         }
 
         @Test
-        fun `when handleAction is called with regular redirect, then paymentData is stored`() = runTest {
+        fun `when handleAction is called with regular redirect, then paymentData is stored`() {
             // GIVEN
             val component = createComponent(
                 action = RedirectAction(
                     type = ActionTypes.REDIRECT,
                     paymentData = "testPaymentData",
                 ),
-                coroutineScope = this,
             )
 
             // WHEN
@@ -106,14 +104,13 @@ internal class RedirectComponentTest(
         }
 
         @Test
-        fun `when handleAction is called with native redirect, then nativeRedirectData is stored`() = runTest {
+        fun `when handleAction is called with native redirect, then nativeRedirectData is stored`() {
             // GIVEN
             val component = createComponent(
                 action = RedirectAction(
                     type = ActionTypes.NATIVE_REDIRECT,
                     nativeRedirectData = "testNativeData",
                 ),
-                coroutineScope = this,
             )
 
             // WHEN
@@ -137,21 +134,20 @@ internal class RedirectComponentTest(
                     type = ActionTypes.REDIRECT,
                     paymentData = "testPaymentData",
                 ),
-                coroutineScope = this,
             )
             component.handleAction()
 
-            component.eventFlow.test {
-                // WHEN
-                component.onNewIntent(Intent())
+            val events = component.eventFlow.test(testScheduler)
 
-                // THEN
-                val event = awaitItem()
-                assertTrue(event is ActionComponentEvent.ActionDetails)
-                val details = (event as ActionComponentEvent.ActionDetails).data
-                assertEquals(expectedDetails.toString(), details.details.toString())
-                assertEquals("testPaymentData", details.paymentData)
-            }
+            // WHEN
+            component.handleReturn(Intent())
+
+            // THEN
+            val event = events.latestValue
+            assertTrue(event is ActionComponentEvent.ActionDetails)
+            val details = (event as ActionComponentEvent.ActionDetails).data
+            assertEquals(expectedDetails.toString(), details.details.toString())
+            assertEquals("testPaymentData", details.paymentData)
         }
 
         @Test
@@ -164,22 +160,21 @@ internal class RedirectComponentTest(
                     type = ActionTypes.REDIRECT,
                     paymentData = "paymentData",
                 ),
-                coroutineScope = this,
             )
 
-            component.eventFlow.test {
-                // WHEN
-                component.onNewIntent(Intent())
+            val events = component.eventFlow.test(testScheduler)
 
-                // THEN
-                val event = awaitItem()
-                assertTrue(event is ActionComponentEvent.Error)
-                assertEquals(error, (event as ActionComponentEvent.Error).error)
-            }
+            // WHEN
+            component.handleReturn(Intent())
+
+            // THEN
+            val event = events.latestValue
+            assertTrue(event is ActionComponentEvent.Error)
+            assertEquals(error, (event as ActionComponentEvent.Error).error)
         }
 
         @Test
-        fun `when onNewIntent is called and parsing fails, then redirect parse failed event is tracked`() = runTest {
+        fun `when onNewIntent is called and parsing fails, then redirect parse failed event is tracked`() {
             // GIVEN
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
@@ -188,11 +183,10 @@ internal class RedirectComponentTest(
                     paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                     type = ActionTypes.REDIRECT,
                 ),
-                coroutineScope = this,
             )
 
             // WHEN
-            component.onNewIntent(Intent())
+            component.handleReturn(Intent())
 
             // THEN
             val expectedEvent = GenericEvents.error(
@@ -203,7 +197,7 @@ internal class RedirectComponentTest(
         }
 
         @Test
-        fun `when onNewIntent is called and error is emitted, then redirect failed event is tracked`() = runTest {
+        fun `when onNewIntent is called and error is emitted, then redirect failed event is tracked`() {
             // GIVEN
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
@@ -212,11 +206,10 @@ internal class RedirectComponentTest(
                     paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                     type = ActionTypes.REDIRECT,
                 ),
-                coroutineScope = this,
             )
 
             // WHEN
-            component.onNewIntent(Intent())
+            component.handleReturn(Intent())
 
             // THEN
             val expectedEvent = GenericEvents.error(
@@ -245,22 +238,21 @@ internal class RedirectComponentTest(
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testNativeData",
                     ),
-                    coroutineScope = this,
                 )
                 component.handleAction()
 
-                component.eventFlow.test {
-                    // WHEN
-                    component.onNewIntent(Intent())
+                val events = component.eventFlow.test(testScheduler)
 
-                    // THEN
-                    val event = awaitItem()
-                    assertTrue(event is ActionComponentEvent.ActionDetails)
-                    val details = (event as ActionComponentEvent.ActionDetails).data
-                    val expectedDetails = NativeRedirectResponse.SERIALIZER.serialize(response)
-                    assertEquals(expectedDetails.toString(), details.details.toString())
-                    assertNull(details.paymentData)
-                }
+                // WHEN
+                component.handleReturn(Intent())
+
+                // THEN
+                val event = events.latestValue
+                assertTrue(event is ActionComponentEvent.ActionDetails)
+                val details = (event as ActionComponentEvent.ActionDetails).data
+                val expectedDetails = NativeRedirectResponse.SERIALIZER.serialize(response)
+                assertEquals(expectedDetails.toString(), details.details.toString())
+                assertNull(details.paymentData)
             }
 
         @Test
@@ -276,19 +268,18 @@ internal class RedirectComponentTest(
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
                     ),
-                    coroutineScope = this,
                 )
                 component.handleAction()
 
-                component.eventFlow.test {
-                    // WHEN
-                    component.onNewIntent(Intent())
+                val events = component.eventFlow.test(testScheduler)
 
-                    // THEN
-                    val event = awaitItem()
-                    assertTrue(event is ActionComponentEvent.Error)
-                    assertEquals(error, (event as ActionComponentEvent.Error).error)
-                }
+                // WHEN
+                component.handleReturn(Intent())
+
+                // THEN
+                val event = events.latestValue
+                assertTrue(event is ActionComponentEvent.Error)
+                assertEquals(error, (event as ActionComponentEvent.Error).error)
             }
 
         @Test
@@ -304,13 +295,11 @@ internal class RedirectComponentTest(
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
                     ),
-                    coroutineScope = this,
                 )
                 component.handleAction()
 
                 // WHEN
-                component.onNewIntent(Intent())
-                advanceUntilIdle()
+                component.handleReturn(Intent())
 
                 // THEN
                 val expectedEvent = GenericEvents.error(
@@ -333,18 +322,17 @@ internal class RedirectComponentTest(
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
                     ),
-                    coroutineScope = this,
                 )
                 component.handleAction()
 
-                component.eventFlow.test {
-                    // WHEN
-                    component.onNewIntent(Intent())
+                val events = component.eventFlow.test(testScheduler)
 
-                    // THEN
-                    val event = awaitItem()
-                    assertTrue(event is ActionComponentEvent.Error)
-                }
+                // WHEN
+                component.handleReturn(Intent())
+
+                // THEN
+                val event = events.latestValue
+                assertTrue(event is ActionComponentEvent.Error)
             }
 
         @Test
@@ -360,13 +348,11 @@ internal class RedirectComponentTest(
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
                     ),
-                    coroutineScope = this,
                 )
                 component.handleAction()
 
                 // WHEN
-                component.onNewIntent(Intent())
-                advanceUntilIdle()
+                component.handleReturn(Intent())
 
                 // THEN
                 val expectedEvent = GenericEvents.error(
@@ -379,7 +365,6 @@ internal class RedirectComponentTest(
 
     private fun createComponent(
         action: RedirectAction = RedirectAction(),
-        coroutineScope: CoroutineScope,
     ): RedirectComponent {
         return RedirectComponent(
             action = action,
@@ -388,7 +373,7 @@ internal class RedirectComponentTest(
             paymentDataRepository = paymentDataRepository,
             nativeRedirectService = nativeRedirectService,
             clientKey = TEST_CLIENT_KEY,
-            coroutineScope = coroutineScope,
+            coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         )
     }
 
