@@ -29,7 +29,8 @@ internal fun ThreeDS2EventEffect(
     val colors = CheckoutThemeProvider.colors
     val attributes = CheckoutThemeProvider.attributes
     val uiCustomization = remember(colors, attributes) { mapToUiCustomization(colors, attributes) }
-    LaunchedEffect(handleAction, viewEventFlow, onError, uiCustomization, activity) {
+
+    LaunchedEffect(viewEventFlow, activity, uiCustomization) {
         viewEventFlow.collect { event ->
             when (event) {
                 is ThreeDS2Event.HandleAction -> {
