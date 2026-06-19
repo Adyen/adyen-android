@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.helper.LocalCardBrandMapper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -24,24 +22,10 @@ internal class StoredCardComponentStateFactory(
     private val componentParams: CardComponentParams,
 ) : ComponentStateFactory<StoredCardComponentState> {
     override fun createInitialState(): StoredCardComponentState {
-        val cardType = CardBrand(txVariant = storedPaymentMethod.brand)
-
-        val storedDetectedCardType = DetectedCardType(
-            cardBrand = cardType,
-            enableLuhnCheck = true,
-            cvcPolicy = when {
-                componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||
-                    NO_CVC_BRANDS.contains(cardType) -> Brand.FieldPolicy.HIDDEN
-
-                else -> Brand.FieldPolicy.REQUIRED
-            },
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+        val storedDetectedCardType = LocalCardBrandMapper.map(
+            cardBrand = CardBrand(txVariant = storedPaymentMethod.brand),
             isSupported = true,
-            isHidden = false,
-            isShopperSelectionAllowedInDualBranded = false,
-            panLength = null,
-            paymentMethodVariant = null,
-            localizedBrand = null,
+            hideCvc = componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE,
         )
 
         return StoredCardComponentState(
@@ -55,9 +39,5 @@ internal class StoredCardComponentStateFactory(
             isLoading = false,
             detectedCardType = storedDetectedCardType,
         )
-    }
-
-    companion object {
-        private val NO_CVC_BRANDS: Set<CardBrand> = setOf(CardBrand(txVariant = CardType.BCMC.txVariant))
     }
 }

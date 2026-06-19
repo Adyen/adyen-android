@@ -8,11 +8,10 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.helper.LocalCardBrandMapper
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 
 internal class LocalCardBrandDetectionService(
@@ -25,30 +24,12 @@ internal class LocalCardBrandDetectionService(
             return emptyList()
         }
         val matchingCardBrands = CardBrand.estimate(cardNumber)
-        return matchingCardBrands.map(::mapCardBrands)
-    }
-
-    private fun mapCardBrands(cardBrand: CardBrand): DetectedCardType {
-        return DetectedCardType(
-            cardBrand = cardBrand,
-            enableLuhnCheck = true,
-            cvcPolicy = when {
-                NO_CVC_BRANDS.contains(cardBrand) -> Brand.FieldPolicy.HIDDEN
-                else -> Brand.FieldPolicy.REQUIRED
-            },
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = supportedCardBrands.contains(cardBrand),
-            isHidden = false,
-            isShopperSelectionAllowedInDualBranded = false,
-            panLength = null,
-            paymentMethodVariant = null,
-            localizedBrand = null,
-        )
-    }
-
-    companion object {
-        private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(
-            CardBrand(txVariant = CardType.BCMC.txVariant),
-        )
+        return matchingCardBrands.map {
+            LocalCardBrandMapper.map(
+                cardBrand = it,
+                isSupported = supportedCardBrands.contains(it),
+                hideCvc = false,
+            )
+        }
     }
 }
