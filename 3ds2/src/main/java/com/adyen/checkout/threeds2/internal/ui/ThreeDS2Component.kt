@@ -10,7 +10,6 @@ package com.adyen.checkout.threeds2.internal.ui
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -109,8 +108,8 @@ internal class ThreeDS2Component(
         threeDsEventChannel.trySend(ThreeDS2Event.HandleAction)
     }
 
-    private fun handleAction(context: Context, uiCustomization: UiCustomization) {
-        handleAction(action, context as Activity, uiCustomization)
+    private fun handleAction(activity: Activity, uiCustomization: UiCustomization) {
+        handleAction(action, activity, uiCustomization)
     }
 
     private fun handleAction(action: Action, activity: Activity, uiCustomization: UiCustomization) {

@@ -8,11 +8,12 @@
 
 package com.adyen.checkout.threeds2.internal.ui
 
-import android.content.Context
+import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.threeds2.customization.UiCustomization
@@ -20,18 +21,24 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 internal fun ThreeDS2EventEffect(
-    handleAction: (Context, UiCustomization) -> Unit,
+    handleAction: (Activity, UiCustomization) -> Unit,
     viewEventFlow: Flow<ThreeDS2Event>,
     onError: (InternalCheckoutError) -> Unit,
 ) {
-    val context = LocalContext.current
+    val activity = LocalActivity.current
     val colors = CheckoutThemeProvider.colors
     val attributes = CheckoutThemeProvider.attributes
     val uiCustomization = remember(colors, attributes) { mapToUiCustomization(colors, attributes) }
-    LaunchedEffect(handleAction, viewEventFlow, onError, uiCustomization) {
+    LaunchedEffect(handleAction, viewEventFlow, onError, uiCustomization, activity) {
         viewEventFlow.collect { event ->
             when (event) {
-                is ThreeDS2Event.HandleAction -> handleAction(context, uiCustomization)
+                is ThreeDS2Event.HandleAction -> {
+                    if (activity == null) {
+                        onError(GenericError("Activity is not available."))
+                    } else {
+                        handleAction(activity, uiCustomization)
+                    }
+                }
             }
         }
     }
