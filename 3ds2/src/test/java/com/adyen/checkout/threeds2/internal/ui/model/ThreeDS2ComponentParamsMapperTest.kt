@@ -27,7 +27,6 @@ internal class ThreeDS2ComponentParamsMapperTest {
     fun `when 3ds2 configuration is set then params should match the configuration`() {
         val configuration = ThreeDS2Configuration(
             threeDSRequestorAppURL = TEST_APP_URL,
-            uiCustomization = null,
         )
         val params = mapper.mapToParams(checkoutParams(configuration))
 
