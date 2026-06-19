@@ -818,6 +818,7 @@ public final class com/adyen/checkout/core/components/CheckoutConfiguration$CREA
 
 public final class com/adyen/checkout/core/components/CheckoutController {
 	public static final field $stable I
+	public final fun handleReturn (Landroid/content/Intent;)V
 	public final fun requiresUserInteraction ()Z
 	public final fun submit ()V
 }

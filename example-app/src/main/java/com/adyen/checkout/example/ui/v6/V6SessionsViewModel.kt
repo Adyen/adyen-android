@@ -168,7 +168,7 @@ internal class V6SessionsViewModel @Inject constructor(
     }
 
     fun onNewIntent(intent: Intent) {
-        val returnUrl = savedStateHandle.get<String>(V6Activity.RETURN_URL_EXTRA) ?: return
+        val returnUrl = savedStateHandle.get<String>(V6SessionsActivity.RETURN_URL_EXTRA) ?: return
         if (intent.data?.toString()?.startsWith(returnUrl) == true) {
             checkoutController?.handleReturn(intent)
         }
