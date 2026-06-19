@@ -22,8 +22,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
-import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.internal.analytics.CardScannerEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.helper.toBinLookupData
@@ -81,7 +81,7 @@ constructor(
     private val coroutineScope: CoroutineScope,
     private val sdkDataProvider: SdkDataProvider,
     private val paymentMethodType: String,
-    private val onBinValueCallback: OnBinValueCallback?,
+    private val onBinChangeCallback: OnBinChangeCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
     private val cardScannerWrapper: CardScannerWrapper,
     private val publicKey: String?,
@@ -279,20 +279,22 @@ constructor(
     }
 
     private fun onBinChanged() {
+        val callback = onBinChangeCallback ?: return
         componentState
             .map { it.binValue }
             .distinctUntilChanged()
             .drop(1)
-            .onEach { newBinValue -> onBinValueCallback?.onBinValue(newBinValue) }
+            .onEach { newBinValue -> callback.onBinChange(newBinValue) }
             .launchIn(coroutineScope)
     }
 
     private fun onCardBrandDataChanged() {
+        val callback = onBinLookupCallback ?: return
         componentState
             .map { it.networkBinLookupState }
             .distinctUntilChanged()
             .mapNotNull { it?.toBinLookupData() }
-            .onEach { onBinLookupCallback?.onBinLookup(it) }
+            .onEach { binLookupData -> callback.onBinLookup(binLookupData) }
             .launchIn(coroutineScope)
     }
 

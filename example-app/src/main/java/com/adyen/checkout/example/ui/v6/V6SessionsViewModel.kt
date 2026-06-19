@@ -97,7 +97,7 @@ internal class V6SessionsViewModel @Inject constructor(
         }
     }
 
-    private fun onBinValue(binValue: String) {
+    private fun onBinChange(binValue: String) {
         Log.d(TAG, "Bin value received: $binValue")
     }
 
@@ -146,7 +146,7 @@ internal class V6SessionsViewModel @Inject constructor(
                 onComplete = ::onComplete,
             ) {
                 card(
-                    onBinValue = ::onBinValue,
+                    onBinChange = ::onBinChange,
                     onBinLookup = ::onBinLookup,
                 )
             },

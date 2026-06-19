@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
-import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.internal.data.api.BinLookupCache
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
@@ -103,7 +103,7 @@ internal class CardFactory :
             coroutineScope = coroutineScope,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
             paymentMethodType = paymentMethodType,
-            onBinValueCallback = additionalCallbacks.getAdditionalCallback<OnBinValueCallback>(),
+            onBinChangeCallback = additionalCallbacks.getAdditionalCallback<OnBinChangeCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
             cardScannerWrapper = CardScannerWrapper(),
             publicKey = params.publicKey,
