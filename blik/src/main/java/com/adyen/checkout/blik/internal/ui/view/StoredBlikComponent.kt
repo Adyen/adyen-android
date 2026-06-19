@@ -9,6 +9,7 @@
 package com.adyen.checkout.blik.internal.ui.view
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
@@ -17,6 +18,7 @@ import com.adyen.checkout.ui.internal.element.button.PayButton
 internal fun StoredBlikComponent(
     viewState: StoredBlikViewState,
     onSubmitClick: () -> Unit,
+    modifier: Modifier,
 ) {
     ComponentScaffold(
         footer = {
@@ -25,6 +27,7 @@ internal fun StoredBlikComponent(
                 onClick = onSubmitClick,
             )
         },
+        modifier = modifier,
     ) {
         // No content needed - stored Blik just shows a Pay button
     }
