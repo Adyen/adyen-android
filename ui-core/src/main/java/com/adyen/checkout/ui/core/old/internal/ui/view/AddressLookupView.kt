@@ -33,6 +33,7 @@ import com.adyen.checkout.ui.core.old.internal.util.showKeyboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.old.internal.util.collectWithLifecycle
 
 @Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -84,11 +85,10 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun observeDelegate(delegate: AddressLookupDelegate, coroutineScope: CoroutineScope) {
         delegate.addressLookupStateFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
+            .collectWithLifecycle(this, coroutineScope) { outputDataChanged(it) }
 
         delegate.addressLookupErrorPopupFlow
-            .onEach { message ->
+            .collectWithLifecycle(this, coroutineScope) { message ->
                 val errorMessage =
                     message ?: localizedContext.getString(R.string.component_error)
                 AlertDialog.Builder(context)
@@ -97,7 +97,6 @@ class AddressLookupView @JvmOverloads constructor(
                     .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
                     .show()
             }
-            .launchIn(coroutineScope)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {

@@ -35,6 +35,7 @@ import com.adyen.checkout.ui.core.old.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.old.internal.util.collectWithLifecycle
 import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
@@ -161,8 +162,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
 
     private fun observeDelegate(delegate: BacsDirectDebitDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
+            .collectWithLifecycle(this, coroutineScope) { outputDataChanged(it) }
     }
 
     private fun outputDataChanged(bacsDirectDebitOutputData: BacsDirectDebitOutputData) {

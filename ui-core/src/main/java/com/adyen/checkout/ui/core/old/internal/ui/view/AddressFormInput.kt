@@ -33,6 +33,7 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.old.internal.util.collectWithLifecycle
 
 /**
  * AddressFormInput to be used in other modules.
@@ -140,10 +141,10 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun subscribeCountryAndStateList(coroutineScope: CoroutineScope) {
-        delegate.addressOutputDataFlow.onEach { addressOutputData ->
+        delegate.addressOutputDataFlow.collectWithLifecycle(this, coroutineScope) { addressOutputData ->
             updateCountries(addressOutputData.countryOptions)
             updateStates(addressOutputData.stateOptions)
-        }.launchIn(coroutineScope)
+        }
     }
 
     fun initLocalizedContext(localizedContext: Context) {
