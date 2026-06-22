@@ -81,4 +81,8 @@ enum class SharedPreferencesEntry(val key: String, val defaultValue: Any?) {
         key = "on_before_submit_mode",
         defaultValue = SettingsDefaults.ON_BEFORE_SUBMIT_MODE,
     ),
+    SHOW_CARDHOLDER_NAME(
+        key = "show_cardholder_name",
+        defaultValue = SettingsDefaults.SHOW_CARDHOLDER_NAME,
+    ),
 }
