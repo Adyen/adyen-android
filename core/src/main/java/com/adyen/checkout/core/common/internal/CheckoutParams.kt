@@ -13,6 +13,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.Configuration
+import com.adyen.checkout.core.components.PrefilledShopperInformation
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -26,6 +27,7 @@ data class CheckoutParams(
     val publicKey: String?,
     val additionalConfigurations: Map<String, Configuration>,
     val additionalSessionParams: AdditionalSessionParams?,
+    val shopperInformation: PrefilledShopperInformation?,
 ) {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -63,6 +63,7 @@ class CheckoutConfiguration(
     val amount: Amount? = null,
     val analyticsConfiguration: AnalyticsConfiguration? = null,
     val showSubmitButton: Boolean? = null,
+    val shopperInformation: PrefilledShopperInformation? = null,
     @IgnoredOnParcel
     private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
 ) : Parcelable {
@@ -85,6 +86,7 @@ class CheckoutConfiguration(
         amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
         showSubmitButton = parcel.readValue(null) as? Boolean?,
+        shopperInformation = parcel.readParcelable(PrefilledShopperInformation::class.java.classLoader),
     ) {
         val size = parcel.readInt()
 
@@ -116,6 +118,7 @@ class CheckoutConfiguration(
         dest.writeParcelable(amount, flags)
         dest.writeParcelable(analyticsConfiguration, flags)
         dest.writeValue(showSubmitButton)
+        dest.writeParcelable(shopperInformation, flags)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
             dest.writeString(it.key)

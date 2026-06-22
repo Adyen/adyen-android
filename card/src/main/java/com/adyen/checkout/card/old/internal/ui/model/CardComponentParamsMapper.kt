@@ -16,6 +16,7 @@ import com.adyen.checkout.card.old.getCardConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PrefilledShopperInformation
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -81,11 +82,12 @@ internal class CardComponentParamsMapper(
         )
         val cardConfiguration = checkoutConfiguration.getCardConfiguration()
         return mapToParams(
-            commonComponentParamsMapperData.commonComponentParams,
-            commonComponentParamsMapperData.sessionParams,
-            dropInOverrideParams,
-            cardConfiguration,
-            paymentMethod,
+            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
+            sessionParams = commonComponentParamsMapperData.sessionParams,
+            dropInOverrideParams = dropInOverrideParams,
+            cardConfiguration = cardConfiguration,
+            paymentMethod = paymentMethod,
+            shopperInformation = checkoutConfiguration.shopperInformation,
         )
     }
 
@@ -95,6 +97,7 @@ internal class CardComponentParamsMapper(
         dropInOverrideParams: DropInOverrideParams?,
         cardConfiguration: CardConfiguration?,
         paymentMethod: PaymentMethod?,
+        shopperInformation: PrefilledShopperInformation?,
     ): CardComponentParams {
         return CardComponentParams(
             commonComponentParams = commonComponentParams,
@@ -124,6 +127,7 @@ internal class CardComponentParamsMapper(
             } else {
                 StoredCVCVisibility.SHOW
             },
+            shopperInformation = shopperInformation,
         )
     }
 

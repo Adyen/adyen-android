@@ -116,7 +116,9 @@ class DefaultCardDelegate(
     private val dualBrandedCardHandler: DualBrandedCardHandler,
 ) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
 
-    private val inputData: CardInputData = CardInputData()
+    private val inputData: CardInputData = CardInputData().apply {
+        holderName = componentParams.shopperInformation?.card?.holderName.orEmpty()
+    }
 
     private var publicKey: String? = null
 

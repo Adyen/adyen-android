@@ -45,6 +45,7 @@ internal class CheckoutParamsFactory(
             publicKey = publicKey,
             additionalConfigurations = configuration.getAvailableConfigurations(),
             additionalSessionParams = session?.createAdditionalSessionParams(),
+            shopperInformation = configuration.shopperInformation,
         )
     }
 

@@ -33,6 +33,7 @@ internal class CardComponentStateFactory(
                 requirementPolicy = getSecurityCodeRequirementPolicy(),
             ),
             holderName = TextInputComponentState(
+                text = componentParams.shopperInformation?.card?.holderName.orEmpty(),
                 requirementPolicy = getHolderNameRequirementPolicy(),
             ),
             socialSecurityNumber = TextInputComponentState(

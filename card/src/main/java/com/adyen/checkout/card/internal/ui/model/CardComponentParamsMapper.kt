@@ -54,6 +54,7 @@ internal class CardComponentParamsMapper {
                 cardConfiguration = cardConfiguration,
                 amount = params.amount,
             ),
+            shopperInformation = params.shopperInformation,
         )
     }
 

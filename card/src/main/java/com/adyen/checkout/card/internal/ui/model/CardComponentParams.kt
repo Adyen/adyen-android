@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.PrefilledShopperInformation
 
 internal data class CardComponentParams(
     val showCardholderName: Boolean,
@@ -23,4 +24,5 @@ internal data class CardComponentParams(
     val storedCVCVisibility: StoredCVCVisibility,
     val showCardScanner: Boolean,
     val installmentParams: InstallmentParams?,
+    val shopperInformation: PrefilledShopperInformation?,
 )
