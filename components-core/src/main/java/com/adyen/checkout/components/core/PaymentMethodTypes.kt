@@ -64,6 +64,7 @@ object PaymentMethodTypes {
 
     // Payment methods that do not need a payment component, but only an action component
     const val DUIT_NOW = "duitnow"
+    const val PAYPAL = "paypal"
     const val PAY_NOW = "paynow"
     const val PIX = "pix"
     const val PROMPT_PAY = "promptpay"
@@ -139,6 +140,7 @@ object PaymentMethodTypes {
         ONLINE_BANKING_PL,
         ONLINE_BANKING_SK,
         OPEN_BANKING,
+        PAYPAL,
         PAY_BY_BANK,
         PAY_BY_BANK_US,
         PAY_NOW,
