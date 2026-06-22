@@ -49,7 +49,7 @@ fun <T> Flow<T>.collectWithLifecycle(
     coroutineScope: CoroutineScope,
     action: (T) -> Unit
 ): Job {
-    return coroutineScope.launch {
+    return coroutineScope.launch(kotlinx.coroutines.Dispatchers.Main.immediate) {
         if (view.findViewTreeLifecycleOwner() == null) {
             view.awaitAttach()
         }
@@ -58,7 +58,20 @@ fun <T> Flow<T>.collectWithLifecycle(
             this@collectWithLifecycle.flowWithLifecycle(lifecycleOwner.lifecycle)
                 .collect { action(it) }
         } else {
-            this@collectWithLifecycle.collect { action(it) }
+            val collectJob = launch {
+                this@collectWithLifecycle.collect { action(it) }
+            }
+            val listener = object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View) {}
+                override fun onViewDetachedFromWindow(v: View) {
+                    collectJob.cancel()
+                    view.removeOnAttachStateChangeListener(this)
+                }
+            }
+            view.addOnAttachStateChangeListener(listener)
+            collectJob.invokeOnCompletion {
+                view.removeOnAttachStateChangeListener(listener)
+            }
         }
     }
 }
