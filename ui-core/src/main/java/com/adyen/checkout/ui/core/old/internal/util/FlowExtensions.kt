@@ -19,9 +19,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun mergeViewFlows(
@@ -45,14 +49,35 @@ fun <T> Flow<T>.collectWithLifecycle(
     coroutineScope: CoroutineScope,
     action: (T) -> Unit
 ): Job {
-    val lifecycleOwner = view.findViewTreeLifecycleOwner()
-    return if (lifecycleOwner != null) {
-        this.flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { action(it) }
-            .launchIn(coroutineScope)
-    } else {
-        this.onEach { action(it) }
-            .launchIn(coroutineScope)
+    return coroutineScope.launch {
+        if (view.findViewTreeLifecycleOwner() == null) {
+            view.awaitAttach()
+        }
+        val lifecycleOwner = view.findViewTreeLifecycleOwner()
+        if (lifecycleOwner != null) {
+            this@collectWithLifecycle.flowWithLifecycle(lifecycleOwner.lifecycle)
+                .collect { action(it) }
+        } else {
+            this@collectWithLifecycle.collect { action(it) }
+        }
+    }
+}
+
+private suspend fun View.awaitAttach() {
+    if (isAttachedToWindow) return
+    suspendCancellableCoroutine<Unit> { continuation ->
+        val listener = object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                removeOnAttachStateChangeListener(this)
+                continuation.resume(Unit)
+            }
+
+            override fun onViewDetachedFromWindow(v: View) {}
+        }
+        addOnAttachStateChangeListener(listener)
+        continuation.invokeOnCancellation {
+            removeOnAttachStateChangeListener(listener)
+        }
     }
 }
 
