@@ -77,4 +77,8 @@ enum class SharedPreferencesEntry(val key: String, val defaultValue: Any?) {
         key = "ui_theme",
         defaultValue = SettingsDefaults.UI_THEME,
     ),
+    SHOW_CARDHOLDER_NAME(
+        key = "show_cardholder_name",
+        defaultValue = SettingsDefaults.SHOW_CARDHOLDER_NAME,
+    ),
 }

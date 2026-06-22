@@ -78,6 +78,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
             card {
                 setShopperReference(keyValueStorage.getShopperReference())
+                setHolderNameRequired(keyValueStorage.isShowCardholderName())
                 setAddressConfiguration(getAddressConfiguration())
                 setInstallmentConfigurations(getOldInstallmentConfiguration())
             }
@@ -119,6 +120,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             card(
+                showCardholderName = keyValueStorage.isShowCardholderName(),
                 billingAddressMode = getBillingAddressMode(),
                 installmentConfiguration = getInstallmentConfiguration(),
             )
