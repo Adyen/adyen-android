@@ -10,23 +10,19 @@ package com.adyen.checkout.threeds2
 
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
-import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal class ThreeDS2Configuration internal constructor(
     val threeDSRequestorAppURL: String?,
-    val uiCustomization: UiCustomization?,
 ) : Configuration
 
 @JvmOverloads
 fun CheckoutConfiguration.threeDS2(
     threeDSRequestorAppURL: String? = null,
-    uiCustomization: UiCustomization? = null,
 ): CheckoutConfiguration {
     val config = ThreeDS2Configuration(
         threeDSRequestorAppURL = threeDSRequestorAppURL,
-        uiCustomization = uiCustomization,
     )
     addConfiguration(config)
     return this

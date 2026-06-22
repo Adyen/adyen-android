@@ -11,7 +11,14 @@ package com.adyen.checkout.ui.internal.helper
 import androidx.annotation.RestrictTo
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
+import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun Color.isDark() = luminance() < LUMINANCE_THRESHOLD
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Color.toHex(): String = String.format(Locale.ROOT, "#%06X", RGB_MASK and toArgb())
+
 private const val LUMINANCE_THRESHOLD = 0.5f
+private const val RGB_MASK = 0xFFFFFF
