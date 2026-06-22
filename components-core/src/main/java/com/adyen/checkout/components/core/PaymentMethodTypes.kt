@@ -51,6 +51,7 @@ object PaymentMethodTypes {
     const val ONLINE_BANKING_PL = "onlineBanking_PL"
     const val ONLINE_BANKING_SK = "onlineBanking_SK"
     const val OPEN_BANKING = "openbanking_UK"
+    const val PAYPAL = "paypal"
     const val PAY_BY_BANK = "paybybank"
     const val PAY_BY_BANK_US = "paybybank_AIS_DD"
     const val PAY_TO = "payto"
@@ -64,7 +65,6 @@ object PaymentMethodTypes {
 
     // Payment methods that do not need a payment component, but only an action component
     const val DUIT_NOW = "duitnow"
-    const val PAYPAL = "paypal"
     const val PAY_NOW = "paynow"
     const val PIX = "pix"
     const val PROMPT_PAY = "promptpay"
