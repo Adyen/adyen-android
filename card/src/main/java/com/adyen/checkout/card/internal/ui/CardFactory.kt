@@ -132,7 +132,8 @@ internal class CardFactory :
 
         return StoredCardComponent(
             // TODO - Remove casting when paymentMethod object is typed
-            storedPaymentMethod = storedPaymentMethod as? StoredCardPaymentMethod ?: error("Incorrect paymentMethod"),
+            storedPaymentMethod = storedPaymentMethod as? StoredCardPaymentMethod
+                ?: throw IllegalArgumentException("Incorrect paymentMethod"),
             analyticsManager = analyticsManager,
             cardEncryptor = cardEncryptor,
             componentParams = cardComponentParams,
