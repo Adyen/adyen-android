@@ -53,11 +53,11 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `initialize is called twice, then the second time is ignored`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
+            whenever(analyticsRepository.setup()) doAnswer { error("test") }
 
             analyticsManager.initialize()
 
-            verify(analyticsRepository, times(1)).fetchCheckoutAttemptId()
+            verify(analyticsRepository, times(1)).setup()
             analyticsManager.clear(this@InitializeTest)
         }
     }
@@ -93,7 +93,7 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `the event should force sending, then the event is sent right away`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
+            whenever(analyticsRepository.setup()) doReturn "test value"
             analyticsManager.initialize()
             val event = AnalyticsEvent.Info(
                 component = "test",
@@ -130,7 +130,7 @@ internal class DefaultAnalyticsManagerTest(
     @Test
     fun `when timer ticks, then all stored events should be sent`() = runTest {
         analyticsManager = createAnalyticsManager()
-        whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
+        whenever(analyticsRepository.setup()) doReturn "test value"
         whenever(analyticsRepository.storeEvent(any())) doReturn Unit
         whenever(analyticsRepository.sendEvents(any())) doReturn Unit
         analyticsManager.initialize()
