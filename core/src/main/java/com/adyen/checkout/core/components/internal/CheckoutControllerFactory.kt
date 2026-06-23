@@ -24,7 +24,6 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
-import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineScope
@@ -98,18 +97,10 @@ internal class CheckoutControllerFactory {
         componentRequestDispatcher: SubmittableComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
-        val paymentMethod = PaymentMethodResolver.resolve(target, context)
-
-        if (paymentMethod == null) {
-            componentRequestDispatcher.failure(
-                CheckoutError(
-                    code = CheckoutError.ErrorCode.PAYMENT_METHOD_FAILURE,
-                    message = "Payment method for target '${target}' was not found in the payment methods response.",
-                ),
-            )
-            //TODO - gracefully fail
-            error("")
-        }
+        val paymentMethod = PaymentMethodResolver.resolve(target, context) ?: return createFailedCheckoutController(
+            errorMessage = "Payment method for target '$target' was not found in the payment methods response.",
+            componentRequestDispatcher = componentRequestDispatcher,
+        )
 
         val (checkoutParams, analyticsManager) = createCommonDependencies(
             paymentMethodType = paymentMethod.type,
@@ -132,27 +123,25 @@ internal class CheckoutControllerFactory {
             checkoutParams = checkoutParams,
         )
 
-        val paymentComponent = when (paymentComponentResult) {
-            is PaymentComponentResult.Success -> paymentComponentResult.component
-            is PaymentComponentResult.Failure -> {
-                componentRequestDispatcher.failure(
-                    CheckoutError(
-                        code = CheckoutError.ErrorCode.PAYMENT_METHOD_FAILURE,
-                        message = paymentComponentResult.message,
-                    ),
+        return when (paymentComponentResult) {
+            is PaymentComponentResult.Success -> {
+                val flow = FullCheckoutFlow(
+                    componentRequestDispatcher = componentRequestDispatcher,
+                    coroutineScope = coroutineScope,
+                    paymentComponent = paymentComponentResult.component,
+                    actionHandler = actionHandler,
                 )
-                null
+
+                CheckoutController(flow = flow)
+            }
+
+            is PaymentComponentResult.Failure -> {
+                createFailedCheckoutController(
+                    errorMessage = paymentComponentResult.message,
+                    componentRequestDispatcher = componentRequestDispatcher,
+                )
             }
         }
-
-        val flow = FullCheckoutFlow(
-            componentRequestDispatcher = componentRequestDispatcher,
-            coroutineScope = coroutineScope,
-            paymentComponent = paymentComponent,
-            actionHandler = actionHandler,
-        )
-
-        return CheckoutController(flow = flow)
     }
 
     private fun createCommonDependencies(
@@ -210,6 +199,17 @@ internal class CheckoutControllerFactory {
         analyticsManager = analyticsManager,
         params = params,
     )
+
+    private fun createFailedCheckoutController(
+        errorMessage: String,
+        componentRequestDispatcher: ComponentRequestDispatcher,
+    ): CheckoutController {
+        val flow = FailureCheckoutFlow(
+            errorMessage = errorMessage,
+            componentRequestDispatcher = componentRequestDispatcher,
+        )
+        return CheckoutController(flow)
+    }
 
     private data class CommonDependencies(
         val checkoutParams: CheckoutParams,

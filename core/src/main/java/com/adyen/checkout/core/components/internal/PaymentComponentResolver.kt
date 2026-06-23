@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 
 internal object PaymentComponentResolver {
 
+    @Suppress("LongParameterList")
     fun resolve(
         paymentMethod: PaymentMethodResponse,
         callbacks: CheckoutCallbacks,
@@ -49,6 +50,7 @@ internal object PaymentComponentResolver {
         }
     }
 
+    @Suppress("LongParameterList")
     private fun resolvePaymentMethod(
         paymentMethod: PaymentMethod,
         callbacks: CheckoutCallbacks,
