@@ -29,7 +29,6 @@ internal object GenericPaymentComponentFactory : PaymentComponentFactory<Generic
             analyticsManager = analyticsManager,
             paymentMethodType = paymentMethod.type,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
-            coroutineScope = coroutineScope,
         )
     }
 }

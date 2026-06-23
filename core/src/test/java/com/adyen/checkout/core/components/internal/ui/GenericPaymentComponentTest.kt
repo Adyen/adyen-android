@@ -14,7 +14,6 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.GenericPaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.GenericDetails
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -44,9 +43,9 @@ internal class GenericPaymentComponentTest(
     }
 
     @Test
-    fun `when component is created, then analytics is initialized`() = runTest {
+    fun `when component is created, then analytics is initialized`() {
         // GIVEN - WHEN
-        createComponent(this)
+        createComponent()
 
         // THEN
         analyticsManager.assertIsInitialized()
@@ -56,7 +55,7 @@ internal class GenericPaymentComponentTest(
     fun `when submit is called, then eventFlow emits Submit event`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
-        val component = createComponent(this)
+        val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
         // WHEN
@@ -71,7 +70,7 @@ internal class GenericPaymentComponentTest(
     fun `when submit is called, then state contains correct payment method type`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
-        val component = createComponent(this)
+        val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
         // WHEN
@@ -89,7 +88,7 @@ internal class GenericPaymentComponentTest(
     fun `when submit is called, then state contains sdk data from provider`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
-        val component = createComponent(this)
+        val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
         // WHEN
@@ -104,7 +103,7 @@ internal class GenericPaymentComponentTest(
     fun `when submit is called, then state subtype is null`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
-        val component = createComponent(this)
+        val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
         // WHEN
@@ -119,7 +118,7 @@ internal class GenericPaymentComponentTest(
     fun `when submit is called, then state order is null`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
-        val component = createComponent(this)
+        val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
         // WHEN
@@ -134,7 +133,7 @@ internal class GenericPaymentComponentTest(
     fun `when submit is called, then state is valid`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
-        val component = createComponent(this)
+        val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
         // WHEN
@@ -149,7 +148,7 @@ internal class GenericPaymentComponentTest(
     fun `when submit is called, then sdk data provider is called`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
-        val component = createComponent(this)
+        val component = createComponent()
         component.eventFlow.test(testScheduler)
 
         // WHEN
@@ -160,9 +159,9 @@ internal class GenericPaymentComponentTest(
     }
 
     @Test
-    fun `when onCleared is called, then analytics is cleared`() = runTest {
+    fun `when onCleared is called, then analytics is cleared`() {
         // GIVEN
-        val component = createComponent(this)
+        val component = createComponent()
 
         // WHEN
         component.onCleared()
@@ -171,12 +170,11 @@ internal class GenericPaymentComponentTest(
         analyticsManager.assertIsCleared()
     }
 
-    private fun createComponent(coroutineScope: CoroutineScope): GenericPaymentComponent {
+    private fun createComponent(): GenericPaymentComponent {
         return GenericPaymentComponent(
             analyticsManager = analyticsManager,
             paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
             sdkDataProvider = sdkDataProvider,
-            coroutineScope = coroutineScope,
         )
     }
 

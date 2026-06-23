@@ -70,7 +70,7 @@ internal class CheckoutControllerFactory {
         callbacks: ActionOnlyCheckoutCallbacks,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
-        val (checkoutParams, analyticsManager) = createCommonDependencies(context)
+        val (checkoutParams, analyticsManager) = createCommonDependencies(context, coroutineScope)
         val componentRequestDispatcher = ActionOnlyComponentRequestDispatcher(callbacks)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
@@ -92,7 +92,7 @@ internal class CheckoutControllerFactory {
         componentRequestDispatcher: SubmittableComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
-        val (checkoutParams, analyticsManager) = createCommonDependencies(context)
+        val (checkoutParams, analyticsManager) = createCommonDependencies(context, coroutineScope)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
@@ -132,7 +132,10 @@ internal class CheckoutControllerFactory {
         return CheckoutController(flow = flow)
     }
 
-    private fun createCommonDependencies(context: CheckoutContext): CommonDependencies {
+    private fun createCommonDependencies(
+        context: CheckoutContext,
+        coroutineScope: CoroutineScope,
+    ): CommonDependencies {
         val session = (context as? CheckoutContext.Sessions)?.checkoutSession
 
         val checkoutParams = CheckoutParamsFactory().create(
@@ -147,6 +150,7 @@ internal class CheckoutControllerFactory {
             source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
             sessionId = session?.sessionSetupResponse?.id,
             checkoutAttemptId = context.checkoutAttemptId,
+            coroutineScope = coroutineScope,
         )
 
         return CommonDependencies(checkoutParams, analyticsManager)

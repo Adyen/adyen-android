@@ -23,7 +23,6 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.paymentmethod.BlikDetails
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -32,7 +31,6 @@ internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
-    coroutineScope: CoroutineScope,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -41,11 +39,11 @@ internal class StoredBlikComponent(
     private val isLoading = MutableStateFlow(false)
 
     init {
-        initializeAnalytics(coroutineScope)
+        initializeAnalytics()
     }
 
-    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
-        analyticsManager.initialize(this, coroutineScope)
+    private fun initializeAnalytics() {
+        analyticsManager.initialize(this)
     }
 
     @Composable

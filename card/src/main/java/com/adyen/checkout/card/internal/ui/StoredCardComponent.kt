@@ -91,12 +91,12 @@ internal class StoredCardComponent(
             localizedBrand = null,
         )
 
-        initializeAnalytics(coroutineScope)
+        initializeAnalytics()
         onIntent(StoredCardIntent.UpdateDetectedCardType(storedDetectedCardType))
     }
 
-    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
-        analyticsManager.initialize(this, coroutineScope)
+    private fun initializeAnalytics() {
+        analyticsManager.initialize(this)
     }
 
     @Composable
