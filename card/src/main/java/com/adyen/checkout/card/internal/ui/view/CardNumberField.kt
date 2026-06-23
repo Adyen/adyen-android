@@ -11,26 +11,33 @@ package com.adyen.checkout.card.internal.ui.view
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
@@ -53,7 +60,6 @@ import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.text.Footnote
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.Dimensions.Spacing
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -140,10 +146,10 @@ private fun CardNumberInputField(
         modifier = Modifier.fillMaxWidth(),
         visible = cardBrandViewState is CardBrandViewState.SelectableDualBrand,
     ) {
-        Column {
-            Spacer(modifier = Modifier.size(Spacing.Small))
-            Footnote(resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION))
-        }
+        Footnote(
+            text = resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION),
+            modifier = Modifier.padding(top = Dimensions.Spacing.Small),
+        )
     }
 }
 
@@ -206,17 +212,28 @@ private fun SelectableDualBrandLogos(
             BrandLogo(
                 txVariant = brandItem.brand.txVariant,
                 modifier = Modifier
+                    .semantics {
+                        role = Role.RadioButton
+                        selected = brandItem.isSelected
+                    }
+                    .clip(RoundedCornerShape(Dimensions.CornerRadius))
                     .then(
                         if (brandItem.isSelected) {
-                            Modifier.background(
-                                color = CheckoutThemeProvider.colors.background,
-                                shape = RoundedCornerShape(Dimensions.CornerRadius),
-                            )
+                            Modifier
+                                .border(
+                                    width = 1.dp,
+                                    color = CheckoutThemeProvider.colors.outline,
+                                    shape = RoundedCornerShape(Dimensions.CornerRadius),
+                                )
+                                .background(color = CheckoutThemeProvider.colors.background)
                         } else {
                             Modifier
                         },
                     )
-                    .clickable(onClick = { onBrandSelected(brandItem.brand) })
+                    .clickable(
+                        interactionSource = null,
+                        indication = ripple(),
+                    ) { onBrandSelected(brandItem.brand) }
                     .padding(Dimensions.Spacing.ExtraSmall),
             )
         }
