@@ -35,6 +35,7 @@ dependencies {
     api project(':sessions-core')
 
     // Dependencies
+    implementation libs.compose.activity
     implementation libs.androidx.startup
     implementation libs.google.pay.play.services.coroutines
     api libs.google.pay.play.services.wallet
