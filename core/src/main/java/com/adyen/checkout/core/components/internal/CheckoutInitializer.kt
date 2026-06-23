@@ -118,5 +118,5 @@ object CheckoutInitializer {
 data class InitializationData(
     val checkoutSession: CheckoutSession?,
     val publicKey: String?,
-    val checkoutAttemptId: String?,
+    val checkoutAttemptId: String,
 )
