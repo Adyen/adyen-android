@@ -6,10 +6,7 @@
 
 package com.adyen.checkout.example.data.storage
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import java.util.Base64 as JavaBase64
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,13 +17,14 @@ import javax.inject.Singleton
  *
  * The JSON schema uses unified keys aligned with the native SDKs (e.g. `showCardholderName`).
  * All fields are optional — omitted fields leave the stored default unchanged.
+ *
+ * When [configBase64] is null or empty (normal app launch without test extras), the persisted
+ * configuration is reset to defaults to prevent test pollution from previous e2e runs.
  */
 @Singleton
 class ExternalConfigurationReader @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
 ) {
-
-    private val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     /**
      * Decodes the Base64-encoded JSON config and applies it to storage.
@@ -34,14 +32,22 @@ class ExternalConfigurationReader @Inject constructor(
      * @param configBase64 Base64-encoded JSON string, or null if no config was passed.
      */
     fun apply(configBase64: String?) {
-        if (configBase64.isNullOrEmpty()) return
+        if (configBase64.isNullOrEmpty()) {
+            // Reset to defaults to prevent test pollution from previous e2e runs
+            keyValueStorage.setShowCardholderName(SettingsDefaults.SHOW_CARDHOLDER_NAME)
+            return
+        }
 
+        decodeAndApply(configBase64)
+    }
+
+    private fun decodeAndApply(configBase64: String) {
         val json = runCatching {
-            String(JavaBase64.getDecoder().decode(configBase64))
+            String(android.util.Base64.decode(configBase64, android.util.Base64.DEFAULT), Charsets.UTF_8)
         }.getOrNull() ?: return
 
         val config = runCatching {
-            moshi.adapter(ExternalConfiguration::class.java).fromJson(json)
+            ExternalConfiguration.fromJson(json)
         }.getOrNull() ?: return
 
         config.card?.let { applyCardConfiguration(it) }
@@ -53,9 +59,35 @@ class ExternalConfigurationReader @Inject constructor(
 }
 
 internal data class ExternalConfiguration(
-    @Json(name = "CARD_CONFIGURATION") val card: ExternalCardConfiguration? = null,
-)
+    val card: ExternalCardConfiguration? = null,
+) {
+    companion object {
+        private const val KEY_CARD_CONFIGURATION = "CARD_CONFIGURATION"
+
+        fun fromJson(json: String): ExternalConfiguration {
+            val root = JSONObject(json)
+            val cardJson = root.optJSONObject(KEY_CARD_CONFIGURATION)
+            return ExternalConfiguration(
+                card = cardJson?.let { ExternalCardConfiguration.fromJson(it) },
+            )
+        }
+    }
+}
 
 internal data class ExternalCardConfiguration(
-    @Json(name = "showCardholderName") val showCardholderName: Boolean? = null,
-)
+    val showCardholderName: Boolean? = null,
+) {
+    companion object {
+        private const val KEY_SHOW_CARDHOLDER_NAME = "showCardholderName"
+
+        fun fromJson(json: JSONObject): ExternalCardConfiguration {
+            return ExternalCardConfiguration(
+                showCardholderName = if (json.has(KEY_SHOW_CARDHOLDER_NAME)) {
+                    json.getBoolean(KEY_SHOW_CARDHOLDER_NAME)
+                } else {
+                    null
+                },
+            )
+        }
+    }
+}
