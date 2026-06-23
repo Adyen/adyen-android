@@ -29,14 +29,6 @@ internal class GenericPaymentComponent(
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
-    init {
-        initializeAnalytics()
-    }
-
-    private fun initializeAnalytics() {
-        analyticsManager.initialize()
-    }
-
     @Composable
     override fun Content(modifier: Modifier) {
         // This component has no UI
@@ -67,7 +59,5 @@ internal class GenericPaymentComponent(
         // There is no UI to display a loading state
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 }

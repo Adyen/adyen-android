@@ -32,34 +32,27 @@ internal class DefaultAnalyticsManager(
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : AnalyticsManager {
 
-    @Volatile
-    private var isInitialized: Boolean = false
-
     private var timerJob: Job? = null
 
-    override fun initialize() {
-        if (isInitialized) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Already initialized, ignoring." }
-            return
-        }
-        isInitialized = true
-
-        coroutineScope.launch(coroutineDispatcher) {
-            runSuspendCatching {
-                analyticsRepository.setup()
-            }.fold(
-                onSuccess = {
-                    startTimer()
-                },
-                onFailure = {
-                    adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." }
-                },
-            )
+    init {
+        if (canTrackEvents()) {
+            coroutineScope.launch(coroutineDispatcher) {
+                runSuspendCatching {
+                    analyticsRepository.setup()
+                }.fold(
+                    onSuccess = {
+                        startTimer()
+                    },
+                    onFailure = {
+                        adyenLog(AdyenLogLevel.WARN, it) { "Failed analytics setup." }
+                    },
+                )
+            }
         }
     }
 
     override fun trackEvent(event: AnalyticsEvent) {
-        if (cannotSendEvents()) {
+        if (!canTrackEvents()) {
             adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
             return
         }
@@ -107,15 +100,7 @@ internal class DefaultAnalyticsManager(
 
     override fun getCheckoutAttemptId(): String = checkoutAttemptId
 
-    private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.INITIAL.priority
-
-    override fun clear(owner: Any) {
-        adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
-
-        isInitialized = false
-        stopTimer()
-        timerJob = null
-    }
+    private fun canTrackEvents() = analyticsParams.level.priority > AnalyticsParamsLevel.INITIAL.priority
 
     companion object {
 

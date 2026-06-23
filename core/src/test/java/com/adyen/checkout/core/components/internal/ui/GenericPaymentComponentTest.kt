@@ -43,15 +43,6 @@ internal class GenericPaymentComponentTest(
     }
 
     @Test
-    fun `when component is created, then analytics is initialized`() {
-        // GIVEN - WHEN
-        createComponent()
-
-        // THEN
-        analyticsManager.assertIsInitialized()
-    }
-
-    @Test
     fun `when submit is called, then eventFlow emits Submit event`() = runTest {
         // GIVEN
         whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
@@ -156,18 +147,6 @@ internal class GenericPaymentComponentTest(
 
         // THEN
         verify(sdkDataProvider).createEncodedSdkData()
-    }
-
-    @Test
-    fun `when onCleared is called, then analytics is cleared`() {
-        // GIVEN
-        val component = createComponent()
-
-        // WHEN
-        component.onCleared()
-
-        // THEN
-        analyticsManager.assertIsCleared()
     }
 
     private fun createComponent(): GenericPaymentComponent {

@@ -13,11 +13,7 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface AnalyticsManager {
 
-    fun initialize()
-
     fun trackEvent(event: AnalyticsEvent)
 
     fun getCheckoutAttemptId(): String
-
-    fun clear(owner: Any)
 }

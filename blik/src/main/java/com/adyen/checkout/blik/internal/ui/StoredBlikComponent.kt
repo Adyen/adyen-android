@@ -38,14 +38,6 @@ internal class StoredBlikComponent(
 
     private val isLoading = MutableStateFlow(false)
 
-    init {
-        initializeAnalytics()
-    }
-
-    private fun initializeAnalytics() {
-        analyticsManager.initialize()
-    }
-
     @Composable
     override fun Content(modifier: Modifier) {
         val isLoading by this.isLoading.collectAsStateWithLifecycle()
@@ -68,9 +60,7 @@ internal class StoredBlikComponent(
         this.isLoading.value = isLoading
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 
     private fun createPaymentComponentState(): BlikPaymentComponentState {
         val blikDetails = BlikDetails(

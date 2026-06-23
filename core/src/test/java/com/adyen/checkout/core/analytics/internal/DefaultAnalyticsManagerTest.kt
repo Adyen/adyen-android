@@ -13,12 +13,10 @@ import com.adyen.checkout.core.common.LoggingExtension
 import com.adyen.checkout.core.common.TestDispatcherExtension
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -26,7 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -40,46 +37,22 @@ internal class DefaultAnalyticsManagerTest(
     @param:Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
-    private lateinit var analyticsManager: DefaultAnalyticsManager
-
-    @BeforeEach
-    fun setup() {
-        analyticsManager = createAnalyticsManager()
-    }
-
-    @Nested
-    @DisplayName("when initializing and")
-    inner class InitializeTest {
-
-        @Test
-        fun `initialize is called twice, then the second time is ignored`() = runTest {
-            whenever(analyticsRepository.setup()) doAnswer { error("test") }
-
-            analyticsManager.initialize()
-
-            verify(analyticsRepository, times(1)).setup()
-            analyticsManager.clear(this@InitializeTest)
-        }
-    }
-
     @Nested
     @DisplayName("when tracking events and")
     inner class TrackEventTest {
 
         @Test
         fun `analytics level is initial, then events should not be stored`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
-            analyticsManager.initialize()
+            val analyticsManager = createAnalyticsManager(analyticsParamsLevel = AnalyticsParamsLevel.INITIAL)
 
             analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
 
             verify(analyticsRepository, never()).storeEvent(any())
-            analyticsManager.clear(this@TrackEventTest)
         }
 
         @Test
         fun `sending events is enabled, then events should be stored`() = runTest {
-            analyticsManager.initialize()
+            val analyticsManager = createAnalyticsManager(coroutineScope = backgroundScope)
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = false,
@@ -88,13 +61,12 @@ internal class DefaultAnalyticsManagerTest(
             analyticsManager.trackEvent(event)
 
             verify(analyticsRepository).storeEvent(event)
-            analyticsManager.clear(this@TrackEventTest)
         }
 
         @Test
         fun `the event should force sending, then the event is sent right away`() = runTest {
             whenever(analyticsRepository.setup()) doReturn "test value"
-            analyticsManager.initialize()
+            val analyticsManager = createAnalyticsManager(coroutineScope = backgroundScope)
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = true,
@@ -103,7 +75,6 @@ internal class DefaultAnalyticsManagerTest(
             analyticsManager.trackEvent(event)
 
             verify(analyticsRepository).sendEvents(any())
-            analyticsManager.clear(this@TrackEventTest)
         }
     }
 
@@ -113,8 +84,7 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `analytics level is initial, then events are not sent`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
-            analyticsManager.initialize()
+            val analyticsManager = createAnalyticsManager(analyticsParamsLevel = AnalyticsParamsLevel.INITIAL)
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = true,
@@ -123,35 +93,39 @@ internal class DefaultAnalyticsManagerTest(
             analyticsManager.trackEvent(event)
 
             verify(analyticsRepository, never()).sendEvents(any())
-            analyticsManager.clear(this@SendEventTest)
         }
     }
 
     @Test
     fun `when timer ticks, then all stored events should be sent`() = runTest {
-        analyticsManager = createAnalyticsManager()
         whenever(analyticsRepository.setup()) doReturn "test value"
         whenever(analyticsRepository.storeEvent(any())) doReturn Unit
         whenever(analyticsRepository.sendEvents(any())) doReturn Unit
-        analyticsManager.initialize()
+        val analyticsManager = createAnalyticsManager(coroutineScope = backgroundScope)
 
         analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
         testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_SECONDS + 1.milliseconds)
 
         verify(analyticsRepository, times(1)).sendEvents(any())
-        analyticsManager.clear(this@DefaultAnalyticsManagerTest)
+    }
+
+    @Test
+    fun `when analytics level is initial, then setup is not called`() = runTest {
+        createAnalyticsManager(analyticsParamsLevel = AnalyticsParamsLevel.INITIAL)
+
+        verify(analyticsRepository, never()).setup()
     }
 
     private fun createAnalyticsManager(
         analyticsParamsLevel: AnalyticsParamsLevel = AnalyticsParamsLevel.ALL,
+        coroutineScope: CoroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
     ): DefaultAnalyticsManager {
-        val coroutineDispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
         return DefaultAnalyticsManager(
             analyticsRepository = analyticsRepository,
             analyticsParams = AnalyticsParams(analyticsParamsLevel),
             checkoutAttemptId = "test-id",
-            coroutineScope = CoroutineScope(coroutineDispatcher),
-            coroutineDispatcher = coroutineDispatcher,
+            coroutineScope = coroutineScope,
+            coroutineDispatcher = UnconfinedTestDispatcher(),
         )
     }
 }

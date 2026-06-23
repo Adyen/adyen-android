@@ -91,12 +91,7 @@ internal class StoredCardComponent(
             localizedBrand = null,
         )
 
-        initializeAnalytics()
         onIntent(StoredCardIntent.UpdateDetectedCardType(storedDetectedCardType))
-    }
-
-    private fun initializeAnalytics() {
-        analyticsManager.initialize()
     }
 
     @Composable
@@ -135,9 +130,7 @@ internal class StoredCardComponent(
         onIntent(StoredCardIntent.UpdateLoading(isLoading))
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 
     private fun onIntent(intent: StoredCardIntent) {
         componentState.handleIntent(intent)
