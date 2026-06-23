@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.common.AdyenLogLevel
@@ -26,6 +27,9 @@ import kotlinx.coroutines.supervisorScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CheckoutInitializer {
+
+    @VisibleForTesting
+    internal const val FAILED_CHECKOUT_ATTEMPT_ID = "fetch-checkoutAttemptId-failed"
 
     suspend fun initialize(
         checkoutConfiguration: CheckoutConfiguration,
@@ -90,23 +94,23 @@ object CheckoutInitializer {
 
     private suspend fun fetchCheckoutAttemptId(
         checkoutConfiguration: CheckoutConfiguration,
-    ): String? {
+    ): String {
         val httpClient = HttpClientFactory.getAnalyticsHttpClient(checkoutConfiguration.environment)
         val analyticsService = AnalyticsService(httpClient)
 
-        analyticsService.fetchCheckoutAttemptId(
+        return analyticsService.fetchCheckoutAttemptId(
             request = AnalyticsSetupRequest(),
             clientKey = checkoutConfiguration.clientKey,
         ).fold(
             onSuccess = { response ->
                 adyenLog(AdyenLogLevel.DEBUG) { "Checkout attempt ID fetched" }
-                return response.checkoutAttemptId
+                response.checkoutAttemptId
             },
             onFailure = {
                 adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch checkout attempt ID" }
-                return null
+                null
             },
-        )
+        ) ?: FAILED_CHECKOUT_ATTEMPT_ID
     }
 }
 
