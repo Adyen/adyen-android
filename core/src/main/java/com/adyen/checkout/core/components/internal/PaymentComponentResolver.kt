@@ -9,30 +9,27 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutCallbacks
-import com.adyen.checkout.core.components.CheckoutTarget
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import kotlinx.coroutines.CoroutineScope
 
 internal object PaymentComponentResolver {
 
-    @Suppress("LongParameterList")
     fun resolve(
-        target: CheckoutTarget,
-        context: CheckoutContext,
+        paymentMethod: PaymentMethodResponse,
         callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
         checkoutParams: CheckoutParams,
     ): PaymentComponentResult {
-        return when (target) {
-            is CheckoutTarget.PaymentMethod -> resolvePaymentMethod(
-                target = target,
-                context = context,
+        return when (paymentMethod) {
+            is PaymentMethod -> resolvePaymentMethod(
+                paymentMethod = paymentMethod,
                 callbacks = callbacks,
                 coroutineScope = coroutineScope,
                 analyticsManager = analyticsManager,
@@ -40,37 +37,26 @@ internal object PaymentComponentResolver {
                 checkoutParams = checkoutParams,
             )
 
-            is CheckoutTarget.StoredPaymentMethod -> resolveStoredPaymentMethod(
-                target = target,
-                context = context,
+            is StoredPaymentMethod -> resolveStoredPaymentMethod(
+                paymentMethod = paymentMethod,
                 coroutineScope = coroutineScope,
                 analyticsManager = analyticsManager,
                 sdkDataProvider = sdkDataProvider,
                 checkoutParams = checkoutParams,
             )
 
-            else -> PaymentComponentResult.Failure("Unsupported checkout target.")
+            else -> PaymentComponentResult.Failure("Unsupported payment method response type.")
         }
     }
 
-    @Suppress("LongParameterList", "ReturnCount")
     private fun resolvePaymentMethod(
-        target: CheckoutTarget.PaymentMethod,
-        context: CheckoutContext,
+        paymentMethod: PaymentMethod,
         callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
         checkoutParams: CheckoutParams,
     ): PaymentComponentResult {
-        val paymentMethods = context.getPaymentMethodResponse()?.paymentMethods
-            ?: return PaymentComponentResult.Failure("No payment methods response available.")
-
-        val paymentMethod = paymentMethods.find { it.type == target.type }
-            ?: return PaymentComponentResult.Failure(
-                "Payment method '${target.type}' was not found in the payment methods response.",
-            )
-
         val component = PaymentMethodProvider.getPaymentComponent(
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
@@ -79,49 +65,31 @@ internal object PaymentComponentResolver {
             params = checkoutParams,
             additionalCallbacks = callbacks.additionalCallbacks,
         ) ?: return PaymentComponentResult.Failure(
-            "Payment method '${target.type}' is not supported. " +
+            "Payment method '${paymentMethod.type}' is not supported. " +
                 "Ensure the corresponding module is included in your build dependencies.",
         )
 
         return PaymentComponentResult.Success(component)
     }
 
-    @Suppress("ReturnCount", "LongParameterList")
     private fun resolveStoredPaymentMethod(
-        target: CheckoutTarget.StoredPaymentMethod,
-        context: CheckoutContext,
+        paymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
         checkoutParams: CheckoutParams,
     ): PaymentComponentResult {
-        val storedPaymentMethods = context.getPaymentMethodResponse()?.storedPaymentMethods
-            ?: return PaymentComponentResult.Failure("No payment methods response available.")
-
-        val storedPaymentMethod = storedPaymentMethods.find { it.id == target.id }
-            ?: return PaymentComponentResult.Failure(
-                "Stored payment method with id '${target.id}' was not found in the payment methods response.",
-            )
-
         val component = PaymentMethodProvider.getStoredPaymentComponent(
-            storedPaymentMethod = storedPaymentMethod,
+            storedPaymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             sdkDataProvider = sdkDataProvider,
             params = checkoutParams,
         ) ?: return PaymentComponentResult.Failure(
-            "Stored payment method type '${storedPaymentMethod.type}' is not supported. " +
+            "Stored payment method type '${paymentMethod.type}' is not supported. " +
                 "Ensure the corresponding module is included in your build dependencies.",
         )
 
         return PaymentComponentResult.Success(component)
-    }
-
-    private fun CheckoutContext.getPaymentMethodResponse(): PaymentMethods? {
-        return when (this) {
-            is CheckoutContext.Advanced -> paymentMethods
-            is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods
-            is CheckoutContext.ActionOnly -> null
-        }
     }
 }

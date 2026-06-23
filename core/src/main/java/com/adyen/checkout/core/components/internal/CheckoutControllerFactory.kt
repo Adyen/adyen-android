@@ -24,7 +24,6 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
-import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
@@ -72,7 +71,12 @@ internal class CheckoutControllerFactory {
         callbacks: ActionOnlyCheckoutCallbacks,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
-        val (checkoutParams, analyticsManager) = createCommonDependencies(context, coroutineScope)
+        // TODO - what should be the payment method type for action only?
+        val (checkoutParams, analyticsManager) = createCommonDependencies(
+            paymentMethodType = "NONE",
+            context = context,
+            coroutineScope = coroutineScope,
+        )
         val componentRequestDispatcher = ActionOnlyComponentRequestDispatcher(callbacks)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
@@ -94,17 +98,33 @@ internal class CheckoutControllerFactory {
         componentRequestDispatcher: SubmittableComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
-        val (checkoutParams, analyticsManager, sdkDataProvider) = createCommonDependencies(context, coroutineScope)
+        val paymentMethod = PaymentMethodResolver.resolve(target, context)
+
+        if (paymentMethod == null) {
+            componentRequestDispatcher.failure(
+                CheckoutError(
+                    code = CheckoutError.ErrorCode.PAYMENT_METHOD_FAILURE,
+                    message = "Payment method for target '${target}' was not found in the payment methods response.",
+                ),
+            )
+            //TODO - gracefully fail
+            error("")
+        }
+
+        val (checkoutParams, analyticsManager) = createCommonDependencies(
+            paymentMethodType = paymentMethod.type,
+            context = context,
+            coroutineScope = coroutineScope,
+        )
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
         )
-
+        val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
         val paymentComponentResult = PaymentComponentResolver.resolve(
-            target = target,
-            context = context,
+            paymentMethod = paymentMethod,
             callbacks = callbacks,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
@@ -136,6 +156,7 @@ internal class CheckoutControllerFactory {
     }
 
     private fun createCommonDependencies(
+        paymentMethodType: String,
         context: CheckoutContext,
         coroutineScope: CoroutineScope,
     ): CommonDependencies {
@@ -149,19 +170,15 @@ internal class CheckoutControllerFactory {
 
         val analyticsManager = AnalyticsManagerFactory().provide(
             params = checkoutParams,
-            // TODO - Analytics: Pass the correct paymentMethod type
-            source = AnalyticsSource.PaymentComponent("paymentMethod.type"),
+            source = AnalyticsSource.PaymentComponent(paymentMethodType),
             sessionId = session?.sessionSetupResponse?.id,
             checkoutAttemptId = context.checkoutAttemptId,
             coroutineScope = coroutineScope,
         )
 
-        val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
-
         return CommonDependencies(
             checkoutParams = checkoutParams,
             analyticsManager = analyticsManager,
-            sdkDataProvider = sdkDataProvider,
         )
     }
 
@@ -197,6 +214,5 @@ internal class CheckoutControllerFactory {
     private data class CommonDependencies(
         val checkoutParams: CheckoutParams,
         val analyticsManager: AnalyticsManager,
-        val sdkDataProvider: SdkDataProvider,
     )
 }

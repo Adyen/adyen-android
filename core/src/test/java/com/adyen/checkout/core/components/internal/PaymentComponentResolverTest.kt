@@ -8,30 +8,25 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.action.data.RedirectAction
+import android.os.Parcel
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
-import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethod
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
-import com.adyen.checkout.core.sessions.CheckoutSession
-import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -47,40 +42,14 @@ internal class PaymentComponentResolverTest {
     }
 
     @Test
-    fun `when payment methods response has no payment methods, then Failure is returned`() = runTest {
-        val result = resolve(
-            target = CheckoutTarget.PaymentMethod("scheme"),
-            paymentMethods = PaymentMethods(paymentMethods = null),
-        )
-
-        assertEquals(PaymentComponentResult.Failure("No payment methods response available."), result)
-    }
-
-    @Test
-    fun `when target payment method is not in the response, then Failure is returned`() = runTest {
-        val result = resolve(
-            target = CheckoutTarget.PaymentMethod("scheme"),
-            paymentMethods = PaymentMethods(
-                paymentMethods = listOf(GenericPaymentMethod(type = "ideal", name = "iDEAL")),
-            ),
-        )
-
-        assertEquals(
-            PaymentComponentResult.Failure(
-                "Payment method 'scheme' was not found in the payment methods response.",
-            ),
-            result,
-        )
-    }
-
-    @Test
     fun `when payment method is not supported, then Failure is returned`() = runTest {
-        val result = resolve(
-            target = CheckoutTarget.PaymentMethod("scheme"),
-            paymentMethods = PaymentMethods(
-                paymentMethods = listOf(UnsupportedPaymentMethod(type = "scheme", name = "Card")),
-            ),
+        val paymentMethod = CardPaymentMethod(
+            type = "scheme",
+            name = "Card",
+            brands = emptyList(),
+            fundingSource = null,
         )
+        val result = resolve(paymentMethod)
 
         assertEquals(
             PaymentComponentResult.Failure(
@@ -92,52 +61,13 @@ internal class PaymentComponentResolverTest {
     }
 
     @Test
-    fun `when payment methods response has no stored payment methods, then Failure is returned`() = runTest {
-        val result = resolve(
-            target = CheckoutTarget.StoredPaymentMethod("test_id"),
-            paymentMethods = PaymentMethods(storedPaymentMethods = null),
-        )
-
-        assertEquals(PaymentComponentResult.Failure("No payment methods response available."), result)
-    }
-
-    @Test
-    fun `when target stored payment method is not in the response, then Failure is returned`() = runTest {
-        val result = resolve(
-            target = CheckoutTarget.StoredPaymentMethod("test_id"),
-            paymentMethods = PaymentMethods(
-                storedPaymentMethods = listOf(
-                    StoredBLIKPaymentMethod(
-                        type = "blik",
-                        name = "BLIK",
-                        id = "other_id",
-                        supportedShopperInteractions = emptyList(),
-                    ),
-                ),
-            ),
-        )
-
-        assertEquals(
-            PaymentComponentResult.Failure(
-                "Stored payment method with id 'test_id' was not found in the payment methods response.",
-            ),
-            result,
-        )
-    }
-
-    @Test
     fun `when stored payment method is not supported, then Failure is returned`() = runTest {
         val result = resolve(
-            target = CheckoutTarget.StoredPaymentMethod("test_id"),
-            paymentMethods = PaymentMethods(
-                storedPaymentMethods = listOf(
-                    StoredBLIKPaymentMethod(
-                        type = "blik",
-                        name = "BLIK",
-                        id = "test_id",
-                        supportedShopperInteractions = emptyList(),
-                    ),
-                ),
+            StoredBLIKPaymentMethod(
+                type = "blik",
+                name = "BLIK",
+                id = "test_id",
+                supportedShopperInteractions = emptyList(),
             ),
         )
 
@@ -151,13 +81,19 @@ internal class PaymentComponentResolverTest {
     }
 
     @Test
-    fun `when checkout target is unknown, then Failure is returned`() = runTest {
+    fun `when payment method response type is unsupported, then Failure is returned`() = runTest {
         val result = resolve(
-            target = object : CheckoutTarget {},
-            paymentMethods = PaymentMethods(),
+            object : PaymentMethodResponse() {
+                override val type: String = "unknown"
+                override val name: String = "Unknown"
+                override fun writeToParcel(dest: Parcel, flags: Int) = Unit
+            },
         )
 
-        assertEquals(PaymentComponentResult.Failure("Unsupported checkout target."), result)
+        assertEquals(
+            PaymentComponentResult.Failure("Unsupported payment method response type."),
+            result,
+        )
     }
 
     @Test
@@ -165,12 +101,7 @@ internal class PaymentComponentResolverTest {
         val component = TestPaymentComponent()
         registerFactory(type = "scheme", component = component)
 
-        val result = resolve(
-            target = CheckoutTarget.PaymentMethod("scheme"),
-            paymentMethods = PaymentMethods(
-                paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Card")),
-            ),
-        )
+        val result = resolve(GenericPaymentMethod(type = "scheme", name = "Card"))
 
         assertEquals(PaymentComponentResult.Success(component), result)
     }
@@ -181,121 +112,26 @@ internal class PaymentComponentResolverTest {
         registerStoredFactory(type = "blik", component = component)
 
         val result = resolve(
-            target = CheckoutTarget.StoredPaymentMethod("test_id"),
-            paymentMethods = PaymentMethods(
-                storedPaymentMethods = listOf(
-                    StoredBLIKPaymentMethod(
-                        type = "blik",
-                        name = "BLIK",
-                        id = "test_id",
-                        supportedShopperInteractions = emptyList(),
-                    ),
-                ),
+            StoredBLIKPaymentMethod(
+                type = "blik",
+                name = "BLIK",
+                id = "test_id",
+                supportedShopperInteractions = emptyList(),
             ),
-        )
-
-        assertEquals(PaymentComponentResult.Success(component), result)
-    }
-
-    @Test
-    fun `when context is ActionOnly, then Failure is returned`() = runTest {
-        val result = PaymentComponentResolver.resolve(
-            target = CheckoutTarget.PaymentMethod("scheme"),
-            context = actionOnlyContext(),
-            callbacks = advancedCallbacks(),
-            coroutineScope = this,
-            analyticsManager = TestAnalyticsManager(),
-            sdkDataProvider = TestSdkDataProvider(),
-            checkoutParams = checkoutParams(),
-        )
-
-        assertEquals(PaymentComponentResult.Failure("No payment methods response available."), result)
-    }
-
-    @Test
-    fun `when context is Sessions, then payment methods are resolved from the session setup response`() = runTest {
-        val component = TestPaymentComponent()
-        registerFactory(type = "scheme", component = component)
-
-        val result = PaymentComponentResolver.resolve(
-            target = CheckoutTarget.PaymentMethod("scheme"),
-            context = sessionsContext(
-                PaymentMethods(
-                    paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Card")),
-                ),
-            ),
-            callbacks = advancedCallbacks(),
-            coroutineScope = this,
-            analyticsManager = TestAnalyticsManager(),
-            sdkDataProvider = TestSdkDataProvider(),
-            checkoutParams = checkoutParams(),
         )
 
         assertEquals(PaymentComponentResult.Success(component), result)
     }
 
     private fun CoroutineScope.resolve(
-        target: CheckoutTarget,
-        paymentMethods: PaymentMethods,
+        paymentMethod: PaymentMethodResponse,
     ): PaymentComponentResult = PaymentComponentResolver.resolve(
-        target = target,
-        context = advancedContext(paymentMethods),
+        paymentMethod = paymentMethod,
         callbacks = advancedCallbacks(),
         coroutineScope = this,
         analyticsManager = TestAnalyticsManager(),
         sdkDataProvider = TestSdkDataProvider(),
         checkoutParams = checkoutParams(),
-    )
-
-    private fun advancedContext(paymentMethods: PaymentMethods) = CheckoutContext.Advanced(
-        paymentMethods = paymentMethods,
-        checkoutConfiguration = CheckoutConfiguration(
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-            shopperLocale = Locale.US,
-        ),
-        checkoutAttemptId = "",
-        publicKey = null,
-    )
-
-    private fun actionOnlyContext() = CheckoutContext.ActionOnly(
-        action = RedirectAction(
-            type = "redirect",
-            paymentData = "test_data",
-            paymentMethodType = "scheme",
-        ),
-        checkoutConfiguration = CheckoutConfiguration(
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-            shopperLocale = Locale.US,
-        ),
-        checkoutAttemptId = "",
-        publicKey = null,
-    )
-
-    private fun sessionsContext(paymentMethods: PaymentMethods) = CheckoutContext.Sessions(
-        checkoutSession = CheckoutSession(
-            sessionSetupResponse = SessionSetupResponse(
-                id = "test_session_id",
-                sessionData = "test_session_data",
-                amount = null,
-                expiresAt = "2026-12-31T23:59:59Z",
-                paymentMethods = paymentMethods,
-                returnUrl = null,
-                configuration = null,
-                shopperLocale = null,
-            ),
-            order = null,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-        ),
-        checkoutConfiguration = CheckoutConfiguration(
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-            shopperLocale = Locale.US,
-        ),
-        checkoutAttemptId = "",
-        publicKey = null,
     )
 
     private fun advancedCallbacks() = AdvancedCheckoutCallbacks(
