@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
+import com.adyen.checkout.googlepay.internal.helper.awaitTask
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
@@ -40,8 +41,8 @@ internal fun googlePayEvent(
                 GooglePayViewEvent.Pay -> {
                     val task = paymentsClient.loadPaymentData(
                         GooglePayUtils.createPaymentDataRequest(componentParams),
-                    )
-                    task.addOnCompleteListener(launcher::launch)
+                    ).awaitTask()
+                    launcher.launch(task)
                 }
             }
         }
