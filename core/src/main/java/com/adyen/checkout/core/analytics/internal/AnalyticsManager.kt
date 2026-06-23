@@ -14,6 +14,4 @@ import androidx.annotation.RestrictTo
 interface AnalyticsManager {
 
     fun trackEvent(event: AnalyticsEvent)
-
-    fun getCheckoutAttemptId(): String
 }

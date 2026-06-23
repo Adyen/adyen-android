@@ -49,8 +49,6 @@ class TestAnalyticsManager : AnalyticsManager {
         return re.matches(actual)
     }
 
-    override fun getCheckoutAttemptId(): String = checkoutAttemptId
-
     fun setCheckoutAttemptId(checkoutAttemptId: String) {
         this.checkoutAttemptId = checkoutAttemptId
     }

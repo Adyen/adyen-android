@@ -98,8 +98,6 @@ internal class DefaultAnalyticsManager(
         )
     }
 
-    override fun getCheckoutAttemptId(): String = checkoutAttemptId
-
     private fun canTrackEvents() = analyticsParams.level.priority > AnalyticsParamsLevel.INITIAL.priority
 
     companion object {
