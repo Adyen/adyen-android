@@ -23,6 +23,8 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
+import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
@@ -92,7 +94,7 @@ internal class CheckoutControllerFactory {
         componentRequestDispatcher: SubmittableComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
     ): CheckoutController {
-        val (checkoutParams, analyticsManager) = createCommonDependencies(context, coroutineScope)
+        val (checkoutParams, analyticsManager, sdkDataProvider) = createCommonDependencies(context, coroutineScope)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
@@ -106,6 +108,7 @@ internal class CheckoutControllerFactory {
             callbacks = callbacks,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
             checkoutParams = checkoutParams,
         )
 
@@ -153,7 +156,13 @@ internal class CheckoutControllerFactory {
             coroutineScope = coroutineScope,
         )
 
-        return CommonDependencies(checkoutParams, analyticsManager)
+        val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
+
+        return CommonDependencies(
+            checkoutParams = checkoutParams,
+            analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
+        )
     }
 
     private fun createSessionComponentRequestDispatcher(
@@ -188,5 +197,6 @@ internal class CheckoutControllerFactory {
     private data class CommonDependencies(
         val checkoutParams: CheckoutParams,
         val analyticsManager: AnalyticsManager,
+        val sdkDataProvider: SdkDataProvider,
     )
 }

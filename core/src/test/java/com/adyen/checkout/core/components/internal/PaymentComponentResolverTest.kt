@@ -26,6 +26,8 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethod
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.sessions.CheckoutSession
@@ -203,6 +205,7 @@ internal class PaymentComponentResolverTest {
             callbacks = advancedCallbacks(),
             coroutineScope = this,
             analyticsManager = TestAnalyticsManager(),
+            sdkDataProvider = TestSdkDataProvider(),
             checkoutParams = checkoutParams(),
         )
 
@@ -224,6 +227,7 @@ internal class PaymentComponentResolverTest {
             callbacks = advancedCallbacks(),
             coroutineScope = this,
             analyticsManager = TestAnalyticsManager(),
+            sdkDataProvider = TestSdkDataProvider(),
             checkoutParams = checkoutParams(),
         )
 
@@ -239,6 +243,7 @@ internal class PaymentComponentResolverTest {
         callbacks = advancedCallbacks(),
         coroutineScope = this,
         analyticsManager = TestAnalyticsManager(),
+        sdkDataProvider = TestSdkDataProvider(),
         checkoutParams = checkoutParams(),
     )
 
@@ -319,6 +324,7 @@ internal class PaymentComponentResolverTest {
                     paymentMethod: PaymentMethod,
                     coroutineScope: CoroutineScope,
                     analyticsManager: AnalyticsManager,
+                    sdkDataProvider: SdkDataProvider,
                     params: CheckoutParams,
                     additionalCallbacks: Set<CheckoutAdditionalCallback>,
                 ): PaymentComponent = component
@@ -334,6 +340,7 @@ internal class PaymentComponentResolverTest {
                     storedPaymentMethod: StoredPaymentMethod,
                     coroutineScope: CoroutineScope,
                     analyticsManager: AnalyticsManager,
+                    sdkDataProvider: SdkDataProvider,
                     params: CheckoutParams,
                 ): PaymentComponent = component
             },

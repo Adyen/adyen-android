@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.components.internal.data.provider
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.internal.data.model.sdkData.Analytics
@@ -27,7 +26,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(DirectSdkDataCreation::class)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultSdkDataProvider(
-    private val analyticsManager: AnalyticsManager
+    private val checkoutAttemptId: String,
 ) : SdkDataProvider {
 
     @OptIn(ExperimentalEncodingApi::class)
@@ -53,7 +52,7 @@ class DefaultSdkDataProvider(
         return SdkData(
             schemaVersion = SCHEMA_VERSION,
             analytics = Analytics(
-                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                checkoutAttemptId = checkoutAttemptId,
             ),
             authentication = authentication,
             createdAt = Date().time,

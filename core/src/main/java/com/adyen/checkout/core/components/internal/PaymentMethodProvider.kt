@@ -16,6 +16,7 @@ import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
@@ -44,6 +45,7 @@ object PaymentMethodProvider {
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): PaymentComponent? {
@@ -59,6 +61,7 @@ object PaymentMethodProvider {
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
             params = params,
             additionalCallbacks = additionalCallbacks,
         )
@@ -68,6 +71,7 @@ object PaymentMethodProvider {
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
     ): PaymentComponent? {
         val txVariant = storedPaymentMethod.type
@@ -76,6 +80,7 @@ object PaymentMethodProvider {
             storedPaymentMethod = storedPaymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
             params = params,
         )
     }

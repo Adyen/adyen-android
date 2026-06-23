@@ -13,7 +13,7 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
-import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import kotlinx.coroutines.CoroutineScope
 
 internal object GenericPaymentComponentFactory : PaymentComponentFactory<GenericPaymentComponent> {
@@ -22,13 +22,14 @@ internal object GenericPaymentComponentFactory : PaymentComponentFactory<Generic
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>
     ): GenericPaymentComponent {
         return GenericPaymentComponent(
             analyticsManager = analyticsManager,
             paymentMethodType = paymentMethod.type,
-            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            sdkDataProvider = sdkDataProvider,
         )
     }
 }
