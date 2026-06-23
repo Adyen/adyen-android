@@ -54,7 +54,6 @@ internal class BlikFactory :
             storedPaymentMethod = storedPaymentMethod,
             analyticsManager = analyticsManager,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
-            coroutineScope = coroutineScope,
         )
     }
 }

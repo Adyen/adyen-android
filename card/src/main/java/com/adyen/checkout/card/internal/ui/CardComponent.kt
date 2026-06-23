@@ -103,7 +103,7 @@ constructor(
     }
 
     private fun initializeAnalytics() {
-        analyticsManager.initialize(this, coroutineScope)
+        analyticsManager.initialize(this)
     }
 
     @Composable

@@ -52,11 +52,11 @@ internal class BlikComponent(
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     init {
-        initializeAnalytics(coroutineScope)
+        initializeAnalytics()
     }
 
-    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
-        analyticsManager.initialize(this, coroutineScope)
+    private fun initializeAnalytics() {
+        analyticsManager.initialize(this)
     }
 
     @Composable

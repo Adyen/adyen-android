@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.analytics.internal
 
-import kotlinx.coroutines.CoroutineScope
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.fail
@@ -22,7 +21,7 @@ class TestAnalyticsManager : AnalyticsManager {
     private var checkoutAttemptId: String = CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     private val events: MutableList<AnalyticsEvent> = mutableListOf()
 
-    override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
+    override fun initialize(owner: Any) {
         isInitialized = true
     }
 

@@ -9,12 +9,11 @@
 package com.adyen.checkout.core.analytics.internal
 
 import androidx.annotation.RestrictTo
-import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface AnalyticsManager {
 
-    fun initialize(owner: Any, coroutineScope: CoroutineScope)
+    fun initialize(owner: Any)
 
     fun trackEvent(event: AnalyticsEvent)
 

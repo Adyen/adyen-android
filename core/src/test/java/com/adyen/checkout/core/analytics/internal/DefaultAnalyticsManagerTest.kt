@@ -14,8 +14,8 @@ import com.adyen.checkout.core.common.TestDispatcherExtension
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -55,7 +55,7 @@ internal class DefaultAnalyticsManagerTest(
         fun `initialize is called twice, then the second time is ignored`() = runTest {
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
 
-            analyticsManager.initialize(this@InitializeTest, this)
+            analyticsManager.initialize(this@InitializeTest)
 
             verify(analyticsRepository, times(1)).fetchCheckoutAttemptId()
             analyticsManager.clear(this@InitializeTest)
@@ -69,7 +69,7 @@ internal class DefaultAnalyticsManagerTest(
         @Test
         fun `analytics level is initial, then events should not be stored`() = runTest {
             analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
-            analyticsManager.initialize(this@TrackEventTest, this)
+            analyticsManager.initialize(this@TrackEventTest)
 
             analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
 
@@ -79,7 +79,7 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `sending events is enabled, then events should be stored`() = runTest {
-            analyticsManager.initialize(this@TrackEventTest, this)
+            analyticsManager.initialize(this@TrackEventTest)
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = false,
@@ -94,7 +94,7 @@ internal class DefaultAnalyticsManagerTest(
         @Test
         fun `the event should force sending, then the event is sent right away`() = runTest {
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
-            analyticsManager.initialize(this@TrackEventTest, this)
+            analyticsManager.initialize(this@TrackEventTest)
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = true,
@@ -114,7 +114,7 @@ internal class DefaultAnalyticsManagerTest(
         @Test
         fun `analytics level is initial, then events are not sent`() = runTest {
             analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
-            analyticsManager.initialize(this@SendEventTest, this)
+            analyticsManager.initialize(this@SendEventTest)
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = true,
@@ -129,11 +129,11 @@ internal class DefaultAnalyticsManagerTest(
 
     @Test
     fun `when timer ticks, then all stored events should be sent`() = runTest {
-        analyticsManager = createAnalyticsManager(coroutineDispatcher = StandardTestDispatcher(testScheduler))
+        analyticsManager = createAnalyticsManager()
         whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
         whenever(analyticsRepository.storeEvent(any())) doReturn Unit
         whenever(analyticsRepository.sendEvents(any())) doReturn Unit
-        analyticsManager.initialize(this@DefaultAnalyticsManagerTest, this)
+        analyticsManager.initialize(this@DefaultAnalyticsManagerTest)
 
         analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
         testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_SECONDS + 1.milliseconds)
@@ -144,11 +144,14 @@ internal class DefaultAnalyticsManagerTest(
 
     private fun createAnalyticsManager(
         analyticsParamsLevel: AnalyticsParamsLevel = AnalyticsParamsLevel.ALL,
-        coroutineDispatcher: CoroutineDispatcher = UnconfinedTestDispatcher(),
-    ) = DefaultAnalyticsManager(
-        analyticsRepository = analyticsRepository,
-        analyticsParams = AnalyticsParams(analyticsParamsLevel),
-        checkoutAttemptId = "test-id",
-        coroutineDispatcher = coroutineDispatcher,
-    )
+    ): DefaultAnalyticsManager {
+        val coroutineDispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
+        return DefaultAnalyticsManager(
+            analyticsRepository = analyticsRepository,
+            analyticsParams = AnalyticsParams(analyticsParamsLevel),
+            checkoutAttemptId = "test-id",
+            coroutineScope = CoroutineScope(coroutineDispatcher),
+            coroutineDispatcher = coroutineDispatcher,
+        )
+    }
 }
