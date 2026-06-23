@@ -28,7 +28,7 @@ fun redirectEvent(
     onError: (InternalCheckoutError) -> Unit,
 ) {
     val context = LocalContext.current
-    LaunchedEffect(redirectHandler, viewEventFlow, onError) {
+    LaunchedEffect(viewEventFlow) {
         viewEventFlow.collect { event ->
             when (event) {
                 is RedirectViewEvent.Redirect -> {
