@@ -16,18 +16,8 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals
 @Suppress("TooManyFunctions")
 class TestAnalyticsManager : AnalyticsManager {
 
-    private var isInitialized = false
-    private var isCleared = false
     private var checkoutAttemptId: String = CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     private val events: MutableList<AnalyticsEvent> = mutableListOf()
-
-    override fun initialize() {
-        isInitialized = true
-    }
-
-    fun assertIsInitialized() {
-        assertTrue(isInitialized)
-    }
 
     override fun trackEvent(event: AnalyticsEvent) {
         events.add(event)
@@ -63,14 +53,6 @@ class TestAnalyticsManager : AnalyticsManager {
 
     fun setCheckoutAttemptId(checkoutAttemptId: String) {
         this.checkoutAttemptId = checkoutAttemptId
-    }
-
-    override fun clear(owner: Any) {
-        isCleared = true
-    }
-
-    fun assertIsCleared() {
-        assertTrue(isCleared)
     }
 
     companion object {

@@ -51,14 +51,6 @@ internal class BlikComponent(
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
-    init {
-        initializeAnalytics()
-    }
-
-    private fun initializeAnalytics() {
-        analyticsManager.initialize()
-    }
-
     @Composable
     override fun Content(modifier: Modifier) {
         BlikContent(
@@ -88,9 +80,7 @@ internal class BlikComponent(
         componentState.handleIntent(BlikIntent.UpdateLoading(isLoading))
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 
     private fun onIntent(intent: BlikIntent) {
         componentState.handleIntent(intent)

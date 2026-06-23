@@ -55,14 +55,6 @@ internal class MBWayComponent(
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
-    init {
-        initializeAnalytics()
-    }
-
-    private fun initializeAnalytics() {
-        analyticsManager.initialize()
-    }
-
     @Composable
     override fun Content(modifier: Modifier) {
         MBWayContent(
@@ -116,7 +108,5 @@ internal class MBWayComponent(
         componentState.handleIntent(MBWayIntent.UpdateLoading(isLoading))
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 }

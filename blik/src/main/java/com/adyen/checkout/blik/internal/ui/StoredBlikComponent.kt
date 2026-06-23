@@ -37,14 +37,6 @@ internal class StoredBlikComponent(
 
     private val viewState = MutableStateFlow(StoredBlikViewState(isLoading = false))
 
-    init {
-        initializeAnalytics()
-    }
-
-    private fun initializeAnalytics() {
-        analyticsManager.initialize()
-    }
-
     @Composable
     override fun Content(modifier: Modifier) {
         StoredBlikContent(
@@ -67,9 +59,7 @@ internal class StoredBlikComponent(
         }
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 
     private fun createPaymentComponentState(): BlikPaymentComponentState {
         val blikDetails = BlikDetails(
