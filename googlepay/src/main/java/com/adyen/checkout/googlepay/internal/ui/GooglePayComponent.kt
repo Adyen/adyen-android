@@ -8,37 +8,88 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
+import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateValidator
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayIntent
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewStateProducer
+import com.adyen.checkout.googlepay.internal.ui.state.toPaymentComponentState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 
-internal class GooglePayComponent : PaymentComponent {
+@Suppress("LongParameterList")
+internal class GooglePayComponent(
+    private val analyticsManager: AnalyticsManager,
+    // TODO - Will be used to build the Google Pay sheet request and availability check.
+    @Suppress("UnusedPrivateProperty", "UnusedPrivateMember")
+    private val componentParams: GooglePayComponentParams,
+    private val sdkDataProvider: SdkDataProvider,
+    private val paymentMethodType: String,
+    private val componentStateValidator: GooglePayComponentStateValidator,
+    componentStateFactory: GooglePayComponentStateFactory,
+    componentStateReducer: GooglePayComponentStateReducer,
+    viewStateProducer: GooglePayViewStateProducer,
+    coroutineScope: CoroutineScope,
+) : PaymentComponent {
 
-    override val eventFlow: Flow<PaymentComponentEvent>
-        get() = TODO("Not yet implemented")
+    private val eventChannel = bufferedChannel<PaymentComponentEvent>()
+    override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
+
+    private val componentState = ComponentStateFlow(
+        initialState = componentStateFactory.createInitialState(),
+        reducer = componentStateReducer,
+        validator = componentStateValidator,
+        coroutineScope = coroutineScope,
+    )
+
+    internal val viewState = componentState.viewState(viewStateProducer, coroutineScope)
+
+    init {
+        initializeAnalytics(coroutineScope)
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        analyticsManager.initialize(this, coroutineScope)
+    }
 
     @Composable
     override fun Content(modifier: Modifier) {
-        TODO("Not yet implemented")
+        // TODO - Render the Google Pay button and launch the payment sheet.
+        Box(modifier = modifier)
     }
 
     override fun submit() {
-        TODO("Not yet implemented")
+        // TODO - Launch the Google Pay sheet and handle the result before emitting.
+        if (componentStateValidator.isValid(componentState.value)) {
+            val paymentComponentState = componentState.value.toPaymentComponentState(
+                paymentMethodType = paymentMethodType,
+                sdkDataProvider = sdkDataProvider,
+            )
+            eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
+        }
     }
 
-    override fun requiresUserInteraction(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun requiresUserInteraction(): Boolean = true
 
     override fun setLoading(isLoading: Boolean) {
-        TODO("Not yet implemented")
+        componentState.handleIntent(GooglePayIntent.UpdateLoading(isLoading))
     }
 
     override fun onCleared() {
-        TODO("Not yet implemented")
+        analyticsManager.clear(this)
     }
 
     companion object {
