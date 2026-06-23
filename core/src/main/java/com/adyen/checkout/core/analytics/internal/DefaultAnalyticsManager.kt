@@ -32,20 +32,17 @@ internal class DefaultAnalyticsManager(
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : AnalyticsManager {
 
+    @Volatile
     private var isInitialized: Boolean = false
 
     private var timerJob: Job? = null
 
-    private var ownerReference: String? = null
-
-    override fun initialize(owner: Any) {
+    override fun initialize() {
         if (isInitialized) {
             adyenLog(AdyenLogLevel.DEBUG) { "Already initialized, ignoring." }
             return
         }
         isInitialized = true
-
-        ownerReference = owner::class.qualifiedName
 
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
@@ -113,14 +110,8 @@ internal class DefaultAnalyticsManager(
     private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.INITIAL.priority
 
     override fun clear(owner: Any) {
-        if (ownerReference != owner::class.qualifiedName) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Clear called by not the original owner, ignoring." }
-            return
-        }
-
         adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
 
-        ownerReference = null
         isInitialized = false
         stopTimer()
         timerJob = null

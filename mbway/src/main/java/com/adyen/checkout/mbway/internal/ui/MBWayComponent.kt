@@ -61,7 +61,7 @@ internal class MBWayComponent(
     }
 
     private fun initializeAnalytics() {
-        analyticsManager.initialize(this)
+        analyticsManager.initialize()
     }
 
     @Composable

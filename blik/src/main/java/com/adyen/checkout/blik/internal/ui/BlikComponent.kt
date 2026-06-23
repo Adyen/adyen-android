@@ -58,7 +58,7 @@ internal class BlikComponent(
     }
 
     private fun initializeAnalytics() {
-        analyticsManager.initialize(this)
+        analyticsManager.initialize()
     }
 
     @Composable

@@ -43,7 +43,7 @@ internal class StoredBlikComponent(
     }
 
     private fun initializeAnalytics() {
-        analyticsManager.initialize(this)
+        analyticsManager.initialize()
     }
 
     @Composable

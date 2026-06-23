@@ -13,7 +13,7 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface AnalyticsManager {
 
-    fun initialize(owner: Any)
+    fun initialize()
 
     fun trackEvent(event: AnalyticsEvent)
 
