@@ -46,7 +46,7 @@ internal class DefaultAnalyticsManager(
 
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
-                analyticsRepository.fetchCheckoutAttemptId()
+                analyticsRepository.setup()
             }.fold(
                 onSuccess = {
                     startTimer()
