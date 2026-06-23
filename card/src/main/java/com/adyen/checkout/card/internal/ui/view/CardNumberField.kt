@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,8 +50,10 @@ import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParamet
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
+import com.adyen.checkout.ui.internal.text.Footnote
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.Dimensions.Spacing
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -132,6 +135,16 @@ private fun CardNumberInputField(
             )
         },
     )
+
+    AnimatedVisibility(
+        modifier = Modifier.fillMaxWidth(),
+        visible = cardBrandViewState is CardBrandViewState.SelectableDualBrand,
+    ) {
+        Column {
+            Spacer(modifier = Modifier.size(Spacing.Small))
+            Footnote(resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION))
+        }
+    }
 }
 
 @Composable
