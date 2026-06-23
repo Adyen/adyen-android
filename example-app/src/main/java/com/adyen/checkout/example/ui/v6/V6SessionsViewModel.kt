@@ -52,9 +52,6 @@ internal class V6SessionsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var checkoutContext: CheckoutContext.Sessions
-    private lateinit var sessionId: String
-    private lateinit var sessionData: String
-
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
     init {
@@ -92,8 +89,6 @@ internal class V6SessionsViewModel @Inject constructor(
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.error.message.orEmpty()))
             is Checkout.Result.Success -> {
                 checkoutContext = result.checkoutContext
-                sessionId = checkoutContext.checkoutSession.sessionSetupResponse.id
-                sessionData = checkoutContext.checkoutSession.sessionSetupResponse.sessionData
                 val paymentMethods = checkoutContext.getPaymentMethods()
                 V6UiState.Component(
                     paymentMethods = paymentMethods,
@@ -197,12 +192,11 @@ internal class V6SessionsViewModel @Inject constructor(
         val currentAmount = keyValueStorage.getAmount()
         val patchedAmount = currentAmount.copy(value = currentAmount.value + 100L)
         val patchResponse = paymentsRepository.patchSession(
-            sessionId = sessionId,
-            sessionData = sessionData,
+            sessionId = checkoutContext.checkoutSession.sessionSetupResponse.id,
+            sessionData = checkoutContext.checkoutSession.sessionSetupResponse.sessionData,
             amount = patchedAmount,
         )
         return if (patchResponse != null) {
-            sessionData = patchResponse.sessionData
             BeforeSubmitResult.Proceed(data, patchResponse.sessionData)
         } else {
             BeforeSubmitResult.Abort()
