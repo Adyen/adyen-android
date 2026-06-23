@@ -14,7 +14,7 @@ import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
-import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
@@ -27,6 +27,7 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): GooglePayComponent {
@@ -42,7 +43,7 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
         return GooglePayComponent(
             analyticsManager = analyticsManager,
             componentParams = componentParams,
-            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            sdkDataProvider = sdkDataProvider,
             paymentMethodType = googlePayPaymentMethod.type,
             componentStateValidator = GooglePayComponentStateValidator(),
             componentStateFactory = GooglePayComponentStateFactory(),

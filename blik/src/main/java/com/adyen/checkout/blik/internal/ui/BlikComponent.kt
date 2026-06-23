@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("LongParameterList")
 internal class BlikComponent(
-    private val analyticsManager: AnalyticsManager,
+    @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: BlikComponentStateValidator,
     componentStateFactory: BlikComponentStateFactory,

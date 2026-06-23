@@ -23,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PaymentComponentFactory<T : PaymentComponent> : ComponentFactory {
 
+    @Suppress("LongParameterList")
     fun create(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,

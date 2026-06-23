@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
-    private val analyticsManager: AnalyticsManager,
+    @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent {
 

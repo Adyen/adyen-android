@@ -41,6 +41,7 @@ object PaymentMethodProvider {
         }
     }
 
+    @Suppress("LongParameterList")
     fun getPaymentComponent(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,

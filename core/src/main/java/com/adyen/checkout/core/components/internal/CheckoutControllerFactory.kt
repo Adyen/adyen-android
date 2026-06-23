@@ -98,7 +98,7 @@ internal class CheckoutControllerFactory {
         coroutineScope: CoroutineScope,
     ): CheckoutController {
         val paymentMethod = PaymentMethodResolver.resolve(target, context) ?: return createFailedCheckoutController(
-            errorMessage = "Payment method for target '${target}' was not found in the payment methods response.",
+            errorMessage = "Payment method for target '$target' was not found in the payment methods response.",
             componentRequestDispatcher = componentRequestDispatcher,
         )
 
