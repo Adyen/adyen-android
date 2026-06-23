@@ -21,7 +21,6 @@ import com.adyen.checkout.core.components.data.applyBeforeSubmitData
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
-import kotlinx.coroutines.CancellationException
 
 internal class SessionComponentRequestDispatcher(
     initialSessionData: String,
@@ -33,38 +32,42 @@ internal class SessionComponentRequestDispatcher(
     private var sessionData: String = initialSessionData
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
-        val finalData = handleBeforeSubmit(data) ?: return SubmitResult.Retry()
+        val beforeSubmitResult = handleBeforeSubmit(data)
 
-        return sessionRepository.submitPayment(
-            sessionId = sessionId,
-            sessionData = sessionData,
-            paymentComponentData = finalData,
-        ).fold(
-            onSuccess = { response ->
-                sessionData = response.sessionData
-                // TODO - Check if we need to support partial payment flow
-                when {
-                    response.action != null -> SubmitResult.Action(response.action)
-                    else -> SubmitResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
-                }
-            },
-            onFailure = { error ->
-                // TODO - Add analytics
+        return when (beforeSubmitResult) {
+            is BeforeSubmitResult.Abort -> SubmitResult.Retry()
+            is BeforeSubmitResult.Proceed -> {
+                beforeSubmitResult.sessionData?.let { sessionData = it }
+                val finalData = data.applyBeforeSubmitData(beforeSubmitResult.data)
+                sessionRepository.submitPayment(
+                    sessionId = sessionId,
+                    sessionData = sessionData,
+                    paymentComponentData = finalData,
+                ).fold(
+                    onSuccess = { response ->
+                        sessionData = response.sessionData
+                        // TODO - Check if we need to support partial payment flow
+                        when {
+                            response.action != null -> SubmitResult.Action(response.action)
+                            else -> SubmitResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
+                        }
+                    },
+                    onFailure = { error ->
+                        // TODO - Add analytics
 //                val event = GenericEvents.error(
 //                    component = paymentMethodType,
 //                    event = ErrorEvent.API_PAYMENTS,
 //                )
 //                analyticsManager.trackEvent(event)
-                callbacks.onFailure(error.toCheckoutError())
-                SubmitResult.Retry(error.message)
-            },
-        )
+                        callbacks.onFailure(error.toCheckoutError())
+                        SubmitResult.Retry(error.message)
+                    },
+                )
+            }
+        }
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun handleBeforeSubmit(data: PaymentComponentData<*>): PaymentComponentData<*>? {
-        val callback = callbacks.onBeforeSubmit ?: return data
-
+    private suspend fun handleBeforeSubmit(data: PaymentComponentData<*>): BeforeSubmitResult {
         val inputData = BeforeSubmitData(
             billingAddress = data.billingAddress,
             deliveryAddress = data.deliveryAddress,
@@ -72,22 +75,7 @@ internal class SessionComponentRequestDispatcher(
             shopperEmail = data.shopperEmail,
         )
 
-        return try {
-            when (val result = callback(inputData)) {
-                is BeforeSubmitResult.Proceed -> {
-                    result.sessionData?.let { sessionData = it }
-                    data.applyBeforeSubmitData(result.data)
-                }
-
-                is BeforeSubmitResult.Abort -> null
-                else -> data
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            callbacks.onFailure(e.toCheckoutError())
-            null
-        }
+        return callbacks.onBeforeSubmit?.invoke(inputData) ?: BeforeSubmitResult.Proceed(inputData)
     }
 
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {

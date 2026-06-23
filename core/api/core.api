@@ -730,8 +730,7 @@ public final class com/adyen/checkout/core/components/AnalyticsLevel : java/lang
 	public static fun values ()[Lcom/adyen/checkout/core/components/AnalyticsLevel;
 }
 
-public abstract class com/adyen/checkout/core/components/BeforeSubmitResult {
-	public static final field $stable I
+public abstract interface class com/adyen/checkout/core/components/BeforeSubmitResult {
 }
 
 public final class com/adyen/checkout/core/components/BeforeSubmitResult$Abort : com/adyen/checkout/core/components/BeforeSubmitResult {

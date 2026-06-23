@@ -16,7 +16,7 @@ import com.adyen.checkout.core.components.data.BeforeSubmitData
  * Return [Proceed] to continue the session submission, or [Abort] to stop it. Aborting the submission does not trigger
  * the error callback.
  */
-abstract class BeforeSubmitResult internal constructor() {
+sealed interface BeforeSubmitResult {
 
     /**
      * Continue the submission flow with the provided data.
@@ -33,12 +33,12 @@ abstract class BeforeSubmitResult internal constructor() {
     class Proceed(
         val data: BeforeSubmitData,
         val sessionData: String? = null,
-    ) : BeforeSubmitResult()
+    ) : BeforeSubmitResult
 
     /**
      * Stop the submission flow and reset the component to the ready state.
      *
      * This does not call the error callback.
      */
-    class Abort : BeforeSubmitResult()
+    class Abort : BeforeSubmitResult
 }

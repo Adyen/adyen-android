@@ -290,7 +290,7 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when onBeforeSubmit returns Abort then submission stops and onError is not called`() = runTest {
+        fun `when onBeforeSubmit returns Abort then submission stops and onFailure is not called`() = runTest {
             var onErrorCalls = 0
             val dispatcher = createDispatcher(
                 onFailure = { onErrorCalls++ },
@@ -361,24 +361,23 @@ internal class SessionComponentRequestDispatcherTest(
         }
 
         @Test
-        fun `when onBeforeSubmit throws exception then onError is called and submission stops`() = runTest {
+        fun `when onBeforeSubmit throws exception then it propagates and submission stops`() = runTest {
             var onErrorCalls = 0
-            val capturedErrors = mutableListOf<CheckoutError>()
             val dispatcher = createDispatcher(
-                onFailure = { error ->
-                    onErrorCalls++
-                    capturedErrors.add(error)
-                },
+                onFailure = { onErrorCalls++ },
                 onBeforeSubmit = {
                     throw IllegalStateException("Merchant callback error")
                 },
             )
 
-            val result = dispatcher.submit(emptyPaymentComponentData())
+            try {
+                dispatcher.submit(emptyPaymentComponentData())
+                fail("Expected IllegalStateException to propagate")
+            } catch (e: IllegalStateException) {
+                assertEquals("Merchant callback error", e.message)
+            }
 
-            assertEquals(SubmitResult.Retry(), result)
-            assertEquals(1, onErrorCalls)
-            assertEquals(1, capturedErrors.size)
+            assertEquals(0, onErrorCalls)
             verify(sessionRepository, never()).submitPayment(any(), any(), any())
         }
 

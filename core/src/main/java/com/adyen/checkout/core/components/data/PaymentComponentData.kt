@@ -133,7 +133,6 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     }
 }
 
-@Suppress("UNCHECKED_CAST")
 internal fun <T : PaymentMethodDetails> PaymentComponentData<T>.applyBeforeSubmitData(
     beforeSubmitData: BeforeSubmitData,
 ): PaymentComponentData<T> {
