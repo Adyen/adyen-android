@@ -18,6 +18,8 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethod
+import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
@@ -113,6 +115,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
+                sdkDataProvider = generateSdkDataProvider(),
                 params = generateCheckoutParams(),
                 additionalCallbacks = emptySet(),
             )
@@ -141,6 +144,7 @@ internal class PaymentMethodProviderTest {
                 ),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
+                sdkDataProvider = generateSdkDataProvider(),
                 params = generateCheckoutParams(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
@@ -173,6 +177,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
+                sdkDataProvider = generateSdkDataProvider(),
                 params = generateCheckoutParams(),
                 additionalCallbacks = emptySet(),
             )
@@ -194,6 +199,7 @@ internal class PaymentMethodProviderTest {
                 ),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
+                sdkDataProvider = generateSdkDataProvider(),
                 params = generateCheckoutParams(),
             )
             assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
@@ -207,6 +213,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
+                sdkDataProvider = generateSdkDataProvider(),
                 params = generateCheckoutParams(),
                 additionalCallbacks = emptySet(),
             )
@@ -220,6 +227,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod = UnsupportedPaymentMethod(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
+                sdkDataProvider = generateSdkDataProvider(),
                 params = generateCheckoutParams(),
                 additionalCallbacks = emptySet(),
             )
@@ -237,6 +245,7 @@ internal class PaymentMethodProviderTest {
             ),
             coroutineScope = this,
             analyticsManager = TestAnalyticsManager(),
+            sdkDataProvider = generateSdkDataProvider(),
             params = generateCheckoutParams(),
         )
         assertNull(actualComponent)
@@ -263,6 +272,7 @@ internal class PaymentMethodProviderTest {
                 paymentMethod: PaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
+                sdkDataProvider: SdkDataProvider,
                 params: CheckoutParams,
                 additionalCallbacks: Set<CheckoutAdditionalCallback>,
             ) = paymentComponent
@@ -275,9 +285,12 @@ internal class PaymentMethodProviderTest {
                 storedPaymentMethod: StoredPaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
+                sdkDataProvider: SdkDataProvider,
                 params: CheckoutParams,
             ) = paymentComponent
         }
+
+    private fun generateSdkDataProvider() = DefaultSdkDataProvider("test-checkout-attempt-id")
 
     private fun generateCheckoutParams() = CheckoutParams(
         shopperLocale = Locale.US,

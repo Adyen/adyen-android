@@ -14,6 +14,7 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import kotlinx.coroutines.CoroutineScope
 
 internal object PaymentComponentResolver {
@@ -25,6 +26,7 @@ internal object PaymentComponentResolver {
         callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         checkoutParams: CheckoutParams,
     ): PaymentComponentResult {
         return when (target) {
@@ -34,6 +36,7 @@ internal object PaymentComponentResolver {
                 callbacks = callbacks,
                 coroutineScope = coroutineScope,
                 analyticsManager = analyticsManager,
+                sdkDataProvider = sdkDataProvider,
                 checkoutParams = checkoutParams,
             )
 
@@ -42,6 +45,7 @@ internal object PaymentComponentResolver {
                 context = context,
                 coroutineScope = coroutineScope,
                 analyticsManager = analyticsManager,
+                sdkDataProvider = sdkDataProvider,
                 checkoutParams = checkoutParams,
             )
 
@@ -56,6 +60,7 @@ internal object PaymentComponentResolver {
         callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         checkoutParams: CheckoutParams,
     ): PaymentComponentResult {
         val paymentMethods = context.getPaymentMethodResponse()?.paymentMethods
@@ -70,6 +75,7 @@ internal object PaymentComponentResolver {
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
             params = checkoutParams,
             additionalCallbacks = callbacks.additionalCallbacks,
         ) ?: return PaymentComponentResult.Failure(
@@ -80,12 +86,13 @@ internal object PaymentComponentResolver {
         return PaymentComponentResult.Success(component)
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "LongParameterList")
     private fun resolveStoredPaymentMethod(
         target: CheckoutTarget.StoredPaymentMethod,
         context: CheckoutContext,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         checkoutParams: CheckoutParams,
     ): PaymentComponentResult {
         val storedPaymentMethods = context.getPaymentMethodResponse()?.storedPaymentMethods
@@ -100,6 +107,7 @@ internal object PaymentComponentResolver {
             storedPaymentMethod = storedPaymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
             params = checkoutParams,
         ) ?: return PaymentComponentResult.Failure(
             "Stored payment method type '${storedPaymentMethod.type}' is not supported. " +

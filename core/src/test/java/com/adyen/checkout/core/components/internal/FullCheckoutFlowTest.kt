@@ -19,6 +19,7 @@ import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
 import com.adyen.checkout.core.components.CheckoutSecondaryRoute
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
@@ -233,6 +234,7 @@ internal class FullCheckoutFlowTest(
                     paymentMethod: com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod,
                     coroutineScope: CoroutineScope,
                     analyticsManager: AnalyticsManager,
+                    sdkDataProvider: SdkDataProvider,
                     params: CheckoutParams,
                     additionalCallbacks: Set<CheckoutAdditionalCallback>,
                 ) = component

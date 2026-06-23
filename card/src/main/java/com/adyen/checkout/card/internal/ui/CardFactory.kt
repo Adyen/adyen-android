@@ -39,7 +39,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.getAdditionalCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
-import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -52,6 +52,7 @@ internal class CardFactory :
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): CardComponent {
@@ -101,7 +102,7 @@ internal class CardFactory :
             componentStateReducer = componentStateReducer,
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
-            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            sdkDataProvider = sdkDataProvider,
             paymentMethodType = paymentMethodType,
             onBinChangeCallback = additionalCallbacks.getAdditionalCallback<OnBinChangeCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
@@ -115,6 +116,7 @@ internal class CardFactory :
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
     ): StoredCardComponent {
         // TODO - Remove casting when paymentMethod object is typed
@@ -145,7 +147,7 @@ internal class CardFactory :
             componentStateReducer = componentStateReducer,
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
-            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            sdkDataProvider = sdkDataProvider,
             publicKey = params.publicKey,
         )
     }
