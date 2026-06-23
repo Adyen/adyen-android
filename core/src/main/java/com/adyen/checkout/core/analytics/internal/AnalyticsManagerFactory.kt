@@ -30,7 +30,7 @@ internal class AnalyticsManagerFactory {
         params: CheckoutParams,
         source: AnalyticsSource,
         sessionId: String?,
-        checkoutAttemptId: String?,
+        checkoutAttemptId: String,
     ): AnalyticsManager = provide(
         shopperLocale = params.shopperLocale,
         environment = params.environment,
@@ -54,7 +54,7 @@ internal class AnalyticsManagerFactory {
         amount: Amount?,
         source: AnalyticsSource,
         sessionId: String?,
-        checkoutAttemptId: String?,
+        checkoutAttemptId: String,
     ): AnalyticsManager {
         val applicationContext = ApplicationContextHolder.require()
 
@@ -86,6 +86,7 @@ internal class AnalyticsManagerFactory {
                 analyticsTrackRequestProvider = AnalyticsTrackRequestProvider(),
             ),
             analyticsParams = analyticsParams,
+            checkoutAttemptId = checkoutAttemptId,
         )
     }
 

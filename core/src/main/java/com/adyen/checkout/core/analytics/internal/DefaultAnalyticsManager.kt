@@ -27,10 +27,9 @@ import kotlin.time.Duration.Companion.seconds
 internal class DefaultAnalyticsManager(
     private val analyticsRepository: AnalyticsRepository,
     private val analyticsParams: AnalyticsParams,
+    private val checkoutAttemptId: String,
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : AnalyticsManager {
-
-    private var checkoutAttemptIdState: CheckoutAttemptIdState = CheckoutAttemptIdState.NotAvailable
 
     private var isInitialized: Boolean = false
 
@@ -54,16 +53,11 @@ internal class DefaultAnalyticsManager(
             runSuspendCatching {
                 analyticsRepository.fetchCheckoutAttemptId()
             }.fold(
-                onSuccess = { attemptId ->
-                    checkoutAttemptIdState = attemptId?.let { id ->
-                        CheckoutAttemptIdState.Available(id)
-                    }?.also {
-                        startTimer()
-                    } ?: CheckoutAttemptIdState.Failed
+                onSuccess = {
+                    startTimer()
                 },
                 onFailure = {
                     adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." }
-                    checkoutAttemptIdState = CheckoutAttemptIdState.Failed
                 },
             )
         }
@@ -99,7 +93,7 @@ internal class DefaultAnalyticsManager(
         }
         timerJob = coroutineScope?.launch(coroutineDispatcher) {
             while (isActive) {
-                delay(DISPATCH_INTERVAL_MILLIS)
+                delay(DISPATCH_INTERVAL_SECONDS)
                 sendEvents()
             }
         }
@@ -110,14 +104,8 @@ internal class DefaultAnalyticsManager(
     }
 
     private suspend fun sendEvents() {
-        val checkoutAttemptIdState = checkoutAttemptIdState as? CheckoutAttemptIdState.Available
-        if (checkoutAttemptIdState == null) {
-            adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId should be available at this point." }
-            return
-        }
-
         runSuspendCatching {
-            analyticsRepository.sendEvents(checkoutAttemptIdState.checkoutAttemptId)
+            analyticsRepository.sendEvents(checkoutAttemptId)
         }.fold(
             onSuccess = { /* Not necessary */ },
             onFailure = { throwable ->
@@ -126,11 +114,7 @@ internal class DefaultAnalyticsManager(
         )
     }
 
-    override fun getCheckoutAttemptId(): String = when (val checkoutAttemptIdState = checkoutAttemptIdState) {
-        is CheckoutAttemptIdState.Available -> checkoutAttemptIdState.checkoutAttemptId
-        CheckoutAttemptIdState.Failed -> FAILED_CHECKOUT_ATTEMPT_ID
-        CheckoutAttemptIdState.NotAvailable -> CHECKOUT_ATTEMPT_ID_NOT_FETCHED
-    }
+    override fun getCheckoutAttemptId(): String = checkoutAttemptId
 
     private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.INITIAL.priority
 
@@ -143,7 +127,6 @@ internal class DefaultAnalyticsManager(
         adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
 
         coroutineScope = null
-        checkoutAttemptIdState = CheckoutAttemptIdState.NotAvailable
         ownerReference = null
         isInitialized = false
         stopTimer()
@@ -151,13 +134,8 @@ internal class DefaultAnalyticsManager(
     }
 
     companion object {
-        @VisibleForTesting
-        internal const val CHECKOUT_ATTEMPT_ID_NOT_FETCHED = "checkoutAttemptId-not-fetched"
 
         @VisibleForTesting
-        internal const val FAILED_CHECKOUT_ATTEMPT_ID = "fetch-checkoutAttemptId-failed"
-
-        @VisibleForTesting
-        internal val DISPATCH_INTERVAL_MILLIS = 10.seconds.inWholeMilliseconds
+        internal val DISPATCH_INTERVAL_SECONDS = 10.seconds
     }
 }
