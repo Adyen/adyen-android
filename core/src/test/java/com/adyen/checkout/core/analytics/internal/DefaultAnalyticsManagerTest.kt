@@ -55,7 +55,7 @@ internal class DefaultAnalyticsManagerTest(
         fun `initialize is called twice, then the second time is ignored`() = runTest {
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
 
-            analyticsManager.initialize(this@InitializeTest)
+            analyticsManager.initialize()
 
             verify(analyticsRepository, times(1)).fetchCheckoutAttemptId()
             analyticsManager.clear(this@InitializeTest)
@@ -69,7 +69,7 @@ internal class DefaultAnalyticsManagerTest(
         @Test
         fun `analytics level is initial, then events should not be stored`() = runTest {
             analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
-            analyticsManager.initialize(this@TrackEventTest)
+            analyticsManager.initialize()
 
             analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
 
@@ -79,7 +79,7 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `sending events is enabled, then events should be stored`() = runTest {
-            analyticsManager.initialize(this@TrackEventTest)
+            analyticsManager.initialize()
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = false,
@@ -94,7 +94,7 @@ internal class DefaultAnalyticsManagerTest(
         @Test
         fun `the event should force sending, then the event is sent right away`() = runTest {
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
-            analyticsManager.initialize(this@TrackEventTest)
+            analyticsManager.initialize()
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = true,
@@ -114,7 +114,7 @@ internal class DefaultAnalyticsManagerTest(
         @Test
         fun `analytics level is initial, then events are not sent`() = runTest {
             analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
-            analyticsManager.initialize(this@SendEventTest)
+            analyticsManager.initialize()
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = true,
@@ -133,7 +133,7 @@ internal class DefaultAnalyticsManagerTest(
         whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
         whenever(analyticsRepository.storeEvent(any())) doReturn Unit
         whenever(analyticsRepository.sendEvents(any())) doReturn Unit
-        analyticsManager.initialize(this@DefaultAnalyticsManagerTest)
+        analyticsManager.initialize()
 
         analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
         testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_SECONDS + 1.milliseconds)

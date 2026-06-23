@@ -103,7 +103,7 @@ constructor(
     }
 
     private fun initializeAnalytics() {
-        analyticsManager.initialize(this)
+        analyticsManager.initialize()
     }
 
     @Composable

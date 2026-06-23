@@ -21,7 +21,7 @@ class TestAnalyticsManager : AnalyticsManager {
     private var checkoutAttemptId: String = CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     private val events: MutableList<AnalyticsEvent> = mutableListOf()
 
-    override fun initialize(owner: Any) {
+    override fun initialize() {
         isInitialized = true
     }
 
