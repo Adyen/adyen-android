@@ -31,7 +31,8 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): GooglePayComponent {
         // TODO - Remove casting when paymentMethod object is typed
-        val googlePayPaymentMethod = paymentMethod as? GooglePayPaymentMethod ?: error("Incorrect paymentMethod")
+        val googlePayPaymentMethod = paymentMethod as? GooglePayPaymentMethod
+            ?: throw IllegalArgumentException("Incorrect paymentMethod")
 
         val componentParams = GooglePayComponentParamsMapper().mapToParams(
             params = params,

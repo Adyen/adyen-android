@@ -48,7 +48,7 @@ internal class GooglePayFactoryTest {
 
     @Test
     fun `when create is called with a non GooglePayPaymentMethod, then an error is thrown`() {
-        assertThrows<IllegalStateException> {
+        assertThrows<IllegalArgumentException> {
             factory.create(
                 paymentMethod = mock<PaymentMethod>(),
                 coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
