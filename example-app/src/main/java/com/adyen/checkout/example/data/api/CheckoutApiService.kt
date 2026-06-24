@@ -12,6 +12,8 @@ import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.SessionPatchRequest
+import com.adyen.checkout.example.data.api.model.SessionPatchResponse
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.sessions.core.SessionModel
 import org.json.JSONObject
@@ -19,6 +21,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -64,4 +67,10 @@ internal interface CheckoutApiService {
         @Query("merchantAccount") merchantAccount: String,
         @Query("shopperReference") shopperReference: String,
     ): Response<Unit>
+
+    @PATCH("sessions/{sessionId}")
+    suspend fun patchSessionAsync(
+        @Path("sessionId") sessionId: String,
+        @Body request: SessionPatchRequest,
+    ): SessionPatchResponse
 }

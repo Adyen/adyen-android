@@ -13,6 +13,7 @@ import com.adyen.checkout.example.data.storage.AnalyticsMode
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.IntegrationFlow
+import com.adyen.checkout.example.data.storage.OnBeforeSubmitMode
 import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.ui.theme.UITheme
 
@@ -74,6 +75,14 @@ internal object SettingsLists {
         when (it) {
             IntegrationFlow.SESSIONS -> R.string.settings_list_integration_flow_sessions
             IntegrationFlow.ADVANCED -> R.string.settings_list_integration_flow_advanced
+        }
+    }
+
+    val onBeforeSubmitModes = OnBeforeSubmitMode.entries.associateWith {
+        when (it) {
+            OnBeforeSubmitMode.UPDATE_SHOPPER_DATA -> R.string.settings_list_on_before_submit_mode_update_shopper_data
+            OnBeforeSubmitMode.PATCH_SESSION_AMOUNT -> R.string.settings_list_on_before_submit_mode_patch_session_amount
+            OnBeforeSubmitMode.ABORT -> R.string.settings_list_on_before_submit_mode_abort
         }
     }
 }

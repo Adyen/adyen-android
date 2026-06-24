@@ -40,6 +40,7 @@ internal class SettingsUIMapper @Inject constructor(
                     getAmount(),
                     getIntegrationRegion(),
                     getIntegrationFlow(),
+                    getOnBeforeSubmitMode(),
                     getMerchantAccount(),
                 ),
             ),
@@ -253,6 +254,16 @@ internal class SettingsUIMapper @Inject constructor(
         )
     }
 
+    private fun getOnBeforeSubmitMode(): SettingsItem {
+        val onBeforeSubmitMode = keyValueStorage.getOnBeforeSubmitMode()
+        val displayValue = requireNotNull(SettingsLists.onBeforeSubmitModes[onBeforeSubmitMode])
+        return SettingsItem.Text(
+            identifier = SettingsIdentifier.ON_BEFORE_SUBMIT_MODE,
+            titleResId = R.string.settings_title_on_before_submit_mode,
+            subtitle = UIText.Resource(displayValue),
+        )
+    }
+
     @Suppress("LongMethod", "CyclomaticComplexMethod")
     fun getEditSettingDialogData(settingsItem: SettingsItem): EditSettingDialogData {
         return when (settingsItem.identifier) {
@@ -399,6 +410,19 @@ internal class SettingsUIMapper @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_integration_flow,
                     items = SettingsLists.integrationFlows.entries.map {
+                        EditSettingDialogData.SingleSelectList.Item(
+                            text = UIText.Resource(it.value),
+                            value = it.key,
+                        )
+                    },
+                )
+            }
+
+            SettingsIdentifier.ON_BEFORE_SUBMIT_MODE -> {
+                EditSettingDialogData.SingleSelectList(
+                    identifier = settingsItem.identifier,
+                    titleResId = R.string.settings_title_on_before_submit_mode,
+                    items = SettingsLists.onBeforeSubmitModes.entries.map {
                         EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key,

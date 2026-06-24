@@ -17,11 +17,13 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
+import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
+import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -101,7 +103,7 @@ internal class PaymentMethodViewModel(
                     target = target,
                     context = checkoutContext,
                     callbacks = SessionCheckoutCallbacks(
-                        beforeSubmit = ::beforeSubmit,
+                        onBeforeSubmit = ::onBeforeSubmit,
                         onFailure = ::onFailure,
                         onComplete = ::onComplete,
                     ),
@@ -113,8 +115,9 @@ internal class PaymentMethodViewModel(
         }
     }
 
-    private fun beforeSubmit(@Suppress("unused") paymentComponentData: PaymentComponentData<*>) {
+    private suspend fun onBeforeSubmit(data: BeforeSubmitData): BeforeSubmitResult {
         // TODO - Implement after beforeSubmit is added to DropInService
+        return BeforeSubmitResult.Proceed(data)
     }
 
     private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): SubmitResult {

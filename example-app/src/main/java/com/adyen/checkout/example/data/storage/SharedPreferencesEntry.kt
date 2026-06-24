@@ -77,4 +77,8 @@ enum class SharedPreferencesEntry(val key: String, val defaultValue: Any?) {
         key = "ui_theme",
         defaultValue = SettingsDefaults.UI_THEME,
     ),
+    ON_BEFORE_SUBMIT_MODE(
+        key = "on_before_submit_mode",
+        defaultValue = SettingsDefaults.ON_BEFORE_SUBMIT_MODE,
+    ),
 }

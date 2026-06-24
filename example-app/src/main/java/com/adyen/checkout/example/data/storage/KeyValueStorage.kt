@@ -18,6 +18,7 @@ import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CURRENCY
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.INSTANT_PAYMENT_METHOD_TYPE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.INTEGRATION_FLOW
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.MERCHANT_ACCOUNT
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.ON_BEFORE_SUBMIT_MODE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.REMOVE_STORED_PAYMENT_METHOD
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_COUNTRY
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_EMAIL
@@ -62,6 +63,8 @@ interface KeyValueStorage {
     fun setIntegrationFlow(integrationFlow: IntegrationFlow)
     fun getAnalyticsMode(): AnalyticsMode
     fun setAnalyticsMode(analyticsMode: AnalyticsMode)
+    fun getOnBeforeSubmitMode(): OnBeforeSubmitMode
+    fun setOnBeforeSubmitMode(onBeforeSubmitMode: OnBeforeSubmitMode)
 }
 
 @Suppress("TooManyFunctions")
@@ -201,5 +204,13 @@ internal class DefaultKeyValueStorage @Inject constructor(
 
     override fun setAnalyticsMode(analyticsMode: AnalyticsMode) {
         sharedPreferencesManager.putEnum(ANALYTICS_MODE, analyticsMode)
+    }
+
+    override fun getOnBeforeSubmitMode(): OnBeforeSubmitMode {
+        return sharedPreferencesManager.getEnum(ON_BEFORE_SUBMIT_MODE)
+    }
+
+    override fun setOnBeforeSubmitMode(onBeforeSubmitMode: OnBeforeSubmitMode) {
+        sharedPreferencesManager.putEnum(ON_BEFORE_SUBMIT_MODE, onBeforeSubmitMode)
     }
 }

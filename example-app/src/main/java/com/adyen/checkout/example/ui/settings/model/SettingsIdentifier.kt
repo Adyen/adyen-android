@@ -25,4 +25,5 @@ internal enum class SettingsIdentifier {
     ANALYTICS_MODE,
     UI_THEME,
     INTEGRATION_FLOW,
+    ON_BEFORE_SUBMIT_MODE,
 }

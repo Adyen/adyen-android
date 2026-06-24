@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
@@ -17,6 +18,8 @@ import com.adyen.checkout.example.data.api.model.CreateOrderRequest
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequestData
+import com.adyen.checkout.example.data.api.model.SessionPatchRequest
+import com.adyen.checkout.example.data.api.model.SessionPatchResponse
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -24,6 +27,7 @@ import org.json.JSONObject
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse as OldPaymentMethodsApiResponse
 import com.adyen.checkout.sessions.core.SessionModel as OldSessionModel
 
+@Suppress("TooManyFunctions")
 interface PaymentsRepository {
     suspend fun createSessionOld(sessionRequest: SessionRequest): OldSessionModel?
     suspend fun createSession(sessionRequest: SessionRequest): SessionResponse?
@@ -39,6 +43,8 @@ interface PaymentsRepository {
         merchantAccount: String,
         shopperReference: String,
     ): Boolean
+
+    suspend fun patchSession(sessionId: String, sessionData: String, amount: Amount): SessionPatchResponse?
 }
 
 @Suppress("TooManyFunctions")
@@ -120,5 +126,18 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
             )
         }
         return response?.isSuccessful == true
+    }
+
+    override suspend fun patchSession(
+        sessionId: String,
+        sessionData: String,
+        amount: Amount,
+    ): SessionPatchResponse? = safeApiCall {
+        val request = SessionPatchRequest(
+            sessionData = sessionData,
+            amount = amount,
+            payable = true,
+        )
+        checkoutApiService.patchSessionAsync(sessionId, request)
     }
 }

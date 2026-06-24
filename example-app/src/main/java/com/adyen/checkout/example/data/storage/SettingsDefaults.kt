@@ -29,4 +29,5 @@ object SettingsDefaults {
     val INTEGRATION_FLOW: IntegrationFlow = IntegrationFlow.SESSIONS
     val ANALYTICS_MODE: AnalyticsMode = AnalyticsMode.ALL
     val UI_THEME: UITheme = UITheme.SYSTEM
+    val ON_BEFORE_SUBMIT_MODE: OnBeforeSubmitMode = OnBeforeSubmitMode.UPDATE_SHOPPER_DATA
 }
