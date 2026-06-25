@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.update
 
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
-    private val analyticsManager: AnalyticsManager,
+    @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent {
 

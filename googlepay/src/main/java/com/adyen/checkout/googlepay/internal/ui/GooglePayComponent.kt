@@ -42,7 +42,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("LongParameterList")
 internal class GooglePayComponent(
-    private val analyticsManager: AnalyticsManager,
+    @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val componentParams: GooglePayComponentParams,
     private val sdkDataProvider: SdkDataProvider,
     private val paymentMethodType: String,
@@ -70,14 +70,6 @@ internal class GooglePayComponent(
     )
 
     internal val viewState = componentState.viewState(viewStateProducer, coroutineScope)
-
-    init {
-        initializeAnalytics(coroutineScope)
-    }
-
-    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
-        analyticsManager.initialize(this, coroutineScope)
-    }
 
     @Composable
     override fun Content(modifier: Modifier) {
@@ -157,9 +149,7 @@ internal class GooglePayComponent(
         componentState.handleIntent(GooglePayIntent.UpdateLoading(isLoading))
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 
     companion object {
         @JvmField

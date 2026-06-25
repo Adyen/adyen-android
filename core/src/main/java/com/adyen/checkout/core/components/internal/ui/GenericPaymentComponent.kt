@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class GenericPaymentComponent(
-    private val analyticsManager: AnalyticsManager,
+    @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val paymentMethodType: String,
     private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent {
