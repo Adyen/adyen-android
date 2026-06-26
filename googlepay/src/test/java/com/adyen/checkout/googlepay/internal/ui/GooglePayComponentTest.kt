@@ -13,6 +13,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doReturn
@@ -163,13 +165,47 @@ internal class GooglePayComponentTest {
         )
     }
 
+    @Test
+    fun `when availability check returns true, then the available state is updated`() = runTest {
+        val availabilityCheck = mock<GooglePayAvailabilityCheck> {
+            onBlocking { isAvailable(any()) } doReturn true
+        }
+        val component = createComponent(
+            coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+            googlePayAvailabilityCheck = availabilityCheck,
+        )
+        val viewState = component.viewState.test(testScheduler)
+
+        component.checkAvailability(mock())
+
+        assertTrue(viewState.latestValue.isAvailable)
+    }
+
+    @Test
+    fun `when availability check returns false, then the available state stays false`() = runTest {
+        val availabilityCheck = mock<GooglePayAvailabilityCheck> {
+            onBlocking { isAvailable(any()) } doReturn false
+        }
+        val component = createComponent(
+            coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+            googlePayAvailabilityCheck = availabilityCheck,
+        )
+        val viewState = component.viewState.test(testScheduler)
+
+        component.checkAvailability(mock())
+
+        assertFalse(viewState.latestValue.isAvailable)
+    }
+
     private fun createComponent(
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager = mock(),
+        googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mock(),
     ) = GooglePayComponent(
         analyticsManager = analyticsManager,
         componentParams = mock<GooglePayComponentParams>(),
         sdkDataProvider = mock<SdkDataProvider>(),
+        googlePayAvailabilityCheck = googlePayAvailabilityCheck,
         paymentMethodType = "googlepay",
         componentStateValidator = GooglePayComponentStateValidator(),
         componentStateFactory = GooglePayComponentStateFactory(),
