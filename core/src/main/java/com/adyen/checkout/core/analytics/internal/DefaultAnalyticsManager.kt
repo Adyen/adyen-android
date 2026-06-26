@@ -35,19 +35,18 @@ internal class DefaultAnalyticsManager(
     private var timerJob: Job? = null
 
     init {
-        if (canTrackEvents()) {
-            coroutineScope.launch(coroutineDispatcher) {
-                runSuspendCatching {
-                    analyticsRepository.setup()
-                }.fold(
-                    onSuccess = {
-                        startTimer()
-                    },
-                    onFailure = {
-                        adyenLog(AdyenLogLevel.WARN, it) { "Failed analytics setup." }
-                    },
-                )
-            }
+        coroutineScope.launch(coroutineDispatcher) {
+            runSuspendCatching {
+                analyticsRepository.setup()
+            }.fold(
+                onSuccess = {
+                    startTimer()
+                },
+                onFailure = {
+                    adyenLog(AdyenLogLevel.WARN, it) { "Failed analytics setup." }
+                    startTimer()
+                },
+            )
         }
     }
 

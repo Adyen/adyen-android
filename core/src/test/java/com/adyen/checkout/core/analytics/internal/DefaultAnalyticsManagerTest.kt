@@ -44,20 +44,23 @@ internal class DefaultAnalyticsManagerTest(
     inner class InitializationTest {
 
         @Test
-        fun `analytics level is initial, then setup is not called`() = runTest {
-            createAnalyticsManager(analyticsParamsLevel = AnalyticsParamsLevel.INITIAL)
+        fun `setup succeeds, then timer is started`() = runTest {
+            whenever(analyticsRepository.setup()) doReturn "test value"
+            createAnalyticsManager(coroutineScope = backgroundScope)
 
-            verify(analyticsRepository, never()).setup()
+            testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_SECONDS + 1.milliseconds)
+
+            verify(analyticsRepository).sendEvents(any())
         }
 
         @Test
-        fun `setup fails, then timer is not started`() = runTest {
+        fun `setup fails, then timer is started`() = runTest {
             whenever(analyticsRepository.setup()) doAnswer { error("setup failed") }
             createAnalyticsManager(coroutineScope = backgroundScope)
 
             testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_SECONDS + 1.milliseconds)
 
-            verify(analyticsRepository, never()).sendEvents(any())
+            verify(analyticsRepository).sendEvents(any())
         }
     }
 
@@ -67,7 +70,10 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `analytics level is initial, then events should not be stored`() = runTest {
-            val analyticsManager = createAnalyticsManager(analyticsParamsLevel = AnalyticsParamsLevel.INITIAL)
+            val analyticsManager = createAnalyticsManager(
+                analyticsParamsLevel = AnalyticsParamsLevel.INITIAL,
+                coroutineScope = backgroundScope,
+            )
 
             analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
 
@@ -122,7 +128,10 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `analytics level is initial, then events are not sent`() = runTest {
-            val analyticsManager = createAnalyticsManager(analyticsParamsLevel = AnalyticsParamsLevel.INITIAL)
+            val analyticsManager = createAnalyticsManager(
+                analyticsParamsLevel = AnalyticsParamsLevel.INITIAL,
+                coroutineScope = backgroundScope,
+            )
             val event = AnalyticsEvent.Info(
                 component = "test",
                 shouldForceSend = true,
@@ -190,7 +199,10 @@ internal class DefaultAnalyticsManagerTest(
 
     @Test
     fun `when getCheckoutAttemptId is called, then returns provided id`() = runTest {
-        val analyticsManager = createAnalyticsManager(analyticsParamsLevel = AnalyticsParamsLevel.INITIAL)
+        val analyticsManager = createAnalyticsManager(
+            analyticsParamsLevel = AnalyticsParamsLevel.INITIAL,
+            coroutineScope = backgroundScope,
+        )
 
         assertEquals("test-id", analyticsManager.getCheckoutAttemptId())
     }
