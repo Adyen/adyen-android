@@ -112,7 +112,7 @@ internal class DefaultAnalyticsSetupProviderTest {
         amount: Amount? = Amount("USD", 123),
         source: AnalyticsSource = AnalyticsSource.PaymentComponent("scheme"),
         sessionId: String? = "sessionId",
-        checkoutAttemptId: String? = "checkoutAttemptId",
+        checkoutAttemptId: String = "checkoutAttemptId",
     ) = DefaultAnalyticsSetupProvider(
         shopperLocale = shopperLocale,
         isCreatedByDropIn = isCreatedByDropIn,

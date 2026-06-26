@@ -26,7 +26,7 @@ internal class DefaultAnalyticsSetupProvider(
     private val amount: Amount?,
     private val source: AnalyticsSource,
     private val sessionId: String?,
-    private val checkoutAttemptId: String?,
+    private val checkoutAttemptId: String,
 ) : AnalyticsSetupProvider {
 
     override fun provide(): AnalyticsSetupRequest {

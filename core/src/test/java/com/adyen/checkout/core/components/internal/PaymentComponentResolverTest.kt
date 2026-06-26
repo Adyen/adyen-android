@@ -249,7 +249,7 @@ internal class PaymentComponentResolverTest {
             clientKey = TEST_CLIENT_KEY,
             shopperLocale = Locale.US,
         ),
-        checkoutAttemptId = null,
+        checkoutAttemptId = "",
         publicKey = null,
     )
 
@@ -264,7 +264,7 @@ internal class PaymentComponentResolverTest {
             clientKey = TEST_CLIENT_KEY,
             shopperLocale = Locale.US,
         ),
-        checkoutAttemptId = null,
+        checkoutAttemptId = "",
         publicKey = null,
     )
 
@@ -289,7 +289,7 @@ internal class PaymentComponentResolverTest {
             clientKey = TEST_CLIENT_KEY,
             shopperLocale = Locale.US,
         ),
-        checkoutAttemptId = null,
+        checkoutAttemptId = "",
         publicKey = null,
     )
 

@@ -18,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -33,11 +32,12 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class, DirectAnalyticsEventCreation::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class, TestDispatcherExtension::class)
 internal class DefaultAnalyticsManagerTest(
-    @Mock private val analyticsRepository: AnalyticsRepository,
+    @param:Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
     private lateinit var analyticsManager: DefaultAnalyticsManager
@@ -47,45 +47,9 @@ internal class DefaultAnalyticsManagerTest(
         analyticsManager = createAnalyticsManager()
     }
 
-    @Test
-    fun `checkoutAttemptId is not available by default`() {
-        assertEquals(DefaultAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED, analyticsManager.getCheckoutAttemptId())
-    }
-
     @Nested
     @DisplayName("when initializing and")
     inner class InitializeTest {
-
-        @Test
-        fun `fetching checkoutAttemptId succeeds, then it is set`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
-
-            analyticsManager.initialize(this@InitializeTest, this)
-
-            assertEquals("test value", analyticsManager.getCheckoutAttemptId())
-            analyticsManager.clear(this@InitializeTest)
-        }
-
-        @Test
-        fun `analytics level is initial, then checkoutAttemptId is still set`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
-
-            analyticsManager.initialize(this@InitializeTest, this)
-
-            assertEquals("test value", analyticsManager.getCheckoutAttemptId())
-            analyticsManager.clear(this@InitializeTest)
-        }
-
-        @Test
-        fun `fetching checkoutAttemptId fails, then checkoutAttemptId is failed`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
-
-            analyticsManager.initialize(this@InitializeTest, this)
-
-            assertEquals(DefaultAnalyticsManager.FAILED_CHECKOUT_ATTEMPT_ID, analyticsManager.getCheckoutAttemptId())
-            analyticsManager.clear(this@InitializeTest)
-        }
 
         @Test
         fun `initialize is called twice, then the second time is ignored`() = runTest {
@@ -161,36 +125,6 @@ internal class DefaultAnalyticsManagerTest(
             verify(analyticsRepository, never()).sendEvents(any())
             analyticsManager.clear(this@SendEventTest)
         }
-
-        @Test
-        fun `checkoutAttemptId is null when fetching, then events are not sent`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn null
-            analyticsManager.initialize(this@SendEventTest, this)
-            val event = AnalyticsEvent.Info(
-                component = "test",
-                shouldForceSend = true,
-            )
-
-            analyticsManager.trackEvent(event)
-
-            verify(analyticsRepository, never()).sendEvents(any())
-            analyticsManager.clear(this@SendEventTest)
-        }
-
-        @Test
-        fun `checkoutAttemptId has failed fetching, then events are not sent`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
-            analyticsManager.initialize(this@SendEventTest, this)
-            val event = AnalyticsEvent.Info(
-                component = "test",
-                shouldForceSend = true,
-            )
-
-            analyticsManager.trackEvent(event)
-
-            verify(analyticsRepository, never()).sendEvents(any())
-            analyticsManager.clear(this@SendEventTest)
-        }
     }
 
     @Test
@@ -202,7 +136,7 @@ internal class DefaultAnalyticsManagerTest(
         analyticsManager.initialize(this@DefaultAnalyticsManagerTest, this)
 
         analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
-        testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_MILLIS + 1)
+        testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_SECONDS + 1.milliseconds)
 
         verify(analyticsRepository, times(1)).sendEvents(any())
         analyticsManager.clear(this@DefaultAnalyticsManagerTest)
@@ -214,6 +148,7 @@ internal class DefaultAnalyticsManagerTest(
     ) = DefaultAnalyticsManager(
         analyticsRepository = analyticsRepository,
         analyticsParams = AnalyticsParams(analyticsParamsLevel),
+        checkoutAttemptId = "test-id",
         coroutineDispatcher = coroutineDispatcher,
     )
 }

@@ -10,7 +10,7 @@ package com.adyen.checkout.core.common.internal
 
 import com.adyen.checkout.core.common.CheckoutContext
 
-internal val CheckoutContext.checkoutAttemptId: String?
+internal val CheckoutContext.checkoutAttemptId: String
     get() = when (this) {
         is CheckoutContext.Sessions -> checkoutAttemptId
         is CheckoutContext.Advanced -> checkoutAttemptId
