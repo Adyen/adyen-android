@@ -79,6 +79,10 @@ internal class GooglePayComponent(
 
     internal val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
+    private val allowedPaymentMethods by lazy {
+        GooglePayUtils.getAllowedPaymentMethodsJson(componentParams)
+    }
+
     init {
         checkAvailability()
     }
@@ -88,8 +92,11 @@ internal class GooglePayComponent(
         GooglePayContent(
             viewStateFlow = viewState,
             viewEventFlow = viewEventFlow,
+            allowedPaymentMethods = allowedPaymentMethods,
+            buttonStyling = componentParams.googlePayButtonStyling,
             onResult = ::onPaymentResult,
             loadPaymentData = ::loadPaymentData,
+            onSubmit = ::submit,
             modifier = modifier,
         )
     }

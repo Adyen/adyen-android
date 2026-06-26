@@ -10,13 +10,13 @@ package com.adyen.checkout.googlepay.internal.ui.view
 
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.internal.ui.GooglePayViewEvent
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewState
 import com.google.android.gms.tasks.Task
@@ -30,8 +30,11 @@ import kotlinx.coroutines.flow.StateFlow
 internal fun GooglePayContent(
     viewStateFlow: StateFlow<GooglePayViewState>,
     viewEventFlow: Flow<GooglePayViewEvent>,
+    allowedPaymentMethods: String,
+    buttonStyling: GooglePayButtonStyling?,
     onResult: (ApiTaskResult<PaymentData>) -> Unit,
     loadPaymentData: suspend (Context) -> Task<PaymentData>,
+    onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -50,7 +53,13 @@ internal fun GooglePayContent(
     }
 
     if (viewState.isAvailable) {
-        // TODO - Render the Google Pay button.
-        Box(modifier = modifier)
+        GooglePayButton(
+            isLoading = viewState.isLoading,
+            isButtonVisible = viewState.isButtonVisible,
+            allowedPaymentMethods = allowedPaymentMethods,
+            buttonStyling = buttonStyling,
+            onClick = onSubmit,
+            modifier = modifier,
+        )
     }
 }

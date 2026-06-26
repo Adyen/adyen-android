@@ -25,6 +25,7 @@
 "com.android.tools.build:gradle" = "[Android Gradle Plugin](https://developer.android.com/build/releases/gradle-plugin)"
 "com.google.android.gms:play-services-wallet" = "[Play Services Wallet](https://developers.google.com/pay/api/android/support/release-notes)"
 "com.google.android.material:material" = "[Material](https://github.com/material-components/material-components-android/releases/tag/{})"
+"com.google.pay.button:compose-pay-button" = "[Google Pay Compose Button](https://github.com/google-pay/compose-pay-button/releases/tag/v{})"
 "com.squareup.okhttp3:okhttp" = "[OkHttp](https://square.github.io/okhttp/changelogs/changelog/)"
 "com.tencent.mm.opensdk:wechat-sdk-android-without-mta" = "[WeChat](https://developers.weixin.qq.com/doc/oplatform/en/Mobile_App/Access_Guide/Android.html)"
 "kotlin" = "[Kotlin](https://github.com/JetBrains/kotlin/releases/tag/v{})"

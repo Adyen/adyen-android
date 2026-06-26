@@ -37,7 +37,7 @@ dependencies {
     // Dependencies
     implementation libs.compose.activity
     implementation libs.androidx.startup
-    implementation libs.google.pay.play.services.coroutines
+    implementation libs.google.pay.compose.button
     api libs.google.pay.play.services.wallet
 
     //Tests
