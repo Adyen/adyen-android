@@ -51,7 +51,6 @@ object PaymentMethodTypes {
     const val ONLINE_BANKING_PL = "onlineBanking_PL"
     const val ONLINE_BANKING_SK = "onlineBanking_SK"
     const val OPEN_BANKING = "openbanking_UK"
-    const val PAYPAL = "paypal"
     const val PAY_BY_BANK = "paybybank"
     const val PAY_BY_BANK_US = "paybybank_AIS_DD"
     const val PAY_TO = "payto"
@@ -140,7 +139,6 @@ object PaymentMethodTypes {
         ONLINE_BANKING_PL,
         ONLINE_BANKING_SK,
         OPEN_BANKING,
-        PAYPAL,
         PAY_BY_BANK,
         PAY_BY_BANK_US,
         PAY_NOW,
