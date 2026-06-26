@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.content.Intent
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.AdyenLogLevel
@@ -41,4 +42,8 @@ internal class ActionOnlyCheckoutFlow(
 
     // Action only flows do not require user interaction
     override fun requiresUserInteraction(): Boolean = false
+
+    override fun handleReturn(intent: Intent) {
+        actionHandler.handleReturn(intent)
+    }
 }

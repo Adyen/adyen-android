@@ -1,16 +1,20 @@
+/*
+ * Copyright (c) 2026 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 12/6/2026.
+ */
+
 @file:Suppress("DEPRECATION")
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.old
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.redirect.old.RedirectConfiguration
-import com.adyen.checkout.redirect.old.getRedirectConfiguration
-import com.adyen.checkout.redirect.old.redirect
-import com.adyen.checkout.redirect.old.toCheckoutConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale

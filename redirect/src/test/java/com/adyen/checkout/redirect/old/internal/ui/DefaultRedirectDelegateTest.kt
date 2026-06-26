@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 18/8/2022.
+ * Created by oscars on 12/6/2026.
  */
 
 @file:Suppress("DEPRECATION")
 
-package com.adyen.checkout.redirect.internal.ui
+package com.adyen.checkout.redirect.old.internal.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -30,7 +30,6 @@ import com.adyen.checkout.core.old.exception.HttpException
 import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.redirect.old.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.old.internal.data.model.NativeRedirectResponse
-import com.adyen.checkout.redirect.old.internal.ui.DefaultRedirectDelegate
 import com.adyen.checkout.redirect.old.redirect
 import com.adyen.checkout.ui.core.old.internal.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
@@ -241,7 +240,7 @@ internal class DefaultRedirectDelegateTest(
         }
 
         @ParameterizedTest
-        @MethodSource("com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegateTest#errorSource")
+        @MethodSource("com.adyen.checkout.redirect.old.internal.ui.DefaultRedirectDelegateTest#errorSource")
         fun `when native redirect is handled and error is thrown, then an error event is tracked`(error: Exception) =
             runTest {
                 whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }

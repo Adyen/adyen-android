@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components
 
+import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
@@ -93,4 +94,16 @@ class CheckoutController internal constructor(
      * @return `true` if user interaction is needed, `false` otherwise.
      */
     fun requiresUserInteraction(): Boolean = flow.requiresUserInteraction()
+
+    /**
+     * Handles the return from an external redirect (e.g. a browser or third-party app).
+     *
+     * Call this method when the app receives a deep link or new intent after the user is redirected
+     * externally as part of an action.
+     *
+     * @param intent The [Intent] received by the app upon returning from the external redirect.
+     */
+    fun handleReturn(intent: Intent) {
+        flow.handleReturn(intent)
+    }
 }

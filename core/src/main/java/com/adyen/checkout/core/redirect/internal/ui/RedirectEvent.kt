@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.Flow
 fun redirectEvent(
     redirectHandler: RedirectHandler,
     viewEventFlow: Flow<RedirectViewEvent>,
-    onError: (InternalCheckoutError) -> Unit
+    onError: (InternalCheckoutError) -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(redirectHandler, viewEventFlow, onError) {

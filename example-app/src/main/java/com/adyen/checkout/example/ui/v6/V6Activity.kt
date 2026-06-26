@@ -59,11 +59,7 @@ class V6Activity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-
-        val data = intent.data
-        if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
-            viewModel.handleIntent(intent)
-        }
+        viewModel.onNewIntent(intent)
     }
 
     companion object {

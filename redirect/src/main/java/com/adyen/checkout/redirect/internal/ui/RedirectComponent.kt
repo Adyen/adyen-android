@@ -16,6 +16,7 @@ import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -24,7 +25,6 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
-import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
@@ -41,17 +41,17 @@ import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 
-internal class RedirectComponent(
+internal class RedirectComponent
+@Suppress("LongParameterList")
+constructor(
     private val action: RedirectAction,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
     private val clientKey: String,
-) : ActionComponent, IntentHandlingComponent {
-
-    private var _coroutineScope: CoroutineScope? = null
-    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+    private val coroutineScope: CoroutineScope,
+) : ActionComponent, ReturningActionComponent {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
@@ -79,7 +79,27 @@ internal class RedirectComponent(
         launchAction(action.url)
     }
 
-    override fun handleIntent(intent: Intent) {
+    private fun initState() {
+        when (action.type) {
+            ActionTypes.NATIVE_REDIRECT -> {
+                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
+            }
+
+            else -> {
+                paymentDataRepository.paymentData = action.paymentData
+            }
+        }
+    }
+
+    private fun launchAction(url: String?) {
+        adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+        // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
+        //  status when the app resumes. Currently we have no way of doing that but we can create something like
+        //  PaymentComponentState for actions.
+        redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
+    }
+
+    override fun handleReturn(intent: Intent) {
         adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
@@ -102,26 +122,6 @@ internal class RedirectComponent(
 
             emitError(e)
         }
-    }
-
-    private fun initState() {
-        when (action.type) {
-            ActionTypes.NATIVE_REDIRECT -> {
-                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
-            }
-
-            else -> {
-                paymentDataRepository.paymentData = action.paymentData
-            }
-        }
-    }
-
-    private fun launchAction(url: String?) {
-        adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
-        // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
-        //  status when the app resumes. Currently we have no way of doing that but we can create something like
-        //  PaymentComponentState for actions.
-        redirectEventChannel.trySend(RedirectViewEvent.Redirect(url.orEmpty()))
     }
 
     private fun handleNativeRedirect(nativeRedirectData: String?, details: JSONObject) {

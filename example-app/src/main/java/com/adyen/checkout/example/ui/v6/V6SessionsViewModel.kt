@@ -43,6 +43,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
 internal class V6SessionsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -52,6 +53,9 @@ internal class V6SessionsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var checkoutContext: CheckoutContext.Sessions
+
+    private var checkoutController: CheckoutController? = null
+
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
     init {
@@ -121,11 +125,6 @@ internal class V6SessionsViewModel @Inject constructor(
         uiState = V6UiState.Final(ResultState.get(result.resultCode.value))
     }
 
-    @Suppress("unused")
-    fun handleIntent(intent: Intent) {
-        // TODO - Check if the controller should handle the intent or if we can do this inside a component
-    }
-
     fun onPaymentMethodSelected(paymentMethod: PaymentMethodResponse) {
         val newState = (uiState as? V6UiState.Component)?.copy(
             selectedPaymentMethod = paymentMethod,
@@ -164,7 +163,21 @@ internal class V6SessionsViewModel @Inject constructor(
                 )
             },
             coroutineScope = viewModelScope,
-        )
+        ).also {
+            checkoutController = it
+        }
+    }
+
+    fun onNewIntent(intent: Intent) {
+        val returnUrl = savedStateHandle.get<String>(V6SessionsActivity.RETURN_URL_EXTRA) ?: return
+        if (intent.data?.toString()?.startsWith(returnUrl) == true) {
+            checkoutController?.handleReturn(intent)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        checkoutController = null
     }
 
     private suspend fun onBeforeSubmit(data: BeforeSubmitData): BeforeSubmitResult {

@@ -8,7 +8,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.old
 
 import android.app.Activity
 import android.content.Intent
@@ -18,7 +18,6 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.redirect.old.RedirectComponent
 import com.adyen.checkout.redirect.old.internal.ui.RedirectComponentViewType
 import com.adyen.checkout.redirect.old.internal.ui.RedirectDelegate
 import com.adyen.checkout.test.LoggingExtension

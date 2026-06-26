@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
@@ -18,6 +19,7 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.action.internal.ActionFactory
+import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CheckoutResultCode
@@ -45,6 +47,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
@@ -72,15 +75,15 @@ internal class ActionHandlerTest(
     inner class HandleActionTest {
 
         @Test
-        fun `when handleAction is not called, then actionComponent is null`() = runTest {
-            val actionHandler = createActionHandler(CoroutineScope(UnconfinedTestDispatcher()))
+        fun `when handleAction is not called, then actionComponent is null`() {
+            val actionHandler = createActionHandler()
 
             assertNull(actionHandler.actionComponent)
         }
 
         @Test
-        fun `when handleAction is called, then actionComponent is set`() = runTest {
-            val actionHandler = createActionHandler(CoroutineScope(UnconfinedTestDispatcher()))
+        fun `when handleAction is called, then actionComponent is set`() {
+            val actionHandler = createActionHandler()
 
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
 
@@ -88,8 +91,8 @@ internal class ActionHandlerTest(
         }
 
         @Test
-        fun `when handleAction is called, then handleAction is called on the action component`() = runTest {
-            val actionHandler = createActionHandler(CoroutineScope(UnconfinedTestDispatcher()))
+        fun `when handleAction is called, then handleAction is called on the action component`() {
+            val actionHandler = createActionHandler()
 
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
 
@@ -98,8 +101,8 @@ internal class ActionHandlerTest(
         }
 
         @Test
-        fun `when handleAction is called again, then actionComponent is replaced`() = runTest {
-            val actionHandler = createActionHandler(CoroutineScope(UnconfinedTestDispatcher()))
+        fun `when handleAction is called again, then actionComponent is replaced`() {
+            val actionHandler = createActionHandler()
 
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
             val firstComponent = actionHandler.actionComponent
@@ -111,8 +114,8 @@ internal class ActionHandlerTest(
         }
 
         @Test
-        fun `when handleAction is called again, then handleAction is called on the new action component`() = runTest {
-            val actionHandler = createActionHandler(CoroutineScope(UnconfinedTestDispatcher()))
+        fun `when handleAction is called again, then handleAction is called on the new action component`() {
+            val actionHandler = createActionHandler()
 
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
@@ -130,7 +133,7 @@ internal class ActionHandlerTest(
             whenever(componentRequestDispatcher.additionalDetails(any())) doReturn
                 AdditionalDetailsResult.Completion("Authorised")
 
-            val actionHandler = createActionHandler(CoroutineScope(UnconfinedTestDispatcher()))
+            val actionHandler = createActionHandler()
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
 
             eventFlow.emit(ActionComponentEvent.ActionDetails(ActionComponentData()))
@@ -144,7 +147,7 @@ internal class ActionHandlerTest(
 
         @Test
         fun `when Error event is emitted, then error is called on the dispatcher`() = runTest {
-            val actionHandler = createActionHandler(CoroutineScope(UnconfinedTestDispatcher()))
+            val actionHandler = createActionHandler()
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
 
             val internalError = GenericError("test error")
@@ -158,6 +161,60 @@ internal class ActionHandlerTest(
                 ),
             )
         }
+    }
+
+    @Nested
+    inner class HandleReturnTest {
+
+        @Test
+        fun `when action component is null, then nothing happens`() {
+            val actionHandler = createActionHandler()
+
+            val intent = mock<Intent>()
+            actionHandler.handleReturn(intent)
+
+            assertNull(actionHandler.actionComponent)
+        }
+
+        @Test
+        fun `when action component can handle return, then handleReturn is called on the action component`() {
+            registerReturningTestFactory()
+            val actionHandler = createActionHandler()
+            actionHandler.handleAction(TestAction(type = RETURNING_ACTION_TYPE))
+
+            val intent = mock<Intent>()
+            actionHandler.handleReturn(intent)
+
+            val component = actionHandler.actionComponent as? ControllableReturningActionComponent
+            assertEquals(1, component?.handleReturnCallCount)
+            assertEquals(intent, component?.lastIntent)
+        }
+
+        @Test
+        fun `when action component cannot handle return, then nothing happens`() {
+            val actionHandler = createActionHandler()
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            val intent = mock<Intent>()
+            actionHandler.handleReturn(intent)
+
+            assert(actionHandler.actionComponent !is ReturningActionComponent)
+        }
+    }
+
+    private fun registerReturningTestFactory() {
+        ActionComponentProvider.register(
+            RETURNING_ACTION_TYPE,
+            object : ActionFactory<ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ) = ControllableReturningActionComponent(eventFlow)
+            },
+        )
     }
 
     private fun registerTestFactory() {
@@ -175,9 +232,9 @@ internal class ActionHandlerTest(
         )
     }
 
-    private fun createActionHandler(coroutineScope: CoroutineScope) = ActionHandler(
+    private fun createActionHandler() = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
-        coroutineScope = coroutineScope,
+        coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         analyticsManager = TestAnalyticsManager(),
         params = generateCheckoutParams(),
     )
@@ -209,7 +266,34 @@ internal class ActionHandlerTest(
         }
     }
 
+    private class ControllableReturningActionComponent(
+        override val eventFlow: Flow<ActionComponentEvent>,
+    ) : ActionComponent, ReturningActionComponent {
+
+        var handleActionCallCount = 0
+            private set
+
+        var handleReturnCallCount = 0
+            private set
+
+        var lastIntent: Intent? = null
+            private set
+
+        @Composable
+        override fun Content(modifier: Modifier) = Unit
+
+        override fun handleAction() {
+            handleActionCallCount++
+        }
+
+        override fun handleReturn(intent: Intent) {
+            handleReturnCallCount++
+            lastIntent = intent
+        }
+    }
+
     companion object {
         private const val TEST_ACTION_TYPE = "test_action"
+        private const val RETURNING_ACTION_TYPE = "returning_action"
     }
 }

@@ -56,6 +56,8 @@ internal class V6ViewModel @Inject constructor(
 
     private lateinit var checkoutContext: CheckoutContext.Advanced
 
+    private var checkoutController: CheckoutController? = null
+
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
     init {
@@ -175,11 +177,6 @@ internal class V6ViewModel @Inject constructor(
         uiState = V6UiState.Final(ResultState.get(result.resultCode.value))
     }
 
-    @Suppress("unused")
-    fun handleIntent(intent: Intent) {
-        // TODO - Check if the controller should handle the intent or if we can do this inside a component
-    }
-
     fun onPaymentMethodSelected(paymentMethod: PaymentMethodResponse) {
         val newState = (uiState as? V6UiState.Component)?.copy(
             selectedPaymentMethod = paymentMethod,
@@ -219,7 +216,21 @@ internal class V6ViewModel @Inject constructor(
                 )
             },
             coroutineScope = viewModelScope,
-        )
+        ).also {
+            checkoutController = it
+        }
+    }
+
+    fun onNewIntent(intent: Intent) {
+        val returnUrl = savedStateHandle.get<String>(V6Activity.RETURN_URL_EXTRA) ?: return
+        if (intent.data?.toString()?.startsWith(returnUrl) == true) {
+            checkoutController?.handleReturn(intent)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        checkoutController = null
     }
 
     companion object {
