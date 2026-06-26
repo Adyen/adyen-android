@@ -11,7 +11,7 @@ package com.adyen.checkout.await.internal.ui
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.adyen.checkout.await.internal.ui.view.AwaitComponent
+import com.adyen.checkout.await.internal.ui.view.AwaitContent
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.AwaitAction
 import com.adyen.checkout.core.action.internal.ActionComponent
@@ -69,7 +69,7 @@ internal class AwaitComponent(
             onError = ::emitError,
         )
 
-        AwaitComponent(modifier)
+        AwaitContent(modifier)
     }
 
     override fun handleAction() {

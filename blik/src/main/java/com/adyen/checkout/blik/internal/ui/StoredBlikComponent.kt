@@ -9,12 +9,10 @@
 package com.adyen.checkout.blik.internal.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
-import com.adyen.checkout.blik.internal.ui.view.StoredBlikComponent
+import com.adyen.checkout.blik.internal.ui.view.StoredBlikContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -27,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
@@ -38,7 +37,7 @@ internal class StoredBlikComponent(
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
-    private val isLoading = MutableStateFlow(false)
+    private val viewState = MutableStateFlow(StoredBlikViewState(isLoading = false))
 
     init {
         initializeAnalytics(coroutineScope)
@@ -50,10 +49,8 @@ internal class StoredBlikComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        val isLoading by this.isLoading.collectAsStateWithLifecycle()
-
-        StoredBlikComponent(
-            viewState = StoredBlikViewState(isLoading = isLoading),
+        StoredBlikContent(
+            viewStateFlow = viewState,
             onSubmitClick = ::submit,
             modifier = modifier,
         )
@@ -67,7 +64,9 @@ internal class StoredBlikComponent(
     override fun requiresUserInteraction(): Boolean = false
 
     override fun setLoading(isLoading: Boolean) {
-        this.isLoading.value = isLoading
+        this.viewState.update {
+            it.copy(isLoading = isLoading)
+        }
     }
 
     override fun onCleared() {

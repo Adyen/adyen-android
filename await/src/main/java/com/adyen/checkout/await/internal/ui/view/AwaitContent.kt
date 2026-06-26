@@ -23,7 +23,7 @@ import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
-internal fun AwaitComponent(
+internal fun AwaitContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -38,6 +38,6 @@ internal fun AwaitComponent(
 
 @Preview(showBackground = true)
 @Composable
-private fun AwaitComponentPreview() {
-    AwaitComponent()
+private fun AwaitContentPreview() {
+    AwaitContent()
 }

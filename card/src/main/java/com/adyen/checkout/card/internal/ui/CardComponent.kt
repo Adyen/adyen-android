@@ -12,16 +12,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.analytics.CardScannerEvents
@@ -35,8 +29,9 @@ import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
-import com.adyen.checkout.card.internal.ui.view.CardComponent
-import com.adyen.checkout.card.internal.ui.view.InstallmentPicker
+import com.adyen.checkout.card.internal.ui.view.CardContent
+import com.adyen.checkout.card.internal.ui.view.CardSecondaryContent
+import com.adyen.checkout.card.internal.ui.view.CardSecondaryContentEntry
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
@@ -113,49 +108,27 @@ constructor(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        val context = LocalContext.current
-        LaunchedEffect(Unit) {
-            initializeCardScanner(context)
-        }
-
-        val scannerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.StartIntentSenderForResult(),
-        ) { result ->
-            onCardScannerResult(result.resultCode, result.data)
-            // Re-initialize to get a fresh PendingIntent, as Google's PaymentCardRecognitionPendingIntent is single-use
-            initializeCardScanner(context)
-        }
-
-        val viewState by viewState.collectAsStateWithLifecycle()
-        CardComponent(
-            viewState = viewState,
+        CardContent(
+            modifier = modifier,
+            viewStateFlow = viewState,
             onIntent = ::handleIntent,
             onSubmitClick = ::submit,
-            onScanButtonClick = {
-                onScanButtonClick(scannerLauncher)
-            },
             onInstallmentPickerClick = ::onInstallmentPickerClick,
-            modifier = modifier,
+            initializeCardScanner = ::initializeCardScanner,
+            onCardScannerResult = ::onCardScannerResult,
+            onScanButtonClick = ::onScanButtonClick,
         )
     }
 
     @Composable
     override fun SecondaryContent(identifier: String, modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-
-        when (identifier) {
-            INSTALLMENTS_IDENTIFIER -> {
-                InstallmentPicker(
-                    installmentOptions = viewState.installmentViewState?.installmentOptions ?: emptyList(),
-                    selectedInstallment = viewState.installmentViewState?.selectedInstallment,
-                    onItemClick = { installment ->
-                        onIntent(CardIntent.UpdateInstallment(installment))
-                        eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen)
-                    },
-                    modifier = modifier,
-                )
-            }
-        }
+        CardSecondaryContent(
+            modifier = modifier,
+            identifier = identifier,
+            viewState = viewState,
+            onIntent = ::onIntent,
+            onDismissRequest = { eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen) },
+        )
     }
 
     override fun submit() {
@@ -301,7 +274,7 @@ constructor(
     private fun onInstallmentPickerClick() {
         eventChannel.trySend(
             PaymentComponentEvent.SecondaryScreen(
-                identifier = INSTALLMENTS_IDENTIFIER,
+                identifier = CardSecondaryContentEntry.INSTALLMENTS,
             ),
         )
     }
@@ -325,9 +298,5 @@ constructor(
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
-    }
-
-    companion object {
-        private const val INSTALLMENTS_IDENTIFIER = "installments"
     }
 }

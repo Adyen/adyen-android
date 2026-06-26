@@ -9,9 +9,7 @@
 package com.adyen.checkout.card.internal.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -22,7 +20,7 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidat
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
-import com.adyen.checkout.card.internal.ui.view.StoredCardComponent
+import com.adyen.checkout.card.internal.ui.view.StoredCardContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -101,9 +99,8 @@ internal class StoredCardComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        val viewState by viewState.collectAsStateWithLifecycle()
-        StoredCardComponent(
-            viewState = viewState,
+        StoredCardContent(
+            viewStateFlow = viewState,
             onIntent = ::onIntent,
             onSubmitClick = ::submit,
             modifier = modifier,

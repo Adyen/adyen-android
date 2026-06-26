@@ -8,12 +8,22 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
+import android.content.Context
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
@@ -33,9 +43,47 @@ import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-internal fun CardComponent(
+internal fun CardContent(
+    modifier: Modifier,
+    viewStateFlow: StateFlow<CardViewState>,
+    onIntent: (CardIntent) -> Unit,
+    onSubmitClick: () -> Unit,
+    onInstallmentPickerClick: () -> Unit,
+    initializeCardScanner: (Context) -> Unit,
+    onCardScannerResult: (Int, Intent?) -> Unit,
+    onScanButtonClick: (ActivityResultLauncher<IntentSenderRequest>) -> Unit,
+) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        initializeCardScanner(context)
+    }
+
+    val scannerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+    ) { result ->
+        onCardScannerResult(result.resultCode, result.data)
+        // Re-initialize to get a fresh PendingIntent, as Google's PaymentCardRecognitionPendingIntent is single-use
+        initializeCardScanner(context)
+    }
+
+    val viewState by viewStateFlow.collectAsStateWithLifecycle()
+    CardContent(
+        viewState = viewState,
+        onIntent = onIntent,
+        onSubmitClick = onSubmitClick,
+        onScanButtonClick = {
+            onScanButtonClick(scannerLauncher)
+        },
+        onInstallmentPickerClick = onInstallmentPickerClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun CardContent(
     viewState: CardViewState,
     onIntent: (CardIntent) -> Unit,
     onSubmitClick: () -> Unit,
@@ -155,8 +203,8 @@ private fun CardDetailsSection(
 
 @Preview(showBackground = true)
 @Composable
-private fun CardComponentPreview() {
-    CardComponent(
+private fun CardContentPreview() {
+    CardContent(
         viewState = CardViewState(
             cardNumber = TextInputViewState(
                 text = "5555444433331111",
