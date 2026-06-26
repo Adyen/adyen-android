@@ -15,8 +15,7 @@ import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
-import com.adyen.checkout.core.components.CheckoutSecondaryRoute
+import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -64,57 +63,57 @@ internal class FullCheckoutFlowTest(
     inner class NavigationTest {
 
         @Test
-        fun `when SecondaryScreen event is emitted, then paymentMethodNavigation emits Secondary route`() = runTest {
+        fun `when SecondaryScreen event is emitted, then navigation emits Secondary route`() = runTest {
             val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
-            val paymentMethodNavigation = flow.paymentMethodNavigation.test(testScheduler)
+            val navigation = flow.navigation.test(testScheduler)
             eventFlow.emit(PaymentComponentEvent.SecondaryScreen("test_id"))
 
-            val expected = paymentMethodNavigation.latestValue
-            assertInstanceOf<CheckoutPaymentMethodRoute.Secondary>(expected)
+            val expected = navigation.latestValue
+            assertInstanceOf<CheckoutRoute.Secondary>(expected)
             assertEquals("test_id", expected.identifier)
         }
 
         @Test
-        fun `when CloseSecondaryScreen event is emitted, then secondaryNavigation emits PaymentMethod route`() =
+        fun `when CloseSecondaryScreen event is emitted, then navigation emits PaymentMethod route`() =
             runTest {
                 val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
-                val secondaryNavigation = flow.secondaryNavigation.test(testScheduler)
+                val navigation = flow.navigation.test(testScheduler)
                 eventFlow.emit(PaymentComponentEvent.CloseSecondaryScreen)
 
-                val expected = secondaryNavigation.latestValue
-                assertInstanceOf<CheckoutSecondaryRoute.PaymentMethod>(expected)
+                val expected = navigation.latestValue
+                assertInstanceOf<CheckoutRoute.PaymentMethod>(expected)
             }
 
         @Test
-        fun `when submit results in Action, then paymentMethodNavigation emits Action route`() = runTest {
+        fun `when submit results in Action, then navigation emits Action route`() = runTest {
             val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
             whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
 
             val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
-            val paymentMethodNavigation = flow.paymentMethodNavigation.test(testScheduler)
+            val navigation = flow.navigation.test(testScheduler)
             eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
 
-            val expected = paymentMethodNavigation.latestValue
-            assertInstanceOf<CheckoutPaymentMethodRoute.Action>(expected)
+            val expected = navigation.latestValue
+            assertInstanceOf<CheckoutRoute.Action>(expected)
         }
 
         @Test
-        fun `when multiple SecondaryScreen events are emitted, then paymentMethodNavigation emits corresponding routes`() =
+        fun `when multiple SecondaryScreen events are emitted, then navigation emits corresponding routes`() =
             runTest {
                 val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
-                val paymentMethodNavigation = flow.paymentMethodNavigation.test(testScheduler)
+                val navigation = flow.navigation.test(testScheduler)
                 eventFlow.emit(PaymentComponentEvent.SecondaryScreen("first"))
                 eventFlow.emit(PaymentComponentEvent.SecondaryScreen("second"))
 
                 val expected = listOf(
-                    CheckoutPaymentMethodRoute.Secondary("first"),
-                    CheckoutPaymentMethodRoute.Secondary("second"),
+                    CheckoutRoute.Secondary("first"),
+                    CheckoutRoute.Secondary("second"),
                 )
-                assertEquals(expected, paymentMethodNavigation.values)
+                assertEquals(expected, navigation.values)
             }
     }
 

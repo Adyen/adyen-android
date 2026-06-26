@@ -65,9 +65,13 @@ class CheckoutController internal constructor(
 
     internal val actionComponent: ActionComponent? get() = flow.actionComponent
 
-    internal val paymentMethodNavigation: Flow<CheckoutPaymentMethodRoute> get() = flow.paymentMethodNavigation
-
-    internal val secondaryNavigation: Flow<CheckoutSecondaryRoute> get() = flow.secondaryNavigation
+    /**
+     * A [Flow] of [CheckoutRoute] events that indicate which screen should be displayed.
+     *
+     * Collect this flow to observe navigation changes and update the UI accordingly (e.g. showing
+     * the payment method input, an action screen, or secondary content).
+     */
+    val navigation: Flow<CheckoutRoute> get() = flow.navigation
 
     /**
      * Submits the current payment data.

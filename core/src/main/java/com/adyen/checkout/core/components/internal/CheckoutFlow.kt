@@ -10,8 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
-import com.adyen.checkout.core.components.CheckoutSecondaryRoute
+import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.flow.Flow
 
@@ -21,9 +20,7 @@ internal interface CheckoutFlow {
 
     val actionComponent: ActionComponent?
 
-    val paymentMethodNavigation: Flow<CheckoutPaymentMethodRoute>
-
-    val secondaryNavigation: Flow<CheckoutSecondaryRoute>
+    val navigation: Flow<CheckoutRoute>
 
     fun submit()
 
