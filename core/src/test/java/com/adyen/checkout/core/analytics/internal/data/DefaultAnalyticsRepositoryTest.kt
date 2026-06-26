@@ -66,7 +66,7 @@ internal class DefaultAnalyticsRepositoryTest(
         val checkoutAttemptId = "some id"
         whenever(remoteDataStore.setup(any())) doReturn AnalyticsSetupResponse(checkoutAttemptId)
 
-        val result = analyticsRepository.fetchCheckoutAttemptId()
+        val result = analyticsRepository.setup()
 
         assertEquals(checkoutAttemptId, result)
     }

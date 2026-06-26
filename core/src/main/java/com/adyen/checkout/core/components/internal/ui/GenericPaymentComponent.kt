@@ -17,27 +17,17 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.GenericPaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.GenericDetails
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class GenericPaymentComponent(
-    private val analyticsManager: AnalyticsManager,
+    @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val paymentMethodType: String,
     private val sdkDataProvider: SdkDataProvider,
-    coroutineScope: CoroutineScope,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
-
-    init {
-        initializeAnalytics(coroutineScope)
-    }
-
-    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
-        analyticsManager.initialize(this, coroutineScope)
-    }
 
     @Composable
     override fun Content(modifier: Modifier) {
@@ -69,7 +59,5 @@ internal class GenericPaymentComponent(
         // There is no UI to display a loading state
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 }

@@ -97,13 +97,8 @@ constructor(
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     init {
-        initializeAnalytics()
         onCardBrandDataChanged()
         onBinChanged()
-    }
-
-    private fun initializeAnalytics() {
-        analyticsManager.initialize(this, coroutineScope)
     }
 
     @Composable
@@ -156,9 +151,7 @@ constructor(
         onIntent(CardIntent.UpdateLoading(isLoading))
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 
     private fun onScanButtonClick(scannerLauncher: ActivityResultLauncher<IntentSenderRequest>) {
         val intentSender = getCardScannerIntentSender() ?: run {

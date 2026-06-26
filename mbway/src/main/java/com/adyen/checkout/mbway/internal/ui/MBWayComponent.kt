@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("LongParameterList")
 internal class MBWayComponent(
-    private val analyticsManager: AnalyticsManager,
+    @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: MBWayComponentStateValidator,
     componentStateFactory: MBWayComponentStateFactory,
@@ -54,14 +54,6 @@ internal class MBWayComponent(
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
-
-    init {
-        initializeAnalytics(coroutineScope)
-    }
-
-    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
-        analyticsManager.initialize(this, coroutineScope)
-    }
 
     @Composable
     override fun Content(modifier: Modifier) {
@@ -116,7 +108,5 @@ internal class MBWayComponent(
         componentState.handleIntent(MBWayIntent.UpdateLoading(isLoading))
     }
 
-    override fun onCleared() {
-        analyticsManager.clear(this)
-    }
+    override fun onCleared() = Unit
 }

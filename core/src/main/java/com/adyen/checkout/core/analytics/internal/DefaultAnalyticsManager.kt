@@ -28,47 +28,34 @@ internal class DefaultAnalyticsManager(
     private val analyticsRepository: AnalyticsRepository,
     private val analyticsParams: AnalyticsParams,
     private val checkoutAttemptId: String,
+    private val coroutineScope: CoroutineScope,
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : AnalyticsManager {
 
-    private var isInitialized: Boolean = false
-
-    private var coroutineScope: CoroutineScope? = null
-
     private var timerJob: Job? = null
 
-    private var ownerReference: String? = null
-
-    override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
-        if (isInitialized) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Already initialized, ignoring." }
-            return
-        }
-        isInitialized = true
-
-        ownerReference = owner::class.qualifiedName
-        this.coroutineScope = coroutineScope
-
+    init {
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
-                analyticsRepository.fetchCheckoutAttemptId()
+                analyticsRepository.setup()
             }.fold(
                 onSuccess = {
                     startTimer()
                 },
                 onFailure = {
-                    adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." }
+                    adyenLog(AdyenLogLevel.WARN, it) { "Failed analytics setup." }
+                    startTimer()
                 },
             )
         }
     }
 
     override fun trackEvent(event: AnalyticsEvent) {
-        if (cannotSendEvents()) {
+        if (!canTrackEvents()) {
             adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
             return
         }
-        coroutineScope?.launch(coroutineDispatcher) {
+        coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
                 analyticsRepository.storeEvent(event)
 
@@ -82,16 +69,12 @@ internal class DefaultAnalyticsManager(
                     adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" }
                 },
             )
-        } ?: adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null. Tracking event failed." }
+        }
     }
 
     private fun startTimer() {
         stopTimer()
-        if (coroutineScope == null) {
-            adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null." }
-            return
-        }
-        timerJob = coroutineScope?.launch(coroutineDispatcher) {
+        timerJob = coroutineScope.launch(coroutineDispatcher) {
             while (isActive) {
                 delay(DISPATCH_INTERVAL_SECONDS)
                 sendEvents()
@@ -116,22 +99,7 @@ internal class DefaultAnalyticsManager(
 
     override fun getCheckoutAttemptId(): String = checkoutAttemptId
 
-    private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.INITIAL.priority
-
-    override fun clear(owner: Any) {
-        if (ownerReference != owner::class.qualifiedName) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Clear called by not the original owner, ignoring." }
-            return
-        }
-
-        adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
-
-        coroutineScope = null
-        ownerReference = null
-        isInitialized = false
-        stopTimer()
-        timerJob = null
-    }
+    private fun canTrackEvents() = analyticsParams.level.priority > AnalyticsParamsLevel.INITIAL.priority
 
     companion object {
 

@@ -12,7 +12,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
 
 internal interface AnalyticsRepository {
 
-    suspend fun fetchCheckoutAttemptId(): String?
+    suspend fun setup(): String?
 
     suspend fun storeEvent(event: AnalyticsEvent)
 

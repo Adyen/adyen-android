@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.analytics.internal
 
-import kotlinx.coroutines.CoroutineScope
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.fail
@@ -17,18 +16,8 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals
 @Suppress("TooManyFunctions")
 class TestAnalyticsManager : AnalyticsManager {
 
-    private var isInitialized = false
-    private var isCleared = false
     private var checkoutAttemptId: String = CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     private val events: MutableList<AnalyticsEvent> = mutableListOf()
-
-    override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
-        isInitialized = true
-    }
-
-    fun assertIsInitialized() {
-        assertTrue(isInitialized)
-    }
 
     override fun trackEvent(event: AnalyticsEvent) {
         events.add(event)
@@ -64,14 +53,6 @@ class TestAnalyticsManager : AnalyticsManager {
 
     fun setCheckoutAttemptId(checkoutAttemptId: String) {
         this.checkoutAttemptId = checkoutAttemptId
-    }
-
-    override fun clear(owner: Any) {
-        isCleared = true
-    }
-
-    fun assertIsCleared() {
-        assertTrue(isCleared)
     }
 
     companion object {

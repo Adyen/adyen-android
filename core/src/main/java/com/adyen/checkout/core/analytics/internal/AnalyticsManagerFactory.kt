@@ -22,6 +22,7 @@ import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
+import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
 internal class AnalyticsManagerFactory {
@@ -31,6 +32,7 @@ internal class AnalyticsManagerFactory {
         source: AnalyticsSource,
         sessionId: String?,
         checkoutAttemptId: String,
+        coroutineScope: CoroutineScope,
     ): AnalyticsManager = provide(
         shopperLocale = params.shopperLocale,
         environment = params.environment,
@@ -42,6 +44,7 @@ internal class AnalyticsManagerFactory {
         source = source,
         sessionId = sessionId,
         checkoutAttemptId = checkoutAttemptId,
+        coroutineScope = coroutineScope,
     )
 
     @Suppress("LongParameterList")
@@ -55,6 +58,7 @@ internal class AnalyticsManagerFactory {
         source: AnalyticsSource,
         sessionId: String?,
         checkoutAttemptId: String,
+        coroutineScope: CoroutineScope,
     ): AnalyticsManager {
         val applicationContext = ApplicationContextHolder.require()
 
@@ -87,6 +91,7 @@ internal class AnalyticsManagerFactory {
             ),
             analyticsParams = analyticsParams,
             checkoutAttemptId = checkoutAttemptId,
+            coroutineScope = coroutineScope,
         )
     }
 
