@@ -122,10 +122,10 @@ internal class RedirectComponentTest(
     }
 
     @Nested
-    inner class OnNewIntentTest {
+    inner class HandleReturnTest {
 
         @Test
-        fun `when onNewIntent is called with valid data, then details are emitted`() = runTest {
+        fun `when handleReturn is called with valid data, then details are emitted`() = runTest {
             // GIVEN
             val expectedDetails = JSONObject().apply { put("redirectResult", "testResult") }
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn expectedDetails
@@ -151,7 +151,7 @@ internal class RedirectComponentTest(
         }
 
         @Test
-        fun `when onNewIntent is called and parsing fails, then error is emitted`() = runTest {
+        fun `when handleReturn is called and parsing fails, then error is emitted`() = runTest {
             // GIVEN
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
@@ -174,7 +174,7 @@ internal class RedirectComponentTest(
         }
 
         @Test
-        fun `when onNewIntent is called and parsing fails, then redirect parse failed event is tracked`() {
+        fun `when handleReturn is called and parsing fails, then redirect parse failed event is tracked`() {
             // GIVEN
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
@@ -197,7 +197,7 @@ internal class RedirectComponentTest(
         }
 
         @Test
-        fun `when onNewIntent is called and error is emitted, then redirect failed event is tracked`() {
+        fun `when handleReturn is called and error is emitted, then redirect failed event is tracked`() {
             // GIVEN
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
@@ -224,7 +224,7 @@ internal class RedirectComponentTest(
     inner class NativeRedirectTest {
 
         @Test
-        fun `when onNewIntent is called with native redirect and service succeeds, then details are emitted`() =
+        fun `when handleReturn is called with native redirect and service succeeds, then details are emitted`() =
             runTest {
                 // GIVEN
                 val response = NativeRedirectResponse("someRedirectResult")
@@ -256,7 +256,7 @@ internal class RedirectComponentTest(
             }
 
         @Test
-        fun `when onNewIntent is called with native redirect and HttpError is thrown, then error is emitted`() =
+        fun `when handleReturn is called with native redirect and HttpError is thrown, then error is emitted`() =
             runTest {
                 // GIVEN
                 val error = HttpError(401, "Unauthorized", null)
@@ -283,7 +283,7 @@ internal class RedirectComponentTest(
             }
 
         @Test
-        fun `when onNewIntent is called with native redirect and HttpError is thrown, then api native redirect error event is tracked`() =
+        fun `when handleReturn is called with native redirect and HttpError is thrown, then api native redirect error event is tracked`() =
             runTest {
                 // GIVEN
                 val error = HttpError(401, "Unauthorized", null)
@@ -310,7 +310,7 @@ internal class RedirectComponentTest(
             }
 
         @Test
-        fun `when onNewIntent is called with native redirect and JSONException is thrown, then error is emitted`() =
+        fun `when handleReturn is called with native redirect and JSONException is thrown, then error is emitted`() =
             runTest {
                 // GIVEN
                 val error = JSONException("Serialization error")
@@ -336,7 +336,7 @@ internal class RedirectComponentTest(
             }
 
         @Test
-        fun `when onNewIntent is called with native redirect and JSONException is thrown, then api native redirect error event is tracked`() =
+        fun `when handleReturn is called with native redirect and JSONException is thrown, then api native redirect error event is tracked`() =
             runTest {
                 // GIVEN
                 val error = JSONException("Serialization error")

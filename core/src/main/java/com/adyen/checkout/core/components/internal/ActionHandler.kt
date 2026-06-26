@@ -17,8 +17,10 @@ import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
@@ -78,6 +80,10 @@ internal class ActionHandler(
     }
 
     fun handleReturn(intent: Intent) {
-        (actionComponent as? ReturningActionComponent)?.handleReturn(intent)
+        (actionComponent as? ReturningActionComponent)?.handleReturn(intent) ?: run {
+            adyenLog(AdyenLogLevel.WARN) {
+                "handleReturn called but actionComponent is null or not a ReturningActionComponent"
+            }
+        }
     }
 }

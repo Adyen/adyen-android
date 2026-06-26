@@ -43,6 +43,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
 internal class V6SessionsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
