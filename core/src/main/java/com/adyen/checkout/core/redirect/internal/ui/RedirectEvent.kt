@@ -12,6 +12,8 @@ import android.annotation.SuppressLint
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -28,6 +30,7 @@ fun redirectEvent(
     onError: (InternalCheckoutError) -> Unit,
 ) {
     val context = LocalContext.current
+    val onError by rememberUpdatedState(onError)
     LaunchedEffect(viewEventFlow) {
         viewEventFlow.collect { event ->
             when (event) {
