@@ -9,7 +9,6 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import androidx.annotation.VisibleForTesting
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -33,6 +32,7 @@ import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateVal
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayIntent
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewStateProducer
 import com.adyen.checkout.googlepay.internal.ui.state.toPaymentComponentState
+import com.adyen.checkout.googlepay.internal.ui.view.GooglePayContent
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.contract.ApiTaskResult
@@ -56,6 +56,9 @@ internal class GooglePayComponent(
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
+    // Launching the Google Pay sheet requires an ActivityResultLauncher that can only be created from a
+    // Composable (see GooglePayContent). As submit() is triggered outside of composition, we bridge the
+    // request to the Composable layer by sending a view event through this channel.
     private val viewEventChannel = bufferedChannel<GooglePayViewEvent>()
     private val viewEventFlow: Flow<GooglePayViewEvent> = viewEventChannel.receiveAsFlow()
 
@@ -78,14 +81,12 @@ internal class GooglePayComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        googlePayEvent(
+        GooglePayContent(
             componentParams = componentParams,
             viewEventFlow = viewEventFlow,
             onResult = ::onPaymentResult,
+            modifier = modifier,
         )
-
-        // TODO - Render the Google Pay button.
-        Box(modifier = modifier)
     }
 
     override fun submit() {
