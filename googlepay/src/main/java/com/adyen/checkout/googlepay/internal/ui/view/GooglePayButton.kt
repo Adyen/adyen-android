@@ -12,29 +12,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.adyen.checkout.googlepay.GooglePayButtonStyling
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayButtonViewState
 import com.google.pay.button.PayButton
 
 @Composable
 internal fun GooglePayButton(
-    isLoading: Boolean,
-    isButtonVisible: Boolean,
-    allowedPaymentMethods: String,
-    buttonStyling: GooglePayButtonStyling?,
+    buttonViewState: GooglePayButtonViewState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (isButtonVisible) {
-        PayButton(
-            onClick = onClick,
-            allowedPaymentMethods = allowedPaymentMethods,
-            modifier = modifier.fillMaxWidth(),
-            theme = buttonStyling?.buttonTheme.toButtonTheme(),
-            type = buttonStyling?.buttonType.toButtonType(),
-            radius = buttonStyling?.cornerRadius?.dp ?: DEFAULT_CORNER_RADIUS,
-            enabled = !isLoading,
-        )
-    }
+    val buttonStyling = buttonViewState.buttonStyling
+    PayButton(
+        onClick = onClick,
+        allowedPaymentMethods = buttonViewState.allowedPaymentMethods,
+        modifier = modifier.fillMaxWidth(),
+        theme = buttonStyling?.buttonTheme.toButtonTheme(),
+        type = buttonStyling?.buttonType.toButtonType(),
+        radius = buttonStyling?.cornerRadius?.dp ?: DEFAULT_CORNER_RADIUS,
+        enabled = !buttonViewState.isLoading,
+    )
 }
 
 private val DEFAULT_CORNER_RADIUS = 100.dp

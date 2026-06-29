@@ -12,11 +12,16 @@ import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 
 internal class GooglePayViewStateProducer : ViewStateProducer<GooglePayComponentState, GooglePayViewState> {
 
-    override fun produce(state: GooglePayComponentState): GooglePayViewState {
-        return GooglePayViewState(
-            isButtonVisible = state.isButtonVisible,
+    override fun produce(state: GooglePayComponentState) = GooglePayViewState(
+        buttonViewState = createButtonViewState(state),
+    )
+
+    private fun createButtonViewState(state: GooglePayComponentState): GooglePayButtonViewState? {
+        if (!state.isAvailable || !state.isButtonVisible) return null
+        return GooglePayButtonViewState(
+            allowedPaymentMethods = state.allowedPaymentMethods,
+            buttonStyling = state.buttonStyling,
             isLoading = state.isLoading,
-            isAvailable = state.isAvailable,
         )
     }
 }

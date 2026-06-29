@@ -9,10 +9,16 @@
 package com.adyen.checkout.googlepay.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 
-internal class GooglePayComponentStateFactory : ComponentStateFactory<GooglePayComponentState> {
+internal class GooglePayComponentStateFactory(
+    private val componentParams: GooglePayComponentParams,
+) : ComponentStateFactory<GooglePayComponentState> {
 
     override fun createInitialState() = GooglePayComponentState(
+        allowedPaymentMethods = GooglePayUtils.getAllowedPaymentMethodsJson(componentParams),
+        buttonStyling = componentParams.googlePayButtonStyling,
         isButtonVisible = true,
         isLoading = false,
         isAvailable = false,

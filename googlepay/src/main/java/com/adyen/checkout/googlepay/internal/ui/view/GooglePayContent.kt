@@ -15,9 +15,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.internal.ui.GooglePayViewEvent
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayButtonViewState
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewState
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.PaymentData
@@ -30,15 +31,12 @@ import kotlinx.coroutines.flow.StateFlow
 internal fun GooglePayContent(
     viewStateFlow: StateFlow<GooglePayViewState>,
     viewEventFlow: Flow<GooglePayViewEvent>,
-    allowedPaymentMethods: String,
-    buttonStyling: GooglePayButtonStyling?,
     onResult: (ApiTaskResult<PaymentData>) -> Unit,
     loadPaymentData: suspend (Context) -> Task<PaymentData>,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val viewState by viewStateFlow.collectAsStateWithLifecycle()
 
     val launcher = rememberLauncherForActivityResult(
         contract = TaskResultContracts.GetPaymentDataResult(),
@@ -52,14 +50,40 @@ internal fun GooglePayContent(
         }
     }
 
-    if (viewState.isAvailable) {
+    val viewState by viewStateFlow.collectAsStateWithLifecycle()
+    GooglePayContent(
+        viewState = viewState,
+        onSubmit = onSubmit,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun GooglePayContent(
+    viewState: GooglePayViewState,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    viewState.buttonViewState?.let { buttonViewState ->
         GooglePayButton(
-            isLoading = viewState.isLoading,
-            isButtonVisible = viewState.isButtonVisible,
-            allowedPaymentMethods = allowedPaymentMethods,
-            buttonStyling = buttonStyling,
+            buttonViewState = buttonViewState,
             onClick = onSubmit,
             modifier = modifier,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GooglePayContentPreview() {
+    GooglePayContent(
+        viewState = GooglePayViewState(
+            buttonViewState = GooglePayButtonViewState(
+                allowedPaymentMethods = "[]",
+                buttonStyling = null,
+                isLoading = false,
+            ),
+        ),
+        onSubmit = {},
+    )
 }
