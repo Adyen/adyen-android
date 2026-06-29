@@ -14,6 +14,7 @@ import android.content.Intent
 import android.content.IntentSender
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.card.OnBinChangeCallback
@@ -231,7 +232,8 @@ constructor(
         componentState.handleIntent(intent)
     }
 
-    private fun handleIntent(intent: CardIntent) {
+    @VisibleForTesting
+    internal fun handleIntent(intent: CardIntent) {
         when (intent) {
             is CardIntent.UpdateCardNumber -> onCardNumberChanged(intent.number)
             is CardIntent.SelectBrand -> onBrandSelected(intent)

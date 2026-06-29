@@ -223,6 +223,39 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
+    fun `when dual brand with shopper selection is detected, then card number supportingText is dual brand selector description`() {
+        // GIVEN
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val mcBrandData = getCardBrandData().copy(cardBrand = CardBrand("mc"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(visaBrandData, mcBrandData),
+                shopperSelectedCardBrandData = visaBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION, viewState.cardNumber?.supportingText)
+    }
+
+    @Test
+    fun `when no brand is detected, then card number supportingText is null`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.NoBrandsDetected,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(null, viewState.cardNumber?.supportingText)
+    }
+
+    @Test
     fun `when dual brand with non-amex selected, then cardNumberFormat should be Default`() {
         // GIVEN
         val amexBrandData = getCardBrandData().copy(
