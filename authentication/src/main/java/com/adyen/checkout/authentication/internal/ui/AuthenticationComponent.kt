@@ -110,7 +110,8 @@ constructor(
         authenticationEventChannel.trySend(AuthenticationEvent.HandleAction)
     }
 
-    private fun handleAction(activity: Activity, uiCustomization: UiCustomization) {
+    @VisibleForTesting
+    internal fun handleAction(activity: Activity, uiCustomization: UiCustomization) {
         handleAction(action, activity, uiCustomization)
     }
 
