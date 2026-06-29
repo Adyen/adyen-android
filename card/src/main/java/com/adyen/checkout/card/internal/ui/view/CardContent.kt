@@ -31,6 +31,7 @@ import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
+import com.adyen.checkout.card.internal.ui.state.StorePaymentViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -182,9 +183,9 @@ private fun CardDetailsSection(
                 onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
             )
         }
-        if (viewState.isStorePaymentFieldVisible) {
+        if (viewState.storePaymentViewState != null) {
             SwitchContainer(
-                checked = viewState.storePaymentMethod,
+                checked = viewState.storePaymentViewState.isSelected,
                 onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
             ) {
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
@@ -231,8 +232,7 @@ private fun CardContentPreview() {
             postalCode = TextInputViewState(
                 text = "1234 AB",
             ),
-            storePaymentMethod = false,
-            isStorePaymentFieldVisible = true,
+            storePaymentViewState = StorePaymentViewState(isSelected = true),
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             isLoading = false,
