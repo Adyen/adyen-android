@@ -201,14 +201,14 @@ constructor(
             "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically"
         }
 
-        val fingerprintToken = try {
+        val fingerprintToken = runCatching {
             decodeFingerprintToken(encodedFingerprintToken)
-        } catch (e: RuntimeException) {
+        }.getOrElse { error ->
             trackFingerprintErrorEvent(ErrorEvent.THREEDS2_TOKEN_DECODING)
             emitError(
                 GenericError(
                     message = "Failed to decode fingerprint token",
-                    cause = e,
+                    cause = error,
                 ),
             )
             return
@@ -289,17 +289,10 @@ constructor(
     }
 
     @OptIn(ExperimentalEncodingApi::class)
-    @Throws(RuntimeException::class, JSONException::class)
+    @Throws(JSONException::class, IllegalArgumentException::class)
     private fun decodeFingerprintToken(encoded: String): FingerprintToken {
         val decodedFingerprintToken = Base64.decode(encoded).toString(Charsets.UTF_8)
-
-        @Suppress("TooGenericExceptionThrown")
-        val fingerprintJson: JSONObject = try {
-            JSONObject(decodedFingerprintToken)
-        } catch (e: JSONException) {
-            throw RuntimeException("JSON parsing of FingerprintToken failed", e)
-        }
-
+        val fingerprintJson = JSONObject(decodedFingerprintToken)
         return FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
     }
 
@@ -385,26 +378,21 @@ constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionThrown")
     @OptIn(ExperimentalEncodingApi::class)
-    @Throws(RuntimeException::class)
+    @Throws(JSONException::class)
     private fun createEncodedFingerprint(authenticationRequestParameters: AuthenticationRequestParameters): String {
-        return try {
-            val fingerprintJson = JSONObject().apply {
-                with(authenticationRequestParameters) {
-                    put("sdkAppID", sdkAppID)
-                    put("sdkEncData", deviceData)
-                    put("sdkEphemPubKey", JSONObject(sdkEphemeralPublicKey))
-                    put("sdkReferenceNumber", sdkReferenceNumber)
-                    put("sdkTransID", sdkTransactionID)
-                    put("messageVersion", messageVersion)
-                }
+        val fingerprintJson = JSONObject().apply {
+            with(authenticationRequestParameters) {
+                put("sdkAppID", sdkAppID)
+                put("sdkEncData", deviceData)
+                put("sdkEphemPubKey", JSONObject(sdkEphemeralPublicKey))
+                put("sdkReferenceNumber", sdkReferenceNumber)
+                put("sdkTransID", sdkTransactionID)
+                put("messageVersion", messageVersion)
             }
-
-            Base64.encode(fingerprintJson.toString().toByteArray())
-        } catch (e: JSONException) {
-            throw RuntimeException("Failed to create encoded fingerprint", e)
         }
+
+        return Base64.encode(fingerprintJson.toString().toByteArray())
     }
 
     private suspend fun submitFingerprintAutomatically(
@@ -556,13 +544,12 @@ constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun onCompleted(transactionStatus: String) {
         adyenLog(AdyenLogLevel.DEBUG) { "challenge completed" }
         try {
             val details = makeDetails(transactionStatus)
             emitDetails(details)
-        } catch (e: RuntimeException) {
+        } catch (e: JSONException) {
             trackChallengeErrorEvent(
                 errorEvent = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
                 message = "Challenge completed and details cannot be created",
@@ -576,13 +563,13 @@ constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    @Suppress("SwallowedException")
     private fun onCancelled(result: ChallengeResult.Cancelled) {
         adyenLog(AdyenLogLevel.DEBUG) { "challenge cancelled" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
-        } catch (e: RuntimeException) {
+        } catch (e: JSONException) {
             trackChallengeErrorEvent(
                 errorEvent = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
                 message = "Challenge is cancelled and details cannot be created",
@@ -596,13 +583,12 @@ constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun onTimeout(result: ChallengeResult.Timeout) {
         adyenLog(AdyenLogLevel.DEBUG) { "challenge timed out" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
-        } catch (e: RuntimeException) {
+        } catch (e: JSONException) {
             trackChallengeErrorEvent(
                 errorEvent = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
                 message = "Challenge timed out and details cannot be created",
@@ -616,13 +602,12 @@ constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun onError(result: ChallengeResult.Error) {
         adyenLog(AdyenLogLevel.DEBUG) { "challenge error" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
-        } catch (e: RuntimeException) {
+        } catch (e: JSONException) {
             trackChallengeErrorEvent(
                 errorEvent = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
                 message = "Challenge failed and details cannot be created",
