@@ -32,6 +32,7 @@ import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
 import com.adyen.checkout.card.internal.ui.state.StorePaymentViewState
+import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -123,8 +124,7 @@ private fun CardDetailsSection(
         if (viewState.cardNumber != null) {
             CardNumberField(
                 cardNumberState = viewState.cardNumber,
-                supportedCardBrands = viewState.supportedCardBrands,
-                isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
+                supportedCardBrandsViewState = viewState.supportedCardBrandsViewState,
                 cardBrandViewState = viewState.cardBrandViewState,
                 cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
@@ -233,8 +233,11 @@ private fun CardContentPreview() {
                 text = "1234 AB",
             ),
             storePaymentViewState = StorePaymentViewState(isSelected = true),
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
+
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
             isLoading = false,
             isCardScanButtonVisible = false,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),

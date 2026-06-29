@@ -46,6 +46,13 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             null
         }
 
+        val supportedCardBrandsViewState = SupportedCardBrandsViewState(
+            supportedCardBrands = state.supportedCardBrands.filterNot {
+                isHiddenCardType(it.txVariant)
+            },
+            isVisible = isSupportedCardBrandsShown,
+        )
+
         return CardViewState(
             cardNumber = state.cardNumber.copy(description = cardNumberInputDescription).toViewState(
                 trailingIcon = getCardNumberTrailingIcon(state.cardNumber, isCardScanButtonVisible),
@@ -64,10 +71,7 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
                 trailingIcon = getPostalCodeTrailingIcon(state.postalCode),
             ),
             storePaymentViewState = storePaymentViewState,
-            supportedCardBrands = state.supportedCardBrands.filterNot {
-                isHiddenCardType(it.txVariant)
-            },
-            isSupportedCardBrandsShown = isSupportedCardBrandsShown,
+            supportedCardBrandsViewState = supportedCardBrandsViewState,
             cardBrandViewState = cardBrandViewState,
             cardNumberFormat = cardNumberFormat,
             isLoading = state.isLoading,

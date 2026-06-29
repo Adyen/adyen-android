@@ -42,6 +42,7 @@ import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.SelectableCardBrandItem
+import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
@@ -63,8 +64,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun CardNumberField(
     cardNumberState: TextInputViewState,
-    supportedCardBrands: List<CardBrand>,
-    isSupportedCardBrandsShown: Boolean,
+    supportedCardBrandsViewState: SupportedCardBrandsViewState,
     cardBrandViewState: CardBrandViewState,
     cardNumberFormat: CardNumberFormat,
     onValueChange: (String) -> Unit,
@@ -87,8 +87,7 @@ internal fun CardNumberField(
         )
 
         CardBrandsList(
-            cardBrands = supportedCardBrands,
-            visible = isSupportedCardBrandsShown,
+            supportedCardBrandsViewState = supportedCardBrandsViewState,
         )
     }
 }
@@ -247,20 +246,19 @@ private fun BrandLogo(
 
 @Composable
 private fun CardBrandsList(
-    cardBrands: List<CardBrand>,
-    visible: Boolean,
+    supportedCardBrandsViewState: SupportedCardBrandsViewState,
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         modifier = modifier.fillMaxWidth(),
-        visible = visible,
+        visible = supportedCardBrandsViewState.isVisible,
     ) {
         FlowRow(
             modifier = Modifier.padding(top = Dimensions.Spacing.ExtraSmall),
             horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
             verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
         ) {
-            for (cardBrand in cardBrands) {
+            for (cardBrand in supportedCardBrandsViewState.supportedCardBrands) {
                 BrandLogo(cardBrand.txVariant)
             }
         }
@@ -314,12 +312,14 @@ private fun CardNumberFieldPreview(
                 text = "",
                 trailingIcon = CardNumberTrailingIcon.ScanButton,
             ),
-            supportedCardBrands = listOf(
-                CardBrand(CardType.MASTERCARD.txVariant),
-                CardBrand(CardType.VISA.txVariant),
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = listOf(
+                    CardBrand(CardType.MASTERCARD.txVariant),
+                    CardBrand(CardType.VISA.txVariant),
+                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+                ),
+                isVisible = true,
             ),
-            isSupportedCardBrandsShown = true,
             cardBrandViewState = CardBrandViewState.Placeholder,
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
@@ -332,12 +332,10 @@ private fun CardNumberFieldPreview(
             cardNumberState = TextInputViewState(
                 text = "5555444433331111",
             ),
-            supportedCardBrands = listOf(
-                CardBrand(CardType.MASTERCARD.txVariant),
-                CardBrand(CardType.VISA.txVariant),
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
             ),
-            isSupportedCardBrandsShown = true,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
@@ -345,16 +343,14 @@ private fun CardNumberFieldPreview(
             onScanButtonClick = {},
             onBrandSelect = {},
         )
-
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "1234123456123451234",
             ),
-            supportedCardBrands = listOf(
-                CardBrand(CardType.MASTERCARD.txVariant),
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
             ),
-            isSupportedCardBrandsShown = false,
             cardBrandViewState = CardBrandViewState.Placeholder,
             cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
@@ -369,8 +365,10 @@ private fun CardNumberFieldPreview(
                 isError = true,
                 trailingIcon = CardNumberTrailingIcon.Warning,
             ),
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
             cardBrandViewState = CardBrandViewState.Placeholder,
             cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
@@ -384,8 +382,10 @@ private fun CardNumberFieldPreview(
             cardNumberState = TextInputViewState(
                 text = "5555444433330001",
             ),
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
             cardBrandViewState = CardBrandViewState.DualBrand(
                 brands = listOf(
                     CardBrand(CardType.VISA.txVariant),
@@ -404,8 +404,10 @@ private fun CardNumberFieldPreview(
             cardNumberState = TextInputViewState(
                 text = "5555444433330002",
             ),
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
             cardBrandViewState = CardBrandViewState.SelectableDualBrand(
                 brands = listOf(
                     SelectableCardBrandItem(
