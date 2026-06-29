@@ -17,7 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -195,16 +194,6 @@ internal class DefaultAnalyticsManagerTest(
 
             verify(analyticsRepository, times(2)).sendEvents(any())
         }
-    }
-
-    @Test
-    fun `when getCheckoutAttemptId is called, then returns provided id`() = runTest {
-        val analyticsManager = createAnalyticsManager(
-            analyticsParamsLevel = AnalyticsParamsLevel.INITIAL,
-            coroutineScope = backgroundScope,
-        )
-
-        assertEquals("test-id", analyticsManager.getCheckoutAttemptId())
     }
 
     private fun createAnalyticsManager(

@@ -19,7 +19,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
-import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import kotlinx.coroutines.CoroutineScope
 
 internal class BlikFactory :
@@ -30,12 +30,13 @@ internal class BlikFactory :
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): BlikComponent {
         return BlikComponent(
             analyticsManager = analyticsManager,
-            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            sdkDataProvider = sdkDataProvider,
             componentStateFactory = BlikComponentStateFactory(),
             componentStateReducer = BlikComponentStateReducer(),
             componentStateValidator = BlikComponentStateValidator(),
@@ -48,12 +49,13 @@ internal class BlikFactory :
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
+        sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
     ): StoredBlikComponent {
         return StoredBlikComponent(
             storedPaymentMethod = storedPaymentMethod,
             analyticsManager = analyticsManager,
-            sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            sdkDataProvider = sdkDataProvider,
         )
     }
 }

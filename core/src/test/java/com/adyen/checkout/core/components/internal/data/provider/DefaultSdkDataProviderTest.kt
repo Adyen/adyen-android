@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.components.internal.data.provider
 
-import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
 import com.adyen.checkout.core.common.internal.model.getLongOrNull
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
@@ -24,27 +23,23 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class)
 internal class DefaultSdkDataProviderTest {
 
-    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var sdkDataProvider: DefaultSdkDataProvider
 
     @BeforeEach
     fun setup() {
-        analyticsManager = TestAnalyticsManager()
-        sdkDataProvider = DefaultSdkDataProvider(analyticsManager)
+        sdkDataProvider = DefaultSdkDataProvider(CHECKOUT_ATTEMPT_ID)
     }
 
     @Test
     fun `when createEncodedSdkData is called, then data is correctly set`() {
-        val checkoutAttemptId = "test_checkout_attempt_id"
         val threeDS2SdkVersion = "2.2.0"
-        analyticsManager.setCheckoutAttemptId(checkoutAttemptId)
 
         val encodedSdkData = sdkDataProvider.createEncodedSdkData(threeDS2SdkVersion)
 
         assertNotNull(encodedSdkData)
         val jsonObject = decodeJsonObject(encodedSdkData!!)
         assertEquals(
-            checkoutAttemptId,
+            CHECKOUT_ATTEMPT_ID,
             jsonObject.optJSONObject("analytics")?.getStringOrNull("checkoutAttemptId"),
         )
         assertEquals(
@@ -57,8 +52,6 @@ internal class DefaultSdkDataProviderTest {
 
     @Test
     fun `when createEncodedSdkData is called without 3DS2 SDK version, then the version is null`() {
-        analyticsManager.setCheckoutAttemptId("test_checkout_attempt_id")
-
         val encodedSdkData = sdkDataProvider.createEncodedSdkData(null)
 
         assertNotNull(encodedSdkData)
@@ -69,5 +62,9 @@ internal class DefaultSdkDataProviderTest {
     private fun decodeJsonObject(encodedString: String): JSONObject {
         val decodedString = Base64.decode(encodedString).toString(Charsets.UTF_8)
         return JSONObject(decodedString)
+    }
+
+    companion object {
+        private const val CHECKOUT_ATTEMPT_ID = "test_checkout_attempt_id"
     }
 }
