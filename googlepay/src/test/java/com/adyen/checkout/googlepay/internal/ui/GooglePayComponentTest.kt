@@ -13,6 +13,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
@@ -163,13 +164,45 @@ internal class GooglePayComponentTest {
         )
     }
 
+    @Test
+    fun `when availability check returns true, then the available state is updated`() = runTest {
+        val availabilityCheck = mock<GooglePayAvailabilityCheck> {
+            onBlocking { isAvailable() } doReturn true
+        }
+        val component = createComponent(
+            coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+            googlePayAvailabilityCheck = availabilityCheck,
+        )
+        val viewState = component.viewState.test(testScheduler)
+
+        assertTrue(viewState.latestValue.isAvailable)
+    }
+
+    @Test
+    fun `when availability check returns false, then the available state stays false`() = runTest {
+        val availabilityCheck = mock<GooglePayAvailabilityCheck> {
+            onBlocking { isAvailable() } doReturn false
+        }
+        val component = createComponent(
+            coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+            googlePayAvailabilityCheck = availabilityCheck,
+        )
+        val viewState = component.viewState.test(testScheduler)
+
+        assertFalse(viewState.latestValue.isAvailable)
+    }
+
     private fun createComponent(
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager = mock(),
+        googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mock {
+            onBlocking { isAvailable() } doReturn false
+        },
     ) = GooglePayComponent(
         analyticsManager = analyticsManager,
         componentParams = mock<GooglePayComponentParams>(),
         sdkDataProvider = mock<SdkDataProvider>(),
+        googlePayAvailabilityCheck = googlePayAvailabilityCheck,
         paymentMethodType = "googlepay",
         componentStateValidator = GooglePayComponentStateValidator(),
         componentStateFactory = GooglePayComponentStateFactory(),

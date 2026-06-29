@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.components.CheckoutController
 
@@ -23,7 +24,8 @@ import com.adyen.checkout.core.components.CheckoutController
  * pattern used by `androidx.startup`, WorkManager, Firebase, etc. and does not leak.
  */
 @SuppressLint("StaticFieldLeak")
-internal object ApplicationContextHolder {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object ApplicationContextHolder {
 
     @Volatile
     private var applicationContext: Context? = null

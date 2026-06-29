@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +26,9 @@ import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
+import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
+import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
+import com.adyen.checkout.googlepay.internal.helper.awaitTask
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
@@ -34,23 +38,27 @@ import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewStateProducer
 import com.adyen.checkout.googlepay.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.googlepay.internal.ui.view.GooglePayContent
 import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "TooManyFunctions")
 internal class GooglePayComponent(
     @Suppress("unused") private val analyticsManager: AnalyticsManager,
     private val componentParams: GooglePayComponentParams,
     private val sdkDataProvider: SdkDataProvider,
+    private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
     private val paymentMethodType: String,
     private val componentStateValidator: GooglePayComponentStateValidator,
     componentStateFactory: GooglePayComponentStateFactory,
     componentStateReducer: GooglePayComponentStateReducer,
     viewStateProducer: GooglePayViewStateProducer,
-    coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -71,14 +79,37 @@ internal class GooglePayComponent(
 
     internal val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
+    init {
+        checkAvailability()
+    }
+
     @Composable
     override fun Content(modifier: Modifier) {
         GooglePayContent(
-            componentParams = componentParams,
+            viewStateFlow = viewState,
             viewEventFlow = viewEventFlow,
             onResult = ::onPaymentResult,
+            loadPaymentData = ::loadPaymentData,
             modifier = modifier,
         )
+    }
+
+    // TODO - Expose a merchant-facing Google Pay availability pre-check API (COSDK-1310).
+    private fun checkAvailability() {
+        coroutineScope.launch {
+            val isAvailable = googlePayAvailabilityCheck.isAvailable()
+            componentState.handleIntent(GooglePayIntent.UpdateAvailability(isAvailable))
+        }
+    }
+
+    private suspend fun loadPaymentData(context: Context): Task<PaymentData> {
+        val paymentsClient = Wallet.getPaymentsClient(
+            context,
+            GooglePayUtils.createWalletOptions(componentParams),
+        )
+        return paymentsClient
+            .loadPaymentData(GooglePayUtils.createPaymentDataRequest(componentParams))
+            .awaitTask()
     }
 
     override fun submit() {

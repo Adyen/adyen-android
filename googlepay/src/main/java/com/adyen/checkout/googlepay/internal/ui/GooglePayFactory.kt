@@ -13,8 +13,10 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
@@ -43,6 +45,10 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
             analyticsManager = analyticsManager,
             componentParams = componentParams,
             sdkDataProvider = DefaultSdkDataProvider(analyticsManager),
+            googlePayAvailabilityCheck = GooglePayAvailabilityCheck(
+                componentParams = componentParams,
+                applicationContext = ApplicationContextHolder.require(),
+            ),
             paymentMethodType = googlePayPaymentMethod.type,
             componentStateValidator = GooglePayComponentStateValidator(),
             componentStateFactory = GooglePayComponentStateFactory(),
