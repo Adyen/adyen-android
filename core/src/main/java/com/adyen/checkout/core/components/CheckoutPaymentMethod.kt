@@ -13,8 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLocale
-import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
@@ -34,11 +32,10 @@ fun CheckoutPaymentMethod(
     }
 
     InternalCheckoutTheme(theme) {
-        // TODO - get params from controller
         CheckoutCompositionLocalProvider(
-            locale = LocalLocale.current.platformLocale,
+            locale = controller.shopperLocale,
             localizationProvider = localizationProvider,
-            environment = Environment.TEST,
+            environment = controller.environment,
         ) {
             controller.paymentComponent?.Content(modifier)
         }

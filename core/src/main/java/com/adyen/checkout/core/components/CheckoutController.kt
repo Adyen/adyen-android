@@ -11,11 +11,13 @@ package com.adyen.checkout.core.components
 import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.internal.CheckoutFlow
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import java.util.Locale
 
 fun CheckoutController(
     target: CheckoutTarget,
@@ -59,6 +61,8 @@ fun CheckoutController(
 
 class CheckoutController internal constructor(
     private val flow: CheckoutFlow,
+    internal val environment: Environment,
+    internal val shopperLocale: Locale,
 ) {
 
     internal val paymentComponent: PaymentComponent? get() = flow.paymentComponent
