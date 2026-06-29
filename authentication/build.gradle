@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2026 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 29/6/2026.
+ */
+
+plugins {
+    alias libs.plugins.checkout.android.library
+    alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.compose
+}
+
+checkoutPublishing {
+    id = "authentication"
+    name = "Adyen Checkout Authentication"
+    description = "Adyen Checkout authentication module for Adyen's Checkout API."
+}
+
+android {
+    namespace 'com.adyen.checkout.authentication'
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(':core')
+
+    // Dependencies
+    implementation libs.adyen3ds2
+    implementation libs.androidx.startup
+    implementation libs.compose.activity
+
+    //Tests
+//    testImplementation testFixtures(project(':test-core'))
+//    testImplementation testFixtures(project(':components-core'))
+//    testImplementation testFixtures(project(':ui-core'))
+//    testImplementation libs.json
+//    testImplementation libs.bundles.junit
+//    testImplementation libs.bundles.mockito
+//    testImplementation libs.bundles.kotlin.coroutines.test
+}
