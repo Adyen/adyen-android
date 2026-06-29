@@ -128,6 +128,7 @@ constructor(
 
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
+            // TODO - Move encryption out of this method to prevent submission
             val paymentComponentState = componentState.value.toPaymentComponentState(
                 publicKey = publicKey,
                 componentParams = componentParams,

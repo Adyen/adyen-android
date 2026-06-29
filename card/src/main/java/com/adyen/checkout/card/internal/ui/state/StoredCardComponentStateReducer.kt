@@ -22,10 +22,6 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
                 securityCode = state.securityCode.updateFocus(intent.hasFocus),
             )
 
-            is StoredCardIntent.UpdateDetectedCardType -> state.copy(
-                detectedCardType = intent.detectedCardType,
-            )
-
             is StoredCardIntent.UpdateLoading -> state.copy(
                 isLoading = intent.isLoading,
             )

@@ -47,40 +47,6 @@ internal fun SecurityCodeField(
     onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    SecurityCodeFieldInternal(
-        securityCodeState = securityCodeState,
-        cardNumberFormat = cardNumberFormat,
-        onSecurityCodeChanged = onValueChange,
-        onSecurityCodeFocusChanged = onFocusChange,
-        modifier = modifier,
-    )
-}
-
-@Composable
-internal fun StoredCardSecurityCodeField(
-    securityCodeState: TextInputViewState,
-    cardNumberFormat: CardNumberFormat,
-    onValueChange: (String) -> Unit,
-    onFocusChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    SecurityCodeFieldInternal(
-        securityCodeState = securityCodeState,
-        cardNumberFormat = cardNumberFormat,
-        onSecurityCodeChanged = onValueChange,
-        onSecurityCodeFocusChanged = onFocusChange,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun SecurityCodeFieldInternal(
-    securityCodeState: TextInputViewState,
-    cardNumberFormat: CardNumberFormat,
-    onSecurityCodeChanged: (String) -> Unit,
-    onSecurityCodeFocusChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-) {
     val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
         ?: resolveString(
             when (cardNumberFormat) {
@@ -109,13 +75,13 @@ private fun SecurityCodeFieldInternal(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onSecurityCodeFocusChanged(focusState.isFocused)
+                onFocusChange(focusState.isFocused)
             },
         label = resolveString(key = CheckoutLocalizationKey.CARD_SECURITY_CODE) + labelSuffix,
         state = rememberTextFieldStateWithCurrentValue(securityCodeState.text),
         isError = securityCodeState.isError,
         supportingText = supportingTextSecurityCode,
-        onValueChange = onSecurityCodeChanged,
+        onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
@@ -162,15 +128,15 @@ private fun SecurityCodeIcon(
     }
 
     AnimatedContent(
-        targetState = resourceId,
+        targetState = resourceId to tint,
         modifier = modifier,
         label = "SecurityCodeIcon",
-    ) { targetResourceId ->
+    ) { (targetResourceId, targetTint) ->
         Icon(
             modifier = Modifier.size(Dimensions.LogoSize.small),
             imageVector = ImageVector.vectorResource(targetResourceId),
             contentDescription = null,
-            tint = tint,
+            tint = targetTint,
         )
     }
 }

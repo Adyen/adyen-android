@@ -114,15 +114,15 @@ private fun ExpiryDateIcon(
     }
 
     AnimatedContent(
-        targetState = resourceId,
+        targetState = resourceId to tint,
         modifier = modifier,
         label = "ExpiryDateIcon",
-    ) { targetResourceId ->
+    ) { (targetResourceId, targetTint) ->
         Icon(
             modifier = Modifier.size(Dimensions.LogoSize.small),
             imageVector = ImageVector.vectorResource(targetResourceId),
             contentDescription = null,
-            tint = tint,
+            tint = targetTint,
         )
     }
 }
