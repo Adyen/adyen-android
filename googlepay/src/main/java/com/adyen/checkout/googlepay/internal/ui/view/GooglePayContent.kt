@@ -31,7 +31,6 @@ internal fun GooglePayContent(
     viewStateFlow: StateFlow<GooglePayViewState>,
     viewEventFlow: Flow<GooglePayViewEvent>,
     onResult: (ApiTaskResult<PaymentData>) -> Unit,
-    onCheckAvailability: suspend (Context) -> Unit,
     loadPaymentData: suspend (Context) -> Task<PaymentData>,
     modifier: Modifier = Modifier,
 ) {
@@ -47,12 +46,6 @@ internal fun GooglePayContent(
             when (event) {
                 GooglePayViewEvent.Pay -> launcher.launch(loadPaymentData(context))
             }
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        if (!viewState.isAvailable) {
-            onCheckAvailability(context)
         }
     }
 

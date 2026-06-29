@@ -45,6 +45,7 @@ import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
 internal class GooglePayComponent(
@@ -57,7 +58,7 @@ internal class GooglePayComponent(
     componentStateFactory: GooglePayComponentStateFactory,
     componentStateReducer: GooglePayComponentStateReducer,
     viewStateProducer: GooglePayViewStateProducer,
-    coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -78,23 +79,27 @@ internal class GooglePayComponent(
 
     internal val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
+    init {
+        checkAvailability()
+    }
+
     @Composable
     override fun Content(modifier: Modifier) {
         GooglePayContent(
             viewStateFlow = viewState,
             viewEventFlow = viewEventFlow,
             onResult = ::onPaymentResult,
-            onCheckAvailability = ::checkAvailability,
             loadPaymentData = ::loadPaymentData,
             modifier = modifier,
         )
     }
 
     // TODO - Expose a merchant-facing Google Pay availability pre-check API (COSDK-1310).
-    @VisibleForTesting
-    internal suspend fun checkAvailability(context: Context) {
-        val isAvailable = googlePayAvailabilityCheck.isAvailable(context)
-        componentState.handleIntent(GooglePayIntent.UpdateAvailability(isAvailable))
+    private fun checkAvailability() {
+        coroutineScope.launch {
+            val isAvailable = googlePayAvailabilityCheck.isAvailable()
+            componentState.handleIntent(GooglePayIntent.UpdateAvailability(isAvailable))
+        }
     }
 
     private suspend fun loadPaymentData(context: Context): Task<PaymentData> {

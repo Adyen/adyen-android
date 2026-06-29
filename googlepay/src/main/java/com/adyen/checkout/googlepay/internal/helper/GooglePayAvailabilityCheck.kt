@@ -18,17 +18,19 @@ import com.google.android.gms.wallet.Wallet
 
 internal class GooglePayAvailabilityCheck(
     private val componentParams: GooglePayComponentParams,
+    private val applicationContext: Context,
 ) {
 
-    suspend fun isAvailable(context: Context): Boolean {
+    suspend fun isAvailable(): Boolean {
         val playServicesAvailable = GoogleApiAvailability.getInstance()
-            .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+            .isGooglePlayServicesAvailable(applicationContext) == ConnectionResult.SUCCESS
         if (!playServicesAvailable) {
             adyenLog(AdyenLogLevel.ERROR) { "GooglePay is not available, Google Play Services are missing." }
             return false
         }
 
-        val paymentsClient = Wallet.getPaymentsClient(context, GooglePayUtils.createWalletOptions(componentParams))
+        val paymentsClient =
+            Wallet.getPaymentsClient(applicationContext, GooglePayUtils.createWalletOptions(componentParams))
         val task = paymentsClient.isReadyToPay(GooglePayUtils.createIsReadyToPayRequest(componentParams)).awaitTask()
         return if (task.isSuccessful) {
             task.result == true

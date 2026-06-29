@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doReturn
@@ -168,15 +167,13 @@ internal class GooglePayComponentTest {
     @Test
     fun `when availability check returns true, then the available state is updated`() = runTest {
         val availabilityCheck = mock<GooglePayAvailabilityCheck> {
-            onBlocking { isAvailable(any()) } doReturn true
+            onBlocking { isAvailable() } doReturn true
         }
         val component = createComponent(
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
             googlePayAvailabilityCheck = availabilityCheck,
         )
         val viewState = component.viewState.test(testScheduler)
-
-        component.checkAvailability(mock())
 
         assertTrue(viewState.latestValue.isAvailable)
     }
@@ -184,7 +181,7 @@ internal class GooglePayComponentTest {
     @Test
     fun `when availability check returns false, then the available state stays false`() = runTest {
         val availabilityCheck = mock<GooglePayAvailabilityCheck> {
-            onBlocking { isAvailable(any()) } doReturn false
+            onBlocking { isAvailable() } doReturn false
         }
         val component = createComponent(
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
@@ -192,15 +189,15 @@ internal class GooglePayComponentTest {
         )
         val viewState = component.viewState.test(testScheduler)
 
-        component.checkAvailability(mock())
-
         assertFalse(viewState.latestValue.isAvailable)
     }
 
     private fun createComponent(
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager = mock(),
-        googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mock(),
+        googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mock {
+            onBlocking { isAvailable() } doReturn false
+        },
     ) = GooglePayComponent(
         analyticsManager = analyticsManager,
         componentParams = mock<GooglePayComponentParams>(),
