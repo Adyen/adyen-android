@@ -233,7 +233,8 @@ private fun SelectableDualBrandLogos(
                         },
                     )
                     .clickable { onBrandSelect(brandItem.brand) }
-                    .padding(Dimensions.Spacing.ExtraSmall),
+                    .padding(Dimensions.Spacing.ExtraSmall)
+                    .clip(RoundedCornerShape(Dimensions.CornerRadius)),
             )
         }
     }
