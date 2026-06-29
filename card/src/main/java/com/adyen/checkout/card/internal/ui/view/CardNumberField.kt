@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -72,7 +71,7 @@ internal fun CardNumberField(
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     onScanButtonClick: () -> Unit,
-    onBrandSelected: (CardBrand) -> Unit,
+    onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -85,7 +84,7 @@ internal fun CardNumberField(
             onValueChange = onValueChange,
             onFocusChange = onFocusChange,
             onScanButtonClick = onScanButtonClick,
-            onBrandSelected = onBrandSelected,
+            onBrandSelect = onBrandSelect,
         )
 
         CardBrandsList(
@@ -103,7 +102,7 @@ private fun CardNumberInputField(
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     onScanButtonClick: () -> Unit,
-    onBrandSelected: (CardBrand) -> Unit,
+    onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextCardNumber = cardNumberState.supportingText?.let { resolveString(it) }
@@ -118,45 +117,48 @@ private fun CardNumberInputField(
         CardNumberOutputTransformation(cardNumberFormat = cardNumberFormat)
     }
 
-    CheckoutTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .onFocusChanged { focusState ->
-                onFocusChange(focusState.isFocused)
+    Column(modifier = modifier) {
+        CheckoutTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    onFocusChange(focusState.isFocused)
+                },
+            label = resolveString(CheckoutLocalizationKey.CARD_NUMBER),
+            state = rememberTextFieldStateWithCurrentValue(cardNumberState.text),
+            isError = cardNumberState.isError,
+            supportingText = supportingTextCardNumber,
+            onValueChange = onValueChange,
+            inputTransformation = inputTransformation,
+            outputTransformation = outputTransformation,
+            shouldFocus = cardNumberState.isFocused,
+            trailingIcon = {
+                CardNumberFieldIcon(
+                    state = cardNumberState,
+                    cardBrandViewState = cardBrandViewState,
+                    onScanButtonClick = onScanButtonClick,
+                    onBrandSelect = onBrandSelect,
+                )
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_NUMBER),
-        state = rememberTextFieldStateWithCurrentValue(cardNumberState.text),
-        isError = cardNumberState.isError,
-        supportingText = supportingTextCardNumber,
-        onValueChange = onValueChange,
-        inputTransformation = inputTransformation,
-        outputTransformation = outputTransformation,
-        shouldFocus = cardNumberState.isFocused,
-        trailingIcon = {
-            CardNumberFieldIcon(
-                state = cardNumberState,
-                cardBrandViewState = cardBrandViewState,
-                onScanButtonClick = onScanButtonClick,
-                onBrandSelected = onBrandSelected,
-            )
-        },
-    )
-
-    AnimatedVisibility(
-        modifier = Modifier.fillMaxWidth(),
-        visible = cardBrandViewState is CardBrandViewState.SelectableDualBrand,
-    ) {
-        Footnote(
-            text = resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION),
-            modifier = Modifier.padding(top = Dimensions.Spacing.Small),
         )
+
+        AnimatedVisibility(
+            visible = cardBrandViewState is CardBrandViewState.SelectableDualBrand,
+        ) {
+            Footnote(
+                text = resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Dimensions.Spacing.Small),
+            )
+        }
     }
 }
 
 @Composable
 private fun DetectedBrandsList(
     cardBrandViewState: CardBrandViewState,
-    onBrandSelected: (CardBrand) -> Unit,
+    onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -170,7 +172,7 @@ private fun DetectedBrandsList(
 
             is CardBrandViewState.SelectableDualBrand -> SelectableDualBrandLogos(
                 selectableBrandItems = cardBrandViewState.brands,
-                onBrandSelected = onBrandSelected,
+                onBrandSelect = onBrandSelect,
             )
         }
     }
@@ -197,7 +199,7 @@ private fun DualBrandLogos(
 @Composable
 private fun SelectableDualBrandLogos(
     selectableBrandItems: List<SelectableCardBrandItem>,
-    onBrandSelected: (CardBrand) -> Unit,
+    onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -230,10 +232,7 @@ private fun SelectableDualBrandLogos(
                             Modifier
                         },
                     )
-                    .clickable(
-                        interactionSource = null,
-                        indication = ripple(),
-                    ) { onBrandSelected(brandItem.brand) }
+                    .clickable { onBrandSelect(brandItem.brand) }
                     .padding(Dimensions.Spacing.ExtraSmall),
             )
         }
@@ -286,7 +285,7 @@ private fun CardNumberFieldIcon(
     state: TextInputViewState,
     cardBrandViewState: CardBrandViewState,
     onScanButtonClick: () -> Unit,
-    onBrandSelected: (CardBrand) -> Unit,
+    onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon
@@ -310,7 +309,7 @@ private fun CardNumberFieldIcon(
                 )
             }
 
-            else -> DetectedBrandsList(cardBrandViewState, onBrandSelected)
+            else -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
         }
     }
 }
@@ -338,7 +337,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
-            onBrandSelected = {},
+            onBrandSelect = {},
         )
 
         CardNumberField(
@@ -356,7 +355,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
-            onBrandSelected = {},
+            onBrandSelect = {},
         )
 
         CardNumberField(
@@ -373,7 +372,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
-            onBrandSelected = {},
+            onBrandSelect = {},
         )
 
         CardNumberField(
@@ -389,7 +388,7 @@ private fun CardNumberFieldPreview(
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
-            onBrandSelected = {},
+            onBrandSelect = {},
         )
     }
 }
