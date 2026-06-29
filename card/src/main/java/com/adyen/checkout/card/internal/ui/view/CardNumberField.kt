@@ -56,7 +56,6 @@ import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParamet
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
-import com.adyen.checkout.ui.internal.text.Footnote
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -117,42 +116,29 @@ private fun CardNumberInputField(
         CardNumberOutputTransformation(cardNumberFormat = cardNumberFormat)
     }
 
-    Column(modifier = modifier) {
-        CheckoutTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    onFocusChange(focusState.isFocused)
-                },
-            label = resolveString(CheckoutLocalizationKey.CARD_NUMBER),
-            state = rememberTextFieldStateWithCurrentValue(cardNumberState.text),
-            isError = cardNumberState.isError,
-            supportingText = supportingTextCardNumber,
-            onValueChange = onValueChange,
-            inputTransformation = inputTransformation,
-            outputTransformation = outputTransformation,
-            shouldFocus = cardNumberState.isFocused,
-            trailingIcon = {
-                CardNumberFieldIcon(
-                    state = cardNumberState,
-                    cardBrandViewState = cardBrandViewState,
-                    onScanButtonClick = onScanButtonClick,
-                    onBrandSelect = onBrandSelect,
-                )
+    CheckoutTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                onFocusChange(focusState.isFocused)
             },
-        )
-
-        AnimatedVisibility(
-            visible = cardBrandViewState is CardBrandViewState.SelectableDualBrand,
-        ) {
-            Footnote(
-                text = resolveString(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = Dimensions.Spacing.Small),
+        label = resolveString(CheckoutLocalizationKey.CARD_NUMBER),
+        state = rememberTextFieldStateWithCurrentValue(cardNumberState.text),
+        isError = cardNumberState.isError,
+        supportingText = supportingTextCardNumber,
+        onValueChange = onValueChange,
+        inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
+        shouldFocus = cardNumberState.isFocused,
+        trailingIcon = {
+            CardNumberFieldIcon(
+                state = cardNumberState,
+                cardBrandViewState = cardBrandViewState,
+                onScanButtonClick = onScanButtonClick,
+                onBrandSelect = onBrandSelect,
             )
-        }
-    }
+        },
+    )
 }
 
 @Composable

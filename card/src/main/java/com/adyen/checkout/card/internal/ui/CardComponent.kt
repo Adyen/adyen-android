@@ -19,9 +19,11 @@ import androidx.compose.ui.Modifier
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.analytics.CardScannerEvents
+import com.adyen.checkout.card.internal.analytics.DualBrandCardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.state.CardBrandState
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -53,6 +55,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -97,6 +100,7 @@ constructor(
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     init {
+        subscribeToDualBrandAnalyticsEvents()
         onCardBrandDataChanged()
         onBinChanged()
     }
@@ -230,6 +234,7 @@ constructor(
     private fun handleIntent(intent: CardIntent) {
         when (intent) {
             is CardIntent.UpdateCardNumber -> onCardNumberChanged(intent.number)
+            is CardIntent.SelectBrand -> onBrandSelected(intent)
             else -> onIntent(intent)
         }
     }
@@ -243,6 +248,39 @@ constructor(
         detectCardTypeRepository.detectCardTypes(cardNumber).onEach { result ->
             onIntent(CardIntent.UpdateDetectedCardTypes(result))
         }.launchIn(coroutineScope)
+    }
+
+    private fun onBrandSelected(intent: CardIntent.SelectBrand) {
+        val currentBrandState = componentState.value.cardBrandState
+        if (currentBrandState is CardBrandState.DualBrandWithShopperSelection &&
+            currentBrandState.shopperSelectedCardBrandData.cardBrand != intent.cardBrand
+        ) {
+            val event = DualBrandCardEvents.brandSelected(
+                component = paymentMethodType,
+                selectedBrand = intent.cardBrand
+            )
+            analyticsManager.trackEvent(event)
+        }
+        onIntent(intent)
+    }
+
+    private fun subscribeToDualBrandAnalyticsEvents() {
+        componentState
+            .map { it.cardBrandState is CardBrandState.DualBrandWithShopperSelection }
+            .distinctUntilChanged()
+            .filter { isVisible -> isVisible }
+            .onEach {
+                val cardBrandState = componentState.value.cardBrandState
+                    as? CardBrandState.DualBrandWithShopperSelection ?: return@onEach
+
+                val event = DualBrandCardEvents.dualBrandSelectionDisplayed(
+                    component = paymentMethodType,
+                    selectedBrand = cardBrandState.shopperSelectedCardBrandData.cardBrand,
+                    brandOptions = cardBrandState.cardBrandDataList,
+                )
+                analyticsManager.trackEvent(event)
+            }
+            .launchIn(coroutineScope)
     }
 
     private fun onBinChanged() {
