@@ -10,9 +10,14 @@ package com.adyen.checkout.googlepay.internal.ui.view
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayButtonViewState
+import com.adyen.checkout.ui.internal.helper.isDark
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.google.pay.button.ButtonTheme
+import com.google.pay.button.ButtonType
 import com.google.pay.button.PayButton
 
 @Composable
@@ -22,12 +27,17 @@ internal fun GooglePayButton(
     modifier: Modifier = Modifier,
 ) {
     val buttonStyling = buttonViewState.buttonStyling
+    val backgroundColor = CheckoutThemeProvider.colors.background
+    val defaultButtonTheme = remember(backgroundColor) {
+        if (backgroundColor.isDark()) ButtonTheme.Light else ButtonTheme.Dark
+    }
+
     PayButton(
         onClick = onClick,
         allowedPaymentMethods = buttonViewState.allowedPaymentMethods,
         modifier = modifier.fillMaxWidth(),
-        theme = buttonStyling?.buttonTheme.toButtonTheme(),
-        type = buttonStyling?.buttonType.toButtonType(),
+        theme = buttonStyling?.buttonTheme?.toButtonTheme() ?: defaultButtonTheme,
+        type = buttonStyling?.buttonType?.toButtonType() ?: ButtonType.Buy,
         radius = buttonStyling?.cornerRadius?.dp ?: DEFAULT_CORNER_RADIUS,
         enabled = !buttonViewState.isLoading,
     )

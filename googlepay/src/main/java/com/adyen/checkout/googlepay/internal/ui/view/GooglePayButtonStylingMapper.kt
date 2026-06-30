@@ -13,13 +13,12 @@ import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.google.pay.button.ButtonTheme
 import com.google.pay.button.ButtonType
 
-internal fun GooglePayButtonTheme?.toButtonTheme(): ButtonTheme = when (this) {
+internal fun GooglePayButtonTheme.toButtonTheme(): ButtonTheme = when (this) {
     GooglePayButtonTheme.LIGHT -> ButtonTheme.Light
-    GooglePayButtonTheme.DARK,
-    null -> ButtonTheme.Dark
+    GooglePayButtonTheme.DARK -> ButtonTheme.Dark
 }
 
-internal fun GooglePayButtonType?.toButtonType(): ButtonType = when (this) {
+internal fun GooglePayButtonType.toButtonType(): ButtonType = when (this) {
     GooglePayButtonType.BOOK -> ButtonType.Book
     GooglePayButtonType.CHECKOUT -> ButtonType.Checkout
     GooglePayButtonType.DONATE -> ButtonType.Donate
@@ -27,6 +26,5 @@ internal fun GooglePayButtonType?.toButtonType(): ButtonType = when (this) {
     GooglePayButtonType.PAY -> ButtonType.Pay
     GooglePayButtonType.SUBSCRIBE -> ButtonType.Subscribe
     GooglePayButtonType.PLAIN -> ButtonType.Plain
-    GooglePayButtonType.BUY,
-    null -> ButtonType.Buy
+    GooglePayButtonType.BUY -> ButtonType.Buy
 }
