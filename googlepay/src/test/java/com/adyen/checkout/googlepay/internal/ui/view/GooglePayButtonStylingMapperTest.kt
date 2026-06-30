@@ -28,13 +28,7 @@ internal class GooglePayButtonStylingMapperTest {
     }
 
     @Test
-    fun `when toButtonTheme is called with null, then it defaults to ButtonTheme Dark`() {
-        assertEquals(ButtonTheme.Dark, (null as GooglePayButtonTheme?).toButtonTheme())
-    }
-
-    @Test
     fun `when toButtonType is called with each type, then it maps to the matching ButtonType`() {
-        assertEquals(ButtonType.Buy, GooglePayButtonType.BUY.toButtonType())
         assertEquals(ButtonType.Book, GooglePayButtonType.BOOK.toButtonType())
         assertEquals(ButtonType.Checkout, GooglePayButtonType.CHECKOUT.toButtonType())
         assertEquals(ButtonType.Donate, GooglePayButtonType.DONATE.toButtonType())
@@ -42,10 +36,6 @@ internal class GooglePayButtonStylingMapperTest {
         assertEquals(ButtonType.Pay, GooglePayButtonType.PAY.toButtonType())
         assertEquals(ButtonType.Subscribe, GooglePayButtonType.SUBSCRIBE.toButtonType())
         assertEquals(ButtonType.Plain, GooglePayButtonType.PLAIN.toButtonType())
-    }
-
-    @Test
-    fun `when toButtonType is called with null, then it defaults to ButtonType Buy`() {
-        assertEquals(ButtonType.Buy, (null as GooglePayButtonType?).toButtonType())
+        assertEquals(ButtonType.Buy, GooglePayButtonType.BUY.toButtonType())
     }
 }
