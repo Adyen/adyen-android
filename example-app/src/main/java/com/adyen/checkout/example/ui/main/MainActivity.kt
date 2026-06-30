@@ -115,6 +115,10 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
+        // Re-apply external configuration when the activity receives a new intent without restarting.
+        // This resets to defaults when no config extra is present, preventing test pollution.
+        externalConfigurationReader.apply(intent.getStringExtra(CONFIG_EXTRA))
+
         when (intent.data?.path) {
             InstantFragment.RETURN_URL_PATH -> {
                 (supportFragmentManager.findFragmentByTag(InstantFragment.TAG) as? InstantFragment)
