@@ -56,7 +56,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -268,13 +267,14 @@ constructor(
 
     private fun subscribeToDualBrandAnalyticsEvents() {
         componentState
-            .map { it.cardBrandState is CardBrandState.DualBrandWithShopperSelection }
-            .distinctUntilChanged()
-            .filter { isVisible -> isVisible }
-            .onEach {
-                val cardBrandState = componentState.value.cardBrandState
-                    as? CardBrandState.DualBrandWithShopperSelection ?: return@onEach
-
+            .map { it.cardBrandState }
+            .distinctUntilChanged { old, new ->
+                val isOldDualBrandWithSelection = old is CardBrandState.DualBrandWithShopperSelection
+                val isNewDualBrandWithSelection = new is CardBrandState.DualBrandWithShopperSelection
+                isOldDualBrandWithSelection == isNewDualBrandWithSelection
+            }
+            .mapNotNull { it as? CardBrandState.DualBrandWithShopperSelection }
+            .onEach { cardBrandState ->
                 val event = DualBrandCardEvents.dualBrandSelectionDisplayed(
                     component = paymentMethodType,
                     selectedBrand = cardBrandState.shopperSelectedCardBrandData.cardBrand,
