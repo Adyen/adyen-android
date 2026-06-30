@@ -15,10 +15,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.googlepay.internal.ui.GooglePayViewEvent
-import com.adyen.checkout.googlepay.internal.ui.state.GooglePayButtonViewState
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewState
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.PaymentData
@@ -71,19 +69,4 @@ private fun GooglePayContent(
             modifier = modifier,
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun GooglePayContentPreview() {
-    GooglePayContent(
-        viewState = GooglePayViewState(
-            buttonViewState = GooglePayButtonViewState(
-                allowedPaymentMethods = "[]",
-                buttonStyling = null,
-                isLoading = false,
-            ),
-        ),
-        onSubmit = {},
-    )
 }
