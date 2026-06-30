@@ -90,6 +90,7 @@ internal class GooglePayComponent(
             viewEventFlow = viewEventFlow,
             onResult = ::onPaymentResult,
             loadPaymentData = ::loadPaymentData,
+            onSubmit = ::submit,
             modifier = modifier,
         )
     }

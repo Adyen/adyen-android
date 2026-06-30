@@ -52,7 +52,7 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
             ),
             paymentMethodType = googlePayPaymentMethod.type,
             componentStateValidator = GooglePayComponentStateValidator(),
-            componentStateFactory = GooglePayComponentStateFactory(),
+            componentStateFactory = GooglePayComponentStateFactory(componentParams),
             componentStateReducer = GooglePayComponentStateReducer(),
             viewStateProducer = GooglePayViewStateProducer(),
             coroutineScope = coroutineScope,

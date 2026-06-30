@@ -13,6 +13,7 @@ import com.adyen.checkout.core.common.internal.helper.AmountFormat
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.components.paymentmethod.GooglePayDetails
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.SoftwareInfo
@@ -29,6 +30,7 @@ import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.Wallet.WalletOptions
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.math.RoundingMode
@@ -103,6 +105,21 @@ internal object GooglePayUtils {
     }
 
     /**
+     * Create the allowed payment methods as a JSON array string, as required by the Compose
+     * `PayButton` from the Google Pay button library.
+     *
+     * @param params The parameters based on the Google Pay component configuration.
+     * @return The allowed payment methods serialized as a JSON array string.
+     */
+    fun getAllowedPaymentMethodsJson(params: GooglePayComponentParams): String {
+        val allowedPaymentMethods = ModelUtils.serializeOptList(
+            getAllowedPaymentMethods(params),
+            GooglePayPaymentMethodModel.SERIALIZER,
+        )
+        return (allowedPaymentMethods ?: JSONArray()).toString()
+    }
+
+    /**
      * Find the token required by Adyen on the payments/ call for Google Pay.
      *
      * @param paymentData The PaymentData result from Google Pay.
@@ -160,7 +177,7 @@ internal object GooglePayUtils {
             sdkData = sdkData,
             googlePayToken = googlePayToken,
             googlePayCardNetwork = googlePayCardNetwork,
-            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull()
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull(),
         )
     }
 

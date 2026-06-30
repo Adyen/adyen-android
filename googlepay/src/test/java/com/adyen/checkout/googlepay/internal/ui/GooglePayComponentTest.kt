@@ -11,8 +11,10 @@ package com.adyen.checkout.googlepay.internal.ui
 import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.test
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
@@ -22,6 +24,7 @@ import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewStateProducer
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.WalletConstants
 import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,6 +33,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.argumentCaptor
@@ -49,23 +54,25 @@ internal class GooglePayComponentTest {
     }
 
     @Test
-    fun `when setLoading is called with true, then the loading state is updated`() = runTest {
+    fun `when setLoading is called with true, then the button is disabled`() = runTest {
         val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
         val viewState = component.viewState.test(testScheduler)
 
         component.setLoading(true)
 
-        assertTrue(viewState.latestValue.isLoading)
+        val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+        assertTrue(buttonViewState.isLoading)
     }
 
     @Test
-    fun `when submit is called, then loading state is set to true`() = runTest {
+    fun `when submit is called, then the button is disabled`() = runTest {
         val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
         val viewState = component.viewState.test(testScheduler)
 
         component.submit()
 
-        assertTrue(viewState.latestValue.isLoading)
+        val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+        assertTrue(buttonViewState.isLoading)
     }
 
     @Test
@@ -130,7 +137,8 @@ internal class GooglePayComponentTest {
         component.onPaymentResult(createResult(CommonStatusCodes.CANCELED))
 
         assertTrue(events.values.isEmpty())
-        assertFalse(viewState.latestValue.isLoading)
+        val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+        assertFalse(buttonViewState.isLoading)
     }
 
     @Test
@@ -165,7 +173,7 @@ internal class GooglePayComponentTest {
     }
 
     @Test
-    fun `when availability check returns true, then the available state is updated`() = runTest {
+    fun `when availability check returns true, then the button is shown`() = runTest {
         val availabilityCheck = mock<GooglePayAvailabilityCheck> {
             onBlocking { isAvailable() } doReturn true
         }
@@ -175,11 +183,11 @@ internal class GooglePayComponentTest {
         )
         val viewState = component.viewState.test(testScheduler)
 
-        assertTrue(viewState.latestValue.isAvailable)
+        assertNotNull(viewState.latestValue.buttonViewState)
     }
 
     @Test
-    fun `when availability check returns false, then the available state stays false`() = runTest {
+    fun `when availability check returns false, then the button is not shown`() = runTest {
         val availabilityCheck = mock<GooglePayAvailabilityCheck> {
             onBlocking { isAvailable() } doReturn false
         }
@@ -189,26 +197,69 @@ internal class GooglePayComponentTest {
         )
         val viewState = component.viewState.test(testScheduler)
 
-        assertFalse(viewState.latestValue.isAvailable)
+        assertNull(viewState.latestValue.buttonViewState)
     }
+
+    @Test
+    fun `when component is created, then the button view state exposes allowed payment methods and styling`() =
+        runTest {
+            val buttonStyling = GooglePayButtonStyling()
+            val component = createComponent(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+                googlePayButtonStyling = buttonStyling,
+            )
+            val viewState = component.viewState.test(testScheduler)
+
+            val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+            assertTrue(buttonViewState.allowedPaymentMethods.isNotEmpty())
+            assertEquals(buttonStyling, buttonViewState.buttonStyling)
+        }
 
     private fun createComponent(
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager = mock(),
         googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mock {
-            onBlocking { isAvailable() } doReturn false
+            onBlocking { isAvailable() } doReturn true
         },
-    ) = GooglePayComponent(
-        analyticsManager = analyticsManager,
-        componentParams = mock<GooglePayComponentParams>(),
-        sdkDataProvider = mock<SdkDataProvider>(),
-        googlePayAvailabilityCheck = googlePayAvailabilityCheck,
-        paymentMethodType = "googlepay",
-        componentStateValidator = GooglePayComponentStateValidator(),
-        componentStateFactory = GooglePayComponentStateFactory(),
-        componentStateReducer = GooglePayComponentStateReducer(),
-        viewStateProducer = GooglePayViewStateProducer(),
-        coroutineScope = coroutineScope,
+        googlePayButtonStyling: GooglePayButtonStyling? = null,
+    ): GooglePayComponent {
+        val componentParams = createComponentParams(googlePayButtonStyling)
+        return GooglePayComponent(
+            analyticsManager = analyticsManager,
+            componentParams = componentParams,
+            sdkDataProvider = mock<SdkDataProvider>(),
+            googlePayAvailabilityCheck = googlePayAvailabilityCheck,
+            paymentMethodType = "googlepay",
+            componentStateValidator = GooglePayComponentStateValidator(),
+            componentStateFactory = GooglePayComponentStateFactory(componentParams),
+            componentStateReducer = GooglePayComponentStateReducer(),
+            viewStateProducer = GooglePayViewStateProducer(),
+            coroutineScope = coroutineScope,
+        )
+    }
+
+    private fun createComponentParams(
+        googlePayButtonStyling: GooglePayButtonStyling? = null,
+    ) = GooglePayComponentParams(
+        amount = Amount("USD", 0),
+        gatewayMerchantId = "TEST_GATEWAY_MERCHANT_ID",
+        googlePayEnvironment = WalletConstants.ENVIRONMENT_TEST,
+        totalPriceStatus = "FINAL",
+        countryCode = null,
+        merchantInfo = null,
+        allowedAuthMethods = listOf("PAN_ONLY", "CRYPTOGRAM_3DS"),
+        allowedCardNetworks = listOf("VISA", "MASTERCARD"),
+        isAllowPrepaidCards = false,
+        isAllowCreditCards = null,
+        isAssuranceDetailsRequired = null,
+        isEmailRequired = false,
+        isExistingPaymentMethodRequired = false,
+        isShippingAddressRequired = false,
+        shippingAddressParameters = null,
+        isBillingAddressRequired = false,
+        billingAddressParameters = null,
+        checkoutOption = null,
+        googlePayButtonStyling = googlePayButtonStyling,
     )
 
     private fun createResult(
