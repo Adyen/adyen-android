@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.common.CardBrand
 
+@Immutable
 internal data class SupportedCardBrandsViewState(
     val supportedCardBrands: List<CardBrand>,
     // We use an isVisible flag instead of making this class nullable because we need to animate the enter/exit

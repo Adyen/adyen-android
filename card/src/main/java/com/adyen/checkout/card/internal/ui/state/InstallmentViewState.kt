@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 
+@Immutable
 internal data class InstallmentViewState(
     val installmentOptions: List<InstallmentModel>,
     val selectedInstallment: InstallmentModel?,
