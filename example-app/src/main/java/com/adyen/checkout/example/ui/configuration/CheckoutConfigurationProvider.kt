@@ -24,6 +24,7 @@ import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
+import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.old.googlePay
 import com.adyen.checkout.instant.instantPayment
 import com.adyen.checkout.mealvoucherfr.mealVoucherFR
@@ -121,6 +122,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             card(
                 billingAddressMode = getBillingAddressMode(),
                 installmentConfiguration = getInstallmentConfiguration(),
+            )
+
+            googlePay(
+                countryCode = keyValueStorage.getCountry(),
+                checkoutOption = "COMPLETE_IMMEDIATE_PURCHASE",
             )
 
             threeDS2(

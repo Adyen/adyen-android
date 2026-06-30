@@ -16,6 +16,8 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 
 private val SUPPORTED_V6_PAYMENT_METHODS = listOf(
     PaymentMethodTypes.BLIK,
+    PaymentMethodTypes.GOOGLE_PAY,
+    PaymentMethodTypes.GOOGLE_PAY_LEGACY,
     PaymentMethodTypes.MB_WAY,
     PaymentMethodTypes.SCHEME,
 )
