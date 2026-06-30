@@ -56,13 +56,15 @@ internal class CardComponentTest(
     @Mock private val cardScannerWrapper: CardScannerWrapper,
 ) {
 
-    private val analyticsManager = TestAnalyticsManager()
-    private val cardComponentParams = createCardComponentParams()
+    private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var cardComponentParams: CardComponentParams
     private lateinit var coroutineScope: CoroutineScope
     private lateinit var component: CardComponent
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
+        cardComponentParams = createCardComponentParams()
         coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
         component = createCardComponent()
     }
