@@ -157,7 +157,7 @@ private fun DetectedBrandsList(
             is CardBrandViewState.DualBrand -> DualBrandLogos(cardBrandViewState.brands)
 
             is CardBrandViewState.SelectableDualBrand -> SelectableDualBrandLogos(
-                selectableBrandItems = cardBrandViewState.brands,
+                brands = cardBrandViewState.brands,
                 onBrandSelect = onBrandSelect,
             )
         }
@@ -166,14 +166,14 @@ private fun DetectedBrandsList(
 
 @Composable
 private fun DualBrandLogos(
-    cardBrands: List<CardBrand>,
+    brands: List<CardBrand>,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .padding(Dimensions.Spacing.ExtraSmall),
     ) {
-        cardBrands.forEach { brand ->
+        brands.forEach { brand ->
             BrandLogo(
                 txVariant = brand.txVariant,
                 modifier = Modifier.padding(Dimensions.Spacing.ExtraSmall),
@@ -184,7 +184,7 @@ private fun DualBrandLogos(
 
 @Composable
 private fun SelectableDualBrandLogos(
-    selectableBrandItems: List<SelectableCardBrandItem>,
+    brands: List<SelectableCardBrandItem>,
     onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -196,7 +196,7 @@ private fun SelectableDualBrandLogos(
             )
             .padding(Dimensions.Spacing.ExtraSmall),
     ) {
-        selectableBrandItems.forEach { brandItem ->
+        brands.forEach { brandItem ->
             BrandLogo(
                 txVariant = brandItem.brand.txVariant,
                 modifier = Modifier

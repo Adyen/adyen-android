@@ -100,7 +100,7 @@ constructor(
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     init {
-        subscribeToDualBrandAnalyticsEvents()
+        subscribeToDualBrandSelectionAppearAnalyticsEvents()
         onCardBrandDataChanged()
         onBinChanged()
     }
@@ -265,7 +265,7 @@ constructor(
         onIntent(intent)
     }
 
-    private fun subscribeToDualBrandAnalyticsEvents() {
+    private fun subscribeToDualBrandSelectionAppearAnalyticsEvents() {
         componentState
             .map { it.cardBrandState }
             .distinctUntilChanged { old, new ->

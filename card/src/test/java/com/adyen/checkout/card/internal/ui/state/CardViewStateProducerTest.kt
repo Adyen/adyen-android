@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 
 internal class CardViewStateProducerTest {
 
@@ -223,6 +224,27 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
+    fun `when dual brand with non-amex selected, then cardNumberFormat should be Default`() {
+        // GIVEN
+        val amexBrandData = getCardBrandData().copy(
+            cardBrand = CardBrand("amex"),
+        )
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(amexBrandData, visaBrandData),
+                shopperSelectedCardBrandData = visaBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
+    }
+
+    @Test
     fun `when dual brand with shopper selection is detected, then card number supportingText is dual brand selector description`() {
         // GIVEN
         val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
@@ -252,28 +274,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(null, viewState.cardNumber?.supportingText)
-    }
-
-    @Test
-    fun `when dual brand with non-amex selected, then cardNumberFormat should be Default`() {
-        // GIVEN
-        val amexBrandData = getCardBrandData().copy(
-            cardBrand = CardBrand("amex"),
-        )
-        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
-        val componentState = createComponentState(
-            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
-                cardBrandDataList = listOf(amexBrandData, visaBrandData),
-                shopperSelectedCardBrandData = visaBrandData,
-            ),
-        )
-
-        // WHEN
-        val viewState = producer.produce(componentState)
-
-        // THEN
-        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
+        assertNull(viewState.cardNumber?.supportingText)
     }
 
     // UC6: Error Hides Brand Logos

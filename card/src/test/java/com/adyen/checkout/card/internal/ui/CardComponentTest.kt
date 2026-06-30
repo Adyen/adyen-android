@@ -35,9 +35,7 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -57,31 +55,22 @@ internal class CardComponentTest(
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
-    private lateinit var cardComponentParams: CardComponentParams
-    private lateinit var coroutineScope: CoroutineScope
     private lateinit var component: CardComponent
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
-        cardComponentParams = createCardComponentParams()
-        coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-        component = createCardComponent()
-    }
-
-    @AfterEach
-    fun afterEach() {
-        coroutineScope.cancel()
+        component = createComponent()
     }
 
     @Nested
     @DisplayName("when brand state transitions to DualBrandWithShopperSelection")
-    inner class SubscribeToDualBrandAnalyticsEventsTest {
+    inner class SubscribeToDualBrandSelectionAppearAnalyticsEventsTest {
 
         @Test
         fun `then dualBrandSelectionDisplayed event is tracked`() {
             // WHEN
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDualBrandSelectableList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
 
             // THEN
             val expected = DualBrandCardEvents.dualBrandSelectionDisplayed(
@@ -98,10 +87,10 @@ internal class CardComponentTest(
         @Test
         fun `and same state is emitted again then event is tracked only once`() {
             // WHEN
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDualBrandSelectableList()))
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDualBrandSelectableList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
 
-            // THEN - distinctUntilChanged prevents duplicate events for repeated DualBrandWithShopperSelection state
+            // THEN
             val expected = DualBrandCardEvents.dualBrandSelectionDisplayed(
                 component = PAYMENT_METHOD_TYPE,
                 selectedBrand = CardBrand("visa"),
@@ -121,7 +110,7 @@ internal class CardComponentTest(
         @Test
         fun `and brand is different from currently selected then brandSelected event is tracked`() {
             // GIVEN
-            setupDualBrandWithShopperSelectionState()
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
 
             // WHEN - current selection is "visa" (first brand), selecting "cartebancaire"
             component.handleIntent(CardIntent.SelectBrand(CardBrand("cartebancaire")))
@@ -137,12 +126,12 @@ internal class CardComponentTest(
         @Test
         fun `and brand is same as currently selected then no brandSelected event is tracked`() {
             // GIVEN
-            setupDualBrandWithShopperSelectionState()
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
 
             // WHEN - current selection is "visa", re-selecting "visa"
             component.handleIntent(CardIntent.SelectBrand(CardBrand("visa")))
 
-            // THEN - last event is the dualBrandSelectionDisplayed event, not a brandSelected event
+            // THEN
             val notExpected = DualBrandCardEvents.brandSelected(
                 component = PAYMENT_METHOD_TYPE,
                 selectedBrand = CardBrand("visa"),
@@ -166,16 +155,13 @@ internal class CardComponentTest(
         }
     }
 
-    private fun setupDualBrandWithShopperSelectionState() {
-        component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDualBrandSelectableList()))
-    }
-
-    private fun createDualBrandSelectableList() = DetectedCardTypeList(
+    private fun createDetectedSelectableCardBrandList() = DetectedCardTypeList(
         detectedCardTypes = listOf(
-            createDetectedCardType().copy(cardBrand = CardBrand("visa")),
-            createDetectedCardType().copy(
+            createDetectedSelectableCardType().copy(
+                cardBrand = CardBrand("visa"),
+            ),
+            createDetectedSelectableCardType().copy(
                 cardBrand = CardBrand("cartebancaire"),
-                isShopperSelectionAllowedInDualBranded = true,
             ),
         ),
         source = DetectedCardTypeList.Source.NETWORK,
@@ -183,23 +169,47 @@ internal class CardComponentTest(
         issuingCountryCode = null,
     )
 
-    private fun createCardComponent(): CardComponent {
-        val detectCardTypeBinHelper = DetectCardTypeBinHelper()
-        val cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams, detectCardTypeBinHelper)
-        val reducer = CardComponentStateReducer(cardBrandIntentsHandler)
-        val factory = CardComponentStateFactory(cardComponentParams)
-        val validator = CardComponentStateValidator(CardValidationMapper())
+    private fun createDetectedSelectableCardType() = DetectedCardType(
+        cardBrand = CardBrand(""),
+        enableLuhnCheck = true,
+        cvcPolicy = Brand.FieldPolicy.REQUIRED,
+        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+        isSupported = true,
+        isHidden = false,
+        isShopperSelectionAllowedInDualBranded = true,
+        panLength = null,
+        paymentMethodVariant = null,
+        localizedBrand = null,
+    )
+
+    private fun createCardBrandData(cardBrand: CardBrand) = CardBrandData(
+        cardBrand = cardBrand,
+        enableLuhnCheck = true,
+        cvcPolicy = Brand.FieldPolicy.REQUIRED,
+        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+        panLength = null,
+        paymentMethodVariant = null,
+        localizedBrand = null,
+    )
+
+    private fun createComponent(
+        cardComponentParams: CardComponentParams = createCardComponentParams()
+    ): CardComponent {
+        val cardBrandIntentsHandler = CardBrandIntentsHandler(
+            componentParams = cardComponentParams,
+            detectCardTypeBinHelper = DetectCardTypeBinHelper(),
+        )
         return CardComponent(
             analyticsManager = analyticsManager,
             cardEncryptor = cardEncryptor,
             genericEncryptor = genericEncryptor,
             componentParams = cardComponentParams,
             detectCardTypeRepository = detectCardTypeRepository,
-            componentStateValidator = validator,
-            componentStateFactory = factory,
-            componentStateReducer = reducer,
+            componentStateValidator = CardComponentStateValidator(CardValidationMapper()),
+            componentStateFactory = CardComponentStateFactory(cardComponentParams),
+            componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler),
             viewStateProducer = CardViewStateProducer(),
-            coroutineScope = coroutineScope,
+            coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
             sdkDataProvider = sdkDataProvider,
             paymentMethodType = PAYMENT_METHOD_TYPE,
             onBinChangeCallback = null,
@@ -214,37 +224,14 @@ internal class CardComponentTest(
         showCardholderName = false,
         supportedCardBrands = emptyList(),
         showStorePaymentMethod = false,
-        showSupportedCardBrandLogos = true,
+        showSupportedCardBrandLogos = false,
         socialSecurityNumberVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility = FieldVisibility.HIDE,
         showPostalCode = false,
-        cvcVisibility = CVCVisibility.ALWAYS_SHOW,
-        storedCVCVisibility = StoredCVCVisibility.SHOW,
+        cvcVisibility = CVCVisibility.ALWAYS_HIDE,
+        storedCVCVisibility = StoredCVCVisibility.HIDE,
         showCardScanner = false,
         installmentParams = null,
-    )
-
-    private fun createDetectedCardType() = DetectedCardType(
-        cardBrand = CardBrand("visa"),
-        enableLuhnCheck = true,
-        cvcPolicy = Brand.FieldPolicy.REQUIRED,
-        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-        isSupported = true,
-        isHidden = false,
-        isShopperSelectionAllowedInDualBranded = false,
-        panLength = null,
-        paymentMethodVariant = null,
-        localizedBrand = null,
-    )
-
-    private fun createCardBrandData(cardBrand: CardBrand) = CardBrandData(
-        cardBrand = cardBrand,
-        enableLuhnCheck = true,
-        cvcPolicy = Brand.FieldPolicy.REQUIRED,
-        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-        panLength = null,
-        paymentMethodVariant = null,
-        localizedBrand = null,
     )
 
     companion object {

@@ -35,13 +35,13 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             is CardBrandState.DualBrandWithShopperSelection -> false
         }
 
-        val cardNumberDescription = getCardNumberDescription(state.cardBrandState)
+        val cardNumberInputDescription = getCardNumberInputDescription(state.cardBrandState)
         val cardBrandViewState = getCardBrandViewState(state.cardBrandState)
         val cardNumberFormat = getCardNumberFormat(state.cardBrandState)
         val isCardScanButtonVisible = state.isCardScanningAvailable && state.cardNumber.text.isEmpty()
 
         return CardViewState(
-            cardNumber = state.cardNumber.copy(description = cardNumberDescription).toViewState(
+            cardNumber = state.cardNumber.copy(description = cardNumberInputDescription).toViewState(
                 trailingIcon = getCardNumberTrailingIcon(state.cardNumber, isCardScanButtonVisible),
             ),
             expiryDate = state.expiryDate.toViewState(
@@ -71,7 +71,7 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
         )
     }
 
-    private fun getCardNumberDescription(cardBrandState: CardBrandState): CheckoutLocalizationKey? {
+    private fun getCardNumberInputDescription(cardBrandState: CardBrandState): CheckoutLocalizationKey? {
         if (cardBrandState is CardBrandState.DualBrandWithShopperSelection) {
             return CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION
         }
