@@ -129,6 +129,7 @@ private fun CardDetailsSection(
                 onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
                 onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
                 onScanButtonClick = onScanButtonClick,
+                onBrandSelect = { onIntent(CardIntent.SelectBrand(it)) },
             )
         }
         if (viewState.expiryDate != null) {
