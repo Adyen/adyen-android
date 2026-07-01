@@ -377,5 +377,51 @@ private fun CardNumberFieldPreview(
             onScanButtonClick = {},
             onBrandSelect = {},
         )
+
+        // Dual brand card logos
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "5555444433330001",
+            ),
+            supportedCardBrands = emptyList(),
+            isSupportedCardBrandsShown = false,
+            cardBrandViewState = CardBrandViewState.DualBrand(
+                brands = listOf(
+                    CardBrand(CardType.VISA.txVariant),
+                    CardBrand(CardType.MASTERCARD.txVariant),
+                ),
+            ),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
+            onValueChange = {},
+            onFocusChange = {},
+            onScanButtonClick = {},
+            onBrandSelect = {},
+        )
+
+        // Selectable dual brand card logos
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "5555444433330002",
+            ),
+            supportedCardBrands = emptyList(),
+            isSupportedCardBrandsShown = false,
+            cardBrandViewState = CardBrandViewState.SelectableDualBrand(
+                brands = listOf(
+                    SelectableCardBrandItem(
+                        brand = CardBrand(CardType.VISA.txVariant),
+                        isSelected = true,
+                    ),
+                    SelectableCardBrandItem(
+                        brand = CardBrand(CardType.MASTERCARD.txVariant),
+                        isSelected = false,
+                    ),
+                ),
+            ),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
+            onValueChange = {},
+            onFocusChange = {},
+            onScanButtonClick = {},
+            onBrandSelect = {},
+        )
     }
 }
