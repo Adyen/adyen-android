@@ -275,7 +275,8 @@ private fun CardNumberFieldIcon(
     onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon
+    // null is not expected for the trailingIcon
+    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon ?: return
     AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
         when (trailingIcon) {
             CardNumberTrailingIcon.Warning -> Icon(
@@ -296,7 +297,7 @@ private fun CardNumberFieldIcon(
                 )
             }
 
-            else -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
+            CardNumberTrailingIcon.BrandLogos -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
         }
     }
 }
