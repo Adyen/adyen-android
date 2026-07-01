@@ -18,7 +18,7 @@ hilt = "2.59.2"
 detekt = "1.23.8"
 jacoco = "0.8.12"
 ktlint = "1.8.0"
-sonarqube = "7.3.0.8198"
+sonarqube = "7.3.1.8318"
 binary-compatibility-validator = "0.18.1"
 
 # Android dependencies
