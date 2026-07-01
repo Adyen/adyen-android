@@ -70,7 +70,7 @@ internal class CardComponentTest(
         @Test
         fun `then dualBrandSelectionDisplayed event is tracked`() {
             // WHEN
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
 
             // THEN
             val expected = DualBrandCardEvents.dualBrandSelectionDisplayed(
@@ -87,8 +87,8 @@ internal class CardComponentTest(
         @Test
         fun `and same state is emitted again then event is tracked only once`() {
             // WHEN
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
 
             // THEN
             val expected = DualBrandCardEvents.dualBrandSelectionDisplayed(
@@ -101,6 +101,65 @@ internal class CardComponentTest(
             )
             analyticsManager.assertEventCount(1, expected)
         }
+
+        @Test
+        fun `and shopper changes brand selection within DualBrandWithShopperSelection then no new event is tracked`() {
+            // GIVEN
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
+
+            // WHEN - change selection from auto-selected "visa" to "cartebancaire"
+            component.handleIntent(CardIntent.SelectBrand(CardBrand("cartebancaire")))
+
+            // THEN - event is tracked only once (on appear, not on brand selection change)
+            val expected = DualBrandCardEvents.dualBrandSelectionDisplayed(
+                component = PAYMENT_METHOD_TYPE,
+                selectedBrand = CardBrand("visa"),
+                brandOptions = listOf(
+                    createCardBrandData(CardBrand("visa")),
+                    createCardBrandData(CardBrand("cartebancaire")),
+                ),
+            )
+            analyticsManager.assertEventCount(1, expected)
+        }
+
+        @Test
+        fun `and brand state transitions to non-dual-brand then no new event is tracked`() {
+            // GIVEN
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
+
+            // WHEN - clear detected brands (simulates card number being cleared)
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createEmptyDetectedCardTypeList()))
+
+            // THEN - event is tracked only once (on appear, not on disappear)
+            val expected = DualBrandCardEvents.dualBrandSelectionDisplayed(
+                component = PAYMENT_METHOD_TYPE,
+                selectedBrand = CardBrand("visa"),
+                brandOptions = listOf(
+                    createCardBrandData(CardBrand("visa")),
+                    createCardBrandData(CardBrand("cartebancaire")),
+                ),
+            )
+            analyticsManager.assertEventCount(1, expected)
+        }
+
+        @Test
+        fun `and dual brand state disappears and reappears then event is tracked again`() {
+            // WHEN
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createEmptyDetectedCardTypeList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
+
+            // THEN
+            val expected = DualBrandCardEvents.dualBrandSelectionDisplayed(
+                component = PAYMENT_METHOD_TYPE,
+                selectedBrand = CardBrand("visa"),
+                brandOptions = listOf(
+                    createCardBrandData(CardBrand("visa")),
+                    createCardBrandData(CardBrand("cartebancaire")),
+                ),
+            )
+            analyticsManager.assertEventCount(2, expected)
+        }
     }
 
     @Nested
@@ -110,7 +169,7 @@ internal class CardComponentTest(
         @Test
         fun `and brand is different from currently selected then brandSelected event is tracked`() {
             // GIVEN
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
 
             // WHEN - current selection is "visa" (first brand), selecting "cartebancaire"
             component.handleIntent(CardIntent.SelectBrand(CardBrand("cartebancaire")))
@@ -126,7 +185,7 @@ internal class CardComponentTest(
         @Test
         fun `and brand is same as currently selected then no brandSelected event is tracked`() {
             // GIVEN
-            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createDetectedSelectableCardBrandList()))
+            component.handleIntent(CardIntent.UpdateDetectedCardTypes(createSelectableDetectedCardBrandList()))
 
             // WHEN - current selection is "visa", re-selecting "visa"
             component.handleIntent(CardIntent.SelectBrand(CardBrand("visa")))
@@ -155,7 +214,14 @@ internal class CardComponentTest(
         }
     }
 
-    private fun createDetectedSelectableCardBrandList() = DetectedCardTypeList(
+    private fun createEmptyDetectedCardTypeList() = DetectedCardTypeList(
+        detectedCardTypes = emptyList(),
+        source = DetectedCardTypeList.Source.NETWORK,
+        cardDetectionBin = null,
+        issuingCountryCode = null,
+    )
+
+    private fun createSelectableDetectedCardBrandList() = DetectedCardTypeList(
         detectedCardTypes = listOf(
             createDetectedSelectableCardType().copy(
                 cardBrand = CardBrand("visa"),

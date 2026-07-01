@@ -266,13 +266,19 @@ constructor(
     }
 
     private fun subscribeToDualBrandSelectionAppearAnalyticsEvents() {
+        // Fires dualBrandSelectionDisplayed when DualBrandWithShopperSelection appears.
         componentState
             .map { it.cardBrandState }
+            // Compares bucket membership (DualBrandWithShopperSelection vs. anything else) rather
+            // than state equality: suppresses brand-selection changes within the dual brand UI
+            // (same bucket → "equal") while emitting on appear/disappear transitions.
             .distinctUntilChanged { old, new ->
                 val isOldDualBrandWithSelection = old is CardBrandState.DualBrandWithShopperSelection
                 val isNewDualBrandWithSelection = new is CardBrandState.DualBrandWithShopperSelection
                 isOldDualBrandWithSelection == isNewDualBrandWithSelection
             }
+            // Discards the disappear emissions so only appear transitions reach onEach.
+            // WARNING: must come AFTER distinctUntilChanged — reversing them causes the event to never fire.
             .mapNotNull { it as? CardBrandState.DualBrandWithShopperSelection }
             .onEach { cardBrandState ->
                 val event = DualBrandCardEvents.dualBrandSelectionDisplayed(
