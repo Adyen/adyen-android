@@ -1,6 +1,7 @@
 package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
+import com.adyen.checkout.authentication.authentication
 import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.InstallmentConfiguration
@@ -29,7 +30,6 @@ import com.adyen.checkout.googlepay.old.googlePay
 import com.adyen.checkout.instant.instantPayment
 import com.adyen.checkout.mealvoucherfr.mealVoucherFR
 import com.adyen.checkout.threeds2.old.adyen3DS2
-import com.adyen.checkout.threeds2.threeDS2
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -129,7 +129,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 checkoutOption = "COMPLETE_IMMEDIATE_PURCHASE",
             )
 
-            threeDS2(
+            authentication(
                 threeDSRequestorAppURL = "https://www.adyen.com",
             )
         }

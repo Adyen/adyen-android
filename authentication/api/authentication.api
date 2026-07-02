@@ -1,0 +1,14 @@
+public final class com/adyen/checkout/authentication/AuthenticationConfigurationKt {
+	public static final fun authentication (Lcom/adyen/checkout/core/components/CheckoutConfiguration;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun authentication (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun authentication$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+}
+
+public final class com/adyen/checkout/authentication/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field CHECKOUT_VERSION Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+

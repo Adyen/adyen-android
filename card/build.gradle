@@ -34,6 +34,7 @@ dependencies {
     // Checkout
     api project(':3ds2')
     api project(':action-core')
+    api project(':authentication')
     api project(':core')
     api project(':cse')
     api project(':ui-core')
