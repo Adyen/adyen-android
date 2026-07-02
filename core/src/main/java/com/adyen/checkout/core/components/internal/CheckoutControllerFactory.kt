@@ -84,7 +84,11 @@ internal class CheckoutControllerFactory {
             action = context.action,
             actionHandler = actionHandler,
         )
-        return CheckoutController(flow = flow)
+        return CheckoutController(
+            flow = flow,
+            environment = checkoutParams.environment,
+            shopperLocale = checkoutParams.shopperLocale,
+        )
     }
 
     private fun createFullCheckoutController(
@@ -132,7 +136,11 @@ internal class CheckoutControllerFactory {
             actionHandler = actionHandler,
         )
 
-        return CheckoutController(flow = flow)
+        return CheckoutController(
+            flow = flow,
+            environment = checkoutParams.environment,
+            shopperLocale = checkoutParams.shopperLocale,
+        )
     }
 
     private fun createCommonDependencies(
