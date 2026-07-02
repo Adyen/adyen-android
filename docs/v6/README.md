@@ -84,6 +84,8 @@ val configuration = CheckoutConfiguration(
 
 Use the builder block to register payment-method and action configuration that should apply to the flow.
 
+In session flow, `showStorePaymentMethod` and `installmentConfiguration` for cards are controlled by the `/sessions` response. Their effective values come from `enableStoreDetails`, `installmentOptions`, and `showInstallmentAmount`. Configure them in your session request and do not rely on component-level values to override them.
+
 ## Session flow
 
 Use the session flow when your backend starts checkout with `/sessions`.

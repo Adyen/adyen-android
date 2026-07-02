@@ -19,7 +19,6 @@ val configuration = CheckoutConfiguration(
     card(
         showCardholderName = true,
         showSecurityCode = true,
-        showStorePaymentMethod = true,
     )
     threeDS2(threeDSRequestorAppURL = "https://your-app.example/adyen")
 }
@@ -56,6 +55,15 @@ lifecycleScope.launch {
     }
 }
 ```
+
+## Session-controlled card settings
+
+When you use `/sessions`, some card settings are controlled by the session response instead of component-level `card(...)` parameters:
+
+- `showStorePaymentMethod` follows `enableStoreDetails`.
+- `installmentConfiguration` follows `installmentOptions`. `showInstallmentAmount` is also read from the session response.
+
+Configure these values in your `/sessions` request and do not rely on component-level values to override them.
 
 Once you have the controller, render it from your `@Composable` UI with `CheckoutPaymentFlow(...)`. Pass a `CheckoutTheme` and optional `CheckoutLocalizationProvider` when you render the flow. See [theme.md](theme.md) and [README.md](README.md#localization).
 
