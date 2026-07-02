@@ -14,14 +14,17 @@ import android.content.Intent
 import android.content.IntentSender
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.analytics.CardScannerEvents
+import com.adyen.checkout.card.internal.analytics.DualBrandCardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.state.CardBrandState
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
@@ -97,6 +100,7 @@ constructor(
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     init {
+        subscribeToDualBrandSelectionAppearAnalyticsEvents()
         onCardBrandDataChanged()
         onBinChanged()
     }
@@ -227,9 +231,11 @@ constructor(
         componentState.handleIntent(intent)
     }
 
-    private fun handleIntent(intent: CardIntent) {
+    @VisibleForTesting
+    internal fun handleIntent(intent: CardIntent) {
         when (intent) {
             is CardIntent.UpdateCardNumber -> onCardNumberChanged(intent.number)
+            is CardIntent.SelectBrand -> onBrandSelected(intent)
             else -> onIntent(intent)
         }
     }
@@ -243,6 +249,46 @@ constructor(
         detectCardTypeRepository.detectCardTypes(cardNumber).onEach { result ->
             onIntent(CardIntent.UpdateDetectedCardTypes(result))
         }.launchIn(coroutineScope)
+    }
+
+    private fun onBrandSelected(intent: CardIntent.SelectBrand) {
+        val currentBrandState = componentState.value.cardBrandState
+        if (currentBrandState is CardBrandState.DualBrandWithShopperSelection &&
+            currentBrandState.shopperSelectedCardBrandData.cardBrand != intent.cardBrand
+        ) {
+            val event = DualBrandCardEvents.brandSelected(
+                component = paymentMethodType,
+                selectedBrand = intent.cardBrand
+            )
+            analyticsManager.trackEvent(event)
+        }
+        onIntent(intent)
+    }
+
+    private fun subscribeToDualBrandSelectionAppearAnalyticsEvents() {
+        // Fires dualBrandSelectionDisplayed when DualBrandWithShopperSelection appears.
+        componentState
+            .map { it.cardBrandState }
+            // Compares bucket membership (DualBrandWithShopperSelection vs. anything else) rather
+            // than state equality: suppresses brand-selection changes within the dual brand UI
+            // (same bucket → "equal") while emitting on appear/disappear transitions.
+            .distinctUntilChanged { old, new ->
+                val isOldDualBrandWithSelection = old is CardBrandState.DualBrandWithShopperSelection
+                val isNewDualBrandWithSelection = new is CardBrandState.DualBrandWithShopperSelection
+                isOldDualBrandWithSelection == isNewDualBrandWithSelection
+            }
+            // Discards the disappear emissions so only appear transitions reach onEach.
+            // WARNING: must come AFTER distinctUntilChanged — reversing them causes the event to never fire.
+            .mapNotNull { it as? CardBrandState.DualBrandWithShopperSelection }
+            .onEach { cardBrandState ->
+                val event = DualBrandCardEvents.dualBrandSelectionDisplayed(
+                    component = paymentMethodType,
+                    selectedBrand = cardBrandState.shopperSelectedCardBrandData.cardBrand,
+                    brandOptions = cardBrandState.cardBrandDataList,
+                )
+                analyticsManager.trackEvent(event)
+            }
+            .launchIn(coroutineScope)
     }
 
     private fun onBinChanged() {

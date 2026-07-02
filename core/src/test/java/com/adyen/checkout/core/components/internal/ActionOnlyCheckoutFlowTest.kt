@@ -57,21 +57,12 @@ internal class ActionOnlyCheckoutFlowTest(
     }
 
     @Test
-    fun `when paymentMethodNavigation is collected, then no values are emitted`() = runTest {
+    fun `when navigation is collected, then no values are emitted`() = runTest {
         val flow = ActionOnlyCheckoutFlow(createAction(), actionHandler)
 
-        val paymentMethodNavigation = flow.paymentMethodNavigation.test(testScheduler)
+        val paymentMethodNavigation = flow.navigation.test(testScheduler)
 
         assertTrue(paymentMethodNavigation.values.isEmpty())
-    }
-
-    @Test
-    fun `when secondaryNavigation is collected, then no values are emitted`() = runTest {
-        val flow = ActionOnlyCheckoutFlow(createAction(), actionHandler)
-
-        val secondaryNavigation = flow.secondaryNavigation.test(testScheduler)
-
-        assertTrue(secondaryNavigation.values.isEmpty())
     }
 
     @Test

@@ -87,8 +87,8 @@ abstract class PaymentMethodDetails : ModelObject() {
 //                PaymentMethodTypes.PAY_BY_BANK_US -> PayByBankUSPaymentMethod.SERIALIZER
 //                PayEasyPaymentMethod.PAYMENT_METHOD_TYPE -> PayEasyPaymentMethod.SERIALIZER
 //                PayToPaymentMethod.PAYMENT_METHOD_TYPE -> PayToPaymentMethod.SERIALIZER
-//                PaymentMethodTypes.GOOGLE_PAY,
-//                PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayPaymentMethod.SERIALIZER
+                PaymentMethodTypes.GOOGLE_PAY,
+                PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayDetails.SERIALIZER
 //
 //                PaymentMethodTypes.MOLPAY_MALAYSIA,
 //                PaymentMethodTypes.MOLPAY_THAILAND,

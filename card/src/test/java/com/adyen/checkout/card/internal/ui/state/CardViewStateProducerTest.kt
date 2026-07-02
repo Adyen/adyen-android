@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 
 internal class CardViewStateProducerTest {
 
@@ -42,7 +43,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertTrue(viewState.isSupportedCardBrandsShown)
+        assertTrue(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     // UC5: Brand Detection Hides Placeholder (No Error)
@@ -57,7 +58,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     // UC5: Brand Detection Hides Placeholder (No Error)
@@ -72,7 +73,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertTrue(viewState.isSupportedCardBrandsShown)
+        assertTrue(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     @Test
@@ -86,7 +87,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertTrue(viewState.isSupportedCardBrandsShown)
+        assertTrue(viewState.supportedCardBrandsViewState.isVisible)
         assertEquals(CardBrandViewState.Placeholder, viewState.cardBrandViewState)
     }
 
@@ -102,7 +103,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
         assertEquals(CardBrandViewState.SingleBrand(CardBrand("visa")), viewState.cardBrandViewState)
     }
 
@@ -119,7 +120,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
         assertEquals(
             CardBrandViewState.DualBrand(listOf(CardBrand("visa"), CardBrand("mc"))),
             viewState.cardBrandViewState,
@@ -142,7 +143,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
         assertEquals(
             CardBrandViewState.SelectableDualBrand(
                 listOf(
@@ -243,6 +244,39 @@ internal class CardViewStateProducerTest {
         assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
     }
 
+    @Test
+    fun `when dual brand with shopper selection is detected, then card number supportingText is dual brand selector description`() {
+        // GIVEN
+        val visaBrandData = getCardBrandData().copy(cardBrand = CardBrand("visa"))
+        val mcBrandData = getCardBrandData().copy(cardBrand = CardBrand("mc"))
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                cardBrandDataList = listOf(visaBrandData, mcBrandData),
+                shopperSelectedCardBrandData = visaBrandData,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION, viewState.cardNumber?.supportingText)
+    }
+
+    @Test
+    fun `when no brand is detected, then card number supportingText is null`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardBrandState = CardBrandState.NoBrandsDetected,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.cardNumber?.supportingText)
+    }
+
     // UC6: Error Hides Brand Logos
     @Test
     fun `when card number has error with detected brand, then trailing icon is warning and supported brands are hidden`() {
@@ -264,7 +298,7 @@ internal class CardViewStateProducerTest {
             CardNumberTrailingIcon.Warning,
             viewState.cardNumber?.trailingIcon,
         )
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     // UC7: Re-entering Field Clears Error - brand detected scenario
@@ -286,7 +320,7 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertEquals(false, viewState.cardNumber?.isError)
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     // UC7: Re-entering Field Clears Error - no brand detected scenario
@@ -308,7 +342,7 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertEquals(false, viewState.cardNumber?.isError)
-        assertTrue(viewState.isSupportedCardBrandsShown)
+        assertTrue(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     // UC8: Valid Input Hides Logos
@@ -328,7 +362,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
         assertEquals(false, viewState.cardNumber?.isError)
         assertEquals(
             CardNumberTrailingIcon.BrandLogos,
@@ -364,7 +398,7 @@ internal class CardViewStateProducerTest {
 
             // THEN
             assertEquals(false, viewState.cardNumber?.isError)
-            assertFalse(viewState.isSupportedCardBrandsShown)
+            assertFalse(viewState.supportedCardBrandsViewState.isVisible)
             assertEquals(
                 CardNumberTrailingIcon.BrandLogos,
                 viewState.cardNumber?.trailingIcon,
@@ -414,7 +448,7 @@ internal class CardViewStateProducerTest {
         // THEN
         assertEquals(
             listOf(CardBrand("visa"), CardBrand("mc")),
-            viewState.supportedCardBrands,
+            viewState.supportedCardBrandsViewState.supportedCardBrands,
         )
     }
 
@@ -452,7 +486,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     @Test
@@ -467,7 +501,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertFalse(viewState.isSupportedCardBrandsShown)
+        assertFalse(viewState.supportedCardBrandsViewState.isVisible)
     }
 
     @Test
@@ -540,11 +574,11 @@ internal class CardViewStateProducerTest {
     fun `when installment state has options and selection, then viewState contains same options and selection`() {
         // GIVEN
         val options = listOf(
-            InstallmentModel.Regular(3, amountPerInstallment = null, showAmount = false)
+            InstallmentModel.Regular(3, amountPerInstallment = null, showAmount = false),
         )
         val selection = options.first()
         val componentState = createComponentState(
-            installmentState = InstallmentState(options, selection)
+            installmentState = InstallmentState(options, selection),
         )
 
         // WHEN

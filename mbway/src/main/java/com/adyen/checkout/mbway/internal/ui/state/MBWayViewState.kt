@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.mbway.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
+@Immutable
 internal data class MBWayViewState(
     val countries: List<CountryModel>,
     val selectedCountryCode: CountryModel,

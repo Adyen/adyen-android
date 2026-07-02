@@ -67,6 +67,8 @@ internal class GooglePayComponentStateReducerTest {
     }
 
     private fun createInitialState() = GooglePayComponentState(
+        allowedPaymentMethods = "[]",
+        buttonStyling = null,
         isButtonVisible = false,
         isLoading = false,
         isAvailable = false,

@@ -40,6 +40,8 @@ internal class GooglePayComponentStateExtTest {
         whenever(paymentData.toJson()).thenReturn(TEST_PAYMENT_DATA_JSON)
         val paymentMethodType = "googlepay"
         val componentState = GooglePayComponentState(
+            allowedPaymentMethods = "[]",
+            buttonStyling = null,
             isButtonVisible = true,
             isLoading = false,
             isAvailable = true,
@@ -65,6 +67,8 @@ internal class GooglePayComponentStateExtTest {
     @Test
     fun `when paymentData is null, then state is not valid`() {
         val componentState = GooglePayComponentState(
+            allowedPaymentMethods = "[]",
+            buttonStyling = null,
             isButtonVisible = true,
             isLoading = false,
             isAvailable = true,

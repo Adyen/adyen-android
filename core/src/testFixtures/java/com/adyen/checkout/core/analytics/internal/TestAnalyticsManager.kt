@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.fail
@@ -35,6 +36,11 @@ class TestAnalyticsManager : AnalyticsManager {
     fun assertLastEventNotEquals(expected: AnalyticsEvent) {
         if (events.isEmpty()) return
         assertFalse(areEventsEqual(expected, events.last()))
+    }
+
+    fun assertEventCount(expectedCount: Int, event: AnalyticsEvent) {
+        val actualCount = events.count { areEventsEqual(event, it) }
+        assertEquals(expectedCount, actualCount)
     }
 
     private fun areEventsEqual(expected: AnalyticsEvent, actual: AnalyticsEvent): Boolean {

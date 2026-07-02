@@ -13,6 +13,7 @@ import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
@@ -34,12 +35,26 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             is CardBrandState.DualBrandWithShopperSelection -> false
         }
 
+        val cardNumberInputDescription = getCardNumberInputDescription(state.cardBrandState)
         val cardBrandViewState = getCardBrandViewState(state.cardBrandState)
         val cardNumberFormat = getCardNumberFormat(state.cardBrandState)
         val isCardScanButtonVisible = state.isCardScanningAvailable && state.cardNumber.text.isEmpty()
 
+        val storePaymentViewState = if (state.isStorePaymentFieldVisible) {
+            StorePaymentViewState(isSelected = state.storePaymentMethod)
+        } else {
+            null
+        }
+
+        val supportedCardBrandsViewState = SupportedCardBrandsViewState(
+            supportedCardBrands = state.supportedCardBrands.filterNot {
+                isHiddenCardType(it.txVariant)
+            },
+            isVisible = isSupportedCardBrandsShown,
+        )
+
         return CardViewState(
-            cardNumber = state.cardNumber.toViewState(
+            cardNumber = state.cardNumber.copy(description = cardNumberInputDescription).toViewState(
                 trailingIcon = getCardNumberTrailingIcon(state.cardNumber, isCardScanButtonVisible),
             ),
             expiryDate = state.expiryDate.toViewState(
@@ -55,18 +70,22 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             postalCode = state.postalCode.toViewState(
                 trailingIcon = getPostalCodeTrailingIcon(state.postalCode),
             ),
-            storePaymentMethod = state.storePaymentMethod,
-            isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,
-            supportedCardBrands = state.supportedCardBrands.filterNot {
-                isHiddenCardType(it.txVariant)
-            },
-            isSupportedCardBrandsShown = isSupportedCardBrandsShown,
+            storePaymentViewState = storePaymentViewState,
+            supportedCardBrandsViewState = supportedCardBrandsViewState,
             cardBrandViewState = cardBrandViewState,
             cardNumberFormat = cardNumberFormat,
             isLoading = state.isLoading,
             isCardScanButtonVisible = isCardScanButtonVisible,
             installmentViewState = state.installmentState.toViewState(),
         )
+    }
+
+    private fun getCardNumberInputDescription(cardBrandState: CardBrandState): CheckoutLocalizationKey? {
+        if (cardBrandState is CardBrandState.DualBrandWithShopperSelection) {
+            return CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION
+        }
+
+        return null
     }
 
     private fun getCardBrandViewState(cardBrandState: CardBrandState): CardBrandViewState {

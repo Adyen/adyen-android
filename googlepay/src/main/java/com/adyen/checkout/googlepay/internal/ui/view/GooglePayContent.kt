@@ -10,7 +10,6 @@ package com.adyen.checkout.googlepay.internal.ui.view
 
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,10 +31,10 @@ internal fun GooglePayContent(
     viewEventFlow: Flow<GooglePayViewEvent>,
     onResult: (ApiTaskResult<PaymentData>) -> Unit,
     loadPaymentData: suspend (Context) -> Task<PaymentData>,
+    onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val viewState by viewStateFlow.collectAsStateWithLifecycle()
 
     val launcher = rememberLauncherForActivityResult(
         contract = TaskResultContracts.GetPaymentDataResult(),
@@ -49,8 +48,25 @@ internal fun GooglePayContent(
         }
     }
 
-    if (viewState.isAvailable) {
-        // TODO - Render the Google Pay button.
-        Box(modifier = modifier)
+    val viewState by viewStateFlow.collectAsStateWithLifecycle()
+    GooglePayContent(
+        viewState = viewState,
+        onSubmit = onSubmit,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun GooglePayContent(
+    viewState: GooglePayViewState,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    viewState.buttonViewState?.let { buttonViewState ->
+        GooglePayButton(
+            buttonViewState = buttonViewState,
+            onClick = onSubmit,
+            modifier = modifier,
+        )
     }
 }

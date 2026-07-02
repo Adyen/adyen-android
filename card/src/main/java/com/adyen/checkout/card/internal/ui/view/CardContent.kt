@@ -31,6 +31,8 @@ import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
+import com.adyen.checkout.card.internal.ui.state.StorePaymentViewState
+import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -122,13 +124,13 @@ private fun CardDetailsSection(
         if (viewState.cardNumber != null) {
             CardNumberField(
                 cardNumberState = viewState.cardNumber,
-                supportedCardBrands = viewState.supportedCardBrands,
-                isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
+                supportedCardBrandsViewState = viewState.supportedCardBrandsViewState,
                 cardBrandViewState = viewState.cardBrandViewState,
                 cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
                 onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
                 onScanButtonClick = onScanButtonClick,
+                onBrandSelect = { onIntent(CardIntent.SelectBrand(it)) },
             )
         }
         if (viewState.expiryDate != null) {
@@ -181,9 +183,9 @@ private fun CardDetailsSection(
                 onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
             )
         }
-        if (viewState.isStorePaymentFieldVisible) {
+        if (viewState.storePaymentViewState != null) {
             SwitchContainer(
-                checked = viewState.storePaymentMethod,
+                checked = viewState.storePaymentViewState.isSelected,
                 onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
             ) {
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
@@ -230,10 +232,12 @@ private fun CardContentPreview() {
             postalCode = TextInputViewState(
                 text = "1234 AB",
             ),
-            storePaymentMethod = false,
-            isStorePaymentFieldVisible = true,
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
+            storePaymentViewState = StorePaymentViewState(isSelected = true),
+
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
             isLoading = false,
             isCardScanButtonVisible = false,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),

@@ -11,11 +11,14 @@ package com.adyen.checkout.core.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -38,20 +41,25 @@ fun CheckoutPaymentFlow(
         state = CheckoutPaymentFlowState.PaymentMethod
     }
 
+    LaunchedEffect(controller) {
+        controller.navigation.collect { route ->
+            state = when (route) {
+                is CheckoutRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
+                is CheckoutRoute.Action -> CheckoutPaymentFlowState.Action
+                is CheckoutRoute.Secondary -> CheckoutPaymentFlowState.Secondary(route.identifier)
+                else -> {
+                    adyenLog(AdyenLogLevel.WARN) { "Unknown route: $route" }
+                    state
+                }
+            }
+        }
+    }
+
     AnimatedContent(state) { localState ->
         when (localState) {
             CheckoutPaymentFlowState.PaymentMethod -> {
                 CheckoutPaymentMethod(
                     controller = controller,
-                    onNavigate = { route ->
-                        state = when (route) {
-                            is CheckoutPaymentMethodRoute.Action -> CheckoutPaymentFlowState.Action
-                            is CheckoutPaymentMethodRoute.Secondary ->
-                                CheckoutPaymentFlowState.Secondary(route.identifier)
-
-                            else -> state
-                        }
-                    },
                     modifier = modifier,
                     theme = theme,
                     localizationProvider = localizationProvider,
@@ -71,12 +79,6 @@ fun CheckoutPaymentFlow(
                 CheckoutSecondary(
                     identifier = localState.identifier,
                     controller = controller,
-                    onNavigate = { route ->
-                        state = when (route) {
-                            is CheckoutSecondaryRoute.PaymentMethod -> CheckoutPaymentFlowState.PaymentMethod
-                            else -> state
-                        }
-                    },
                     modifier = modifier,
                     theme = theme,
                     localizationProvider = localizationProvider,

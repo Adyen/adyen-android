@@ -851,6 +851,38 @@ internal class CardBrandIntentsHandlerTest(
             assertInstanceOf<CardBrandState.DualBrandWithShopperSelection>(actual.cardBrandState)
             assertEquals(carteBancaireCardBrandData, actual.cardBrandState.shopperSelectedCardBrandData)
         }
+
+        @Test
+        fun `and selected brand is not in the brand list then state is unchanged`() {
+            val visaCardBrandData = createCardBrandData().copy(cardBrand = CardBrand("visa"))
+            val mcCardBrandData = createCardBrandData().copy(cardBrand = CardBrand("mc"))
+            val state = createInitialState().copy(
+                cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                    cardBrandDataList = listOf(visaCardBrandData, mcCardBrandData),
+                    shopperSelectedCardBrandData = visaCardBrandData,
+                ),
+            )
+
+            val actual = cardBrandIntentsHandler.onBrandSelected(state, CardIntent.SelectBrand(CardBrand("amex")))
+
+            assertEquals(state, actual)
+        }
+
+        @Test
+        fun `and brand state is not DualBrandWithShopperSelection then state is unchanged`() {
+            val state = createInitialState().copy(
+                cardBrandState = CardBrandState.DualBrand(
+                    listOf(
+                        createCardBrandData().copy(cardBrand = CardBrand("visa")),
+                        createCardBrandData().copy(cardBrand = CardBrand("mc")),
+                    ),
+                ),
+            )
+
+            val actual = cardBrandIntentsHandler.onBrandSelected(state, CardIntent.SelectBrand(CardBrand("visa")))
+
+            assertEquals(state, actual)
+        }
     }
 
     @Nested
