@@ -84,6 +84,8 @@ val configuration = CheckoutConfiguration(
 
 Use the builder block to register payment-method and action configuration that should apply to the flow.
 
+In session flow, the effective `amount` comes from the `/sessions` response. A client-side `amount` on `CheckoutConfiguration` does not override it. For card-specific session-controlled settings such as `showStorePaymentMethod`, `installmentConfiguration`, and `showInstallmentAmount`, see [card-session-flow.md](card-session-flow.md).
+
 ## Session flow
 
 Use the session flow when your backend starts checkout with `/sessions`.

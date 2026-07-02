@@ -64,6 +64,9 @@ val configuration = CheckoutConfiguration(
 | `socialSecurityNumberVisibility` | Shows or hides the CPF/CNPJ field. |
 | `supportedCardBrands` | Restricts the supported card brands for the flow. |
 | `showCardScanner` | Shows or hides the card scanner entry point. |
+| `installmentConfiguration` | Configures installments. |
+
+When you use [session flow](card-session-flow.md), some card settings, including `showStorePaymentMethod`, `installmentConfiguration`, and `showInstallmentAmount`, are determined by the session instead of component-level overrides. For details, see [card-session-flow.md](card-session-flow.md).
 
 ## Public billing-address coverage in alpha
 
