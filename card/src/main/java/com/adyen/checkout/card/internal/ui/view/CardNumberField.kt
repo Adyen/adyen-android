@@ -307,6 +307,7 @@ private fun CardNumberFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemeWrapper(theme) {
+        // empty input
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "",
@@ -328,9 +329,11 @@ private fun CardNumberFieldPreview(
             onBrandSelect = {},
         )
 
+        // single detected card brand
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "5555444433331111",
+                trailingIcon = CardNumberTrailingIcon.BrandLogos,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
                 supportedCardBrands = emptyList(),
@@ -343,44 +346,12 @@ private fun CardNumberFieldPreview(
             onScanButtonClick = {},
             onBrandSelect = {},
         )
+
+        // Dual brand card logos + amex format
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "1234123456123451234",
-            ),
-            supportedCardBrandsViewState = SupportedCardBrandsViewState(
-                supportedCardBrands = emptyList(),
-                isVisible = false,
-            ),
-            cardBrandViewState = CardBrandViewState.Placeholder,
-            cardNumberFormat = CardNumberFormat.AMEX,
-            onValueChange = {},
-            onFocusChange = {},
-            onScanButtonClick = {},
-            onBrandSelect = {},
-        )
-
-        CardNumberField(
-            cardNumberState = TextInputViewState(
-                text = "1234",
-                isError = true,
-                trailingIcon = CardNumberTrailingIcon.Warning,
-            ),
-            supportedCardBrandsViewState = SupportedCardBrandsViewState(
-                supportedCardBrands = emptyList(),
-                isVisible = false,
-            ),
-            cardBrandViewState = CardBrandViewState.Placeholder,
-            cardNumberFormat = CardNumberFormat.AMEX,
-            onValueChange = {},
-            onFocusChange = {},
-            onScanButtonClick = {},
-            onBrandSelect = {},
-        )
-
-        // Dual brand card logos
-        CardNumberField(
-            cardNumberState = TextInputViewState(
-                text = "5555444433330001",
+                trailingIcon = CardNumberTrailingIcon.BrandLogos,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
                 supportedCardBrands = emptyList(),
@@ -388,11 +359,11 @@ private fun CardNumberFieldPreview(
             ),
             cardBrandViewState = CardBrandViewState.DualBrand(
                 brands = listOf(
-                    CardBrand(CardType.VISA.txVariant),
+                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
                     CardBrand(CardType.MASTERCARD.txVariant),
                 ),
             ),
-            cardNumberFormat = CardNumberFormat.DEFAULT,
+            cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
@@ -403,6 +374,8 @@ private fun CardNumberFieldPreview(
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "5555444433330002",
+                trailingIcon = CardNumberTrailingIcon.BrandLogos,
+                supportingText = CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
                 supportedCardBrands = emptyList(),
@@ -420,6 +393,26 @@ private fun CardNumberFieldPreview(
                     ),
                 ),
             ),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
+            onValueChange = {},
+            onFocusChange = {},
+            onScanButtonClick = {},
+            onBrandSelect = {},
+        )
+
+        // error state
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "1234",
+                isError = true,
+                trailingIcon = CardNumberTrailingIcon.Warning,
+                supportingText = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+            ),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
+            cardBrandViewState = CardBrandViewState.Placeholder,
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
