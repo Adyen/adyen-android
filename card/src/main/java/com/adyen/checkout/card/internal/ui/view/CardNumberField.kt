@@ -141,6 +141,41 @@ private fun CardNumberInputField(
 }
 
 @Composable
+private fun CardNumberFieldIcon(
+    state: TextInputViewState,
+    cardBrandViewState: CardBrandViewState,
+    onScanButtonClick: () -> Unit,
+    onBrandSelect: (CardBrand) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // null is not expected for the trailingIcon
+    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon ?: return
+    AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
+        when (trailingIcon) {
+            CardNumberTrailingIcon.Warning -> Icon(
+                modifier = Modifier.size(Dimensions.LogoSize.small),
+                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
+                contentDescription = null,
+                tint = CheckoutThemeProvider.colors.destructive,
+            )
+
+            CardNumberTrailingIcon.ScanButton -> IconButton(
+                onClick = onScanButtonClick,
+                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.primary,
+                )
+            }
+
+            CardNumberTrailingIcon.BrandLogos -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
+        }
+    }
+}
+
+@Composable
 private fun DetectedBrandsList(
     cardBrandViewState: CardBrandViewState,
     onBrandSelect: (CardBrand) -> Unit,
@@ -226,25 +261,6 @@ private fun SelectableDualBrandLogos(
 }
 
 @Composable
-private fun BrandLogo(
-    txVariant: String?,
-    modifier: Modifier = Modifier,
-) {
-    val placeholderResId = getThemedIcon(
-        backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-        lightDrawableId = R.drawable.ic_card_placeholder_light,
-        darkDrawableId = R.drawable.ic_card_placeholder_dark,
-    )
-
-    CheckoutNetworkLogo(
-        modifier = modifier.size(Dimensions.LogoSize.small),
-        txVariant = txVariant.orEmpty(),
-        placeholder = placeholderResId,
-        errorFallback = placeholderResId,
-    )
-}
-
-@Composable
 private fun CardBrandsList(
     supportedCardBrandsViewState: SupportedCardBrandsViewState,
     modifier: Modifier = Modifier,
@@ -266,38 +282,22 @@ private fun CardBrandsList(
 }
 
 @Composable
-private fun CardNumberFieldIcon(
-    state: TextInputViewState,
-    cardBrandViewState: CardBrandViewState,
-    onScanButtonClick: () -> Unit,
-    onBrandSelect: (CardBrand) -> Unit,
+private fun BrandLogo(
+    txVariant: String?,
     modifier: Modifier = Modifier,
 ) {
-    // null is not expected for the trailingIcon
-    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon ?: return
-    AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
-        when (trailingIcon) {
-            CardNumberTrailingIcon.Warning -> Icon(
-                modifier = Modifier.size(Dimensions.LogoSize.small),
-                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.destructive,
-            )
+    val placeholderResId = getThemedIcon(
+        backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+        lightDrawableId = R.drawable.ic_card_placeholder_light,
+        darkDrawableId = R.drawable.ic_card_placeholder_dark,
+    )
 
-            CardNumberTrailingIcon.ScanButton -> IconButton(
-                onClick = onScanButtonClick,
-                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
-                    contentDescription = null,
-                    tint = CheckoutThemeProvider.colors.primary,
-                )
-            }
-
-            CardNumberTrailingIcon.BrandLogos -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
-        }
-    }
+    CheckoutNetworkLogo(
+        modifier = modifier.size(Dimensions.LogoSize.small),
+        txVariant = txVariant.orEmpty(),
+        placeholder = placeholderResId,
+        errorFallback = placeholderResId,
+    )
 }
 
 @Suppress("LongMethod")
