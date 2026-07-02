@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
@@ -21,10 +20,8 @@ internal data class CardViewState(
     val kcpBirthDateOrTaxNumber: TextInputViewState?,
     val kcpCardPassword: TextInputViewState?,
     val postalCode: TextInputViewState?,
-    val storePaymentMethod: Boolean,
-    val isStorePaymentFieldVisible: Boolean,
-    val supportedCardBrands: List<CardBrand>,
-    val isSupportedCardBrandsShown: Boolean,
+    val storePaymentViewState: StorePaymentViewState?,
+    val supportedCardBrandsViewState: SupportedCardBrandsViewState,
     val cardBrandViewState: CardBrandViewState,
     val cardNumberFormat: CardNumberFormat,
     val isLoading: Boolean,

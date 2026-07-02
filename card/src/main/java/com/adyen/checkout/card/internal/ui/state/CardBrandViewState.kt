@@ -8,12 +8,17 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.common.CardBrand
 
 internal sealed class CardBrandViewState {
     data object Placeholder : CardBrandViewState()
     data class SingleBrand(val brand: CardBrand) : CardBrandViewState()
+
+    @Immutable
     data class DualBrand(val brands: List<CardBrand>) : CardBrandViewState()
+
+    @Immutable
     data class SelectableDualBrand(val brands: List<SelectableCardBrandItem>) : CardBrandViewState()
 }
 

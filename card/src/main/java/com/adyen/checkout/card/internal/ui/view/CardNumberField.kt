@@ -42,6 +42,7 @@ import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.SelectableCardBrandItem
+import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
@@ -63,8 +64,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 internal fun CardNumberField(
     cardNumberState: TextInputViewState,
-    supportedCardBrands: List<CardBrand>,
-    isSupportedCardBrandsShown: Boolean,
+    supportedCardBrandsViewState: SupportedCardBrandsViewState,
     cardBrandViewState: CardBrandViewState,
     cardNumberFormat: CardNumberFormat,
     onValueChange: (String) -> Unit,
@@ -87,8 +87,7 @@ internal fun CardNumberField(
         )
 
         CardBrandsList(
-            cardBrands = supportedCardBrands,
-            visible = isSupportedCardBrandsShown,
+            supportedCardBrandsViewState = supportedCardBrandsViewState,
         )
     }
 }
@@ -139,6 +138,41 @@ private fun CardNumberInputField(
             )
         },
     )
+}
+
+@Composable
+private fun CardNumberFieldIcon(
+    state: TextInputViewState,
+    cardBrandViewState: CardBrandViewState,
+    onScanButtonClick: () -> Unit,
+    onBrandSelect: (CardBrand) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // null is not expected for the trailingIcon
+    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon ?: return
+    AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
+        when (trailingIcon) {
+            CardNumberTrailingIcon.Warning -> Icon(
+                modifier = Modifier.size(Dimensions.LogoSize.small),
+                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
+                contentDescription = null,
+                tint = CheckoutThemeProvider.colors.destructive,
+            )
+
+            CardNumberTrailingIcon.ScanButton -> IconButton(
+                onClick = onScanButtonClick,
+                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.primary,
+                )
+            }
+
+            CardNumberTrailingIcon.BrandLogos -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
+        }
+    }
 }
 
 @Composable
@@ -227,6 +261,27 @@ private fun SelectableDualBrandLogos(
 }
 
 @Composable
+private fun CardBrandsList(
+    supportedCardBrandsViewState: SupportedCardBrandsViewState,
+    modifier: Modifier = Modifier,
+) {
+    AnimatedVisibility(
+        modifier = modifier.fillMaxWidth(),
+        visible = supportedCardBrandsViewState.isVisible,
+    ) {
+        FlowRow(
+            modifier = Modifier.padding(top = Dimensions.Spacing.ExtraSmall),
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
+        ) {
+            for (cardBrand in supportedCardBrandsViewState.supportedCardBrands) {
+                BrandLogo(cardBrand.txVariant)
+            }
+        }
+    }
+}
+
+@Composable
 private fun BrandLogo(
     txVariant: String?,
     modifier: Modifier = Modifier,
@@ -245,63 +300,6 @@ private fun BrandLogo(
     )
 }
 
-@Composable
-private fun CardBrandsList(
-    cardBrands: List<CardBrand>,
-    visible: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    AnimatedVisibility(
-        modifier = modifier.fillMaxWidth(),
-        visible = visible,
-    ) {
-        FlowRow(
-            modifier = Modifier.padding(top = Dimensions.Spacing.ExtraSmall),
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-        ) {
-            for (cardBrand in cardBrands) {
-                BrandLogo(cardBrand.txVariant)
-            }
-        }
-    }
-}
-
-@Composable
-private fun CardNumberFieldIcon(
-    state: TextInputViewState,
-    cardBrandViewState: CardBrandViewState,
-    onScanButtonClick: () -> Unit,
-    onBrandSelect: (CardBrand) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    // null is not expected for the trailingIcon
-    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon ?: return
-    AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
-        when (trailingIcon) {
-            CardNumberTrailingIcon.Warning -> Icon(
-                modifier = Modifier.size(Dimensions.LogoSize.small),
-                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.destructive,
-            )
-
-            CardNumberTrailingIcon.ScanButton -> IconButton(
-                onClick = onScanButtonClick,
-                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
-                    contentDescription = null,
-                    tint = CheckoutThemeProvider.colors.primary,
-                )
-            }
-
-            CardNumberTrailingIcon.BrandLogos -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
-        }
-    }
-}
-
 @Suppress("LongMethod")
 @Preview
 @Composable
@@ -309,17 +307,20 @@ private fun CardNumberFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemeWrapper(theme) {
+        // empty input
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "",
                 trailingIcon = CardNumberTrailingIcon.ScanButton,
             ),
-            supportedCardBrands = listOf(
-                CardBrand(CardType.MASTERCARD.txVariant),
-                CardBrand(CardType.VISA.txVariant),
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = listOf(
+                    CardBrand(CardType.MASTERCARD.txVariant),
+                    CardBrand(CardType.VISA.txVariant),
+                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+                ),
+                isVisible = true,
             ),
-            isSupportedCardBrandsShown = true,
             cardBrandViewState = CardBrandViewState.Placeholder,
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
@@ -328,16 +329,16 @@ private fun CardNumberFieldPreview(
             onBrandSelect = {},
         )
 
+        // single detected card brand
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "5555444433331111",
+                trailingIcon = CardNumberTrailingIcon.BrandLogos,
             ),
-            supportedCardBrands = listOf(
-                CardBrand(CardType.MASTERCARD.txVariant),
-                CardBrand(CardType.VISA.txVariant),
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
             ),
-            isSupportedCardBrandsShown = true,
             cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
@@ -346,53 +347,23 @@ private fun CardNumberFieldPreview(
             onBrandSelect = {},
         )
 
+        // Dual brand card logos + amex format
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "1234123456123451234",
+                trailingIcon = CardNumberTrailingIcon.BrandLogos,
             ),
-            supportedCardBrands = listOf(
-                CardBrand(CardType.MASTERCARD.txVariant),
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
             ),
-            isSupportedCardBrandsShown = false,
-            cardBrandViewState = CardBrandViewState.Placeholder,
-            cardNumberFormat = CardNumberFormat.AMEX,
-            onValueChange = {},
-            onFocusChange = {},
-            onScanButtonClick = {},
-            onBrandSelect = {},
-        )
-
-        CardNumberField(
-            cardNumberState = TextInputViewState(
-                text = "1234",
-                isError = true,
-                trailingIcon = CardNumberTrailingIcon.Warning,
-            ),
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
-            cardBrandViewState = CardBrandViewState.Placeholder,
-            cardNumberFormat = CardNumberFormat.AMEX,
-            onValueChange = {},
-            onFocusChange = {},
-            onScanButtonClick = {},
-            onBrandSelect = {},
-        )
-
-        // Dual brand card logos
-        CardNumberField(
-            cardNumberState = TextInputViewState(
-                text = "5555444433330001",
-            ),
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
             cardBrandViewState = CardBrandViewState.DualBrand(
                 brands = listOf(
-                    CardBrand(CardType.VISA.txVariant),
+                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
                     CardBrand(CardType.MASTERCARD.txVariant),
                 ),
             ),
-            cardNumberFormat = CardNumberFormat.DEFAULT,
+            cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
             onScanButtonClick = {},
@@ -403,9 +374,13 @@ private fun CardNumberFieldPreview(
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "5555444433330002",
+                trailingIcon = CardNumberTrailingIcon.BrandLogos,
+                supportingText = CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION,
             ),
-            supportedCardBrands = emptyList(),
-            isSupportedCardBrandsShown = false,
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
             cardBrandViewState = CardBrandViewState.SelectableDualBrand(
                 brands = listOf(
                     SelectableCardBrandItem(
@@ -418,6 +393,26 @@ private fun CardNumberFieldPreview(
                     ),
                 ),
             ),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
+            onValueChange = {},
+            onFocusChange = {},
+            onScanButtonClick = {},
+            onBrandSelect = {},
+        )
+
+        // error state
+        CardNumberField(
+            cardNumberState = TextInputViewState(
+                text = "1234",
+                isError = true,
+                trailingIcon = CardNumberTrailingIcon.Warning,
+                supportingText = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+            ),
+            supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                supportedCardBrands = emptyList(),
+                isVisible = false,
+            ),
+            cardBrandViewState = CardBrandViewState.Placeholder,
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
