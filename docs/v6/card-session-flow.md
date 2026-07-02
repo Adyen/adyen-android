@@ -58,10 +58,10 @@ lifecycleScope.launch {
 
 ## Session-controlled card settings
 
-When you use `/sessions`, some card settings are controlled by the session response instead of component-level `card(...)` parameters:
+When you use `/sessions`, some card settings are determined by the session instead of component-level `card(...)` parameters:
 
-- `showStorePaymentMethod` follows `enableStoreDetails`.
-- `installmentConfiguration` follows `installmentOptions`. `showInstallmentAmount` is also read from the session response.
+- `showStorePaymentMethod` cannot be overridden from `CardConfiguration`. To change whether shoppers can store a payment method, set the server-side `/sessions` request parameter `storePaymentMethodMode` when creating the session.
+- `installmentConfiguration` and `showInstallmentAmount` are also determined by the session and cannot be overridden from component-level configuration.
 
 Configure these values in your `/sessions` request and do not rely on component-level values to override them.
 
