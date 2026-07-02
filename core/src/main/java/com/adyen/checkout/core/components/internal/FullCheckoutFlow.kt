@@ -11,18 +11,17 @@ package com.adyen.checkout.core.components.internal
 import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutResultCode
-import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.CheckoutPaymentMethodRoute
-import com.adyen.checkout.core.components.CheckoutSecondaryRoute
+import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class FullCheckoutFlow(
     private val componentRequestDispatcher: SubmittableComponentRequestDispatcher,
@@ -33,13 +32,11 @@ internal class FullCheckoutFlow(
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
 
-    private val paymentMethodNavigationChannel: Channel<CheckoutPaymentMethodRoute> = bufferedChannel()
-    override val paymentMethodNavigation: Flow<CheckoutPaymentMethodRoute> =
-        paymentMethodNavigationChannel.receiveAsFlow()
-
-    private val secondaryNavigationChannel: Channel<CheckoutSecondaryRoute> = bufferedChannel()
-    override val secondaryNavigation: Flow<CheckoutSecondaryRoute> =
-        secondaryNavigationChannel.receiveAsFlow()
+    private val navigationFlow = MutableSharedFlow<CheckoutRoute>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    override val navigation: Flow<CheckoutRoute> = navigationFlow.asSharedFlow()
 
     init {
         paymentComponent?.eventFlow
@@ -57,11 +54,11 @@ internal class FullCheckoutFlow(
                     }
 
                     is PaymentComponentEvent.SecondaryScreen -> {
-                        paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Secondary(event.identifier))
+                        navigationFlow.tryEmit(CheckoutRoute.Secondary(event.identifier))
                     }
 
                     PaymentComponentEvent.CloseSecondaryScreen -> {
-                        secondaryNavigationChannel.trySend(CheckoutSecondaryRoute.PaymentMethod())
+                        navigationFlow.tryEmit(CheckoutRoute.PaymentMethod())
                     }
                 }
             }
@@ -80,7 +77,7 @@ internal class FullCheckoutFlow(
         when (submitResult) {
             is SubmitResult.Action -> {
                 actionHandler.handleAction(submitResult.action)
-                paymentMethodNavigationChannel.trySend(CheckoutPaymentMethodRoute.Action())
+                navigationFlow.tryEmit(CheckoutRoute.Action())
             }
 
             is SubmitResult.Completion -> {

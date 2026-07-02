@@ -9,19 +9,24 @@
 package com.adyen.checkout.core.components
 
 /**
- * Represents the navigation routes that can be triggered while displaying [CheckoutPaymentMethod].
+ * Represents the navigation routes that can be triggered during the checkout flow.
  */
-abstract class CheckoutPaymentMethodRoute internal constructor() {
+abstract class CheckoutRoute internal constructor() {
+
+    /**
+     * Route to display a payment method component. Use [CheckoutPaymentMethod] to display it.
+     */
+    class PaymentMethod : CheckoutRoute()
 
     /**
      * Route to display an action component. Use [CheckoutAction] to display the action.
      */
-    class Action : CheckoutPaymentMethodRoute()
+    class Action : CheckoutRoute()
 
     /**
      * Route to display secondary content. Use [CheckoutSecondary] to display the secondary content.
      *
      * @param identifier The unique identifier for the secondary screen.
      */
-    data class Secondary(val identifier: String) : CheckoutPaymentMethodRoute()
+    data class Secondary(val identifier: String) : CheckoutRoute()
 }
