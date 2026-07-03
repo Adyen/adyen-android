@@ -97,6 +97,7 @@ dependencies {
     dokka(project(':ach'))
     dokka(project(':action'))
     dokka(project(':action-core'))
+    dokka(project(':authentication'))
     dokka(project(':await'))
     dokka(project(':bacs'))
     dokka(project(':bcmc'))
