@@ -37,5 +37,8 @@ dependencies {
 
     //Tests
     testImplementation libs.bundles.junit
+    testImplementation libs.bundles.kotlin.coroutines.test
     testImplementation libs.bundles.mockito
+    testImplementation libs.json
+    testImplementation testFixtures(project(':core'))
 }
