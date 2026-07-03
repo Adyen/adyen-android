@@ -159,6 +159,122 @@ internal class FullCheckoutFlowTest(
     }
 
     @Nested
+    inner class SubmitTest {
+
+        @Test
+        fun `when submit is called, then payment component submit is called`() = runTest {
+            val component = TestPaymentComponent(eventFlow)
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            flow.submit()
+
+            assertEquals(1, component.submitCount)
+        }
+
+        @Test
+        fun `when submit is called, then loading is set to true`() = runTest {
+            val component = TestPaymentComponent(eventFlow)
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            flow.submit()
+
+            assertTrue(component.isLoading)
+        }
+
+        @Test
+        fun `when submit is called twice, then payment component submit is called only once`() = runTest {
+            val component = TestPaymentComponent(eventFlow)
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            flow.submit()
+            flow.submit()
+
+            assertEquals(1, component.submitCount)
+        }
+
+        @Test
+        fun `when submit results in Retry and submit is called again, then payment component submit is called twice`() =
+            runTest {
+                whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+
+                val component = TestPaymentComponent(eventFlow)
+                val flow = createFullCheckoutFlow(
+                    coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                    component = component,
+                )
+
+                flow.submit()
+                eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+                flow.submit()
+
+                assertEquals(2, component.submitCount)
+            }
+
+        @Test
+        fun `when submit results in Retry, then loading is set to false`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+
+            val component = TestPaymentComponent(eventFlow)
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            flow.submit()
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            assertFalse(component.isLoading)
+        }
+
+        @Test
+        fun `when submit results in Completion, then submit cannot be called again`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
+
+            val component = TestPaymentComponent(eventFlow)
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            flow.submit()
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            flow.submit()
+
+            assertEquals(1, component.submitCount)
+        }
+
+        @Test
+        fun `when submit results in Action, then submit cannot be called again`() = runTest {
+            val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
+
+            val component = TestPaymentComponent(eventFlow)
+            val flow = createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            flow.submit()
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            flow.submit()
+
+            assertEquals(1, component.submitCount)
+        }
+    }
+
+    @Nested
     inner class HandleResultTest {
 
         @Test

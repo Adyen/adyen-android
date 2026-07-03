@@ -19,14 +19,24 @@ internal class TestPaymentComponent(
     private val requiresUserInteraction: Boolean = true,
 ) : PaymentComponent {
 
+    var submitCount = 0
+        private set
+
+    var isLoading = false
+        private set
+
     @Composable
     override fun Content(modifier: Modifier) = Unit
 
-    override fun submit() = Unit
+    override fun submit() {
+        submitCount++
+    }
 
     override fun requiresUserInteraction(): Boolean = requiresUserInteraction
 
-    override fun setLoading(isLoading: Boolean) = Unit
+    override fun setLoading(isLoading: Boolean) {
+        this.isLoading = isLoading
+    }
 
     override fun onCleared() = Unit
 }

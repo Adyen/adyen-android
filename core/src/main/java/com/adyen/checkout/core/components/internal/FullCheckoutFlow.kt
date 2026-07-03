@@ -38,15 +38,16 @@ internal class FullCheckoutFlow(
     )
     override val navigation: Flow<CheckoutRoute> = navigationFlow.asSharedFlow()
 
+    @Volatile
+    private var canSubmit = true
+
     init {
         paymentComponent?.eventFlow
             ?.onEach { event ->
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
-                        paymentComponent.setLoading(true)
                         val result = componentRequestDispatcher.submit(event.state.data)
                         handleResult(result)
-                        paymentComponent.setLoading(false)
                     }
 
                     is PaymentComponentEvent.Error -> {
@@ -65,9 +66,11 @@ internal class FullCheckoutFlow(
             ?.launchIn(coroutineScope)
     }
 
-    // TODO - Ensure we are not handling an action
     override fun submit() {
+        if (!canSubmit) return
+        canSubmit = false
         paymentComponent?.submit()
+        paymentComponent?.setLoading(true)
     }
 
     override fun requiresUserInteraction(): Boolean =
@@ -85,7 +88,8 @@ internal class FullCheckoutFlow(
             }
 
             is SubmitResult.Retry -> {
-                // No-op: there is nothing we should do in these cases
+                canSubmit = true
+                paymentComponent?.setLoading(false)
             }
 
             is SubmitResult.PartialPayment -> {
