@@ -22,6 +22,7 @@ import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.analytics.CardScannerEvents
 import com.adyen.checkout.card.internal.analytics.DualBrandCardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
+import com.adyen.checkout.card.internal.helper.CardBinHelper
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardBrandState
@@ -30,7 +31,6 @@ import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
-import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.CardContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContent
@@ -258,7 +258,7 @@ constructor(
         ) {
             val event = DualBrandCardEvents.brandSelected(
                 component = paymentMethodType,
-                selectedBrand = intent.cardBrand
+                selectedBrand = intent.cardBrand,
             )
             analyticsManager.trackEvent(event)
         }
@@ -294,7 +294,12 @@ constructor(
     private fun onBinChanged() {
         val callback = onBinChangeCallback ?: return
         componentState
-            .map { it.binValue }
+            .map { state ->
+                CardBinHelper.getBin(
+                    cardNumber = state.cardNumber.text,
+                    isValid = state.cardNumber.isValid,
+                )
+            }
             .distinctUntilChanged()
             .drop(1)
             .onEach { newBinValue -> callback.onBinChange(newBinValue) }
