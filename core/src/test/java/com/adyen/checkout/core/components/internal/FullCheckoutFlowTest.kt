@@ -165,19 +165,6 @@ internal class FullCheckoutFlowTest(
         }
 
         @Test
-        fun `when submit is called, then loading is set to true`() = runTest {
-            val component = TestPaymentComponent(eventFlow)
-            val flow = createFullCheckoutFlow(
-                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
-                component = component,
-            )
-
-            flow.submit()
-
-            assertTrue(component.isLoading)
-        }
-
-        @Test
         fun `when submit is called twice, then payment component submit is called only once`() = runTest {
             val component = TestPaymentComponent(eventFlow)
             val flow = createFullCheckoutFlow(
@@ -261,6 +248,20 @@ internal class FullCheckoutFlowTest(
             flow.submit()
 
             assertEquals(1, component.submitCount)
+        }
+
+        @Test
+        fun `when submit event is received, then loading is set to true`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
+            val component = TestPaymentComponent(eventFlow)
+            createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            assertTrue(component.isLoading)
         }
     }
 

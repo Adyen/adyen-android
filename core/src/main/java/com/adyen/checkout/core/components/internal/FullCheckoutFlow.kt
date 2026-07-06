@@ -46,6 +46,7 @@ internal class FullCheckoutFlow(
             .onEach { event ->
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
+                        paymentComponent.setLoading(true)
                         val result = componentRequestDispatcher.submit(event.state.data)
                         handleResult(result)
                     }
@@ -69,7 +70,6 @@ internal class FullCheckoutFlow(
     override fun submit() {
         if (!canSubmit.compareAndSet(true, false)) return
         paymentComponent.submit()
-        paymentComponent.setLoading(true)
     }
 
     override fun requiresUserInteraction(): Boolean =
