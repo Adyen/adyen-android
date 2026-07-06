@@ -138,16 +138,6 @@ internal class FullCheckoutFlowTest(
         }
 
         @Test
-        fun `when payment component is null, then returns false`() = runTest {
-            val flow = createFullCheckoutFlow(
-                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
-                component = null,
-            )
-
-            assertFalse(flow.requiresUserInteraction())
-        }
-
-        @Test
         fun `when payment component does not require user interaction, then returns false`() = runTest {
             val flow = createFullCheckoutFlow(
                 coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
@@ -329,9 +319,9 @@ internal class FullCheckoutFlowTest(
     private fun createFullCheckoutFlow(
         coroutineScope: CoroutineScope,
         requiresUserInteraction: Boolean = true,
-        component: PaymentComponent? = TestPaymentComponent(eventFlow, requiresUserInteraction),
+        component: PaymentComponent = TestPaymentComponent(eventFlow, requiresUserInteraction),
     ): FullCheckoutFlow {
-        component?.let { registerComponent(it) }
+        registerComponent(component)
 
         return FullCheckoutFlow(
             componentRequestDispatcher = componentRequestDispatcher,

@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.onEach
 internal class FullCheckoutFlow(
     private val componentRequestDispatcher: SubmittableComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
-    override val paymentComponent: PaymentComponent?,
+    override val paymentComponent: PaymentComponent,
     private val actionHandler: ActionHandler,
 ) : CheckoutFlow {
 
@@ -42,8 +42,8 @@ internal class FullCheckoutFlow(
     private var canSubmit = true
 
     init {
-        paymentComponent?.eventFlow
-            ?.onEach { event ->
+        paymentComponent.eventFlow
+            .onEach { event ->
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         val result = componentRequestDispatcher.submit(event.state.data)
@@ -63,18 +63,18 @@ internal class FullCheckoutFlow(
                     }
                 }
             }
-            ?.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
     }
 
     override fun submit() {
         if (!canSubmit) return
         canSubmit = false
-        paymentComponent?.submit()
-        paymentComponent?.setLoading(true)
+        paymentComponent.submit()
+        paymentComponent.setLoading(true)
     }
 
     override fun requiresUserInteraction(): Boolean =
-        actionComponent == null && paymentComponent?.requiresUserInteraction() == true
+        actionComponent == null && paymentComponent.requiresUserInteraction()
 
     private fun handleResult(submitResult: SubmitResult) {
         when (submitResult) {
@@ -89,7 +89,7 @@ internal class FullCheckoutFlow(
 
             is SubmitResult.Retry -> {
                 canSubmit = true
-                paymentComponent?.setLoading(false)
+                paymentComponent.setLoading(false)
             }
 
             is SubmitResult.PartialPayment -> {
