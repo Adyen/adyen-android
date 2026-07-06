@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.concurrent.atomic.AtomicBoolean
 
 internal class FullCheckoutFlow(
     private val componentRequestDispatcher: SubmittableComponentRequestDispatcher,
@@ -38,8 +39,7 @@ internal class FullCheckoutFlow(
     )
     override val navigation: Flow<CheckoutRoute> = navigationFlow.asSharedFlow()
 
-    @Volatile
-    private var canSubmit = true
+    private val canSubmit = AtomicBoolean(true)
 
     init {
         paymentComponent.eventFlow
@@ -67,8 +67,7 @@ internal class FullCheckoutFlow(
     }
 
     override fun submit() {
-        if (!canSubmit) return
-        canSubmit = false
+        if (!canSubmit.compareAndSet(true, false)) return
         paymentComponent.submit()
         paymentComponent.setLoading(true)
     }
@@ -88,7 +87,7 @@ internal class FullCheckoutFlow(
             }
 
             is SubmitResult.Retry -> {
-                canSubmit = true
+                canSubmit.set(true)
                 paymentComponent.setLoading(false)
             }
 
