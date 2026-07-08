@@ -26,6 +26,7 @@ import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
+import com.adyen.checkout.core.error.internal.PaymentMethodUnavailableError
 import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.helper.awaitTask
@@ -99,6 +100,9 @@ internal class GooglePayComponent(
     private fun checkAvailability() {
         coroutineScope.launch {
             val isAvailable = googlePayAvailabilityCheck.isAvailable()
+            if (!isAvailable) {
+                emitError(PaymentMethodUnavailableError("Google Pay is not available"))
+            }
             componentState.handleIntent(GooglePayIntent.UpdateAvailability(isAvailable))
         }
     }
