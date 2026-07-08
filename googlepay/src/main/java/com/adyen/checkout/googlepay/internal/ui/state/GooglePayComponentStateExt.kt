@@ -27,6 +27,7 @@ internal fun GooglePayComponentState.toPaymentComponentState(
         order = null,
     )
 
+    // TODO check if paymentComponentData should be null if the token is null or empty
     val isValid = paymentData != null && GooglePayUtils.findToken(paymentData).isNotEmpty()
 
     return GooglePayPaymentComponentState(

@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class)
 internal class GooglePayComponentStateValidatorTest {
@@ -33,8 +32,8 @@ internal class GooglePayComponentStateValidatorTest {
     }
 
     @Test
-    fun `when paymentData is null, then isValid returns false`() {
-        val state = createState(paymentData = null)
+    fun `when google pay in unavailable, then isValid returns false`() {
+        val state = createState(isAvailable = false)
 
         val result = validator.isValid(state)
 
@@ -42,9 +41,8 @@ internal class GooglePayComponentStateValidatorTest {
     }
 
     @Test
-    fun `when paymentData has valid token, then isValid returns true`() {
-        whenever(paymentData.toJson()).thenReturn(VALID_PAYMENT_DATA_JSON)
-        val state = createState(paymentData = paymentData)
+    fun `when google pay in available, then isValid returns true`() {
+        val state = createState(isAvailable = true)
 
         val result = validator.isValid(state)
 
@@ -52,52 +50,20 @@ internal class GooglePayComponentStateValidatorTest {
     }
 
     @Test
-    fun `when paymentData has empty token, then isValid returns false`() {
-        whenever(paymentData.toJson()).thenReturn(EMPTY_TOKEN_PAYMENT_DATA_JSON)
-        val state = createState(paymentData = paymentData)
-
-        val result = validator.isValid(state)
-
-        assertFalse(result)
-    }
-
-    @Test
     fun `when validate is called, then state is returned unchanged`() {
-        val state = createState(paymentData = null)
+        val state = createState(isAvailable = true)
 
         val result = validator.validate(state)
 
         assertSame(state, result)
     }
 
-    private fun createState(paymentData: PaymentData?) = GooglePayComponentState(
+    private fun createState(isAvailable: Boolean) = GooglePayComponentState(
         allowedPaymentMethods = "[]",
         buttonStyling = null,
         isButtonVisible = false,
         isLoading = false,
-        isAvailable = false,
-        paymentData = paymentData,
+        isAvailable = isAvailable,
+        paymentData = null,
     )
-
-    companion object {
-        private const val VALID_PAYMENT_DATA_JSON = """
-            {
-                "paymentMethodData": {
-                    "tokenizationData": {
-                        "token": "test_token_123"
-                    }
-                }
-            }
-        """
-
-        private const val EMPTY_TOKEN_PAYMENT_DATA_JSON = """
-            {
-                "paymentMethodData": {
-                    "tokenizationData": {
-                        "token": ""
-                    }
-                }
-            }
-        """
-    }
 }

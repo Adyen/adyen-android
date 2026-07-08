@@ -69,7 +69,9 @@ internal class GooglePayComponent(
     // Composable (see GooglePayContent). As submit() is triggered outside of composition, we bridge the
     // request to the Composable layer by sending a view event through this channel.
     private val viewEventChannel = bufferedChannel<GooglePayViewEvent>()
-    private val viewEventFlow: Flow<GooglePayViewEvent> = viewEventChannel.receiveAsFlow()
+
+    @VisibleForTesting
+    internal val viewEventFlow: Flow<GooglePayViewEvent> = viewEventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -118,8 +120,12 @@ internal class GooglePayComponent(
     }
 
     override fun submit() {
-        setLoading(true)
-        viewEventChannel.trySend(GooglePayViewEvent.Pay)
+        if (componentStateValidator.isValid(componentState.value)) {
+            setLoading(true)
+            viewEventChannel.trySend(GooglePayViewEvent.Pay)
+        } else {
+            // ensure we don't trigger a submit if the state is invalid, no action needed on the UI
+        }
     }
 
     @VisibleForTesting
