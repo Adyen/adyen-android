@@ -17,12 +17,12 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.card
+import com.adyen.checkout.authentication.authentication
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.threeds2.threeDS2
 ```
 
 ## Configure the card component
@@ -85,7 +85,7 @@ Register card-specific callbacks through the checkout callbacks block:
 val callbacks = AdvancedCheckoutCallbacks(
     onSubmit = { data -> callPayments(data) },
     onAdditionalDetails = { data -> callDetails(data) },
-    onError = { error -> showError(error.message.orEmpty()) },
+    onFailure = { error -> showError(error.message.orEmpty()) },
 ) {
     card(
         onBinChange = OnBinChangeCallback { bin ->
@@ -107,7 +107,7 @@ val callbacks = AdvancedCheckoutCallbacks(
 
 ## 3D Secure configuration
 
-3DS2-specific settings are configured with `threeDS2(...)`, not `card(...)`:
+3DS2-specific settings are configured with `authentication(...)`, not `card(...)`:
 
 ```kotlin
 val configuration = CheckoutConfiguration(
@@ -115,7 +115,7 @@ val configuration = CheckoutConfiguration(
     clientKey = clientKey,
 ) {
     card(showCardholderName = true)
-    threeDS2(
+    authentication(
         threeDSRequestorAppURL = "https://your-app.example/adyen",
     )
 }
