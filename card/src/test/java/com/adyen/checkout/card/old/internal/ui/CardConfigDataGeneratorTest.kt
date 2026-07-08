@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 19/8/2024.
+ * Created by oscars on 8/7/2026.
  */
 
 @file:Suppress("DEPRECATION")
 
-package com.adyen.checkout.card.internal.ui
+package com.adyen.checkout.card.old.internal.ui
 
 import com.adyen.checkout.card.old.KCPAuthVisibility
 import com.adyen.checkout.card.old.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.old.internal.ui.CardConfigDataGenerator
 import com.adyen.checkout.card.old.internal.ui.model.AddressFieldPolicyParams
 import com.adyen.checkout.card.old.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.old.internal.ui.model.CardComponentParams

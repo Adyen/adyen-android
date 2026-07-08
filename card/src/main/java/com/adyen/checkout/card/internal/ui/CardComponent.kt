@@ -23,6 +23,7 @@ import com.adyen.checkout.card.internal.analytics.CardScannerEvents
 import com.adyen.checkout.card.internal.analytics.DualBrandCardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.helper.CardBinHelper
+import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardBrandState
@@ -84,6 +85,7 @@ constructor(
     private val cardScannerWrapper: CardScannerWrapper,
     private val publicKey: String?,
     private val environment: Environment,
+    private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) : PaymentComponent,
     SecondaryScreenComponent {
 
@@ -100,9 +102,18 @@ constructor(
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     init {
+        trackRenderEvent()
         subscribeToDualBrandSelectionAppearAnalyticsEvents()
         onCardBrandDataChanged()
         onBinChanged()
+    }
+
+    private fun trackRenderEvent() {
+        val event = GenericEvents.rendered(
+            component = paymentMethodType,
+            configData = cardConfigDataGenerator.generate(params = componentParams, isStored = false),
+        )
+        analyticsManager.trackEvent(event)
     }
 
     @Composable

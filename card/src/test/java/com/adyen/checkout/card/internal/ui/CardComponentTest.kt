@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
+import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -27,6 +28,7 @@ import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
@@ -43,15 +45,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class CardComponentTest(
-    @Mock private val cardEncryptor: BaseCardEncryptor,
-    @Mock private val genericEncryptor: BaseGenericEncryptor,
-    @Mock private val detectCardTypeRepository: DetectCardTypeRepository,
-    @Mock private val sdkDataProvider: SdkDataProvider,
-    @Mock private val cardScannerWrapper: CardScannerWrapper,
+    @param:Mock private val cardEncryptor: BaseCardEncryptor,
+    @param:Mock private val genericEncryptor: BaseGenericEncryptor,
+    @param:Mock private val detectCardTypeRepository: DetectCardTypeRepository,
+    @param:Mock private val sdkDataProvider: SdkDataProvider,
+    @param:Mock private val cardScannerWrapper: CardScannerWrapper,
+    @param:Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -61,6 +67,24 @@ internal class CardComponentTest(
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
         component = createComponent()
+    }
+
+    @Test
+    fun `when component is initialized then rendered event is tracked`() {
+        // GIVEN
+        val configData = mapOf("testKey" to "testValue")
+        whenever(cardConfigDataGenerator.generate(params = any(), isStored = eq(false))).thenReturn(configData)
+        analyticsManager = TestAnalyticsManager()
+
+        // WHEN
+        createComponent()
+
+        // THEN
+        val expected = GenericEvents.rendered(
+            component = PAYMENT_METHOD_TYPE,
+            configData = configData,
+        )
+        analyticsManager.assertHasEventEquals(expected)
     }
 
     @Nested
@@ -283,6 +307,7 @@ internal class CardComponentTest(
             cardScannerWrapper = cardScannerWrapper,
             publicKey = null,
             environment = Environment.TEST,
+            cardConfigDataGenerator = cardConfigDataGenerator,
         )
     }
 
