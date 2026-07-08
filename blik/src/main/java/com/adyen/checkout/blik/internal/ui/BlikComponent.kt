@@ -18,19 +18,22 @@ import com.adyen.checkout.blik.internal.ui.state.BlikViewStateProducer
 import com.adyen.checkout.blik.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.view.BlikContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+internal class BlikComponent
 @Suppress("LongParameterList")
-internal class BlikComponent(
-    @Suppress("unused") private val analyticsManager: AnalyticsManager,
+constructor(
+    private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: BlikComponentStateValidator,
     componentStateFactory: BlikComponentStateFactory,
@@ -50,6 +53,15 @@ internal class BlikComponent(
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
+
+    init {
+        trackRenderEvent()
+    }
+
+    private fun trackRenderEvent() {
+        val event = GenericEvents.rendered(component = PaymentMethodTypes.BLIK)
+        analyticsManager.trackEvent(event)
+    }
 
     @Composable
     override fun Content(modifier: Modifier) {

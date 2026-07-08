@@ -74,6 +74,7 @@ internal class StoredCardComponentTest(
         // THEN
         val expected = GenericEvents.rendered(
             component = PAYMENT_METHOD_TYPE,
+            isStoredPaymentMethod = true,
             configData = configData,
         )
         analyticsManager.assertHasEventEquals(expected)

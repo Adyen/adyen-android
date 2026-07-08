@@ -84,6 +84,7 @@ constructor(
     private fun trackRenderEvent() {
         val event = GenericEvents.rendered(
             component = paymentMethodType,
+            isStoredPaymentMethod = true,
             configData = cardConfigDataGenerator.generate(params = componentParams, isStored = true),
         )
         analyticsManager.trackEvent(event)
