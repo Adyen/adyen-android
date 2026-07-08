@@ -151,6 +151,9 @@ internal class CardFactory :
             coroutineScope = coroutineScope,
             sdkDataProvider = sdkDataProvider,
             publicKey = params.publicKey,
+            paymentMethodType = storedCardPaymentMethod.type,
+            componentParams = cardComponentParams,
+            cardConfigDataGenerator = CardConfigDataGenerator(params),
         )
     }
 }

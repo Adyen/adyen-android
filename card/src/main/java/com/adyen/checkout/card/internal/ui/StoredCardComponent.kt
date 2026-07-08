@@ -10,6 +10,8 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
@@ -58,6 +60,9 @@ constructor(
     coroutineScope: CoroutineScope,
     private val sdkDataProvider: SdkDataProvider,
     private val publicKey: String?,
+    private val paymentMethodType: String,
+    private val componentParams: CardComponentParams,
+    private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
@@ -71,6 +76,18 @@ constructor(
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
+
+    init {
+        trackRenderEvent()
+    }
+
+    private fun trackRenderEvent() {
+        val event = GenericEvents.rendered(
+            component = paymentMethodType,
+            configData = cardConfigDataGenerator.generate(params = componentParams, isStored = true),
+        )
+        analyticsManager.trackEvent(event)
+    }
 
     @Composable
     override fun Content(modifier: Modifier) {
