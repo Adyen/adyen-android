@@ -84,7 +84,13 @@ internal class GooglePayComponent(
     internal val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     init {
+        trackRenderEvent()
         checkAvailability()
+    }
+
+    private fun trackRenderEvent() {
+        val event = GenericEvents.rendered(component = paymentMethodType)
+        analyticsManager.trackEvent(event)
     }
 
     @Composable

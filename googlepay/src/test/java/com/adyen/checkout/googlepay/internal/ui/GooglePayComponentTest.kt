@@ -8,8 +8,9 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
-import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
-import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.ErrorEvent
+import com.adyen.checkout.core.analytics.internal.GenericEvents
+import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -38,16 +39,29 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertInstanceOf
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class GooglePayComponentTest {
+
+    private lateinit var analyticsManager: TestAnalyticsManager
+
+    @BeforeEach
+    fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
+    }
+
+    @Test
+    fun `when component is initialized then rendered event is tracked`() = runTest {
+        createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+
+        val expected = GenericEvents.rendered(component = TEST_PAYMENT_METHOD_TYPE)
+        analyticsManager.assertHasEventEquals(expected)
+    }
 
     @Test
     fun `when requiresUserInteraction is called, then it returns true`() = runTest {
@@ -130,22 +144,14 @@ internal class GooglePayComponentTest {
 
     @Test
     fun `when result is successful with valid data, then a submit analytics event is tracked`() = runTest {
-        val analyticsManager = mock<AnalyticsManager>()
         val component = createComponent(
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
-            analyticsManager = analyticsManager,
         )
-        component.eventFlow.test(testScheduler)
 
         component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData(VALID_PAYMENT_DATA_JSON)))
 
-        val captor = argumentCaptor<AnalyticsEvent>()
-        verify(analyticsManager, atLeastOnce()).trackEvent(captor.capture())
-        assertTrue(
-            captor.allValues.any { event ->
-                event is AnalyticsEvent.Log && event.type == AnalyticsEvent.Log.Type.SUBMIT
-            },
-        )
+        val expected = GenericEvents.submit(component = TEST_PAYMENT_METHOD_TYPE)
+        analyticsManager.assertHasEventEquals(expected)
     }
 
     @Test
@@ -202,22 +208,14 @@ internal class GooglePayComponentTest {
 
     @Test
     fun `when result is an error, then a third party error analytics event is tracked`() = runTest {
-        val analyticsManager = mock<AnalyticsManager>()
         val component = createComponent(
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
-            analyticsManager = analyticsManager,
         )
-        component.eventFlow.test(testScheduler)
 
         component.onPaymentResult(createResult(CommonStatusCodes.INTERNAL_ERROR))
 
-        val captor = argumentCaptor<AnalyticsEvent>()
-        verify(analyticsManager, atLeastOnce()).trackEvent(captor.capture())
-        assertTrue(
-            captor.allValues.any { event ->
-                event is AnalyticsEvent.Error && event.errorType == AnalyticsEvent.Error.Type.THIRD_PARTY
-            },
-        )
+        val expected = GenericEvents.error(component = TEST_PAYMENT_METHOD_TYPE, event = ErrorEvent.THIRD_PARTY)
+        analyticsManager.assertHasEventEquals(expected)
     }
 
     @Test
@@ -299,10 +297,9 @@ internal class GooglePayComponentTest {
     @Suppress("LongParameterList")
     private fun createComponent(
         coroutineScope: CoroutineScope,
-        analyticsManager: AnalyticsManager = mock(),
         googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = true),
         googlePayButtonStyling: GooglePayButtonStyling? = null,
-        paymentMethodType: String = "googlepay",
+        paymentMethodType: String = TEST_PAYMENT_METHOD_TYPE,
         sdkDataProvider: SdkDataProvider = mock(),
     ): GooglePayComponent {
         val componentParams = createComponentParams(googlePayButtonStyling)
@@ -385,5 +382,7 @@ internal class GooglePayComponentTest {
                 }
             }
         """
+
+        private const val TEST_PAYMENT_METHOD_TYPE = "googlepay"
     }
 }
