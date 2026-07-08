@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -21,13 +22,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class GenericPaymentComponent(
-    @Suppress("unused") private val analyticsManager: AnalyticsManager,
+    private val analyticsManager: AnalyticsManager,
     private val paymentMethodType: String,
     private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
+
+    init {
+        trackRenderEvent()
+    }
+
+    private fun trackRenderEvent() {
+        val event = GenericEvents.rendered(component = paymentMethodType)
+        analyticsManager.trackEvent(event)
+    }
 
     @Composable
     override fun Content(modifier: Modifier) {
