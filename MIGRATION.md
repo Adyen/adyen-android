@@ -47,7 +47,7 @@ val configuration = CheckoutConfiguration(
     shopperLocale = shopperLocale,
 ) {
     card(showCardholderName = true)
-    threeDS2(threeDSRequestorAppURL = "https://your-app.example/adyen")
+    authentication(threeDSRequestorAppURL = "https://your-app.example/adyen")
 }
 
 lifecycleScope.launch {
@@ -134,7 +134,7 @@ class CardActivity : AppCompatActivity() {
                             onAdditionalDetails = { data ->
                                 callDetails(data)
                             },
-                            onError = { error ->
+                            onFailure = { error ->
                                 showError(error.message.orEmpty())
                             },
                         ) {
