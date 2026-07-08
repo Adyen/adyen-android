@@ -22,11 +22,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.concurrent.atomic.AtomicBoolean
 
 internal class FullCheckoutFlow(
     private val componentRequestDispatcher: SubmittableComponentRequestDispatcher,
     coroutineScope: CoroutineScope,
-    override val paymentComponent: PaymentComponent?,
+    override val paymentComponent: PaymentComponent,
     private val actionHandler: ActionHandler,
 ) : CheckoutFlow {
 
@@ -38,15 +39,16 @@ internal class FullCheckoutFlow(
     )
     override val navigation: Flow<CheckoutRoute> = navigationFlow.asSharedFlow()
 
+    private val canSubmit = AtomicBoolean(true)
+
     init {
-        paymentComponent?.eventFlow
-            ?.onEach { event ->
+        paymentComponent.eventFlow
+            .onEach { event ->
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         paymentComponent.setLoading(true)
                         val result = componentRequestDispatcher.submit(event.state.data)
                         handleResult(result)
-                        paymentComponent.setLoading(false)
                     }
 
                     is PaymentComponentEvent.Error -> {
@@ -62,16 +64,16 @@ internal class FullCheckoutFlow(
                     }
                 }
             }
-            ?.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
     }
 
-    // TODO - Ensure we are not handling an action
     override fun submit() {
-        paymentComponent?.submit()
+        if (!canSubmit.compareAndSet(true, false)) return
+        paymentComponent.submit()
     }
 
     override fun requiresUserInteraction(): Boolean =
-        actionComponent == null && paymentComponent?.requiresUserInteraction() == true
+        actionComponent == null && paymentComponent.requiresUserInteraction()
 
     private fun handleResult(submitResult: SubmitResult) {
         when (submitResult) {
@@ -85,7 +87,8 @@ internal class FullCheckoutFlow(
             }
 
             is SubmitResult.Retry -> {
-                // No-op: there is nothing we should do in these cases
+                canSubmit.set(true)
+                paymentComponent.setLoading(false)
             }
 
             is SubmitResult.PartialPayment -> {
