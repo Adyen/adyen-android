@@ -23,7 +23,7 @@ val configuration = CheckoutConfiguration(
         showSecurityCode = true,
         showStorePaymentMethod = true,
     )
-    threeDS2(threeDSRequestorAppURL = "https://your-app.example/adyen")
+    authentication(threeDSRequestorAppURL = "https://your-app.example/adyen")
 }
 
 lifecycleScope.launch {
@@ -42,7 +42,7 @@ lifecycleScope.launch {
                     onAdditionalDetails = { data ->
                         callDetails(data)
                     },
-                    onError = { error ->
+                    onFailure = { error ->
                         showError(error.message.orEmpty())
                     },
                 ) {

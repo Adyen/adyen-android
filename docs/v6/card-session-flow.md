@@ -20,7 +20,7 @@ val configuration = CheckoutConfiguration(
         showCardholderName = true,
         showSecurityCode = true,
     )
-    threeDS2(threeDSRequestorAppURL = "https://your-app.example/adyen")
+    authentication(threeDSRequestorAppURL = "https://your-app.example/adyen")
 }
 
 lifecycleScope.launch {
@@ -33,10 +33,10 @@ lifecycleScope.launch {
                 target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
                 context = result.checkoutContext,
                 callbacks = SessionCheckoutCallbacks(
-                    onFinished = {
-                        showSuccess()
+                    onComplete = { checkoutResult ->
+                        showSuccess(checkoutResult.resultCode.value)
                     },
-                    onError = { error ->
+                    onFailure = { error ->
                         showError(error.message.orEmpty())
                     },
                 ) {

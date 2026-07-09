@@ -2,7 +2,7 @@
 
 This guide covers the v6 checkout entry points and the shared concepts used by the Android v6 alpha documentation set.
 
-For card-specific configuration and flow guides, see [card.md](card.md), [card-session-flow.md](card-session-flow.md), and [card-advanced-flow.md](card-advanced-flow.md). For Compose theme customization, see [theme.md](theme.md). For migration notes, see [../../MIGRATION.md](../../MIGRATION.md).
+For card-specific configuration and flow guides, see [card.md](card.md), [card-session-flow.md](card-session-flow.md), and [card-advanced-flow.md](card-advanced-flow.md). For Compose theme customization, see [theme.md](theme.md). For migration notes, including Google Pay migration notes, see [../../MIGRATION.md](../../MIGRATION.md).
 
 ## Alpha status
 
@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.card
+import com.adyen.checkout.authentication.authentication
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.StringResourceLocalizationProvider
@@ -44,7 +45,6 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutPaymentFlow
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.threeds2.threeDS2
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import java.util.Locale
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ import kotlinx.coroutines.launch
 - environment and client key
 - optional shopper locale, amount, analytics, and submit-button behavior
 - payment-method configuration registered through the builder block
-- action configuration such as 3D Secure 2
+- action configuration such as authentication
 
 ```kotlin
 val configuration = CheckoutConfiguration(
@@ -76,7 +76,7 @@ val configuration = CheckoutConfiguration(
         showStorePaymentMethod = true,
     )
 
-    threeDS2(
+    authentication(
         threeDSRequestorAppURL = "https://your-app.example/adyen",
     )
 }

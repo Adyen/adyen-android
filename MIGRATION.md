@@ -47,7 +47,7 @@ val configuration = CheckoutConfiguration(
     shopperLocale = shopperLocale,
 ) {
     card(showCardholderName = true)
-    threeDS2(threeDSRequestorAppURL = "https://your-app.example/adyen")
+    authentication(threeDSRequestorAppURL = "https://your-app.example/adyen")
 }
 
 lifecycleScope.launch {
@@ -134,7 +134,7 @@ class CardActivity : AppCompatActivity() {
                             onAdditionalDetails = { data ->
                                 callDetails(data)
                             },
-                            onError = { error ->
+                            onFailure = { error ->
                                 showError(error.message.orEmpty())
                             },
                         ) {
@@ -238,12 +238,80 @@ CheckoutPaymentFlow(
 - Locale selection still starts from `shopperLocale` on `CheckoutConfiguration`.
 - Targeted string overrides move to `CheckoutLocalizationProvider` or `StringResourceLocalizationProvider` passed to `CheckoutPaymentFlow(...)`.
 
+### Google Pay
+
+#### Configuration object
+
+##### Before (v5)
+
+```kotlin
+val checkoutConfiguration = CheckoutConfiguration(
+    environment = environment,
+    clientKey = clientKey,
+    amount = amount,
+) {
+    googlePay {
+        setCountryCode("US")
+        setCheckoutOption("COMPLETE_IMMEDIATE_PURCHASE")
+        setGooglePayEnvironment(WalletConstants.ENVIRONMENT_TEST)
+    }
+}
+```
+
+##### After (v6)
+
+```kotlin
+val configuration = CheckoutConfiguration(
+    environment = Environment.TEST,
+    clientKey = clientKey,
+    amount = amount,
+) {
+    googlePay(
+        countryCode = "US",
+        checkoutOption = "COMPLETE_IMMEDIATE_PURCHASE",
+    )
+}
+```
+
+#### Flow migration
+
+Google Pay now follows the same `Checkout.setup(...)` + `CheckoutController(...)` + `CheckoutPaymentFlow(...)` host pattern as the other public v6 payment methods.
+
+```kotlin
+lifecycleScope.launch {
+    when (val result = Checkout.setup(paymentMethods = paymentMethods, configuration = configuration)) {
+        is Checkout.Result.Error -> showError(result.error.message.orEmpty())
+        is Checkout.Result.Success -> {
+            val controller = CheckoutController(
+                target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.GOOGLE_PAY),
+                context = result.checkoutContext,
+                callbacks = AdvancedCheckoutCallbacks(
+                    onSubmit = { data ->
+                        callPayments(data)
+                    },
+                    onAdditionalDetails = { data ->
+                        callDetails(data)
+                    },
+                    onFailure = { error ->
+                        showError(error.message.orEmpty())
+                    },
+                ),
+                coroutineScope = lifecycleScope,
+            )
+        }
+    }
+}
+```
+
+If your payment-method response still returns `googlepay_legacy`, target `PaymentMethodTypes.GOOGLE_PAY_LEGACY` instead.
+
 #### Package migration guide
 
 | v5 style | v6 style |
 | --- | --- |
 | `com.adyen.checkout.components.core.CheckoutConfiguration` | `com.adyen.checkout.core.components.CheckoutConfiguration` |
 | `com.adyen.checkout.card.*` | `com.adyen.checkout.card.*` (package unchanged) |
+| `com.adyen.checkout.googlepay.old.googlePay` | `com.adyen.checkout.googlepay.googlePay` |
 | `CheckoutSessionProvider.createSession(...)` | `Checkout.setup(sessionResponse = ..., configuration = ...)` |
 | `ComponentCallback<CardComponentState>` | `AdvancedCheckoutCallbacks` |
 | `SessionComponentCallback<CardComponentState>` | `SessionCheckoutCallbacks` |
