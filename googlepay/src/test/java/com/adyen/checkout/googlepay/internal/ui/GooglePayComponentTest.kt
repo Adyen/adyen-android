@@ -158,6 +158,22 @@ internal class GooglePayComponentTest {
     }
 
     @Test
+    fun `when result is successful but data is invalid, then an Error event is emitted`() = runTest {
+        val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+        val events = component.eventFlow.test(testScheduler)
+
+        component.onPaymentResult(
+            createResult(
+                CommonStatusCodes.SUCCESS,
+                paymentData = createPaymentData(EMPTY_TOKEN_PAYMENT_DATA_JSON),
+            ),
+        )
+
+        assertEquals(1, events.values.size)
+        assertInstanceOf<PaymentComponentEvent.Error>(events.latestValue)
+    }
+
+    @Test
     fun `when result is canceled, then no event is emitted and loading is reset`() = runTest {
         val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
         val events = component.eventFlow.test(testScheduler)
@@ -311,9 +327,7 @@ internal class GooglePayComponentTest {
         }
     }
 
-    private fun createPaymentData() = mock<PaymentData> {
-        on { toJson() } doReturn TEST_PAYMENT_DATA_JSON
-    }
+    private fun createPaymentData(json: String = VALID_PAYMENT_DATA_JSON) = PaymentData.fromJson(json)
 
     private fun mockGooglePayAvailabilityCheck(isAvailable: Boolean): GooglePayAvailabilityCheck {
         return mock {
@@ -322,7 +336,24 @@ internal class GooglePayComponentTest {
     }
 
     companion object {
-        private const val TEST_PAYMENT_DATA_JSON =
-            "{\"paymentMethodData\": {\"tokenizationData\": {\"token\": \"test_token\"}}}"
+        private const val VALID_PAYMENT_DATA_JSON = """
+            {
+                "paymentMethodData": {
+                    "tokenizationData": {
+                        "token": "test_token_123"
+                    }
+                }
+            }
+        """
+
+        private const val EMPTY_TOKEN_PAYMENT_DATA_JSON = """
+            {
+                "paymentMethodData": {
+                    "tokenizationData": {
+                        "token": ""
+                    }
+                }
+            }
+        """
     }
 }

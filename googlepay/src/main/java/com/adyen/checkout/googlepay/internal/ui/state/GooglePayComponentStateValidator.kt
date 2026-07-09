@@ -17,10 +17,8 @@ internal class GooglePayComponentStateValidator : ComponentStateValidator<Google
     }
 
     override fun isValid(state: GooglePayComponentState): Boolean {
-        // this validation is triggered when the component is submitted (pay button is clicked)
-        // at that moment the google pay sheet has not been opened yet so the GooglePayComponentState.paymentData is
-        // still null
-        // so the only parameter that can be validated here is the availability check result
-        return state.isAvailable
+        return with(state) {
+            isAvailable && paymentData != null
+        }
     }
 }

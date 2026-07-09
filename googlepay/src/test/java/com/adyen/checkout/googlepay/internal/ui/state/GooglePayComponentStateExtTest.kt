@@ -37,7 +37,7 @@ internal class GooglePayComponentStateExtTest {
 
     @Test
     fun `when toPaymentComponentState is called with valid payment data, then a valid component state is created`() {
-        whenever(paymentData.toJson()).thenReturn(VALID_PAYMENT_DATA_JSON)
+        whenever(paymentData.toJson()).thenReturn(TEST_PAYMENT_DATA_JSON)
         val paymentMethodType = "googlepay"
         val componentState = GooglePayComponentState(
             allowedPaymentMethods = "[]",
@@ -65,26 +65,6 @@ internal class GooglePayComponentStateExtTest {
     }
 
     @Test
-    fun `when toPaymentComponentState is called with invalid payment data, then state is not valid`() {
-        whenever(paymentData.toJson()).thenReturn(EMPTY_TOKEN_PAYMENT_DATA_JSON)
-        val componentState = GooglePayComponentState(
-            allowedPaymentMethods = "[]",
-            buttonStyling = null,
-            isButtonVisible = true,
-            isLoading = false,
-            isAvailable = true,
-            paymentData = paymentData,
-        )
-
-        val paymentComponentState = componentState.toPaymentComponentState(
-            paymentMethodType = "googlepay",
-            sdkDataProvider = sdkDataProvider,
-        )
-
-        assertFalse(paymentComponentState.isValid)
-    }
-
-    @Test
     fun `when paymentData is null, then state is not valid`() {
         val componentState = GooglePayComponentState(
             allowedPaymentMethods = "[]",
@@ -105,24 +85,7 @@ internal class GooglePayComponentStateExtTest {
     }
 
     companion object {
-        private const val VALID_PAYMENT_DATA_JSON = """
-            {
-                "paymentMethodData": {
-                    "tokenizationData": {
-                        "token": "test_token_123"
-                    }
-                }
-            }
-        """
-
-        private const val EMPTY_TOKEN_PAYMENT_DATA_JSON = """
-            {
-                "paymentMethodData": {
-                    "tokenizationData": {
-                        "token": ""
-                    }
-                }
-            }
-        """
+        private const val TEST_PAYMENT_DATA_JSON =
+            "{\"paymentMethodData\": {\"tokenizationData\": {\"token\": \"test_token\"}}}"
     }
 }

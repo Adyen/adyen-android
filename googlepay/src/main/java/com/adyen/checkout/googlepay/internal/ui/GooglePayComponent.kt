@@ -45,7 +45,11 @@ import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
@@ -84,6 +88,7 @@ internal class GooglePayComponent(
 
     init {
         checkAvailability()
+        submitWhenStateIsValid()
     }
 
     @Composable
@@ -120,11 +125,16 @@ internal class GooglePayComponent(
     }
 
     override fun submit() {
-        if (componentStateValidator.isValid(componentState.value)) {
+        // usually when a component is submitted (pay button is clicked) we validate the state and emit and emit a
+        // submit event (onSubmit callback)
+        // however, with Google Pay submit only opens the Google Pay sheet where the shopper still needs to complete the
+        // payment before we can send the submit event
+        // so here we only need to ensure that the component is available
+        if (componentState.value.isAvailable) {
             setLoading(true)
             viewEventChannel.trySend(GooglePayViewEvent.Pay)
         } else {
-            // ensure we don't trigger a submit if the state is invalid, no action needed on the UI
+            adyenLog(AdyenLogLevel.ERROR) { "Unable to trigger submit, GooglePay is not available" }
         }
     }
 
@@ -150,9 +160,9 @@ internal class GooglePayComponent(
     }
 
     private fun handleSuccessResult(paymentData: PaymentData?) {
-        if (paymentData == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "GooglePay payment data is null" }
-            trackThirdPartyErrorEvent("Result is success, but data is missing")
+        if (paymentData == null || GooglePayUtils.findToken(paymentData).isNullOrEmpty()) {
+            adyenLog(AdyenLogLevel.ERROR) { "GooglePay payment data is null or invalid" }
+            trackThirdPartyErrorEvent("Result is success, but data is missing or invalid")
             emitError(GenericError("GooglePay encountered an unexpected error"))
             return
         }
@@ -161,14 +171,6 @@ internal class GooglePayComponent(
         analyticsManager.trackEvent(GenericEvents.submit(paymentMethodType))
 
         componentState.handleIntent(GooglePayIntent.UpdatePaymentData(paymentData))
-
-        val paymentComponentState = componentState.value
-            .copy(paymentData = paymentData)
-            .toPaymentComponentState(
-                paymentMethodType = paymentMethodType,
-                sdkDataProvider = sdkDataProvider,
-            )
-        eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
     }
 
     private fun emitError(error: InternalCheckoutError) {
@@ -183,6 +185,22 @@ internal class GooglePayComponent(
             message = message,
         )
         analyticsManager.trackEvent(event)
+    }
+
+    // the state becomes valid when the shopper has completed the payment flow which should trigger onSubmit
+    private fun submitWhenStateIsValid() {
+        componentState
+            .filter { componentStateValidator.isValid(it) }
+            // only emit once, when the state becomes valid
+            .take(1)
+            .onEach { state ->
+                val paymentComponentState = state.toPaymentComponentState(
+                    paymentMethodType = paymentMethodType,
+                    sdkDataProvider = sdkDataProvider,
+                )
+                eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
+            }
+            .launchIn(coroutineScope)
     }
 
     override fun requiresUserInteraction(): Boolean = true
