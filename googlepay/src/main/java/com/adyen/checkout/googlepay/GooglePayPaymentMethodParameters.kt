@@ -33,10 +33,8 @@ abstract class GooglePayPaymentMethodParameters internal constructor() : Parcela
      * possible values. Defaults to the networks returned by the Adyen API when null.
      * @param allowPrepaidCards Set to false if you don't support prepaid cards.
      * @param allowCreditCards Set to false if you don't support credit cards.
-     * @param allowedIssuerCountryCodes The country codes of the issuers you support. Defaults to
-     * the country codes returned by the Adyen API when null.
-     * @param blockedIssuerCountryCodes The country codes of the issuers you don't support. Defaults
-     * to an empty list when null.
+     * @param issuerCountryCodes Restricts the supported issuers by country. Leaves the decision to Google Pay
+     * when null.
      * @param assuranceDetailsRequired Set to true to request assurance details.
      * @param billingAddressRequired Set to true if you require a billing address.
      * @param billingAddressParameters The billing address parameters. See [BillingAddressParameters].
@@ -47,8 +45,7 @@ abstract class GooglePayPaymentMethodParameters internal constructor() : Parcela
         val allowedCardNetworks: List<String>? = null,
         val allowPrepaidCards: Boolean? = null,
         val allowCreditCards: Boolean? = null,
-        val allowedIssuerCountryCodes: List<String>? = null,
-        val blockedIssuerCountryCodes: List<String>? = null,
+        val issuerCountryCodes: IssuerCountryCodes? = null,
         val assuranceDetailsRequired: Boolean? = null,
         val billingAddressRequired: Boolean? = null,
         val billingAddressParameters: BillingAddressParameters? = null,

@@ -9,6 +9,7 @@
 package com.adyen.checkout.googlepay.internal.ui.model
 
 import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.IssuerCountryCodes
 
 /**
  * Resolved, non-nullable counterpart of the public
@@ -23,8 +24,7 @@ internal sealed class GooglePayPaymentMethodParams {
         val allowedCardNetworks: List<String>,
         val isAllowPrepaidCards: Boolean,
         val isAllowCreditCards: Boolean?,
-        val allowedIssuerCountryCodes: List<String>?,
-        val blockedIssuerCountryCodes: List<String>?,
+        val issuerCountryCodes: IssuerCountryCodes?,
         val isAssuranceDetailsRequired: Boolean?,
         val isBillingAddressRequired: Boolean,
         val billingAddressParameters: BillingAddressParameters?,

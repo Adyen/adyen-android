@@ -15,6 +15,7 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.components.paymentmethod.GooglePayDetails
+import com.adyen.checkout.googlepay.IssuerCountryCodes
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.SoftwareInfo
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
@@ -244,8 +245,8 @@ internal object GooglePayUtils {
             allowedCardNetworks = card.allowedCardNetworks,
             isAllowPrepaidCards = card.isAllowPrepaidCards,
             isAllowCreditCards = card.isAllowCreditCards,
-            allowedIssuerCountryCodes = card.allowedIssuerCountryCodes,
-            blockedIssuerCountryCodes = card.blockedIssuerCountryCodes,
+            allowedIssuerCountryCodes = (card.issuerCountryCodes as? IssuerCountryCodes.Allowed)?.codes,
+            blockedIssuerCountryCodes = (card.issuerCountryCodes as? IssuerCountryCodes.Blocked)?.codes,
             isAssuranceDetailsRequired = card.isAssuranceDetailsRequired,
             isBillingAddressRequired = card.isBillingAddressRequired,
             billingAddressParameters = card.billingAddressParameters,

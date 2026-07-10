@@ -26,6 +26,7 @@ import com.adyen.checkout.googlepay.GooglePayButtonTheme
 import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.GooglePayPaymentMethodParameters
+import com.adyen.checkout.googlepay.IssuerCountryCodes
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
 import com.google.android.gms.wallet.WalletConstants
@@ -75,8 +76,7 @@ internal class GooglePayComponentParamsMapperTest {
             allowedCardNetworks = allowedCardNetworks,
             allowPrepaidCards = true,
             allowCreditCards = true,
-            allowedIssuerCountryCodes = listOf("NL", "US"),
-            blockedIssuerCountryCodes = listOf("FR"),
+            issuerCountryCodes = IssuerCountryCodes.Allowed(listOf("NL", "US")),
             assuranceDetailsRequired = true,
             billingAddressRequired = true,
             billingAddressParameters = billingAddressParameters,
@@ -123,8 +123,7 @@ internal class GooglePayComponentParamsMapperTest {
                     allowedCardNetworks = allowedCardNetworks,
                     isAllowPrepaidCards = true,
                     isAllowCreditCards = true,
-                    allowedIssuerCountryCodes = listOf("NL", "US"),
-                    blockedIssuerCountryCodes = listOf("FR"),
+                    issuerCountryCodes = IssuerCountryCodes.Allowed(listOf("NL", "US")),
                     isAssuranceDetailsRequired = true,
                     isBillingAddressRequired = true,
                     billingAddressParameters = billingAddressParameters,
@@ -466,8 +465,7 @@ internal class GooglePayComponentParamsMapperTest {
         allowedCardNetworks: List<String> = AllowedCardNetworks.allAllowedCardNetworks,
         isAllowPrepaidCards: Boolean = false,
         isAllowCreditCards: Boolean? = null,
-        allowedIssuerCountryCodes: List<String>? = null,
-        blockedIssuerCountryCodes: List<String>? = null,
+        issuerCountryCodes: IssuerCountryCodes? = null,
         isAssuranceDetailsRequired: Boolean? = null,
         isBillingAddressRequired: Boolean = false,
         billingAddressParameters: BillingAddressParameters? = null,
@@ -476,8 +474,7 @@ internal class GooglePayComponentParamsMapperTest {
         allowedCardNetworks = allowedCardNetworks,
         isAllowPrepaidCards = isAllowPrepaidCards,
         isAllowCreditCards = isAllowCreditCards,
-        allowedIssuerCountryCodes = allowedIssuerCountryCodes,
-        blockedIssuerCountryCodes = blockedIssuerCountryCodes,
+        issuerCountryCodes = issuerCountryCodes,
         isAssuranceDetailsRequired = isAssuranceDetailsRequired,
         isBillingAddressRequired = isBillingAddressRequired,
         billingAddressParameters = billingAddressParameters,
