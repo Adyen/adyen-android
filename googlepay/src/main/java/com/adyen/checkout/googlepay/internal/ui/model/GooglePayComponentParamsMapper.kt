@@ -19,6 +19,7 @@ import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.GooglePayPaymentMethodParameters
 import com.google.android.gms.wallet.WalletConstants
 
 internal class GooglePayComponentParamsMapper {
@@ -32,8 +33,7 @@ internal class GooglePayComponentParamsMapper {
         return GooglePayComponentParams(
             amount = params.amount ?: DEFAULT_AMOUNT,
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
-            allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
-            allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
+            allowedPaymentMethods = googlePayConfiguration.getAllowedPaymentMethods(paymentMethod),
             googlePayEnvironment = getGooglePayEnvironment(
                 params.environment,
                 googlePayConfiguration,
@@ -42,16 +42,11 @@ internal class GooglePayComponentParamsMapper {
                 ?: DEFAULT_TOTAL_PRICE_STATUS,
             countryCode = googlePayConfiguration?.countryCode,
             merchantInfo = googlePayConfiguration?.merchantInfo,
-            isAllowPrepaidCards = googlePayConfiguration?.isAllowPrepaidCards ?: false,
-            isAllowCreditCards = googlePayConfiguration?.isAllowCreditCards,
-            isAssuranceDetailsRequired = googlePayConfiguration?.isAssuranceDetailsRequired,
             isEmailRequired = googlePayConfiguration?.isEmailRequired ?: false,
             isExistingPaymentMethodRequired = googlePayConfiguration?.isExistingPaymentMethodRequired
                 ?: false,
             isShippingAddressRequired = googlePayConfiguration?.isShippingAddressRequired ?: false,
             shippingAddressParameters = googlePayConfiguration?.shippingAddressParameters,
-            isBillingAddressRequired = googlePayConfiguration?.isBillingAddressRequired ?: false,
-            billingAddressParameters = googlePayConfiguration?.billingAddressParameters,
             checkoutOption = googlePayConfiguration?.checkoutOption,
             googlePayButtonStyling = googlePayConfiguration?.googlePayButtonStyling,
         )
@@ -73,16 +68,36 @@ internal class GooglePayComponentParamsMapper {
             )
     }
 
-    private fun GooglePayConfiguration?.getAvailableAuthMethods(): List<String> {
-        return this?.allowedAuthMethods
-            ?: AllowedAuthMethods.allAllowedAuthMethods
+    /**
+     * Resolves the configured [GooglePayPaymentMethodParameters]. When none are configured a single
+     * [GooglePayPaymentMethodParameters.Card] is used by default. Type specific defaults (such as
+     * auth methods and card networks) are filled in during resolution.
+     */
+    private fun GooglePayConfiguration?.getAllowedPaymentMethods(
+        paymentMethod: GooglePayPaymentMethod,
+    ): List<GooglePayPaymentMethodParams> {
+        val configuredPaymentMethods = this?.allowedPaymentMethods?.takeIf { it.isNotEmpty() }
+            ?: listOf(GooglePayPaymentMethodParameters.Card())
+        return configuredPaymentMethods.map { it.resolveDefaults(paymentMethod) }
     }
 
-    private fun GooglePayConfiguration?.getAvailableCardNetworks(
+    private fun GooglePayPaymentMethodParameters.resolveDefaults(
         paymentMethod: GooglePayPaymentMethod,
-    ): List<String> {
-        return this?.allowedCardNetworks
-            ?: getAvailableCardNetworksFromApi(paymentMethod).ifEmpty { AllowedCardNetworks.allAllowedCardNetworks }
+    ): GooglePayPaymentMethodParams {
+        return when (this) {
+            is GooglePayPaymentMethodParameters.Card -> GooglePayPaymentMethodParams.Card(
+                allowedAuthMethods = allowedAuthMethods ?: AllowedAuthMethods.allAllowedAuthMethods,
+                allowedCardNetworks = allowedCardNetworks ?: getAvailableCardNetworksFromApi(paymentMethod)
+                    .ifEmpty { AllowedCardNetworks.allAllowedCardNetworks },
+                isAllowPrepaidCards = allowPrepaidCards ?: false,
+                isAllowCreditCards = allowCreditCards,
+                isAssuranceDetailsRequired = assuranceDetailsRequired,
+                isBillingAddressRequired = billingAddressRequired ?: false,
+                billingAddressParameters = billingAddressParameters,
+            )
+
+            else -> error("Unsupported Google Pay payment method parameters: $this")
+        }
     }
 
     private fun getAvailableCardNetworksFromApi(paymentMethod: GooglePayPaymentMethod): List<String> {

@@ -21,6 +21,7 @@ import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayPaymentMethodParams
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateValidator
@@ -326,17 +327,21 @@ internal class GooglePayComponentTest {
         totalPriceStatus = "FINAL",
         countryCode = null,
         merchantInfo = null,
-        allowedAuthMethods = listOf("PAN_ONLY", "CRYPTOGRAM_3DS"),
-        allowedCardNetworks = listOf("VISA", "MASTERCARD"),
-        isAllowPrepaidCards = false,
-        isAllowCreditCards = null,
-        isAssuranceDetailsRequired = null,
+        allowedPaymentMethods = listOf(
+            GooglePayPaymentMethodParams.Card(
+                allowedAuthMethods = listOf("PAN_ONLY", "CRYPTOGRAM_3DS"),
+                allowedCardNetworks = listOf("VISA", "MASTERCARD"),
+                isAllowPrepaidCards = false,
+                isAllowCreditCards = null,
+                isAssuranceDetailsRequired = null,
+                isBillingAddressRequired = false,
+                billingAddressParameters = null,
+            ),
+        ),
         isEmailRequired = false,
         isExistingPaymentMethodRequired = false,
         isShippingAddressRequired = false,
         shippingAddressParameters = null,
-        isBillingAddressRequired = false,
-        billingAddressParameters = null,
         checkoutOption = null,
         googlePayButtonStyling = googlePayButtonStyling,
     )

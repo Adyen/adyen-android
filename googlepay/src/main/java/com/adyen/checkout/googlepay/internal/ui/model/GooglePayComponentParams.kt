@@ -9,7 +9,6 @@
 package com.adyen.checkout.googlepay.internal.ui.model
 
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.googlepay.BillingAddressParameters
 import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
@@ -21,17 +20,11 @@ internal data class GooglePayComponentParams(
     val totalPriceStatus: String,
     val countryCode: String?,
     val merchantInfo: MerchantInfo?,
-    val allowedAuthMethods: List<String>,
-    val allowedCardNetworks: List<String>,
-    val isAllowPrepaidCards: Boolean,
-    val isAllowCreditCards: Boolean?,
-    val isAssuranceDetailsRequired: Boolean?,
+    val allowedPaymentMethods: List<GooglePayPaymentMethodParams>,
     val isEmailRequired: Boolean,
     val isExistingPaymentMethodRequired: Boolean,
     val isShippingAddressRequired: Boolean,
     val shippingAddressParameters: ShippingAddressParameters?,
-    val isBillingAddressRequired: Boolean,
-    val billingAddressParameters: BillingAddressParameters?,
     val checkoutOption: String?,
     val googlePayButtonStyling: GooglePayButtonStyling?,
 )
