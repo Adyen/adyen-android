@@ -23,6 +23,8 @@ internal sealed class GooglePayPaymentMethodParams {
         val allowedCardNetworks: List<String>,
         val isAllowPrepaidCards: Boolean,
         val isAllowCreditCards: Boolean?,
+        val allowedIssuerCountryCodes: List<String>?,
+        val blockedIssuerCountryCodes: List<String>?,
         val isAssuranceDetailsRequired: Boolean?,
         val isBillingAddressRequired: Boolean,
         val billingAddressParameters: BillingAddressParameters?,

@@ -91,6 +91,8 @@ internal class GooglePayComponentParamsMapper {
                     .ifEmpty { AllowedCardNetworks.allAllowedCardNetworks },
                 isAllowPrepaidCards = allowPrepaidCards ?: false,
                 isAllowCreditCards = allowCreditCards,
+                allowedIssuerCountryCodes = allowedIssuerCountryCodes,
+                blockedIssuerCountryCodes = blockedIssuerCountryCodes,
                 isAssuranceDetailsRequired = assuranceDetailsRequired,
                 isBillingAddressRequired = billingAddressRequired ?: false,
                 billingAddressParameters = billingAddressParameters,

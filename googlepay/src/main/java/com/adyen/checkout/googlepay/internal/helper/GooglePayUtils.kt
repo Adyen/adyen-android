@@ -244,6 +244,8 @@ internal object GooglePayUtils {
             allowedCardNetworks = card.allowedCardNetworks,
             isAllowPrepaidCards = card.isAllowPrepaidCards,
             isAllowCreditCards = card.isAllowCreditCards,
+            allowedIssuerCountryCodes = card.allowedIssuerCountryCodes,
+            blockedIssuerCountryCodes = card.blockedIssuerCountryCodes,
             isAssuranceDetailsRequired = card.isAssuranceDetailsRequired,
             isBillingAddressRequired = card.isBillingAddressRequired,
             billingAddressParameters = card.billingAddressParameters,

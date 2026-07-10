@@ -333,6 +333,8 @@ internal class GooglePayComponentTest {
                 allowedCardNetworks = listOf("VISA", "MASTERCARD"),
                 isAllowPrepaidCards = false,
                 isAllowCreditCards = null,
+                allowedIssuerCountryCodes = null,
+                blockedIssuerCountryCodes = emptyList(),
                 isAssuranceDetailsRequired = null,
                 isBillingAddressRequired = false,
                 billingAddressParameters = null,
