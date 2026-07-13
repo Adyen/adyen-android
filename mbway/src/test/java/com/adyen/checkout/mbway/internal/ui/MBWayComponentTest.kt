@@ -118,7 +118,7 @@ internal class MBWayComponentTest(
             componentStateValidator = componentStateValidator,
             componentStateFactory = MBWayComponentStateFactory(Locale("pt", "PT")),
             componentStateReducer = MBWayComponentStateReducer(),
-            viewStateProducer = MBWayViewStateProducer(),
+            viewStateProducer = MBWayViewStateProducer(null),
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         )
     }

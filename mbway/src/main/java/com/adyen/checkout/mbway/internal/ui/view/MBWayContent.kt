@@ -59,7 +59,7 @@ private fun MBWayContent(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
         footer = {
-            PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+            PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
         },
     ) {
         Column(
@@ -101,6 +101,7 @@ private fun MBWayContentPreview() {
             isLoading = false,
             selectedCountryCode = countries.first(),
             phoneNumber = TextInputViewState(),
+            amount = null,
         ),
         onIntent = {},
         onSubmitClick = {},
