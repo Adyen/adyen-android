@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-import com.google.android.gms.wallet.PaymentData
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -46,15 +45,6 @@ internal class GooglePayComponentStateValidatorTest {
     }
 
     @Test
-    fun `when payment data is null, then isValid returns false`() {
-        val state = createState().copy(paymentData = null)
-
-        val result = validator.isValid(state)
-
-        assertFalse(result)
-    }
-
-    @Test
     fun `when validate is called, then state is returned unchanged`() {
         val state = createState()
 
@@ -69,6 +59,5 @@ internal class GooglePayComponentStateValidatorTest {
         isButtonVisible = false,
         isLoading = false,
         isAvailable = true,
-        paymentData = PaymentData.fromJson("{}"),
     )
 }

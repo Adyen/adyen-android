@@ -17,8 +17,6 @@ internal class GooglePayComponentStateValidator : ComponentStateValidator<Google
     }
 
     override fun isValid(state: GooglePayComponentState): Boolean {
-        return with(state) {
-            isAvailable && paymentData != null
-        }
+        return state.isAvailable
     }
 }

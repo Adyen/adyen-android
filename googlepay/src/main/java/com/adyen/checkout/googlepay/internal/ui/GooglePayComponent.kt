@@ -18,6 +18,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -35,8 +36,8 @@ import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFac
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateValidator
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayIntent
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayPaymentComponentState
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewStateProducer
-import com.adyen.checkout.googlepay.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.googlepay.internal.ui.view.GooglePayContent
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.tasks.Task
@@ -45,21 +46,17 @@ import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
 internal class GooglePayComponent(
-    @Suppress("unused") private val analyticsManager: AnalyticsManager,
+    private val analyticsManager: AnalyticsManager,
     private val componentParams: GooglePayComponentParams,
     private val sdkDataProvider: SdkDataProvider,
     private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
     private val paymentMethodType: String,
-    private val componentStateValidator: GooglePayComponentStateValidator,
+    componentStateValidator: GooglePayComponentStateValidator,
     componentStateFactory: GooglePayComponentStateFactory,
     componentStateReducer: GooglePayComponentStateReducer,
     viewStateProducer: GooglePayViewStateProducer,
@@ -88,7 +85,6 @@ internal class GooglePayComponent(
 
     init {
         checkAvailability()
-        submitWhenStateIsValid()
     }
 
     @Composable
@@ -125,9 +121,9 @@ internal class GooglePayComponent(
     }
 
     override fun submit() {
-        // usually when a component is submitted (pay button is clicked) we validate the state and emit and emit a
-        // submit event (onSubmit callback)
-        // however, with Google Pay submit only opens the Google Pay sheet where the shopper still needs to complete the
+        // usually when a component is submitted (pay button is clicked) we validate the state and emit a submit event
+        // (onSubmit callback)
+        // however with Google Pay, submit only opens the Google Pay sheet where the shopper still needs to complete the
         // payment before we can send the submit event
         // so here we only need to ensure that the component is available
         if (componentState.value.isAvailable) {
@@ -170,7 +166,29 @@ internal class GooglePayComponent(
 
         analyticsManager.trackEvent(GenericEvents.submit(paymentMethodType))
 
-        componentState.handleIntent(GooglePayIntent.UpdatePaymentData(paymentData))
+        val paymentComponentState = createPaymentComponentState(paymentData)
+
+        // the actual onSubmit callback is triggered here instead on the submit() function - when the button is clicked
+        eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
+    }
+
+    @VisibleForTesting
+    internal fun createPaymentComponentState(paymentData: PaymentData): GooglePayPaymentComponentState {
+        val googlePayDetails = GooglePayUtils.createGooglePayDetails(
+            paymentData = paymentData,
+            paymentMethodType = paymentMethodType,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
+        )
+
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = googlePayDetails,
+            order = null,
+        )
+
+        return GooglePayPaymentComponentState(
+            data = paymentComponentData,
+            isValid = true,
+        )
     }
 
     private fun emitError(error: InternalCheckoutError) {
@@ -185,22 +203,6 @@ internal class GooglePayComponent(
             message = message,
         )
         analyticsManager.trackEvent(event)
-    }
-
-    // the state becomes valid when the shopper has completed the payment flow which should trigger onSubmit
-    private fun submitWhenStateIsValid() {
-        componentState
-            .filter { componentStateValidator.isValid(it) }
-            // only emit once, when the state becomes valid
-            .take(1)
-            .onEach { state ->
-                val paymentComponentState = state.toPaymentComponentState(
-                    paymentMethodType = paymentMethodType,
-                    sdkDataProvider = sdkDataProvider,
-                )
-                eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
-            }
-            .launchIn(coroutineScope)
     }
 
     override fun requiresUserInteraction(): Boolean = true

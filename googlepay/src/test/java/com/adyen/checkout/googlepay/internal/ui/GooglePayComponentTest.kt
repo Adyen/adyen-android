@@ -14,9 +14,11 @@ import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.error.internal.PaymentMethodUnavailableError
 import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
+import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
@@ -120,7 +122,7 @@ internal class GooglePayComponentTest {
         val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
         val events = component.eventFlow.test(testScheduler)
 
-        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData()))
+        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData(VALID_PAYMENT_DATA_JSON)))
 
         assertEquals(1, events.values.size)
         assertInstanceOf<PaymentComponentEvent.Submit>(events.latestValue)
@@ -135,7 +137,7 @@ internal class GooglePayComponentTest {
         )
         component.eventFlow.test(testScheduler)
 
-        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData()))
+        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData(VALID_PAYMENT_DATA_JSON)))
 
         val captor = argumentCaptor<AnalyticsEvent>()
         verify(analyticsManager, atLeastOnce()).trackEvent(captor.capture())
@@ -269,19 +271,47 @@ internal class GooglePayComponentTest {
             assertEquals(buttonStyling, buttonViewState.buttonStyling)
         }
 
+    @Test
+    fun `when createPaymentComponentState is called with valid payment data, then a valid component state is created`() =
+        runTest {
+            val paymentData = createPaymentData(VALID_PAYMENT_DATA_JSON)
+            val paymentMethodType = "googlepay"
+
+            val component = createComponent(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+                paymentMethodType = paymentMethodType,
+                sdkDataProvider = TestSdkDataProvider(),
+            )
+
+            val paymentComponentState = component.createPaymentComponentState(paymentData)
+
+            val expectedGooglePayDetails = GooglePayUtils.createGooglePayDetails(
+                paymentData = paymentData,
+                paymentMethodType = paymentMethodType,
+                sdkData = TestSdkDataProvider.TEST_SDK_DATA,
+            )
+
+            assertEquals(expectedGooglePayDetails, paymentComponentState.data.paymentMethod)
+            assertNull(paymentComponentState.data.order)
+            assertTrue(paymentComponentState.isValid)
+        }
+
+    @Suppress("LongParameterList")
     private fun createComponent(
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager = mock(),
         googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = true),
         googlePayButtonStyling: GooglePayButtonStyling? = null,
+        paymentMethodType: String = "googlepay",
+        sdkDataProvider: SdkDataProvider = mock(),
     ): GooglePayComponent {
         val componentParams = createComponentParams(googlePayButtonStyling)
         return GooglePayComponent(
             analyticsManager = analyticsManager,
             componentParams = componentParams,
-            sdkDataProvider = mock<SdkDataProvider>(),
+            sdkDataProvider = sdkDataProvider,
             googlePayAvailabilityCheck = googlePayAvailabilityCheck,
-            paymentMethodType = "googlepay",
+            paymentMethodType = paymentMethodType,
             componentStateValidator = GooglePayComponentStateValidator(),
             componentStateFactory = GooglePayComponentStateFactory(componentParams),
             componentStateReducer = GooglePayComponentStateReducer(),
@@ -327,7 +357,7 @@ internal class GooglePayComponentTest {
         }
     }
 
-    private fun createPaymentData(json: String = VALID_PAYMENT_DATA_JSON) = PaymentData.fromJson(json)
+    private fun createPaymentData(json: String) = PaymentData.fromJson(json)
 
     private fun mockGooglePayAvailabilityCheck(isAvailable: Boolean): GooglePayAvailabilityCheck {
         return mock {
