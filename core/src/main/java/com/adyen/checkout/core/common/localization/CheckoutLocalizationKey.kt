@@ -73,4 +73,7 @@ enum class CheckoutLocalizationKey {
     BLIK_CODE_HINT,
     BLIK_CODE_INVALID,
     BLIK_HELPER_TEXT,
+    PAY_BUTTON_NO_AMOUNT,
+    PAY_BUTTON_ZERO_AMOUNT,
+    PAY_BUTTON_WITH_AMOUNT,
 }
