@@ -13,8 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
+import com.adyen.checkout.core.components.internal.ui.PayButton
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
-import com.adyen.checkout.ui.internal.element.button.PayButton
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable

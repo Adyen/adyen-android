@@ -19,9 +19,9 @@ import com.adyen.checkout.blik.internal.ui.state.BlikIntent
 import com.adyen.checkout.blik.internal.ui.state.BlikViewState
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.internal.ui.PayButton
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
-import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import kotlinx.coroutines.flow.StateFlow
