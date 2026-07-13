@@ -53,7 +53,7 @@ private fun BlikContent(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
         footer = {
-            PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+            PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
         },
     ) {
         Column(
@@ -80,6 +80,7 @@ private fun BlikContentPreview() {
         viewState = BlikViewState(
             blikCode = TextInputViewState(),
             isLoading = false,
+            amount = null,
         ),
         onIntent = {},
         onSubmitClick = {},
