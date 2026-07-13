@@ -58,7 +58,7 @@ private fun StoredCardContent(
         ComponentScaffold(
             modifier = modifier,
             footer = {
-                PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+                PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
             },
         ) {
             Column(
@@ -87,6 +87,7 @@ private fun StoredCardContentPreview(
             brand = CardBrand(""),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             isLoading = false,
+            amount = null,
         )
 
         StoredCardContent(

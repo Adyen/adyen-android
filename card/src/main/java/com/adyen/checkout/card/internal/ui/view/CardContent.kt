@@ -96,7 +96,7 @@ private fun CardContent(
     ComponentScaffold(
         modifier = modifier,
         footer = {
-            PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+            PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
         },
     ) {
         CardDetailsSection(
@@ -246,6 +246,7 @@ private fun CardContentPreview() {
                 installmentOptions = listOf(InstallmentModel.OneTime),
                 selectedInstallment = InstallmentModel.OneTime,
             ),
+            amount = null,
         ),
         onIntent = {},
         onSubmitClick = {},

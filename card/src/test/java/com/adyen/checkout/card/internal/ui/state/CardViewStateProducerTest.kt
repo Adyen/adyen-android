@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -28,7 +29,19 @@ internal class CardViewStateProducerTest {
 
     @BeforeEach
     fun beforeEach() {
-        producer = CardViewStateProducer()
+        producer = CardViewStateProducer(amount = TEST_AMOUNT)
+    }
+
+    @Test
+    fun `when produce is called, then amount is propagated to the view state`() {
+        // GIVEN
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(TEST_AMOUNT, viewState.amount)
     }
 
     // UC5: Brand Detection Hides Placeholder (No Error)
@@ -628,5 +641,9 @@ internal class CardViewStateProducerTest {
             paymentMethodVariant = null,
             localizedBrand = null,
         )
+    }
+
+    companion object {
+        private val TEST_AMOUNT = Amount(currency = "EUR", value = 1337)
     }
 }

@@ -14,11 +14,14 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
-internal class CardViewStateProducer : ViewStateProducer<CardComponentState, CardViewState> {
+internal class CardViewStateProducer(
+    private val amount: Amount?,
+) : ViewStateProducer<CardComponentState, CardViewState> {
 
     override fun produce(state: CardComponentState): CardViewState {
         // we only show all supported card brands when the setting is enabled
@@ -77,6 +80,7 @@ internal class CardViewStateProducer : ViewStateProducer<CardComponentState, Car
             isLoading = state.isLoading,
             isCardScanButtonVisible = isCardScanButtonVisible,
             installmentViewState = state.installmentState.toViewState(),
+            amount = amount,
         )
     }
 
