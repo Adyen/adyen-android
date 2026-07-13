@@ -13,13 +13,17 @@ import com.adyen.checkout.core.error.CheckoutError
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.Locale
 
 internal class AmountTest {
 
@@ -123,6 +127,75 @@ internal class AmountTest {
 
         assertNotNull(result)
         assertEquals(CheckoutError.ErrorCode.INVALID_AMOUNT_VALUE, result?.code)
+    }
+
+    @Nested
+    inner class FormatTest {
+
+        @Test
+        fun `when formatting USD amount then symbol and two decimals are shown`() {
+            val amount = Amount(currency = "USD", value = 1337L)
+
+            val result = amount.format(Locale.US)
+
+            assertEquals("$13.37", result)
+        }
+
+        @Test
+        fun `when formatting EUR amount in US locale then euro symbol and two decimals are shown`() {
+            val amount = Amount(currency = "EUR", value = 1337L)
+
+            val result = amount.format(Locale.US)
+
+            assertEquals("\u20AC13.37", result)
+        }
+
+        @Test
+        fun `when amount value is zero then formatted amount shows zero`() {
+            val amount = Amount(currency = "USD", value = 0L)
+
+            val result = amount.format(Locale.US)
+
+            assertEquals("$0.00", result)
+        }
+
+        @Test
+        fun `when amount is large then grouping separators are applied`() {
+            val amount = Amount(currency = "USD", value = 1234567L)
+
+            val result = amount.format(Locale.US)
+
+            assertEquals("$12,345.67", result)
+        }
+
+        @Test
+        fun `when currency has zero fraction digits then no decimals are shown`() {
+            val amount = Amount(currency = "JPY", value = 1337L)
+
+            val result = amount.format(Locale.US)
+
+            assertTrue(result.contains("1,337"), "Expected '1,337' in '$result'")
+            assertFalse(result.contains("."), "Expected no decimal separator in '$result'")
+        }
+
+        @Test
+        fun `when currency has three fraction digits then three decimals are shown`() {
+            val amount = Amount(currency = "KWD", value = 1337L)
+
+            val result = amount.format(Locale.US)
+
+            assertTrue(result.contains("1.337"), "Expected '1.337' in '$result'")
+        }
+
+        @Test
+        fun `when Adyen fraction digits differ from platform default then Adyen value is used`() {
+            // ISK defaults to 0 fraction digits on the platform, but Adyen defines 2
+            val amount = Amount(currency = "ISK", value = 1337L)
+
+            val result = amount.format(Locale.US)
+
+            assertTrue(result.contains("13.37"), "Expected '13.37' in '$result'")
+        }
     }
 
     companion object {
