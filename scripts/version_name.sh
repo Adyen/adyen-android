@@ -9,7 +9,7 @@ function release_version() {
     fi
 
     local version_name="${branch_name#*release/}"
-    local version_name_regex="^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}(-(alpha|beta|rc)\.[0-9]{1,2})?$"
+    local version_name_regex="^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}(-(alpha|beta|rc)(\.[0-9]{1,2})?)?(\+[0-9A-Za-z-]+)?$"
 
     if [[ ! ${version_name} =~ ${version_name_regex} ]]; then
         echo "Error: invalid version name: $version_name. Please make sure that the name follows this pattern: $version_name_regex ."
