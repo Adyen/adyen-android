@@ -22,6 +22,5 @@ internal class GooglePayComponentStateFactory(
         isButtonVisible = true,
         isLoading = false,
         isAvailable = false,
-        paymentData = null,
     )
 }

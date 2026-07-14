@@ -14,9 +14,11 @@ import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.error.internal.PaymentMethodUnavailableError
 import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
+import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFactory
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
@@ -33,11 +35,11 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doReturn
@@ -87,14 +89,43 @@ internal class GooglePayComponentTest {
     }
 
     @Test
+    fun `when submit is called, then Pay event is emitted for the view to handle`() = runTest {
+        val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+        val events = component.viewEventFlow.test(testScheduler)
+        // although the flow itself is not tested, this line is needed to ensure the flow gets updated
+        component.viewState.test(testScheduler)
+
+        component.submit()
+
+        assertEquals(1, events.values.size)
+        assertInstanceOf<GooglePayViewEvent.Pay>(events.latestValue)
+    }
+
+    @Test
+    fun `when availability check returns false and submit is called afterwards, then no event is emitted for the view`() =
+        runTest {
+            val component = createComponent(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+                googlePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = false),
+            )
+            val events = component.viewEventFlow.test(testScheduler)
+            // although the flow itself is not tested, this line is needed to ensure the flow gets updated
+            component.viewState.test(testScheduler)
+
+            component.submit()
+
+            assertTrue(events.values.isEmpty())
+        }
+
+    @Test
     fun `when result is successful with valid data, then a Submit event is emitted`() = runTest {
         val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
         val events = component.eventFlow.test(testScheduler)
 
-        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData()))
+        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData(VALID_PAYMENT_DATA_JSON)))
 
         assertEquals(1, events.values.size)
-        assertInstanceOf(PaymentComponentEvent.Submit::class.java, events.latestValue)
+        assertInstanceOf<PaymentComponentEvent.Submit>(events.latestValue)
     }
 
     @Test
@@ -106,7 +137,7 @@ internal class GooglePayComponentTest {
         )
         component.eventFlow.test(testScheduler)
 
-        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData()))
+        component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, createPaymentData(VALID_PAYMENT_DATA_JSON)))
 
         val captor = argumentCaptor<AnalyticsEvent>()
         verify(analyticsManager, atLeastOnce()).trackEvent(captor.capture())
@@ -125,7 +156,23 @@ internal class GooglePayComponentTest {
         component.onPaymentResult(createResult(CommonStatusCodes.SUCCESS, paymentData = null))
 
         assertEquals(1, events.values.size)
-        assertInstanceOf(PaymentComponentEvent.Error::class.java, events.latestValue)
+        assertInstanceOf<PaymentComponentEvent.Error>(events.latestValue)
+    }
+
+    @Test
+    fun `when result is successful but data is invalid, then an Error event is emitted`() = runTest {
+        val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+        val events = component.eventFlow.test(testScheduler)
+
+        component.onPaymentResult(
+            createResult(
+                CommonStatusCodes.SUCCESS,
+                paymentData = createPaymentData(EMPTY_TOKEN_PAYMENT_DATA_JSON),
+            ),
+        )
+
+        assertEquals(1, events.values.size)
+        assertInstanceOf<PaymentComponentEvent.Error>(events.latestValue)
     }
 
     @Test
@@ -150,7 +197,7 @@ internal class GooglePayComponentTest {
         component.onPaymentResult(createResult(CommonStatusCodes.INTERNAL_ERROR))
 
         assertEquals(1, events.values.size)
-        assertInstanceOf(PaymentComponentEvent.Error::class.java, events.latestValue)
+        assertInstanceOf<PaymentComponentEvent.Error>(events.latestValue)
     }
 
     @Test
@@ -204,8 +251,8 @@ internal class GooglePayComponentTest {
         val events = component.eventFlow.test(testScheduler)
 
         assertEquals(1, events.values.size)
-        val errorEvent = assertInstanceOf(PaymentComponentEvent.Error::class.java, events.latestValue)
-        val nestedError = assertInstanceOf(PaymentMethodUnavailableError::class.java, errorEvent.error)
+        val errorEvent = assertInstanceOf<PaymentComponentEvent.Error>(events.latestValue)
+        val nestedError = assertInstanceOf<PaymentMethodUnavailableError>(errorEvent.error)
         assertEquals("Google Pay is not available", nestedError.message)
     }
 
@@ -224,19 +271,47 @@ internal class GooglePayComponentTest {
             assertEquals(buttonStyling, buttonViewState.buttonStyling)
         }
 
+    @Test
+    fun `when createPaymentComponentState is called with valid payment data, then a valid component state is created`() =
+        runTest {
+            val paymentData = createPaymentData(VALID_PAYMENT_DATA_JSON)
+            val paymentMethodType = "googlepay"
+
+            val component = createComponent(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+                paymentMethodType = paymentMethodType,
+                sdkDataProvider = TestSdkDataProvider(),
+            )
+
+            val paymentComponentState = component.createPaymentComponentState(paymentData)
+
+            val expectedGooglePayDetails = GooglePayUtils.createGooglePayDetails(
+                paymentData = paymentData,
+                paymentMethodType = paymentMethodType,
+                sdkData = TestSdkDataProvider.TEST_SDK_DATA,
+            )
+
+            assertEquals(expectedGooglePayDetails, paymentComponentState.data.paymentMethod)
+            assertNull(paymentComponentState.data.order)
+            assertTrue(paymentComponentState.isValid)
+        }
+
+    @Suppress("LongParameterList")
     private fun createComponent(
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager = mock(),
         googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = true),
         googlePayButtonStyling: GooglePayButtonStyling? = null,
+        paymentMethodType: String = "googlepay",
+        sdkDataProvider: SdkDataProvider = mock(),
     ): GooglePayComponent {
         val componentParams = createComponentParams(googlePayButtonStyling)
         return GooglePayComponent(
             analyticsManager = analyticsManager,
             componentParams = componentParams,
-            sdkDataProvider = mock<SdkDataProvider>(),
+            sdkDataProvider = sdkDataProvider,
             googlePayAvailabilityCheck = googlePayAvailabilityCheck,
-            paymentMethodType = "googlepay",
+            paymentMethodType = paymentMethodType,
             componentStateValidator = GooglePayComponentStateValidator(),
             componentStateFactory = GooglePayComponentStateFactory(componentParams),
             componentStateReducer = GooglePayComponentStateReducer(),
@@ -282,9 +357,7 @@ internal class GooglePayComponentTest {
         }
     }
 
-    private fun createPaymentData() = mock<PaymentData> {
-        on { toJson() } doReturn TEST_PAYMENT_DATA_JSON
-    }
+    private fun createPaymentData(json: String) = PaymentData.fromJson(json)
 
     private fun mockGooglePayAvailabilityCheck(isAvailable: Boolean): GooglePayAvailabilityCheck {
         return mock {
@@ -293,7 +366,24 @@ internal class GooglePayComponentTest {
     }
 
     companion object {
-        private const val TEST_PAYMENT_DATA_JSON =
-            "{\"paymentMethodData\": {\"tokenizationData\": {\"token\": \"test_token\"}}}"
+        private const val VALID_PAYMENT_DATA_JSON = """
+            {
+                "paymentMethodData": {
+                    "tokenizationData": {
+                        "token": "test_token_123"
+                    }
+                }
+            }
+        """
+
+        private const val EMPTY_TOKEN_PAYMENT_DATA_JSON = """
+            {
+                "paymentMethodData": {
+                    "tokenizationData": {
+                        "token": ""
+                    }
+                }
+            }
+        """
     }
 }

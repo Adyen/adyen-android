@@ -123,20 +123,17 @@ internal object GooglePayUtils {
      * Find the token required by Adyen on the payments/ call for Google Pay.
      *
      * @param paymentData The PaymentData result from Google Pay.
-     * @return The token string.
-     * @throws CheckoutException If failed to find the token.
+     * @return The token string or null if the token is not found.
      */
-    @Suppress("TooGenericExceptionThrown")
-    // TODO - Change RuntimeException into a clearer error. Also update the kdocs and remove the suppresion.
-    @Throws(RuntimeException::class)
-    fun findToken(paymentData: PaymentData): String {
+    fun findToken(paymentData: PaymentData): String? {
         return try {
             val paymentDataJson = JSONObject(paymentData.toJson())
             val paymentMethodDataJson = paymentDataJson.getJSONObject(PAYMENT_METHOD_DATA)
             val tokenizationDataJson = paymentMethodDataJson.getJSONObject(TOKENIZATION_DATA)
             tokenizationDataJson.getString(TOKEN)
         } catch (e: JSONException) {
-            throw RuntimeException("Failed to find Google Pay token.", e)
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to find Google Pay token." }
+            return null
         }
     }
 
@@ -148,13 +145,10 @@ internal object GooglePayUtils {
      * @return The object matching the data for the API call to Adyen.
      */
     fun createGooglePayDetails(
-        paymentData: PaymentData?,
+        paymentData: PaymentData,
         paymentMethodType: String?,
         sdkData: String?,
-    ): GooglePayDetails? {
-        if (paymentData == null) {
-            return null
-        }
+    ): GooglePayDetails {
         val (googlePayToken, googlePayCardNetwork) = try {
             val paymentDataJson = JSONObject(paymentData.toJson())
             val paymentMethodDataJson = paymentDataJson.getJSONObject(PAYMENT_METHOD_DATA)
