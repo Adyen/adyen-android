@@ -8,24 +8,18 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-import com.google.android.gms.wallet.PaymentData
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class)
 internal class GooglePayComponentStateValidatorTest {
 
     private lateinit var validator: GooglePayComponentStateValidator
-
-    @Mock
-    private lateinit var paymentData: PaymentData
 
     @BeforeEach
     fun beforeEach() {
@@ -33,18 +27,8 @@ internal class GooglePayComponentStateValidatorTest {
     }
 
     @Test
-    fun `when paymentData is null, then isValid returns false`() {
-        val state = createState(paymentData = null)
-
-        val result = validator.isValid(state)
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `when paymentData has valid token, then isValid returns true`() {
-        whenever(paymentData.toJson()).thenReturn(VALID_PAYMENT_DATA_JSON)
-        val state = createState(paymentData = paymentData)
+    fun `when google pay is available and payment data is valid, then isValid returns true`() {
+        val state = createState()
 
         val result = validator.isValid(state)
 
@@ -52,9 +36,8 @@ internal class GooglePayComponentStateValidatorTest {
     }
 
     @Test
-    fun `when paymentData has empty token, then isValid returns false`() {
-        whenever(paymentData.toJson()).thenReturn(EMPTY_TOKEN_PAYMENT_DATA_JSON)
-        val state = createState(paymentData = paymentData)
+    fun `when google pay is unavailable, then isValid returns false`() {
+        val state = createState().copy(isAvailable = false)
 
         val result = validator.isValid(state)
 
@@ -63,41 +46,18 @@ internal class GooglePayComponentStateValidatorTest {
 
     @Test
     fun `when validate is called, then state is returned unchanged`() {
-        val state = createState(paymentData = null)
+        val state = createState()
 
         val result = validator.validate(state)
 
         assertSame(state, result)
     }
 
-    private fun createState(paymentData: PaymentData?) = GooglePayComponentState(
+    private fun createState() = GooglePayComponentState(
         allowedPaymentMethods = "[]",
         buttonStyling = null,
         isButtonVisible = false,
         isLoading = false,
-        isAvailable = false,
-        paymentData = paymentData,
+        isAvailable = true,
     )
-
-    companion object {
-        private const val VALID_PAYMENT_DATA_JSON = """
-            {
-                "paymentMethodData": {
-                    "tokenizationData": {
-                        "token": "test_token_123"
-                    }
-                }
-            }
-        """
-
-        private const val EMPTY_TOKEN_PAYMENT_DATA_JSON = """
-            {
-                "paymentMethodData": {
-                    "tokenizationData": {
-                        "token": ""
-                    }
-                }
-            }
-        """
-    }
 }

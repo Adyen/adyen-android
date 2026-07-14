@@ -16,7 +16,6 @@ internal class GooglePayComponentStateReducer : ComponentStateReducer<GooglePayC
         return when (intent) {
             is GooglePayIntent.UpdateLoading -> state.copy(isLoading = intent.isLoading)
             is GooglePayIntent.UpdateButtonVisible -> state.copy(isButtonVisible = intent.isButtonVisible)
-            is GooglePayIntent.UpdatePaymentData -> state.copy(paymentData = intent.paymentData)
             is GooglePayIntent.UpdateAvailability -> state.copy(isAvailable = intent.isAvailable)
         }
     }

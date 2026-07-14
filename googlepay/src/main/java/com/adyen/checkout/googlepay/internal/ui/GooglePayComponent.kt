@@ -18,6 +18,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -35,8 +36,8 @@ import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateFac
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateReducer
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateValidator
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayIntent
+import com.adyen.checkout.googlepay.internal.ui.state.GooglePayPaymentComponentState
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewStateProducer
-import com.adyen.checkout.googlepay.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.googlepay.internal.ui.view.GooglePayContent
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.tasks.Task
@@ -50,12 +51,12 @@ import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
 internal class GooglePayComponent(
-    @Suppress("unused") private val analyticsManager: AnalyticsManager,
+    private val analyticsManager: AnalyticsManager,
     private val componentParams: GooglePayComponentParams,
     private val sdkDataProvider: SdkDataProvider,
     private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
     private val paymentMethodType: String,
-    private val componentStateValidator: GooglePayComponentStateValidator,
+    componentStateValidator: GooglePayComponentStateValidator,
     componentStateFactory: GooglePayComponentStateFactory,
     componentStateReducer: GooglePayComponentStateReducer,
     viewStateProducer: GooglePayViewStateProducer,
@@ -69,7 +70,9 @@ internal class GooglePayComponent(
     // Composable (see GooglePayContent). As submit() is triggered outside of composition, we bridge the
     // request to the Composable layer by sending a view event through this channel.
     private val viewEventChannel = bufferedChannel<GooglePayViewEvent>()
-    private val viewEventFlow: Flow<GooglePayViewEvent> = viewEventChannel.receiveAsFlow()
+
+    @VisibleForTesting
+    internal val viewEventFlow: Flow<GooglePayViewEvent> = viewEventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -118,8 +121,17 @@ internal class GooglePayComponent(
     }
 
     override fun submit() {
-        setLoading(true)
-        viewEventChannel.trySend(GooglePayViewEvent.Pay)
+        // usually when a component is submitted (pay button is clicked) we validate the state and emit a submit event
+        // (onSubmit callback)
+        // however with Google Pay, submit only opens the Google Pay sheet where the shopper still needs to complete the
+        // payment before we can send the submit event
+        // so here we only need to ensure that the component is available
+        if (componentState.value.isAvailable) {
+            setLoading(true)
+            viewEventChannel.trySend(GooglePayViewEvent.Pay)
+        } else {
+            adyenLog(AdyenLogLevel.ERROR) { "Unable to trigger submit, GooglePay is not available" }
+        }
     }
 
     @VisibleForTesting
@@ -144,9 +156,9 @@ internal class GooglePayComponent(
     }
 
     private fun handleSuccessResult(paymentData: PaymentData?) {
-        if (paymentData == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "GooglePay payment data is null" }
-            trackThirdPartyErrorEvent("Result is success, but data is missing")
+        if (paymentData == null || GooglePayUtils.findToken(paymentData).isNullOrEmpty()) {
+            adyenLog(AdyenLogLevel.ERROR) { "GooglePay payment data is null or invalid" }
+            trackThirdPartyErrorEvent("Result is success, but data is missing or invalid")
             emitError(GenericError("GooglePay encountered an unexpected error"))
             return
         }
@@ -154,15 +166,29 @@ internal class GooglePayComponent(
 
         analyticsManager.trackEvent(GenericEvents.submit(paymentMethodType))
 
-        componentState.handleIntent(GooglePayIntent.UpdatePaymentData(paymentData))
+        val paymentComponentState = createPaymentComponentState(paymentData)
 
-        val paymentComponentState = componentState.value
-            .copy(paymentData = paymentData)
-            .toPaymentComponentState(
-                paymentMethodType = paymentMethodType,
-                sdkDataProvider = sdkDataProvider,
-            )
+        // the actual onSubmit callback is triggered here instead on the submit() function - when the button is clicked
         eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
+    }
+
+    @VisibleForTesting
+    internal fun createPaymentComponentState(paymentData: PaymentData): GooglePayPaymentComponentState {
+        val googlePayDetails = GooglePayUtils.createGooglePayDetails(
+            paymentData = paymentData,
+            paymentMethodType = paymentMethodType,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
+        )
+
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = googlePayDetails,
+            order = null,
+        )
+
+        return GooglePayPaymentComponentState(
+            data = paymentComponentData,
+            isValid = true,
+        )
     }
 
     private fun emitError(error: InternalCheckoutError) {
