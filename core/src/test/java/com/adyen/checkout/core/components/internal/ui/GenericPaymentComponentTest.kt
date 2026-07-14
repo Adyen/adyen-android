@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal.ui
 
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -40,6 +41,16 @@ internal class GenericPaymentComponentTest(
     @BeforeEach
     fun setUp() {
         analyticsManager = TestAnalyticsManager()
+    }
+
+    @Test
+    fun `when component is initialized then rendered event is tracked`() {
+        // WHEN
+        createComponent()
+
+        // THEN
+        val expected = GenericEvents.rendered(component = TEST_PAYMENT_METHOD_TYPE)
+        analyticsManager.assertHasEventEquals(expected)
     }
 
     @Test

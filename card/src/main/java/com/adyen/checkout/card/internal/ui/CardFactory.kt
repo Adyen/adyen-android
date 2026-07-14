@@ -15,6 +15,7 @@ import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.LocalCardBrandDetectionService
 import com.adyen.checkout.card.internal.data.api.NetworkCardBrandDetectionService
+import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.state.CardBrandIntentsHandler
@@ -109,6 +110,7 @@ internal class CardFactory :
             cardScannerWrapper = CardScannerWrapper(),
             publicKey = params.publicKey,
             environment = params.environment,
+            cardConfigDataGenerator = CardConfigDataGenerator(params),
         )
     }
 
@@ -149,6 +151,9 @@ internal class CardFactory :
             coroutineScope = coroutineScope,
             sdkDataProvider = sdkDataProvider,
             publicKey = params.publicKey,
+            paymentMethodType = storedCardPaymentMethod.type,
+            componentParams = cardComponentParams,
+            cardConfigDataGenerator = CardConfigDataGenerator(params),
         )
     }
 }

@@ -14,6 +14,7 @@ import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
 import com.adyen.checkout.blik.internal.ui.view.StoredBlikContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -28,7 +29,7 @@ import kotlinx.coroutines.flow.update
 
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
-    @Suppress("unused") private val analyticsManager: AnalyticsManager,
+    private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
 ) : PaymentComponent {
 
@@ -36,6 +37,18 @@ internal class StoredBlikComponent(
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val viewState = MutableStateFlow(StoredBlikViewState(isLoading = false))
+
+    init {
+        trackRenderEvent()
+    }
+
+    private fun trackRenderEvent() {
+        val event = GenericEvents.rendered(
+            component = storedPaymentMethod.type,
+            isStoredPaymentMethod = true,
+        )
+        analyticsManager.trackEvent(event)
+    }
 
     @Composable
     override fun Content(modifier: Modifier) {

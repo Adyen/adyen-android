@@ -11,6 +11,7 @@ package com.adyen.checkout.mbway.internal.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -18,6 +19,7 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
@@ -31,9 +33,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+internal class MBWayComponent
 @Suppress("LongParameterList")
-internal class MBWayComponent(
-    @Suppress("unused") private val analyticsManager: AnalyticsManager,
+constructor(
+    private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: MBWayComponentStateValidator,
     componentStateFactory: MBWayComponentStateFactory,
@@ -54,6 +57,15 @@ internal class MBWayComponent(
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
+
+    init {
+        trackRenderEvent()
+    }
+
+    private fun trackRenderEvent() {
+        val event = GenericEvents.rendered(component = PaymentMethodTypes.MB_WAY)
+        analyticsManager.trackEvent(event)
+    }
 
     @Composable
     override fun Content(modifier: Modifier) {
