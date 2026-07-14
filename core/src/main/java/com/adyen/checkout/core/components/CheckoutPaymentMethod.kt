@@ -15,6 +15,17 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
+/**
+ * A [Composable] that displays the payment method input UI for the given [controller].
+ *
+ * Use this when you want to render the payment method screen yourself. To render the whole flow
+ * (payment method, action and secondary screens) automatically, use [CheckoutPaymentFlow] instead.
+ *
+ * @param controller The [CheckoutController] driving this flow.
+ * @param modifier The [Modifier] to be applied to the payment method UI.
+ * @param theme The [CheckoutTheme] used to style the UI.
+ * @param localizationProvider An optional [CheckoutLocalizationProvider] to override the displayed strings.
+ */
 @Composable
 fun CheckoutPaymentMethod(
     controller: CheckoutController,

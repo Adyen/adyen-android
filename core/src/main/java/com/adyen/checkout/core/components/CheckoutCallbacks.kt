@@ -10,6 +10,14 @@ package com.adyen.checkout.core.components
 
 import androidx.annotation.RestrictTo
 
+/**
+ * Base class for the callbacks used to interact with a [CheckoutController].
+ *
+ * Use one of the subclasses that matches your flow: [SessionCheckoutCallbacks], [AdvancedCheckoutCallbacks] or
+ * [ActionOnlyCheckoutCallbacks].
+ *
+ * @param additionalCallbacksBlock An optional block to register payment-method-specific [CheckoutAdditionalCallback]s.
+ */
 abstract class CheckoutCallbacks(
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit,
 ) {
@@ -41,4 +49,7 @@ inline fun <reified T : CheckoutAdditionalCallback> Set<CheckoutAdditionalCallba
     return find { it is T } as? T
 }
 
+/**
+ * Marker interface for payment-method-specific callbacks that can be registered through [CheckoutCallbacks].
+ */
 interface CheckoutAdditionalCallback
