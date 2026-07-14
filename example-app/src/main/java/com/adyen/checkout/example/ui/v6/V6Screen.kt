@@ -23,10 +23,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -179,8 +180,14 @@ private fun DropDownButton(
                 bottom = ExampleTheme.dimensions.grid_1,
             ),
     ) {
-        Text(text)
-        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+        Text(text, color = Color(theme.colors.text.value))
+        @Suppress("MagicNumber")
+        Icon(
+            modifier = Modifier.rotate(if (isExpanded) 180f else 0f),
+            imageVector = Icons.Filled.ArrowDropDown,
+            contentDescription = null,
+            tint = Color(theme.colors.text.value),
+        )
     }
 }
 
@@ -203,13 +210,21 @@ private fun PaymentMethodOptionsDialog(
                 modifier = Modifier.padding(vertical = ExampleTheme.dimensions.grid_1),
             ) {
                 item {
-                    Subtitle("Regular", Modifier.padding(ExampleTheme.dimensions.grid_2))
+                    Subtitle(
+                        text = "Regular",
+                        modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
+                        color = Color(theme.colors.text.value),
+                    )
                 }
                 items(paymentMethods) { paymentMethod ->
                     PaymentMethodItem(paymentMethod, onItemClick, theme)
                 }
                 item {
-                    Subtitle("Stored", Modifier.padding(ExampleTheme.dimensions.grid_2))
+                    Subtitle(
+                        text = "Stored",
+                        modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
+                        color = Color(theme.colors.text.value),
+                    )
                 }
                 items(storedPaymentMethods) { paymentMethod ->
                     PaymentMethodItem(paymentMethod, onItemClick, theme)
@@ -237,7 +252,7 @@ private fun PaymentMethodItem(
             ),
     ) {
         @Suppress("RestrictedApi")
-        (Body(paymentMethod.name))
+        Body(paymentMethod.name, color = Color(theme.colors.text.value))
         @Suppress("RestrictedApi")
         SubHeadline(
             paymentMethod.type,
