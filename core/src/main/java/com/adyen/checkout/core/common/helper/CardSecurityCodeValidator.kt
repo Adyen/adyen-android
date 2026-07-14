@@ -14,6 +14,12 @@ import com.adyen.checkout.core.common.internal.helper.StringUtil
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_AMEX
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_DEFAULT
 
+/**
+ * Validates card security codes (CVV/CVC).
+ *
+ * Use this when building a custom card UI to validate the security code independently of the
+ * built-in card component.
+ */
 object CardSecurityCodeValidator {
 
     /**

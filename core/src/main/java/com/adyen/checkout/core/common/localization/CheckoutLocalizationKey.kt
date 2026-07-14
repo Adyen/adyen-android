@@ -8,6 +8,12 @@
 
 package com.adyen.checkout.core.common.localization
 
+/**
+ * Identifies a piece of user-facing text displayed by the checkout UI.
+ *
+ * Each key maps to a localized string that can be overridden through a
+ * [CheckoutLocalizationProvider], allowing you to customize the copy shown to the shopper.
+ */
 enum class CheckoutLocalizationKey {
     AWAIT_LOADING,
     CARD_NUMBER,

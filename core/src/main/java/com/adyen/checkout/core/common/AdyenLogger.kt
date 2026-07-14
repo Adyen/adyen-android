@@ -16,10 +16,30 @@ import com.adyen.checkout.core.common.internal.helper.LogcatLogger
  */
 interface AdyenLogger {
 
+    /**
+     * Returns whether a message logged at the given [level] should be emitted, based on the
+     * currently configured minimum log level.
+     *
+     * @param level The level of the message to be logged.
+     * @return `true` if the message should be logged, `false` otherwise.
+     */
     fun shouldLog(level: AdyenLogLevel): Boolean
 
+    /**
+     * Sets the minimum [AdyenLogLevel] to be logged. Messages below this level are ignored.
+     *
+     * @param level The minimum level to be logged.
+     */
     fun setLogLevel(level: AdyenLogLevel)
 
+    /**
+     * Logs a message with the given [level].
+     *
+     * @param level The severity level of the message.
+     * @param tag The tag identifying the source of the message.
+     * @param message The message to be logged.
+     * @param throwable An optional [Throwable] to log alongside the message.
+     */
     fun log(
         level: AdyenLogLevel,
         tag: String,

@@ -12,6 +12,12 @@ import com.adyen.checkout.core.common.internal.helper.StringUtil
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MINIMUM_LENGTH
 
+/**
+ * Validates card numbers.
+ *
+ * Use this when building a custom card UI to validate the card number independently of the built-in
+ * card component.
+ */
 object CardNumberValidator {
 
     // Luhn Check
