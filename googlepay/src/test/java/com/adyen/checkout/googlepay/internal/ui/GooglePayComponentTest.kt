@@ -14,6 +14,7 @@ import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.error.internal.PaymentMethodUnavailableError
 import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
@@ -174,12 +175,9 @@ internal class GooglePayComponentTest {
 
     @Test
     fun `when availability check returns true, then the button is shown`() = runTest {
-        val availabilityCheck = mock<GooglePayAvailabilityCheck> {
-            onBlocking { isAvailable() } doReturn true
-        }
         val component = createComponent(
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
-            googlePayAvailabilityCheck = availabilityCheck,
+            googlePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = true),
         )
         val viewState = component.viewState.test(testScheduler)
 
@@ -188,16 +186,27 @@ internal class GooglePayComponentTest {
 
     @Test
     fun `when availability check returns false, then the button is not shown`() = runTest {
-        val availabilityCheck = mock<GooglePayAvailabilityCheck> {
-            onBlocking { isAvailable() } doReturn false
-        }
         val component = createComponent(
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
-            googlePayAvailabilityCheck = availabilityCheck,
+            googlePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = false),
         )
         val viewState = component.viewState.test(testScheduler)
 
         assertNull(viewState.latestValue.buttonViewState)
+    }
+
+    @Test
+    fun `when availability check returns false, then an Error event is emitted`() = runTest {
+        val component = createComponent(
+            coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
+            googlePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = false),
+        )
+        val events = component.eventFlow.test(testScheduler)
+
+        assertEquals(1, events.values.size)
+        val errorEvent = assertInstanceOf(PaymentComponentEvent.Error::class.java, events.latestValue)
+        val nestedError = assertInstanceOf(PaymentMethodUnavailableError::class.java, errorEvent.error)
+        assertEquals("Google Pay is not available", nestedError.message)
     }
 
     @Test
@@ -218,9 +227,7 @@ internal class GooglePayComponentTest {
     private fun createComponent(
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager = mock(),
-        googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mock {
-            onBlocking { isAvailable() } doReturn true
-        },
+        googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = true),
         googlePayButtonStyling: GooglePayButtonStyling? = null,
     ): GooglePayComponent {
         val componentParams = createComponentParams(googlePayButtonStyling)
@@ -277,6 +284,12 @@ internal class GooglePayComponentTest {
 
     private fun createPaymentData() = mock<PaymentData> {
         on { toJson() } doReturn TEST_PAYMENT_DATA_JSON
+    }
+
+    private fun mockGooglePayAvailabilityCheck(isAvailable: Boolean): GooglePayAvailabilityCheck {
+        return mock {
+            onBlocking { isAvailable() } doReturn isAvailable
+        }
     }
 
     companion object {
