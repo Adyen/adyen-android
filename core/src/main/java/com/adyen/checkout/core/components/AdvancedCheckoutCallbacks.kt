@@ -12,6 +12,18 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 
+/**
+ * Callbacks used during a payment using the advanced flow.
+ *
+ * @param onSubmit Called after component validation, when the shopper submits the payment. Make a network call to the
+ * `/payments` endpoint of the Checkout API through your server, and return the result as a [SubmitResult].
+ * @param onAdditionalDetails Called when additional details are required to complete the payment (for example after
+ * an action). Make a network call to the `/payments/details` endpoint of the Checkout API through your server, and
+ * return the result as an [AdditionalDetailsResult].
+ * @param onFailure Called when an error occurs.
+ * @param onComplete Called when the payment is completed.
+ * @param additionalCallbacksBlock An optional block to register payment-method-specific [CheckoutAdditionalCallback]s.
+ */
 class AdvancedCheckoutCallbacks(
     internal val onSubmit: suspend (data: PaymentComponentData<*>) -> SubmitResult,
     internal val onAdditionalDetails: suspend (data: ActionComponentData) -> AdditionalDetailsResult,

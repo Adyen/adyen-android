@@ -16,6 +16,18 @@ import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
+/**
+ * A [Composable] that displays a secondary screen of the payment method handled by the given [controller].
+ *
+ * A secondary screen is shown when a payment method requires an additional step (identified by [identifier]).
+ * The available identifiers are provided through [CheckoutRoute.Secondary].
+ *
+ * @param identifier The identifier of the secondary screen to display.
+ * @param controller The [CheckoutController] driving this flow.
+ * @param modifier The [Modifier] to be applied to the secondary UI.
+ * @param theme The [CheckoutTheme] used to style the UI.
+ * @param localizationProvider An optional [CheckoutLocalizationProvider] to override the displayed strings.
+ */
 @Composable
 fun CheckoutSecondary(
     identifier: String,

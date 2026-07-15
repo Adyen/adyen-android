@@ -19,6 +19,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import java.util.Locale
 
+/**
+ * Creates a [CheckoutController] for the advanced flow.
+ *
+ * @param target The [CheckoutTarget] indicating which payment method (or stored payment method) to use.
+ * @param context The [CheckoutContext.Advanced] obtained from [Checkout.setup].
+ * @param callbacks The [AdvancedCheckoutCallbacks] used to handle the payment flow.
+ * @param coroutineScope The [CoroutineScope] tied to the lifecycle that owns this controller.
+ * @return A [CheckoutController] instance.
+ */
 fun CheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext.Advanced,
@@ -33,6 +42,15 @@ fun CheckoutController(
     )
 }
 
+/**
+ * Creates a [CheckoutController] for the sessions flow.
+ *
+ * @param target The [CheckoutTarget] indicating which payment method (or stored payment method) to use.
+ * @param context The [CheckoutContext.Sessions] obtained from [Checkout.setup].
+ * @param callbacks The [SessionCheckoutCallbacks] used to observe the payment flow.
+ * @param coroutineScope The [CoroutineScope] tied to the lifecycle that owns this controller.
+ * @return A [CheckoutController] instance.
+ */
 fun CheckoutController(
     target: CheckoutTarget,
     context: CheckoutContext.Sessions,
@@ -47,6 +65,14 @@ fun CheckoutController(
     )
 }
 
+/**
+ * Creates a [CheckoutController] for the action-only flow.
+ *
+ * @param context The [CheckoutContext.ActionOnly] obtained from [Checkout.setup].
+ * @param callbacks The [ActionOnlyCheckoutCallbacks] used to handle the action flow.
+ * @param coroutineScope The [CoroutineScope] tied to the lifecycle that owns this controller.
+ * @return A [CheckoutController] instance.
+ */
 fun CheckoutController(
     context: CheckoutContext.ActionOnly,
     callbacks: ActionOnlyCheckoutCallbacks,
@@ -59,6 +85,12 @@ fun CheckoutController(
     )
 }
 
+/**
+ * Controls a checkout flow.
+ *
+ * Create an instance using one of the [CheckoutController] factory functions, then drive the flow through
+ * [submit] and [handleReturn], and observe navigation changes if necessary through [navigation].
+ */
 class CheckoutController internal constructor(
     private val flow: CheckoutFlow,
     internal val environment: Environment,
