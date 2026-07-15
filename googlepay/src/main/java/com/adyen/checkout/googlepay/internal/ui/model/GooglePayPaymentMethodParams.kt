@@ -9,11 +9,12 @@
 package com.adyen.checkout.googlepay.internal.ui.model
 
 import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.GooglePayAllowedPaymentMethods
 import com.adyen.checkout.googlepay.IssuerCountryCodes
 
 /**
  * Resolved, non-nullable counterpart of the public
- * [com.adyen.checkout.googlepay.GooglePayPaymentMethodParameters]. Defaults are applied while
+ * [GooglePayAllowedPaymentMethods]. Defaults are applied while
  * mapping in [GooglePayComponentParamsMapper] so that downstream code does not have to handle
  * nullability.
  */

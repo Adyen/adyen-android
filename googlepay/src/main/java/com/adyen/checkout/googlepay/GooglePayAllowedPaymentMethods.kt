@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 9/2/2026.
+ * Created by oscars on 15/7/2026.
  */
 
 package com.adyen.checkout.googlepay
@@ -12,15 +12,23 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 /**
- * Describes a payment method supported by Google Pay and its parameters. Pass a list of these to
- * [GooglePayConfiguration.allowedPaymentMethods] to configure which payment methods are offered.
+ * The payment methods supported by Google Pay. Pass this to [GooglePayConfiguration.allowedPaymentMethods] to
+ * configure which payment methods are offered.
  *
- * This is a mapping of the
- * [PaymentMethod](https://developers.google.com/pay/api/android/reference/request-objects#PaymentMethod)
- * object from the Google Pay SDK. Each subclass corresponds to a supported `type` and carries the
- * `parameters` specific to that type.
+ * This maps to the
+ * [allowedPaymentMethods](https://developers.google.com/pay/api/android/reference/request-objects#PaymentDataRequest)
+ * array of the Google Pay `PaymentDataRequest`. Each type can only be configured once, as Google Pay
+ * does not allow the same payment method type to appear more than once. A dedicated field is exposed
+ * per supported type to enforce this.
+ *
+ * When all fields are null a single [Card] is used by default.
+ *
+ * @param card Parameters for the `CARD` payment method type. See [Card].
  */
-abstract class GooglePayPaymentMethodParameters internal constructor() : Parcelable {
+@Parcelize
+data class GooglePayAllowedPaymentMethods(
+    val card: Card? = null,
+) : Parcelable {
 
     /**
      * Parameters for the `CARD` payment method type. This is a mapping of the
@@ -49,5 +57,5 @@ abstract class GooglePayPaymentMethodParameters internal constructor() : Parcela
         val assuranceDetailsRequired: Boolean? = null,
         val billingAddressRequired: Boolean? = null,
         val billingAddressParameters: BillingAddressParameters? = null,
-    ) : GooglePayPaymentMethodParameters()
+    ) : Parcelable
 }
