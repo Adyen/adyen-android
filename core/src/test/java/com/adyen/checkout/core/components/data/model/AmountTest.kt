@@ -196,6 +196,16 @@ internal class AmountTest {
 
             assertTrue(result.contains("13.37"), "Expected '13.37' in '$result'")
         }
+
+        @Test
+        fun `when formatting an amount with invalid currency then empty string is returned`() {
+            // ISK defaults to 0 fraction digits on the platform, but Adyen defines 2
+            val amount = Amount(currency = "TEST", value = 1337L)
+
+            val result = amount.format(Locale.US)
+
+            assertEquals("", result)
+        }
     }
 
     companion object {

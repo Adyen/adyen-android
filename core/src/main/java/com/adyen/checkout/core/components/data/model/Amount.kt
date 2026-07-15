@@ -9,7 +9,9 @@
 package com.adyen.checkout.core.components.data.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutCurrency
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
@@ -49,14 +51,19 @@ data class Amount(
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun Amount.format(locale: Locale): String {
-    val currencyCode = currency
-    val checkoutCurrency = CheckoutCurrency.find(currencyCode)
-    val currency = Currency.getInstance(currencyCode)
-    val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
-    currencyFormat.currency = currency
-    val fractionDigits = checkoutCurrency?.fractionDigits ?: 0
-    currencyFormat.minimumFractionDigits = fractionDigits
-    currencyFormat.maximumFractionDigits = fractionDigits
-    val value = BigDecimal.valueOf(value, fractionDigits)
-    return currencyFormat.format(value)
+    return runCatching {
+        val currencyCode = currency
+        val checkoutCurrency = CheckoutCurrency.find(currencyCode)
+        val currency = Currency.getInstance(currencyCode)
+        val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
+        currencyFormat.currency = currency
+        val fractionDigits = checkoutCurrency?.fractionDigits ?: 0
+        currencyFormat.minimumFractionDigits = fractionDigits
+        currencyFormat.maximumFractionDigits = fractionDigits
+        val value = BigDecimal.valueOf(value, fractionDigits)
+        currencyFormat.format(value)
+    }.getOrElse { e ->
+        adyenLog(AdyenLogLevel.WARN, e) { "Failed to format amount: $this" }
+        ""
+    }
 }
