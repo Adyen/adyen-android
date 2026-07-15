@@ -10,6 +10,14 @@ package com.adyen.checkout.core.common
 
 import android.util.Log
 
+/**
+ * The severity levels used by the Adyen logger, ordered from most to least verbose.
+ *
+ * Use these values with [AdyenLogger.setLogLevel] to control the minimum level that gets logged.
+ * [NONE] disables logging entirely.
+ *
+ * @param priority The underlying Android [Log] priority for this level.
+ */
 enum class AdyenLogLevel(
     val priority: Int,
 ) {

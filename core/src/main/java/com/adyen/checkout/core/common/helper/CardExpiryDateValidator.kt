@@ -13,6 +13,12 @@ import com.adyen.checkout.core.common.internal.helper.DateUtils
 import java.util.Calendar
 import java.util.GregorianCalendar
 
+/**
+ * Validates card expiry dates.
+ *
+ * Use this when building a custom card UI to validate the expiry date independently of the built-in
+ * card component.
+ */
 object CardExpiryDateValidator {
     /**
      * Expiry date.
