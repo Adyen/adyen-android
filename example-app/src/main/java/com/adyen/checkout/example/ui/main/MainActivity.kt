@@ -77,7 +77,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Apply external configuration from intent extras (passed by e2e tests via Base64-encoded JSON)
         externalConfigurationReader.apply(intent?.getStringExtra(CONFIG_EXTRA))
 
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
@@ -115,8 +114,6 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        // Re-apply external configuration when the activity receives a new intent without restarting.
-        // This resets to defaults when no config extra is present, preventing test pollution.
         externalConfigurationReader.apply(intent.getStringExtra(CONFIG_EXTRA))
 
         when (intent.data?.path) {

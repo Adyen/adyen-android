@@ -9,6 +9,8 @@ package com.adyen.checkout.example.data.storage
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Reads external SDK configuration from a Base64-encoded JSON string (passed via intent extras)
@@ -21,19 +23,14 @@ import javax.inject.Singleton
  * When [configBase64] is null or empty (normal app launch without test extras), the persisted
  * configuration is reset to defaults to prevent test pollution from previous e2e runs.
  */
+@OptIn(ExperimentalEncodingApi::class)
 @Singleton
 class ExternalConfigurationReader @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
 ) {
 
-    /**
-     * Decodes the Base64-encoded JSON config and applies it to storage.
-     *
-     * @param configBase64 Base64-encoded JSON string, or null if no config was passed.
-     */
     fun apply(configBase64: String?) {
         if (configBase64.isNullOrEmpty()) {
-            // Reset to defaults to prevent test pollution from previous e2e runs
             keyValueStorage.setShowCardholderName(SettingsDefaults.SHOW_CARDHOLDER_NAME)
             return
         }
@@ -43,7 +40,7 @@ class ExternalConfigurationReader @Inject constructor(
 
     private fun decodeAndApply(configBase64: String) {
         val json = runCatching {
-            String(android.util.Base64.decode(configBase64, android.util.Base64.DEFAULT), Charsets.UTF_8)
+            String(Base64.decode(configBase64), Charsets.UTF_8)
         }.getOrNull() ?: return
 
         val config = runCatching {
