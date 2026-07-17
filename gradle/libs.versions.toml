@@ -8,30 +8,29 @@ min-sdk = "21"
 version-code = "1"
 
 # Build script
-android-gradle-plugin = "8.8.1"
-kotlin = "1.9.25"
-ksp = "1.9.25-1.0.20"
-dokka = "1.9.20"
-hilt = "2.55"
-compose-compiler = "1.5.15"
+android-gradle-plugin = "9.2.1"
+kotlin = "2.3.21"
+ksp = "2.3.8"
+dokka = "2.2.0"
+hilt = "2.59.2"
 
 # Code quality
 detekt = "1.23.8"
-kover = "0.9.3"
-ktlint = "1.5.0"
-sonarqube = "5.1.0.4882"
-binary-compatibility-validator = "0.16.3"
+kover = "0.9.8"
+ktlint = "1.8.0"
+sonarqube = "7.3.1.8318"
+binary-compatibility-validator = "0.18.1"
 
 # Android dependencies
 activity = "1.10.1"
-annotation = "1.9.1"
-appcompat = "1.7.0"
-autofill = "1.3.0-rc01"
+annotation = "1.10.0"
+appcompat = "1.7.1"
+autofill = "1.3.0"
 browser = "1.8.0"
-coroutines = "1.9.0"
-fragment = "1.8.6"
+coroutines = "1.11.0"
+fragment = "1.8.9"
 lifecycle = "2.8.7"
-material = "1.12.0"
+material = "1.13.0"
 recyclerview = "1.4.0"
 constraintlayout = "2.2.1"
 
@@ -57,23 +56,23 @@ moshi-adapters = "1.15.2"
 moshi-kotlin-adapter = "1.15.2"
 okhttp-logging = "4.12.0"
 preference = "1.2.1"
-retrofit2 = "2.11.0"
+retrofit2 = "2.12.0"
 
 # Tests
 arch-core-testing = "2.2.0"
 barista = "4.3.0"
-espresso = "3.6.1"
+espresso = "3.7.0"
 json = "20250107"
 jose4j = "0.9.6"
-junit-jupiter = "5.12.2"
+junit-jupiter = "5.14.4"
 konsist = "0.17.3"
-lint = "31.8.0"
+lint = "31.13.2"
 mockito-kotlin = "5.4.0"
-mockito = "5.17.0"
-robolectric = "4.14.1"
-test-ext = "1.2.1"
-test-rules = "1.6.1"
-turbine = "1.2.0"
+mockito = "5.23.0"
+robolectric = "4.16.1"
+test-ext = "1.3.0"
+test-rules = "1.7.0"
+turbine = "1.2.1"
 uiautomator = "2.3.0"
 
 [libraries]
@@ -101,9 +100,8 @@ compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-viewmodel" }
-# this unused dependency is needed so that renovate can update the compose compiler version. More info in: https://github.com/renovatebot/renovate/issues/18354
-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose-compiler" }
 google-pay-play-services-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
 google-pay-play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "play-services-wallet" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
@@ -175,13 +173,13 @@ mockito-android = ["mockito-android-main", "mockito-kotlin"]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlin = { id = "kotlin" }
-kotlin-android = { id = "kotlin-android" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }

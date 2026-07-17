@@ -28,9 +28,6 @@ open class AdyenTextInputEditText @JvmOverloads constructor(
     open val rawValue: String
         get() = text?.toString() ?: ""
 
-    /**
-     * Constructor of AdyenTextInputEditText.
-     */
     init {
         this.addTextChangedListener(textWatcher)
     }

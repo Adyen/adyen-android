@@ -42,7 +42,10 @@ android {
             buildConfigField "String", "AUTHORIZATION_HEADER_VALUE", "\"\""
             buildConfigField "String", "CLIENT_KEY", "\"$accClientKey\""
 
-            signingConfig signingConfigs.acceptance
+            def filePath = System.getenv("SIGNING_STORE_FILE")
+            if (filePath) {
+                signingConfig signingConfigs.acceptance
+            }
         }
     }
 }

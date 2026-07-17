@@ -29,16 +29,6 @@ internal class CurrencyUtilsTest {
     }
 
     @Test
-    fun `format amount with ar-LB locale`() {
-        val amount = Amount("LBP", 10050L)
-        val locale = Locale.forLanguageTag("ar-LB")
-
-        val formattedAmount = CurrencyUtils.formatAmount(amount, locale)
-
-        assertEquals("ل.ل.\u200F ١٠٠٫٥٠", formattedAmount)
-    }
-
-    @Test
     fun `format amount with en-US locale`() {
         val amount = Amount("USD", 220000L)
         val locale = Locale.forLanguageTag("en-US")

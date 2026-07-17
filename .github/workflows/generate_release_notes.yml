@@ -18,7 +18,7 @@ jobs:
       allowed-labels: ${{ steps.get_allowed_labels.outputs.allowed_labels }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Get the list of allowed pull request labels
         id: get_allowed_labels
@@ -42,13 +42,13 @@ jobs:
     needs: get_allowed_labels
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
-          python-version: '3.13'
+          python-version: '3.14'
 
       - name: Generate release notes
         id: generate_release_notes
@@ -64,7 +64,7 @@ jobs:
           python scripts/generate_release_notes.py $RELEASE_NOTES_FILE_NAME
 
       - name: Upload release notes artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         env:
           VERSION_NAME: ${{ inputs.version-name }}
         with:
