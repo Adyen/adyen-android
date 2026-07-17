@@ -7,15 +7,43 @@
  */
 
 // only apply dokka if module supports kotlin
-project.plugins.withId("kotlin-android") {
+project.plugins.withId("com.android.library") {
     // cannot reference the plugins declared in the version catalogs here because it requires the use of the `plugins` block instead of the `apply plugin` command
     // the `plugins` block cannot be used in gradle files such as this one, which are imported into other gradle files with the `apply from` command
     apply plugin: "org.jetbrains.dokka"
+    apply plugin: "org.jetbrains.dokka-javadoc"
 
+    def projectName = project.name
+    def mainSourceDir = file("src/main/java")
+
+    dokka {
+        moduleName.set(projectName)
+
+        dokkaPublications.configureEach {
+            suppressInheritedMembers.set(true)
+            failOnWarning.set(false)
+        }
+
+        dokkaSourceSets.configureEach {
+            sourceLink {
+                localDirectory.set(mainSourceDir)
+                remoteUrl("https://github.com/Adyen/adyen-android/tree/main/${projectName}/src/main/java")
+                remoteLineSuffix.set("#L")
+            }
+        }
+
+        pluginsConfiguration {
+            html {
+                footerMessage.set("Copyright (c) ${java.time.Year.now()} Adyen N.V.")
+            }
+        }
+    }
+
+    def dokkaJavadoc = tasks.named("dokkaGeneratePublicationJavadoc")
     tasks.register("javadocJar", Jar) {
-        dependsOn tasks.named("dokkaJavadoc")
+        dependsOn(dokkaJavadoc)
         archiveClassifier.set('javadoc')
-        from dokkaJavadoc.outputDirectory
+        from(dokkaJavadoc.flatMap { it.outputDirectory })
     }
 }
 

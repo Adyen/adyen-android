@@ -1,21 +1,23 @@
 import com.android.build.gradle.LibraryPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper
+import kotlinx.validation.ApiValidationExtension
+import kotlinx.validation.KotlinApiBuildTask
+import kotlinx.validation.KotlinApiCompareTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias libs.plugins.android.application apply false
     alias libs.plugins.android.library apply false
-    alias libs.plugins.jetbrains.kotlin.android apply false
+    alias libs.plugins.kotlin.compose apply false
     alias libs.plugins.kover apply false
     alias libs.plugins.ksp apply false
     alias libs.plugins.hilt apply false
     alias libs.plugins.detekt
     alias libs.plugins.dokka
+    alias libs.plugins.dokka.javadoc apply false
     alias libs.plugins.sonarqube
     alias libs.plugins.binary.compatibility.validator
 }
 
-apply from: "config/gradle/dokkaRoot.gradle"
 apply from: "config/gradle/sonarcloud.gradle"
 apply from: "config/gradle/apiValidator.gradle"
 apply from: "config/gradle/dependencyList.gradle"
@@ -27,6 +29,69 @@ ext {
         versionName = "develop"
     }
     checkoutRedirectScheme = "adyencheckout"
+}
+
+dokka {
+    dokkaPublications {
+        html {
+            outputDirectory.set(layout.buildDirectory.dir("docs"))
+        }
+    }
+}
+
+dependencies {
+    dokka(project(':3ds2'))
+    dokka(project(':ach'))
+    dokka(project(':action'))
+    dokka(project(':action-core'))
+    dokka(project(':await'))
+    dokka(project(':bacs'))
+    dokka(project(':bcmc'))
+    dokka(project(':blik'))
+    dokka(project(':boleto'))
+    dokka(project(':card'))
+    dokka(project(':card-scanning'))
+    dokka(project(':cashapppay'))
+    dokka(project(':checkout-core'))
+    dokka(project(':components-compose'))
+    dokka(project(':components-core'))
+    dokka(project(':convenience-stores-jp'))
+    dokka(project(':cse'))
+    dokka(project(':dotpay'))
+    dokka(project(':drop-in'))
+    dokka(project(':drop-in-compose'))
+    dokka(project(':econtext'))
+    dokka(project(':entercash'))
+    dokka(project(':eps'))
+    dokka(project(':giftcard'))
+    dokka(project(':googlepay'))
+    dokka(project(':ideal'))
+    dokka(project(':instant'))
+    dokka(project(':issuer-list'))
+    dokka(project(':mbway'))
+    dokka(project(':meal-voucher-fr'))
+    dokka(project(':molpay'))
+    dokka(project(':online-banking-core'))
+    dokka(project(':online-banking-cz'))
+    dokka(project(':online-banking-jp'))
+    dokka(project(':online-banking-pl'))
+    dokka(project(':online-banking-sk'))
+    dokka(project(':openbanking'))
+    dokka(project(':paybybank'))
+    dokka(project(':paybybank-us'))
+    dokka(project(':payeasy'))
+    dokka(project(':payto'))
+    dokka(project(':qr-code'))
+    dokka(project(':redirect'))
+    dokka(project(':seven-eleven'))
+    dokka(project(':sepa'))
+    dokka(project(':sessions-core'))
+    dokka(project(':twint'))
+    dokka(project(':twint-action'))
+    dokka(project(':ui-core'))
+    dokka(project(':upi'))
+    dokka(project(':voucher'))
+    dokka(project(':wechatpay'))
 }
 
 subprojects {
@@ -63,11 +128,101 @@ subprojects {
         dependencies {
             lintChecks project(':lint')
         }
-    }
 
-    plugins.withType(KotlinAndroidPluginWrapper).configureEach {
-        kotlin {
-            jvmToolchain(javaVersion)
+        def apiValidation = rootProject.extensions.findByType(ApiValidationExtension)
+        if (apiValidation != null && !apiValidation.ignoredProjects.contains(project.name)) {
+            dependencies.add(
+                "bcv-rt-jvm-cp",
+                "org.jetbrains.kotlin:kotlin-metadata-jvm:${libs.versions.kotlin.get()}"
+            )
+
+            afterEvaluate {
+                def projectName = project.name
+                def dumpFileName = "${projectName}.api"
+                def apiDirName = "api"
+                def apiBuild = tasks.register("apiBuild", KotlinApiBuildTask) {
+                    description = "Builds Kotlin API for 'release' compilation of ${projectName}"
+                    inputClassesDirs.from(tasks.named("compileReleaseKotlin").map { it.outputs.files })
+                    inputClassesDirs.from(tasks.named("compileReleaseJavaWithJavac").map { it.outputs.files })
+                    outputApiFile.set(layout.buildDirectory.file("${apiDirName}/${dumpFileName}"))
+                    runtimeClasspath.from(configurations.named("bcv-rt-jvm-cp-resolver"))
+
+                    doLast {
+                        def apiFile = outputApiFile.get().asFile
+                        if (!apiFile.exists()) return
+                        def result = new StringBuilder()
+                        def skip = false
+                        apiFile.eachLine { line ->
+                            if (!skip && line.contains("class ") && line.contains('ComposableSingletons$')) {
+                                skip = true
+                            } else if (skip && line == "}") {
+                                skip = false
+                            } else if (!skip) {
+                                result.append(line).append('\n')
+                            }
+                        }
+                        apiFile.text = result.toString()
+                            .replaceAll(/(?m)^\tpublic(?: final)? fun describeContents \(\)I\n/, "")
+                            .replaceAll(/(?m)^\tpublic(?: final)? fun writeToParcel \(Landroid\/os\/Parcel;I\)V\n/, "")
+                            .replaceAll(/\n{3,}/, "\n\n")
+                    }
+                }
+
+                def apiCheckFile = layout.buildDirectory.file("${apiDirName}/check/${dumpFileName}")
+                def apiCheckSource = tasks.register("apiCheckSource") {
+                    def goldenApiFile = file("${apiDirName}/${dumpFileName}")
+                    inputs.file(goldenApiFile)
+                    outputs.file(apiCheckFile)
+                    doLast {
+                        def filteredApiFile = apiCheckFile.get().asFile
+                        def result = new StringBuilder()
+                        def skip = false
+                        goldenApiFile.eachLine { line ->
+                            if (!skip && line.contains("class ") && line.contains('\$Creator : android/os/Parcelable\$Creator')) {
+                                skip = true
+                            } else if (skip && line == "}") {
+                                skip = false
+                            } else if (!skip) {
+                                result.append(line).append('\n')
+                            }
+                        }
+                        filteredApiFile.parentFile.mkdirs()
+                        filteredApiFile.text = result.toString()
+                            .replaceAll(/(?m)^\tpublic(?: final)? fun describeContents \(\)I\n/, "")
+                            .replaceAll(/(?m)^\tpublic(?: final)? fun writeToParcel \(Landroid\/os\/Parcel;I\)V\n/, "")
+                            .replaceAll(/\n{3,}/, "\n\n")
+                    }
+                }
+
+                def apiCheck = tasks.register("apiCheck", KotlinApiCompareTask) {
+                    group = "verification"
+                    description = "Checks signatures of public API against the golden value in API folder for ${projectName}"
+                    dependsOn(apiCheckSource)
+                    projectApiFile.set(apiCheckFile)
+                    generatedApiFile.set(apiBuild.flatMap { it.outputApiFile })
+                }
+
+                tasks.register("apiDump") {
+                    group = "other"
+                    description = "Syncs the API file for ${projectName}"
+                    dependsOn(apiBuild)
+                    def fromProvider = apiBuild.flatMap { it.outputApiFile }
+                    def toFile = file("${apiDirName}/${dumpFileName}")
+                    inputs.file(fromProvider)
+                    outputs.file(toFile)
+                    doLast {
+                        def source = fromProvider.get().asFile
+                        if (source.exists()) {
+                            toFile.parentFile.mkdirs()
+                            toFile.bytes = source.bytes
+                        } else {
+                            toFile.delete()
+                        }
+                    }
+                }
+
+                tasks.named("check") { dependsOn(apiCheck) }
+            }
         }
     }
 
@@ -75,6 +230,7 @@ subprojects {
         kotlinOptions {
             freeCompilerArgs += [
                 '-opt-in=kotlin.RequiresOptIn',
+                '-jvm-default=disable',
             ]
         }
     }
