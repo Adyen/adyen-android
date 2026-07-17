@@ -1,7 +1,7 @@
 [versions]
 # SDK
-compile-sdk = "35"
-target-sdk = "35"
+compile-sdk = "36"
+target-sdk = "36"
 min-sdk = "21"
 
 # App version, only used for example app, no need to increment
