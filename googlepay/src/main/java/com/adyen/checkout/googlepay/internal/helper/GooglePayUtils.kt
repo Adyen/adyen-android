@@ -15,6 +15,7 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.components.paymentmethod.GooglePayDetails
+import com.adyen.checkout.googlepay.IssuerCountryCodes
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.SoftwareInfo
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
@@ -25,6 +26,7 @@ import com.adyen.checkout.googlepay.internal.data.model.PaymentMethodTokenizatio
 import com.adyen.checkout.googlepay.internal.data.model.TokenizationParameters
 import com.adyen.checkout.googlepay.internal.data.model.TransactionInfoModel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayPaymentMethodParams
 import com.adyen.threeds2.ThreeDS2Service
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
@@ -221,26 +223,33 @@ internal object GooglePayUtils {
     }
 
     internal fun getAllowedPaymentMethods(params: GooglePayComponentParams): List<GooglePayPaymentMethodModel> {
-        return listOf(createCardPaymentMethod(params))
+        return params.allowedPaymentMethods.map { createPaymentMethodModel(it, params) }
     }
 
-    private fun createCardPaymentMethod(params: GooglePayComponentParams): GooglePayPaymentMethodModel {
-        return GooglePayPaymentMethodModel(
-            type = PAYMENT_TYPE_CARD,
-            parameters = createCardParameters(params),
-            tokenizationSpecification = createTokenizationSpecification(params),
-        )
+    private fun createPaymentMethodModel(
+        parameters: GooglePayPaymentMethodParams,
+        params: GooglePayComponentParams,
+    ): GooglePayPaymentMethodModel {
+        return when (parameters) {
+            is GooglePayPaymentMethodParams.Card -> GooglePayPaymentMethodModel(
+                type = PAYMENT_TYPE_CARD,
+                parameters = createCardParameters(parameters),
+                tokenizationSpecification = createTokenizationSpecification(params),
+            )
+        }
     }
 
-    private fun createCardParameters(params: GooglePayComponentParams): CardParameters {
+    private fun createCardParameters(card: GooglePayPaymentMethodParams.Card): CardParameters {
         return CardParameters(
-            allowedAuthMethods = params.allowedAuthMethods,
-            allowedCardNetworks = params.allowedCardNetworks,
-            isAllowPrepaidCards = params.isAllowPrepaidCards,
-            isAllowCreditCards = params.isAllowCreditCards,
-            isAssuranceDetailsRequired = params.isAssuranceDetailsRequired,
-            isBillingAddressRequired = params.isBillingAddressRequired,
-            billingAddressParameters = params.billingAddressParameters,
+            allowedAuthMethods = card.allowedAuthMethods,
+            allowedCardNetworks = card.allowedCardNetworks,
+            isAllowPrepaidCards = card.isAllowPrepaidCards,
+            isAllowCreditCards = card.isAllowCreditCards,
+            allowedIssuerCountryCodes = (card.issuerCountryCodes as? IssuerCountryCodes.Allowed)?.codes,
+            blockedIssuerCountryCodes = (card.issuerCountryCodes as? IssuerCountryCodes.Blocked)?.codes,
+            isAssuranceDetailsRequired = card.isAssuranceDetailsRequired,
+            isBillingAddressRequired = card.isBillingAddressRequired,
+            billingAddressParameters = card.billingAddressParameters,
         )
     }
 

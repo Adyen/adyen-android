@@ -15,8 +15,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 /**
- * Pass this object to [GooglePayConfiguration.billingAddressParameters] to set additional fields to be returned for
- * the requested billing address. This object is a mapping of the
+ * Pass this object to [GooglePayAllowedPaymentMethods.Card.billingAddressParameters] to set additional fields to be
+ * returned for the requested billing address. This object is a mapping of the
  * [BillingAddressParameters](https://developers.google.com/pay/api/android/reference/request-objects#BillingAddressParameters)
  * object from the Google Pay SDK.
  *

@@ -21,10 +21,12 @@ import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.GooglePayAllowedPaymentMethods
 import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.GooglePayButtonTheme
 import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.IssuerCountryCodes
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
 import com.google.android.gms.wallet.WalletConstants
@@ -69,23 +71,28 @@ internal class GooglePayComponentParamsMapperTest {
             cornerRadius = 16,
         )
 
+        val cardParameters = GooglePayAllowedPaymentMethods.Card(
+            allowedAuthMethods = allowedAuthMethods,
+            allowedCardNetworks = allowedCardNetworks,
+            allowPrepaidCards = true,
+            allowCreditCards = true,
+            issuerCountryCodes = IssuerCountryCodes.Allowed(listOf("NL", "US")),
+            assuranceDetailsRequired = true,
+            billingAddressRequired = true,
+            billingAddressParameters = billingAddressParameters,
+        )
+
         val googlePayConfiguration = createGooglePayConfiguration(
             merchantAccount = "MERCHANT_ACCOUNT",
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION,
             totalPriceStatus = "STATUS",
             countryCode = "ZZ",
             merchantInfo = merchantInfo,
-            allowedAuthMethods = allowedAuthMethods,
-            allowedCardNetworks = allowedCardNetworks,
-            isAllowPrepaidCards = true,
-            isAllowCreditCards = true,
-            isAssuranceDetailsRequired = true,
+            allowedPaymentMethods = GooglePayAllowedPaymentMethods(card = cardParameters),
             isEmailRequired = true,
             isExistingPaymentMethodRequired = true,
             isShippingAddressRequired = true,
             shippingAddressParameters = shippingAddressParameters,
-            isBillingAddressRequired = true,
-            billingAddressParameters = billingAddressParameters,
             checkoutOption = "DEFAULT",
             googlePayButtonStyling = googlePayButtonStyling,
         )
@@ -110,17 +117,22 @@ internal class GooglePayComponentParamsMapperTest {
             totalPriceStatus = "STATUS",
             countryCode = "ZZ",
             merchantInfo = merchantInfo,
-            allowedAuthMethods = allowedAuthMethods,
-            allowedCardNetworks = allowedCardNetworks,
-            isAllowPrepaidCards = true,
-            isAllowCreditCards = true,
-            isAssuranceDetailsRequired = true,
+            allowedPaymentMethods = listOf(
+                resolvedCard(
+                    allowedAuthMethods = allowedAuthMethods,
+                    allowedCardNetworks = allowedCardNetworks,
+                    isAllowPrepaidCards = true,
+                    isAllowCreditCards = true,
+                    issuerCountryCodes = IssuerCountryCodes.Allowed(listOf("NL", "US")),
+                    isAssuranceDetailsRequired = true,
+                    isBillingAddressRequired = true,
+                    billingAddressParameters = billingAddressParameters,
+                ),
+            ),
             isEmailRequired = true,
             isExistingPaymentMethodRequired = true,
             isShippingAddressRequired = true,
             shippingAddressParameters = shippingAddressParameters,
-            isBillingAddressRequired = true,
-            billingAddressParameters = billingAddressParameters,
             checkoutOption = "DEFAULT",
             googlePayButtonStyling = googlePayButtonStyling,
         )
@@ -202,7 +214,9 @@ internal class GooglePayComponentParamsMapperTest {
     fun `when allowedCardNetworks is not set in googlePayConfiguration then brands in the paymentMethod is used`() {
         val checkoutParams = createCheckoutParams(
             configuration = createGooglePayConfiguration(
-                allowedCardNetworks = null,
+                allowedPaymentMethods = GooglePayAllowedPaymentMethods(
+                    card = GooglePayAllowedPaymentMethods.Card(),
+                ),
             ),
         )
 
@@ -216,7 +230,61 @@ internal class GooglePayComponentParamsMapperTest {
         )
 
         val expected = getGooglePayComponentParams(
-            allowedCardNetworks = listOf("MASTERCARD", "AMEX", "DISCOVER"),
+            allowedPaymentMethods = listOf(
+                resolvedCard(
+                    allowedCardNetworks = listOf("MASTERCARD", "AMEX", "DISCOVER"),
+                ),
+            ),
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when allowedPaymentMethods holder has a null card then default card is used`() {
+        val checkoutParams = createCheckoutParams(
+            configuration = createGooglePayConfiguration(
+                allowedPaymentMethods = GooglePayAllowedPaymentMethods(card = null),
+            ),
+        )
+
+        val params = googlePayComponentParamsMapper.mapToParams(
+            params = checkoutParams,
+            paymentMethod = createPaymentMethod(),
+        )
+
+        val expected = getGooglePayComponentParams(
+            allowedPaymentMethods = listOf(resolvedCard()),
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when allowedPaymentMethods holder has a configured card then that card is resolved`() {
+        val checkoutParams = createCheckoutParams(
+            configuration = createGooglePayConfiguration(
+                allowedPaymentMethods = GooglePayAllowedPaymentMethods(
+                    card = GooglePayAllowedPaymentMethods.Card(
+                        allowedAuthMethods = listOf("PAN_ONLY"),
+                        allowedCardNetworks = listOf("VISA"),
+                    ),
+                ),
+            ),
+        )
+
+        val params = googlePayComponentParamsMapper.mapToParams(
+            params = checkoutParams,
+            paymentMethod = createPaymentMethod(),
+        )
+
+        val expected = getGooglePayComponentParams(
+            allowedPaymentMethods = listOf(
+                resolvedCard(
+                    allowedAuthMethods = listOf("PAN_ONLY"),
+                    allowedCardNetworks = listOf("VISA"),
+                ),
+            ),
         )
 
         assertEquals(expected, params)
@@ -352,17 +420,11 @@ internal class GooglePayComponentParamsMapperTest {
         totalPriceStatus: String? = null,
         countryCode: String? = null,
         merchantInfo: MerchantInfo? = null,
-        allowedAuthMethods: List<String>? = null,
-        allowedCardNetworks: List<String>? = null,
-        isAllowPrepaidCards: Boolean? = null,
-        isAllowCreditCards: Boolean? = null,
-        isAssuranceDetailsRequired: Boolean? = null,
+        allowedPaymentMethods: GooglePayAllowedPaymentMethods? = null,
         isEmailRequired: Boolean? = null,
         isExistingPaymentMethodRequired: Boolean? = null,
         isShippingAddressRequired: Boolean? = null,
         shippingAddressParameters: ShippingAddressParameters? = null,
-        isBillingAddressRequired: Boolean? = null,
-        billingAddressParameters: BillingAddressParameters? = null,
         checkoutOption: String? = null,
         googlePayButtonStyling: GooglePayButtonStyling? = null,
     ) = GooglePayConfiguration(
@@ -371,17 +433,11 @@ internal class GooglePayComponentParamsMapperTest {
         totalPriceStatus = totalPriceStatus,
         countryCode = countryCode,
         merchantInfo = merchantInfo,
-        allowedAuthMethods = allowedAuthMethods,
-        allowedCardNetworks = allowedCardNetworks,
-        isAllowPrepaidCards = isAllowPrepaidCards,
-        isAllowCreditCards = isAllowCreditCards,
-        isAssuranceDetailsRequired = isAssuranceDetailsRequired,
+        allowedPaymentMethods = allowedPaymentMethods,
         isEmailRequired = isEmailRequired,
         isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
         isShippingAddressRequired = isShippingAddressRequired,
         shippingAddressParameters = shippingAddressParameters,
-        isBillingAddressRequired = isBillingAddressRequired,
-        billingAddressParameters = billingAddressParameters,
         checkoutOption = checkoutOption,
         googlePayButtonStyling = googlePayButtonStyling,
     )
@@ -394,17 +450,11 @@ internal class GooglePayComponentParamsMapperTest {
         totalPriceStatus: String = "FINAL",
         countryCode: String? = null,
         merchantInfo: MerchantInfo? = null,
-        allowedAuthMethods: List<String> = AllowedAuthMethods.allAllowedAuthMethods,
-        allowedCardNetworks: List<String> = AllowedCardNetworks.allAllowedCardNetworks,
-        isAllowPrepaidCards: Boolean = false,
-        isAllowCreditCards: Boolean? = null,
-        isAssuranceDetailsRequired: Boolean? = null,
+        allowedPaymentMethods: List<GooglePayPaymentMethodParams> = listOf(resolvedCard()),
         isEmailRequired: Boolean = false,
         isExistingPaymentMethodRequired: Boolean = false,
         isShippingAddressRequired: Boolean = false,
         shippingAddressParameters: ShippingAddressParameters? = null,
-        isBillingAddressRequired: Boolean = false,
-        billingAddressParameters: BillingAddressParameters? = null,
         checkoutOption: String? = null,
         googlePayButtonStyling: GooglePayButtonStyling? = null,
     ) = GooglePayComponentParams(
@@ -414,19 +464,34 @@ internal class GooglePayComponentParamsMapperTest {
         totalPriceStatus = totalPriceStatus,
         countryCode = countryCode,
         merchantInfo = merchantInfo,
-        allowedAuthMethods = allowedAuthMethods,
-        allowedCardNetworks = allowedCardNetworks,
-        isAllowPrepaidCards = isAllowPrepaidCards,
-        isAllowCreditCards = isAllowCreditCards,
-        isAssuranceDetailsRequired = isAssuranceDetailsRequired,
+        allowedPaymentMethods = allowedPaymentMethods,
         isEmailRequired = isEmailRequired,
         isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
         isShippingAddressRequired = isShippingAddressRequired,
         shippingAddressParameters = shippingAddressParameters,
-        isBillingAddressRequired = isBillingAddressRequired,
-        billingAddressParameters = billingAddressParameters,
         checkoutOption = checkoutOption,
         googlePayButtonStyling = googlePayButtonStyling,
+    )
+
+    @Suppress("LongParameterList")
+    private fun resolvedCard(
+        allowedAuthMethods: List<String> = AllowedAuthMethods.allAllowedAuthMethods,
+        allowedCardNetworks: List<String> = AllowedCardNetworks.allAllowedCardNetworks,
+        isAllowPrepaidCards: Boolean = false,
+        isAllowCreditCards: Boolean? = null,
+        issuerCountryCodes: IssuerCountryCodes? = null,
+        isAssuranceDetailsRequired: Boolean? = null,
+        isBillingAddressRequired: Boolean = false,
+        billingAddressParameters: BillingAddressParameters? = null,
+    ) = GooglePayPaymentMethodParams.Card(
+        allowedAuthMethods = allowedAuthMethods,
+        allowedCardNetworks = allowedCardNetworks,
+        isAllowPrepaidCards = isAllowPrepaidCards,
+        isAllowCreditCards = isAllowCreditCards,
+        issuerCountryCodes = issuerCountryCodes,
+        isAssuranceDetailsRequired = isAssuranceDetailsRequired,
+        isBillingAddressRequired = isBillingAddressRequired,
+        billingAddressParameters = billingAddressParameters,
     )
 
     private fun createPaymentMethod(
