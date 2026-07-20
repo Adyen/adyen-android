@@ -16,10 +16,10 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionFactory<T : ActionComponent> {
+interface ActionFactory<A : Action, T : ActionComponent> {
 
     fun create(
-        action: Action,
+        action: A,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,

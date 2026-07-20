@@ -20,11 +20,11 @@ import java.util.concurrent.ConcurrentHashMap
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object ActionComponentProvider {
 
-    private val factories = ConcurrentHashMap<String, ActionFactory<*>>()
+    private val factories = ConcurrentHashMap<String, ActionFactory<*, *>>()
 
     fun register(
         actionType: String,
-        factory: ActionFactory<*>,
+        factory: ActionFactory<*, *>,
     ) {
         factories[actionType] = factory
     }
@@ -36,7 +36,9 @@ object ActionComponentProvider {
         params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
     ): ActionComponent {
-        return factories[action.type]?.create(
+        @Suppress("UNCHECKED_CAST")
+        val factory = factories[action.type] as? ActionFactory<Action, *>
+        return factory?.create(
             action = action,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,

@@ -9,7 +9,6 @@
 package com.adyen.checkout.await.internal.ui
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.AwaitAction
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -21,22 +20,15 @@ import com.adyen.checkout.core.components.internal.data.api.StatusService
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 
-internal class AwaitFactory : ActionFactory<AwaitComponent> {
+internal class AwaitFactory : ActionFactory<AwaitAction, AwaitComponent> {
 
-    @Suppress("TooGenericExceptionThrown")
     override fun create(
-        action: Action,
+        action: AwaitAction,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
     ): AwaitComponent {
-        if (action !is AwaitAction) {
-//          TODO - Error Propagation
-//          throw ComponentException("Unsupported action")
-            throw RuntimeException("Unsupported action")
-        }
-
         val redirectHandler = DefaultRedirectHandler()
         val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val statusService = StatusService(httpClient)

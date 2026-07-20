@@ -14,7 +14,7 @@ import com.adyen.checkout.authentication.internal.data.api.SubmitFingerprintRepo
 import com.adyen.checkout.authentication.internal.data.api.SubmitFingerprintService
 import com.adyen.checkout.authentication.internal.data.model.AuthenticationSerializer
 import com.adyen.checkout.authentication.internal.ui.model.AuthenticationComponentParamsMapper
-import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.data.Threeds2Action
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -25,10 +25,12 @@ import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 
-internal class AuthenticationFactory(private val application: Application) : ActionFactory<AuthenticationComponent> {
+internal class AuthenticationFactory(
+    private val application: Application,
+) : ActionFactory<Threeds2Action, AuthenticationComponent> {
 
     override fun create(
-        action: Action,
+        action: Threeds2Action,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,

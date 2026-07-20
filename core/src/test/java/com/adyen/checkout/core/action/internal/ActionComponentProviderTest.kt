@@ -140,7 +140,7 @@ internal class ActionComponentProviderTest {
     }
 
     private fun generateFactory(actionComponent: ActionComponent) =
-        object : ActionFactory<ActionComponent> {
+        object : ActionFactory<Action, ActionComponent> {
             override fun create(
                 action: Action,
                 coroutineScope: CoroutineScope,
