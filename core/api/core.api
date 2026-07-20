@@ -651,6 +651,9 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_INVALID_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field PAY_BUTTON_NO_AMOUNT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field PAY_BUTTON_WITH_AMOUNT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field PAY_BUTTON_ZERO_AMOUNT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static fun values ()[Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

@@ -18,12 +18,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.internal.ui.PayButton
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
-import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import kotlinx.coroutines.flow.StateFlow
@@ -59,7 +59,7 @@ private fun MBWayContent(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
         footer = {
-            PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+            PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
         },
     ) {
         Column(
@@ -101,6 +101,7 @@ private fun MBWayContentPreview() {
             isLoading = false,
             selectedCountryCode = countries.first(),
             phoneNumber = TextInputViewState(),
+            amount = null,
         ),
         onIntent = {},
         onSubmitClick = {},

@@ -40,7 +40,7 @@ internal class BlikFactory :
             componentStateFactory = BlikComponentStateFactory(),
             componentStateReducer = BlikComponentStateReducer(),
             componentStateValidator = BlikComponentStateValidator(),
-            viewStateProducer = BlikViewStateProducer(),
+            viewStateProducer = BlikViewStateProducer(params.amount),
             coroutineScope = coroutineScope,
         )
     }

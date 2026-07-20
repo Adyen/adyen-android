@@ -60,6 +60,7 @@ private fun CountryCodePickerPreview() {
             isLoading = false,
             selectedCountryCode = countries.first(),
             phoneNumber = TextInputViewState(),
+            amount = null,
         ),
         onItemClick = {},
     )

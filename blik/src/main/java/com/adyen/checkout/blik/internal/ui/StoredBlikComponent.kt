@@ -11,8 +11,6 @@ package com.adyen.checkout.blik.internal.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
-import com.adyen.checkout.blik.internal.ui.state.StoredBlikViewState
-import com.adyen.checkout.blik.internal.ui.view.StoredBlikContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -23,9 +21,7 @@ import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.paymentmethod.BlikDetails
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 
 internal class StoredBlikComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
@@ -35,8 +31,6 @@ internal class StoredBlikComponent(
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
-
-    private val viewState = MutableStateFlow(StoredBlikViewState(isLoading = false))
 
     init {
         trackRenderEvent()
@@ -52,27 +46,13 @@ internal class StoredBlikComponent(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        StoredBlikContent(
-            viewStateFlow = viewState,
-            onSubmitClick = ::submit,
-            modifier = modifier,
-        )
+        // This component has no UI
     }
 
     override fun submit() {
         val paymentComponentState = createPaymentComponentState()
         eventChannel.trySend(PaymentComponentEvent.Submit(paymentComponentState))
     }
-
-    override fun requiresUserInteraction(): Boolean = false
-
-    override fun setLoading(isLoading: Boolean) {
-        this.viewState.update {
-            it.copy(isLoading = isLoading)
-        }
-    }
-
-    override fun onCleared() = Unit
 
     private fun createPaymentComponentState(): BlikPaymentComponentState {
         val blikDetails = BlikDetails(
@@ -92,4 +72,10 @@ internal class StoredBlikComponent(
             isValid = true,
         )
     }
+
+    override fun requiresUserInteraction(): Boolean = false
+
+    override fun setLoading(isLoading: Boolean) = Unit
+
+    override fun onCleared() = Unit
 }

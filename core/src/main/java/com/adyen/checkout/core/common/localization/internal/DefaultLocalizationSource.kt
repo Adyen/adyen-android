@@ -133,6 +133,11 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.BLIK_CODE_HINT -> R.string.checkout_blik_code_hint
             CheckoutLocalizationKey.BLIK_CODE_INVALID -> R.string.checkout_blik_code_not_valid
             CheckoutLocalizationKey.BLIK_HELPER_TEXT -> R.string.checkout_blik_helper_text
+
+            // Pay button
+            CheckoutLocalizationKey.PAY_BUTTON_NO_AMOUNT -> R.string.checkout_pay_button_no_amount
+            CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT -> R.string.checkout_pay_button_zero_amount
+            CheckoutLocalizationKey.PAY_BUTTON_WITH_AMOUNT -> R.string.checkout_pay_button_with_amount
         }
 
         return context.getString(resId)

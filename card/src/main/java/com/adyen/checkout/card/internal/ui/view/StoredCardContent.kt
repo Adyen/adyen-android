@@ -21,9 +21,9 @@ import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.internal.ui.PayButton
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
-import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -58,7 +58,7 @@ private fun StoredCardContent(
         ComponentScaffold(
             modifier = modifier,
             footer = {
-                PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+                PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
             },
         ) {
             Column(
@@ -87,6 +87,7 @@ private fun StoredCardContentPreview(
             brand = CardBrand(""),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             isLoading = false,
+            amount = null,
         )
 
         StoredCardContent(
