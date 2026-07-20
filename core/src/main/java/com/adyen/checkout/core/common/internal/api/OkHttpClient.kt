@@ -11,7 +11,7 @@ package com.adyen.checkout.core.common.internal.api
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 import com.adyen.checkout.core.error.internal.HttpError
 import okhttp3.Headers.Companion.toHeaders
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -57,12 +57,8 @@ internal class OkHttpClient(
         return executeRequest(request, path)
     }
 
-    @Suppress("TooGenericExceptionThrown")
     private fun buildURL(path: String, queryParameters: Map<String, String>): String {
-        val builder = (baseUrl + path).toHttpUrlOrNull()?.newBuilder()
-            ?: throw Exception("Failed to parse URL.")
-        // TODO - Errors
-//            ?: throw CheckoutException("Failed to parse URL.")
+        val builder = (baseUrl + path).toHttpUrl().newBuilder()
 
         queryParameters.forEach { entry ->
             builder.addQueryParameter(entry.key, entry.value)
@@ -106,7 +102,7 @@ internal class OkHttpClient(
     private fun Response.getHttpError(): HttpError {
         val stringBody = try {
             body?.string()
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             null
         }
 
@@ -114,7 +110,7 @@ internal class OkHttpClient(
             stringBody
                 ?.let { JSONObject(it) }
                 ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
-        } catch (e: JSONException) {
+        } catch (_: JSONException) {
             null
         }
 
