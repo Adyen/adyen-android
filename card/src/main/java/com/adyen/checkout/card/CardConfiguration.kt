@@ -13,6 +13,9 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Configuration for the card payment method. Create it by calling [CheckoutConfiguration.card].
+ */
 @Parcelize
 @Suppress("LongParameterList")
 class CardConfiguration internal constructor(
@@ -29,6 +32,27 @@ class CardConfiguration internal constructor(
     val installmentConfiguration: InstallmentConfiguration?,
 ) : Configuration
 
+/**
+ * Adds a [CardConfiguration] to this [CheckoutConfiguration] to configure the card payment method.
+ *
+ * @param billingAddressMode The type of billing address form to show to the shopper.
+ * @param koreanAuthenticationVisibility Whether the security fields for Korean cards should be shown.
+ * @param showCardholderName Whether the cardholder name should be shown as an input field.
+ * @param showSecurityCode Whether the security code (CVC/CVV) field should be shown and requested from the shopper on
+ * a regular payment. Note that hiding it might have implications for the risk of the transaction; talk to Adyen
+ * Support before changing this.
+ * @param showSecurityCodeForStoredCard Whether the security code (CVC/CVV) field should be shown and requested from
+ * the shopper on a stored card payment.
+ * @param showStorePaymentMethod Whether the option to store the card for future payments should be shown as an input
+ * field. Not applicable for the sessions flow.
+ * @param showSupportedCardBrandLogos Whether the logos of the supported card brands should be shown.
+ * @param socialSecurityNumberVisibility Whether the CPF/CNPJ field for Brazilian shoppers should be shown.
+ * @param supportedCardBrands The supported card brands, shown as the shopper inputs the card number. Defaults to the
+ * brands from the `/paymentMethods` response if available.
+ * @param showCardScanner Whether the card scanner should be shown.
+ * @param installmentConfiguration The configuration of the installment options shown to the shopper. Not applicable
+ * for the sessions flow.
+ */
 @Suppress("LongParameterList")
 @JvmOverloads
 fun CheckoutConfiguration.card(

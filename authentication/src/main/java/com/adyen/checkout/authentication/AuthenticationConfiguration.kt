@@ -17,6 +17,12 @@ internal class AuthenticationConfiguration internal constructor(
     val threeDSRequestorAppURL: String?,
 ) : Configuration
 
+/**
+ * Adds an authentication configuration to this [CheckoutConfiguration] to configure 3D Secure 2 authentication.
+ *
+ * @param threeDSRequestorAppURL The URL of the requestor app, used by the issuer's ACS app to redirect the shopper
+ * back to your app after out-of-band (OOB) authentication.
+ */
 @JvmOverloads
 fun CheckoutConfiguration.authentication(
     threeDSRequestorAppURL: String? = null,
