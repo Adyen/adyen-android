@@ -13,12 +13,12 @@ import org.json.JSONObject
 
 @Parcelize
 data class RedirectAction(
-    override val type: String? = null,
-    override val paymentData: String? = null,
-    override val paymentMethodType: String? = null,
-    val method: String? = null,
-    val url: String? = null,
-    val nativeRedirectData: String? = null,
+    override val type: String,
+    override val paymentData: String?,
+    override val paymentMethodType: String?,
+    val method: String?,
+    val url: String?,
+    val nativeRedirectData: String?,
 ) : Action() {
 
     companion object {
@@ -42,7 +42,7 @@ data class RedirectAction(
 
             override fun deserialize(jsonObject: JSONObject): RedirectAction {
                 return RedirectAction(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
                     paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
                     method = jsonObject.getStringOrNull(METHOD),

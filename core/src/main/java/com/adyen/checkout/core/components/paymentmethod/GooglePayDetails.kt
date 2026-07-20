@@ -13,11 +13,11 @@ import org.json.JSONObject
 
 @Parcelize
 data class GooglePayDetails(
-    override val type: String?,
-    override val sdkData: String? = null,
-    val googlePayToken: String? = null,
-    val googlePayCardNetwork: String? = null,
-    val threeDS2SdkVersion: String? = null,
+    override val type: String,
+    override val sdkData: String?,
+    val googlePayToken: String?,
+    val googlePayCardNetwork: String?,
+    val threeDS2SdkVersion: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -27,7 +27,6 @@ data class GooglePayDetails(
 
         @JvmField
         val SERIALIZER: Serializer<GooglePayDetails> = object : Serializer<GooglePayDetails> {
-            @Suppress("TooGenericExceptionThrown")
             override fun serialize(modelObject: GooglePayDetails): JSONObject {
                 return JSONObject().apply {
                     putOpt(TYPE, modelObject.type)
@@ -40,7 +39,7 @@ data class GooglePayDetails(
 
             override fun deserialize(jsonObject: JSONObject): GooglePayDetails {
                 return GooglePayDetails(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     googlePayToken = jsonObject.getStringOrNull(GOOGLE_PAY_TOKEN),
                     googlePayCardNetwork = jsonObject.getStringOrNull(GOOGLE_PAY_CARD_NETWORK),

@@ -148,7 +148,7 @@ internal object GooglePayUtils {
      */
     fun createGooglePayDetails(
         paymentData: PaymentData,
-        paymentMethodType: String?,
+        paymentMethodType: String,
         sdkData: String?,
     ): GooglePayDetails {
         val (googlePayToken, googlePayCardNetwork) = try {

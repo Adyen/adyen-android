@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TestAction(
-    override val type: String? = "test",
+    override val type: String = "test",
     override val paymentData: String? = null,
     override val paymentMethodType: String? = null,
 ) : Action()

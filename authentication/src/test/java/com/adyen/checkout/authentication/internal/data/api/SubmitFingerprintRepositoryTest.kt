@@ -73,7 +73,14 @@ internal class SubmitFingerprintRepositoryTest(
     @Test
     fun `when response type is action with RedirectAction then result is Redirect`() = runTest {
         // GIVEN
-        val redirectAction = RedirectAction(url = "https://redirect.url")
+        val redirectAction = RedirectAction(
+            type = RedirectAction.ACTION_TYPE,
+            paymentData = null,
+            paymentMethodType = null,
+            method = null,
+            url = "https://redirect.url",
+            nativeRedirectData = null,
+        )
         val response = SubmitFingerprintResponse(
             action = redirectAction,
             type = "action",
@@ -94,7 +101,14 @@ internal class SubmitFingerprintRepositoryTest(
     @Test
     fun `when response type is action with Threeds2Action then result is Threeds2`() = runTest {
         // GIVEN
-        val threeds2Action = Threeds2Action(token = "test-token")
+        val threeds2Action = Threeds2Action(
+            type = Threeds2Action.ACTION_TYPE,
+            paymentData = null,
+            paymentMethodType = null,
+            token = "test-token",
+            subtype = null,
+            authorisationToken = null,
+        )
         val response = SubmitFingerprintResponse(
             action = threeds2Action,
             type = "action",

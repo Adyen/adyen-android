@@ -280,6 +280,9 @@ internal class PaymentMethodResolverTest {
             type = "redirect",
             paymentData = "test_data",
             paymentMethodType = "scheme",
+            method = null,
+            url = null,
+            nativeRedirectData = null,
         ),
         checkoutConfiguration = CheckoutConfiguration(
             environment = Environment.TEST,

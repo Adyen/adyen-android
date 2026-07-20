@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.components.paymentmethod
 
 import com.adyen.checkout.core.common.internal.model.ModelObject
-import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import org.json.JSONObject
 
 /**
@@ -21,37 +20,22 @@ import org.json.JSONObject
  */
 abstract class PaymentMethodDetails : ModelObject() {
 
-    abstract val type: String?
+    abstract val type: String
     abstract val sdkData: String?
 
     companion object {
         const val TYPE = "type"
         const val SDK_DATA = "sdkData"
 
-        @Suppress("TooGenericExceptionThrown")
         @JvmField
         val SERIALIZER: Serializer<PaymentMethodDetails> = object : Serializer<PaymentMethodDetails> {
             override fun serialize(modelObject: PaymentMethodDetails): JSONObject {
-                val paymentMethodType = with(modelObject.type) {
-                    if (isNullOrEmpty()) {
-                        // TODO - Error Propagation
-                        // throw CheckoutException("PaymentMethod type not found")
-                        throw RuntimeException("PaymentMethod type not found")
-                    } else {
-                        this
-                    }
-                }
-                val serializer = getChildSerializer(paymentMethodType)
+                val serializer = getChildSerializer(modelObject.type)
                 return serializer.serialize(modelObject)
             }
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethodDetails {
-                val actionType = jsonObject.getStringOrNull(TYPE)
-                if (actionType.isNullOrEmpty()) {
-                    // TODO - Error Propagation
-                    // throw CheckoutException("PaymentMethod type not found")
-                    throw RuntimeException("PaymentMethod type not found")
-                }
+                val actionType = jsonObject.getString(TYPE)
                 val serializer = getChildSerializer(actionType)
                 return serializer.deserialize(jsonObject)
             }

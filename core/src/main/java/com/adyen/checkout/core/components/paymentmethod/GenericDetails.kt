@@ -14,7 +14,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class GenericDetails(
-    override val type: String?,
+    override val type: String,
     override val sdkData: String?,
     val subtype: String?,
 ) : PaymentMethodDetails() {
@@ -35,7 +35,7 @@ data class GenericDetails(
 
             override fun deserialize(jsonObject: JSONObject): GenericDetails {
                 return GenericDetails(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     subtype = jsonObject.getStringOrNull(SUBTYPE),
                 )

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.action.data.RedirectAction
+import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -72,7 +72,7 @@ internal class ActionOnlyCheckoutFlowTest(
         flow.submit()
     }
 
-    private fun createAction() = RedirectAction(
+    private fun createAction() = TestAction(
         type = "redirect",
         paymentData = "test_data",
         paymentMethodType = "scheme",

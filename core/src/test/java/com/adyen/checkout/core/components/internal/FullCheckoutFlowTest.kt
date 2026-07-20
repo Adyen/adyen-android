@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.action.data.RedirectAction
+import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutResultCode
@@ -90,7 +90,7 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when submit results in Action, then navigation emits Action route`() = runTest {
-            val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
+            val action = TestAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
             whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
 
             val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
@@ -275,7 +275,7 @@ internal class FullCheckoutFlowTest(
         @Test
         fun `when submit results in Action and submit is called again, then only one submit request is dispatched`() =
             runTest {
-                val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
+                val action = TestAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
                 whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
 
                 val component = TestPaymentComponent(eventFlow)
@@ -301,7 +301,7 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when submit results in Action, then actionHandler handleAction is called`() = runTest {
-            val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
+            val action = TestAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
             whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
 
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))

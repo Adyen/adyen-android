@@ -18,7 +18,6 @@ import com.adyen.checkout.authentication.internal.data.api.SubmitFingerprintRepo
 import com.adyen.checkout.authentication.internal.data.model.AuthenticationSerializer
 import com.adyen.checkout.authentication.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.authentication.internal.ui.model.AuthenticationComponentParams
-import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.data.Threeds2Action
@@ -100,7 +99,7 @@ internal class AuthenticationComponentTest(
     }
 
     private fun createComponent(
-        action: Action = Threeds2Action(
+        action: Threeds2Action = threeds2Action(
             subtype = Threeds2Action.SubType.FINGERPRINT.value,
             token = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray()),
         ),
@@ -130,25 +129,9 @@ internal class AuthenticationComponentTest(
     inner class HandleActionTest {
 
         @Test
-        fun `action is not Threeds2Action, then an error is emitted`() = runTest {
-            // GIVEN
-            val redirectAction = RedirectAction(url = "https://redirect.url")
-            component = createComponent(action = redirectAction)
-            component.initialize(this)
-            val eventFlow = component.eventFlow.test(testScheduler)
-
-            // WHEN
-            component.handleAction(Activity(), mock())
-
-            // THEN
-            val event = assertInstanceOf<ActionComponentEvent.Error>(eventFlow.latestValue)
-            assertEquals("Unsupported action", event.error.message)
-        }
-
-        @Test
         fun `subtype is null, then an error is emitted`() = runTest {
             // GIVEN
-            val action = Threeds2Action(subtype = null, token = "token")
+            val action = threeds2Action(subtype = null, token = "token")
             component = createComponent(action = action)
             component.initialize(this)
             val eventFlow = component.eventFlow.test(testScheduler)
@@ -164,7 +147,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `token is null for fingerprint subtype, then an error is emitted`() = runTest {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 subtype = Threeds2Action.SubType.FINGERPRINT.value,
                 token = null,
             )
@@ -183,7 +166,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `token is null for challenge subtype, then an error is emitted`() = runTest {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 subtype = Threeds2Action.SubType.CHALLENGE.value,
                 token = null,
             )
@@ -202,7 +185,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `action has paymentData, then paymentData is stored`() = runTest {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 subtype = Threeds2Action.SubType.FINGERPRINT.value,
                 token = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray()),
                 paymentData = "test_payment_data",
@@ -384,7 +367,7 @@ internal class AuthenticationComponentTest(
             // GIVEN
             threeDS2Service.transactionResult =
                 TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
-            val redirectAction = RedirectAction(url = "https://redirect.url")
+            val redirectAction = redirectAction(url = "https://redirect.url")
             val submitResult = SubmitFingerprintResult.Redirect(redirectAction)
             whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
                 Result.success(submitResult)
@@ -423,7 +406,7 @@ internal class AuthenticationComponentTest(
             // GIVEN
             threeDS2Service.transactionResult =
                 TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
-            val threeds2Action = Threeds2Action(subtype = null)
+            val threeds2Action = threeds2Action(subtype = null)
             val submitResult = SubmitFingerprintResult.Threeds2(threeds2Action)
             whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
                 Result.success(submitResult)
@@ -444,7 +427,7 @@ internal class AuthenticationComponentTest(
             // GIVEN
             threeDS2Service.transactionResult =
                 TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
-            val redirectAction = RedirectAction(url = "https://redirect.url")
+            val redirectAction = redirectAction(url = "https://redirect.url")
             val submitResult = SubmitFingerprintResult.Redirect(redirectAction)
             whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
                 Result.success(submitResult)
@@ -673,7 +656,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `completed with authorisationToken, then threeDsResult details are used`() = runTest {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 subtype = Threeds2Action.SubType.FINGERPRINT.value,
                 token = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray()),
                 authorisationToken = "test-auth-token",
@@ -710,7 +693,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `handleAction is called with fingerprint subtype, then action event is tracked`() {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                 type = TEST_ACTION_TYPE,
                 subtype = Threeds2Action.SubType.FINGERPRINT.value,
@@ -734,7 +717,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `handleAction is called with challenge subtype, then action event is tracked`() {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                 type = TEST_ACTION_TYPE,
                 subtype = Threeds2Action.SubType.CHALLENGE.value,
@@ -843,7 +826,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `token is null for fingerprint, then fingerprint error event is tracked`() = runTest {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 subtype = Threeds2Action.SubType.FINGERPRINT.value,
                 token = null,
             )
@@ -863,7 +846,7 @@ internal class AuthenticationComponentTest(
         @Test
         fun `token is null for challenge, then challenge error event is tracked`() = runTest {
             // GIVEN
-            val action = Threeds2Action(
+            val action = threeds2Action(
                 subtype = Threeds2Action.SubType.CHALLENGE.value,
                 token = null,
             )
@@ -1108,11 +1091,11 @@ internal class AuthenticationComponentTest(
                 AuthenticationEvents.Result.COMPLETED,
             ),
             Arguments.arguments(
-                SubmitFingerprintResult.Redirect(RedirectAction()),
+                SubmitFingerprintResult.Redirect(redirectAction()),
                 AuthenticationEvents.Result.REDIRECT,
             ),
             Arguments.arguments(
-                SubmitFingerprintResult.Threeds2(Threeds2Action()),
+                SubmitFingerprintResult.Threeds2(threeds2Action()),
                 AuthenticationEvents.Result.THREEDS2,
             ),
         )
@@ -1135,6 +1118,40 @@ internal class AuthenticationComponentTest(
                 ChallengeResult.Timeout("transactionStatus", "additionalDetails"),
                 AuthenticationEvents.Result.TIMEOUT,
             ),
+        )
+
+        @Suppress("LongParameterList")
+        private fun threeds2Action(
+            type: String = Threeds2Action.ACTION_TYPE,
+            paymentData: String? = null,
+            paymentMethodType: String? = null,
+            token: String? = null,
+            subtype: String? = null,
+            authorisationToken: String? = null,
+        ) = Threeds2Action(
+            type = type,
+            paymentData = paymentData,
+            paymentMethodType = paymentMethodType,
+            token = token,
+            subtype = subtype,
+            authorisationToken = authorisationToken,
+        )
+
+        @Suppress("LongParameterList")
+        private fun redirectAction(
+            type: String = RedirectAction.ACTION_TYPE,
+            paymentData: String? = null,
+            paymentMethodType: String? = null,
+            method: String? = null,
+            url: String? = null,
+            nativeRedirectData: String? = null,
+        ) = RedirectAction(
+            type = type,
+            paymentData = paymentData,
+            paymentMethodType = paymentMethodType,
+            method = method,
+            url = url,
+            nativeRedirectData = nativeRedirectData,
         )
     }
 }

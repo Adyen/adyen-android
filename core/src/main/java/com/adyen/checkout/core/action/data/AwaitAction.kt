@@ -13,7 +13,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class AwaitAction(
-    override val type: String?,
+    override val type: String,
     override val paymentData: String?,
     override val paymentMethodType: String?,
     val url: String?,
@@ -36,7 +36,7 @@ data class AwaitAction(
 
             override fun deserialize(jsonObject: JSONObject): AwaitAction {
                 return AwaitAction(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
                     paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
                     url = jsonObject.getStringOrNull(URL),

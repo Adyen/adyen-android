@@ -13,7 +13,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class CardDetails(
-    override val type: String?,
+    override val type: String,
     override val sdkData: String? = null,
     val encryptedCardNumber: String? = null,
     val encryptedExpiryMonth: String? = null,
@@ -61,7 +61,7 @@ data class CardDetails(
 
             override fun deserialize(jsonObject: JSONObject): CardDetails {
                 return CardDetails(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedExpiryMonth = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_MONTH),
