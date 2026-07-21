@@ -39,8 +39,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
@@ -165,7 +167,7 @@ internal class FullCheckoutFlowTest(
         }
 
         @Test
-        fun `when submit is called twice, then payment component submit is called only once`() = runTest {
+        fun `when submit is called twice, then payment component submit is called twice`() = runTest {
             val component = TestPaymentComponent(eventFlow)
             val flow = createFullCheckoutFlow(
                 coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
@@ -175,27 +177,8 @@ internal class FullCheckoutFlowTest(
             flow.submit()
             flow.submit()
 
-            assertEquals(1, component.submitCount)
+            assertEquals(2, component.submitCount)
         }
-
-        @Test
-        fun `when submit results in Retry and submit is called again, then payment component submit is called twice`() =
-            runTest {
-                whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
-
-                val component = TestPaymentComponent(eventFlow)
-                val flow = createFullCheckoutFlow(
-                    coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
-                    component = component,
-                )
-
-                flow.submit()
-                eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
-
-                flow.submit()
-
-                assertEquals(2, component.submitCount)
-            }
 
         @Test
         fun `when submit results in Retry, then loading is set to false`() = runTest {
@@ -214,43 +197,6 @@ internal class FullCheckoutFlowTest(
         }
 
         @Test
-        fun `when submit results in Completion, then submit cannot be called again`() = runTest {
-            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
-
-            val component = TestPaymentComponent(eventFlow)
-            val flow = createFullCheckoutFlow(
-                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
-                component = component,
-            )
-
-            flow.submit()
-            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
-
-            flow.submit()
-
-            assertEquals(1, component.submitCount)
-        }
-
-        @Test
-        fun `when submit results in Action, then submit cannot be called again`() = runTest {
-            val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
-            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
-
-            val component = TestPaymentComponent(eventFlow)
-            val flow = createFullCheckoutFlow(
-                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
-                component = component,
-            )
-
-            flow.submit()
-            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
-
-            flow.submit()
-
-            assertEquals(1, component.submitCount)
-        }
-
-        @Test
         fun `when submit event is received, then loading is set to true`() = runTest {
             whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
             val component = TestPaymentComponent(eventFlow)
@@ -263,6 +209,91 @@ internal class FullCheckoutFlowTest(
 
             assertTrue(component.isLoading)
         }
+
+        @Test
+        fun `when submit is called, then a submit request is dispatched`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
+            val component = TestPaymentComponent(eventFlow)
+            createFullCheckoutFlow(
+                coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                component = component,
+            )
+
+            val state = createPaymentComponentState()
+            eventFlow.emit(PaymentComponentEvent.Submit(state))
+
+            with(argumentCaptor<PaymentComponentData<*>>()) {
+                verify(componentRequestDispatcher, times(1)).submit(capture())
+                assertEquals(state.data, lastValue)
+            }
+        }
+
+        @Test
+        fun `when submit results in Retry and submit is called again, then another submit request is dispatched`() =
+            runTest {
+                whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+
+                val component = TestPaymentComponent(eventFlow)
+                createFullCheckoutFlow(
+                    coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                    component = component,
+                )
+
+                val state1 = createPaymentComponentState()
+                eventFlow.emit(PaymentComponentEvent.Submit(state1))
+                val state2 = createPaymentComponentState(shopperReference = TEST_SHOPPER_REFERENCE)
+                eventFlow.emit(PaymentComponentEvent.Submit(state2))
+
+                with(argumentCaptor<PaymentComponentData<*>>()) {
+                    verify(componentRequestDispatcher, times(2)).submit(capture())
+                    assertEquals(listOf(state1.data, state2.data), allValues)
+                }
+            }
+
+        @Test
+        fun `when submit results in Completion and submit is called again, then only one submit request is dispatched`() =
+            runTest {
+                whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
+
+                val component = TestPaymentComponent(eventFlow)
+                createFullCheckoutFlow(
+                    coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                    component = component,
+                )
+
+                val state1 = createPaymentComponentState()
+                eventFlow.emit(PaymentComponentEvent.Submit(state1))
+                val state2 = createPaymentComponentState(shopperReference = TEST_SHOPPER_REFERENCE)
+                eventFlow.emit(PaymentComponentEvent.Submit(state2))
+
+                with(argumentCaptor<PaymentComponentData<*>>()) {
+                    verify(componentRequestDispatcher, times(1)).submit(capture())
+                    assertEquals(state1.data, lastValue)
+                }
+            }
+
+        @Test
+        fun `when submit results in Action and submit is called again, then only one submit request is dispatched`() =
+            runTest {
+                val action = RedirectAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
+                whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
+
+                val component = TestPaymentComponent(eventFlow)
+                createFullCheckoutFlow(
+                    coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+                    component = component,
+                )
+
+                val state1 = createPaymentComponentState()
+                eventFlow.emit(PaymentComponentEvent.Submit(state1))
+                val state2 = createPaymentComponentState(shopperReference = TEST_SHOPPER_REFERENCE)
+                eventFlow.emit(PaymentComponentEvent.Submit(state2))
+
+                with(argumentCaptor<PaymentComponentData<*>>()) {
+                    verify(componentRequestDispatcher, times(1)).submit(capture())
+                    assertEquals(state1.data, lastValue)
+                }
+            }
     }
 
     @Nested
@@ -348,14 +379,21 @@ internal class FullCheckoutFlowTest(
         )
     }
 
-    private fun createPaymentComponentState(): PaymentComponentState<PaymentMethodDetails> {
+    private fun createPaymentComponentState(
+        shopperReference: String? = null
+    ): PaymentComponentState<PaymentMethodDetails> {
         return object : PaymentComponentState<PaymentMethodDetails> {
-            override val data = PaymentComponentData<PaymentMethodDetails>(paymentMethod = null, order = null)
+            override val data = PaymentComponentData<PaymentMethodDetails>(
+                paymentMethod = null,
+                order = null,
+                shopperReference = shopperReference,
+            )
             override val isValid = true
         }
     }
 
     companion object {
         private const val TEST_PAYMENT_METHOD_TYPE = "test_payment_method"
+        private const val TEST_SHOPPER_REFERENCE = "test_shopper_reference"
     }
 }
