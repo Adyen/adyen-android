@@ -9,8 +9,19 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
+import com.adyen.checkout.core.components.CheckoutCallbacks
 
+/**
+ * Callback invoked when the first digits (BIN) of the card number entered by the shopper change.
+ *
+ * Register it through [CheckoutCallbacks.card] on your [CheckoutCallbacks].
+ */
 fun interface OnBinChangeCallback : CheckoutAdditionalCallback {
 
+    /**
+     * Called when the BIN of the entered card number changes.
+     *
+     * @param binValue The current BIN (the leading digits of the card number).
+     */
     fun onBinChange(binValue: String)
 }
