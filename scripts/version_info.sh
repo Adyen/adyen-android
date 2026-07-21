@@ -10,7 +10,7 @@ function version_info() {
     local branch_name=$(git branch --show-current)
 
     if [[ $branch_name != release/* ]]; then
-      echo "Error: invalid branch name. Branch name should start with \"release/\"."
+      echo "Error: invalid branch name. Branch name should start with \"release/\"." >&2
       exit 1
     fi
 
@@ -18,7 +18,7 @@ function version_info() {
     local version_name_regex="^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}(-(alpha|beta|rc)\.[0-9]{1,2})?$"
 
     if [[ ! ${version_name} =~ ${version_name_regex} ]]; then
-        echo "Error: invalid version name: $version_name. Please make sure that the name follows this pattern: $version_name_regex ."
+        echo "Error: invalid version name: $version_name. Please make sure that the name follows this pattern: $version_name_regex ." >&2
         exit 1
     fi
 
