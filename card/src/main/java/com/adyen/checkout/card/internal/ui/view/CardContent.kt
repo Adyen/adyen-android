@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -192,7 +193,10 @@ private fun CardDetailsSection(
             }
         }
         if (viewState.installmentViewState != null) {
-            Subtitle(resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS))
+            Subtitle(
+                text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS),
+                modifier = Modifier.padding(top = Dimensions.Spacing.Small),
+            )
             ValuePickerField(
                 value = viewState.installmentViewState.selectedInstallment?.toDisplayText() ?: "",
                 label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
