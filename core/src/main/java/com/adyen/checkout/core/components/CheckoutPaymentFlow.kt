@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.components.internal.CheckoutFullScreenDialog
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
@@ -64,9 +65,30 @@ fun CheckoutPaymentFlow(
         }
     }
 
+    CheckoutContent(
+        controller = controller,
+        modifier = modifier,
+        theme = theme,
+        localizationProvider = localizationProvider,
+        state = state,
+        onSecondaryDismissed = {
+            state = CheckoutPaymentFlowState.PaymentMethod
+        },
+    )
+}
+
+@Composable
+private fun CheckoutContent(
+    controller: CheckoutController,
+    modifier: Modifier,
+    theme: CheckoutTheme = CheckoutTheme(),
+    localizationProvider: CheckoutLocalizationProvider?,
+    state: CheckoutPaymentFlowState,
+    onSecondaryDismissed: () -> Unit,
+) {
     AnimatedContent(state) { localState ->
         when (localState) {
-            CheckoutPaymentFlowState.PaymentMethod -> {
+            CheckoutPaymentFlowState.PaymentMethod, is CheckoutPaymentFlowState.Secondary -> {
                 CheckoutPaymentMethod(
                     controller = controller,
                     modifier = modifier,
@@ -83,16 +105,21 @@ fun CheckoutPaymentFlow(
                     localizationProvider = localizationProvider,
                 )
             }
+        }
+    }
 
-            is CheckoutPaymentFlowState.Secondary -> {
-                CheckoutSecondary(
-                    identifier = localState.identifier,
-                    controller = controller,
-                    modifier = modifier,
-                    theme = theme,
-                    localizationProvider = localizationProvider,
-                )
-            }
+    if (state is CheckoutPaymentFlowState.Secondary) {
+        CheckoutFullScreenDialog(
+            theme = theme,
+            onDismissRequest = onSecondaryDismissed,
+        ) {
+            CheckoutSecondary(
+                identifier = state.identifier,
+                controller = controller,
+                modifier = modifier,
+                theme = theme,
+                localizationProvider = localizationProvider,
+            )
         }
     }
 }
