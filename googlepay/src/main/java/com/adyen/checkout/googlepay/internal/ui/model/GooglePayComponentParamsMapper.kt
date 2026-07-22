@@ -59,7 +59,6 @@ internal class GooglePayComponentParamsMapper {
     private fun GooglePayConfiguration?.getPreferredGatewayMerchantId(
         paymentMethod: GooglePayPaymentMethod,
     ): String {
-        // TODO - Error propagation - Update the code
         return this?.merchantAccount
             ?: paymentMethod.configuration?.gatewayMerchantId
             ?: throw GenericError(

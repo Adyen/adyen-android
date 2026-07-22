@@ -71,7 +71,7 @@ constructor(
     override fun handleAction() {
         val event = GenericEvents.action(
             component = action.paymentMethodType.orEmpty(),
-            subType = action.type.orEmpty(),
+            subType = action.type,
         )
         analyticsManager.trackEvent(event)
 

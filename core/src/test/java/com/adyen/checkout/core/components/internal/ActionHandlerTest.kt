@@ -205,7 +205,7 @@ internal class ActionHandlerTest(
     private fun registerReturningTestFactory() {
         ActionComponentProvider.register(
             RETURNING_ACTION_TYPE,
-            object : ActionFactory<ActionComponent> {
+            object : ActionFactory<Action, ActionComponent> {
                 override fun create(
                     action: Action,
                     coroutineScope: CoroutineScope,
@@ -220,7 +220,7 @@ internal class ActionHandlerTest(
     private fun registerTestFactory() {
         ActionComponentProvider.register(
             TEST_ACTION_TYPE,
-            object : ActionFactory<ActionComponent> {
+            object : ActionFactory<Action, ActionComponent> {
                 override fun create(
                     action: Action,
                     coroutineScope: CoroutineScope,

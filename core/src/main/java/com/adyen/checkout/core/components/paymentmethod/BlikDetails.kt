@@ -14,7 +14,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class BlikDetails(
-    override val type: String?,
+    override val type: String,
     override val sdkData: String?,
     val blikCode: String?,
     val storedPaymentMethodId: String?,
@@ -38,7 +38,7 @@ data class BlikDetails(
 
             override fun deserialize(jsonObject: JSONObject): BlikDetails {
                 return BlikDetails(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     blikCode = jsonObject.getStringOrNull(BLIK_CODE),
                     storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),

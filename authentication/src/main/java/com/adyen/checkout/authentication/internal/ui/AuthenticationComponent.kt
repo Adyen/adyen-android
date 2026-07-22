@@ -67,7 +67,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 internal class AuthenticationComponent
 @Suppress("LongParameterList")
 constructor(
-    private val action: Action,
+    private val action: Threeds2Action,
     private val componentParams: AuthenticationComponentParams,
     override val savedStateHandle: SavedStateHandle,
     private val analyticsManager: AnalyticsManager,
@@ -115,14 +115,7 @@ constructor(
         handleAction(action, activity, uiCustomization)
     }
 
-    private fun handleAction(action: Action, activity: Activity, uiCustomization: UiCustomization) {
-        if (action !is Threeds2Action) {
-            emitError(
-                GenericError("Unsupported action"),
-            )
-            return
-        }
-
+    private fun handleAction(action: Threeds2Action, activity: Activity, uiCustomization: UiCustomization) {
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         handleThreeds2Action(action, activity, uiCustomization)
@@ -663,7 +656,7 @@ constructor(
     private fun trackActionEvent(action: Action, message: String) {
         val event = GenericEvents.action(
             component = action.paymentMethodType.orEmpty(),
-            subType = action.type.orEmpty(),
+            subType = action.type,
             message = message,
         )
         analyticsManager.trackEvent(event)
@@ -696,7 +689,7 @@ constructor(
 
     private fun makeDetails(transactionStatus: String, errorDetails: String? = null): JSONObject {
         // Check whether authorizationToken was set and create the corresponding details object
-        val token = (action as? Threeds2Action)?.authorisationToken
+        val token = action.authorisationToken
         return if (token == null) {
             authenticationSerializer.createChallengeDetails(
                 transactionStatus = transactionStatus,

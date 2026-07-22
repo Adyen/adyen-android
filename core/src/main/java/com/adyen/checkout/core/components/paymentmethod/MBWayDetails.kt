@@ -14,8 +14,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class MBWayDetails(
-    override val type: String?,
-    override val sdkData: String? = null,
+    override val type: String,
+    override val sdkData: String?,
     val telephoneNumber: String?,
 ) : PaymentMethodDetails() {
 
@@ -35,7 +35,7 @@ data class MBWayDetails(
 
             override fun deserialize(jsonObject: JSONObject): MBWayDetails {
                 return MBWayDetails(
-                    type = jsonObject.getStringOrNull(TYPE),
+                    type = jsonObject.getString(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     telephoneNumber = jsonObject.getStringOrNull(TELEPHONE_NUMBER),
                 )

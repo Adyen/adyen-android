@@ -9,7 +9,6 @@
 package com.adyen.checkout.redirect.internal.ui
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -20,22 +19,15 @@ import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import kotlinx.coroutines.CoroutineScope
 
-internal class RedirectFactory : ActionFactory<RedirectComponent> {
+internal class RedirectFactory : ActionFactory<RedirectAction, RedirectComponent> {
 
-    @Suppress("TooGenericExceptionThrown")
     override fun create(
-        action: Action,
+        action: RedirectAction,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
     ): RedirectComponent {
-        if (action !is RedirectAction) {
-//          TODO - Error Propagation
-//          throw ComponentException("Unsupported action")
-            throw RuntimeException("Unsupported action")
-        }
-
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         val httpClient = HttpClientFactory.getHttpClient(params.environment)

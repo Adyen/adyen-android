@@ -68,7 +68,7 @@ internal class RedirectComponentTest(
         fun `when handleAction is called, then analytics action event is tracked`() {
             // GIVEN
             val component = createComponent(
-                action = RedirectAction(
+                action = redirectAction(
                     paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                     type = TEST_ACTION_TYPE,
                     paymentData = "paymentData",
@@ -90,7 +90,7 @@ internal class RedirectComponentTest(
         fun `when handleAction is called with regular redirect, then paymentData is stored`() {
             // GIVEN
             val component = createComponent(
-                action = RedirectAction(
+                action = redirectAction(
                     type = ActionTypes.REDIRECT,
                     paymentData = "testPaymentData",
                 ),
@@ -107,7 +107,7 @@ internal class RedirectComponentTest(
         fun `when handleAction is called with native redirect, then nativeRedirectData is stored`() {
             // GIVEN
             val component = createComponent(
-                action = RedirectAction(
+                action = redirectAction(
                     type = ActionTypes.NATIVE_REDIRECT,
                     nativeRedirectData = "testNativeData",
                 ),
@@ -130,7 +130,7 @@ internal class RedirectComponentTest(
             val expectedDetails = JSONObject().apply { put("redirectResult", "testResult") }
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn expectedDetails
             val component = createComponent(
-                action = RedirectAction(
+                action = redirectAction(
                     type = ActionTypes.REDIRECT,
                     paymentData = "testPaymentData",
                 ),
@@ -156,7 +156,7 @@ internal class RedirectComponentTest(
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
             val component = createComponent(
-                action = RedirectAction(
+                action = redirectAction(
                     type = ActionTypes.REDIRECT,
                     paymentData = "paymentData",
                 ),
@@ -179,7 +179,7 @@ internal class RedirectComponentTest(
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
             val component = createComponent(
-                action = RedirectAction(
+                action = redirectAction(
                     paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                     type = ActionTypes.REDIRECT,
                 ),
@@ -202,7 +202,7 @@ internal class RedirectComponentTest(
             val error = GenericError("Failed to parse redirect result.")
             whenever(redirectHandler.parseRedirectResult(anyOrNull())) doAnswer { throw error }
             val component = createComponent(
-                action = RedirectAction(
+                action = redirectAction(
                     paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                     type = ActionTypes.REDIRECT,
                 ),
@@ -234,7 +234,7 @@ internal class RedirectComponentTest(
                 }
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn redirectResult
                 val component = createComponent(
-                    action = RedirectAction(
+                    action = redirectAction(
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testNativeData",
                     ),
@@ -263,7 +263,7 @@ internal class RedirectComponentTest(
                 whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
-                    action = RedirectAction(
+                    action = redirectAction(
                         paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
@@ -290,7 +290,7 @@ internal class RedirectComponentTest(
                 whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
-                    action = RedirectAction(
+                    action = redirectAction(
                         paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
@@ -317,7 +317,7 @@ internal class RedirectComponentTest(
                 whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
-                    action = RedirectAction(
+                    action = redirectAction(
                         paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
@@ -343,7 +343,7 @@ internal class RedirectComponentTest(
                 whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
-                    action = RedirectAction(
+                    action = redirectAction(
                         paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                         type = ActionTypes.NATIVE_REDIRECT,
                         nativeRedirectData = "testData",
@@ -364,7 +364,7 @@ internal class RedirectComponentTest(
     }
 
     private fun createComponent(
-        action: RedirectAction = RedirectAction(),
+        action: RedirectAction = redirectAction(),
     ): RedirectComponent {
         return RedirectComponent(
             action = action,
@@ -376,6 +376,20 @@ internal class RedirectComponentTest(
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         )
     }
+
+    private fun redirectAction(
+        type: String = TEST_ACTION_TYPE,
+        paymentMethodType: String? = null,
+        paymentData: String? = null,
+        nativeRedirectData: String? = null,
+    ) = RedirectAction(
+        type = type,
+        paymentMethodType = paymentMethodType,
+        paymentData = paymentData,
+        nativeRedirectData = nativeRedirectData,
+        method = null,
+        url = null,
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfgh"

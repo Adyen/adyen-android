@@ -8,7 +8,8 @@
 package com.adyen.checkout.core.action.data
 
 import com.adyen.checkout.core.common.internal.model.ModelObject
-import com.adyen.checkout.core.common.internal.model.getStringOrNull
+import com.adyen.checkout.core.error.CheckoutError
+import com.adyen.checkout.core.error.CheckoutException
 import org.json.JSONObject
 
 /**
@@ -21,7 +22,7 @@ import org.json.JSONObject
  * exact type of the subclass.
  */
 abstract class Action : ModelObject() {
-    abstract val type: String?
+    abstract val type: String
     abstract val paymentData: String?
     abstract val paymentMethodType: String?
 
@@ -34,35 +35,28 @@ abstract class Action : ModelObject() {
         @JvmField
         val SERIALIZER: Serializer<Action> = object : Serializer<Action> {
             override fun serialize(modelObject: Action): JSONObject {
-                val actionType = modelObject.type
-                if (actionType.isNullOrEmpty()) {
-                    // TODO - Error Propagation
-                    // throw CheckoutException("Action type not found")
-                    throw RuntimeException("Action type not found")
-                }
-                return getChildSerializer(actionType).serialize(modelObject)
+                return getChildSerializer(modelObject.type).serialize(modelObject)
             }
 
             override fun deserialize(jsonObject: JSONObject): Action {
-                val actionType = jsonObject.getStringOrNull(TYPE)
-                    // TODO - Error Propagation
-                    // ?: throw CheckoutException("Action type not found")
-                    ?: throw RuntimeException("Action type not found")
+                val actionType = jsonObject.getString(TYPE)
                 val serializer = getChildSerializer(actionType)
                 return serializer.deserialize(jsonObject)
             }
         }
 
-        @Suppress("TooGenericExceptionThrown")
         fun getChildSerializer(actionType: String): Serializer<Action> {
             val childSerializer = when (actionType) {
                 AwaitAction.ACTION_TYPE -> AwaitAction.SERIALIZER
                 RedirectAction.ACTION_TYPE -> RedirectAction.SERIALIZER
                 Threeds2Action.ACTION_TYPE -> Threeds2Action.SERIALIZER
-                else ->
-                    // TODO - Error Propagation
-                    // throw CheckoutException("Action type not found - $actionType")
-                    throw RuntimeException("Action type not found - $actionType")
+                else -> {
+                    val error = CheckoutError(
+                        code = CheckoutError.ErrorCode.GENERIC,
+                        message = "Action type not found - $actionType",
+                    )
+                    throw CheckoutException(error)
+                }
             }
             @Suppress("UNCHECKED_CAST")
             return childSerializer as Serializer<Action>

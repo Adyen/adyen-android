@@ -12,13 +12,13 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 
 @Parcelize
-class Threeds2Action(
-    override val type: String? = null,
-    override val paymentData: String? = null,
-    override val paymentMethodType: String? = null,
-    val token: String? = null,
-    val subtype: String? = null,
-    val authorisationToken: String? = null
+data class Threeds2Action(
+    override val type: String,
+    override val paymentData: String?,
+    override val paymentMethodType: String?,
+    val token: String?,
+    val subtype: String?,
+    val authorisationToken: String?,
 ) : Action() {
 
     companion object {
@@ -43,10 +43,10 @@ class Threeds2Action(
 
             override fun deserialize(jsonObject: JSONObject): Threeds2Action {
                 return Threeds2Action(
+                    type = jsonObject.getString(TYPE),
                     token = jsonObject.getStringOrNull(TOKEN),
                     subtype = jsonObject.getStringOrNull(SUBTYPE),
                     authorisationToken = jsonObject.getStringOrNull(AUTHORISATION_TOKEN),
-                    type = jsonObject.getStringOrNull(TYPE),
                     paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
                     paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
                 )

@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.components.data.model.paymentmethod
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.json.JSONObject
 
@@ -25,30 +24,16 @@ abstract class PaymentMethod
 constructor() : PaymentMethodResponse() {
 
     companion object {
-        @Suppress("TooGenericExceptionThrown")
+
         @JvmField
         val SERIALIZER: Serializer<PaymentMethod> = object : Serializer<PaymentMethod> {
             override fun serialize(modelObject: PaymentMethod): JSONObject {
-                val paymentMethodType = with(modelObject.type) {
-                    if (isNullOrEmpty()) {
-                        // TODO - Error Propagation
-                        // throw CheckoutException("PaymentMethod type not found")
-                        throw RuntimeException("PaymentMethod type not found")
-                    } else {
-                        this
-                    }
-                }
-                val serializer = getChildSerializer(paymentMethodType)
+                val serializer = getChildSerializer(modelObject.type)
                 return serializer.serialize(modelObject)
             }
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethod {
-                val type = jsonObject.getStringOrNull(TYPE)
-                if (type.isNullOrEmpty()) {
-                    // TODO - Error Propagation
-                    // throw CheckoutException("PaymentMethod type not found")
-                    throw RuntimeException("PaymentMethod type not found")
-                }
+                val type = jsonObject.getString(TYPE)
                 val serializer = getChildSerializer(type)
                 return serializer.deserialize(jsonObject)
             }
