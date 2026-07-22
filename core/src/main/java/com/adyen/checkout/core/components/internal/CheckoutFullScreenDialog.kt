@@ -9,9 +9,16 @@
 package com.adyen.checkout.core.components.internal
 
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -22,6 +29,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowCompat
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -49,8 +59,18 @@ internal fun CheckoutFullScreenDialog(
             modifier = Modifier.fillMaxSize(),
             color = Color(theme.colors.background.value),
         ) {
-            // keep content out from under the bars, while the surface stays edge-to-edge
-            Box(modifier = Modifier.safeDrawingPadding()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    // keep content out from under the bars, while the surface stays edge-to-edge
+                    .safeDrawingPadding(),
+            ) {
+                IconButton(onClick = onDismissRequest) {
+                    Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
+                }
+
+                Spacer(Modifier.size(Dimensions.Spacing.Small))
+
                 content()
             }
         }

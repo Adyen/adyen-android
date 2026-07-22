@@ -41,6 +41,7 @@ dependencies {
     implementation libs.compose.activity
     implementation libs.okhttp
     implementation libs.androidx.startup
+    implementation libs.compose.material.icons
 
     testImplementation libs.json
     testImplementation libs.bundles.junit
