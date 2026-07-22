@@ -118,12 +118,23 @@ public final class com/adyen/checkout/core/action/data/Threeds2Action : com/adye
 	public static final field Companion Lcom/adyen/checkout/core/action/data/Threeds2Action$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/Threeds2Action;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/action/data/Threeds2Action;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/action/data/Threeds2Action;
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAuthorisationToken ()Ljava/lang/String;
 	public fun getPaymentData ()Ljava/lang/String;
 	public fun getPaymentMethodType ()Ljava/lang/String;
 	public final fun getSubtype ()Ljava/lang/String;
 	public final fun getToken ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 

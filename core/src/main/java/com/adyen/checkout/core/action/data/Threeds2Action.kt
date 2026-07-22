@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 
 @Parcelize
-class Threeds2Action(
+data class Threeds2Action(
     override val type: String,
     override val paymentData: String?,
     override val paymentMethodType: String?,

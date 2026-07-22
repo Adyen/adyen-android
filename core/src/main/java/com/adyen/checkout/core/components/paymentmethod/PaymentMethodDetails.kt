@@ -35,8 +35,8 @@ abstract class PaymentMethodDetails : ModelObject() {
             }
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethodDetails {
-                val actionType = jsonObject.getString(TYPE)
-                val serializer = getChildSerializer(actionType)
+                val paymentMethodType = jsonObject.getString(TYPE)
+                val serializer = getChildSerializer(paymentMethodType)
                 return serializer.deserialize(jsonObject)
             }
         }
