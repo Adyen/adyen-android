@@ -45,7 +45,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentsClient
-import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -198,11 +197,7 @@ internal class DefaultGooglePayDelegate(
 
     @Deprecated("Deprecated in favor of onSubmit()", replaceWith = ReplaceWith("onSubmit()"))
     override fun startGooglePayScreen(activity: Activity, requestCode: Int) {
-        adyenLog(AdyenLogLevel.DEBUG) { "startGooglePayScreen" }
-        val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(componentParams))
-        val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
-        @Suppress("DEPRECATION")
-        AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode)
+        // This flow is removed from the Google Pay SDK
     }
 
     override fun onSubmit() {
