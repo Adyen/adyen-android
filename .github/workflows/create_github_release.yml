@@ -6,6 +6,9 @@ on:
       version-name:
         required: true
         type: string
+      prerelease:
+        required: true
+        type: boolean
 
 permissions:
   contents: write
@@ -29,3 +32,4 @@ jobs:
           commit: ${{ github.sha }}
           name: ${{ env.VERSION_NAME }}
           draft: true
+          prerelease: ${{ inputs.prerelease }}

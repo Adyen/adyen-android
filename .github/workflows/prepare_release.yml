@@ -43,6 +43,7 @@ jobs:
     needs: [generate_version_name, publish_to_maven_central]
     with:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
+      prerelease: ${{ needs.generate_version_name.outputs.prerelease }}
   generate_release_notes:
     name: Generate release notes
     permissions:

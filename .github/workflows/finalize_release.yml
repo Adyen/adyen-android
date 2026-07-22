@@ -41,8 +41,12 @@ jobs:
           commit: ${{ github.sha }}
           allowUpdates: true
           updateOnlyUnreleased: true
+          # This step only publishes the existing draft release (created during prepare_release).
+          # The omit* flags keep the name, body and prerelease flag set at creation time, so they
+          # are not reset while updating here.
           omitNameDuringUpdate: true
           omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
           draft: false
 
   remove_release_branch:

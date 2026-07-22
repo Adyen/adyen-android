@@ -6,6 +6,9 @@ on:
       version-name:
         description: "The version name of the current release"
         value: ${{ jobs.generate_version_name.outputs.version-name }}
+      prerelease:
+        description: "Whether the current release is a pre-release (alpha, beta or rc)"
+        value: ${{ jobs.generate_version_name.outputs.prerelease }}
 
 permissions:
   contents: read
@@ -15,13 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version-name: ${{ steps.generate_version_name.outputs.version_name }}
+      prerelease: ${{ steps.generate_version_name.outputs.prerelease }}
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - name: Generate version name
         id: generate_version_name
         run: |
-          chmod +x scripts/version_name.sh
-          VERSION_NAME=$(./scripts/version_name.sh)
-          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
-          echo $VERSION_NAME
+          chmod +x scripts/version_info.sh
+          VERSION_INFO=$(./scripts/version_info.sh)
+          echo "$VERSION_INFO"
+
+          VERSION_NAME=$(echo "$VERSION_INFO" | grep '^version_name=' | cut -d= -f2-)
+          PRERELEASE=$(echo "$VERSION_INFO" | grep '^prerelease=' | cut -d= -f2-)
+
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
