@@ -86,9 +86,17 @@ private fun CheckoutContent(
     state: CheckoutPaymentFlowState,
     onSecondaryDismissed: () -> Unit,
 ) {
-    AnimatedContent(state) { localState ->
+    // AnimatedContent redraws/animates every time its target state changes
+    // when moving from Secondary to PaymentMethod, the state does change but the displayed content is the same
+    // this mapping ensures the target state does not change and prevents the AnimatedContent from flickering
+    val checkoutContentState = when (state) {
+        CheckoutPaymentFlowState.Action -> CheckoutContentState.ACTION
+        CheckoutPaymentFlowState.PaymentMethod,
+        is CheckoutPaymentFlowState.Secondary -> CheckoutContentState.PAYMENT_METHOD
+    }
+    AnimatedContent(checkoutContentState) { localState ->
         when (localState) {
-            CheckoutPaymentFlowState.PaymentMethod, is CheckoutPaymentFlowState.Secondary -> {
+            CheckoutContentState.PAYMENT_METHOD -> {
                 CheckoutPaymentMethod(
                     controller = controller,
                     modifier = modifier,
@@ -97,7 +105,7 @@ private fun CheckoutContent(
                 )
             }
 
-            CheckoutPaymentFlowState.Action -> {
+            CheckoutContentState.ACTION -> {
                 CheckoutAction(
                     controller = controller,
                     modifier = modifier,
@@ -128,4 +136,9 @@ private sealed class CheckoutPaymentFlowState {
     data object PaymentMethod : CheckoutPaymentFlowState()
     data object Action : CheckoutPaymentFlowState()
     data class Secondary(val identifier: String) : CheckoutPaymentFlowState()
+}
+
+private enum class CheckoutContentState {
+    PAYMENT_METHOD,
+    ACTION,
 }
