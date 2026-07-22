@@ -124,7 +124,6 @@ private fun CheckoutContent(
             CheckoutSecondary(
                 identifier = state.identifier,
                 controller = controller,
-                modifier = modifier,
                 theme = theme,
                 localizationProvider = localizationProvider,
             )

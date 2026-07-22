@@ -9,12 +9,14 @@
 package com.adyen.checkout.core.components.internal
 
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -69,9 +71,13 @@ internal fun CheckoutFullScreenDialog(
                     Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
                 }
 
-                Spacer(Modifier.size(Dimensions.Spacing.Small))
-
-                content()
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small)
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    content()
+                }
             }
         }
     }
