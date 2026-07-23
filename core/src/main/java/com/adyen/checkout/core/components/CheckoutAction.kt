@@ -39,7 +39,15 @@ fun CheckoutAction(
             localizationProvider = localizationProvider,
             environment = controller.environment,
         ) {
-            controller.actionComponent?.Content(modifier)
+            CheckoutActionInternal(controller, modifier)
         }
     }
+}
+
+@Composable
+internal fun CheckoutActionInternal(
+    controller: CheckoutController,
+    modifier: Modifier,
+) {
+    controller.actionComponent?.Content(modifier)
 }

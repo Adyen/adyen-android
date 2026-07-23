@@ -42,7 +42,16 @@ fun CheckoutSecondary(
             localizationProvider = localizationProvider,
             environment = controller.environment,
         ) {
-            (controller.paymentComponent as? SecondaryScreenComponent?)?.SecondaryContent(identifier, modifier)
+            CheckoutSecondaryInternal(identifier, controller, modifier)
         }
     }
+}
+
+@Composable
+internal fun CheckoutSecondaryInternal(
+    identifier: String,
+    controller: CheckoutController,
+    modifier: Modifier,
+) {
+    (controller.paymentComponent as? SecondaryScreenComponent?)?.SecondaryContent(identifier, modifier)
 }

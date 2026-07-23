@@ -8,19 +8,24 @@
 
 package com.adyen.checkout.core.components
 
+import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.components.internal.CheckoutFullScreenDialog
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
+import kotlinx.parcelize.Parcelize
 
 /**
  * A [Composable] that renders the full checkout flow for the given [controller], automatically switching
@@ -38,7 +43,7 @@ fun CheckoutPaymentFlow(
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-    var state by remember(controller) {
+    var state by rememberSaveable(controller) {
         val initialState = when {
             controller.actionComponent != null -> CheckoutPaymentFlowState.Action
             else -> CheckoutPaymentFlowState.PaymentMethod
@@ -64,41 +69,86 @@ fun CheckoutPaymentFlow(
         }
     }
 
-    AnimatedContent(state) { localState ->
-        when (localState) {
-            CheckoutPaymentFlowState.PaymentMethod -> {
-                CheckoutPaymentMethod(
-                    controller = controller,
-                    modifier = modifier,
-                    theme = theme,
-                    localizationProvider = localizationProvider,
-                )
-            }
-
-            CheckoutPaymentFlowState.Action -> {
-                CheckoutAction(
-                    controller = controller,
-                    modifier = modifier,
-                    theme = theme,
-                    localizationProvider = localizationProvider,
-                )
-            }
-
-            is CheckoutPaymentFlowState.Secondary -> {
-                CheckoutSecondary(
-                    identifier = localState.identifier,
-                    controller = controller,
-                    modifier = modifier,
-                    theme = theme,
-                    localizationProvider = localizationProvider,
-                )
-            }
+    InternalCheckoutTheme(theme) {
+        CheckoutCompositionLocalProvider(
+            locale = controller.shopperLocale,
+            localizationProvider = localizationProvider,
+            environment = controller.environment,
+        ) {
+            CheckoutContent(
+                controller = controller,
+                modifier = modifier,
+                theme = theme,
+                state = state,
+                onSecondaryDismissed = {
+                    state = CheckoutPaymentFlowState.PaymentMethod
+                },
+            )
         }
     }
 }
 
-private sealed class CheckoutPaymentFlowState {
+@Composable
+private fun CheckoutContent(
+    controller: CheckoutController,
+    modifier: Modifier,
+    theme: CheckoutTheme,
+    state: CheckoutPaymentFlowState,
+    onSecondaryDismissed: () -> Unit,
+) {
+    // AnimatedContent redraws/animates every time its target state changes
+    // when moving from Secondary to PaymentMethod, the state does change but the displayed content is the same
+    // this mapping ensures the target state does not change and prevents the AnimatedContent from flickering
+    val checkoutContentState = when (state) {
+        CheckoutPaymentFlowState.Action -> CheckoutContentState.ACTION
+        CheckoutPaymentFlowState.PaymentMethod,
+        is CheckoutPaymentFlowState.Secondary -> CheckoutContentState.PAYMENT_METHOD
+    }
+    AnimatedContent(checkoutContentState) { localState ->
+        when (localState) {
+            CheckoutContentState.PAYMENT_METHOD -> {
+                CheckoutPaymentMethodInternal(
+                    controller = controller,
+                    modifier = modifier,
+                )
+            }
+
+            CheckoutContentState.ACTION -> {
+                CheckoutActionInternal(
+                    controller = controller,
+                    modifier = modifier,
+                )
+            }
+        }
+    }
+
+    if (state is CheckoutPaymentFlowState.Secondary) {
+        CheckoutFullScreenDialog(
+            theme = theme,
+            onDismissRequest = onSecondaryDismissed,
+        ) {
+            CheckoutSecondaryInternal(
+                identifier = state.identifier,
+                controller = controller,
+                modifier = Modifier,
+            )
+        }
+    }
+}
+
+private sealed class CheckoutPaymentFlowState : Parcelable {
+
+    @Parcelize
     data object PaymentMethod : CheckoutPaymentFlowState()
+
+    @Parcelize
     data object Action : CheckoutPaymentFlowState()
+
+    @Parcelize
     data class Secondary(val identifier: String) : CheckoutPaymentFlowState()
+}
+
+private enum class CheckoutContentState {
+    PAYMENT_METHOD,
+    ACTION,
 }
