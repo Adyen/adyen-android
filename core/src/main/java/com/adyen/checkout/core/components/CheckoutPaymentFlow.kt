@@ -8,13 +8,14 @@
 
 package com.adyen.checkout.core.components
 
+import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.AdyenLogLevel
@@ -24,6 +25,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.internal.CheckoutFullScreenDialog
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
+import kotlinx.parcelize.Parcelize
 
 /**
  * A [Composable] that renders the full checkout flow for the given [controller], automatically switching
@@ -41,7 +43,7 @@ fun CheckoutPaymentFlow(
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-    var state by remember(controller) {
+    var state by rememberSaveable(controller) {
         val initialState = when {
             controller.actionComponent != null -> CheckoutPaymentFlowState.Action
             else -> CheckoutPaymentFlowState.PaymentMethod
@@ -134,9 +136,15 @@ private fun CheckoutContent(
     }
 }
 
-private sealed class CheckoutPaymentFlowState {
+private sealed class CheckoutPaymentFlowState : Parcelable {
+
+    @Parcelize
     data object PaymentMethod : CheckoutPaymentFlowState()
+
+    @Parcelize
     data object Action : CheckoutPaymentFlowState()
+
+    @Parcelize
     data class Secondary(val identifier: String) : CheckoutPaymentFlowState()
 }
 
