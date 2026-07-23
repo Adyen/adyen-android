@@ -39,7 +39,15 @@ fun CheckoutPaymentMethod(
             localizationProvider = localizationProvider,
             environment = controller.environment,
         ) {
-            controller.paymentComponent?.Content(modifier)
+            CheckoutPaymentMethodInternal(controller, modifier)
         }
     }
+}
+
+@Composable
+internal fun CheckoutPaymentMethodInternal(
+    controller: CheckoutController,
+    modifier: Modifier,
+) {
+    controller.paymentComponent?.Content(modifier)
 }

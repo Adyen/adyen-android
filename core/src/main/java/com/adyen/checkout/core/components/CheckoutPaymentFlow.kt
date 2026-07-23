@@ -18,9 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.internal.CheckoutFullScreenDialog
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
@@ -65,24 +67,30 @@ fun CheckoutPaymentFlow(
         }
     }
 
-    CheckoutContent(
-        controller = controller,
-        modifier = modifier,
-        theme = theme,
-        localizationProvider = localizationProvider,
-        state = state,
-        onSecondaryDismissed = {
-            state = CheckoutPaymentFlowState.PaymentMethod
-        },
-    )
+    InternalCheckoutTheme(theme) {
+        CheckoutCompositionLocalProvider(
+            locale = controller.shopperLocale,
+            localizationProvider = localizationProvider,
+            environment = controller.environment,
+        ) {
+            CheckoutContent(
+                controller = controller,
+                modifier = modifier,
+                theme = theme,
+                state = state,
+                onSecondaryDismissed = {
+                    state = CheckoutPaymentFlowState.PaymentMethod
+                },
+            )
+        }
+    }
 }
 
 @Composable
 private fun CheckoutContent(
     controller: CheckoutController,
     modifier: Modifier,
-    theme: CheckoutTheme = CheckoutTheme(),
-    localizationProvider: CheckoutLocalizationProvider?,
+    theme: CheckoutTheme,
     state: CheckoutPaymentFlowState,
     onSecondaryDismissed: () -> Unit,
 ) {
@@ -97,20 +105,16 @@ private fun CheckoutContent(
     AnimatedContent(checkoutContentState) { localState ->
         when (localState) {
             CheckoutContentState.PAYMENT_METHOD -> {
-                CheckoutPaymentMethod(
+                CheckoutPaymentMethodInternal(
                     controller = controller,
                     modifier = modifier,
-                    theme = theme,
-                    localizationProvider = localizationProvider,
                 )
             }
 
             CheckoutContentState.ACTION -> {
-                CheckoutAction(
+                CheckoutActionInternal(
                     controller = controller,
                     modifier = modifier,
-                    theme = theme,
-                    localizationProvider = localizationProvider,
                 )
             }
         }
@@ -121,11 +125,10 @@ private fun CheckoutContent(
             theme = theme,
             onDismissRequest = onSecondaryDismissed,
         ) {
-            CheckoutSecondary(
+            CheckoutSecondaryInternal(
                 identifier = state.identifier,
                 controller = controller,
-                theme = theme,
-                localizationProvider = localizationProvider,
+                modifier = Modifier,
             )
         }
     }
