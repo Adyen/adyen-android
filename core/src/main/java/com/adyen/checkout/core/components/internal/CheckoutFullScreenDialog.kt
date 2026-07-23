@@ -36,6 +36,7 @@ internal fun CheckoutFullScreenDialog(
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {
+    // TODO investigate switching to a full height ModalBottomSheet later - currently the animation looks janky
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
