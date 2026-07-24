@@ -21,7 +21,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -81,9 +82,9 @@ fun ValuePickerField(
 @Preview
 @Composable
 private fun ValuePickerFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         ValuePickerField(
             value = "Value",
             label = "Label",

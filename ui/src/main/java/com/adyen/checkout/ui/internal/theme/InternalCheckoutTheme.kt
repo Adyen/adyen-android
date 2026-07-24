@@ -22,7 +22,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun InternalCheckoutTheme(
-    theme: CheckoutTheme = CheckoutTheme(),
+    theme: CheckoutTheme,
     content: @Composable () -> Unit,
 ) {
     val colors = remember(theme.colors) { InternalColors.from(theme.colors) }

@@ -31,14 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -46,12 +44,15 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.ui.internal.element.ListItem
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 private const val AMOUNT_VISIBLE_BRANDS = 3
 
@@ -255,12 +256,10 @@ private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
 @Suppress("LongMethod")
 @Preview(showBackground = true)
 @Composable
-private fun PaymentMethodListContentPreview() {
-    CheckoutCompositionLocalProvider(
-        locale = LocalLocale.current.platformLocale,
-        localizationProvider = null,
-        environment = Environment.TEST,
-    ) {
+private fun PaymentMethodListContentPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
         val storedPaymentMethods = listOf(
             PaymentMethodItem(
                 id = "advantage",

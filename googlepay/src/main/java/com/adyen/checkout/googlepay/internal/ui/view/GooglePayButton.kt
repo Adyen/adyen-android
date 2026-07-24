@@ -19,7 +19,7 @@ import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.GooglePayButtonTheme
 import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayButtonViewState
-import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.helper.isDark
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -58,7 +58,7 @@ private val DEFAULT_CORNER_RADIUS = 100.dp
 private fun GooglePayButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         GooglePayButton(
             buttonViewState = GooglePayButtonViewState(
                 allowedPaymentMethods = "[]",

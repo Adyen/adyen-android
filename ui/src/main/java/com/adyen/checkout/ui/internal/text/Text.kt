@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
-import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -147,7 +147,7 @@ private fun CheckoutText(
 private fun TextPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         Title("Title")
         Subtitle("Subtitle")
         Body("Body")

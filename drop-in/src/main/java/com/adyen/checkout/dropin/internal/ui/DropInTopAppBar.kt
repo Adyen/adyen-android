@@ -20,10 +20,10 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -53,7 +53,7 @@ internal fun DropInTopAppBar(
 private fun DropInTopAppBarPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    InternalCheckoutTheme(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         DropInTopAppBar(
             title = "Title",
             navigationIcon = {

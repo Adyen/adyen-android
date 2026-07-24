@@ -22,7 +22,7 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalPr
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -54,15 +54,15 @@ class DropInActivity : ComponentActivity() {
             .launchIn(lifecycleScope)
 
         setContent {
-            InternalCheckoutTheme {
-                CheckoutCompositionLocalProvider(
-                    locale = viewModel.dropInParams.shopperLocale,
-                    // TODO - support custom localization for drop-in
-                    localizationProvider = null,
-                    environment = viewModel.dropInParams.environment,
-                ) {
-                    NavigationStack(viewModel)
-                }
+            CheckoutCompositionLocalProvider(
+                // TODO - support custom theme for drop-in
+                theme = CheckoutTheme(),
+                locale = viewModel.dropInParams.shopperLocale,
+                // TODO - support custom localization for drop-in
+                localizationProvider = null,
+                environment = viewModel.dropInParams.environment,
+            ) {
+                NavigationStack(viewModel)
             }
         }
     }

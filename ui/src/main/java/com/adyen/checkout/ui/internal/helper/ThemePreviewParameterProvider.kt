@@ -13,6 +13,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.adyen.checkout.ui.theme.CheckoutColors
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
+/**
+ * Preview parameter provider for [CheckoutTheme].
+ * Should be used in combination with [CheckoutThemePreviewWrapper] for all composables.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ThemePreviewParameterProvider : PreviewParameterProvider<CheckoutTheme> {
 

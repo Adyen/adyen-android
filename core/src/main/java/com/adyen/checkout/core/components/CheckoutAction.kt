@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
@@ -33,14 +32,13 @@ fun CheckoutAction(
     theme: CheckoutTheme = CheckoutTheme(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
-    InternalCheckoutTheme(theme) {
-        CheckoutCompositionLocalProvider(
-            locale = controller.shopperLocale,
-            localizationProvider = localizationProvider,
-            environment = controller.environment,
-        ) {
-            CheckoutActionInternal(controller, modifier)
-        }
+    CheckoutCompositionLocalProvider(
+        theme = theme,
+        locale = controller.shopperLocale,
+        localizationProvider = localizationProvider,
+        environment = controller.environment,
+    ) {
+        CheckoutActionInternal(controller, modifier)
     }
 }
 

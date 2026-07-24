@@ -18,27 +18,37 @@ import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.common.localization.internal.LocalizationResolver
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import java.util.Locale
 
+/**
+ * Initializer wrapper for all Checkout components.
+ *
+ * Every public Compose component in the SDK should be wrapped in this function.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutCompositionLocalProvider(
+    theme: CheckoutTheme,
     locale: Locale,
     localizationProvider: CheckoutLocalizationProvider?,
     environment: Environment,
     content: @Composable () -> Unit,
 ) {
-    val context = LocalContext.current
-    val localizedContext = remember(context, locale) {
-        context.createLocalizedContext(locale)
-    }
-    CompositionLocalProvider(
-        LocalLocalizationResolver provides LocalizationResolver(localizationProvider),
-        LocalLocalizedContext provides localizedContext,
-        LocalLocale provides locale,
-        LocalEnvironment provides environment,
-    ) {
-        content()
+    InternalCheckoutTheme(theme) {
+        val context = LocalContext.current
+        val localizedContext = remember(context, locale) {
+            context.createLocalizedContext(locale)
+        }
+        CompositionLocalProvider(
+            LocalLocalizationResolver provides LocalizationResolver(localizationProvider),
+            LocalLocalizedContext provides localizedContext,
+            LocalLocale provides locale,
+            LocalEnvironment provides environment,
+        ) {
+            content()
+        }
     }
 }
 
