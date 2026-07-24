@@ -38,7 +38,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
@@ -180,7 +179,7 @@ fun rememberTextFieldStateWithCurrentValue(currentText: String): TextFieldState 
 @Preview
 @Composable
 private fun CheckoutTextFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
         CheckoutTextField(
@@ -229,21 +228,6 @@ private fun CheckoutTextFieldPreview(
             label = "Password",
             isSecureField = true,
             modifier = Modifier.focusRequester(focusRequester),
-        )
-    }
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<CheckoutTheme> {
-
-    private val themeProvider = ThemePreviewParameterProvider()
-
-    override val values = themeProvider.values + themeProvider.values.map { theme ->
-        theme.copy(
-            colors = theme.colors.copy(
-                container = theme.colors.background,
-                containerOutline = theme.colors.separator,
-            ),
         )
     }
 }

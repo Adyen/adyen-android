@@ -20,9 +20,9 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
-import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -55,7 +55,7 @@ internal fun MBWayPhoneNumberField(
 @Preview
 @Composable
 private fun MBWayPhoneNumberFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
         MBWayPhoneNumberField(

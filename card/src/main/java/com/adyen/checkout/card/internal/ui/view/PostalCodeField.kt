@@ -23,9 +23,9 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
-import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -100,7 +100,7 @@ private fun PostalCodeIcon(
 @Preview
 @Composable
 private fun PostalCodeFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
         PostalCodeField(

@@ -30,9 +30,9 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
-import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -130,7 +130,7 @@ private fun ExpiryDateIcon(
 @Preview
 @Composable
 private fun ExpiryDateFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
         ExpiryDateField(
