@@ -23,7 +23,6 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalPr
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.internal.CheckoutFullScreenDialog
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.parcelize.Parcelize
 
@@ -69,21 +68,20 @@ fun CheckoutPaymentFlow(
         }
     }
 
-    InternalCheckoutTheme(theme) {
-        CheckoutCompositionLocalProvider(
-            locale = controller.shopperLocale,
-            localizationProvider = localizationProvider,
-            environment = controller.environment,
-        ) {
-            CheckoutContent(
-                controller = controller,
-                modifier = modifier,
-                state = state,
-                onSecondaryDismissed = {
-                    state = CheckoutPaymentFlowState.PaymentMethod
-                },
-            )
-        }
+    CheckoutCompositionLocalProvider(
+        theme = theme,
+        locale = controller.shopperLocale,
+        localizationProvider = localizationProvider,
+        environment = controller.environment,
+    ) {
+        CheckoutContent(
+            controller = controller,
+            modifier = modifier,
+            state = state,
+            onSecondaryDismissed = {
+                state = CheckoutPaymentFlowState.PaymentMethod
+            },
+        )
     }
 }
 

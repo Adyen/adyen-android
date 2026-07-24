@@ -20,9 +20,13 @@ import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
+/**
+ * A wrapper that provides a preview environment for a [CheckoutTheme].
+ * This should only be used in compose previews.
+ */
 @Composable
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun CheckoutThemeWrapper(
+fun CheckoutThemePreviewWrapper(
     theme: CheckoutTheme,
     content: @Composable () -> Unit
 ) {

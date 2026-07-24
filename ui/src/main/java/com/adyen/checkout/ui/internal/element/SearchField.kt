@@ -28,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
-import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
-import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -100,9 +100,9 @@ private fun TrailingSearchIcon(
 @Preview
 @Composable
 private fun SearchFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         SearchField(
             hint = "Search..",
         )
