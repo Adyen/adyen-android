@@ -12,6 +12,9 @@ SONATYPE_API_BASE_URL = "https://ossrh-staging-api.central.sonatype.com/manual"
 SEARCH_REPOSITORIES_URL = f"{SONATYPE_API_BASE_URL}/search/repositories"
 UPLOAD_REPO_BASE_URL = f"{SONATYPE_API_BASE_URL}/upload/repository" # Key will be appended
 TIMEOUT_SECONDS = 180 # Setting a timeout a bit higher, in case the Sonatype API takes longer to respond
+# Explicit User-Agent: the default urllib UA (Python-urllib/x) is blocked by
+# Cloudflare (error 1010) on the OSSRH Staging API, so we send a custom one.
+USER_AGENT = "adyen-android-release-bot/1.0 (+https://github.com/Adyen/adyen-android)"
 
 class _SimpleResponse:
     def __init__(self, status_code, text):
@@ -47,6 +50,7 @@ def _make_api_request(method, url, auth, params=None, headers=None, expected_suc
     if headers is None:
         headers = {}
     headers.setdefault("Accept", "application/json") # Default Accept header
+    headers.setdefault("User-Agent", USER_AGENT)
 
     if expected_success_codes is None:
         if method.upper() == "POST":
