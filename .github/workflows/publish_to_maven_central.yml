@@ -13,6 +13,21 @@ on:
       version-name:
         required: true
         type: string
+    secrets:
+      SONATYPE_CENTRAL_PORTAL_USERNAME:
+        required: true
+      SONATYPE_CENTRAL_PORTAL_PASSWORD:
+        required: true
+      SIGNING_KEY_ID:
+        required: true
+      SIGNING_PASSWORD:
+        required: true
+      SIGNING_SECRET_KEY_RING_FILE:
+        required: true
+      SONATYPE_STAGING_PROFILE_ID:
+        required: true
+      GPG_KEY_CONTENTS:
+        required: true
 
 permissions:
   contents: read
