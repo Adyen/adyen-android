@@ -22,17 +22,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun CheckoutFullScreenDialog(
-    theme: CheckoutTheme,
+    @Suppress("unused") theme: CheckoutTheme,
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -49,12 +49,16 @@ internal fun CheckoutFullScreenDialog(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(theme.colors.background.value))
+                .background(color = CheckoutThemeProvider.colors.background)
                 // keep content out from under the bars, while the surface stays edge-to-edge
                 .safeDrawingPadding(),
         ) {
             IconButton(onClick = onDismissRequest) {
-                Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = resolveString(CheckoutLocalizationKey.GENERAL_CLOSE),
+                    tint = CheckoutThemeProvider.colors.primary,
+                )
             }
 
             Box(
