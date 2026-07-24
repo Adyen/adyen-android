@@ -58,14 +58,19 @@ jobs:
         id: update_github_release_notes
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         env:
-          github-token: ${{ secrets.github-token }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
           VERSION_NAME: ${{ inputs.version-name }}
           BODY_FILE: ${{ needs.fetch_updated_release_notes_file.outputs.updated-release-notes-filepath }}
         with:
-          token: ${{ env.github-token }}
+          token: ${{ env.GITHUB_TOKEN }}
           tag: ${{ env.VERSION_NAME }}
           allowUpdates: true
           updateOnlyUnreleased: true
+          # This step only updates the body of the existing draft release (created during
+          # prepare_release).
+          # The omit* flags keep the name, draft status and prerelease flag set at creation time, so
+          # they are not reset while updating here.
           omitNameDuringUpdate: true
-          draft: true
+          omitPrereleaseDuringUpdate: true
+          omitDraftDuringUpdate: true
           bodyFile: ${{ env.BODY_FILE }}
