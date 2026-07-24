@@ -28,11 +28,9 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun CheckoutFullScreenDialog(
-    @Suppress("unused") theme: CheckoutTheme,
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {

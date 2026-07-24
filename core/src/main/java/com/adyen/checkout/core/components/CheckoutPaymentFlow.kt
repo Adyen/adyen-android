@@ -78,7 +78,6 @@ fun CheckoutPaymentFlow(
             CheckoutContent(
                 controller = controller,
                 modifier = modifier,
-                theme = theme,
                 state = state,
                 onSecondaryDismissed = {
                     state = CheckoutPaymentFlowState.PaymentMethod
@@ -92,7 +91,6 @@ fun CheckoutPaymentFlow(
 private fun CheckoutContent(
     controller: CheckoutController,
     modifier: Modifier,
-    theme: CheckoutTheme,
     state: CheckoutPaymentFlowState,
     onSecondaryDismissed: () -> Unit,
 ) {
@@ -124,7 +122,6 @@ private fun CheckoutContent(
 
     if (state is CheckoutPaymentFlowState.Secondary) {
         CheckoutFullScreenDialog(
-            theme = theme,
             onDismissRequest = onSecondaryDismissed,
         ) {
             CheckoutSecondaryInternal(
