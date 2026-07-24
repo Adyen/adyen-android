@@ -8,6 +8,7 @@
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.component.AdhocComponentWithVariants
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.publish.PublishingExtension
@@ -79,8 +80,24 @@ class PublishConventionPlugin : Plugin<Project> {
         extensions.configure<PublishingExtension> {
             publications {
                 create<MavenPublication>("release") {
+                    versionMapping {
+                        allVariants {
+                            fromResolutionOf("releaseRuntimeClasspath")
+                        }
+                    }
+
                     afterEvaluate {
-                        from(components.getByName("release"))
+                        val releaseComponent = components.getByName("release") as AdhocComponentWithVariants
+                        configurations
+                            .matching {
+                                it.name.startsWith("releaseTestFixturesVariant") &&
+                                    (it.name.endsWith("ApiPublication") || it.name.endsWith("RuntimePublication"))
+                            }
+                            .forEach { testFixturesConfiguration ->
+                                releaseComponent.withVariantsFromConfiguration(testFixturesConfiguration) { skip() }
+                            }
+
+                        from(releaseComponent)
 
                         groupId = checkoutGroupId
                         artifactId = extension.id.get()
