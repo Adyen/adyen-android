@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.internal.helper.CheckoutThemeWrapper
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -57,7 +57,7 @@ fun PrimaryButton(
 private fun PrimaryButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         PrimaryButton(
             onClick = {},
             text = "Primary",
@@ -106,7 +106,7 @@ fun SecondaryButton(
 private fun SecondaryButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         SecondaryButton(
             onClick = {},
             text = "Secondary",
@@ -155,7 +155,7 @@ fun TertiaryButton(
 private fun TertiaryButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         TertiaryButton(
             onClick = {},
             text = "Tertiary",
@@ -204,7 +204,7 @@ fun DestructiveButton(
 private fun DestructiveButtonPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    CheckoutThemeWrapper(theme) {
+    CheckoutThemePreviewWrapper(theme) {
         DestructiveButton(
             onClick = {},
             text = "Destructive",
