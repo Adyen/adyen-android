@@ -6,6 +6,9 @@ on:
       version-name:
         required: true
         type: string
+    secrets:
+      github-token:
+        required: true
 
 permissions:
   contents: write
@@ -29,7 +32,7 @@ jobs:
         env:
           BASE_BRANCH: "release-notes"
           VERSION_NAME: ${{ inputs.version-name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
           GITHUB_REPO: ${{ github.repository }}
         run: |
           chmod +x scripts/create_release_notes_pr.sh
