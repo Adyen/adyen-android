@@ -26,6 +26,8 @@ jobs:
       contents: read
       pull-requests: write
     uses: ./.github/workflows/validate_public_api.yml
+    secrets:
+      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
   verify_dependencies:
     name: Validate dependencies
     permissions:
