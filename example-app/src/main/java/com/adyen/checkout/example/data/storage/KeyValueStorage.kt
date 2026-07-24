@@ -24,6 +24,7 @@ import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_CO
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_EMAIL
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_LOCALE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_REFERENCE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOW_CARDHOLDER_NAME
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SPLIT_CARD_FUNDING_SOURCES
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.THREEDS_MODE
 import javax.inject.Inject
@@ -65,6 +66,8 @@ interface KeyValueStorage {
     fun setAnalyticsMode(analyticsMode: AnalyticsMode)
     fun getOnBeforeSubmitMode(): OnBeforeSubmitMode
     fun setOnBeforeSubmitMode(onBeforeSubmitMode: OnBeforeSubmitMode)
+    fun isShowCardholderName(): Boolean
+    fun setShowCardholderName(showCardholderName: Boolean)
 }
 
 @Suppress("TooManyFunctions")
@@ -212,5 +215,13 @@ internal class DefaultKeyValueStorage @Inject constructor(
 
     override fun setOnBeforeSubmitMode(onBeforeSubmitMode: OnBeforeSubmitMode) {
         sharedPreferencesManager.putEnum(ON_BEFORE_SUBMIT_MODE, onBeforeSubmitMode)
+    }
+
+    override fun isShowCardholderName(): Boolean {
+        return sharedPreferencesManager.getBoolean(SHOW_CARDHOLDER_NAME)
+    }
+
+    override fun setShowCardholderName(showCardholderName: Boolean) {
+        sharedPreferencesManager.putBoolean(SHOW_CARDHOLDER_NAME, showCardholderName)
     }
 }
