@@ -39,7 +39,7 @@ jobs:
       contents: write
     uses: ./.github/workflows/create_github_release.yml
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
     needs: [generate_version_name, publish_to_maven_central]
     with:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
@@ -50,7 +50,7 @@ jobs:
       contents: write
     uses: ./.github/workflows/generate_release_notes.yml
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
     needs: [generate_version_name, create_github_release]
     with:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
@@ -60,6 +60,8 @@ jobs:
       contents: write
       pull-requests: write
     uses: ./.github/workflows/create_release_notes_pr.yml
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
     needs: [generate_version_name, generate_release_notes]
     with:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}

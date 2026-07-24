@@ -6,6 +6,9 @@ on:
       version-name:
         required: true
         type: string
+    secrets:
+      github-token:
+        required: true
 
 jobs:
   get_allowed_labels:
@@ -56,7 +59,7 @@ jobs:
         env:
           ALLOWED_LABELS: ${{ needs.get_allowed_labels.outputs.allowed-labels }}
           VERSION_NAME: ${{ inputs.version-name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
           GITHUB_REPO: ${{ github.repository }}
         run: |
           chmod +x scripts/generate_release_notes.py
