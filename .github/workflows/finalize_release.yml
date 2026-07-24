@@ -10,6 +10,27 @@ on:
         type: string
 
 jobs:
+  version_info:
+    name: Resolve version info
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      prerelease: ${{ steps.version_info.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - name: Resolve version info
+        id: version_info
+        env:
+          VERSION_NAME: ${{ inputs.version-name }}
+        run: |
+          chmod +x scripts/version_info.sh
+          VERSION_INFO=$(./scripts/version_info.sh "$VERSION_NAME")
+          echo "$VERSION_INFO"
+
+          PRERELEASE=$(echo "$VERSION_INFO" | grep '^prerelease=' | cut -d= -f2-)
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+
   update_release_notes:
     name: Update release notes
     permissions:
@@ -17,6 +38,7 @@ jobs:
     uses: ./.github/workflows/update_release_notes.yml
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
+    needs: version_info
     with:
       version-name: ${{ inputs.version-name }}
 
@@ -78,4 +100,5 @@ jobs:
     uses: ./.github/workflows/publish_docs.yml
     secrets:
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
-    needs: publish_draft_release
+    needs: [publish_draft_release, version_info]
+    if: needs.version_info.outputs.prerelease == 'false'
