@@ -28,7 +28,7 @@ fun ComponentScaffold(
     modifier: Modifier = Modifier,
     footer: (@Composable () -> Unit)?,
     disableInteraction: Boolean,
-    content: @Composable () -> Unit,
+    content: (@Composable () -> Unit)?,
 ) {
     val focusManager = LocalFocusManager.current
     LaunchedEffect(disableInteraction) {
@@ -42,11 +42,13 @@ fun ComponentScaffold(
             modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            content()
-            if (footer != null) {
+            content?.invoke()
+
+            if (content != null && footer != null) {
                 Spacer(Modifier.size(16.dp))
-                footer()
             }
+
+            footer?.invoke()
         }
 
         if (disableInteraction) {

@@ -10,14 +10,17 @@ package com.adyen.checkout.googlepay.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 
-internal class GooglePayViewStateProducer : ViewStateProducer<GooglePayComponentState, GooglePayViewState> {
+internal class GooglePayViewStateProducer(
+    private val showSubmitButton: Boolean,
+) : ViewStateProducer<GooglePayComponentState, GooglePayViewState> {
 
     override fun produce(state: GooglePayComponentState) = GooglePayViewState(
-        buttonViewState = createButtonViewState(state),
+        isLoading = state.isLoading,
+        payButtonViewState = createButtonViewState(state),
     )
 
     private fun createButtonViewState(state: GooglePayComponentState): GooglePayButtonViewState? {
-        if (!state.isAvailable || !state.isButtonVisible) return null
+        if (!showSubmitButton || !state.isAvailable || !state.isButtonVisible) return null
         return GooglePayButtonViewState(
             allowedPaymentMethods = state.allowedPaymentMethods,
             buttonStyling = state.buttonStyling,

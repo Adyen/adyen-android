@@ -54,7 +54,7 @@ internal class GooglePayFactory : PaymentComponentFactory<GooglePayComponent> {
             componentStateValidator = GooglePayComponentStateValidator(),
             componentStateFactory = GooglePayComponentStateFactory(componentParams),
             componentStateReducer = GooglePayComponentStateReducer(),
-            viewStateProducer = GooglePayViewStateProducer(),
+            viewStateProducer = GooglePayViewStateProducer(showSubmitButton = params.showSubmitButton),
             coroutineScope = coroutineScope,
         )
     }

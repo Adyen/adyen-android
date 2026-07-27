@@ -11,5 +11,6 @@ package com.adyen.checkout.googlepay.internal.ui.state
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 
 internal data class GooglePayViewState(
-    val buttonViewState: GooglePayButtonViewState?,
+    val isLoading: Boolean,
+    val payButtonViewState: GooglePayButtonViewState?,
 ) : ViewState
