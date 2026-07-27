@@ -9,9 +9,9 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import androidx.compose.runtime.Immutable
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 @Immutable
@@ -20,5 +20,5 @@ internal data class MBWayViewState(
     val selectedCountryCode: CountryModel,
     val phoneNumber: TextInputViewState?,
     val isLoading: Boolean,
-    val amount: Amount?,
+    val payButtonViewState: PayButtonViewState,
 ) : ViewState

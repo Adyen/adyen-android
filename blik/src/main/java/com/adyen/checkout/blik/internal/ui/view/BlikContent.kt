@@ -21,6 +21,7 @@ import com.adyen.checkout.blik.internal.ui.state.BlikViewState
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.PayButton
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
@@ -57,7 +58,7 @@ private fun BlikContent(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
         footer = {
-            PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
+            PayButton(payButtonViewState = viewState.payButtonViewState, onClick = onSubmitClick)
         },
     ) {
         Column(
@@ -87,7 +88,7 @@ private fun BlikContentPreview(
             viewState = BlikViewState(
                 blikCode = TextInputViewState(),
                 isLoading = false,
-                amount = null,
+                payButtonViewState = PayButtonViewState(null, false),
             ),
             onIntent = {},
             onSubmitClick = {},

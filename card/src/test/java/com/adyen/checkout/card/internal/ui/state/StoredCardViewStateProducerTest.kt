@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -30,7 +31,7 @@ internal class StoredCardViewStateProducerTest {
     }
 
     @Test
-    fun `when produce is called, then amount is propagated to the view state`() {
+    fun `when produce is called, then pay button state is propagated to the view state`() {
         // GIVEN
         val componentState = createComponentState()
 
@@ -38,7 +39,7 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(TEST_AMOUNT, viewState.amount)
+        assertEquals(PayButtonViewState(TEST_AMOUNT, false), viewState.payButtonViewState)
     }
 
     @Test

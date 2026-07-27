@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
@@ -28,7 +29,7 @@ internal class StoredCardViewStateProducer(
             brand = state.detectedCardType?.cardBrand,
             cardNumberFormat = cardNumberFormat,
             isLoading = state.isLoading,
-            amount = amount,
+            payButtonViewState = PayButtonViewState(amount, state.isLoading),
         )
     }
 

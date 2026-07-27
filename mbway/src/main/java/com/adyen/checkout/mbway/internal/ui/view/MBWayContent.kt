@@ -21,6 +21,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.PayButton
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
@@ -63,7 +64,7 @@ private fun MBWayContent(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
         footer = {
-            PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
+            PayButton(payButtonViewState = viewState.payButtonViewState, onClick = onSubmitClick)
         },
     ) {
         Column(
@@ -108,7 +109,7 @@ private fun MBWayContentPreview(
                 isLoading = false,
                 selectedCountryCode = countries.first(),
                 phoneNumber = TextInputViewState(),
-                amount = null,
+                payButtonViewState = PayButtonViewState(null, false),
             ),
             onIntent = {},
             onSubmitClick = {},

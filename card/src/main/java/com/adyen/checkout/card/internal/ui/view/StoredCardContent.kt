@@ -22,6 +22,7 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.PayButton
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
@@ -58,7 +59,7 @@ private fun StoredCardContent(
         ComponentScaffold(
             modifier = modifier,
             footer = {
-                PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
+                PayButton(payButtonViewState = viewState.payButtonViewState, onClick = onSubmitClick)
             },
         ) {
             Column(
@@ -87,7 +88,7 @@ private fun StoredCardContentPreview(
             brand = CardBrand(""),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             isLoading = false,
-            amount = null,
+            payButtonViewState = PayButtonViewState(null, false),
         )
 
         StoredCardContent(

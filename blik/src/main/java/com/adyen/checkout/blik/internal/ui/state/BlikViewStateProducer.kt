@@ -10,6 +10,7 @@ package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class BlikViewStateProducer(
@@ -20,7 +21,7 @@ internal class BlikViewStateProducer(
         return BlikViewState(
             blikCode = state.blikCode.toViewState(),
             isLoading = state.isLoading,
-            amount = amount,
+            payButtonViewState = PayButtonViewState(amount, state.isLoading),
         )
     }
 }
