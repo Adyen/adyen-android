@@ -20,7 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -55,14 +59,18 @@ fun SearchableValuePicker(
 @Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
-private fun SearchableValuePickerPreview() {
-    val items = List(5) {
-        ValuePickerItem(id = "$it", title = "$it - Title", subtitle = "Subtitle", isSelected = it == 0)
-    }
+private fun SearchableValuePickerPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        val items = List(5) {
+            ValuePickerItem(id = "$it", title = "$it - Title", subtitle = "Subtitle", isSelected = it == 0)
+        }
 
-    SearchableValuePicker(
-        searchHint = "Search..",
-        items = items,
-        onItemClick = {},
-    )
+        SearchableValuePicker(
+            searchHint = "Search..",
+            items = items,
+            onItemClick = {},
+        )
+    }
 }

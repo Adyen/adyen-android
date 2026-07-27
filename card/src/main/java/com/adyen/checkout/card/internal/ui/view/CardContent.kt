@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
@@ -43,9 +44,12 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.SwitchContainer
 import com.adyen.checkout.ui.internal.element.input.ValuePickerField
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -209,52 +213,99 @@ private fun CardDetailsSection(
 
 @Preview(showBackground = true)
 @Composable
-private fun CardContentPreview() {
-    CardContent(
-        viewState = CardViewState(
-            cardNumber = TextInputViewState(
-                text = "5555444433331111",
-            ),
-            expiryDate = TextInputViewState(
-                text = "1234",
-            ),
-            securityCode = TextInputViewState(
-                text = "737",
-            ),
-            holderName = TextInputViewState(
-                text = "J. Smith",
-            ),
-            socialSecurityNumber = TextInputViewState(
-                text = "12123123123412",
-            ),
-            kcpBirthDateOrTaxNumber = TextInputViewState(
-                text = "1234567890",
-            ),
-            kcpCardPassword = TextInputViewState(
-                text = "12",
-            ),
-            postalCode = TextInputViewState(
-                text = "1234 AB",
-            ),
-            storePaymentViewState = StorePaymentViewState(isSelected = true),
+private fun CardContentPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        CardContent(
+            viewState = CardViewState(
+                cardNumber = TextInputViewState(
+                    text = "5555444433331111",
+                ),
+                expiryDate = TextInputViewState(
+                    text = "1234",
+                ),
+                securityCode = TextInputViewState(
+                    text = "737",
+                ),
+                holderName = null,
+                socialSecurityNumber = null,
+                kcpBirthDateOrTaxNumber = null,
+                kcpCardPassword = null,
+                postalCode = null,
+                storePaymentViewState = StorePaymentViewState(isSelected = true),
 
-            supportedCardBrandsViewState = SupportedCardBrandsViewState(
-                supportedCardBrands = emptyList(),
-                isVisible = false,
+                supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                    supportedCardBrands = emptyList(),
+                    isVisible = false,
+                ),
+                isLoading = false,
+                isCardScanButtonVisible = false,
+                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+                cardNumberFormat = CardNumberFormat.DEFAULT,
+                installmentViewState = null,
+                amount = null,
             ),
-            isLoading = false,
-            isCardScanButtonVisible = false,
-            cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
-            cardNumberFormat = CardNumberFormat.DEFAULT,
-            installmentViewState = InstallmentViewState(
-                installmentOptions = listOf(InstallmentModel.OneTime),
-                selectedInstallment = InstallmentModel.OneTime,
+            onIntent = {},
+            onSubmitClick = {},
+            onScanButtonClick = {},
+            onInstallmentPickerClick = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, heightDp = 1100)
+@Composable
+private fun CardContentPreviewAllFields(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        CardContent(
+            viewState = CardViewState(
+                cardNumber = TextInputViewState(
+                    text = "5555444433331111",
+                ),
+                expiryDate = TextInputViewState(
+                    text = "1234",
+                ),
+                securityCode = TextInputViewState(
+                    text = "737",
+                ),
+                holderName = TextInputViewState(
+                    text = "J. Smith",
+                ),
+                socialSecurityNumber = TextInputViewState(
+                    text = "12123123123412",
+                ),
+                kcpBirthDateOrTaxNumber = TextInputViewState(
+                    text = "1234567890",
+                ),
+                kcpCardPassword = TextInputViewState(
+                    text = "12",
+                ),
+                postalCode = TextInputViewState(
+                    text = "1234 AB",
+                ),
+                storePaymentViewState = StorePaymentViewState(isSelected = true),
+
+                supportedCardBrandsViewState = SupportedCardBrandsViewState(
+                    supportedCardBrands = emptyList(),
+                    isVisible = false,
+                ),
+                isLoading = false,
+                isCardScanButtonVisible = false,
+                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+                cardNumberFormat = CardNumberFormat.DEFAULT,
+                installmentViewState = InstallmentViewState(
+                    installmentOptions = listOf(InstallmentModel.OneTime),
+                    selectedInstallment = InstallmentModel.OneTime,
+                ),
+                amount = null,
             ),
-            amount = null,
-        ),
-        onIntent = {},
-        onSubmitClick = {},
-        onScanButtonClick = {},
-        onInstallmentPickerClick = {},
-    )
+            onIntent = {},
+            onSubmitClick = {},
+            onScanButtonClick = {},
+            onInstallmentPickerClick = {},
+        )
+    }
 }

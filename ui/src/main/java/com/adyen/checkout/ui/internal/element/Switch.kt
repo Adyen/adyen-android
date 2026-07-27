@@ -88,19 +88,18 @@ private fun SwitchContainerPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        val description = "A very long and detailed description that covers multiple lines"
         SwitchContainer(
             checked = false,
             onCheckedChange = null,
         ) {
-            Body(description)
+            Body("A short description")
         }
 
         SwitchContainer(
             checked = true,
             onCheckedChange = null,
         ) {
-            Body(description)
+            Body("A very long and detailed description that covers multiple lines")
         }
     }
 }

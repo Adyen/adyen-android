@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.blik.internal.ui.state.BlikIntent
 import com.adyen.checkout.blik.internal.ui.state.BlikViewState
@@ -22,8 +23,11 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.PayButton
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -75,15 +79,19 @@ private fun BlikContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun BlikContentPreview() {
-    BlikContent(
-        viewState = BlikViewState(
-            blikCode = TextInputViewState(),
-            isLoading = false,
-            amount = null,
-        ),
-        onIntent = {},
-        onSubmitClick = {},
-        modifier = Modifier,
-    )
+private fun BlikContentPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        BlikContent(
+            viewState = BlikViewState(
+                blikCode = TextInputViewState(),
+                isLoading = false,
+                amount = null,
+            ),
+            onIntent = {},
+            onSubmitClick = {},
+            modifier = Modifier,
+        )
+    }
 }

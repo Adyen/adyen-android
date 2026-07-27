@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -25,7 +26,10 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.input.ValuePickerField
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -90,21 +94,25 @@ private fun MBWayContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun MBWayContentPreview() {
-    val countries = listOf(
-        CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
-        CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
-    )
-    MBWayContent(
-        viewState = MBWayViewState(
-            countries = countries,
-            isLoading = false,
-            selectedCountryCode = countries.first(),
-            phoneNumber = TextInputViewState(),
-            amount = null,
-        ),
-        onIntent = {},
-        onSubmitClick = {},
-        onCountryCodePickerClick = {},
-    )
+private fun MBWayContentPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        val countries = listOf(
+            CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
+            CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
+        )
+        MBWayContent(
+            viewState = MBWayViewState(
+                countries = countries,
+                isLoading = false,
+                selectedCountryCode = countries.first(),
+                phoneNumber = TextInputViewState(),
+                amount = null,
+            ),
+            onIntent = {},
+            onSubmitClick = {},
+            onCountryCodePickerClick = {},
+        )
+    }
 }
