@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 fun ComponentScaffold(
     modifier: Modifier = Modifier,
     footer: @Composable () -> Unit = {},
-    disableInteraction: Boolean = false,
+    disableInteraction: Boolean,
     content: @Composable () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current

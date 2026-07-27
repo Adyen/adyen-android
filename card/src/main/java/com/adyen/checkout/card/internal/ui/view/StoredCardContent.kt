@@ -58,6 +58,7 @@ private fun StoredCardContent(
     if (viewState.securityCode != null) {
         ComponentScaffold(
             modifier = modifier,
+            disableInteraction = viewState.isLoading,
             footer = {
                 PayButton(payButtonViewState = viewState.payButtonViewState, onClick = onSubmitClick)
             },

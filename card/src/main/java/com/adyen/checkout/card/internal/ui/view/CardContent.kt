@@ -101,6 +101,7 @@ private fun CardContent(
 ) {
     ComponentScaffold(
         modifier = modifier,
+        disableInteraction = viewState.isLoading,
         footer = {
             PayButton(payButtonViewState = viewState.payButtonViewState, onClick = onSubmitClick)
         },
