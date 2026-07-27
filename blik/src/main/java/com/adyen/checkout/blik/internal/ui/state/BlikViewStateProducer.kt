@@ -15,13 +15,14 @@ import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class BlikViewStateProducer(
     private val amount: Amount?,
+    private val showSubmitButton: Boolean,
 ) : ViewStateProducer<BlikComponentState, BlikViewState> {
 
     override fun produce(state: BlikComponentState): BlikViewState {
         return BlikViewState(
             blikCode = state.blikCode.toViewState(),
             isLoading = state.isLoading,
-            payButtonViewState = PayButtonViewState(amount, state.isLoading),
+            payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
         )
     }
 }

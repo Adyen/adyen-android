@@ -18,5 +18,5 @@ internal data class StoredCardViewState(
     val brand: CardBrand?,
     val cardNumberFormat: CardNumberFormat,
     val isLoading: Boolean,
-    val payButtonViewState: PayButtonViewState,
+    val payButtonViewState: PayButtonViewState?,
 ) : ViewState

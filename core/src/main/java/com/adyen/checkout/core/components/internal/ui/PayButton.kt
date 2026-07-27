@@ -82,3 +82,19 @@ private fun PayButtonPreview(
         )
     }
 }
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Composable
+fun payButtonAsComponentScaffoldFooter(
+    payButtonViewState: PayButtonViewState?,
+    onSubmitClick: () -> Unit
+): (@Composable () -> Unit)? {
+    return payButtonViewState?.let {
+        @Composable {
+            PayButton(
+                payButtonViewState = it,
+                onClick = onSubmitClick,
+            )
+        }
+    }
+}

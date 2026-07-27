@@ -298,7 +298,7 @@ internal class CardComponentTest(
             componentStateValidator = CardComponentStateValidator(CardValidationMapper()),
             componentStateFactory = CardComponentStateFactory(cardComponentParams),
             componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler),
-            viewStateProducer = CardViewStateProducer(amount = null),
+            viewStateProducer = CardViewStateProducer(amount = null, showSubmitButton = true),
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
             sdkDataProvider = sdkDataProvider,
             paymentMethodType = PAYMENT_METHOD_TYPE,

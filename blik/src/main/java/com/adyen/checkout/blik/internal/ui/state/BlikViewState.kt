@@ -15,5 +15,5 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
 internal data class BlikViewState(
     val blikCode: TextInputViewState?,
     val isLoading: Boolean,
-    val payButtonViewState: PayButtonViewState,
+    val payButtonViewState: PayButtonViewState?,
 ) : ViewState

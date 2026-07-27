@@ -20,5 +20,5 @@ internal data class MBWayViewState(
     val selectedCountryCode: CountryModel,
     val phoneNumber: TextInputViewState?,
     val isLoading: Boolean,
-    val payButtonViewState: PayButtonViewState,
+    val payButtonViewState: PayButtonViewState?,
 ) : ViewState

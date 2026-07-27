@@ -15,6 +15,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class MBWayViewStateProducer(
     private val amount: Amount?,
+    private val showSubmitButton: Boolean,
 ) : ViewStateProducer<MBWayComponentState, MBWayViewState> {
 
     override fun produce(state: MBWayComponentState): MBWayViewState {
@@ -23,7 +24,7 @@ internal class MBWayViewStateProducer(
             selectedCountryCode = state.selectedCountryCode,
             phoneNumber = state.phoneNumber.toViewState(),
             isLoading = state.isLoading,
-            payButtonViewState = PayButtonViewState(amount, state.isLoading),
+            payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
         )
     }
 }

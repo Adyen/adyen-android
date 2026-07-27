@@ -36,7 +36,7 @@ internal class MBWayFactory : PaymentComponentFactory<MBWayComponent> {
             componentStateFactory = MBWayComponentStateFactory(params.shopperLocale),
             componentStateReducer = MBWayComponentStateReducer(),
             componentStateValidator = MBWayComponentStateValidator(),
-            viewStateProducer = MBWayViewStateProducer(params.amount),
+            viewStateProducer = MBWayViewStateProducer(params.amount, params.showSubmitButton),
             coroutineScope = coroutineScope,
         )
     }

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ComponentScaffold(
     modifier: Modifier = Modifier,
-    footer: @Composable () -> Unit = {},
+    footer: (@Composable () -> Unit)?,
     disableInteraction: Boolean,
     content: @Composable () -> Unit,
 ) {
@@ -43,8 +43,10 @@ fun ComponentScaffold(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             content()
-            Spacer(Modifier.size(16.dp))
-            footer()
+            if (footer != null) {
+                Spacer(Modifier.size(16.dp))
+                footer()
+            }
         }
 
         if (disableInteraction) {

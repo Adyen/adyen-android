@@ -21,7 +21,7 @@ import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.components.internal.ui.PayButton
+import com.adyen.checkout.core.components.internal.ui.payButtonAsComponentScaffoldFooter
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
@@ -59,9 +59,7 @@ private fun StoredCardContent(
         ComponentScaffold(
             modifier = modifier,
             disableInteraction = viewState.isLoading,
-            footer = {
-                PayButton(payButtonViewState = viewState.payButtonViewState, onClick = onSubmitClick)
-            },
+            footer = payButtonAsComponentScaffoldFooter(viewState.payButtonViewState, onSubmitClick),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),

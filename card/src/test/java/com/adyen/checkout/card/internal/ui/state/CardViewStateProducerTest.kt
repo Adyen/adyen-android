@@ -30,7 +30,7 @@ internal class CardViewStateProducerTest {
 
     @BeforeEach
     fun beforeEach() {
-        producer = CardViewStateProducer(amount = TEST_AMOUNT)
+        producer = CardViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = true)
     }
 
     @Test
@@ -43,6 +43,19 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertEquals(PayButtonViewState(TEST_AMOUNT, false), viewState.payButtonViewState)
+    }
+
+    @Test
+    fun `when show submit button is false then pay button view state is null`() {
+        // GIVEN
+        val producer = CardViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = false)
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.payButtonViewState)
     }
 
     // UC5: Brand Detection Hides Placeholder (No Error)

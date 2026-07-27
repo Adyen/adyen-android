@@ -17,6 +17,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class StoredCardViewStateProducer(
     private val amount: Amount?,
+    private val showSubmitButton: Boolean,
 ) : ViewStateProducer<StoredCardComponentState, StoredCardViewState> {
 
     override fun produce(state: StoredCardComponentState): StoredCardViewState {
@@ -29,7 +30,7 @@ internal class StoredCardViewStateProducer(
             brand = state.detectedCardType?.cardBrand,
             cardNumberFormat = cardNumberFormat,
             isLoading = state.isLoading,
-            payButtonViewState = PayButtonViewState(amount, state.isLoading),
+            payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
         )
     }
 

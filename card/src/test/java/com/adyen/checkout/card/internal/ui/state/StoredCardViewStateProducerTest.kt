@@ -27,7 +27,7 @@ internal class StoredCardViewStateProducerTest {
 
     @BeforeEach
     fun beforeEach() {
-        producer = StoredCardViewStateProducer(amount = TEST_AMOUNT)
+        producer = StoredCardViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = true)
     }
 
     @Test
@@ -40,6 +40,19 @@ internal class StoredCardViewStateProducerTest {
 
         // THEN
         assertEquals(PayButtonViewState(TEST_AMOUNT, false), viewState.payButtonViewState)
+    }
+
+    @Test
+    fun `when show submit button is false then pay button view state is null`() {
+        // GIVEN
+        val producer = StoredCardViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = false)
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.payButtonViewState)
     }
 
     @Test
