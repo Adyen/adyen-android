@@ -137,10 +137,17 @@ private fun Component(
             )
         }
 
-        var showButton by remember { mutableStateOf(true) }
-        if (!uiState.checkoutController.requiresUserInteraction() && showButton) {
+        CheckoutPaymentFlow(
+            controller = uiState.checkoutController,
+            theme = theme,
+            modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
+        )
+
+        var showButton by remember(uiState.checkoutController) { mutableStateOf(true) }
+        if (uiState.showCustomButton && showButton) {
             Button(
                 onClick = {
+                    // TODO do not hide button if component is not valid on click
                     showButton = false
                     uiState.checkoutController.submit()
                 },
@@ -151,12 +158,6 @@ private fun Component(
                 Text("Submit")
             }
         }
-
-        CheckoutPaymentFlow(
-            controller = uiState.checkoutController,
-            theme = theme,
-            modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
-        )
     }
 }
 
