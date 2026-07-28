@@ -27,13 +27,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * A list item component that displays a title, an optional subtitle, an optional leading icon and optional trailing
@@ -95,120 +99,152 @@ fun ListItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun ListItemPreview() {
-    ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
+private fun ListItemPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListItemNoSubtitlePreview() {
-    ListItem(title = "Title", onClick = {})
+private fun ListItemNoSubtitlePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(title = "Title", onClick = {})
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListItemWithLeadingIconNoSubtitlePreview() {
-    ListItem(
-        title = "Title",
-        onClick = {},
-        leadingIcon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-    )
+private fun ListItemWithLeadingIconNoSubtitlePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(
+            title = "Title",
+            onClick = {},
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_placeholder_image,
+                    ),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListItemWithLeadingIconPreview() {
-    ListItem(
-        title = "Title",
-        onClick = {},
-        subtitle = "Subtitle",
-        leadingIcon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-    )
+private fun ListItemWithLeadingIconPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(
+            title = "Title",
+            onClick = {},
+            subtitle = "Subtitle",
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_placeholder_image,
+                    ),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListItemWithTrailingIconPreview() {
-    ListItem(
-        title = "Title",
-        onClick = {},
-        subtitle = "Subtitle",
-        trailingContent = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-    )
+private fun ListItemWithTrailingIconPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(
+            title = "Title",
+            onClick = {},
+            subtitle = "Subtitle",
+            trailingContent = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_placeholder_image,
+                    ),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListItemWithTrailingActionPreview() {
-    ListItem(
-        title = "Title",
-        onClick = {},
-        subtitle = "Subtitle",
-        trailingContent = {
-            Body("Action")
-        },
-    )
+private fun ListItemWithTrailingActionPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(
+            title = "Title",
+            onClick = {},
+            subtitle = "Subtitle",
+            trailingContent = {
+                Body("Action")
+            },
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListItemWithIconsPreview() {
-    ListItem(
-        title = "Title",
-        onClick = {},
-        subtitle = "Subtitle",
-        leadingIcon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-        trailingContent = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-    )
+private fun ListItemWithIconsPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(
+            title = "Title",
+            onClick = {},
+            subtitle = "Subtitle",
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_placeholder_image,
+                    ),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+            trailingContent = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_placeholder_image,
+                    ),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+        )
+    }
 }
 
 @Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
-private fun ListItemListPreview() {
-    Column {
-        repeat(5) {
-            ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
+private fun ListItemListPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        Column {
+            repeat(5) {
+                ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
+            }
         }
     }
 }

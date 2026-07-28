@@ -17,7 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun ValuePicker(
@@ -55,13 +59,17 @@ data class ValuePickerItem(
 @Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
-private fun ValuePickerPreview() {
-    val items = List(5) {
-        ValuePickerItem(id = "$it", title = "Title", subtitle = "Subtitle", isSelected = it == 0)
-    }
+private fun ValuePickerPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        val items = List(5) {
+            ValuePickerItem(id = "$it", title = "Title", subtitle = "Subtitle", isSelected = it == 0)
+        }
 
-    ValuePicker(
-        items = items,
-        onItemClick = {},
-    )
+        ValuePicker(
+            items = items,
+            onItemClick = {},
+        )
+    }
 }

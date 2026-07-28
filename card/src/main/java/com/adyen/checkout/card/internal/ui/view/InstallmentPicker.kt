@@ -16,14 +16,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.ui.internal.element.SelectableListItem
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun InstallmentPicker(
@@ -53,24 +57,28 @@ internal fun InstallmentPicker(
 @Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
-private fun InstallmentPickerPreview() {
-    val options = listOf(
-        InstallmentModel.OneTime,
-        InstallmentModel.Revolving,
-        InstallmentModel.Regular(
-            numberOfInstallments = 2,
-            amountPerInstallment = null,
-            showAmount = false,
-        ),
-        InstallmentModel.Regular(
-            numberOfInstallments = 3,
-            amountPerInstallment = Amount("EUR", 100),
-            showAmount = true,
-        ),
-    )
-    InstallmentPicker(
-        installmentOptions = options,
-        selectedInstallment = options.first(),
-        onItemClick = {},
-    )
+private fun InstallmentPickerPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        val options = listOf(
+            InstallmentModel.OneTime,
+            InstallmentModel.Revolving,
+            InstallmentModel.Regular(
+                numberOfInstallments = 2,
+                amountPerInstallment = null,
+                showAmount = false,
+            ),
+            InstallmentModel.Regular(
+                numberOfInstallments = 3,
+                amountPerInstallment = Amount("EUR", 100),
+                showAmount = true,
+            ),
+        )
+        InstallmentPicker(
+            installmentOptions = options,
+            selectedInstallment = options.first(),
+            onItemClick = {},
+        )
+    }
 }

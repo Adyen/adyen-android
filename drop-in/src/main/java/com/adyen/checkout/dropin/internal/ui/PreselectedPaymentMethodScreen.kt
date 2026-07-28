@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -31,10 +32,13 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.element.button.SecondaryButton
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun PreselectedPaymentMethodScreen(
@@ -124,17 +128,21 @@ private fun PreselectedPaymentMethodContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun PreselectedPaymentMethodScreenPreview() {
-    val viewState = PreselectedPaymentMethodViewState(
-        logoTxVariant = "visa",
-        title = "•••• 1234",
-        subtitle = "Use Visa to pay $9.99",
-        payButtonText = "Pay $9.99",
-    )
-    PreselectedPaymentMethodContent(
-        viewState = viewState,
-        onBackClicked = {},
-        onPayClicked = {},
-        onOtherPaymentMethodClicked = {},
-    )
+private fun PreselectedPaymentMethodScreenPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        val viewState = PreselectedPaymentMethodViewState(
+            logoTxVariant = "visa",
+            title = "•••• 1234",
+            subtitle = "Use Visa to pay $9.99",
+            payButtonText = "Pay $9.99",
+        )
+        PreselectedPaymentMethodContent(
+            viewState = viewState,
+            onBackClicked = {},
+            onPayClicked = {},
+            onOtherPaymentMethodClicked = {},
+        )
+    }
 }

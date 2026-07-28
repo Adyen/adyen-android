@@ -20,9 +20,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -62,80 +66,108 @@ fun SelectableListItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectableListItemNoSubtitlePreview() {
-    SelectableListItem(title = "Title", onClick = {}, isSelected = true)
+private fun SelectableListItemNoSubtitlePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        SelectableListItem(title = "Title", onClick = {}, isSelected = true)
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectableListItemWithLeadingIconNoSubtitlePreview() {
-    SelectableListItem(
-        title = "Title",
-        onClick = {},
-        isSelected = true,
-        leadingIcon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-    )
+private fun SelectableListItemWithLeadingIconNoSubtitlePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        SelectableListItem(
+            title = "Title",
+            onClick = {},
+            isSelected = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_placeholder_image,
+                    ),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectableListItemUnselectedPreview() {
-    SelectableListItem(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = false)
+private fun SelectableListItemUnselectedPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        SelectableListItem(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = false)
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectableListItemPreview() {
-    SelectableListItem(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = true)
+private fun SelectableListItemPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        SelectableListItem(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = true)
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectableListItemWithLeadingIconPreview() {
-    SelectableListItem(
-        title = "Title",
-        onClick = {},
-        subtitle = "Subtitle",
-        isSelected = true,
-        leadingIcon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-    )
+private fun SelectableListItemWithLeadingIconPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        SelectableListItem(
+            title = "Title",
+            onClick = {},
+            subtitle = "Subtitle",
+            isSelected = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_placeholder_image,
+                    ),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectableListItemLongTitlePreview() {
-    SelectableListItem(
-        title = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the " +
-            "industry's standard dummy text ever since the 1500s.",
-        onClick = {},
-        subtitle = "Subtitle",
-        isSelected = true,
-    )
+private fun SelectableListItemLongTitlePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        SelectableListItem(
+            title = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been " +
+                "the industry's standard dummy text ever since the 1500s.",
+            onClick = {},
+            subtitle = "Subtitle",
+            isSelected = true,
+        )
+    }
 }
 
 @Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
-private fun SelectableListItemListPreview() {
-    Column {
-        repeat(5) {
-            SelectableListItem(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = it == 1)
+private fun SelectableListItemListPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        Column {
+            repeat(5) {
+                SelectableListItem(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = it == 1)
+            }
         }
     }
 }
