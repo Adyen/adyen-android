@@ -12,29 +12,89 @@ import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.internal.helper.LocalLocale
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.format
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.ui.internal.element.button.PrimaryButton
+import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun PayButton(
-    amount: Amount?,
+    payButtonViewState: PayButtonViewState,
     onClick: () -> Unit,
-    isLoading: Boolean = false,
 ) {
+    val amount = payButtonViewState.amount
     val text = when {
         amount == null -> resolveString(CheckoutLocalizationKey.PAY_BUTTON_NO_AMOUNT)
         amount.value == 0L -> resolveString(CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT)
         else -> resolveString(CheckoutLocalizationKey.PAY_BUTTON_WITH_AMOUNT, amount.format(LocalLocale.current))
     }
+
     PrimaryButton(
         onClick = onClick,
         text = text,
-        isLoading = isLoading,
+        isLoading = payButtonViewState.isLoading,
         modifier = Modifier.fillMaxWidth(),
     )
+}
+
+@Preview
+@Composable
+private fun PayButtonPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        PayButton(
+            payButtonViewState = PayButtonViewState(
+                amount = Amount(currency = "EUR", value = 1337),
+                isLoading = false,
+            ),
+            onClick = {},
+        )
+        PayButton(
+            payButtonViewState = PayButtonViewState(
+                amount = Amount(currency = "EUR", value = 0),
+                isLoading = false,
+            ),
+            onClick = {},
+        )
+        PayButton(
+            payButtonViewState = PayButtonViewState(
+                amount = null,
+                isLoading = false,
+            ),
+            onClick = {},
+        )
+        PayButton(
+            payButtonViewState = PayButtonViewState(
+                amount = Amount(currency = "EUR", value = 1337),
+                isLoading = true,
+            ),
+            onClick = {},
+        )
+    }
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Composable
+fun payButtonAsComponentScaffoldFooter(
+    payButtonViewState: PayButtonViewState?,
+    onSubmitClick: () -> Unit
+): (@Composable () -> Unit)? {
+    return payButtonViewState?.let {
+        @Composable {
+            PayButton(
+                payButtonViewState = it,
+                onClick = onSubmitClick,
+            )
+        }
+    }
 }

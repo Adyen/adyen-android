@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.SearchableValuePicker
@@ -67,7 +68,7 @@ private fun CountryCodePickerPreview(
                 isLoading = false,
                 selectedCountryCode = countries.first(),
                 phoneNumber = TextInputViewState(),
-                amount = null,
+                payButtonViewState = PayButtonViewState(null, false),
             ),
             onItemClick = {},
         )

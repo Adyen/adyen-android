@@ -117,7 +117,7 @@ internal class BlikComponentTest(
             componentStateValidator = componentStateValidator,
             componentStateFactory = BlikComponentStateFactory(),
             componentStateReducer = BlikComponentStateReducer(),
-            viewStateProducer = BlikViewStateProducer(null),
+            viewStateProducer = BlikViewStateProducer(amount = null, showSubmitButton = true),
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         )
     }

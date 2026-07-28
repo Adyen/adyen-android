@@ -10,9 +10,11 @@ package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -22,7 +24,7 @@ internal class BlikViewStateProducerTest {
 
     @BeforeEach
     fun beforeEach() {
-        producer = BlikViewStateProducer(amount = TEST_AMOUNT)
+        producer = BlikViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = true)
     }
 
     @Test
@@ -47,10 +49,19 @@ internal class BlikViewStateProducerTest {
                 isError = true,
             ),
             isLoading = true,
-            amount = TEST_AMOUNT,
+            payButtonViewState = PayButtonViewState(TEST_AMOUNT, true),
         )
 
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `when show submit button is false then pay button view state is null`() {
+        val producer = BlikViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = false)
+
+        val actual = producer.produce(BlikComponentState(blikCode = TextInputComponentState(), isLoading = false))
+
+        assertNull(actual.payButtonViewState)
     }
 
     companion object {

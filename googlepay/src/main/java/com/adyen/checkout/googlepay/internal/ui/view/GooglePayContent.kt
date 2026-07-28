@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.googlepay.internal.ui.GooglePayViewEvent
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewState
+import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.contract.ApiTaskResult
@@ -49,24 +50,17 @@ internal fun GooglePayContent(
     }
 
     val viewState by viewStateFlow.collectAsStateWithLifecycle()
-    GooglePayContent(
-        viewState = viewState,
-        onSubmit = onSubmit,
+    ComponentScaffold(
         modifier = modifier,
+        disableInteraction = viewState.isLoading,
+        footer = viewState.payButtonViewState?.let {
+            @Composable {
+                GooglePayButton(
+                    buttonViewState = it,
+                    onClick = onSubmit,
+                )
+            }
+        },
+        content = null,
     )
-}
-
-@Composable
-private fun GooglePayContent(
-    viewState: GooglePayViewState,
-    onSubmit: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    viewState.buttonViewState?.let { buttonViewState ->
-        GooglePayButton(
-            buttonViewState = buttonViewState,
-            onClick = onSubmit,
-            modifier = modifier,
-        )
-    }
 }

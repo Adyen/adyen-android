@@ -15,6 +15,7 @@ import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -29,11 +30,11 @@ internal class CardViewStateProducerTest {
 
     @BeforeEach
     fun beforeEach() {
-        producer = CardViewStateProducer(amount = TEST_AMOUNT)
+        producer = CardViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = true)
     }
 
     @Test
-    fun `when produce is called, then amount is propagated to the view state`() {
+    fun `when produce is called, then pay button state is propagated to the view state`() {
         // GIVEN
         val componentState = createComponentState()
 
@@ -41,7 +42,20 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(TEST_AMOUNT, viewState.amount)
+        assertEquals(PayButtonViewState(TEST_AMOUNT, false), viewState.payButtonViewState)
+    }
+
+    @Test
+    fun `when show submit button is false then pay button view state is null`() {
+        // GIVEN
+        val producer = CardViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = false)
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.payButtonViewState)
     }
 
     // UC5: Brand Detection Hides Placeholder (No Error)

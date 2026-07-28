@@ -51,8 +51,10 @@ internal class V6ViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-    private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
+    checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel() {
+
+    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
     private lateinit var checkoutContext: CheckoutContext.Advanced
 
@@ -87,7 +89,7 @@ internal class V6ViewModel @Inject constructor(
 
         val result = Checkout.setup(
             paymentMethods = paymentMethods,
-            configuration = checkoutConfigurationProvider.checkoutConfig,
+            configuration = checkoutConfiguration,
         )
 
         uiState = when (result) {
@@ -95,14 +97,16 @@ internal class V6ViewModel @Inject constructor(
             is Checkout.Result.Success -> {
                 checkoutContext = result.checkoutContext
                 val paymentMethods = checkoutContext.getPaymentMethods()
+                val checkoutController = createAndSetCheckoutController(
+                    paymentMethod = paymentMethods.first(),
+                    checkoutContext = result.checkoutContext,
+                )
                 V6UiState.Component(
                     paymentMethods = paymentMethods,
                     storedPaymentMethods = checkoutContext.getStoredPaymentMethods(),
                     selectedPaymentMethod = paymentMethods.first(),
-                    checkoutController = createCheckoutController(
-                        paymentMethod = paymentMethods.first(),
-                        checkoutContext = result.checkoutContext,
-                    ),
+                    checkoutController = checkoutController,
+                    showCustomButton = showCustomButton(checkoutController),
                 )
             }
         }
@@ -178,12 +182,14 @@ internal class V6ViewModel @Inject constructor(
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethodResponse) {
+        val checkoutController = createAndSetCheckoutController(
+            paymentMethod = paymentMethod,
+            checkoutContext = checkoutContext,
+        )
         val newState = (uiState as? V6UiState.Component)?.copy(
             selectedPaymentMethod = paymentMethod,
-            checkoutController = createCheckoutController(
-                paymentMethod = paymentMethod,
-                checkoutContext = checkoutContext,
-            ),
+            checkoutController = checkoutController,
+            showCustomButton = showCustomButton(checkoutController),
         )
 
         if (newState != null) {
@@ -191,7 +197,7 @@ internal class V6ViewModel @Inject constructor(
         }
     }
 
-    private fun createCheckoutController(
+    private fun createAndSetCheckoutController(
         paymentMethod: PaymentMethodResponse,
         checkoutContext: CheckoutContext.Advanced,
     ): CheckoutController {
@@ -219,6 +225,10 @@ internal class V6ViewModel @Inject constructor(
         ).also {
             checkoutController = it
         }
+    }
+
+    private fun showCustomButton(checkoutController: CheckoutController): Boolean {
+        return checkoutConfiguration.showSubmitButton == false || !checkoutController.requiresUserInteraction()
     }
 
     fun onNewIntent(intent: Intent) {

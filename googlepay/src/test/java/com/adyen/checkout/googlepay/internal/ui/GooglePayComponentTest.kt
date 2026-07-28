@@ -78,7 +78,7 @@ internal class GooglePayComponentTest {
 
         component.setLoading(true)
 
-        val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+        val buttonViewState = requireNotNull(viewState.latestValue.payButtonViewState)
         assertTrue(buttonViewState.isLoading)
     }
 
@@ -89,7 +89,7 @@ internal class GooglePayComponentTest {
 
         component.submit()
 
-        val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+        val buttonViewState = requireNotNull(viewState.latestValue.payButtonViewState)
         assertTrue(buttonViewState.isLoading)
     }
 
@@ -192,7 +192,7 @@ internal class GooglePayComponentTest {
         component.onPaymentResult(createResult(CommonStatusCodes.CANCELED))
 
         assertTrue(events.values.isEmpty())
-        val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+        val buttonViewState = requireNotNull(viewState.latestValue.payButtonViewState)
         assertFalse(buttonViewState.isLoading)
     }
 
@@ -227,7 +227,7 @@ internal class GooglePayComponentTest {
         )
         val viewState = component.viewState.test(testScheduler)
 
-        assertNotNull(viewState.latestValue.buttonViewState)
+        assertNotNull(viewState.latestValue.payButtonViewState)
     }
 
     @Test
@@ -238,7 +238,7 @@ internal class GooglePayComponentTest {
         )
         val viewState = component.viewState.test(testScheduler)
 
-        assertNull(viewState.latestValue.buttonViewState)
+        assertNull(viewState.latestValue.payButtonViewState)
     }
 
     @Test
@@ -265,7 +265,7 @@ internal class GooglePayComponentTest {
             )
             val viewState = component.viewState.test(testScheduler)
 
-            val buttonViewState = requireNotNull(viewState.latestValue.buttonViewState)
+            val buttonViewState = requireNotNull(viewState.latestValue.payButtonViewState)
             assertTrue(buttonViewState.allowedPaymentMethods.isNotEmpty())
             assertEquals(buttonStyling, buttonViewState.buttonStyling)
         }
@@ -313,7 +313,7 @@ internal class GooglePayComponentTest {
             componentStateValidator = GooglePayComponentStateValidator(),
             componentStateFactory = GooglePayComponentStateFactory(componentParams),
             componentStateReducer = GooglePayComponentStateReducer(),
-            viewStateProducer = GooglePayViewStateProducer(),
+            viewStateProducer = GooglePayViewStateProducer(showSubmitButton = true),
             coroutineScope = coroutineScope,
         )
     }

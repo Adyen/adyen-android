@@ -22,6 +22,7 @@ sealed interface V6UiState {
         val storedPaymentMethods: List<StoredPaymentMethod>,
         val selectedPaymentMethod: PaymentMethodResponse,
         val checkoutController: CheckoutController,
+        val showCustomButton: Boolean,
     ) : V6UiState
 
     data object Loading : V6UiState

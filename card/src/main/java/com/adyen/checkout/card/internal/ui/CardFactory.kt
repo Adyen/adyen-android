@@ -69,7 +69,7 @@ internal class CardFactory :
         val cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams, detectCardTypeBinHelper)
         val componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler)
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
-        val viewStateProducer = CardViewStateProducer(params.amount)
+        val viewStateProducer = CardViewStateProducer(params.amount, params.showSubmitButton)
 
         val cardEncryptor = CardEncryptorFactory.provide()
         val genericEncryptor = GenericEncryptorFactory.provide()
@@ -136,7 +136,7 @@ internal class CardFactory :
         )
         val componentStateReducer = StoredCardComponentStateReducer()
         val componentStateValidator = StoredCardComponentStateValidator(cardValidationMapper)
-        val viewStateProducer = StoredCardViewStateProducer(params.amount)
+        val viewStateProducer = StoredCardViewStateProducer(params.amount, params.showSubmitButton)
 
         val cardEncryptor = CardEncryptorFactory.provide()
 

@@ -39,7 +39,8 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.PayButton
+import com.adyen.checkout.core.components.internal.ui.payButtonAsComponentScaffoldFooter
+import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.SwitchContainer
@@ -100,9 +101,8 @@ private fun CardContent(
 ) {
     ComponentScaffold(
         modifier = modifier,
-        footer = {
-            PayButton(amount = viewState.amount, onClick = onSubmitClick, isLoading = viewState.isLoading)
-        },
+        disableInteraction = viewState.isLoading,
+        footer = payButtonAsComponentScaffoldFooter(viewState.payButtonViewState, onSubmitClick),
     ) {
         CardDetailsSection(
             viewState = viewState,
@@ -244,7 +244,7 @@ private fun CardContentPreview(
                 cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
                 cardNumberFormat = CardNumberFormat.DEFAULT,
                 installmentViewState = null,
-                amount = null,
+                payButtonViewState = PayButtonViewState(null, false),
             ),
             onIntent = {},
             onSubmitClick = {},
@@ -300,7 +300,7 @@ private fun CardContentPreviewAllFields(
                     installmentOptions = listOf(InstallmentModel.OneTime),
                     selectedInstallment = InstallmentModel.OneTime,
                 ),
-                amount = null,
+                payButtonViewState = PayButtonViewState(null, false),
             ),
             onIntent = {},
             onSubmitClick = {},

@@ -238,7 +238,7 @@ internal class StoredCardComponentTest(
             componentStateValidator = StoredCardComponentStateValidator(CardValidationMapper()),
             componentStateFactory = StoredCardComponentStateFactory(storedPaymentMethod, componentParams),
             componentStateReducer = StoredCardComponentStateReducer(),
-            viewStateProducer = StoredCardViewStateProducer(null),
+            viewStateProducer = StoredCardViewStateProducer(amount = null, showSubmitButton = true),
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
             sdkDataProvider = sdkDataProvider,
             publicKey = publicKey,

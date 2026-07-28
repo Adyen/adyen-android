@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ComponentScaffold(
     modifier: Modifier = Modifier,
-    footer: @Composable () -> Unit = {},
-    disableInteraction: Boolean = false,
-    content: @Composable () -> Unit,
+    footer: (@Composable () -> Unit)?,
+    disableInteraction: Boolean,
+    content: (@Composable () -> Unit)?,
 ) {
     val focusManager = LocalFocusManager.current
     LaunchedEffect(disableInteraction) {
@@ -42,9 +42,13 @@ fun ComponentScaffold(
             modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            content()
-            Spacer(Modifier.size(16.dp))
-            footer()
+            content?.invoke()
+
+            if (content != null && footer != null) {
+                Spacer(Modifier.size(16.dp))
+            }
+
+            footer?.invoke()
         }
 
         if (disableInteraction) {
