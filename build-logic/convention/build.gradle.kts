@@ -17,6 +17,7 @@ dependencies {
     compileOnly(libs.detekt.gradle.plugin)
     compileOnly(libs.dokka.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
+    compileOnly(libs.kover.gradle.plugin)
     compileOnly(libs.sonarqube.gradle.plugin)
     compileOnly(libs.binary.compatibility.validator.gradle.plugin)
 
@@ -49,9 +50,9 @@ gradlePlugin {
             implementationClass = "DokkaConventionPlugin"
         }
 
-        register("checkoutJacoco") {
-            id = libs.plugins.checkout.jacoco.get().pluginId
-            implementationClass = "JacocoConventionPlugin"
+        register("checkoutKover") {
+            id = libs.plugins.checkout.kover.get().pluginId
+            implementationClass = "KoverConventionPlugin"
         }
 
         register("checkoutKtlint") {

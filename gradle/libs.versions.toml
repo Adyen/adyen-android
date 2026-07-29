@@ -129,6 +129,7 @@ android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", ve
 detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
 dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kover-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 sonarqube-gradle-plugin = { group = "org.sonarqube", name = "org.sonarqube.gradle.plugin", version.ref = "sonarqube" }
 binary-compatibility-validator-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 
@@ -200,6 +201,7 @@ checkout-android-library = { id = "checkout.android.library" }
 checkout-detekt = { id = "checkout.detekt" }
 checkout-dokka = { id = "checkout.dokka" }
 checkout-jacoco = { id = "checkout.jacoco" }
+checkout-kover = { id = "checkout.kover" }
 checkout-ktlint = { id = "checkout.ktlint" }
 checkout-publish = { id = "checkout.publish" }
 checkout-sonar = { id = "checkout.sonar" }
