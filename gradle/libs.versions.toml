@@ -134,7 +134,6 @@ kover-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "kover-gradle-pl
 sonarqube-gradle-plugin = { group = "org.sonarqube", name = "org.sonarqube.gradle.plugin", version.ref = "sonarqube" }
 binary-compatibility-validator-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 
-
 # Test libraries
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "test-rules" }
 androidx-test-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "test-ext" }
