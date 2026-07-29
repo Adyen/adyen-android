@@ -13,12 +13,11 @@ plugins {
     alias libs.plugins.dokka
     alias libs.plugins.sonarqube
     alias libs.plugins.binary.compatibility.validator
+    alias libs.plugins.dependency.list.aggregate
+    alias libs.plugins.dependency.resolve
 }
 
-apply from: "config/gradle/dokkaRoot.gradle"
-apply from: "config/gradle/sonarcloud.gradle"
 apply from: "config/gradle/apiValidator.gradle"
-apply from: "config/gradle/dependencyList.gradle"
 
 ext {
     if (project.hasProperty("version-name")) {
@@ -81,6 +80,28 @@ subprojects {
 
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
+    }
+}
+
+sonar {
+    properties {
+        property 'sonar.projectKey', 'Adyen_adyen-android'
+        property 'sonar.organization', 'adyen'
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.gradle.skipCompile', 'true'
+    }
+}
+
+tasks.named("dokkaHtmlMultiModule") {
+    def dokkaDir = "${rootProject.layout.buildDirectory.get().asFile}/docs"
+    outputDirectory.set(file(dokkaDir))
+    doLast {
+        copy {
+            from dokkaDir
+            into dokkaDir
+            include "-modules.html"
+            rename("-modules.html", "index.html")
+        }
     }
 }
 
