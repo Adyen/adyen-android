@@ -23,10 +23,11 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.library")
+            apply(plugin = "kotlin-android")
             apply(plugin = "checkout.dependency.list.generate")
             apply(plugin = "checkout.detekt")
             apply(plugin = "checkout.dokka")
-            apply(plugin = "checkout.jacoco")
+            apply(plugin = "checkout.kover")
             apply(plugin = "checkout.ktlint")
             apply(plugin = "checkout.publish")
             apply(plugin = "checkout.sonar")
@@ -55,7 +56,8 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
                 }
             }
 
-            configureBcvWorkaround()
+            // Uncomment once we update to AGP 9+
+//            configureBcvWorkaround()
         }
     }
 
