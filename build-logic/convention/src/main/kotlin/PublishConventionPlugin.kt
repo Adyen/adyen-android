@@ -23,7 +23,6 @@ import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.kotlin.gradle.plugin.extraProperties
 import java.io.File
-import java.io.FileInputStream
 import java.net.URI
 import java.util.Properties
 import javax.inject.Inject
@@ -44,28 +43,34 @@ class PublishConventionPlugin : Plugin<Project> {
     }
 
     private fun Project.initializeProperties() {
-        extraProperties.set("signing.keyId", "")
-        extraProperties.set("signing.password", "")
-        extraProperties.set("signing.secretKeyRingFile", "")
-        extraProperties.set("sonatypeCentralPortalUsername", "")
-        extraProperties.set("sonatypeCentralPortalPassword", "")
-        extraProperties.set("sonatypeStagingProfileId", "")
-
+        val properties = Properties()
         val secretPropsFile: File = project.rootProject.file("local.properties")
         if (secretPropsFile.exists()) {
-            val p = Properties()
-            p.load(FileInputStream(secretPropsFile))
-            p.forEach { (name, value) ->
-                extraProperties.set(name.toString(), value)
-            }
-        } else {
-            extraProperties.set("signing.keyId", System.getenv("SIGNING_KEY_ID"))
-            extraProperties.set("signing.password", System.getenv("SIGNING_PASSWORD"))
-            extraProperties.set("signing.secretKeyRingFile", System.getenv("SIGNING_SECRET_KEY_RING_FILE"))
-            extraProperties.set("sonatypeCentralPortalUsername", System.getenv("SONATYPE_CENTRAL_PORTAL_USERNAME"))
-            extraProperties.set("sonatypeCentralPortalPassword", System.getenv("SONATYPE_CENTRAL_PORTAL_PASSWORD"))
-            extraProperties.set("sonatypeStagingProfileId", System.getenv("SONATYPE_STAGING_PROFILE_ID"))
+            secretPropsFile.inputStream().use { properties.load(it) }
         }
+
+        fun getPropOrEnv(key: String, envVar: String): String {
+            return properties.getProperty(key) ?: System.getenv(envVar) ?: ""
+        }
+
+        extraProperties.set("signing.keyId", getPropOrEnv("signing.keyId", "SIGNING_KEY_ID"))
+        extraProperties.set("signing.password", getPropOrEnv("signing.password", "SIGNING_PASSWORD"))
+        extraProperties.set(
+            "signing.secretKeyRingFile",
+            getPropOrEnv("signing.secretKeyRingFile", "SIGNING_SECRET_KEY_RING_FILE"),
+        )
+        extraProperties.set(
+            "sonatypeCentralPortalUsername",
+            getPropOrEnv("sonatypeCentralPortalUsername", "SONATYPE_CENTRAL_PORTAL_USERNAME"),
+        )
+        extraProperties.set(
+            "sonatypeCentralPortalPassword",
+            getPropOrEnv("sonatypeCentralPortalPassword", "SONATYPE_CENTRAL_PORTAL_PASSWORD"),
+        )
+        extraProperties.set(
+            "sonatypeStagingProfileId",
+            getPropOrEnv("sonatypeStagingProfileId", "SONATYPE_STAGING_PROFILE_ID"),
+        )
     }
 
     private fun Project.configurePublishing(extension: PublishConventionPluginExtension) {
