@@ -8,24 +8,36 @@
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.logging.Logger
+import org.gradle.api.tasks.TaskProvider
 
 class ResolveDependenciesPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            tasks.register("resolveDependencies") {
-                notCompatibleWithConfigurationCache("Uses project during execution")
-                doNotTrackState("This task must always run to ensure the latest dependencies are resolved")
+            val resolveTask = registerResolveDependenciesTask()
 
-                doLast {
-                    allprojects {
-                        logger.lifecycle("Resolving dependencies for ${project.name}")
-                        project.buildscript.configurations.resolveDependencies(logger)
-                        project.configurations.resolveDependencies(logger)
-                    }
+            if (target == rootProject) {
+                subprojects {
+                    val subprojectResolveTask = registerResolveDependenciesTask()
+                    resolveTask.configure { dependsOn(subprojectResolveTask) }
                 }
+            }
+        }
+    }
+
+    private fun Project.registerResolveDependenciesTask(): TaskProvider<Task> {
+        val project = this
+        return tasks.register("resolveDependencies") {
+            notCompatibleWithConfigurationCache("Uses project during execution")
+            doNotTrackState("This task must always run to ensure the latest dependencies are resolved")
+
+            doLast {
+                project.logger.lifecycle("Resolving dependencies for ${project.name}")
+                project.buildscript.configurations.resolveDependencies(project.logger)
+                project.configurations.resolveDependencies(project.logger)
             }
         }
     }
