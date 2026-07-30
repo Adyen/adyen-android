@@ -17,7 +17,7 @@ class AggregateDependencyListsPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             // Example call from command line: ./gradlew aggregateDependencyLists -PoutputFileName=deps.txt -PincludeModules=true
-            tasks.register<AggregateDependencyListsTask>("aggregateDependencyLists") {
+            val aggregateDependencyLists = tasks.register<AggregateDependencyListsTask>("aggregateDependencyLists") {
                 val filteredSubProjects = subprojects.filter { it.plugins.hasPlugin(libs.plugins.dependency.list.generate.get().pluginId) }
 
                 filteredSubProjects.forEach {
@@ -36,6 +36,11 @@ class AggregateDependencyListsPlugin : Plugin<Project> {
                 outputFile.set(project.layout.buildDirectory.file("outputs/dependency_list/$outputFileName"))
 
                 includeModules.set(project.providers.gradleProperty("includeModules").map { it.toBoolean() })
+            }
+
+            // TODO - Remove this once we have migrated to the new task name
+            tasks.register("dependencyList") {
+                dependsOn(aggregateDependencyLists)
             }
         }
     }

@@ -31,11 +31,14 @@ jobs:
           ARTIFACT_NAME: ${{ inputs.artifact-name }}
         run: |
           DEPENDENCY_LIST_FILE_NAME=$(echo "${ARTIFACT_NAME}")
-          ./gradlew aggregateDependencyLists -q --no-configuration-cache -PoutputFileName=$DEPENDENCY_LIST_FILE_NAME
+          ./gradlew dependencyList -q --no-configuration-cache -PoutputFileName=$DEPENDENCY_LIST_FILE_NAME
 
       - name: Upload dependency list artifact
         uses: actions/upload-artifact@v4
         with:
           name: "${{ inputs.artifact-name }}"
-          path: "${{ inputs.artifact-name }}"
+          path: |
+            build/outputs/dependency_list/${{ inputs.artifact-name }}
+            ${{ inputs.artifact-name }}
           overwrite: true
+          if-no-files-found: ignore
