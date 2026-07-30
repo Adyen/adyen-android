@@ -23,15 +23,17 @@ class SonarConventionPlugin : Plugin<Project> {
                 properties {
                     property(
                         "sonar.androidLint.reportPaths",
-                        "${layout.buildDirectory.get().asFile}/reports/lint-results-debug.xml",
+                        layout.buildDirectory.map { "${it.asFile}/reports/lint-results-debug.xml" },
                     )
                     property(
                         "sonar.kotlin.detekt.reportPaths",
-                        "${layout.buildDirectory.get().asFile}/reports/detekt/detekt-results.xml",
+                        layout.buildDirectory.map { "${it.asFile}/reports/detekt/detekt-results.xml" },
                     )
                     property(
                         "sonar.coverage.jacoco.xmlReportPaths",
-                        "${layout.buildDirectory.get().asFile}/reports/jacoco/jacocoDebugTestReport/jacocoDebugTestReport.xml",
+                        layout.buildDirectory.map {
+                            "${it.asFile}/reports/jacoco/jacocoDebugTestReport/jacocoDebugTestReport.xml"
+                        },
                     )
 
                     val exclusions = coverageExclusions.joinToString()
