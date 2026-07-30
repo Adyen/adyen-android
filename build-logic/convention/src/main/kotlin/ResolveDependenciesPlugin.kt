@@ -13,6 +13,7 @@ import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.register
+import java.util.concurrent.Callable
 
 class ResolveDependenciesPlugin : Plugin<Project> {
 
@@ -33,8 +34,8 @@ class ResolveDependenciesPlugin : Plugin<Project> {
         return tasks.register<ResolveDependenciesTask>("resolveDependencies") {
             doNotTrackState("This task must always run to ensure the latest dependencies are resolved")
 
-            dependencies.from(configurations.resolvableArtifactFiles())
-            dependencies.from(buildscript.configurations.resolvableArtifactFiles())
+            dependencies.from(Callable { configurations.resolvableArtifactFiles() })
+            dependencies.from(Callable { buildscript.configurations.resolvableArtifactFiles() })
         }
     }
 
