@@ -6,12 +6,13 @@
  * Created by oscars on 3/12/2025.
  */
 
+import com.adyen.checkout.ResolveDependenciesTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.artifacts.ConfigurationContainer
-import org.gradle.api.logging.Logger
+import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.TaskProvider
+import org.gradle.kotlin.dsl.register
 
 class ResolveDependenciesPlugin : Plugin<Project> {
 
@@ -28,27 +29,18 @@ class ResolveDependenciesPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.registerResolveDependenciesTask(): TaskProvider<Task> {
-        val project = this
-        return tasks.register("resolveDependencies") {
-            notCompatibleWithConfigurationCache("Uses project during execution")
+    private fun Project.registerResolveDependenciesTask(): TaskProvider<ResolveDependenciesTask> {
+        return tasks.register<ResolveDependenciesTask>("resolveDependencies") {
             doNotTrackState("This task must always run to ensure the latest dependencies are resolved")
 
-            doLast {
-                project.logger.lifecycle("Resolving dependencies for ${project.name}")
-                project.buildscript.configurations.resolveDependencies(project.logger)
-                project.configurations.resolveDependencies(project.logger)
-            }
+            dependencies.from(configurations.resolvableArtifactFiles())
+            dependencies.from(buildscript.configurations.resolvableArtifactFiles())
         }
     }
 
-    private fun ConfigurationContainer.resolveDependencies(logger: Logger) {
-        this
+    private fun ConfigurationContainer.resolvableArtifactFiles(): List<FileCollection> {
+        return this
             .filter { it.isCanBeResolved }
-            .forEach { config ->
-                config.incoming.artifactView { lenient(true) }.artifacts.failures.forEach {
-                    logger.info(it.message)
-                }
-            }
+            .map { it.incoming.artifactView { lenient(true) }.files }
     }
 }
