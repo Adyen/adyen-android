@@ -42,7 +42,9 @@ abstract class AggregateDependencyListsTask : DefaultTask() {
             }
         }
 
-        outputFile.get().asFile.writer().use { writer ->
+        val file = outputFile.get().asFile
+        file.parentFile.mkdirs()
+        file.writer().use { writer ->
             if (includeModules.getOrElse(false)) {
                 groupedDependencies
                     .groupBy { it.dependency }
