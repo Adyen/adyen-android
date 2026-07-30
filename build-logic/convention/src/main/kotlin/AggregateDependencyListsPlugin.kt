@@ -28,11 +28,12 @@ class AggregateDependencyListsPlugin : Plugin<Project> {
 
             val generatePluginId = libs.plugins.dependency.list.generate.get().pluginId
             subprojects {
+                val subproject = this
                 pluginManager.withPlugin(generatePluginId) {
                     aggregateDependencyLists.configure {
-                        dependsOn(tasks.named("generateDependencyList"))
+                        dependsOn(subproject.tasks.named("generateDependencyList"))
                         dependencyLists.from(
-                            layout.buildDirectory.file("outputs/dependency_list/$name.txt"),
+                            subproject.layout.buildDirectory.file("outputs/dependency_list/${subproject.name}.txt"),
                         )
                     }
                 }
