@@ -26,7 +26,7 @@ internal class ComponentStateFlowTest {
     private val reducer = TestReducer()
 
     @Test
-    fun `when the flow is collected before any intent, then the initial state is emitted without being validated`() =
+    fun `when the flow is collected before any intent, then the initial state is emitted already validated`() =
         runTest {
             // GIVEN
             val stateFlow = createStateFlow()
@@ -36,8 +36,20 @@ internal class ComponentStateFlowTest {
             testScheduler.runCurrent()
 
             // THEN
-            assertEquals(listOf(INITIAL_STATE), states.values)
+            assertEquals(listOf(VALIDATED_INITIAL_STATE), states.values)
         }
+
+    @Test
+    fun `when no intent has been handled, then the value is the validated initial state`() = runTest {
+        // GIVEN
+        val stateFlow = createStateFlow()
+
+        // WHEN
+        val value = stateFlow.value
+
+        // THEN
+        assertEquals(VALIDATED_INITIAL_STATE, value)
+    }
 
     @Test
     fun `when an intent is handled, then the reduced state is validated before it is emitted`() = runTest {
@@ -50,7 +62,7 @@ internal class ComponentStateFlowTest {
         testScheduler.runCurrent()
 
         // THEN
-        assertEquals(TestState(value = "a", validationCount = 1), states.latestValue)
+        assertEquals(TestState(value = "a", validationCount = 2), states.latestValue)
     }
 
     @Test
@@ -66,8 +78,9 @@ internal class ComponentStateFlowTest {
             testScheduler.runCurrent()
 
             // THEN
-            assertEquals(listOf(INITIAL_STATE, TestState(value = "a", validationCount = 1)), reducer.reducedStates)
-            assertEquals(TestState(value = "ab", validationCount = 2), states.latestValue)
+            val expectedReduced = listOf(VALIDATED_INITIAL_STATE, TestState(value = "a", validationCount = 2))
+            assertEquals(expectedReduced, reducer.reducedStates)
+            assertEquals(TestState(value = "ab", validationCount = 3), states.latestValue)
         }
 
     @Test
@@ -80,7 +93,7 @@ internal class ComponentStateFlowTest {
         testScheduler.runCurrent()
 
         // THEN
-        assertEquals(INITIAL_STATE, stateFlow.value)
+        assertEquals(VALIDATED_INITIAL_STATE, stateFlow.value)
     }
 
     @Test
@@ -94,7 +107,7 @@ internal class ComponentStateFlowTest {
         testScheduler.runCurrent()
 
         // THEN
-        assertEquals(TestState(value = "a", validationCount = 1), stateFlow.value)
+        assertEquals(TestState(value = "a", validationCount = 2), stateFlow.value)
     }
 
     @Test
@@ -105,7 +118,7 @@ internal class ComponentStateFlowTest {
             val states = stateFlow.test(testScheduler)
             stateFlow.handleIntent(TestIntent("a"))
             testScheduler.runCurrent()
-            assertEquals(TestState(value = "a", validationCount = 1), stateFlow.value)
+            assertEquals(TestState(value = "a", validationCount = 2), stateFlow.value)
 
             // WHEN
             states.cancel()
@@ -114,7 +127,7 @@ internal class ComponentStateFlowTest {
             testScheduler.runCurrent()
 
             // THEN
-            assertEquals(INITIAL_STATE, stateFlow.value)
+            assertEquals(VALIDATED_INITIAL_STATE, stateFlow.value)
         }
 
     @Test
@@ -184,6 +197,9 @@ internal class ComponentStateFlowTest {
     companion object {
 
         private val INITIAL_STATE = TestState()
+
+        // ComponentStateFlow validates the initial state before seeding the fold, so this is what it actually emits.
+        private val VALIDATED_INITIAL_STATE = TestState(validationCount = 1)
 
         // Mirrors the private SUBSCRIBE_TIMEOUT_MS in ComponentStateFlow.
         private const val SHARING_TIMEOUT_MS = 5_000L

@@ -46,6 +46,8 @@ internal class BlikComponentTest(
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        // Needed by every test: the component validates its initial state on construction.
+        whenever(componentStateValidator.validate(any())).thenAnswer { it.arguments[0] }
     }
 
     @Test
@@ -65,7 +67,6 @@ internal class BlikComponentTest(
         @Test
         fun `and state is valid then Submit event is emitted`() = runTest {
             // GIVEN
-            whenever(componentStateValidator.validate(any())).thenAnswer { it.arguments[0] }
             whenever(componentStateValidator.isValid(any())).thenReturn(true)
             whenever(sdkDataProvider.createEncodedSdkData()).thenReturn("sdk_data")
             val component = createComponent()
@@ -84,7 +85,6 @@ internal class BlikComponentTest(
         @Test
         fun `and state is invalid then no Submit event is emitted`() = runTest {
             // GIVEN
-            whenever(componentStateValidator.validate(any())).thenAnswer { it.arguments[0] }
             whenever(componentStateValidator.isValid(any())).thenReturn(false)
             val component = createComponent()
             val eventFlow = component.eventFlow.test(testScheduler)
@@ -100,7 +100,6 @@ internal class BlikComponentTest(
     @Test
     fun `when requiresUserInteraction is called then returns true`() {
         // GIVEN
-        whenever(componentStateValidator.validate(any())).thenAnswer { it.arguments[0] }
         val component = createComponent()
 
         // WHEN

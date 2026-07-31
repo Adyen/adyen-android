@@ -49,13 +49,17 @@ private class ComponentStateFlowImplementation<C : ComponentState, I : Component
 
     private val intents = Channel<I>(Channel.BUFFERED)
 
+    // Validated up front: isValid reads the errorMessage that validate() writes, so an unvalidated state reports
+    // itself valid no matter what it contains.
+    private val validatedInitialState = validator.validate(initialState)
+
     private val stateFlow: StateFlow<C> = intents
         .receiveAsFlow()
-        .runningFold(initialState) { state, intent ->
+        .runningFold(validatedInitialState) { state, intent ->
             val reduced = reducer.reduce(state, intent)
             validator.validate(reduced)
         }
-        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(SUBSCRIBE_TIMEOUT_MS), initialState)
+        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(SUBSCRIBE_TIMEOUT_MS), validatedInitialState)
 
     override val value: C
         get() = stateFlow.value
