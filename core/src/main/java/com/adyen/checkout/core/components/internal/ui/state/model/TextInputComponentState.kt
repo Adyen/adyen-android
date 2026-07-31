@@ -24,10 +24,17 @@ data class TextInputComponentState(
     val isValid: Boolean
         get() = errorMessage == null
 
+    /**
+     * Whether the error message should be displayed, which requires both an error to be present and the field to be
+     * showing its errors.
+     */
+    val showErrorMessage: Boolean
+        get() = showError && errorMessage != null
+
     fun updateText(text: String) = copy(text = text, showError = false)
 
     fun updateFocus(hasFocus: Boolean) = copy(
         isFocused = hasFocus,
-        showError = if (!hasFocus) true else false,
+        showError = !hasFocus,
     )
 }

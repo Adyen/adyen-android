@@ -39,7 +39,7 @@ internal class StoredCardViewStateProducer(
         cardNumberFormat: CardNumberFormat,
     ): SecurityCodeTrailingIcon {
         val isValid = securityCode.errorMessage == null && securityCode.text.isNotEmpty()
-        val isInvalid = securityCode.errorMessage != null && securityCode.showError
+        val isInvalid = securityCode.showErrorMessage
 
         return when {
             isValid -> SecurityCodeTrailingIcon.Checkmark

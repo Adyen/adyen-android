@@ -31,12 +31,11 @@ fun TextInputComponentState.toViewState(
     trailingIcon: TrailingIcon? = null,
 ): TextInputViewState? {
     if (requirementPolicy == RequirementPolicy.Hidden) return null
-    val isError = showError && errorMessage != null
     return TextInputViewState(
         text = text,
-        supportingText = if (isError) errorMessage else description,
+        supportingText = if (showErrorMessage) errorMessage else description,
         isFocused = isFocused,
-        isError = isError,
+        isError = showErrorMessage,
         trailingIcon = trailingIcon,
         isOptional = requirementPolicy is RequirementPolicy.Optional,
     )
