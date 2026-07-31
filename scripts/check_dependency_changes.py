@@ -29,7 +29,7 @@ The following dependencies have been modified in this PR:
 ```diff
 {diff}
 ```
-To check the affected modules run the `dependencyList` gradle task with `includeModules=true`.
+To check the affected modules run the `aggregateDependencyLists` gradle task with `includeModules=true`.
     '''.format(diff=dependency_diff)
 
 def main():

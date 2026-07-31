@@ -124,6 +124,16 @@ detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", ve
 ktlint-cli = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "ktlint" }
 twint = { group = "ch.twint.payment.sdk", name = "android-sdk", version.ref = "twint" }
 
+# Util libraries
+android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
+detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
+dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-android-gradle-plugin = { group = "org.jetbrains.kotlin.android", name = "org.jetbrains.kotlin.android.gradle.plugin", version.ref = "kotlin" }
+kover-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
+sonarqube-gradle-plugin = { group = "org.sonarqube", name = "org.sonarqube.gradle.plugin", version.ref = "sonarqube" }
+binary-compatibility-validator-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
+
 # Test libraries
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "test-rules" }
 androidx-test-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "test-ext" }
@@ -185,3 +195,15 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
+
+# Plugins defined by this project
+checkout-android-library = { id = "checkout.android.library" }
+checkout-detekt = { id = "checkout.detekt" }
+checkout-dokka = { id = "checkout.dokka" }
+checkout-kover = { id = "checkout.kover" }
+checkout-ktlint = { id = "checkout.ktlint" }
+checkout-publish = { id = "checkout.publish" }
+checkout-sonar = { id = "checkout.sonar" }
+dependency-list-aggregate = { id = "checkout.dependency.list.aggregate" }
+dependency-list-generate = { id = "checkout.dependency.list.generate" }
+dependency-resolve = { id = "checkout.dependency.resolve" }
