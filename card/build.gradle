@@ -57,4 +57,13 @@ dependencies {
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.kotlin.coroutines.test
     testImplementation libs.bundles.mockito
+
+    // UI tests
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.compose.ui.test.junit4
+    // Compose's ui-test-junit4 transitively pulls in an old espresso-core (3.5.0) that reflectively
+    // calls the now-removed InputManager.getInstance(), crashing on API 36.1+ emulators. Pin the
+    // version explicitly so Gradle's conflict resolution picks the fixed release instead.
+    androidTestImplementation libs.espresso.core
+    debugImplementation libs.compose.ui.test.manifest
 }

@@ -39,6 +39,7 @@
 "androidx.compose.material:material-icons-core" = ""
 "androidx.compose.ui:ui" = ""
 "androidx.compose.ui:ui-graphics" = ""
+"androidx.compose.ui:ui-test-junit4" = ""
 "androidx.compose.ui:ui-test-manifest" = ""
 "androidx.compose.ui:ui-tooling" = ""
 "androidx.compose.ui:ui-tooling-preview" = ""
