@@ -29,12 +29,14 @@ class CheckoutTestRule(
          * - HiltAndroidRule has to be the outer rule to ensure the dependency graph is built only once
          * - MockServerRule comes second to make sure the backend is ready asap
          * - IdlingDispatcherRule comes after MockServerRule
+         * - OkHttpIdlingRule needs the dependency graph, so it comes after HiltAndroidRule
          * - Rules after ActivityScenarioRule will be executed after the activity is launched
          */
         RuleChain
             .outerRule(hiltRule)
             .around(MockServerRule())
             .around(IdlingDispatcherRule())
+            .around(OkHttpIdlingRule())
             .around(activityRule)
             .apply(base, description)
 }
