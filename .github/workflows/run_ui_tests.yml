@@ -12,7 +12,9 @@ permissions:
 jobs:
   ui-test:
     name: Run UI tests
-    runs-on: ubuntu-latest
+    runs-on:
+      group: larger-runners
+      labels: ubuntu-latest-8-cores
     strategy:
       matrix:
         # Define the Android version you want to run UI tests for here.
