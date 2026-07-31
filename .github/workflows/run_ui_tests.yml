@@ -26,6 +26,11 @@ jobs:
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
+      # Packaging the test APKs of every module in parallel needs more heap than the shared value provides. The last
+      # occurrence of a key wins, so this overrides org.gradle.jvmargs for this workflow only.
+      - name: Increase the Gradle heap
+        run: echo "org.gradle.jvmargs=-Xmx8g" >> ~/.gradle/gradle.properties
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
