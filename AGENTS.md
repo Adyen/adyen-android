@@ -38,7 +38,7 @@ This document outlines important patterns, practices, and rules to follow when w
 
 **Commit workflow - CRITICAL:**
 - **Complete one phase fully before moving to the next**
-- After completing a phase, use the `android-commit` skill (`.agents/skills/android-commit.md`) to commit
+- After completing a phase, use the `android-commit` skill (`.agents/skills/android-commit/SKILL.md`) to commit
 - Never accumulate multiple phases in a single commit
 - Each commit should represent a logical, complete unit of work
 - This ensures work can be reviewed incrementally and rolled back if needed
@@ -285,6 +285,33 @@ if (checkCompileOnly("com.external.sdk.SomeClass")) {
 }
 ```
 
+### Adding or Modifying Dependencies
+
+**Get explicit approval before adding, changing, or removing a dependency — before making any code change.**
+
+We are an SDK. Every dependency we take is imposed on every merchant that integrates us, and every one we drop or re-point can break them. The default answer to a new dependency is no. Check first whether the platform, AndroidX, or an existing dependency already covers the need, or whether the part we need is small enough to implement ourselves.
+
+**Explain the impact before asking**, even when the developer named the dependency themselves:
+- Which modules and configuration (`api`, `implementation`, `compileOnly`, test-only)
+- Whether it reaches merchant builds, and the version conflict, `minSdk`, and size consequences
+- Whether it touches our public API — if its types are exposed, its version becomes part of our contract
+- R8/ProGuard needs, build and CI impact, test impact
+- License, maintenance status, and the alternatives you rejected
+
+Removing a dependency merchants resolve through us is a breaking change.
+
+**Every dependency in `gradle/libs.versions.toml` must also be listed in `.github/release_notes_dependency_list.toml`:**
+- `[included]` — merchant-relevant dependencies: shipped in a published module, or part of the toolchain merchants must be compatible with (AGP and Kotlin). The value is a markdown link to the vendor's release notes, with `{}` where the version goes. These entries are published in our release notes.
+- `[excluded]` — everything else (tests, example app, build logic, CI, code quality tooling), plus merchant-relevant dependencies already covered by another entry such as a BoM. The value is an empty string.
+
+**Always ask the developer to confirm the section and the link before writing the entry.** Never guess a release notes URL.
+
+CI enforces this: a newly added dependency that appears in neither list fails the `validate_dependencies` check on every PR.
+
+Dependency verification is enabled, so a new dependency also requires regenerating `gradle/verification-metadata.xml` or the build fails on a missing checksum.
+
+Use the `android-add-dependency` skill (`.agents/skills/android-add-dependency/SKILL.md`) for the full procedure, including the impact assessment template, how the id is derived, and how to choose the link pattern.
+
 ## Verification Checklist
 
 Before considering work complete:
@@ -296,8 +323,9 @@ Before considering work complete:
 6. If layout/styles changed: Styles added, proper attributes used, hierarchy maintained
 7. If strings changed: All translations present, localized context applied
 8. If new module added: Gradle configuration reviewed, external SDKs handled properly
-9. If refactoring: Test coverage exists for affected code
-10. Added classes and functions have unit tests following given-when-then structure
+9. If dependencies changed: Dependency approved by the developer with its impact explained, release notes dependency list updated and confirmed, verification metadata regenerated
+10. If refactoring: Test coverage exists for affected code
+11. Added classes and functions have unit tests following given-when-then structure
 
 ## When in Doubt
 

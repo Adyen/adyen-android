@@ -21,7 +21,7 @@ Also ensure the branch is up to date with its upstream branch. If behind, pull t
 
 ### 2. Run pre-commit checks
 
-Use the `android-check` skill (`.agents/skills/android-check.md`) to run verification checks. Scope the checks to the modules that have changes.
+Use the `android-check` skill (`.agents/skills/android-check/SKILL.md`) to run verification checks. Scope the checks to the modules that have changes.
 
 **If checks fail:** Do not proceed to committing.
 
@@ -38,6 +38,8 @@ Ask the user for the ticket number (format: `COSDK-XXXX`). If the user has alrea
 Stage only the specific files that were modified and are necessary for the commit. **Never use `git add -A` or `git add .`**. Use `git add <file1> <file2> ...` for individual files.
 
 Include any `.api` files if they were updated (e.g., after running `apiDump` for intentional public API changes).
+
+**If `gradle/libs.versions.toml` is among the changes:** confirm the developer approved the dependency change itself, that `.github/release_notes_dependency_list.toml` covers every added or re-pointed dependency, and that `gradle/verification-metadata.xml` was regenerated. Stage all three files. If the approval or either of the other two is missing, stop and use the `android-add-dependency` skill (`.agents/skills/android-add-dependency/SKILL.md`) before committing.
 
 ### 6. Security scan
 
@@ -79,6 +81,7 @@ Confirm the commit was created successfully by running `git log --oneline -1`.
 
 - Never skip pre-commit checks.
 - Never use `git add -A` or `git add .`.
+- If `gradle/libs.versions.toml` changed, the dependency change must have been approved by the developer, and the release notes dependency list must be updated in the same commit.
 - Always ask for ticket number if not already known.
 - Always confirm the commit message with the user before executing.
 - Stop immediately if secrets are detected in the diff.
