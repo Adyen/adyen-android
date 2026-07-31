@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  -->
+
+<network-security-config>
+    <!--
+      The instrumented tests serve their mock backend over HTTP on loopback, which the platform blocks by default.
+      Only loopback is allowed, and only in debug builds, so no real traffic can be sent over cleartext.
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>

@@ -32,7 +32,9 @@ object CheckoutMockWebServer {
         try {
             newServer.start(DEFAULT_PORT)
         } catch (e: IOException) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to start mock web server." }
+            // Do not swallow this: a server that failed to start makes every request fail with a connection error,
+            // which surfaces much later as a confusing "view not found" failure in whichever test ran.
+            error("Failed to start mock web server on port $DEFAULT_PORT: $e")
         }
 
         return newServer
