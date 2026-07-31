@@ -37,6 +37,7 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
 
                 defaultConfig {
                     minSdk = libs.versions.min.sdk.get().toInt()
+                    targetSdk = libs.versions.target.sdk.get().toInt()
 
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                     consumerProguardFiles("consumer-rules.pro")
