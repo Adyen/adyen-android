@@ -16,11 +16,16 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 
+@DisableCachingByDefault(because = "Not worth caching, simply aggregates dependency list files")
 abstract class AggregateDependencyListsTask : DefaultTask() {
 
     @get:InputFiles
+    @get:PathSensitive(PathSensitivity.NAME_ONLY)
     abstract val dependencyLists: ConfigurableFileCollection
 
     @get:Input

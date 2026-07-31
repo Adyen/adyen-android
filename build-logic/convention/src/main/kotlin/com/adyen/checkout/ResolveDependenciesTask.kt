@@ -15,8 +15,10 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 import javax.inject.Inject
 
+@DisableCachingByDefault(because = "Not worth caching, only resolves dependency artifacts")
 internal abstract class ResolveDependenciesTask @Inject constructor() : DefaultTask() {
 
     @get:InputFiles
