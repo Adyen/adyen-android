@@ -31,7 +31,7 @@ class SonarConventionPlugin : Plugin<Project> {
                     )
                     property(
                         "sonar.coverage.jacoco.xmlReportPaths",
-                        layout.buildDirectory.map { "${it.asFile}/reports/jacoco/jacocoDebugTestReport/jacocoDebugTestReport.xml" },
+                        layout.buildDirectory.map { "${it.asFile}/reports/kover/report.xml" },
                     )
 
                     val exclusions = coverageExclusions.joinToString()

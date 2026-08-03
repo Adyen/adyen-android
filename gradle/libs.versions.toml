@@ -16,7 +16,7 @@ hilt = "2.59.2"
 
 # Code quality
 detekt = "1.23.8"
-jacoco = "0.8.12"
+kover = "0.9.9"
 ktlint = "1.8.0"
 sonarqube = "7.3.1.8318"
 binary-compatibility-validator = "0.18.1"
@@ -175,6 +175,7 @@ android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", ve
 detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
 dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kover-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 sonarqube-gradle-plugin = { group = "org.sonarqube", name = "org.sonarqube.gradle.plugin", version.ref = "sonarqube" }
 binary-compatibility-validator-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 
@@ -205,17 +206,17 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
-jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 
 # Plugins defined by this project
 checkout-android-library = { id = "checkout.android.library" }
 checkout-detekt = { id = "checkout.detekt" }
 checkout-dokka = { id = "checkout.dokka" }
-checkout-jacoco = { id = "checkout.jacoco" }
+checkout-kover = { id = "checkout.kover" }
 checkout-ktlint = { id = "checkout.ktlint" }
 checkout-publish = { id = "checkout.publish" }
 checkout-sonar = { id = "checkout.sonar" }
