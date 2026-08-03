@@ -23,7 +23,13 @@ Ask the user what type of work this is:
 | `fix/` | Bug fixes |
 | `chore/` | Internal changes, refactoring, tooling, maintenance |
 
-> **Note:** Until v6 is released, use `chore/` for all branches based on `main` (where v6 development happens). The `feature/` and `fix/` prefixes require release notes, which are not applicable during v6 development.
+> **Note:** The prefix determines whether release notes are required — `feature/` and `fix/` require them, `chore/` and `renovate/` do not. Because the first alpha has been released, merchants can already observe changes made on `main`, so choose the prefix based on whether the change is merchant-observable:
+>
+> - **Public API change** (any `.api` file is updated) → `feature/` or `fix/`
+> - **Behavioral change** without an API change — a different error code, a callback where there used to be a crash, changed defaults or validation → `feature/` or `fix/`
+> - **Neither** — internal refactoring, tests, tooling, documentation → `chore/`
+>
+> If it is unclear whether a change is merchant-observable, ask the user before choosing the prefix.
 
 ### 2. Determine base branch
 
