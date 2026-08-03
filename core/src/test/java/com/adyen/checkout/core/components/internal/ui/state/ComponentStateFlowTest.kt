@@ -11,7 +11,6 @@ package com.adyen.checkout.core.components.internal.ui.state
 import com.adyen.checkout.core.common.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -84,7 +83,7 @@ internal class ComponentStateFlowTest {
         }
 
     @Test
-    fun `when nothing is collecting, then a handled intent is not applied`() = runTest {
+    fun `when nothing is collecting, then a handled intent is still applied`() = runTest {
         // GIVEN
         val stateFlow = createStateFlow()
 
@@ -93,7 +92,7 @@ internal class ComponentStateFlowTest {
         testScheduler.runCurrent()
 
         // THEN
-        assertEquals(VALIDATED_INITIAL_STATE, stateFlow.value)
+        assertEquals(TestState(value = "a", validationCount = 2), stateFlow.value)
     }
 
     @Test
@@ -111,7 +110,7 @@ internal class ComponentStateFlowTest {
     }
 
     @Test
-    fun `when collection stops for longer than the sharing timeout, then the state resets to the initial state`() =
+    fun `when collection stops for longer than the sharing timeout, then the state survives`() =
         runTest {
             // GIVEN
             val stateFlow = createStateFlow()
@@ -127,7 +126,7 @@ internal class ComponentStateFlowTest {
             testScheduler.runCurrent()
 
             // THEN
-            assertEquals(VALIDATED_INITIAL_STATE, stateFlow.value)
+            assertEquals(TestState(value = "a", validationCount = 2), stateFlow.value)
         }
 
     @Test
@@ -156,11 +155,10 @@ internal class ComponentStateFlowTest {
         assertEquals(TestViewState(value = "a"), viewStates.latestValue)
     }
 
-    private fun TestScope.createStateFlow() = ComponentStateFlow(
+    private fun createStateFlow() = ComponentStateFlow(
         initialState = INITIAL_STATE,
         reducer = reducer,
         validator = TestValidator,
-        coroutineScope = backgroundScope,
     )
 
     private data class TestState(
@@ -198,7 +196,7 @@ internal class ComponentStateFlowTest {
 
         private val INITIAL_STATE = TestState()
 
-        // ComponentStateFlow validates the initial state before seeding the fold, so this is what it actually emits.
+        // ComponentStateFlow validates the initial state before it is stored, so this is what it actually emits.
         private val VALIDATED_INITIAL_STATE = TestState(validationCount = 1)
 
         // Mirrors the private SUBSCRIBE_TIMEOUT_MS in ComponentStateFlow.
