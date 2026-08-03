@@ -17,25 +17,31 @@ class AggregateDependencyListsPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             // Example call from command line: ./gradlew aggregateDependencyLists -PoutputFileName=deps.txt -PincludeModules=true
-            tasks.register<AggregateDependencyListsTask>("aggregateDependencyLists") {
-                val filteredSubProjects = subprojects.filter { it.plugins.hasPlugin(libs.plugins.dependency.list.generate.get().pluginId) }
-
-                filteredSubProjects.forEach {
-                    dependsOn(it.tasks.named("generateDependencyList"))
-                }
-
-                dependencyLists.from(
-                    filteredSubProjects.map {
-                        it.layout.buildDirectory.file("outputs/dependency_list/${it.name}.txt")
-                    },
-                )
-
+            val aggregateDependencyLists = tasks.register<AggregateDependencyListsTask>("aggregateDependencyLists") {
                 val outputFileName = project.providers
                     .gradleProperty("outputFileName")
                     .getOrElse("dependency_list.txt")
                 outputFile.set(project.layout.buildDirectory.file("outputs/dependency_list/$outputFileName"))
 
                 includeModules.set(project.providers.gradleProperty("includeModules").map { it.toBoolean() })
+            }
+
+            val generatePluginId = libs.plugins.dependency.list.generate.get().pluginId
+            subprojects {
+                val subproject = this
+                pluginManager.withPlugin(generatePluginId) {
+                    aggregateDependencyLists.configure {
+                        dependsOn(subproject.tasks.named("generateDependencyList"))
+                        dependencyLists.from(
+                            subproject.layout.buildDirectory.file("outputs/dependency_list/${subproject.name}.txt"),
+                        )
+                    }
+                }
+            }
+
+            // TODO - Remove this once we have migrated to the new task name
+            tasks.register("dependencyList") {
+                dependsOn(aggregateDependencyLists)
             }
         }
     }
