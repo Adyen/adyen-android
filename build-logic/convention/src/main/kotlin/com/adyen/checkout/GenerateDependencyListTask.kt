@@ -14,8 +14,10 @@ import org.gradle.api.provider.ListProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 import javax.inject.Inject
 
+@DisableCachingByDefault(because = "Not worth caching, simply writes resolved dependencies to a file")
 internal abstract class GenerateDependencyListTask @Inject constructor() : DefaultTask() {
 
     @get:OutputFile

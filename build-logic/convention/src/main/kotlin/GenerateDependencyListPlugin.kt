@@ -21,8 +21,7 @@ class GenerateDependencyListPlugin : Plugin<Project> {
                     "Generates a list of all resolved dependencies for the releaseRuntimeClasspath configuration."
                 group = "Reporting"
 
-                val outputDir = project.layout.buildDirectory.dir("outputs/dependency_list").get()
-                outputFile.set(outputDir.file("${project.name}.txt"))
+                outputFile.set(project.layout.buildDirectory.file("outputs/dependency_list/${project.name}.txt"))
 
                 resolvedDependencies.set(
                     configurations.named("releaseRuntimeClasspath").map { config ->
