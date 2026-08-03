@@ -14,6 +14,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.error.internal.GenericError
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
 
@@ -44,9 +45,10 @@ object ActionComponentProvider {
             analyticsManager = analyticsManager,
             params = params,
             savedStateHandle = savedStateHandle,
-        ) ?: run {
-            error("Factory for action type: ${action.type} is not registered.")
-        }
+        ) ?: throw GenericError(
+            "Action type '${action.type}' is not supported. " +
+                "Ensure the corresponding module is included in your build dependencies.",
+        )
     }
 
     /**

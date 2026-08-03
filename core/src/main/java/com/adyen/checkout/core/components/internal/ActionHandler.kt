@@ -22,6 +22,7 @@ import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -42,15 +43,22 @@ internal class ActionHandler(
 
     fun handleAction(action: Action) {
         job?.cancel()
+        this.actionComponent = null
 
-        val actionComponent = ActionComponentProvider.get(
-            action = action,
-            coroutineScope = coroutineScope,
-            analyticsManager = analyticsManager,
-            params = params,
-            // TODO - Check if we really need saved state handle
-            savedStateHandle = @SuppressLint("VisibleForTests") SavedStateHandle(),
-        )
+        val actionComponent = try {
+            ActionComponentProvider.get(
+                action = action,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                params = params,
+                // TODO - Check if we really need saved state handle
+                savedStateHandle = @SuppressLint("VisibleForTests") SavedStateHandle(),
+            )
+        } catch (e: InternalCheckoutError) {
+            adyenLog(AdyenLogLevel.ERROR, e) { "Could not create an action component for action '${action.type}'" }
+            componentRequestDispatcher.failure(e.toCheckoutError())
+            return
+        }
         this.actionComponent = actionComponent
 
         job = actionComponent.eventFlow
