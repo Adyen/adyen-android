@@ -16,7 +16,6 @@ hilt = "2.59.2"
 
 # Code quality
 detekt = "1.23.8"
-jacoco = "0.8.12"
 kover = "0.9.9"
 ktlint = "1.8.0"
 sonarqube = "7.3.1.8318"
@@ -211,14 +210,12 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
-jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 
 # Plugins defined by this project
 checkout-android-library = { id = "checkout.android.library" }
 checkout-detekt = { id = "checkout.detekt" }
 checkout-dokka = { id = "checkout.dokka" }
-checkout-jacoco = { id = "checkout.jacoco" }
 checkout-kover = { id = "checkout.kover" }
 checkout-ktlint = { id = "checkout.ktlint" }
 checkout-publish = { id = "checkout.publish" }

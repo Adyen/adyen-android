@@ -50,11 +50,6 @@ gradlePlugin {
             implementationClass = "DokkaConventionPlugin"
         }
 
-        register("checkoutJacoco") {
-            id = libs.plugins.checkout.jacoco.get().pluginId
-            implementationClass = "JacocoConventionPlugin"
-        }
-
         register("checkoutKover") {
             id = libs.plugins.checkout.kover.get().pluginId
             implementationClass = "KoverConventionPlugin"

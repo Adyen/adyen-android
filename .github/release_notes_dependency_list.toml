@@ -61,7 +61,7 @@
 "checkout.dependency.resolve" = ""
 "checkout.detekt" = ""
 "checkout.dokka" = ""
-"checkout.jacoco" = ""
+"checkout.kover" = ""
 "checkout.ktlint" = ""
 "checkout.publish" = ""
 "checkout.sonar" = ""
