@@ -215,6 +215,66 @@ internal class TextInputComponentStateTest {
         assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
     }
 
+    @Test
+    fun `when showError is true and error message is present, then showErrorMessage returns true`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+            showError = true,
+        )
+
+        // WHEN
+        val showErrorMessage = state.showErrorMessage
+
+        // THEN
+        assertTrue(showErrorMessage)
+    }
+
+    @Test
+    fun `when showError is true and error message is absent, then showErrorMessage returns false`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            errorMessage = null,
+            showError = true,
+        )
+
+        // WHEN
+        val showErrorMessage = state.showErrorMessage
+
+        // THEN
+        assertFalse(showErrorMessage)
+    }
+
+    @Test
+    fun `when showError is false and error message is present, then showErrorMessage returns false`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+            showError = false,
+        )
+
+        // WHEN
+        val showErrorMessage = state.showErrorMessage
+
+        // THEN
+        assertFalse(showErrorMessage)
+    }
+
+    @Test
+    fun `when showError is false and error message is absent, then showErrorMessage returns false`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            errorMessage = null,
+            showError = false,
+        )
+
+        // WHEN
+        val showErrorMessage = state.showErrorMessage
+
+        // THEN
+        assertFalse(showErrorMessage)
+    }
+
     // Additional test: Verify error replaces placeholder
     @Test
     fun `when state has both description and error with showError true, then error is shown as supporting text`() {

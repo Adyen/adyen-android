@@ -11,14 +11,13 @@ package com.adyen.checkout.core.components.internal.ui.state
 import androidx.annotation.RestrictTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 @Suppress("UnnecessaryOptInAnnotation")
 @OptIn(ExperimentalForInheritanceCoroutinesApi::class)
@@ -32,43 +31,42 @@ fun <C : ComponentState, I : ComponentStateIntent> ComponentStateFlow(
     initialState: C,
     reducer: ComponentStateReducer<C, I>,
     validator: ComponentStateValidator<C>,
-    coroutineScope: CoroutineScope,
 ): ComponentStateFlow<C, I> = ComponentStateFlowImplementation(
     initialState = initialState,
     reducer = reducer,
     validator = validator,
-    coroutineScope = coroutineScope,
 )
 
+// Owns its state directly in a MutableStateFlow rather than folding intents over a cold flow. A cold flow's
+// accumulator is torn down by WhileSubscribed once the last collector goes away (e.g. the app is backgrounded for
+// longer than the sharing timeout), and nothing replays the intents handled while nobody was collecting - so
+// shopper input would silently be discarded. Owning the state directly means there is no subscription whose
+// cancellation could lose anything.
+//
+// This requires reducer.reduce and validator.validate to be pure (no side effects), because MutableStateFlow.update
+// can re-invoke its lambda under contention.
 private class ComponentStateFlowImplementation<C : ComponentState, I : ComponentStateIntent>(
     initialState: C,
-    reducer: ComponentStateReducer<C, I>,
-    validator: ComponentStateValidator<C>,
-    coroutineScope: CoroutineScope,
+    private val reducer: ComponentStateReducer<C, I>,
+    private val validator: ComponentStateValidator<C>,
 ) : ComponentStateFlow<C, I> {
 
-    private val intents = Channel<I>(Channel.BUFFERED)
-
-    private val stateFlow: StateFlow<C> = intents
-        .receiveAsFlow()
-        .runningFold(initialState) { state, intent ->
-            val reduced = reducer.reduce(state, intent)
-            validator.validate(reduced)
-        }
-        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(SUBSCRIBE_TIMEOUT_MS), initialState)
+    // Validated up front: isValid reads the errorMessage that validate() writes, so an unvalidated state reports
+    // itself valid no matter what it contains.
+    private val state = MutableStateFlow(validator.validate(initialState))
 
     override val value: C
-        get() = stateFlow.value
+        get() = state.value
 
     override val replayCache: List<C>
-        get() = stateFlow.replayCache
+        get() = state.replayCache
 
     override suspend fun collect(collector: FlowCollector<C>): Nothing {
-        stateFlow.collect(collector)
+        state.collect(collector)
     }
 
     override fun handleIntent(intent: I) {
-        intents.trySend(intent)
+        state.update { validator.validate(reducer.reduce(it, intent)) }
     }
 }
 

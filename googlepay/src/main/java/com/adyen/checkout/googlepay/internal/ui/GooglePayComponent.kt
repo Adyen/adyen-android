@@ -78,7 +78,6 @@ internal class GooglePayComponent(
         initialState = componentStateFactory.createInitialState(),
         reducer = componentStateReducer,
         validator = componentStateValidator,
-        coroutineScope = coroutineScope,
     )
 
     internal val viewState = componentState.viewState(viewStateProducer, coroutineScope)

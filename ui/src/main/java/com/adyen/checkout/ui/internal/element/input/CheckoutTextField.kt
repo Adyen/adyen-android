@@ -159,7 +159,9 @@ fun CheckoutTextField(
 
     LaunchedEffect(shouldFocus) {
         if (shouldFocus) {
-            focusRequester.requestFocus()
+            // Throws if the requester is not attached to a focusable node, which can happen when the field leaves
+            // composition between composition and this effect running. Losing the focus is preferable to crashing.
+            runCatching { focusRequester.requestFocus() }
         }
     }
 }

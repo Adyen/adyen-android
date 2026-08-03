@@ -144,7 +144,7 @@ internal class CardViewStateProducer(
         cardNumber: TextInputComponentState,
         isCardScanButtonVisible: Boolean,
     ): CardNumberTrailingIcon {
-        val isInvalid = cardNumber.errorMessage != null && cardNumber.showError
+        val isInvalid = cardNumber.showErrorMessage
         return when {
             isInvalid -> CardNumberTrailingIcon.Warning
             isCardScanButtonVisible -> CardNumberTrailingIcon.ScanButton
@@ -156,7 +156,7 @@ internal class CardViewStateProducer(
         expiryDate: TextInputComponentState,
     ): ExpiryDateTrailingIcon {
         val isValid = expiryDate.errorMessage == null && expiryDate.text.isNotEmpty()
-        val isInvalid = expiryDate.errorMessage != null && expiryDate.showError
+        val isInvalid = expiryDate.showErrorMessage
 
         return when {
             isValid -> ExpiryDateTrailingIcon.Checkmark
@@ -170,7 +170,7 @@ internal class CardViewStateProducer(
         cardNumberFormat: CardNumberFormat,
     ): SecurityCodeTrailingIcon {
         val isValid = securityCode.errorMessage == null && securityCode.text.isNotEmpty()
-        val isInvalid = securityCode.errorMessage != null && securityCode.showError
+        val isInvalid = securityCode.showErrorMessage
 
         return when {
             isValid -> SecurityCodeTrailingIcon.Checkmark
@@ -183,7 +183,7 @@ internal class CardViewStateProducer(
     private fun getPostalCodeTrailingIcon(
         postalCode: TextInputComponentState
     ): PostalCodeTrailingIcon {
-        val isInvalid = postalCode.errorMessage != null && postalCode.showError
+        val isInvalid = postalCode.showErrorMessage
 
         return when {
             isInvalid -> PostalCodeTrailingIcon.Warning

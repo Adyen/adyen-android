@@ -52,7 +52,7 @@ internal fun BlikCodeField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onFocusChange(focusState.hasFocus)
+                onFocusChange(focusState.isFocused)
             },
         label = resolveString(CheckoutLocalizationKey.BLIK_CODE),
         state = rememberTextFieldStateWithCurrentValue(blikCodeState.text),

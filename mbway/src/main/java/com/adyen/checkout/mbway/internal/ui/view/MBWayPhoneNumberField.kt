@@ -39,7 +39,7 @@ internal fun MBWayPhoneNumberField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onFocusChange(focusState.hasFocus)
+                onFocusChange(focusState.isFocused)
             },
         label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
         state = rememberTextFieldStateWithCurrentValue(mbWayPhoneNumberFieldState.text),
