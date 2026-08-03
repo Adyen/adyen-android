@@ -48,7 +48,7 @@ jobs:
         run: ./gradlew assembleDebug -Pstrip-resources=true
 
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest jacocoDebugTestReport -Pstrip-resources=true
+        run: ./gradlew testDebugUnitTest koverXmlReport -Pstrip-resources=true
 
       - name: Check lint
         run: ./gradlew lintDebug
