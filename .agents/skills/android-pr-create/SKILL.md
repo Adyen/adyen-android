@@ -27,6 +27,8 @@ Determine from the branch name:
 - **Branch type**: `feature/`, `fix/`, `chore/`, or `renovate/`
 - **Whether release notes are required**: Yes for `feature/` and `fix/`, No for `chore/` and `renovate/`
 
+Then verify the prefix actually matches the change. Inspect the diff for public API changes (updated `.api` files) and for behavioral changes a merchant could observe — a different error code, a callback where there used to be a crash, changed defaults or validation. If the branch is `chore/` or `renovate/` but the diff contains either, the prefix is probably wrong and release notes are likely required. Tell the user and ask whether to rename the branch or proceed anyway. Never omit release notes silently.
+
 ### 2. Determine base branch
 
 - Default base: `main`
