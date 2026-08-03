@@ -96,7 +96,6 @@ constructor(
         initialState = componentStateFactory.createInitialState(),
         reducer = componentStateReducer,
         validator = componentStateValidator,
-        coroutineScope = coroutineScope,
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
