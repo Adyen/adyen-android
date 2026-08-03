@@ -17,7 +17,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaym
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
-import com.adyen.checkout.core.error.internal.InternalCheckoutError
+import com.adyen.checkout.core.error.internal.InvalidConfigurationError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.BillingAddressParameters
@@ -202,7 +202,7 @@ internal class GooglePayComponentParamsMapperTest {
             ),
         )
 
-        assertThrows<InternalCheckoutError> {
+        assertThrows<InvalidConfigurationError> {
             googlePayComponentParamsMapper.mapToParams(
                 params = checkoutParams,
                 paymentMethod = createPaymentMethod(),

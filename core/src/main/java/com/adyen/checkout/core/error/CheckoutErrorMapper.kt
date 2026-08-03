@@ -11,6 +11,7 @@ package com.adyen.checkout.core.error
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
+import com.adyen.checkout.core.error.internal.InvalidConfigurationError
 import com.adyen.checkout.core.error.internal.PaymentMethodUnavailableError
 
 /**
@@ -20,6 +21,7 @@ internal fun InternalCheckoutError.toCheckoutError(): CheckoutError {
     val errorCode = when (this) {
         is HttpError -> CheckoutError.ErrorCode.HTTP
         is GenericError -> CheckoutError.ErrorCode.GENERIC
+        is InvalidConfigurationError -> CheckoutError.ErrorCode.INVALID_CONFIGURATION
         is PaymentMethodUnavailableError -> CheckoutError.ErrorCode.PAYMENT_METHOD_FAILURE
     }
 

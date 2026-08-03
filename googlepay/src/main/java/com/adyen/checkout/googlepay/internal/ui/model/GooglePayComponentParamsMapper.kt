@@ -15,7 +15,7 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
-import com.adyen.checkout.core.error.internal.GenericError
+import com.adyen.checkout.core.error.internal.InvalidConfigurationError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.GooglePayAllowedPaymentMethods
@@ -61,7 +61,7 @@ internal class GooglePayComponentParamsMapper {
     ): String {
         return this?.merchantAccount
             ?: paymentMethod.configuration?.gatewayMerchantId
-            ?: throw GenericError(
+            ?: throw InvalidConfigurationError(
                 message = "GooglePay merchantAccount not found. Update your API version or pass it " +
                     "manually inside your GooglePayConfiguration",
             )
