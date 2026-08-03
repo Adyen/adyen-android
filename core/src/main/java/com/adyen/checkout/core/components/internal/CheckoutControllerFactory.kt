@@ -24,6 +24,9 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
+import com.adyen.checkout.core.error.CheckoutException
+import com.adyen.checkout.core.error.internal.InternalCheckoutError
+import com.adyen.checkout.core.error.toCheckoutError
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineScope
@@ -35,9 +38,9 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext.Advanced,
         callbacks: AdvancedCheckoutCallbacks,
         coroutineScope: CoroutineScope,
-    ): CheckoutController {
+    ): CheckoutController = runCatchingCreation {
         val componentRequestDispatcher = AdvancedComponentRequestDispatcher(callbacks)
-        return createFullCheckoutController(
+        createFullCheckoutController(
             target = target,
             context = context,
             callbacks = callbacks,
@@ -51,12 +54,12 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext.Sessions,
         callbacks: SessionCheckoutCallbacks,
         coroutineScope: CoroutineScope,
-    ): CheckoutController {
+    ): CheckoutController = runCatchingCreation {
         val componentRequestDispatcher = createSessionComponentRequestDispatcher(
             context = context,
             callbacks = callbacks,
         )
-        return createFullCheckoutController(
+        createFullCheckoutController(
             target = target,
             context = context,
             callbacks = callbacks,
@@ -69,7 +72,7 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext.ActionOnly,
         callbacks: ActionOnlyCheckoutCallbacks,
         coroutineScope: CoroutineScope,
-    ): CheckoutController {
+    ): CheckoutController = runCatchingCreation {
         val checkoutParams = createCheckoutParams(context)
         // TODO - what should be the payment method type for action only?
         val analyticsManager = createAnalyticsManager(
@@ -89,11 +92,27 @@ internal class CheckoutControllerFactory {
             action = context.action,
             actionHandler = actionHandler,
         )
-        return CheckoutController(
+        CheckoutController(
             flow = flow,
             environment = checkoutParams.environment,
             shopperLocale = checkoutParams.shopperLocale,
         )
+    }
+
+    /**
+     * Runs the controller creation, converting any [InternalCheckoutError] that escapes into the
+     * public [CheckoutException].
+     *
+     * Only [InternalCheckoutError] is caught on purpose. Programming errors and broken invariants
+     * are expected to fail fast so that they surface as bugs instead of being reported as checkout
+     * errors.
+     */
+    // The caught error is not swallowed, toCheckoutError() keeps it as the cause of the thrown exception.
+    @Suppress("SwallowedException")
+    private inline fun <T> runCatchingCreation(block: () -> T): T = try {
+        block()
+    } catch (e: InternalCheckoutError) {
+        throw CheckoutException(e.toCheckoutError())
     }
 
     private fun createFullCheckoutController(
