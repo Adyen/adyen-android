@@ -17,6 +17,7 @@ import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
 import org.gradle.language.base.plugins.LifecycleBasePlugin
+import org.gradle.process.CommandLineArgumentProvider
 
 class KtlintConventionPlugin : Plugin<Project> {
 
@@ -42,18 +43,21 @@ class KtlintConventionPlugin : Plugin<Project> {
                 }
                 inputs.files(inputFiles)
 
-                val outputDir = project.layout.buildDirectory.dir("reports/ktlint").get()
-                val outputFile = outputDir.file("ktlint-report.txt")
+                val outputFile = project.layout.buildDirectory.file("reports/ktlint/ktlint-report.txt")
                 outputs.file(outputFile)
 
                 classpath = ktlint
                 mainClass.set("com.pinterest.ktlint.Main")
-                args(
-                    "--reporter=plain",
-                    "--reporter=plain,output=${outputFile}",
-                    "**/src/**/main/**/*.kt",
-                    "**.kts",
-                    "!**/build/**",
+                argumentProviders.add(
+                    CommandLineArgumentProvider {
+                        listOf(
+                            "--reporter=plain",
+                            "--reporter=plain,output=${outputFile.get().asFile.absolutePath}",
+                            "**/src/**/main/**/*.kt",
+                            "**.kts",
+                            "!**/build/**",
+                        )
+                    },
                 )
             }
 
