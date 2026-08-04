@@ -6,23 +6,24 @@
 
 # Adyen Android
 
+> ### :rotating_light: Are you integrating with v5?
+>
+> This branch documents **v6**, which is currently in **alpha** and under active development. Its public API can still change.
+>
+> For the latest stable release, use the [**`v5` branch**][branch.v5] and the [v5 integration guides](https://docs.adyen.com/online-payments/build-your-integration/?platform=Android).
+
 Adyen Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
 
 For an overview of how you can integrate with Adyen on Android check out the [documentation][docs.android].
 
-<br/>
-
-![DropIn Preview][header.preview]
-
-<br/>
-
 ## Drop-in/Components lifecycle
 
-| Major version | State       | Deprecated   | End-of-life  |
-|---------------|-------------|--------------|--------------|
-| 5.x.x         | Active      | ---          | ---          |
-| 4.x.x         | Inactive    | December 2026    | December 2027    |
-| 3.x.x         | End-of-life | October 2023 | October 2024 |
+| Major version | State                  | Deprecated    | End-of-life   |
+|---------------|------------------------|---------------|---------------|
+| 6.x.x         | Alpha (in development) | ---           | ---           |
+| 5.x.x         | Active                 | ---           | ---           |
+| 4.x.x         | Inactive               | December 2026 | December 2027 |
+| 3.x.x         | End-of-life            | October 2023  | October 2024  |
 
 More information about our versioning and the Drop-in/Components lifecycle can be found [here](https://docs.adyen.com/online-payments/upgrade-your-integration/#lifecycle).
 
@@ -37,19 +38,7 @@ More information about our versioning and the Drop-in/Components lifecycle can b
 There are two main integration types: [Drop-in][docs.dropIn] and [Components][docs.components].
 Import the corresponding module in your `build.gradle` file.
 
-### With Jetpack Compose
-
-For Drop-in:
-```groovy
-implementation "com.adyen.checkout:drop-in-compose:LATEST_VERSION"
-```
-For the Credit Card component:
-```groovy
-implementation "com.adyen.checkout:card:LATEST_VERSION"
-implementation "com.adyen.checkout:components-compose:LATEST_VERSION"
-```
-
-### Without Jetpack Compose
+v6 is Compose-first, so Compose support is built into these artifacts and no separate `-compose` module is needed.
 
 For Drop-in:
 ```groovy
@@ -64,8 +53,6 @@ Find out what the latest version is [here](https://github.com/Adyen/adyen-androi
 
 ## Additional documentation
 
-* [UI Customization guide][docs.github.uiCustomization]
-
 * [Additional documentation for payment methods][docs.github.paymentMethods]
 
 ### v6 alpha documentation
@@ -78,10 +65,6 @@ The Android v6 API documented in this repository is currently alpha and Compose-
 * [v6 card component: advanced flow][docs.github.v6.cardAdvanced]
 * [v6 checkout theme][docs.github.v6.theme]
 * [v5 to v6 migration notes][docs.github.v6.migration]
-
-## Migrate from v4
-
-If you are upgrading from 4.x.x to a current release, check out our [migration guide][migration.guide].
 
 ## ProGuard
 
@@ -110,8 +93,6 @@ Have a look at our [contributing guidelines][contributing.guidelines] to find ou
 
 ## See also
 
-* [Android API documentation][dokka]
-
 * [Adyen Checkout Documentation][docs.checkout]
 
 * [Adyen API Explorer][docs.apiExplorer]
@@ -128,13 +109,11 @@ This repository is available under the [MIT license](LICENSE).
 [shield.license.image]: https://img.shields.io/github/license/Adyen/adyen-android
 [shield.license.link]: LICENSE
 [docs.android]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android
-[header.preview]: https://github.com/user-attachments/assets/0393e58d-172c-45fb-9e49-3a720fe53c89
 [adyen.testAccount]: https://www.adyen.com/signup
 [docs.apiKey]: https://docs.adyen.com/development-resources/how-to-get-the-api-key
 [docs.clientKey]: https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key
 [docs.dropIn]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Drop-in
 [docs.components]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Components
-[docs.github.uiCustomization]: docs/UI_CUSTOMIZATION.md
 [docs.github.paymentMethods]: docs/payment-methods
 [docs.github.v6.readme]: docs/v6/README.md
 [docs.github.v6.card]: docs/v6/card.md
@@ -142,14 +121,13 @@ This repository is available under the [MIT license](LICENSE).
 [docs.github.v6.cardAdvanced]: docs/v6/card-advanced-flow.md
 [docs.github.v6.theme]: docs/v6/theme.md
 [docs.github.v6.migration]: MIGRATION.md
+[branch.v5]: https://github.com/Adyen/adyen-android/tree/v5
 [mavenRepo]: https://repo1.maven.org/maven2/com/adyen/checkout/
-[migration.guide]: https://docs.adyen.com/online-payments/build-your-integration/migrate-to-android-5-0-0
 [github.newIssue]: https://github.com/Adyen/adyen-android/issues/new/choose
 [adyen.support]: https://ca-live.adyen.com/ca/ca/contactUs.shtml
 [analytics.firstVersion]: https://github.com/Adyen/adyen-android/releases/tag/5.0.0
 [docs.analytics]: https://docs.adyen.com/online-payments/analytics-and-data-tracking
 [contributing.guidelines]: https://github.com/Adyen/.github/blob/main/CONTRIBUTING.md
-[dokka]: https://adyen.github.io/adyen-android/
 [docs.checkout]: https://docs.adyen.com/online-payments/
 [docs.apiExplorer]: https://docs.adyen.com/api-explorer/
 [adyenTestCardsAndroid]: https://github.com/Adyen/adyen-testcards-android
