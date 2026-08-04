@@ -168,7 +168,19 @@ CheckoutPaymentFlow(
 ```
 
 Use `shopperLocale` when you want the checkout flow to follow a specific shopper locale. Use a localization provider when you want to override selected strings without replacing the full locale handling.
-You can also override checkout string resources through XML. For more information, see [Overriding string resources](../UI_CUSTOMIZATION.md#overriding-string-resources).
+
+### Overriding string resources
+
+You can also change text in the SDK by overriding string resources. To override a string resource, copy it into your own `strings.xml`. The easiest way to find a string resource is to search for the string on GitHub. If your app supports multiple languages you can do the same thing, but make sure to use the right `values` directory (for example `values-nl-rNL`).
+
+```xml
+<resources>
+    <!-- Original text is: "Change Payment Method" -->
+    <string name="change_payment_method">More Payment Methods</string>
+</resources>
+```
+
+If you cannot find a certain string in the code base, check whether it is coming from the Checkout API. Make sure you localize these strings by sending the correct [shopperLocale](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions#request-shopperLocale).
 
 ## Next steps
 
