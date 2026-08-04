@@ -11,7 +11,7 @@ on:
         type: string
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   get_dependency_list:
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref:  ${{ inputs.ref }}
+          ref: ${{ inputs.ref }}
 
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v4
@@ -31,7 +31,7 @@ jobs:
           ARTIFACT_NAME: ${{ inputs.artifact-name }}
         run: |
           DEPENDENCY_LIST_FILE_NAME=$(echo "${ARTIFACT_NAME}")
-          ./gradlew dependencyList -q --no-configuration-cache -PoutputFileName=$DEPENDENCY_LIST_FILE_NAME
+          ./gradlew aggregateDependencyLists -q -PoutputFileName=$DEPENDENCY_LIST_FILE_NAME
 
       - name: Upload dependency list artifact
         uses: actions/upload-artifact@v4
