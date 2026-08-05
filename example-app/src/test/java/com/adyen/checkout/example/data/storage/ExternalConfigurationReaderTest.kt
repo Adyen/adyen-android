@@ -9,54 +9,53 @@ package com.adyen.checkout.example.data.storage
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
 import java.util.Base64
 
 internal class ExternalConfigurationReaderTest {
 
-    private val keyValueStorage = mock<KeyValueStorage>()
-    private val reader = ExternalConfigurationReader(keyValueStorage)
+    private val reader = ExternalConfigurationReader()
 
     @Test
-    fun `when applying valid config then showCardholderName is set to true`() {
+    fun `when applying valid config then showCardholderName override is set to true`() {
         val config = encodeBase64("""{"CARD_CONFIGURATION":{"showCardholderName":true}}""")
 
         reader.apply(config)
 
-        verify(keyValueStorage).setShowCardholderName(true)
+        assertEquals(true, reader.cardConfiguration?.showCardholderName)
     }
 
     @Test
-    fun `when applying partial config then showCardholderName is not set`() {
+    fun `when applying partial config then showCardholderName override is not set`() {
         val config = encodeBase64("""{"CARD_CONFIGURATION":{}}""")
 
         reader.apply(config)
 
-        verify(keyValueStorage, never()).setShowCardholderName(any())
+        assertNull(reader.cardConfiguration?.showCardholderName)
     }
 
     @Test
-    fun `when applying null config then showCardholderName is reset to default`() {
+    fun `when applying null config then override is cleared`() {
+        reader.apply(encodeBase64("""{"CARD_CONFIGURATION":{"showCardholderName":true}}"""))
+
         reader.apply(null)
 
-        verify(keyValueStorage).setShowCardholderName(SettingsDefaults.SHOW_CARDHOLDER_NAME)
+        assertNull(reader.cardConfiguration)
     }
 
     @Test
-    fun `when applying empty config then showCardholderName is reset to default`() {
+    fun `when applying empty config then override is cleared`() {
+        reader.apply(encodeBase64("""{"CARD_CONFIGURATION":{"showCardholderName":true}}"""))
+
         reader.apply("")
 
-        verify(keyValueStorage).setShowCardholderName(SettingsDefaults.SHOW_CARDHOLDER_NAME)
+        assertNull(reader.cardConfiguration)
     }
 
     @Test
-    fun `when applying invalid base64 then showCardholderName is not set`() {
+    fun `when applying invalid base64 then override is not set`() {
         reader.apply("not-valid-base64!")
 
-        verify(keyValueStorage, never()).setShowCardholderName(any())
+        assertNull(reader.cardConfiguration)
     }
 
     @Test

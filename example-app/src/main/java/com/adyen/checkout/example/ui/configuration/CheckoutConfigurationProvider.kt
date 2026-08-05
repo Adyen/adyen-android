@@ -23,7 +23,9 @@ import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.AnalyticsMode
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
+import com.adyen.checkout.example.data.storage.ExternalConfigurationReader
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.old.googlePay
@@ -47,6 +49,7 @@ import com.adyen.checkout.core.old.Environment as OldEnvironment
 @Singleton
 internal class CheckoutConfigurationProvider @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
+    private val externalConfigurationReader: ExternalConfigurationReader,
     @ApplicationContext private val context: Context,
 ) : ConfigurationProvider {
 
@@ -55,6 +58,12 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             val shopperLocaleString = keyValueStorage.getShopperLocale()
             return shopperLocaleString?.let { Locale.forLanguageTag(it) }
         }
+
+    // Overridable at runtime via ExternalConfigurationReader (e.g. by the e2e test framework),
+    // falling back to the default value used across the example app.
+    private val showCardholderName: Boolean
+        get() = externalConfigurationReader.cardConfiguration?.showCardholderName
+            ?: SettingsDefaults.SHOW_CARDHOLDER_NAME
 
     private val clientKey = BuildConfig.CLIENT_KEY
 
@@ -79,7 +88,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
             card {
                 setShopperReference(keyValueStorage.getShopperReference())
-                setHolderNameRequired(keyValueStorage.isShowCardholderName())
+                setHolderNameRequired(showCardholderName)
                 setAddressConfiguration(getAddressConfiguration())
                 setInstallmentConfigurations(getOldInstallmentConfiguration())
             }
@@ -121,7 +130,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             card(
-                showCardholderName = keyValueStorage.isShowCardholderName(),
+                showCardholderName = showCardholderName,
                 billingAddressMode = getBillingAddressMode(),
                 installmentConfiguration = getInstallmentConfiguration(),
             )

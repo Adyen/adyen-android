@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     @Inject
-    lateinit var externalConfigurationReader: ExternalConfigurationReader
+    internal lateinit var externalConfigurationReader: ExternalConfigurationReader
 
     private val oldDropInLauncher = OldDropIn.registerForDropInResult(
         this,
@@ -275,6 +275,9 @@ class MainActivity : AppCompatActivity() {
         private val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+
+        // Lowercase to match the literal already hardcoded by the e2e test framework
+        // (adyen-checkout-e2e-testing, AdbUtils.kt: `--es config <base64>`).
         internal const val CONFIG_EXTRA = "config"
     }
 }

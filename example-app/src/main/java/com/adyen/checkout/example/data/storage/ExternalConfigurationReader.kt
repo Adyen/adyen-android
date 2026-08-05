@@ -14,44 +14,39 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Reads external SDK configuration from a Base64-encoded JSON string (passed via intent extras)
- * and writes the parsed values to [KeyValueStorage] so the existing
- * [com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider] picks them up.
+ * and keeps the parsed values in memory so [com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider]
+ * can apply them as overrides on top of the persisted [KeyValueStorage] settings.
  *
  * The JSON schema uses unified keys aligned with the native SDKs (e.g. `showCardholderName`).
- * All fields are optional — omitted fields leave the stored default unchanged.
+ * All fields are optional — omitted fields leave the corresponding override unset.
  *
- * When [configBase64] is null or empty (normal app launch without test extras), the persisted
- * configuration is reset to defaults to prevent test pollution from previous e2e runs.
+ * When [configBase64] is null or empty (normal app launch without test extras), any previously
+ * applied override is cleared to prevent state leaking between e2e runs.
  */
 @OptIn(ExperimentalEncodingApi::class)
 @Singleton
-class ExternalConfigurationReader @Inject constructor(
-    private val keyValueStorage: KeyValueStorage,
-) {
+internal class ExternalConfigurationReader @Inject constructor() {
+
+    var cardConfiguration: ExternalCardConfiguration? = null
+        private set
 
     fun apply(configBase64: String?) {
         if (configBase64.isNullOrEmpty()) {
-            keyValueStorage.setShowCardholderName(SettingsDefaults.SHOW_CARDHOLDER_NAME)
+            cardConfiguration = null
             return
         }
 
-        decodeAndApply(configBase64)
+        cardConfiguration = decode(configBase64)?.card
     }
 
-    private fun decodeAndApply(configBase64: String) {
+    private fun decode(configBase64: String): ExternalConfiguration? {
         val json = runCatching {
             String(Base64.decode(configBase64), Charsets.UTF_8)
-        }.getOrNull() ?: return
+        }.getOrNull() ?: return null
 
-        val config = runCatching {
+        return runCatching {
             ExternalConfiguration.fromJson(json)
-        }.getOrNull() ?: return
-
-        config.card?.let { applyCardConfiguration(it) }
-    }
-
-    private fun applyCardConfiguration(card: ExternalCardConfiguration) {
-        card.showCardholderName?.let { keyValueStorage.setShowCardholderName(it) }
+        }.getOrNull()
     }
 }
 
