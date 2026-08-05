@@ -33,12 +33,12 @@ More information about our versioning and the Drop-in/Components lifecycle can b
 * [API key][docs.apiKey]
 * [Client key][docs.clientKey]
 
+v6 is Compose-first and requires your app to support Jetpack Compose.
+
 ## Installation
 
 There are two main integration types: [Drop-in][docs.dropIn] and [Components][docs.components].
 Import the corresponding module in your `build.gradle` file.
-
-v6 is Compose-first, so Compose support is built into these artifacts and no separate `-compose` module is needed.
 
 For Drop-in:
 ```groovy
@@ -51,13 +51,9 @@ implementation "com.adyen.checkout:card:LATEST_VERSION"
 
 Find out what the latest version is [here](https://github.com/Adyen/adyen-android/releases/latest). The library is available on [Maven Central][mavenRepo].
 
-## Additional documentation
+## v6 alpha documentation
 
-* [Additional documentation for payment methods][docs.github.paymentMethods]
-
-### v6 alpha documentation
-
-The Android v6 API documented in this repository is currently alpha and Compose-first. These guides describe the current public v6 API.
+The Android v6 API documented in this repository is currently alpha. These guides describe the current public v6 API.
 
 * [v6 foundations][docs.github.v6.readme]
 * [v6 card component overview][docs.github.v6.card]
@@ -114,7 +110,6 @@ This repository is available under the [MIT license](LICENSE).
 [docs.clientKey]: https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key
 [docs.dropIn]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Drop-in
 [docs.components]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Components
-[docs.github.paymentMethods]: docs/payment-methods
 [docs.github.v6.readme]: docs/v6/README.md
 [docs.github.v6.card]: docs/v6/card.md
 [docs.github.v6.cardSession]: docs/v6/card-session-flow.md
