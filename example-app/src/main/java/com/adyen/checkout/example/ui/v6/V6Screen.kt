@@ -44,6 +44,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.core.components.CheckoutPaymentFlow
@@ -173,6 +175,7 @@ private fun DropDownButton(
                 shape = RoundedCornerShape(ExampleTheme.dimensions.grid_4),
             )
             .clickable(onClick = onClick)
+            .semantics { contentDescription = "v6-payment-method-picker" }
             .padding(
                 start = ExampleTheme.dimensions.grid_2,
                 top = ExampleTheme.dimensions.grid_1,
@@ -246,6 +249,7 @@ private fun PaymentMethodItem(
             .clickable {
                 onClick(paymentMethod)
             }
+            .semantics { contentDescription = "v6-payment-method-${paymentMethod.type}" }
             .padding(
                 horizontal = ExampleTheme.dimensions.grid_2,
                 vertical = ExampleTheme.dimensions.grid_1_5,
