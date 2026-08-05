@@ -2,6 +2,9 @@ name: Release acceptance app
 
 on:
   schedule:
+    # Cron-triggered nightly acceptance app builds.
+    # When triggered by schedule, version_name defaults to 'nightly' and release_notes default to
+    # 'Latest SDK build'.
     # Every work day (Mon-Fri) at 00:00 UTC
     - cron: '0 0 * * 1-5'
   workflow_dispatch:
@@ -45,6 +48,7 @@ jobs:
 
       - name: Build with Gradle
         env:
+          # For cron-triggered runs, fall back to the nightly version name.
           VERSION_NAME: ${{ github.event.inputs.version_name || 'nightly' }}
           ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL }}
           ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY }}
@@ -60,7 +64,8 @@ jobs:
         env:
           ADYEN_ANDROID_FIREBASE_APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
           ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
-          RELEASE_NOTES: ${{ github.event.inputs.release_notes || github.sha }}
+          # For cron-triggered runs, fall back to a fixed release notes message.
+          RELEASE_NOTES: ${{ github.event.inputs.release_notes || 'Latest SDK build' }}
         with:
           appId: ${{ env.ADYEN_ANDROID_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ env.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
