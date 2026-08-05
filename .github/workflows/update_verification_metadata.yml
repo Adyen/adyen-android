@@ -3,7 +3,7 @@ name: Update verification metadata
 on:
   push:
     branches:
-      - 'renovate/android.gradle.plugin'
+      - 'renovate/main-android.gradle.plugin'
   workflow_dispatch:
 
 permissions:
