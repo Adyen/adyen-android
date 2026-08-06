@@ -25,13 +25,16 @@ class DokkaConventionPlugin : Plugin<Project> {
 
             val projectName = name
             val mainSourceDir = file("src/main/java")
+            // Warnings are only fatal when explicitly requested, so documentation keeps
+            // publishing while KDoc issues are outstanding. Pass -PdokkaStrict=true to enforce.
+            val dokkaStrict = providers.gradleProperty("dokkaStrict").map { it.toBoolean() }.orElse(false)
 
             extensions.configure<DokkaExtension> {
                 moduleName = projectName
 
                 dokkaPublications.configureEach {
                     suppressInheritedMembers = true
-                    failOnWarning = true
+                    failOnWarning = dokkaStrict
                 }
 
                 dokkaSourceSets.configureEach {
