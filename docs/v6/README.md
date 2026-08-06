@@ -168,7 +168,6 @@ CheckoutPaymentFlow(
 ```
 
 Use `shopperLocale` when you want the checkout flow to follow a specific shopper locale. Use a localization provider when you want to override selected strings without replacing the full locale handling.
-You can also override checkout string resources through XML. For more information, see [Overriding string resources](../UI_CUSTOMIZATION.md#overriding-string-resources).
 
 ## Next steps
 
