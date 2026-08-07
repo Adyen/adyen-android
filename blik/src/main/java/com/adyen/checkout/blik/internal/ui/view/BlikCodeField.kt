@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.blik.internal.ui.properties.BlikCodeProperties.BLIK_CODE_MAX_LENGTH
 import com.adyen.checkout.blik.internal.ui.properties.BlikCodeProperties.BLIK_CODE_SEPARATOR
 import com.adyen.checkout.blik.internal.ui.properties.BlikCodeProperties.BLIK_CODE_SEPARATORS
+import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -62,6 +63,9 @@ internal fun BlikCodeField(
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
         shouldFocus = blikCodeState.isFocused,
+        trailingIcon = {
+            CheckoutTextFieldTrailingIcon(blikCodeState.trailingIcon)
+        },
     )
 }
 
