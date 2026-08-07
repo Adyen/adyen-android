@@ -13,23 +13,15 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 internal sealed class CardNumberTrailingIcon : TrailingIcon() {
     data object BrandLogos : CardNumberTrailingIcon()
     data object ScanButton : CardNumberTrailingIcon()
-    data object Warning : CardNumberTrailingIcon()
 }
 
 internal sealed class ExpiryDateTrailingIcon : TrailingIcon() {
     data object Placeholder : ExpiryDateTrailingIcon()
     data object Checkmark : ExpiryDateTrailingIcon()
-    data object Warning : ExpiryDateTrailingIcon()
 }
 
 internal sealed class SecurityCodeTrailingIcon : TrailingIcon() {
     data object PlaceholderDefault : SecurityCodeTrailingIcon()
     data object PlaceholderAmex : SecurityCodeTrailingIcon()
     data object Checkmark : SecurityCodeTrailingIcon()
-    data object Warning : SecurityCodeTrailingIcon()
-}
-
-internal sealed class PostalCodeTrailingIcon : TrailingIcon() {
-    data object Placeholder : PostalCodeTrailingIcon()
-    data object Warning : PostalCodeTrailingIcon()
 }

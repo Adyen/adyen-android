@@ -12,9 +12,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 
+/**
+ * Tests the extensions in `TextInputComponentStateExt.kt`: how the requirement policy of a field affects its payment
+ * data value and whether it needs validation.
+ */
 internal class TextInputComponentStateExtTest {
     @Test
     fun `when field is hidden and empty, then value should be null`() {
@@ -101,34 +104,6 @@ internal class TextInputComponentStateExtTest {
 
         // THEN
         assertEquals("text", paymentDataValue)
-    }
-
-    @Test
-    fun `when field is hidden, then view state should be null so it doesn't get displayed`() {
-        // GIVEN
-        val state = TextInputComponentState(
-            requirementPolicy = RequirementPolicy.Hidden,
-        )
-
-        // WHEN
-        val viewState = state.toViewState()
-
-        // THEN
-        assertNull(viewState)
-    }
-
-    @Test
-    fun `when field is optional, then view state should exist`() {
-        // GIVEN
-        val state = TextInputComponentState(
-            requirementPolicy = RequirementPolicy.Optional,
-        )
-
-        // WHEN
-        val viewState = state.toViewState()
-
-        // THEN
-        assertNotNull(viewState)
     }
 
     @Test

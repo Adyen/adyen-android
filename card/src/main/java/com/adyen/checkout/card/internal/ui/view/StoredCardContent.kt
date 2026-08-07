@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
@@ -83,7 +84,9 @@ private fun StoredCardContentPreview(
 ) {
     CheckoutThemePreviewWrapper(theme) {
         val viewState = StoredCardViewState(
-            securityCode = TextInputViewState(),
+            securityCode = TextInputViewState(
+                customTrailingIcon = SecurityCodeTrailingIcon.PlaceholderDefault,
+            ),
             brand = CardBrand(""),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             isLoading = false,

@@ -16,6 +16,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
@@ -131,7 +132,7 @@ internal class StoredCardViewStateProducerTest {
     }
 
     @Test
-    fun `when security code has error, then trailing icon is Warning`() {
+    fun `when security code is showing an error, then trailing icon is Error`() {
         // GIVEN
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
@@ -139,13 +140,14 @@ internal class StoredCardViewStateProducerTest {
                 errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
                 showError = true,
             ),
+            detectedCardType = getDetectedCardType(CardBrand("visa")),
         )
 
         // WHEN
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(SecurityCodeTrailingIcon.Warning, viewState.securityCode?.trailingIcon)
+        assertEquals(TrailingIcon.Error, viewState.securityCode?.trailingIcon)
     }
 
     @Test
@@ -187,7 +189,7 @@ internal class StoredCardViewStateProducerTest {
     }
 
     @Test
-    fun `when security code has error but showError is false, then trailing icon is placeholder`() {
+    fun `when security code is partially filled, then trailing icon is PlaceholderDefault`() {
         // GIVEN
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
@@ -195,6 +197,7 @@ internal class StoredCardViewStateProducerTest {
                 errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
                 showError = false,
             ),
+            detectedCardType = getDetectedCardType(CardBrand("visa")),
         )
 
         // WHEN

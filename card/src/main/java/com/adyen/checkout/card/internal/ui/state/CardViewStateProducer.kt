@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.helper.isHiddenCardType
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
-import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
@@ -60,21 +59,19 @@ internal class CardViewStateProducer(
 
         return CardViewState(
             cardNumber = state.cardNumber.copy(description = cardNumberInputDescription).toViewState(
-                trailingIcon = getCardNumberTrailingIcon(state.cardNumber, isCardScanButtonVisible),
+                customTrailingIcon = getCardNumberTrailingIcon(isCardScanButtonVisible),
             ),
             expiryDate = state.expiryDate.toViewState(
-                trailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
+                customTrailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
             ),
             securityCode = state.securityCode.toViewState(
-                trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
+                customTrailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
             ),
             holderName = state.holderName.toViewState(),
             socialSecurityNumber = state.socialSecurityNumber.toViewState(),
             kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.toViewState(),
             kcpCardPassword = state.kcpCardPassword.toViewState(),
-            postalCode = state.postalCode.toViewState(
-                trailingIcon = getPostalCodeTrailingIcon(state.postalCode),
-            ),
+            postalCode = state.postalCode.toViewState(),
             storePaymentViewState = storePaymentViewState,
             supportedCardBrandsViewState = supportedCardBrandsViewState,
             cardBrandViewState = cardBrandViewState,
@@ -140,28 +137,21 @@ internal class CardViewStateProducer(
         return cardBrandData?.cardBrand.toCardNumberFormat()
     }
 
-    private fun getCardNumberTrailingIcon(
-        cardNumber: TextInputComponentState,
-        isCardScanButtonVisible: Boolean,
-    ): CardNumberTrailingIcon {
-        val isInvalid = cardNumber.showErrorMessage
-        return when {
-            isInvalid -> CardNumberTrailingIcon.Warning
-            isCardScanButtonVisible -> CardNumberTrailingIcon.ScanButton
-            else -> CardNumberTrailingIcon.BrandLogos
+    private fun getCardNumberTrailingIcon(isCardScanButtonVisible: Boolean): CardNumberTrailingIcon {
+        return if (isCardScanButtonVisible) {
+            CardNumberTrailingIcon.ScanButton
+        } else {
+            CardNumberTrailingIcon.BrandLogos
         }
     }
 
     private fun getExpiryDateTrailingIcon(
         expiryDate: TextInputComponentState,
     ): ExpiryDateTrailingIcon {
-        val isValid = expiryDate.errorMessage == null && expiryDate.text.isNotEmpty()
-        val isInvalid = expiryDate.showErrorMessage
-
-        return when {
-            isValid -> ExpiryDateTrailingIcon.Checkmark
-            isInvalid -> ExpiryDateTrailingIcon.Warning
-            else -> ExpiryDateTrailingIcon.Placeholder
+        return if (expiryDate.isValid && expiryDate.text.isNotEmpty()) {
+            ExpiryDateTrailingIcon.Checkmark
+        } else {
+            ExpiryDateTrailingIcon.Placeholder
         }
     }
 
@@ -169,25 +159,10 @@ internal class CardViewStateProducer(
         securityCode: TextInputComponentState,
         cardNumberFormat: CardNumberFormat,
     ): SecurityCodeTrailingIcon {
-        val isValid = securityCode.errorMessage == null && securityCode.text.isNotEmpty()
-        val isInvalid = securityCode.showErrorMessage
-
         return when {
-            isValid -> SecurityCodeTrailingIcon.Checkmark
-            isInvalid -> SecurityCodeTrailingIcon.Warning
+            securityCode.isValid && securityCode.text.isNotEmpty() -> SecurityCodeTrailingIcon.Checkmark
             cardNumberFormat == CardNumberFormat.AMEX -> SecurityCodeTrailingIcon.PlaceholderAmex
             else -> SecurityCodeTrailingIcon.PlaceholderDefault
-        }
-    }
-
-    private fun getPostalCodeTrailingIcon(
-        postalCode: TextInputComponentState
-    ): PostalCodeTrailingIcon {
-        val isInvalid = postalCode.showErrorMessage
-
-        return when {
-            isInvalid -> PostalCodeTrailingIcon.Warning
-            else -> PostalCodeTrailingIcon.Placeholder
         }
     }
 }
