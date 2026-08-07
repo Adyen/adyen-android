@@ -1,11 +1,36 @@
 name: Release acceptance app
 
+# Builds the acceptance app and distributes it to the internal testers. This workflow has no notion
+# of nightly builds; see release_nightly_app.yml for those.
 on:
-  schedule:
-    # Cron-triggered nightly acceptance app builds. Scheduled runs have no inputs, so the version
-    # name and the release notes fall back to the nightly defaults defined below.
-    # Every work day (Mon-Fri) at 00:00 UTC
-    - cron: '0 0 * * 1-5'
+  workflow_call:
+    inputs:
+      version_name:
+        required: true
+        type: string
+      release_notes:
+        required: true
+        type: string
+    # Declared explicitly rather than inherited, so that a caller cannot hand this workflow secrets
+    # it has no use for. The names match the repository secrets, so that they also resolve when this
+    # workflow is dispatched directly instead of being called.
+    secrets:
+      GRADLE_ENCRYPTION_KEY:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_STORE_B64:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_ALIAS:
+        required: true
+      ADYEN_ANDROID_FIREBASE_APP_ID:
+        required: true
+      ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE:
+        required: true
   workflow_dispatch:
     inputs:
       version_name:
@@ -14,12 +39,6 @@ on:
       release_notes:
         required: true
         description: Release notes
-
-# The version name that marks a release as a nightly build. The build and the cleanup at the end of
-# the workflow both depend on it, and a nightly release that no longer matches would silently stop
-# being cleaned up, so it is defined once here.
-env:
-  NIGHTLY_VERSION_NAME: nightly
 
 jobs:
   build_and_release:
@@ -53,8 +72,7 @@ jobs:
 
       - name: Build with Gradle
         env:
-          # For cron-triggered runs, fall back to the nightly version name.
-          VERSION_NAME: ${{ github.event.inputs.version_name || env.NIGHTLY_VERSION_NAME }}
+          VERSION_NAME: ${{ inputs.version_name }}
           ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL }}
           ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY }}
           SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.keystore_path }}
@@ -63,69 +81,16 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
         run: ./gradlew :example-app:assembleAcceptance -Pversion-name=$VERSION_NAME
 
-      # Nightly releases all carry the same version name and version code, so the commit is the only
-      # thing that tells them apart. Expressions cannot take a substring, hence the separate step.
-      - name: Compose nightly release notes
-        id: nightly_notes
-        run: echo "text=Latest SDK build (${GITHUB_SHA::7})" >> "$GITHUB_OUTPUT"
-
       - name: Upload to Firebase App Distribution
         # The version SHA refers to v1.7.1
         uses: wzieba/Firebase-Distribution-Github-Action@bd494989dd4bec0343f78adee87fe66e48279ad6 # v1.7.1
         env:
           ADYEN_ANDROID_FIREBASE_APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
           ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
-          # For cron-triggered runs, fall back to the nightly release notes.
-          RELEASE_NOTES: ${{ github.event.inputs.release_notes || steps.nightly_notes.outputs.text }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
         with:
           appId: ${{ env.ADYEN_ANDROID_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ env.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
           file: example-app/build/outputs/apk/acceptance/example-app-acceptance.apk
           releaseNotes: ${{ env.RELEASE_NOTES }}
           groups: internal
-
-      # Mints a short lived access token from the service account, to authenticate the App
-      # Distribution REST API calls below. The token is only valid for one hour and is never stored.
-      - name: Authenticate to Google Cloud
-        id: auth
-        if: github.event_name == 'schedule'
-        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
-        with:
-          credentials_json: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
-          token_format: access_token
-          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
-
-      # Only a single nightly release should be available to testers at a time. App Distribution
-      # always creates a new release instead of replacing an existing one, so the superseded
-      # releases are removed here. This runs after the upload, so a failed upload leaves the
-      # previous nightly release untouched.
-      - name: Remove superseded nightly releases
-        if: github.event_name == 'schedule'
-        env:
-          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
-          APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
-          VERSION_NAME: ${{ env.NIGHTLY_VERSION_NAME }}
-        run: |
-          # The project number is the second segment of the app id.
-          project_number=$(echo "$APP_ID" | cut -d: -f2)
-          api="https://firebaseappdistribution.googleapis.com/v1/projects/$project_number/apps/$APP_ID/releases"
-
-          # Releases are returned newest first, so everything after the newest nightly release is
-          # superseded. Matching on displayVersion (the version name) means that releases with an
-          # actual version name can never be removed here.
-          names=$(curl --silent --show-error --fail --get "$api" \
-            --header "Authorization: Bearer $ACCESS_TOKEN" \
-            --data-urlencode 'pageSize=100' \
-            | jq --compact-output --arg version "$VERSION_NAME" \
-              '[(.releases // [])[] | select(.displayVersion == $version) | .name] | .[1:]')
-
-          if [ "$names" = "[]" ]; then
-            echo "No superseded nightly releases to remove."
-            exit 0
-          fi
-
-          echo "Removing superseded nightly releases: $names"
-          curl --silent --show-error --fail --request POST "${api}:batchDelete" \
-            --header "Authorization: Bearer $ACCESS_TOKEN" \
-            --header "Content-Type: application/json" \
-            --data "{\"names\": $names}"
