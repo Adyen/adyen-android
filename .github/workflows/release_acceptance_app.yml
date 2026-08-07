@@ -2,9 +2,8 @@ name: Release acceptance app
 
 on:
   schedule:
-    # Cron-triggered nightly acceptance app builds.
-    # When triggered by schedule, version_name defaults to 'nightly' and release_notes default to
-    # 'Latest SDK build'.
+    # Cron-triggered nightly acceptance app builds. Scheduled runs have no inputs, so the version
+    # name and the release notes fall back to the nightly defaults defined below.
     # Every work day (Mon-Fri) at 00:00 UTC
     - cron: '0 0 * * 1-5'
   workflow_dispatch:
@@ -15,6 +14,12 @@ on:
       release_notes:
         required: true
         description: Release notes
+
+# The version name that marks a release as a nightly build. The build and the cleanup at the end of
+# the workflow both depend on it, and a nightly release that no longer matches would silently stop
+# being cleaned up, so it is defined once here.
+env:
+  NIGHTLY_VERSION_NAME: nightly
 
 jobs:
   build_and_release:
@@ -49,7 +54,7 @@ jobs:
       - name: Build with Gradle
         env:
           # For cron-triggered runs, fall back to the nightly version name.
-          VERSION_NAME: ${{ github.event.inputs.version_name || 'nightly' }}
+          VERSION_NAME: ${{ github.event.inputs.version_name || env.NIGHTLY_VERSION_NAME }}
           ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL }}
           ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY }}
           SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.keystore_path }}
@@ -72,3 +77,49 @@ jobs:
           file: example-app/build/outputs/apk/acceptance/example-app-acceptance.apk
           releaseNotes: ${{ env.RELEASE_NOTES }}
           groups: internal
+
+      # Mints a short lived access token from the service account, to authenticate the App
+      # Distribution REST API calls below. The token is only valid for one hour and is never stored.
+      - name: Authenticate to Google Cloud
+        id: auth
+        if: github.event_name == 'schedule'
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          credentials_json: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+
+      # Only a single nightly release should be available to testers at a time. App Distribution
+      # always creates a new release instead of replacing an existing one, so the superseded
+      # releases are removed here. This runs after the upload, so a failed upload leaves the
+      # previous nightly release untouched.
+      - name: Remove superseded nightly releases
+        if: github.event_name == 'schedule'
+        env:
+          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
+          VERSION_NAME: ${{ env.NIGHTLY_VERSION_NAME }}
+        run: |
+          # The project number is the second segment of the app id.
+          project_number=$(echo "$APP_ID" | cut -d: -f2)
+          api="https://firebaseappdistribution.googleapis.com/v1/projects/$project_number/apps/$APP_ID/releases"
+
+          # Releases are returned newest first, so everything after the newest nightly release is
+          # superseded. Matching on displayVersion (the version name) means that releases with an
+          # actual version name can never be removed here.
+          names=$(curl --silent --show-error --fail --get "$api" \
+            --header "Authorization: Bearer $ACCESS_TOKEN" \
+            --data-urlencode 'pageSize=100' \
+            | jq --compact-output --arg version "$VERSION_NAME" \
+              '[(.releases // [])[] | select(.displayVersion == $version) | .name] | .[1:]')
+
+          if [ "$names" = "[]" ]; then
+            echo "No superseded nightly releases to remove."
+            exit 0
+          fi
+
+          echo "Removing superseded nightly releases: $names"
+          curl --silent --show-error --fail --request POST "${api}:batchDelete" \
+            --header "Authorization: Bearer $ACCESS_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "{\"names\": $names}"
