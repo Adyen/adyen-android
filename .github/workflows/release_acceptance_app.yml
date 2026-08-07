@@ -63,14 +63,20 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
         run: ./gradlew :example-app:assembleAcceptance -Pversion-name=$VERSION_NAME
 
+      # Nightly releases all carry the same version name and version code, so the commit is the only
+      # thing that tells them apart. Expressions cannot take a substring, hence the separate step.
+      - name: Compose nightly release notes
+        id: nightly_notes
+        run: echo "text=Latest SDK build (${GITHUB_SHA::7})" >> "$GITHUB_OUTPUT"
+
       - name: Upload to Firebase App Distribution
         # The version SHA refers to v1.7.1
         uses: wzieba/Firebase-Distribution-Github-Action@bd494989dd4bec0343f78adee87fe66e48279ad6 # v1.7.1
         env:
           ADYEN_ANDROID_FIREBASE_APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
           ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
-          # For cron-triggered runs, fall back to a fixed release notes message.
-          RELEASE_NOTES: ${{ github.event.inputs.release_notes || 'Latest SDK build' }}
+          # For cron-triggered runs, fall back to the nightly release notes.
+          RELEASE_NOTES: ${{ github.event.inputs.release_notes || steps.nightly_notes.outputs.text }}
         with:
           appId: ${{ env.ADYEN_ANDROID_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ env.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
