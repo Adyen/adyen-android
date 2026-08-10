@@ -46,6 +46,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -122,6 +123,43 @@ internal class ActionHandlerTest(
 
             val component = actionHandler.actionComponent as? ControllableActionComponent
             assertEquals(1, component?.handleActionCallCount)
+        }
+
+        @Test
+        fun `when the action type is not registered, then failure is called on the dispatcher`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
+
+            val captor = argumentCaptor<CheckoutError>()
+            verify(componentRequestDispatcher).failure(captor.capture())
+
+            val error = captor.firstValue
+            assertEquals(CheckoutError.ErrorCode.GENERIC, error.code)
+            assertEquals(
+                "Action type 'unregistered_actionType' is not supported. " +
+                    "Ensure the corresponding module is included in your build dependencies.",
+                error.message,
+            )
+        }
+
+        @Test
+        fun `when the action type is not registered, then actionComponent stays null`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
+
+            assertNull(actionHandler.actionComponent)
+        }
+
+        @Test
+        fun `when the action type is not registered after a successful action, then actionComponent is cleared`() {
+            val actionHandler = createActionHandler()
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
+
+            assertNull(actionHandler.actionComponent)
         }
     }
 

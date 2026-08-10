@@ -17,6 +17,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
+import com.adyen.checkout.core.error.internal.GenericError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -117,7 +118,7 @@ internal class ActionComponentProviderTest {
 
     @Test
     fun `when get is called for an unregistered factory, then an error is thrown`() = runTest {
-        assertThrows<IllegalStateException> {
+        assertThrows<GenericError> {
             ActionComponentProvider.get(
                 action = TestAction(type = "unregistered_actionType"),
                 coroutineScope = this,
