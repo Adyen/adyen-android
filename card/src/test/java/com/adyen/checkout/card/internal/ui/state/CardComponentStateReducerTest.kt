@@ -198,19 +198,18 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is HighlightValidationErrors and cardNumber has error, then cardNumber showError and focus are set`() {
+    fun `when intent is HighlightValidationErrors and cardNumber has error, then the cardNumber error is shown and focus is set`() {
         val state = createInitialState().copy(
             cardNumber = TextInputComponentState(
                 text = "",
                 isFocused = false,
-                errorMessage = CheckoutLocalizationKey.GENERAL_CLOSE,
-                showError = false,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
             ),
         )
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        assertTrue(actual.cardNumber.showError)
+        assertTrue(actual.cardNumber.isErrorVisible)
         assertTrue(actual.cardNumber.isFocused)
     }
 
@@ -220,19 +219,23 @@ internal class CardComponentStateReducerTest {
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        assertFalse(actual.cardNumber.showError)
-        assertFalse(actual.expiryDate.showError)
-        assertFalse(actual.securityCode.showError)
-        assertFalse(actual.holderName.showError)
-        assertFalse(actual.postalCode.showError)
+        assertFalse(actual.cardNumber.isErrorVisible)
+        assertFalse(actual.expiryDate.isErrorVisible)
+        assertFalse(actual.securityCode.isErrorVisible)
+        assertFalse(actual.holderName.isErrorVisible)
+        assertFalse(actual.postalCode.isErrorVisible)
     }
 
     @Test
     fun `when intent is HighlightValidationErrors with multiple errors, then first field with error gets focus`() {
         val state = createInitialState().copy(
-            cardNumber = TextInputComponentState(errorMessage = null),
-            expiryDate = TextInputComponentState(errorMessage = CheckoutLocalizationKey.GENERAL_CLOSE),
-            securityCode = TextInputComponentState(errorMessage = CheckoutLocalizationKey.GENERAL_CLOSE),
+            cardNumber = TextInputComponentState(error = null),
+            expiryDate = TextInputComponentState(
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
+            ),
+            securityCode = TextInputComponentState(
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
+            ),
         )
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)

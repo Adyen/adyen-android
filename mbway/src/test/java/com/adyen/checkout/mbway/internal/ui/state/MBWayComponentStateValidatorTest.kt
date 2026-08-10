@@ -30,16 +30,15 @@ internal class MBWayComponentStateValidatorTest {
                 selectedCountryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputComponentState(
                     text = VALID_PHONE_NUMBER,
-                    errorMessage = null,
-                    isFocused = false,
-                    showError = false,
+                    error = null,
+                    isFocused = false
                 ),
                 isLoading = false,
             )
 
             val actual = validator.validate(state)
 
-            assertNull(actual.phoneNumber.errorMessage)
+            assertNull(actual.phoneNumber.error?.message)
         }
 
         @Test
@@ -49,16 +48,15 @@ internal class MBWayComponentStateValidatorTest {
                 selectedCountryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputComponentState(
                     text = INVALID_PHONE_NUMBER,
-                    errorMessage = null,
-                    isFocused = false,
-                    showError = false,
+                    error = null,
+                    isFocused = false
                 ),
                 isLoading = false,
             )
 
             val actual = validator.validate(viewState)
 
-            assertEquals(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER, actual.phoneNumber.errorMessage)
+            assertEquals(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER, actual.phoneNumber.error?.message)
         }
     }
 
@@ -72,9 +70,8 @@ internal class MBWayComponentStateValidatorTest {
                 selectedCountryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputComponentState(
                     text = VALID_PHONE_NUMBER,
-                    errorMessage = null,
-                    isFocused = false,
-                    showError = false,
+                    error = null,
+                    isFocused = false
                 ),
                 isLoading = false,
             )
@@ -91,9 +88,8 @@ internal class MBWayComponentStateValidatorTest {
                 selectedCountryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputComponentState(
                     text = INVALID_PHONE_NUMBER,
-                    errorMessage = CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER,
-                    isFocused = false,
-                    showError = false,
+                    error = TextInputComponentState.InputError(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER),
+                    isFocused = false
                 ),
                 isLoading = false,
             )

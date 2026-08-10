@@ -33,9 +33,8 @@ internal class MBWayComponentStateFactoryTest {
             phoneNumber = TextInputComponentState(
                 text = "",
                 description = null,
-                errorMessage = null,
-                isFocused = true,
-                showError = false,
+                error = null,
+                isFocused = true
             ),
             isLoading = false,
         )
