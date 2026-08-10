@@ -39,7 +39,7 @@ Stage only the specific files that were modified and are necessary for the commi
 
 Include any `.api` files if they were updated (e.g., after running `apiDump` for intentional public API changes).
 
-**If `gradle/libs.versions.toml` is among the changes:** confirm the developer approved the dependency change itself, that `.github/release_notes_dependency_list.toml` covers every added or re-pointed dependency, and that `gradle/verification-metadata.xml` was regenerated. Stage all three files. If the approval or either of the other two is missing, stop and use the `android-add-dependency` skill (`.agents/skills/android-add-dependency/SKILL.md`) before committing.
+**If `gradle/libs.versions.toml` is among the changes:** confirm the developer approved the dependency change itself, that `.github/release_notes_dependency_list.toml` covers every added or re-pointed dependency, and that `gradle/verification-metadata.xml` was regenerated. Stage these files. If the approval or any of these files is missing, stop and use the `android-add-dependency` skill (`.agents/skills/android-add-dependency/SKILL.md`) before committing.
 
 ### 6. Security scan
 

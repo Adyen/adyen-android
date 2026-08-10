@@ -287,30 +287,7 @@ if (checkCompileOnly("com.external.sdk.SomeClass")) {
 
 ### Adding or Modifying Dependencies
 
-**Get explicit approval before adding, changing, or removing a dependency — before making any code change.**
-
-We are an SDK. Every dependency we take is imposed on every merchant that integrates us, and every one we drop or re-point can break them. The default answer to a new dependency is no. Check first whether the platform, AndroidX, or an existing dependency already covers the need, or whether the part we need is small enough to implement ourselves.
-
-**Explain the impact before asking**, even when the developer named the dependency themselves:
-- Which modules and configuration (`api`, `implementation`, `compileOnly`, test-only)
-- Whether it reaches merchant builds, and the version conflict, `minSdk`, and size consequences
-- Whether it touches our public API — if its types are exposed, its version becomes part of our contract
-- R8/ProGuard needs, build and CI impact, test impact
-- License, maintenance status, and the alternatives you rejected
-
-Removing a dependency merchants resolve through us is a breaking change.
-
-**Every dependency in `gradle/libs.versions.toml` must also be listed in `.github/release_notes_dependency_list.toml`:**
-- `[included]` — merchant-relevant dependencies: shipped in a published module, or part of the toolchain merchants must be compatible with (AGP and Kotlin). The value is a markdown link to the vendor's release notes, with `{}` where the version goes. These entries are published in our release notes.
-- `[excluded]` — everything else (tests, example app, build logic, CI, code quality tooling), plus merchant-relevant dependencies already covered by another entry such as a BoM. The value is an empty string.
-
-**Always ask the developer to confirm the section and the link before writing the entry.** Never guess a release notes URL.
-
-CI enforces this: a newly added dependency that appears in neither list fails the `validate_dependencies` check on every PR.
-
-Dependency verification is enabled, so a new dependency also requires regenerating `gradle/verification-metadata.xml` or the build fails on a missing checksum.
-
-Use the `android-add-dependency` skill (`.agents/skills/android-add-dependency/SKILL.md`) for the full procedure, including the impact assessment template, how the id is derived, and how to choose the link pattern.
+If a new dependency needs to be added, or an existing dependency needs to be updated or removed, use the `android-add-dependency` skill (`.agents/skills/android-add-dependency/SKILL.md`). It covers the full procedure, including getting approval, the impact assessment template, updating `gradle/libs.versions.toml` and `.github/release_notes_dependency_list.toml`, and regenerating `gradle/verification-metadata.xml`.
 
 ## Verification Checklist
 

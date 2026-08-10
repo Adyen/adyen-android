@@ -1,6 +1,6 @@
 ---
 name: android-add-dependency
-description: Decide on and apply a dependency change — impact assessment, libs.versions.toml, release notes dependency list, and verification metadata.
+description: Add, remove or update an external dependency in the SDK.
 ---
 
 # android-add-dependency
