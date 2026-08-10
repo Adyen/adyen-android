@@ -126,48 +126,32 @@ internal class CardComponentStateReducer(
             }
         }
 
-        val hasCardNumberError = state.cardNumber.errorMessage != null
-        val hasExpiryDateError = state.expiryDate.errorMessage != null
-        val hasSecurityCodeError = state.securityCode.errorMessage != null
-        val hasHolderNameError = state.holderName.errorMessage != null
-        val hasSocialSecurityNumberError = state.socialSecurityNumber.errorMessage != null
-        val hasKcpBirthDateOrTaxNumberError = state.kcpBirthDateOrTaxNumber.errorMessage != null
-        val hasKcpCardPasswordError = state.kcpCardPassword.errorMessage != null
-        val hasPostalCodeError = state.postalCode.errorMessage != null
+        val hasCardNumberError = !state.cardNumber.isValid
+        val hasExpiryDateError = !state.expiryDate.isValid
+        val hasSecurityCodeError = !state.securityCode.isValid
+        val hasHolderNameError = !state.holderName.isValid
+        val hasSocialSecurityNumberError = !state.socialSecurityNumber.isValid
+        val hasKcpBirthDateOrTaxNumberError = !state.kcpBirthDateOrTaxNumber.isValid
+        val hasKcpCardPasswordError = !state.kcpCardPassword.isValid
+        val hasPostalCodeError = !state.postalCode.isValid
 
         return state.copy(
-            cardNumber = state.cardNumber.copy(
-                showError = hasCardNumberError,
-                isFocused = shouldFocus(hasCardNumberError),
-            ),
-            expiryDate = state.expiryDate.copy(
-                showError = hasExpiryDateError,
-                isFocused = shouldFocus(hasExpiryDateError),
-            ),
-            securityCode = state.securityCode.copy(
-                showError = hasSecurityCodeError,
-                isFocused = shouldFocus(hasSecurityCodeError),
-            ),
-            holderName = state.holderName.copy(
-                showError = hasHolderNameError,
-                isFocused = shouldFocus(hasHolderNameError),
-            ),
-            socialSecurityNumber = state.socialSecurityNumber.copy(
-                showError = hasSocialSecurityNumberError,
-                isFocused = shouldFocus(hasSocialSecurityNumberError),
-            ),
-            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.copy(
-                showError = hasKcpBirthDateOrTaxNumberError,
-                isFocused = shouldFocus(hasKcpBirthDateOrTaxNumberError),
-            ),
-            kcpCardPassword = state.kcpCardPassword.copy(
-                showError = hasKcpCardPasswordError,
-                isFocused = shouldFocus(hasKcpCardPasswordError),
-            ),
-            postalCode = state.postalCode.copy(
-                showError = hasPostalCodeError,
-                isFocused = shouldFocus(hasPostalCodeError)
-            )
+            cardNumber = state.cardNumber.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasCardNumberError)),
+            expiryDate = state.expiryDate.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasExpiryDateError)),
+            securityCode = state.securityCode.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasSecurityCodeError)),
+            holderName = state.holderName.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasHolderNameError)),
+            socialSecurityNumber = state.socialSecurityNumber.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasSocialSecurityNumberError)),
+            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasKcpBirthDateOrTaxNumberError)),
+            kcpCardPassword = state.kcpCardPassword.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasKcpCardPasswordError)),
+            postalCode = state.postalCode.showErrorIfPresent()
+                .copy(isFocused = shouldFocus(hasPostalCodeError)),
         )
     }
 }
