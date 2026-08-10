@@ -51,6 +51,10 @@ internal class ComponentItemAdapter(
 
         override fun bind(item: ComponentItem) {
             setTitle(item)
+            binding.root.contentDescription = when (item) {
+                is ComponentItem.Entry.V6Sessions -> "v6-sessions-components-entry"
+                else -> null
+            }
             binding.root.setOnClickListener { onEntryClick(item as ComponentItem.Entry) }
         }
 
