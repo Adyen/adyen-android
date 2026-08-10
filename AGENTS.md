@@ -38,7 +38,7 @@ This document outlines important patterns, practices, and rules to follow when w
 
 **Commit workflow - CRITICAL:**
 - **Complete one phase fully before moving to the next**
-- After completing a phase, use the `android-commit` skill (`.agents/skills/android-commit.md`) to commit
+- After completing a phase, use the `android-commit` skill (`.agents/skills/android-commit/SKILL.md`) to commit
 - Never accumulate multiple phases in a single commit
 - Each commit should represent a logical, complete unit of work
 - This ensures work can be reviewed incrementally and rolled back if needed
@@ -285,6 +285,10 @@ if (checkCompileOnly("com.external.sdk.SomeClass")) {
 }
 ```
 
+### Adding or Modifying Dependencies
+
+If a new dependency needs to be added, or an existing dependency needs to be updated or removed, use the `android-add-dependency` skill (`.agents/skills/android-add-dependency/SKILL.md`). It covers the full procedure, including getting approval, the impact assessment template, updating `gradle/libs.versions.toml` and `.github/release_notes_dependency_list.toml`, and regenerating `gradle/verification-metadata.xml`.
+
 ## Verification Checklist
 
 Before considering work complete:
@@ -296,8 +300,9 @@ Before considering work complete:
 6. If layout/styles changed: Styles added, proper attributes used, hierarchy maintained
 7. If strings changed: All translations present, localized context applied
 8. If new module added: Gradle configuration reviewed, external SDKs handled properly
-9. If refactoring: Test coverage exists for affected code
-10. Added classes and functions have unit tests following given-when-then structure
+9. If dependencies changed: Dependency approved by the developer with its impact explained, release notes dependency list updated and confirmed, verification metadata regenerated
+10. If refactoring: Test coverage exists for affected code
+11. Added classes and functions have unit tests following given-when-then structure
 
 ## When in Doubt
 
