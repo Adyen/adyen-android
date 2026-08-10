@@ -25,7 +25,6 @@ import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.ExternalConfigurationReader
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.old.googlePay
@@ -59,12 +58,6 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             return shopperLocaleString?.let { Locale.forLanguageTag(it) }
         }
 
-    // Overridable at runtime via ExternalConfigurationReader (e.g. by the e2e test framework),
-    // falling back to the default value used across the example app.
-    private val showCardholderName: Boolean
-        get() = externalConfigurationReader.cardConfiguration?.showCardholderName
-            ?: SettingsDefaults.SHOW_CARDHOLDER_NAME
-
     private val clientKey = BuildConfig.CLIENT_KEY
 
     override val oldCheckoutConfig: OldCheckoutConfiguration
@@ -88,7 +81,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
             card {
                 setShopperReference(keyValueStorage.getShopperReference())
-                setHolderNameRequired(showCardholderName)
+                setHolderNameRequired(externalConfigurationReader.cardConfiguration?.showCardholderName ?: false)
                 setAddressConfiguration(getAddressConfiguration())
                 setInstallmentConfigurations(getOldInstallmentConfiguration())
             }
@@ -130,7 +123,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             card(
-                showCardholderName = showCardholderName,
+                showCardholderName = externalConfigurationReader.cardConfiguration?.showCardholderName,
                 billingAddressMode = getBillingAddressMode(),
                 installmentConfiguration = getInstallmentConfiguration(),
             )
