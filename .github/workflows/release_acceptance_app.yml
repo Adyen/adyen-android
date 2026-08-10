@@ -1,12 +1,36 @@
 name: Release acceptance app
 
+# Builds the acceptance app and distributes it to the internal testers. This workflow has no notion
+# of nightly builds; see release_nightly_app.yml for those.
 on:
-  schedule:
-    # Cron-triggered nightly acceptance app builds.
-    # When triggered by schedule, version_name defaults to 'nightly' and release_notes default to
-    # 'Latest SDK build'.
-    # Every work day (Mon-Fri) at 00:00 UTC
-    - cron: '0 0 * * 1-5'
+  workflow_call:
+    inputs:
+      version_name:
+        required: true
+        type: string
+      release_notes:
+        required: true
+        type: string
+    # Declared explicitly rather than inherited, so that a caller cannot hand this workflow secrets
+    # it has no use for. The names match the repository secrets, so that they also resolve when this
+    # workflow is dispatched directly instead of being called.
+    secrets:
+      GRADLE_ENCRYPTION_KEY:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_STORE_B64:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD:
+        required: true
+      ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_ALIAS:
+        required: true
+      ADYEN_ANDROID_FIREBASE_APP_ID:
+        required: true
+      ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE:
+        required: true
   workflow_dispatch:
     inputs:
       version_name:
@@ -48,8 +72,7 @@ jobs:
 
       - name: Build with Gradle
         env:
-          # For cron-triggered runs, fall back to the nightly version name.
-          VERSION_NAME: ${{ github.event.inputs.version_name || 'nightly' }}
+          VERSION_NAME: ${{ inputs.version_name }}
           ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL }}
           ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY }}
           SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.keystore_path }}
@@ -64,8 +87,7 @@ jobs:
         env:
           ADYEN_ANDROID_FIREBASE_APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
           ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
-          # For cron-triggered runs, fall back to a fixed release notes message.
-          RELEASE_NOTES: ${{ github.event.inputs.release_notes || 'Latest SDK build' }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
         with:
           appId: ${{ env.ADYEN_ANDROID_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ env.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
