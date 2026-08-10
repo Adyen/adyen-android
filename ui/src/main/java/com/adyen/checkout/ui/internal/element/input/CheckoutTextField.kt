@@ -69,8 +69,10 @@ import kotlinx.coroutines.flow.collectLatest
  * [CheckoutTextFieldDecorationBox].
  * @param prefix An optional string to be displayed at the beginning of the input area,
  * before the user's input.
- * @param trailingIcon An optional composable function that provides a trailing icon to be
- * displayed at the end of the text field.
+ * @param trailingIcon A composable function that provides a trailing icon to be displayed at the end
+ * of the text field, or null for no icon at all. Payment method fields should render this through
+ * `CheckoutTextFieldTrailingIcon`, which handles the generic empty and error icons for every field.
+ * This parameter is required so that every new field has to make a deliberate choice about it.
  */
 @Suppress("LongMethod")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -92,7 +94,7 @@ fun CheckoutTextField(
     prefix: String? = null,
     hint: String? = null,
     isSecureField: Boolean = false,
-    trailingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)?,
 ) {
     val style = CheckoutThemeProvider.elements.textField
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
@@ -189,6 +191,7 @@ private fun CheckoutTextFieldPreview(
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue(""),
             supportingText = "Description",
+            trailingIcon = null,
         )
 
         CheckoutTextField(
@@ -196,6 +199,7 @@ private fun CheckoutTextFieldPreview(
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue(""),
             prefix = "Prefix",
+            trailingIcon = null,
         )
 
         val focusRequester = remember { FocusRequester() }
@@ -222,6 +226,9 @@ private fun CheckoutTextFieldPreview(
             label = "Label",
             supportingText = "Invalid input",
             isError = true,
+            // Components get this icon from CheckoutTextFieldTrailingIcon, it is passed manually here so that the
+            // preview matches what an errored field actually looks like.
+            trailingIcon = { CheckoutTextFieldErrorIcon() },
         )
 
         CheckoutTextField(
@@ -230,6 +237,7 @@ private fun CheckoutTextFieldPreview(
             label = "Password",
             isSecureField = true,
             modifier = Modifier.focusRequester(focusRequester),
+            trailingIcon = null,
         )
     }
 }

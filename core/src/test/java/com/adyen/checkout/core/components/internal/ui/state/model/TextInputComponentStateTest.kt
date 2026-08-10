@@ -14,6 +14,13 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
+/**
+ * Tests `TextInputComponentState.kt`: how the state of a field evolves as the shopper types, focuses and blurs, and
+ * when that results in an error being displayed. Some tests observe the outcome through `toViewState`, as that is what
+ * the UI ends up rendering.
+ *
+ * Tests for the mapping itself live in `TextInputViewStateTest`.
+ */
 internal class TextInputComponentStateTest {
 
     // UC1: Error on Explicit Validation

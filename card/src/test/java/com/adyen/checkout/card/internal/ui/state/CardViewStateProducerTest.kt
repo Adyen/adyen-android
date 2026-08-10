@@ -10,13 +10,16 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
+import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
-import com.adyen.checkout.card.internal.ui.model.PostalCodeTrailingIcon
+import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -306,7 +309,7 @@ internal class CardViewStateProducerTest {
 
     // UC6: Error Hides Brand Logos
     @Test
-    fun `when card number has error with detected brand, then trailing icon is warning and supported brands are hidden`() {
+    fun `when card number has error with detected brand, then trailing icon is error and supported brands are hidden`() {
         // GIVEN
         val componentState = createComponentState(
             cardNumber = TextInputComponentState(
@@ -322,7 +325,7 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertEquals(
-            CardNumberTrailingIcon.Warning,
+            TrailingIcon.Error,
             viewState.cardNumber?.trailingIcon,
         )
         assertFalse(viewState.supportedCardBrandsViewState.isVisible)
@@ -434,28 +437,6 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
-    fun `when postal code has error, then trailing icon is warning`() {
-        // GIVEN
-        val componentState = createComponentState(
-            postalCode = TextInputComponentState(
-                text = "",
-                errorMessage = CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID,
-                showError = true,
-            ),
-        )
-
-        // WHEN
-        val viewState = producer.produce(componentState)
-
-        // THEN
-        assertEquals(
-            PostalCodeTrailingIcon.Warning,
-            viewState.postalCode?.trailingIcon,
-        )
-        assertEquals(true, viewState.postalCode?.isError)
-    }
-
-    @Test
     fun `when supported card brands contain hidden brands, then hidden brands are excluded from view state`() {
         // GIVEN
         val componentState = createComponentState(
@@ -477,28 +458,6 @@ internal class CardViewStateProducerTest {
             listOf(CardBrand("visa"), CardBrand("mc")),
             viewState.supportedCardBrandsViewState.supportedCardBrands,
         )
-    }
-
-    @Test
-    fun `when postal code is valid, then trailing icon is placeholder`() {
-        // GIVEN
-        val componentState = createComponentState(
-            postalCode = TextInputComponentState(
-                text = "1234 AB",
-                errorMessage = null,
-                showError = false,
-            ),
-        )
-
-        // WHEN
-        val viewState = producer.produce(componentState)
-
-        // THEN
-        assertEquals(
-            PostalCodeTrailingIcon.Placeholder,
-            viewState.postalCode?.trailingIcon,
-        )
-        assertEquals(false, viewState.postalCode?.isError)
     }
 
     @Test
@@ -563,22 +522,7 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
-    fun `when card scanning is not available and card number is empty, then scan button is not visible`() {
-        // GIVEN
-        val componentState = createComponentState(
-            cardNumber = TextInputComponentState(text = ""),
-            isCardScanningAvailable = false,
-        )
-
-        // WHEN
-        val viewState = producer.produce(componentState)
-
-        // THEN
-        assertFalse(viewState.isCardScanButtonVisible)
-    }
-
-    @Test
-    fun `when card scanning is available and card number has error, then trailing icon is Warning not ScanButton`() {
+    fun `when card scanning is available and card number is showing an error, then trailing icon is Error`() {
         // GIVEN
         val componentState = createComponentState(
             cardNumber = TextInputComponentState(
@@ -594,7 +538,201 @@ internal class CardViewStateProducerTest {
 
         // THEN
         assertTrue(viewState.isCardScanButtonVisible)
-        assertEquals(CardNumberTrailingIcon.Warning, viewState.cardNumber?.trailingIcon)
+        assertEquals(TrailingIcon.Error, viewState.cardNumber?.trailingIcon)
+    }
+
+    @Test
+    fun `when expiry date is valid, then trailing icon is Checkmark`() {
+        // GIVEN
+        val componentState = createComponentState(
+            expiryDate = TextInputComponentState(text = "0330"),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(ExpiryDateTrailingIcon.Checkmark, viewState.expiryDate?.trailingIcon)
+    }
+
+    @Test
+    fun `when expiry date is empty, then trailing icon is Placeholder`() {
+        // GIVEN
+        val componentState = createComponentState(
+            expiryDate = TextInputComponentState(text = ""),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(ExpiryDateTrailingIcon.Placeholder, viewState.expiryDate?.trailingIcon)
+    }
+
+    @Test
+    fun `when expiry date is partially filled, then trailing icon is Placeholder`() {
+        // GIVEN
+        val componentState = createComponentState(
+            expiryDate = TextInputComponentState(
+                text = "12",
+                errorMessage = CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(ExpiryDateTrailingIcon.Placeholder, viewState.expiryDate?.trailingIcon)
+    }
+
+    @Test
+    fun `when expiry date is optional and empty, then trailing icon is Placeholder`() {
+        // GIVEN
+        val componentState = createComponentState(
+            expiryDate = TextInputComponentState(
+                text = "",
+                requirementPolicy = RequirementPolicy.Optional,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(ExpiryDateTrailingIcon.Placeholder, viewState.expiryDate?.trailingIcon)
+    }
+
+    @Test
+    fun `when expiry date is showing an error, then trailing icon is Error instead of Placeholder`() {
+        // GIVEN
+        val componentState = createComponentState(
+            expiryDate = TextInputComponentState(
+                text = "6415",
+                errorMessage = CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID,
+                showError = true,
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(TrailingIcon.Error, viewState.expiryDate?.trailingIcon)
+    }
+
+    @Test
+    fun `when security code is valid, then trailing icon is Checkmark`() {
+        // GIVEN
+        val componentState = createComponentState(
+            securityCode = TextInputComponentState(text = "123"),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(SecurityCodeTrailingIcon.Checkmark, viewState.securityCode?.trailingIcon)
+    }
+
+    @Test
+    fun `when security code is empty and amex is detected, then trailing icon is PlaceholderAmex`() {
+        // GIVEN
+        val componentState = createComponentState(
+            securityCode = TextInputComponentState(text = ""),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("amex"))),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(SecurityCodeTrailingIcon.PlaceholderAmex, viewState.securityCode?.trailingIcon)
+    }
+
+    @Test
+    fun `when security code is empty and non-amex is detected, then trailing icon is PlaceholderDefault`() {
+        // GIVEN
+        val componentState = createComponentState(
+            securityCode = TextInputComponentState(text = ""),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("visa"))),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(SecurityCodeTrailingIcon.PlaceholderDefault, viewState.securityCode?.trailingIcon)
+    }
+
+    @Test
+    fun `when security code is partially filled and non-amex is detected, then trailing icon is PlaceholderDefault`() {
+        // GIVEN
+        val componentState = createComponentState(
+            securityCode = TextInputComponentState(
+                text = "12",
+                errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("visa"))),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(SecurityCodeTrailingIcon.PlaceholderDefault, viewState.securityCode?.trailingIcon)
+    }
+
+    @Test
+    fun `when security code is optional and empty, then trailing icon is PlaceholderDefault`() {
+        // GIVEN
+        val componentState = createComponentState(
+            securityCode = TextInputComponentState(
+                text = "",
+                requirementPolicy = RequirementPolicy.Optional,
+            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("visa"))),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(SecurityCodeTrailingIcon.PlaceholderDefault, viewState.securityCode?.trailingIcon)
+    }
+
+    @Test
+    fun `when security code is showing an error, then trailing icon is Error instead of PlaceholderDefault`() {
+        // GIVEN
+        val componentState = createComponentState(
+            securityCode = TextInputComponentState(
+                text = "12",
+                errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+                showError = true,
+            ),
+            cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("visa"))),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(TrailingIcon.Error, viewState.securityCode?.trailingIcon)
+    }
+
+    @Test
+    fun `when card scanning is not available and card number is empty, then scan button is not visible`() {
+        // GIVEN
+        val componentState = createComponentState(
+            cardNumber = TextInputComponentState(text = ""),
+            isCardScanningAvailable = false,
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.isCardScanButtonVisible)
     }
 
     @Test
@@ -620,6 +758,8 @@ internal class CardViewStateProducerTest {
     private fun createComponentState(
         cardNumber: TextInputComponentState = TextInputComponentState(),
         cardBrandState: CardBrandState = CardBrandState.NoBrandsDetected,
+        expiryDate: TextInputComponentState = TextInputComponentState(),
+        securityCode: TextInputComponentState = TextInputComponentState(),
         postalCode: TextInputComponentState = TextInputComponentState(),
         supportedCardBrands: List<CardBrand> = emptyList(),
         showSupportedCardBrandLogos: Boolean = true,
@@ -627,8 +767,8 @@ internal class CardViewStateProducerTest {
         installmentState: InstallmentState = InstallmentState(emptyList(), null),
     ) = CardComponentState(
         cardNumber = cardNumber,
-        expiryDate = TextInputComponentState(),
-        securityCode = TextInputComponentState(),
+        expiryDate = expiryDate,
+        securityCode = securityCode,
         holderName = TextInputComponentState(),
         socialSecurityNumber = TextInputComponentState(),
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
@@ -645,9 +785,9 @@ internal class CardViewStateProducerTest {
         installmentState = installmentState,
     )
 
-    private fun getCardBrandData(): CardBrandData {
+    private fun getCardBrandData(cardBrand: CardBrand = CardBrand("")): CardBrandData {
         return CardBrandData(
-            cardBrand = CardBrand(""),
+            cardBrand = cardBrand,
             enableLuhnCheck = true,
             cvcPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,

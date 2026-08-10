@@ -19,16 +19,26 @@ data class TextInputViewState(
     val supportingText: CheckoutLocalizationKey? = null,
     val isFocused: Boolean = false,
     val isError: Boolean = false,
-    val trailingIcon: TrailingIcon? = null,
+    // The field specific icon, shown while the field is not in an error state. Do not render this directly, use
+    // [trailingIcon] instead.
+    val customTrailingIcon: TrailingIcon? = null,
     val isOptional: Boolean = false,
-)
+) {
+
+    /**
+     * The trailing icon to render. The generic [TrailingIcon.Error] icon always takes precedence over
+     * [customTrailingIcon], so that every field shows the error state consistently.
+     */
+    val trailingIcon: TrailingIcon
+        get() = if (isError) TrailingIcon.Error else customTrailingIcon ?: TrailingIcon.Empty
+}
 
 /**
  * Maps a TextInputComponentState to a TextInputViewState or returns null if the view should not be displayed on the UI.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun TextInputComponentState.toViewState(
-    trailingIcon: TrailingIcon? = null,
+    customTrailingIcon: TrailingIcon? = null,
 ): TextInputViewState? {
     if (requirementPolicy == RequirementPolicy.Hidden) return null
     return TextInputViewState(
@@ -36,7 +46,7 @@ fun TextInputComponentState.toViewState(
         supportingText = if (showErrorMessage) errorMessage else description,
         isFocused = isFocused,
         isError = showErrorMessage,
-        trailingIcon = trailingIcon,
+        customTrailingIcon = customTrailingIcon,
         isOptional = requirementPolicy is RequirementPolicy.Optional,
     )
 }

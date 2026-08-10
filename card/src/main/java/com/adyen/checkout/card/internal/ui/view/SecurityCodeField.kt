@@ -8,13 +8,15 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,9 +28,11 @@ import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_AMEX
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_DEFAULT
+import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
@@ -85,60 +89,57 @@ internal fun SecurityCodeField(
         inputTransformation = inputTransformation,
         shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
-            SecurityCodeIcon(state = securityCodeState)
+            SecurityCodeTrailingIcon(securityCodeState.trailingIcon)
         },
     )
 }
 
 @Composable
-private fun SecurityCodeIcon(
-    state: TextInputViewState,
-    modifier: Modifier = Modifier,
+private fun SecurityCodeTrailingIcon(
+    trailingIcon: TrailingIcon,
 ) {
-    val resourceId: Int
-    val tint: Color
-    when (state.trailingIcon as? SecurityCodeTrailingIcon) {
-        SecurityCodeTrailingIcon.Warning -> {
-            resourceId = com.adyen.checkout.test.R.drawable.ic_warning
-            tint = CheckoutThemeProvider.colors.destructive
-        }
+    CheckoutTextFieldTrailingIcon(trailingIcon) { state ->
+        // unexpected state - the view state producer should set the correct type
+        if (state !is SecurityCodeTrailingIcon) return@CheckoutTextFieldTrailingIcon
 
-        SecurityCodeTrailingIcon.Checkmark -> {
-            resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark
-            tint = CheckoutThemeProvider.colors.primary
-        }
-
-        SecurityCodeTrailingIcon.PlaceholderAmex -> {
-            resourceId = getThemedIcon(
-                backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-                lightDrawableId = R.drawable.ic_card_cvc_front_light,
-                darkDrawableId = R.drawable.ic_card_cvc_front_dark,
+        when (state) {
+            SecurityCodeTrailingIcon.Checkmark -> SecurityCodeTrailingIcon(
+                resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark,
+                tint = CheckoutThemeProvider.colors.primary,
             )
-            tint = Color.Unspecified
-        }
 
-        else -> {
-            resourceId = getThemedIcon(
-                backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-                lightDrawableId = R.drawable.ic_card_cvc_back_light,
-                darkDrawableId = R.drawable.ic_card_cvc_back_dark,
+            SecurityCodeTrailingIcon.PlaceholderAmex -> SecurityCodeTrailingIcon(
+                resourceId = getThemedIcon(
+                    backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+                    lightDrawableId = R.drawable.ic_card_cvc_front_light,
+                    darkDrawableId = R.drawable.ic_card_cvc_front_dark,
+                ),
+                tint = Color.Unspecified,
             )
-            tint = Color.Unspecified
+
+            SecurityCodeTrailingIcon.PlaceholderDefault -> SecurityCodeTrailingIcon(
+                resourceId = getThemedIcon(
+                    backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+                    lightDrawableId = R.drawable.ic_card_cvc_back_light,
+                    darkDrawableId = R.drawable.ic_card_cvc_back_dark,
+                ),
+                tint = Color.Unspecified,
+            )
         }
     }
+}
 
-    AnimatedContent(
-        targetState = resourceId to tint,
-        modifier = modifier,
-        label = "SecurityCodeIcon",
-    ) { (targetResourceId, targetTint) ->
-        Icon(
-            modifier = Modifier.size(Dimensions.LogoSize.small),
-            imageVector = ImageVector.vectorResource(targetResourceId),
-            contentDescription = null,
-            tint = targetTint,
-        )
-    }
+@Composable
+private fun SecurityCodeTrailingIcon(
+    resourceId: Int,
+    tint: Color,
+) {
+    Icon(
+        modifier = Modifier.size(Dimensions.LogoSize.small),
+        imageVector = ImageVector.vectorResource(resourceId),
+        contentDescription = null,
+        tint = tint,
+    )
 }
 
 @Preview
@@ -149,7 +150,7 @@ private fun SecurityCodeFieldPreview(
     CheckoutThemePreviewWrapper(theme) {
         SecurityCodeField(
             securityCodeState = TextInputViewState(
-                text = "123",
+                customTrailingIcon = SecurityCodeTrailingIcon.PlaceholderDefault,
             ),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
@@ -159,17 +160,32 @@ private fun SecurityCodeFieldPreview(
         SecurityCodeField(
             securityCodeState = TextInputViewState(
                 isOptional = true,
+                customTrailingIcon = SecurityCodeTrailingIcon.PlaceholderAmex,
             ),
             cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
         )
 
+        val focusRequester = remember { FocusRequester() }
         SecurityCodeField(
             securityCodeState = TextInputViewState(
                 text = "123",
+                customTrailingIcon = SecurityCodeTrailingIcon.Checkmark,
+            ),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
+            modifier = Modifier.focusRequester(focusRequester),
+            onValueChange = {},
+            onFocusChange = {},
+        )
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
+
+        SecurityCodeField(
+            securityCodeState = TextInputViewState(
+                text = "12",
                 isError = true,
-                trailingIcon = SecurityCodeTrailingIcon.Warning,
             ),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},

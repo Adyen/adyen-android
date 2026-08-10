@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,9 +47,11 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_SEPARATOR
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
+import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
@@ -130,8 +131,8 @@ private fun CardNumberInputField(
         outputTransformation = outputTransformation,
         shouldFocus = cardNumberState.isFocused,
         trailingIcon = {
-            CardNumberFieldIcon(
-                state = cardNumberState,
+            CardNumberTrailingIcon(
+                trailingIcon = cardNumberState.trailingIcon,
                 cardBrandViewState = cardBrandViewState,
                 onScanButtonClick = onScanButtonClick,
                 onBrandSelect = onBrandSelect,
@@ -141,33 +142,28 @@ private fun CardNumberInputField(
 }
 
 @Composable
-private fun CardNumberFieldIcon(
-    state: TextInputViewState,
+private fun CardNumberTrailingIcon(
+    trailingIcon: TrailingIcon,
     cardBrandViewState: CardBrandViewState,
     onScanButtonClick: () -> Unit,
     onBrandSelect: (CardBrand) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    // null is not expected for the trailingIcon
-    val trailingIcon = state.trailingIcon as? CardNumberTrailingIcon ?: return
-    AnimatedContent(targetState = trailingIcon, modifier = modifier) { trailingIcon ->
-        when (trailingIcon) {
-            CardNumberTrailingIcon.Warning -> Icon(
-                modifier = Modifier.size(Dimensions.LogoSize.small),
-                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.destructive,
-            )
+    CheckoutTextFieldTrailingIcon(trailingIcon) { state ->
+        // unexpected state - the view state producer should set the correct type
+        if (state !is CardNumberTrailingIcon) return@CheckoutTextFieldTrailingIcon
 
-            CardNumberTrailingIcon.ScanButton -> IconButton(
-                onClick = onScanButtonClick,
-                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
-                    contentDescription = null,
-                    tint = CheckoutThemeProvider.colors.primary,
-                )
+        when (state) {
+            CardNumberTrailingIcon.ScanButton -> {
+                IconButton(
+                    onClick = onScanButtonClick,
+                    modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
+                        contentDescription = null,
+                        tint = CheckoutThemeProvider.colors.primary,
+                    )
+                }
             }
 
             CardNumberTrailingIcon.BrandLogos -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
@@ -311,7 +307,7 @@ private fun CardNumberFieldPreview(
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "",
-                trailingIcon = CardNumberTrailingIcon.ScanButton,
+                customTrailingIcon = CardNumberTrailingIcon.ScanButton,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
                 supportedCardBrands = listOf(
@@ -333,7 +329,7 @@ private fun CardNumberFieldPreview(
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "5555444433331111",
-                trailingIcon = CardNumberTrailingIcon.BrandLogos,
+                customTrailingIcon = CardNumberTrailingIcon.BrandLogos,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
                 supportedCardBrands = emptyList(),
@@ -351,7 +347,7 @@ private fun CardNumberFieldPreview(
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "1234123456123451234",
-                trailingIcon = CardNumberTrailingIcon.BrandLogos,
+                customTrailingIcon = CardNumberTrailingIcon.BrandLogos,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
                 supportedCardBrands = emptyList(),
@@ -374,7 +370,7 @@ private fun CardNumberFieldPreview(
         CardNumberField(
             cardNumberState = TextInputViewState(
                 text = "5555444433330002",
-                trailingIcon = CardNumberTrailingIcon.BrandLogos,
+                customTrailingIcon = CardNumberTrailingIcon.BrandLogos,
                 supportingText = CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
@@ -405,7 +401,6 @@ private fun CardNumberFieldPreview(
             cardNumberState = TextInputViewState(
                 text = "1234",
                 isError = true,
-                trailingIcon = CardNumberTrailingIcon.Warning,
                 supportingText = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(

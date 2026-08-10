@@ -25,7 +25,7 @@ internal class StoredCardViewStateProducer(
 
         return StoredCardViewState(
             securityCode = state.securityCode.toViewState(
-                trailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
+                customTrailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
             ),
             brand = state.detectedCardType?.cardBrand,
             cardNumberFormat = cardNumberFormat,
@@ -38,12 +38,8 @@ internal class StoredCardViewStateProducer(
         securityCode: TextInputComponentState,
         cardNumberFormat: CardNumberFormat,
     ): SecurityCodeTrailingIcon {
-        val isValid = securityCode.errorMessage == null && securityCode.text.isNotEmpty()
-        val isInvalid = securityCode.showErrorMessage
-
         return when {
-            isValid -> SecurityCodeTrailingIcon.Checkmark
-            isInvalid -> SecurityCodeTrailingIcon.Warning
+            securityCode.isValid && securityCode.text.isNotEmpty() -> SecurityCodeTrailingIcon.Checkmark
             cardNumberFormat == CardNumberFormat.AMEX -> SecurityCodeTrailingIcon.PlaceholderAmex
             else -> SecurityCodeTrailingIcon.PlaceholderDefault
         }

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -24,9 +23,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.core.common.internal.properties.ExpiryDateProperties
+import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.SeparatorsOutputTransformation
 import com.adyen.checkout.ui.internal.element.input.TextFieldSeparator
@@ -78,53 +79,48 @@ internal fun ExpiryDateField(
         outputTransformation = outputTransformation,
         shouldFocus = expiryDateState.isFocused,
         trailingIcon = {
-            ExpiryDateIcon(expiryDateState)
+            ExpiryDateTrailingIcon(expiryDateState.trailingIcon)
         },
     )
 }
 
 @Composable
-private fun ExpiryDateIcon(
-    state: TextInputViewState,
-    modifier: Modifier = Modifier,
+private fun ExpiryDateTrailingIcon(
+    trailingIcon: TrailingIcon,
 ) {
-    val trailingIcon = state.trailingIcon as? ExpiryDateTrailingIcon
+    CheckoutTextFieldTrailingIcon(trailingIcon) { state ->
+        // unexpected state - the view state producer should set the correct type
+        if (state !is ExpiryDateTrailingIcon) return@CheckoutTextFieldTrailingIcon
 
-    val resourceId: Int
-    val tint: Color
-    when (trailingIcon) {
-        ExpiryDateTrailingIcon.Checkmark -> {
-            resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark
-            tint = CheckoutThemeProvider.colors.primary
-        }
-
-        ExpiryDateTrailingIcon.Warning -> {
-            resourceId = com.adyen.checkout.test.R.drawable.ic_warning
-            tint = CheckoutThemeProvider.colors.destructive
-        }
-
-        else -> {
-            resourceId = getThemedIcon(
-                backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-                lightDrawableId = R.drawable.ic_card_expiry_date_light,
-                darkDrawableId = R.drawable.ic_card_expiry_date_dark,
+        when (state) {
+            ExpiryDateTrailingIcon.Checkmark -> ExpiryDateTrailingIcon(
+                resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark,
+                tint = CheckoutThemeProvider.colors.primary,
             )
-            tint = Color.Unspecified
+
+            ExpiryDateTrailingIcon.Placeholder -> ExpiryDateTrailingIcon(
+                resourceId = getThemedIcon(
+                    backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+                    lightDrawableId = R.drawable.ic_card_expiry_date_light,
+                    darkDrawableId = R.drawable.ic_card_expiry_date_dark,
+                ),
+                tint = Color.Unspecified,
+            )
         }
     }
+}
 
-    AnimatedContent(
-        targetState = resourceId to tint,
-        modifier = modifier,
-        label = "ExpiryDateIcon",
-    ) { (targetResourceId, targetTint) ->
-        Icon(
-            modifier = Modifier.size(Dimensions.LogoSize.small),
-            imageVector = ImageVector.vectorResource(targetResourceId),
-            contentDescription = null,
-            tint = targetTint,
-        )
-    }
+@Composable
+private fun ExpiryDateTrailingIcon(
+    resourceId: Int,
+    tint: Color,
+) {
+    Icon(
+        modifier = Modifier.size(Dimensions.LogoSize.small),
+        imageVector = ImageVector.vectorResource(resourceId),
+        contentDescription = null,
+        tint = tint,
+    )
 }
 
 @Preview
@@ -136,6 +132,7 @@ private fun ExpiryDateFieldPreview(
         ExpiryDateField(
             expiryDateState = TextInputViewState(
                 text = "0330",
+                customTrailingIcon = ExpiryDateTrailingIcon.Checkmark,
             ),
             onValueChange = {},
             onFocusChange = {},
@@ -143,6 +140,7 @@ private fun ExpiryDateFieldPreview(
         ExpiryDateField(
             expiryDateState = TextInputViewState(
                 isOptional = true,
+                customTrailingIcon = ExpiryDateTrailingIcon.Placeholder,
             ),
             onValueChange = {},
             onFocusChange = {},
@@ -150,8 +148,8 @@ private fun ExpiryDateFieldPreview(
 
         ExpiryDateField(
             expiryDateState = TextInputViewState(
+                text = "6415",
                 isError = true,
-                trailingIcon = ExpiryDateTrailingIcon.Warning,
             ),
             onValueChange = {},
             onFocusChange = {},
