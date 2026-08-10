@@ -74,8 +74,7 @@ internal class TextInputViewStateTest {
         // GIVEN
         val componentState = TextInputComponentState(
             text = "invalid",
-            errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
-            showError = true,
+            error = visibleError(),
         )
 
         // WHEN
@@ -90,8 +89,7 @@ internal class TextInputViewStateTest {
         // GIVEN
         val componentState = TextInputComponentState(
             text = "invalid",
-            errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
-            showError = false,
+            error = hiddenError(),
         )
 
         // WHEN
@@ -111,6 +109,70 @@ internal class TextInputViewStateTest {
 
         // THEN
         assertEquals(TrailingIcon.Empty, viewState?.trailingIcon)
+    }
+
+    @Test
+    fun `when the error is visible, then it is shown as supporting text`() {
+        // GIVEN
+        val componentState = TextInputComponentState(text = "invalid", error = visibleError())
+
+        // WHEN
+        val viewState = componentState.toViewState()
+
+        // THEN
+        assertEquals(true, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
+    }
+
+    @Test
+    fun `when the error is hidden, then the description is shown as supporting text`() {
+        // GIVEN
+        val componentState = TextInputComponentState(
+            text = "invalid",
+            description = CheckoutLocalizationKey.CARD_NUMBER,
+            error = hiddenError(),
+        )
+
+        // WHEN
+        val viewState = componentState.toViewState()
+
+        // THEN
+        assertEquals(false, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
+    }
+
+    @Test
+    fun `when there is a description and no error, then the description is shown as supporting text`() {
+        // GIVEN
+        val componentState = TextInputComponentState(
+            text = "text",
+            description = CheckoutLocalizationKey.CARD_NUMBER,
+            error = null,
+        )
+
+        // WHEN
+        val viewState = componentState.toViewState()
+
+        // THEN
+        assertEquals(false, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
+    }
+
+    @Test
+    fun `when there is a description and a visible error, then the error takes precedence`() {
+        // GIVEN
+        val componentState = TextInputComponentState(
+            text = "invalid",
+            description = CheckoutLocalizationKey.CARD_NUMBER,
+            error = visibleError(),
+        )
+
+        // WHEN
+        val viewState = componentState.toViewState()
+
+        // THEN
+        assertEquals(true, viewState?.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
     }
 
     @Test
@@ -140,6 +202,16 @@ internal class TextInputViewStateTest {
         // THEN
         assertNotNull(viewState)
     }
+
+    private fun hiddenError() = TextInputComponentState.InputError(
+        message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+        isVisible = false,
+    )
+
+    private fun visibleError() = TextInputComponentState.InputError(
+        message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+        isVisible = true,
+    )
 
     private data object TestTrailingIcon : TrailingIcon()
 }
