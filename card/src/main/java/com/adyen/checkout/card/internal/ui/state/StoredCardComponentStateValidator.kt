@@ -25,12 +25,12 @@ internal class StoredCardComponentStateValidator(
             )
 
         return state.copy(
-            securityCode = state.securityCode.copy(errorMessage = securityCodeError),
+            securityCode = state.securityCode.updateError(securityCodeError),
         )
     }
 
     override fun isValid(state: StoredCardComponentState): Boolean {
-        return state.securityCode.errorMessage == null
+        return state.securityCode.isValid
     }
 
     private fun validateSecurityCode(

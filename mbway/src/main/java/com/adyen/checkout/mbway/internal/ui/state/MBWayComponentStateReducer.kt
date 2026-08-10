@@ -25,12 +25,10 @@ internal class MBWayComponentStateReducer : ComponentStateReducer<MBWayComponent
             )
 
             is MBWayIntent.HighlightValidationErrors -> {
-                val hasPhoneNumberError = state.phoneNumber.errorMessage != null
+                val hasPhoneNumberError = !state.phoneNumber.isValid
                 state.copy(
-                    phoneNumber = state.phoneNumber.copy(
-                        showError = hasPhoneNumberError,
-                        isFocused = hasPhoneNumberError,
-                    ),
+                    phoneNumber = state.phoneNumber.showErrorIfPresent()
+                        .copy(isFocused = hasPhoneNumberError),
                 )
             }
         }
