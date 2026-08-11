@@ -14,6 +14,10 @@ import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateReducer
+import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.GenericViewStateProducer
 import kotlinx.coroutines.CoroutineScope
 
 internal object GenericPaymentComponentFactory : PaymentComponentFactory<GenericPaymentComponent> {
@@ -30,6 +34,11 @@ internal object GenericPaymentComponentFactory : PaymentComponentFactory<Generic
             analyticsManager = analyticsManager,
             paymentMethodType = paymentMethod.type,
             sdkDataProvider = sdkDataProvider,
+            componentStateValidator = GenericComponentStateValidator(),
+            componentStateFactory = GenericComponentStateFactory(),
+            componentStateReducer = GenericComponentStateReducer(),
+            viewStateProducer = GenericViewStateProducer(params.amount, params.showSubmitButton),
+            coroutineScope = coroutineScope,
         )
     }
 }

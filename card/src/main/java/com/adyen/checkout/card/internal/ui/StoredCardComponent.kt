@@ -159,8 +159,13 @@ constructor(
         )
     }
 
-    override fun requiresUserInteraction(): Boolean =
-        componentState.value.securityCode.requirementPolicy == RequirementPolicy.Required
+    override fun requiresUserInteraction(): Boolean {
+        return when (componentState.value.securityCode.requirementPolicy) {
+            RequirementPolicy.Hidden -> false
+            RequirementPolicy.Optional -> true
+            RequirementPolicy.Required -> true
+        }
+    }
 
     override fun setLoading(isLoading: Boolean) {
         onIntent(StoredCardIntent.UpdateLoading(isLoading))
