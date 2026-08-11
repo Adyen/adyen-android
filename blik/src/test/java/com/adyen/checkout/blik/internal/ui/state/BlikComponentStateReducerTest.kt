@@ -61,14 +61,13 @@ internal class BlikComponentStateReducerTest {
             blikCode = TextInputComponentState(
                 text = "",
                 isFocused = false,
-                errorMessage = CheckoutLocalizationKey.BLIK_CODE_INVALID,
-                showError = false,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.BLIK_CODE_INVALID)
             ),
         )
 
         val actual = reducer.reduce(state, BlikIntent.HighlightValidationErrors)
 
-        assertTrue(actual.blikCode.showError)
+        assertTrue(actual.blikCode.isErrorVisible)
         assertTrue(actual.blikCode.isFocused)
     }
 
@@ -78,7 +77,7 @@ internal class BlikComponentStateReducerTest {
 
         val actual = reducer.reduce(state, BlikIntent.HighlightValidationErrors)
 
-        assertFalse(actual.blikCode.showError)
+        assertFalse(actual.blikCode.isErrorVisible)
         assertFalse(actual.blikCode.isFocused)
     }
 
@@ -86,8 +85,7 @@ internal class BlikComponentStateReducerTest {
         blikCode = TextInputComponentState(
             text = "",
             isFocused = false,
-            errorMessage = null,
-            showError = false,
+            error = null
         ),
         isLoading = false,
     )
