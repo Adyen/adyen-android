@@ -9,10 +9,10 @@ version-code = "1"
 
 # Build script
 android-gradle-plugin = "9.2.1"
-kotlin = "2.4.0"
-ksp = "2.3.9"
+kotlin = "2.3.21"
+ksp = "2.3.8"
 dokka = "2.2.0"
-hilt = "2.60"
+hilt = "2.59.2"
 compose-compiler = "1.5.15"
 
 # Code quality
@@ -30,23 +30,23 @@ autofill = "1.3.0"
 browser = "1.10.0"
 coroutines = "1.11.0"
 fragment = "1.8.9"
-lifecycle = "2.11.0"
+lifecycle = "2.10.0"
 material = "1.14.0"
 recyclerview = "1.4.0"
 constraintlayout = "2.2.1"
 
 # Compose dependencies
 compose-activity = "1.13.0"
-compose-bom = "2026.06.01"
-compose-hilt = "1.4.0"
-compose-viewmodel = "2.11.0"
+compose-bom = "2026.05.01"
+compose-hilt = "1.3.0"
+compose-viewmodel = "2.10.0"
 
 # Adyen dependencies
 adyen3ds2 = "2.2.27"
 
 # External dependencies
-cash-app-pay = "2.6.0"
-okhttp = "5.4.0"
+cash-app-pay = "2.5.0"
+okhttp = "4.12.0"
 play-services-wallet = "20.0.0"
 twint = "8.0.0"
 wechat-pay = "6.8.0"
@@ -55,26 +55,26 @@ wechat-pay = "6.8.0"
 leak-canary = "2.14"
 moshi-adapters = "1.15.2"
 moshi-kotlin-adapter = "1.15.2"
-okhttp-logging = "5.4.0"
+okhttp-logging = "4.12.0"
 preference = "1.2.1"
-retrofit2 = "3.0.0"
+retrofit2 = "2.12.0"
 
 # Tests
 arch-core-testing = "2.2.0"
 barista = "4.3.0"
 espresso = "3.7.0"
-json = "20250517"
+json = "20250107"
 jose4j = "0.9.6"
-junit-jupiter = "6.1.1"
+junit-jupiter = "5.14.4"
 konsist = "0.17.3"
-lint = "32.2.1"
-mockito-kotlin = "6.3.0"
+lint = "31.13.2"
+mockito-kotlin = "5.4.0"
 mockito = "5.23.0"
 robolectric = "4.16.1"
 test-ext = "1.3.0"
 test-rules = "1.7.0"
 turbine = "1.2.1"
-uiautomator = "2.4.0"
+uiautomator = "2.3.0"
 
 [libraries]
 
