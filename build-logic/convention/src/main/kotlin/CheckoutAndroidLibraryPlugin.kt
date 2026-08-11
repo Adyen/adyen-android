@@ -23,7 +23,6 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.library")
-            apply(plugin = "kotlin-android")
             apply(plugin = "checkout.dependency.list.generate")
             apply(plugin = "checkout.detekt")
             apply(plugin = "checkout.dokka")
@@ -37,7 +36,6 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
 
                 defaultConfig {
                     minSdk = libs.versions.min.sdk.get().toInt()
-                    targetSdk = libs.versions.target.sdk.get().toInt()
 
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                     consumerProguardFiles("consumer-rules.pro")
@@ -57,8 +55,7 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
                 }
             }
 
-            // Uncomment once we update to AGP 9+
-//            configureBcvWorkaround()
+            configureBcvWorkaround()
         }
     }
 

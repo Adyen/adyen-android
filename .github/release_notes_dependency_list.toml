@@ -5,7 +5,6 @@
 "androidx.appcompat:appcompat" = "[AndroidX Appcompat](https://developer.android.com/jetpack/androidx/releases/appcompat#{})"
 "androidx.autofill:autofill" = "[AndroidX Autofill](https://developer.android.com/jetpack/androidx/releases/autofill#{})"
 "androidx.browser:browser" = "[AndroidX Browser](https://developer.android.com/jetpack/androidx/releases/browser#{})"
-"androidx.compose.compiler:compiler" = "[AndroidX Compose Compiler](https://developer.android.com/jetpack/androidx/releases/compose-compiler#{})"
 "androidx.compose:compose-bom" = "[AndroidX Compose BoM](https://developer.android.com/develop/ui/compose/bom/bom-mapping)"
 "androidx.constraintlayout:constraintlayout" = "[AndroidX ConstraintLayout](https://developer.android.com/jetpack/androidx/releases/constraintlayout#{})"
 "androidx.fragment:fragment-ktx" = "[AndroidX Fragment](https://developer.android.com/jetpack/androidx/releases/fragment#{})"
@@ -106,4 +105,5 @@
 "kotlin-android" = ""
 "kotlin-parcelize" = ""
 "org.jetbrains.kotlin.android" = ""
+"org.jetbrains.kotlin.plugin.compose" = ""
 "org.jetbrains.kotlin:kotlin-parcelize-runtime" = ""
