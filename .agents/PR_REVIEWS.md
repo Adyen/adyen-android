@@ -2,10 +2,6 @@
 
 This document outlines how to handle review comments on Pull Requests in the Adyen Android SDK repository.
 
-**Related guides:**
-- [Pull Request Guide](PULL_REQUEST_GUIDE.md) - PR creation and templates
-- [GitHub CLI Commands](GH_CLI_COMMANDS.md) - `gh` command reference
-
 ## Workflow Overview
 
 1. Fetch review comments
@@ -54,6 +50,14 @@ git push
 ```
 
 The PR will automatically update with the new commit.
+
+For a PR that is part of a stack, pushing a single branch is not enough — see below.
+
+## Addressing Reviews in a Stack
+
+**Fix each comment in the layer that owns it.** Never work around a lower-layer problem from a higher branch — the fix ends up in the wrong PR and confuses every review above it. After committing the fix, rebase and push the whole stack, not just the branch you edited, or the layers above are left stale.
+
+A change in a lower layer can break a higher one even when the rebase is clean, so re-run the `android-check` skill on the layers above, not just the branch you edited.
 
 ## Resolving Conversations
 
@@ -127,6 +131,8 @@ PRs may go through multiple review rounds:
 3. Mark resolved conversations
 4. Wait for the next review round
 5. Repeat until approved
+
+For stacks, reviewers can work on layers in parallel, so rounds may not arrive in order. Collect the feedback for each layer, fix each one on its own branch, and rebase the stack once rather than after every individual comment.
 
 ## Quick Reference
 

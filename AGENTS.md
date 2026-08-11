@@ -38,7 +38,7 @@ This document outlines important patterns, practices, and rules to follow when w
 
 **Commit workflow - CRITICAL:**
 - **Complete one phase fully before moving to the next**
-- After completing a phase, use the `android-commit` skill (`.agents/skills/android-commit.md`) to commit
+- After completing a phase, use the `android-commit` skill (`.agents/skills/android-commit/SKILL.md`) to commit
 - Never accumulate multiple phases in a single commit
 - Each commit should represent a logical, complete unit of work
 - This ensures work can be reviewed incrementally and rolled back if needed
