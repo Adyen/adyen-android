@@ -3,7 +3,7 @@ name: Update verification metadata
 on:
   push:
     branches:
-      - 'renovate/android.gradle.plugin'
+      - 'renovate/v5-all-v5'
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ jobs:
   update-verification-metadata:
     name: Update verification metadata
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.commits[0].message, '[skip update-verification-metadata]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip update-verification-metadata]') }}
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -29,18 +29,20 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
         with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           cache-read-only: true
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Gradle update verification metadata
-        run: ./gradlew --write-verification-metadata sha256 build
+        # We have to run assembleDebug to make sure dynamic dependencies (aapt2) are resolved.
+        run: ./gradlew --write-verification-metadata sha256 resolveDependencies assembleDebug
 
       - name: Commit
+        env:
+          USER_NAME: ${{ secrets.ADYEN_AUTOMATION_BOT_USER }}
+          USER_EMAIL: ${{ secrets.ADYEN_AUTOMATION_BOT_NO_REPLY_EMAIL }}
         run: |
-          git config user.name "${{ secrets.ADYEN_AUTOMATION_BOT_USER }}"
-          git config user.email "${{ secrets.ADYEN_AUTOMATION_BOT_NO_REPLY_EMAIL }}"
+          git config user.name "$USER_NAME"
+          git config user.email "$USER_EMAIL"
           git add .
           git diff-index --quiet HEAD || git commit -m "Update verification metadata
           
