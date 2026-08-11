@@ -97,6 +97,7 @@ dependencies {
     implementation libs.compose.hilt
     implementation libs.compose.material
     implementation libs.compose.viewmodel
+    implementation libs.compose.material.icons
 
     implementation libs.material
 
