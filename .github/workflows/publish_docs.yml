@@ -25,7 +25,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 21
 
       - name: Gradle cache
