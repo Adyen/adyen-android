@@ -3,10 +3,10 @@
 import json
 import os
 import re
-import requests
 import subprocess
 import sys
-import toml
+import tomllib
+import urllib.request
 
 # You can test this script locally with this command:
 # ALLOWED_LABELS="Breaking changes,New,Fixed,Improved,Changed,Removed,Deprecated" GITHUB_TOKEN="" GITHUB_REPO="Adyen/adyen-android" python ./scripts/generate_release_notes.py test_output.txt
@@ -40,8 +40,9 @@ def get_pr_number(commit: str) -> str:
 
 def fetch_pr(number: str) -> dict:
     url = 'https://api.github.com/repos/{}/pulls/{}'.format(os.getenv('GITHUB_REPO'), number)
-    headers = {'Authorization': 'token ' + os.getenv('GITHUB_TOKEN')}
-    return requests.get(url, headers=headers).json()
+    request = urllib.request.Request(url, headers = {'Authorization': 'token ' + os.getenv('GITHUB_TOKEN')})
+    with urllib.request.urlopen(request) as response:
+        return json.loads(response.read().decode())
 
 def get_label_content(label: str, pr_body: str) -> str:
     if not pr_body: return ''
@@ -98,15 +99,15 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
     old_toml_file = subprocess.check_output(['git', 'show', latest_tag + ':' + toml_file_path]
         ).decode(sys.stdout.encoding
         ).strip()
-    old_versions = toml.loads(old_toml_file)
+    old_versions = tomllib.loads(old_toml_file)
 
-    with open(toml_file_path) as file:
-        new_versions = toml.load(file)
+    with open(toml_file_path, 'rb') as file:
+        new_versions = tomllib.load(file)
 
     all_versions = {**old_versions['libraries'], **new_versions['libraries'], **old_versions['plugins'], **new_versions['plugins']}
 
-    with open('.github/release_notes_dependency_list.toml') as file:
-        dependency_list = toml.load(file)
+    with open('.github/release_notes_dependency_list.toml', 'rb') as file:
+        dependency_list = tomllib.load(file)
 
     for value in all_versions.values():
         if 'version' in value:

@@ -1,14 +1,28 @@
 #!/usr/bin/env python3
+import base64
+import json
 import os
 import sys
-import requests
+import urllib.error
 import urllib.parse
+import urllib.request
 
 # --- Configuration ---
 SONATYPE_API_BASE_URL = "https://ossrh-staging-api.central.sonatype.com/manual"
 SEARCH_REPOSITORIES_URL = f"{SONATYPE_API_BASE_URL}/search/repositories"
 DROP_REPOSITORY_BASE_URL = f"{SONATYPE_API_BASE_URL}/drop/repository" # Key will be appended
 TIMEOUT_SECONDS = 60
+# Explicit User-Agent: the default urllib UA (Python-urllib/x) is blocked by
+# Cloudflare (error 1010) on the OSSRH Staging API, so we send a custom one.
+USER_AGENT = "adyen-android-release-bot/1.0 (+https://github.com/Adyen/adyen-android)"
+
+class _SimpleResponse:
+    def __init__(self, status_code, text):
+        self.status_code = status_code
+        self.text = text
+
+    def json(self):
+        return json.loads(self.text)
 
 def _get_auth_credentials():
     # Retrieves Sonatype username and password from environment variables.
@@ -27,26 +41,49 @@ def _make_api_request(method, url, auth, params=None, headers=None, expected_suc
     if headers is None:
         headers = {}
     headers.setdefault("Accept", "application/json") # Default Accept header
+    headers.setdefault("User-Agent", USER_AGENT)
 
     if expected_success_codes is None:
         expected_success_codes = [200]
 
+    # Basic auth header
+    credentials = base64.b64encode(f"{auth[0]}:{auth[1]}".encode()).decode()
+    headers["Authorization"] = f"Basic {credentials}"
+
+    # Append query params
+    if params:
+        url = f"{url}?{urllib.parse.urlencode(params)}"
+
     print(f"Making {method} request to: {url}")
     try:
-        response = requests.request(method=method, url=url, auth=auth, params=params, headers=headers, timeout=TIMEOUT_SECONDS)
+        request = urllib.request.Request(url, headers=headers, method=method)
+        with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
+            status_code = response.status
+            body = response.read().decode()
 
-        print(f"Response Status: {response.status_code}")
+        print(f"Response Status: {status_code}")
         # Optionally print response text for debugging, can be verbose
-        # print(f"Response Text: {response.text[:500]}...") # Print first 500 chars
+        # print(f"Response Text: {body[:500]}...") # Print first 500 chars
 
-        if response.status_code in expected_success_codes:
-            return response
+        if status_code in expected_success_codes:
+            return _SimpleResponse(status_code, body)
         else:
-            print(f"Error: API request to {url} failed with status {response.status_code}.")
-            print(f"Response: {response.text}")
+            print(f"Error: API request to {url} failed with status {status_code}.")
+            print(f"Response: {body}")
             return None
 
-    except requests.exceptions.RequestException as e:
+    except urllib.error.HTTPError as e:
+        status_code = e.code
+        body = e.read().decode()
+        print(f"Response Status: {status_code}")
+        if status_code in expected_success_codes:
+            return _SimpleResponse(status_code, body)
+        else:
+            print(f"Error: API request to {url} failed with status {status_code}.")
+            print(f"Response: {body}")
+            return None
+
+    except urllib.error.URLError as e:
         print(f"Error: Request to {url} failed due to an exception: {e}")
         return None
 
