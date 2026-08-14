@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
@@ -38,9 +39,18 @@ internal class DropInViewModel(
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
 
-    val checkoutContext = input.checkoutContext
+    private val checkoutContext = input.checkoutContext
 
-    val dropInServiceManager = DropInServiceManager(input.serviceClass)
+    private val dropInServiceManager = DropInServiceManager(input.serviceClass)
+
+    val paymentFlowCoordinator = PaymentFlowCoordinator(
+        navigator = navigator,
+        controllerProvider = DefaultDropInControllerProvider(
+            checkoutContext = checkoutContext,
+            dropInServiceManager = dropInServiceManager,
+        ),
+        coroutineScope = viewModelScope,
+    )
 
     val resultFlow: Flow<DropInResult> = merge(
         dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
@@ -52,6 +62,7 @@ internal class DropInViewModel(
         initializePaymentMethods()
         initializeDropInParams()
         initializeBackStack()
+        paymentFlowCoordinator.restoreFlow()
     }
 
     private fun initializePaymentMethods() {

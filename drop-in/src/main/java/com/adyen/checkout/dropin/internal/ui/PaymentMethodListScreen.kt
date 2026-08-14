@@ -59,17 +59,22 @@ private const val AMOUNT_VISIBLE_BRANDS = 3
 @Composable
 internal fun PaymentMethodListScreen(
     navigator: DropInNavigator,
+    paymentFlowCoordinator: PaymentFlowCoordinator,
     viewModel: PaymentMethodListViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PaymentMethodListContent(navigator, viewState, navigator::navigateTo)
+    PaymentMethodListContent(
+        navigator = navigator,
+        viewState = viewState,
+        onPaymentMethodClick = { paymentFlowCoordinator.startFlow(it) },
+    )
 }
 
 @Composable
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
-    onPaymentMethodClick: (PaymentMethodNavKey) -> Unit,
+    onPaymentMethodClick: (DropInPaymentFlowType) -> Unit,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -106,7 +111,7 @@ private fun PaymentMethodListContent(
                     items = it.options,
                     onActionClick = { navigator.navigateTo(StoredPaymentMethodsNavKey) },
                     onPaymentMethodClick = { pm ->
-                        onPaymentMethodClick(PaymentMethodNavKey(DropInPaymentFlowType.StoredPaymentMethod(pm.id)))
+                        onPaymentMethodClick(DropInPaymentFlowType.StoredPaymentMethod(pm.id))
                     },
                 )
 
@@ -119,7 +124,7 @@ private fun PaymentMethodListContent(
                     actionText = it.action,
                     items = it.options,
                     onPaymentMethodClick = { pm ->
-                        onPaymentMethodClick(PaymentMethodNavKey(DropInPaymentFlowType.RegularPaymentMethod(pm.id)))
+                        onPaymentMethodClick(DropInPaymentFlowType.RegularPaymentMethod(pm.id))
                     },
                 )
             }

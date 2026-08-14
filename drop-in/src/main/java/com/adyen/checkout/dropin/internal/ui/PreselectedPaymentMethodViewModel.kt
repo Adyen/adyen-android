@@ -25,6 +25,7 @@ internal class PreselectedPaymentMethodViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val storedPaymentMethodId: String,
     private val navigator: DropInNavigator,
+    private val paymentFlowCoordinator: PaymentFlowCoordinator,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow<PreselectedPaymentMethodViewState?>(null)
@@ -59,7 +60,7 @@ internal class PreselectedPaymentMethodViewModel(
 
     fun onPayClicked() {
         val type = DropInPaymentFlowType.StoredPaymentMethod(storedPaymentMethodId)
-        navigator.clearAndNavigateTo(PaymentMethodNavKey(type))
+        paymentFlowCoordinator.startFlow(paymentFlowType = type, replaceBackStack = true)
     }
 
     fun onOtherPaymentMethodClicked() {
@@ -75,6 +76,7 @@ internal class PreselectedPaymentMethodViewModel(
         private val storedPaymentMethodId: String,
         private val paymentMethodRepository: PaymentMethodRepository,
         private val navigator: DropInNavigator,
+        private val paymentFlowCoordinator: PaymentFlowCoordinator,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -84,6 +86,7 @@ internal class PreselectedPaymentMethodViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 storedPaymentMethodId = storedPaymentMethodId,
                 navigator = navigator,
+                paymentFlowCoordinator = paymentFlowCoordinator,
             ) as T
         }
     }

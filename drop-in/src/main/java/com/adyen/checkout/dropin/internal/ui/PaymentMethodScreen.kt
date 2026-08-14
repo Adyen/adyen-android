@@ -33,10 +33,11 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @Composable
 internal fun PaymentMethodScreen(
     navigator: DropInNavigator,
+    controller: CheckoutController,
     viewModel: PaymentMethodViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PaymentMethodScreenContent(navigator, viewState, viewModel.controller)
+    PaymentMethodScreenContent(navigator, viewState, controller)
 }
 
 @Composable

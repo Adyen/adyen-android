@@ -15,11 +15,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 
 @Composable
 internal fun NavigationStack(
     viewModel: DropInViewModel,
 ) {
+    // TODO - Investigate scoping view models to their nav entry with rememberViewModelStoreNavEntryDecorator. It
+    //  requires the lifecycle-viewmodel-navigation3 dependency and clears a view model once its entry left the
+    //  composition, which makes the key below obsolete and would allow screens to get the controller from their own
+    //  view model.
     NavDisplay(
         backStack = viewModel.navigator.backStack,
         sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
@@ -55,6 +61,7 @@ private fun preselectedPaymentMethodNavEntry(
                 storedPaymentMethodId = key.storedPaymentMethodId,
                 paymentMethodRepository = viewModel.paymentMethodRepository,
                 navigator = viewModel.navigator,
+                paymentFlowCoordinator = viewModel.paymentFlowCoordinator,
             ),
         ),
     )
@@ -68,8 +75,9 @@ private fun paymentMethodListNavEntry(
     metadata = DropInTransitions.slideInAndOutVertically(),
 ) {
     PaymentMethodListScreen(
-        viewModel.navigator,
-        viewModel(
+        navigator = viewModel.navigator,
+        paymentFlowCoordinator = viewModel.paymentFlowCoordinator,
+        viewModel = viewModel(
             factory = PaymentMethodListViewModel.Factory(
                 dropInParams = viewModel.dropInParams,
                 paymentMethodRepository = viewModel.paymentMethodRepository,
@@ -109,16 +117,26 @@ private fun paymentMethodNavEntry(
         key = key,
         metadata = transitions,
     ) {
+        // The controller is intentionally only read once, so this screen keeps rendering while it is navigated away
+        // from and its flow is being torn down.
+        val controller = remember(key) { viewModel.paymentFlowCoordinator.activeController } ?: run {
+            adyenLog(AdyenLogLevel.ERROR, "paymentMethodNavEntry") {
+                "No active payment flow, the PaymentMethodScreen cannot be displayed."
+            }
+            return@NavEntry
+        }
+
         PaymentMethodScreen(
             navigator = viewModel.navigator,
+            controller = controller,
             viewModel = viewModel(
                 factory = PaymentMethodViewModel.Factory(
                     paymentFlowType = key.paymentFlowType,
                     paymentMethodRepository = viewModel.paymentMethodRepository,
-                    checkoutContext = viewModel.checkoutContext,
-                    dropInServiceManager = viewModel.dropInServiceManager,
                 ),
-                key = key.paymentFlowType.hashCode().toString(),
+                // View models are scoped to the activity, so each payment method needs a unique key of its own.
+                // TODO - Remove this key when view models are scoped to their nav entry instead.
+                key = key.toString(),
             ),
         )
     }

@@ -11,6 +11,12 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+/**
+ * Marks the keys that are part of an active payment flow. The flow, and therefore its controller, is kept alive as
+ * long as at least one key of this type is on the back stack.
+ */
+internal sealed interface PaymentFlowNavKey : NavKey
+
 @Serializable
 internal data object EmptyNavKey : NavKey
 
@@ -28,4 +34,4 @@ internal data object StoredPaymentMethodsNavKey : NavKey
 @Serializable
 internal data class PaymentMethodNavKey(
     val paymentFlowType: DropInPaymentFlowType,
-) : NavKey
+) : PaymentFlowNavKey

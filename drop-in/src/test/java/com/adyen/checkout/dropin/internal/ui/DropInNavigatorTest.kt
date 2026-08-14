@@ -45,6 +45,22 @@ internal class DropInNavigatorTest {
     }
 
     @Test
+    fun `when initialized then back stack flow contains only empty key`() {
+        assertEquals(listOf(EmptyNavKey), navigator.backStackFlow.value)
+    }
+
+    @Test
+    fun `when the back stack changes then back stack flow is updated`() {
+        val key = TestNavKey("test")
+
+        navigator.navigateTo(key)
+        assertEquals(listOf(EmptyNavKey, key), navigator.backStackFlow.value)
+
+        navigator.back()
+        assertEquals(listOf(EmptyNavKey), navigator.backStackFlow.value)
+    }
+
+    @Test
     fun `when clearing and navigating to a key then back stack is cleared and key is added`() {
         val initialKey = TestNavKey("initial")
         navigator.navigateTo(initialKey)
@@ -99,6 +115,16 @@ internal class DropInNavigatorTest {
         val restoredNavigator = DropInNavigator(persister)
 
         assertEquals(listOf(EmptyNavKey, key), restoredNavigator.backStack)
+    }
+
+    @Test
+    fun `when restoring from saved state then back stack flow is restored`() {
+        val key = TestNavKey("test")
+        navigator.navigateTo(key)
+
+        val restoredNavigator = DropInNavigator(persister)
+
+        assertEquals(listOf(EmptyNavKey, key), restoredNavigator.backStackFlow.value)
     }
 
     @Serializable
