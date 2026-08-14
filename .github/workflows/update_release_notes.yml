@@ -12,9 +12,9 @@ on:
 jobs:
   fetch_updated_release_notes_file:
     name: Fetch Updated Release Notes File
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-    runs-on: ubuntu-latest
     outputs:
       updated-release-notes-filepath: ${{ steps.fetch_updated_release_notes_file.outputs.updated-release-notes-filepath }}
 
@@ -36,10 +36,10 @@ jobs:
 
   update_github_release_notes:
     name: Update Release Notes
-    permissions:
-      contents: write
     needs: fetch_updated_release_notes_file
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
