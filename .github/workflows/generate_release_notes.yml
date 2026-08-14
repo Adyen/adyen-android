@@ -7,11 +7,10 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
-
 jobs:
   get_allowed_labels:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
 
     outputs:
@@ -38,6 +37,8 @@ jobs:
           echo -e "Allowed labels are: $ALLOWED_LABELS"
 
   generate_release_notes:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     needs: get_allowed_labels
 

@@ -4,10 +4,6 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened ]
 
-permissions:
-  contents: write
-  pull-requests: write
-
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
@@ -15,15 +11,25 @@ concurrency:
 jobs:
   build_and_test:
     name: Build and test
+    permissions:
+      contents: read
     uses: ./.github/workflows/build_and_test.yml
     secrets: inherit
   validate_public_api:
     name: Validate public API
+    permissions:
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/validate_public_api.yml
     secrets: inherit
   verify_dependencies:
     name: Validate dependencies
+    permissions:
+      contents: read
     uses: ./.github/workflows/validate_dependencies.yml
   check_dependency_changes:
     name: Check dependency changes
+    permissions:
+      contents: write
+      pull-requests: write
     uses: ./.github/workflows/check_dependency_changes.yml
