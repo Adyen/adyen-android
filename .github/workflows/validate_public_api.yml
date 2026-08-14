@@ -32,10 +32,18 @@ jobs:
 
       - name: Check public API
         run: |
-          ( ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt" ) || true
-          bash ./scripts/process_api_changes.sh
+          # Regenerate all .api files from the current source.
+          ./gradlew apiDump --quiet
+          # Mark any newly-created .api files (e.g. from a new module) as
+          # intent-to-add so they show up in `git diff` even though untracked.
+          git add --intent-to-add -- '**/*.api'
+          git diff --no-color -- '**/*.api' | bash ./scripts/process_api_changes.sh
 
       - name: Comment on PR
+        # This step will only run on pull_request events.
+        # PR information is only available when workflow gets triggered with pull_request event.
+        # We also check that the PR is not from a fork, because this action will fail if it is.
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
         with:
           file-path: "${{ github.workspace }}/api_changes.md"
@@ -43,9 +51,6 @@ jobs:
           mode: recreate
 
       - name: Check if successful
-        run : |
-          if [ -s api_changes.txt ]
-          then
-            # Fail workflow if there are API changes
-            exit 1
-          fi
+        run: |
+          # Fail the workflow if any `.api` file has uncommitted changes.
+          git diff --quiet -- '**/*.api'
