@@ -15,7 +15,8 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/update_release_notes.yml
-    secrets: inherit
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
     with:
       version-name: ${{ inputs.version-name }}
 
@@ -71,5 +72,6 @@ jobs:
       contents: write
       deployments: write
     uses: ./.github/workflows/publish_docs.yml
-    secrets: inherit
+    secrets:
+      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
     needs: publish_draft_release

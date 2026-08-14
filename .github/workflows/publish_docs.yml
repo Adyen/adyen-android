@@ -2,6 +2,9 @@ name: Publish Docs
 
 on:
   workflow_call:
+    secrets:
+      GRADLE_ENCRYPTION_KEY:
+        required: true
   workflow_dispatch:
 
 permissions:

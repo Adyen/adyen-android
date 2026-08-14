@@ -1,7 +1,10 @@
 name: Validate public API
 
 on:
-  workflow_call
+  workflow_call:
+    secrets:
+      GRADLE_ENCRYPTION_KEY:
+        required: true
 
 permissions:
   contents: read
