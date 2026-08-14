@@ -13,7 +13,6 @@ on:
       version-name:
         required: true
         type: string
-
     secrets:
       SONATYPE_CENTRAL_PORTAL_USERNAME:
         required: true
@@ -29,6 +28,7 @@ on:
         required: true
       GPG_KEY_CONTENTS:
         required: true
+
 permissions:
   contents: read
 
