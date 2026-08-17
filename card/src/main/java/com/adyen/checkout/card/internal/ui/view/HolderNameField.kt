@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -32,6 +33,7 @@ internal fun HolderNameField(
     holderNameState: TextInputViewState,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onFocusRequestConsumed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextHolderName = holderNameState.supportingText?.let { resolveString(it) }
@@ -51,7 +53,9 @@ internal fun HolderNameField(
             keyboardType = KeyboardType.Text,
             capitalization = KeyboardCapitalization.Words,
         ),
-        shouldFocus = holderNameState.isFocused,
+        focusRequest = holderNameState.focusRequest,
+        onFocusRequestConsumed = onFocusRequestConsumed,
+        imeAction = holderNameState.keyboardAction.toImeAction(),
         trailingIcon = {
             CheckoutTextFieldTrailingIcon(holderNameState.trailingIcon)
         },
@@ -70,6 +74,7 @@ private fun HolderNameFieldPreview(
             ),
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
     }
 }
