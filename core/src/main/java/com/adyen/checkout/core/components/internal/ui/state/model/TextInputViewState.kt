@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal.ui.state.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
+import com.adyen.checkout.ui.internal.element.input.FocusRequestToken
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class TextInputViewState(
@@ -29,6 +30,8 @@ data class TextInputViewState(
     // The action key this field shows on the keyboard. Only the last text input of a form closes the keyboard, so this
     // can only be derived from the form as a whole, through `FormState.keyboardActionFor`.
     val keyboardAction: KeyboardAction = KeyboardAction.DONE,
+    // Set when the form is asking this field to take focus. The field reports back once it has acted on it.
+    val focusRequest: FocusRequestToken? = null,
 ) {
 
     /**
@@ -49,6 +52,7 @@ fun TextInputComponentState.toViewState(
     // decided on. DONE until then, because every component still without a form has a single text field, and that
     // field closes the keyboard.
     keyboardAction: KeyboardAction = KeyboardAction.DONE,
+    focusRequest: FocusRequestToken? = null,
 ): TextInputViewState? {
     if (!isVisible) return null
     return TextInputViewState(
@@ -59,5 +63,6 @@ fun TextInputComponentState.toViewState(
         customTrailingIcon = customTrailingIcon,
         isOptional = requirementPolicy is RequirementPolicy.Optional,
         keyboardAction = keyboardAction,
+        focusRequest = focusRequest,
     )
 }
