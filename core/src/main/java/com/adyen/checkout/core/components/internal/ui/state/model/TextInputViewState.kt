@@ -50,7 +50,7 @@ fun TextInputComponentState.toViewState(
     // field closes the keyboard.
     keyboardAction: KeyboardAction = KeyboardAction.DONE,
 ): TextInputViewState? {
-    if (requirementPolicy == RequirementPolicy.Hidden) return null
+    if (!isVisible) return null
     return TextInputViewState(
         text = text,
         supportingText = if (isErrorVisible) error?.message else description,
