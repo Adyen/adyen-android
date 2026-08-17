@@ -71,6 +71,9 @@ private fun StoredCardContent(
                         cardNumberFormat = viewState.cardNumberFormat,
                         onValueChange = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
                         onFocusChange = { onIntent(StoredCardIntent.UpdateSecurityCodeFocus(it)) },
+                        // TODO - Form fields rollout: stored card has no form state yet, so it never asks for focus
+                        // and has nothing to report back. Wire this up when stored card gets its form.
+                        onFocusRequestConsumed = {},
                     )
                 }
             }
