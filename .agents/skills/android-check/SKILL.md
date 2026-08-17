@@ -26,7 +26,7 @@ Run the full check task (compile, lint, unit tests):
 
 - **On success:** Confirm all checks passed.
 - **On failure:** Parse the Gradle output and provide a concise summary of what failed (compilation errors, test failures, lint violations). Include file paths and line numbers when available. Do not dump the entire Gradle log.
-  - **If the failure is a public API mismatch** (e.g., `apiCheck` task fails): This means `.api` dump files are out of date. Inform the developer that they need to run `./gradlew apiDump` (or `./gradlew :<module>:apiDump` if module-scoped) to regenerate the `.api` files, and include those files in their commit.
+  - **If the failure is a public API mismatch** (e.g., `apiCheck` task fails): the public API changed. Report *what* changed, and do not run `apiDump` to silence it — an unintended API change is a real failure. Follow the `android-public-api-change` skill (`.agents/skills/android-public-api-change/SKILL.md`) to confirm the change is intended before the dump files are regenerated.
 
 ## Important
 

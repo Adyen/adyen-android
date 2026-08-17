@@ -1,6 +1,6 @@
 ---
 name: android-add-dependency
-description: Add, remove or update an external dependency in the SDK.
+description: Add, remove or update an external dependency in the SDK. Use before touching gradle/libs.versions.toml, including when the change is a side effect of a larger task.
 ---
 
 # android-add-dependency
@@ -31,7 +31,7 @@ Renovate handles routine version bumps. This skill is for dependency changes mad
 > - **Scope** — which modules, and which configuration (`api`, `implementation`, `compileOnly`, `testImplementation`, `androidTestImplementation`)
 > - **Merchants** — does it end up in merchant builds? Cover version conflicts with libraries merchants commonly use, `minSdk` (ours is 23), download size and method count, and the transitive artifacts it drags in
 > - **Public API** — do its types appear in our public API? If so its version becomes part of our contract and later upgrades turn into breaking changes. Prefer keeping it out of signatures and off `api`
-> - **R8 / ProGuard** — consumer rules or `dontwarn` needed? If it is an optional external SDK, does it need the `compileOnly` + `runCompileOnly` treatment from the "Adding New Modules" section of `AGENTS.md`?
+> - **R8 / ProGuard** — consumer rules or `dontwarn` needed? If it is an optional external SDK, does it need the `compileOnly` + `runCompileOnly` treatment described in the `android-add-module` skill (`.agents/skills/android-add-module/SKILL.md`)?
 > - **Release notes** — `[included]` or `[excluded]`, and why (step 4 works out the exact entry)
 > - **Build and CI** — verification metadata churn, build and CI time, added Renovate surface
 > - **Tests** — impact on the test suite, if any
@@ -40,7 +40,7 @@ Renovate handles routine version bumps. This skill is for dependency changes mad
 
 For a **change**, also state what moves: the size of the version jump, breaking changes in the new version, and any coordinate or artifact swap.
 
-For a **removal**, also state whether anything still uses it, whether its types were exposed in our public API, and whether merchants may be resolving it through us. Removing a dependency merchants rely on transitively is a breaking change — follow the breaking change rules in `AGENTS.md`.
+For a **removal**, also state whether anything still uses it, whether its types were exposed in our public API, and whether merchants may be resolving it through us. Removing a dependency merchants rely on transitively is a breaking change — follow the `android-public-api-change` skill (`.agents/skills/android-public-api-change/SKILL.md`).
 
 **Ask for explicit approval and wait for an answer.** This holds even when the developer already asked for this exact dependency; they should see the impact before it lands. If they have clearly already decided, keep the summary short, but still show it.
 
