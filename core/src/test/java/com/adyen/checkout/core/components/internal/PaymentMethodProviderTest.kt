@@ -211,7 +211,8 @@ internal class PaymentMethodProviderTest {
         runTest {
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
                 paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
-                coroutineScope = this,
+                // The component keeps its view state alive in this scope, so it has to be one that the test cancels
+                coroutineScope = backgroundScope,
                 analyticsManager = TestAnalyticsManager(),
                 sdkDataProvider = generateSdkDataProvider(),
                 params = generateCheckoutParams(),
