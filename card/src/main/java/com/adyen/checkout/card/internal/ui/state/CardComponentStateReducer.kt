@@ -56,6 +56,12 @@ internal class CardComponentStateReducer(
 
             is CardIntent.UpdateFieldFocus -> state.updateFieldFocus(intent.id, intent.hasFocus)
 
+            is CardIntent.FocusRequestConsumed -> if (state.focusRequest?.id == intent.id) {
+                state.copy(focusRequest = null)
+            } else {
+                state
+            }
+
             is CardIntent.UpdateStorePaymentMethod -> state.copy(
                 storePaymentMethod = intent.isChecked,
             )
