@@ -18,35 +18,25 @@ internal sealed interface CardIntent : ComponentStateIntent {
     // User input intents
     data class UpdateCardNumber(val number: String) : CardIntent
 
-    data class UpdateCardNumberFocus(val hasFocus: Boolean) : CardIntent
-
     data class UpdateExpiryDate(val expiryDate: String) : CardIntent
-
-    data class UpdateExpiryDateFocus(val hasFocus: Boolean) : CardIntent
 
     data class UpdateSecurityCode(val securityCode: String) : CardIntent
 
-    data class UpdateSecurityCodeFocus(val hasFocus: Boolean) : CardIntent
-
     data class UpdateHolderName(val holderName: String) : CardIntent
-
-    data class UpdateHolderNameFocus(val hasFocus: Boolean) : CardIntent
 
     data class UpdateSocialSecurityNumber(val socialSecurityNumber: String) : CardIntent
 
-    data class UpdateSocialSecurityNumberFocus(val hasFocus: Boolean) : CardIntent
-
     data class UpdateKcpBirthDateOrTaxNumber(val kcpBirthDateOrTaxNumber: String) : CardIntent
-
-    data class UpdateKcpBirthDateOrTaxNumberFocus(val hasFocus: Boolean) : CardIntent
 
     data class UpdateKcpCardPassword(val kcpCardPassword: String) : CardIntent
 
-    data class UpdateKcpCardPasswordFocus(val hasFocus: Boolean) : CardIntent
-
     data class UpdatePostalCode(val postalCode: String) : CardIntent
 
-    data class UpdatePostalCodeFocus(val hasFocus: Boolean) : CardIntent
+    /**
+     * A field has gained or lost focus. Unlike a value change, which carries the meaning of the field it belongs to,
+     * focus is the same event whichever field reports it, so one intent covers all of them.
+     */
+    data class UpdateFieldFocus(val id: CardFieldId, val hasFocus: Boolean) : CardIntent
 
     data class UpdateStorePaymentMethod(val isChecked: Boolean) : CardIntent
 

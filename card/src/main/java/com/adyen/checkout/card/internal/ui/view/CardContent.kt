@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
+import com.adyen.checkout.card.internal.ui.state.CardFieldId
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
@@ -133,7 +134,7 @@ private fun CardDetailsSection(
                 cardBrandViewState = viewState.cardBrandViewState,
                 cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.CARD_NUMBER, it)) },
                 onScanButtonClick = onScanButtonClick,
                 onBrandSelect = { onIntent(CardIntent.SelectBrand(it)) },
             )
@@ -142,7 +143,7 @@ private fun CardDetailsSection(
             ExpiryDateField(
                 expiryDateState = viewState.expiryDate,
                 onValueChange = { onIntent(CardIntent.UpdateExpiryDate(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateExpiryDateFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, it)) },
             )
         }
         if (viewState.securityCode != null) {
@@ -150,41 +151,41 @@ private fun CardDetailsSection(
                 securityCodeState = viewState.securityCode,
                 cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateSecurityCode(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateSecurityCodeFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.SECURITY_CODE, it)) },
             )
         }
         if (viewState.holderName != null) {
             HolderNameField(
                 holderNameState = viewState.holderName,
                 onValueChange = { onIntent(CardIntent.UpdateHolderName(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateHolderNameFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.HOLDER_NAME, it)) },
             )
         }
         if (viewState.socialSecurityNumber != null) {
             SocialSecurityNumberField(
                 socialSecurityNumberState = viewState.socialSecurityNumber,
                 onValueChange = { onIntent(CardIntent.UpdateSocialSecurityNumber(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateSocialSecurityNumberFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.SOCIAL_SECURITY_NUMBER, it)) },
             )
         }
         if (viewState.kcpBirthDateOrTaxNumber != null) {
             KCPBirthDateOrTaxNumberField(
                 kcpBirthDateOrTaxNumberState = viewState.kcpBirthDateOrTaxNumber,
                 onValueChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER, it)) },
             )
         }
         if (viewState.kcpCardPassword != null) {
             KCPCardPasswordField(
                 kcpCardPasswordState = viewState.kcpCardPassword,
                 onValueChange = { onIntent(CardIntent.UpdateKcpCardPassword(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateKcpCardPasswordFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.KCP_CARD_PASSWORD, it)) },
             )
         }
         if (viewState.postalCode != null) {
             PostalCodeField(
                 postalCodeState = viewState.postalCode,
-                onFocusChange = { onIntent(CardIntent.UpdatePostalCodeFocus(it)) },
+                onFocusChange = { onIntent(CardIntent.UpdateFieldFocus(CardFieldId.POSTAL_CODE, it)) },
                 onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
             )
         }

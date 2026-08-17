@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -67,7 +66,6 @@ data class TextInputComponentState(
     /**
      * Hides the error, if there is one.
      */
-    @VisibleForTesting
     fun hideErrorIfPresent() = copy(error = error?.copy(isVisible = false))
 
     // TODO - Form fields cleanup: will be removed. Reducers call showErrorIfPresent and hideErrorIfPresent themselves
