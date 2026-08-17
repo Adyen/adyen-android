@@ -36,6 +36,22 @@ internal class CardComponentStateFactoryTest {
     }
     // endregion
 
+    // region form
+    @Test
+    fun `when a field is hidden by configuration, then it is left out of the field order`() {
+        val state = createFactory(showCardholderName = false).createInitialState()
+
+        assertFalse(state.form.order.contains(CardFieldId.HOLDER_NAME))
+    }
+
+    @Test
+    fun `when a field is shown by configuration, then it is part of the field order`() {
+        val state = createFactory(showCardholderName = true).createInitialState()
+
+        assertTrue(state.form.order.contains(CardFieldId.HOLDER_NAME))
+    }
+    // endregion
+
     // region securityCode
     @Test
     fun `when cvcVisibility is ALWAYS_SHOW, then securityCode is Required`() {

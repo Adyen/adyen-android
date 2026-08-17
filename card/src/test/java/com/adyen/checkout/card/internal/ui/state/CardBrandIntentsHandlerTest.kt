@@ -21,6 +21,7 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -643,6 +644,18 @@ internal class CardBrandIntentsHandlerTest(
         val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
 
         assertEquals(RequirementPolicy.Hidden, actual.expiryDate.requirementPolicy)
+    }
+
+    @Test
+    fun `when a card brand hides the security code, then it is removed from the field order`() {
+        whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
+        val cardBrandState = CardBrandState.SingleReliableBrand(
+            createCardBrandData().copy(cvcPolicy = Brand.FieldPolicy.HIDDEN),
+        )
+
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
+
+        assertFalse(actual.form.order.contains(CardFieldId.SECURITY_CODE))
     }
 
     @Test
