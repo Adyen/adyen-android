@@ -20,6 +20,10 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateReducer
+import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.GenericViewStateProducer
 import kotlinx.coroutines.CoroutineScope
 
 internal class BlikFactory :
@@ -56,6 +60,11 @@ internal class BlikFactory :
             storedPaymentMethod = storedPaymentMethod,
             analyticsManager = analyticsManager,
             sdkDataProvider = sdkDataProvider,
+            componentStateValidator = GenericComponentStateValidator(),
+            componentStateFactory = GenericComponentStateFactory(),
+            componentStateReducer = GenericComponentStateReducer(),
+            viewStateProducer = GenericViewStateProducer(params.amount, params.showSubmitButton),
+            coroutineScope = coroutineScope,
         )
     }
 }
