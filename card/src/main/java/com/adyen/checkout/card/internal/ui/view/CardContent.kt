@@ -220,6 +220,12 @@ private fun CardContentPreview(
     CheckoutThemePreviewWrapper(theme) {
         CardContent(
             viewState = CardViewState(
+                fieldOrder = listOf(
+                    CardFieldId.CARD_NUMBER,
+                    CardFieldId.EXPIRY_DATE,
+                    CardFieldId.SECURITY_CODE,
+                    CardFieldId.STORE_PAYMENT_METHOD,
+                ),
                 cardNumber = TextInputViewState(
                     text = "5555444433331111",
                 ),
@@ -263,6 +269,7 @@ private fun CardContentPreviewAllFields(
     CheckoutThemePreviewWrapper(theme) {
         CardContent(
             viewState = CardViewState(
+                fieldOrder = CardFieldId.entries,
                 cardNumber = TextInputViewState(
                     text = "5555444433331111",
                 ),

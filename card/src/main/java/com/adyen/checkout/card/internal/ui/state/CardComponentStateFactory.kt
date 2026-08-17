@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -27,6 +28,8 @@ internal class CardComponentStateFactory(
             ?: emptyList()
 
         return CardComponentState(
+            // TODO - Form fields cleanup: will be removed. The focusRequest below is what focuses the card number
+            // now. The flag is still read by the components that have not moved over yet.
             cardNumber = TextInputComponentState(isFocused = true),
             expiryDate = TextInputComponentState(),
             securityCode = TextInputComponentState(
@@ -59,6 +62,8 @@ internal class CardComponentStateFactory(
                 installmentOptions = installmentOptions,
                 selectedInstallment = getPreselectedInstallment(installmentOptions),
             ),
+            // The shopper starts at the first field, with the keyboard already open.
+            focusRequest = FocusRequest(id = CardFieldId.CARD_NUMBER),
         )
     }
 

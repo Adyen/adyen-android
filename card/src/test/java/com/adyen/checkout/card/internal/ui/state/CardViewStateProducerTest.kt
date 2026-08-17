@@ -16,6 +16,8 @@ import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -25,6 +27,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 
 internal class CardViewStateProducerTest {
@@ -755,6 +758,85 @@ internal class CardViewStateProducerTest {
         // THEN
         assertEquals(options, viewState.installmentViewState?.installmentOptions)
         assertEquals(selection, viewState.installmentViewState?.selectedInstallment)
+    }
+
+    @Test
+    fun `when the view state is produced, then the field order comes from the form`() {
+        // GIVEN
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(componentState.form.order, viewState.fieldOrder)
+    }
+
+    @Test
+    fun `when a field is not the last text input, then its keyboard moves to the next field`() {
+        // GIVEN
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(KeyboardAction.NEXT, viewState.cardNumber?.keyboardAction)
+    }
+
+    @Test
+    fun `when a field is the last text input, then its keyboard closes`() {
+        // GIVEN
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(KeyboardAction.DONE, viewState.postalCode?.keyboardAction)
+    }
+
+    @Test
+    fun `when the last field is hidden, then the keyboard closes on the one before it`() {
+        // GIVEN
+        val componentState = createComponentState(
+            postalCode = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(KeyboardAction.DONE, viewState.kcpCardPassword?.keyboardAction)
+    }
+
+    @Test
+    fun `when the form asks a field to take focus, then only that field carries the request`() {
+        // GIVEN
+        val componentState = createComponentState().copy(
+            focusRequest = FocusRequest(CardFieldId.SECURITY_CODE),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNotNull(viewState.securityCode?.focusRequest)
+        assertNull(viewState.cardNumber?.focusRequest)
+        assertNull(viewState.expiryDate?.focusRequest)
+    }
+
+    @Test
+    fun `when no focus is being requested, then no field carries a request`() {
+        // GIVEN
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.cardNumber?.focusRequest)
+        assertNull(viewState.securityCode?.focusRequest)
     }
 
     @Suppress("LongParameterList")

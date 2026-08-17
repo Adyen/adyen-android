@@ -13,6 +13,8 @@ import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewS
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 internal data class CardViewState(
+    // The fields to render, in the order they appear on screen.
+    val fieldOrder: List<CardFieldId>,
     val cardNumber: TextInputViewState?,
     val expiryDate: TextInputViewState?,
     val securityCode: TextInputViewState?,

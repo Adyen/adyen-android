@@ -18,6 +18,7 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -35,6 +36,13 @@ internal class CardComponentStateFactoryTest {
         assertTrue(state.cardNumber.isFocused)
     }
     // endregion
+
+    @Test
+    fun `when initial state is created, then focus is requested on the card number`() {
+        val state = createFactory().createInitialState()
+
+        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), state.focusRequest)
+    }
 
     // region form
     @Test

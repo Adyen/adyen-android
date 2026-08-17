@@ -38,6 +38,12 @@ internal sealed interface CardIntent : ComponentStateIntent {
      */
     data class UpdateFieldFocus(val id: CardFieldId, val hasFocus: Boolean) : CardIntent
 
+    /**
+     * A field has acted on a focus request. Normally the resulting focus gain clears the request on its own, so this
+     * only matters when the field could not take focus at all and no gain ever arrives.
+     */
+    data class FocusRequestConsumed(val id: CardFieldId) : CardIntent
+
     data class UpdateStorePaymentMethod(val isChecked: Boolean) : CardIntent
 
     data class SelectBrand(val cardBrand: CardBrand) : CardIntent
