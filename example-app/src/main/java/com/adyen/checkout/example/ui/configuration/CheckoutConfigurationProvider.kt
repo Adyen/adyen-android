@@ -23,6 +23,7 @@ import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.AnalyticsMode
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
+import com.adyen.checkout.example.data.storage.ExternalConfigurationReader
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
@@ -47,6 +48,7 @@ import com.adyen.checkout.core.old.Environment as OldEnvironment
 @Singleton
 internal class CheckoutConfigurationProvider @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
+    private val externalConfigurationReader: ExternalConfigurationReader,
     @ApplicationContext private val context: Context,
 ) : ConfigurationProvider {
 
@@ -79,6 +81,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
             card {
                 setShopperReference(keyValueStorage.getShopperReference())
+                setHolderNameRequired(externalConfigurationReader.cardConfiguration?.showCardholderName ?: false)
                 setAddressConfiguration(getAddressConfiguration())
                 setInstallmentConfigurations(getOldInstallmentConfiguration())
             }
@@ -120,6 +123,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             card(
+                showCardholderName = externalConfigurationReader.cardConfiguration?.showCardholderName,
                 billingAddressMode = getBillingAddressMode(),
                 installmentConfiguration = getInstallmentConfiguration(),
             )

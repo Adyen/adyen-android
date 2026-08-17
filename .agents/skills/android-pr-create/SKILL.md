@@ -1,15 +1,15 @@
 ---
 name: android-pr-create
-description: Create a draft PR with title, body, and checklist.
+description: Create a PR with title, body, and checklist.
 ---
 
 # android-pr-create
 
-Create a draft Pull Request for the Adyen Android SDK following project conventions.
+Create a Pull Request for the Adyen Android SDK following project conventions.
 
 ## Usage
 
-Invoke this skill when you are ready to open a PR for the current branch. The skill generates the full PR body, shows it for user approval, and creates the PR as a draft.
+Invoke this skill when you are ready to open a PR for the current branch. The skill generates the full PR body, shows it for user approval, and creates the PR.
 
 ## Steps
 
@@ -33,7 +33,7 @@ Then verify the prefix actually matches the change. Inspect the diff for public 
 
 - Default base: `main`
 - If the branch name contains `v5` or the user specifies, use `v5`
-- If this is part of a PR chain, ask the user for the parent branch name and use that as base
+- If this branch is a layer in a stack, the base is the branch **directly below it**, not the trunk. For a chain built with plain git, ask the user for the parent branch name.
 
 ### 3. Compose PR title
 
@@ -80,6 +80,8 @@ Rules:
   ```
 - If there is an implementation plan file (`*_IMPLEMENTATION_PLAN.md`), use it to identify the phases
 - If the work is not phased, omit this section entirely
+
+Keep this section for stacked PRs too — the stack shows branch order, but not the plan behind it.
 
 #### Checklist section
 
@@ -133,17 +135,18 @@ Ask for approval. If the user wants changes, adjust and re-present.
 
 ### 6. Create the PR
 
-After approval, create as a **draft**:
+After approval, open the PR against the base branch determined above, as a draft unless the user wants it ready for review.
 
-```bash
-gh pr create --draft --base <base-branch> --title "<title>" --body "<body>"
-```
+For a stack, PRs are opened and linked per layer in one go, covering **every** branch that does not have a PR yet. The generated titles and bodies do not follow the conventions above, so correct them afterwards.
 
-Show the PR URL to the user after creation.
+Show the PR URL(s) to the user after creation.
+
+### Merging a stack
+
+Worth telling the user when a stack is opened: stacks merge **bottom-up**, so merging a PR also merges every unmerged PR below it.
 
 ## Important
 
-- Always create PRs as draft. Never create a non-draft PR.
 - PRs should be opened in the name of the developer, not the AI agent.
 - Never assign reviewers — GitHub CODEOWNERS handles this automatically.
 - Remove all template comments from the final PR body.

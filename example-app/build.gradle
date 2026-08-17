@@ -113,6 +113,7 @@ dependencies {
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.mockito
     testImplementation libs.konsist
+    testImplementation libs.json
 
 
     androidTestImplementation libs.bundles.androidx.test

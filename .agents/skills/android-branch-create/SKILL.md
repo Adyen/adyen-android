@@ -35,7 +35,7 @@ Ask the user what type of work this is:
 
 - Default: `main` (current development branch, v6)
 - Use `v5` only for essential fixes or features required for v5 maintenance
-- If this is part of a branch chain (phased work), the base should be the parent branch from the previous phase
+- If this is part of a branch chain (phased work), the base is the branch from the previous phase, and `main`/`v5` becomes the **trunk** of the stack
 - If unsure, ask the user
 
 ### 3. Compose branch name
@@ -65,6 +65,8 @@ Present the proposed branch name and base branch. Ask for approval before creati
 
 ### 5. Create and checkout
 
+**Single branch** (not part of a chain):
+
 ```bash
 git checkout <base-branch>
 git pull
@@ -72,9 +74,12 @@ git checkout -b <branch-name>
 git push --set-upstream origin <branch-name>
 ```
 
-Confirm the branch was created by running `git rev-parse --abbrev-ref HEAD`.
+**Chained branches** — build a stack so each layer targets the one below it, with `main`/`v5` as the trunk. If stacking is unavailable, base each branch on the previous phase and set each PR's base manually.
+
+Confirm the branch was created.
 
 ## Important
 
 - Never create a branch without confirming the name and base with the user.
 - Always pull the latest base branch before creating the new branch.
+- Open the PRs for a stack with the `android-pr-create` skill.

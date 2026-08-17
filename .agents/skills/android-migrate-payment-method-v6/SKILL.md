@@ -54,7 +54,7 @@ Follow this loop for each phase below:
 
 ### 1. Branch (and chain)
 
-Use the `android-branch-create` skill to create a `chore/` branch (base `main` during v6). For a multi-phase migration, **chain branches** and open a **stacked draft PR** per branch so reviewers can review incrementally, at the cadence agreed with the developer (see *Before you start* — default is one branch/PR per cohesive group of phases, not per commit). Keep the same prefix and extend the name (e.g. `chore/v6-ideal-state`, `chore/v6-ideal-view`).
+Use the `android-branch-create` skill to create a `chore/` branch (base `main` during v6). For a multi-phase migration, build a **stack** with one draft PR per layer so reviewers can review incrementally, at the cadence agreed with the developer (see *Before you start* — default is one branch/PR per cohesive group of phases, not per commit). Keep the same prefix and extend the name (e.g. `chore/v6-ideal-state`, `chore/v6-ideal-view`). The phase order below is already a valid dependency order, so it maps directly onto stack layers.
 
 ### 2. Preserve the v5 implementation (`old/` package)
 
@@ -135,7 +135,7 @@ Use the `android-branch-create` skill to create a `chore/` branch (base `main` d
 
 - **Plan first, code after approval.** No implementation before the plan document is approved.
 - **Tests are part of every step** — created for new layers, moved with relocated v5 code. Never weaken or delete tests to make a phase pass.
-- **Small commits; PRs at an agreed cadence.** One logical change per commit via `android-commit`. PRs do **not** have to be per commit — group cohesive phases into stacked draft PRs (`android-branch-create` + `android-pr-create`), and agree the per-phase vs per-group cadence with the developer during planning.
+- **Small commits; PRs at an agreed cadence.** One logical change per commit via `android-commit`. PRs do **not** have to be per commit — group cohesive phases into stacked draft PRs (`android-branch-create` + `android-pr-create`), and agree the per-phase vs per-group cadence with the developer during planning. When review feedback lands on a lower layer, fix it on that branch and rebase the layers above — see `.agents/PR_REVIEWS.md`.
 - **Don't skip serializer registration** in `PaymentMethodDetails.getChildSerializer`.
 - **Default to `internal`.** Only the configuration/DSL is public. Discuss any breaking change before proceeding.
 - **Adapt per method.** No single reference is complete: Google Pay (external SDK, no fields), MBWay (input + secondary screen, no params/mapper), Card (input + stored). Confirm which collaborators and optional capabilities — params/mapper, input/validation, stored variant, secondary screen — your method actually needs rather than copying all of them.

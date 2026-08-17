@@ -24,6 +24,7 @@ import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.old.DropInCallback
 import com.adyen.checkout.dropin.old.SessionDropInCallback
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.data.storage.ExternalConfigurationReader
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
 import com.adyen.checkout.example.extensions.getLogTag
@@ -46,6 +47,7 @@ import com.adyen.checkout.example.ui.v6.V6SessionsActivity
 import com.adyen.checkout.redirect.old.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import com.adyen.checkout.dropin.old.DropIn as OldDropIn
 
 @Suppress("TooManyFunctions")
@@ -54,6 +56,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    internal lateinit var externalConfigurationReader: ExternalConfigurationReader
 
     private val oldDropInLauncher = OldDropIn.registerForDropInResult(
         this,
@@ -71,6 +76,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        externalConfigurationReader.apply(intent?.getStringExtra(CONFIG_EXTRA))
 
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, RedirectComponent.getReturnUrl(applicationContext))
@@ -106,6 +113,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+
+        externalConfigurationReader.apply(intent.getStringExtra(CONFIG_EXTRA))
 
         when (intent.data?.path) {
             InstantFragment.RETURN_URL_PATH -> {
@@ -266,5 +275,9 @@ class MainActivity : AppCompatActivity() {
         private val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+
+        // Lowercase to match the literal already hardcoded by the e2e test framework
+        // (adyen-checkout-e2e-testing, AdbUtils.kt: `--es config <base64>`).
+        internal const val CONFIG_EXTRA = "config"
     }
 }
