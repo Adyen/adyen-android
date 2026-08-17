@@ -15,6 +15,8 @@ package com.adyen.checkout.ui.internal.element.input
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -40,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
@@ -49,6 +53,7 @@ import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * A composable that provides a styled text field with Adyen's theming.
@@ -67,10 +72,16 @@ import kotlinx.coroutines.flow.collectLatest
  * @param isError Indicates whether the text field is in an error state. When `true`,
  * the text field's appearance may change to reflect an error.
  * @param keyboardOptions Optional keyboard options that can be used to configure the keyboard.
+ * @param imeAction The action key the keyboard shows. It takes precedence over the one in [keyboardOptions] and over
+ * the one an [inputTransformation] asks for, so that the field the form considers last is the one that closes the
+ * keyboard. Leave it unspecified to keep whatever those two ask for.
  * @param interactionSource Optional [MutableInteractionSource] representing the stream of
  * interactions for this text field.
  * @param innerIndication Optional [Indication] that will be used for the internal
  * [CheckoutTextFieldDecorationBox].
+ * @param focusRequest A pending request to give this field focus, or null if there is none. Each new request moves
+ * focus once, and is reported back through [onFocusRequestConsumed].
+ * @param onFocusRequestConsumed Called after a [focusRequest] has been acted on, so that the state layer can clear it.
  * @param prefix An optional string to be displayed at the beginning of the input area,
  * before the user's input.
  * @param trailingIcon A composable function that provides a trailing icon to be displayed at the end
@@ -92,9 +103,14 @@ fun CheckoutTextField(
     inputTransformation: InputTransformation? = null,
     outputTransformation: OutputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    imeAction: ImeAction = ImeAction.Unspecified,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
+    // TODO - Form fields cleanup: will be removed. Use focusRequest below instead. This stays until every field
+    // composable has moved over to it.
     shouldFocus: Boolean = false,
+    focusRequest: FocusRequestToken? = null,
+    onFocusRequestConsumed: (() -> Unit)? = null,
     prefix: String? = null,
     hint: String? = null,
     isSecureField: Boolean = false,
@@ -103,7 +119,11 @@ fun CheckoutTextField(
     val style = CheckoutThemeProvider.elements.textField
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
-    val focusModifier = modifier.focusRequester(focusRequester)
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
+    val focusModifier = modifier
+        .focusRequester(focusRequester)
+        .bringIntoViewRequester(bringIntoViewRequester)
     val textStyle = TextStyle(
         color = style.textColor,
         fontSize = innerTextStyle.size.sp,
@@ -111,6 +131,7 @@ fun CheckoutTextField(
         lineHeight = innerTextStyle.lineHeight.sp,
     )
     val cursorBrush = SolidColor(style.activeColor)
+    val resolvedKeyboardOptions = keyboardOptions.merge(KeyboardOptions(imeAction = imeAction))
     val decorator = TextFieldDecorator { innerTextField ->
         CheckoutTextFieldDecorationBox(
             label = label,
@@ -135,7 +156,7 @@ fun CheckoutTextField(
             textStyle = textStyle,
             lineLimits = TextFieldLineLimits.SingleLine,
             cursorBrush = cursorBrush,
-            keyboardOptions = keyboardOptions,
+            keyboardOptions = resolvedKeyboardOptions,
             interactionSource = interactionSource,
             decorator = decorator,
         )
@@ -147,7 +168,7 @@ fun CheckoutTextField(
             inputTransformation = inputTransformation,
             textStyle = textStyle,
             cursorBrush = cursorBrush,
-            keyboardOptions = keyboardOptions,
+            keyboardOptions = resolvedKeyboardOptions,
             interactionSource = interactionSource,
             decorator = decorator,
         )
@@ -163,11 +184,28 @@ fun CheckoutTextField(
         }
     }
 
+    // TODO - Form fields cleanup: will be removed together with the shouldFocus parameter. The focusRequest effect
+    // below does the same job.
     LaunchedEffect(shouldFocus) {
         if (shouldFocus) {
             // Throws if the requester is not attached to a focusable node, which can happen when the field leaves
             // composition between composition and this effect running. Losing the focus is preferable to crashing.
             runCatching { focusRequester.requestFocus() }
+        }
+    }
+
+    LaunchedEffect(focusRequest) {
+        if (focusRequest != null) {
+            // Throws if the requester is not attached to a focusable node, which can happen when the field leaves
+            // composition between composition and this effect running. Losing the focus is preferable to crashing.
+            runCatching { focusRequester.requestFocus() }
+
+            // Taking focus scrolls the field into view on its own, but a field that already has focus is told nothing
+            // and would stay off screen, so ask directly. This runs outside the effect because acting on the request
+            // clears it, which would otherwise cancel the scroll a frame or two in.
+            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+
+            onFocusRequestConsumed?.invoke()
         }
     }
 }
