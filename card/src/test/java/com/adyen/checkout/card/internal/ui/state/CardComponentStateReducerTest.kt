@@ -12,9 +12,12 @@ import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,10 +48,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateCardNumberFocus, then cardNumber focus is updated`() {
+    fun `when intent is UpdateFieldFocus for CardNumber, then cardNumber focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdateCardNumberFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.CARD_NUMBER, true))
 
         assertTrue(actual.cardNumber.isFocused)
     }
@@ -63,10 +66,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateExpiryDateFocus, then expiryDate focus is updated`() {
+    fun `when intent is UpdateFieldFocus for ExpiryDate, then expiryDate focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdateExpiryDateFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
 
         assertTrue(actual.expiryDate.isFocused)
     }
@@ -81,10 +84,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateSecurityCodeFocus, then securityCode focus is updated`() {
+    fun `when intent is UpdateFieldFocus for SecurityCode, then securityCode focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdateSecurityCodeFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.SECURITY_CODE, true))
 
         assertTrue(actual.securityCode.isFocused)
     }
@@ -99,10 +102,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateHolderNameFocus, then holderName focus is updated`() {
+    fun `when intent is UpdateFieldFocus for HolderName, then holderName focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdateHolderNameFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.HOLDER_NAME, true))
 
         assertTrue(actual.holderName.isFocused)
     }
@@ -117,10 +120,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateSocialSecurityNumberFocus, then socialSecurityNumber focus is updated`() {
+    fun `when intent is UpdateFieldFocus for SocialSecurityNumber, then socialSecurityNumber focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdateSocialSecurityNumberFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.SOCIAL_SECURITY_NUMBER, true))
 
         assertTrue(actual.socialSecurityNumber.isFocused)
     }
@@ -135,10 +138,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateKcpBirthDateOrTaxNumberFocus, then kcpBirthDateOrTaxNumber focus is updated`() {
+    fun `when intent is UpdateFieldFocus for KcpBirthDateOrTaxNumber, then kcpBirthDateOrTaxNumber focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER, true))
 
         assertTrue(actual.kcpBirthDateOrTaxNumber.isFocused)
     }
@@ -153,10 +156,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateKcpCardPasswordFocus, then kcpCardPassword focus is updated`() {
+    fun `when intent is UpdateFieldFocus for KcpCardPassword, then kcpCardPassword focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdateKcpCardPasswordFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.KCP_CARD_PASSWORD, true))
 
         assertTrue(actual.kcpCardPassword.isFocused)
     }
@@ -171,10 +174,10 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdatePostalCodeFocus, then postalCode focus is updated`() {
+    fun `when intent is UpdateFieldFocus for PostalCode, then postalCode focus is updated`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, CardIntent.UpdatePostalCodeFocus(true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.POSTAL_CODE, true))
 
         assertTrue(actual.postalCode.isFocused)
     }
@@ -246,6 +249,93 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
+    fun `when intent is HighlightValidationErrors, then the first invalid field is asked to keep its error`() {
+        val state = createInitialState().copy(
+            expiryDate = TextInputComponentState(error = hiddenError()),
+            securityCode = TextInputComponentState(error = hiddenError()),
+        )
+
+        val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
+
+        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+    }
+
+    @Test
+    fun `when intent is HighlightValidationErrors and no errors, then no focus is requested`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
+
+        assertNull(actual.focusRequest)
+    }
+
+    /**
+     * The bug this whole mechanism exists for: the focus that pay asks for used to arrive as a plain focus gain, which
+     * hid the error it had just revealed. The field flashed an error and lost it again.
+     */
+    @Test
+    fun `when the field pay focused reports the focus gain, then it keeps showing its error`() {
+        val state = createInitialState().copy(
+            expiryDate = TextInputComponentState(error = hiddenError()),
+        )
+        val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
+
+        val actual = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
+
+        assertTrue(actual.expiryDate.isErrorVisible)
+    }
+
+    @Test
+    fun `when the shopper taps a field showing an error, then the error is hidden`() {
+        val state = createInitialState().copy(
+            expiryDate = TextInputComponentState(error = visibleError()),
+        )
+
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
+
+        assertFalse(actual.expiryDate.isErrorVisible)
+    }
+
+    @Test
+    fun `when an invalid field loses focus, then its error is shown`() {
+        val state = createInitialState().copy(
+            expiryDate = TextInputComponentState(error = hiddenError()),
+        )
+
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, false))
+
+        assertTrue(actual.expiryDate.isErrorVisible)
+    }
+
+    /**
+     * Without this the request would outlive the focus move it asked for, and the shopper's next tap on the same field
+     * would be read as programmatic and keep an error it should clear.
+     */
+    @Test
+    fun `when the requested field gains focus, then the request is cleared`() {
+        val state = createInitialState().copy(
+            expiryDate = TextInputComponentState(error = hiddenError()),
+        )
+        val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
+
+        val focused = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
+
+        assertNull(focused.focusRequest)
+    }
+
+    @Test
+    fun `when a field other than the requested one gains focus, then the request is left alone`() {
+        val state = createInitialState().copy(
+            expiryDate = TextInputComponentState(error = hiddenError()),
+        )
+        val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
+
+        val actual = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFieldId.CARD_NUMBER, true))
+
+        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+    }
+
+    @Test
     fun `when intent is UpdateCardScanningAvailability with true, then isCardScanningAvailable is true`() {
         val state = createInitialState()
 
@@ -303,6 +393,114 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
+    fun `when a card is scanned, then focus is requested on the field after the expiry date`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
+        )
+
+        assertEquals(FocusRequest(CardFieldId.SECURITY_CODE), actual.focusRequest)
+    }
+
+    @Test
+    fun `when a card is scanned and the security code is hidden, then focus is requested on the next visible field`() {
+        val state = createInitialState().copy(
+            securityCode = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden),
+        )
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
+        )
+
+        assertEquals(FocusRequest(CardFieldId.HOLDER_NAME), actual.focusRequest)
+    }
+
+    /**
+     * A scan can come back with only part of a card. Skipping to the field after the expiry date would then send the
+     * shopper past a field the scan did not fill.
+     */
+    @Test
+    fun `when a scan returns only a card number, then focus is requested on the expiry date`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = null, expiryYear = null),
+        )
+
+        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE), actual.focusRequest)
+    }
+
+    /**
+     * A scan without a card number also wipes the one the shopper had typed, so the card number is what needs filling
+     * again. Reading only the expiry date and jumping forward to the security code would strand them.
+     */
+    @Test
+    fun `when a scan returns no card number, then focus is requested on the card number`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = null, expiryMonth = 12, expiryYear = 2025),
+        )
+
+        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), actual.focusRequest)
+    }
+
+    @Test
+    fun `when a scan returns nothing usable, then focus is requested on the card number`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = null, expiryMonth = null, expiryYear = null),
+        )
+
+        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), actual.focusRequest)
+    }
+
+    @Test
+    fun `when a card is scanned and nothing follows the expiry date, then no focus is requested`() {
+        val state = createInitialState().copy(
+            securityCode = hiddenField(),
+            holderName = hiddenField(),
+            socialSecurityNumber = hiddenField(),
+            kcpBirthDateOrTaxNumber = hiddenField(),
+            kcpCardPassword = hiddenField(),
+            postalCode = hiddenField(),
+        )
+
+        val actual = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
+        )
+
+        assertNull(actual.focusRequest)
+    }
+
+    /**
+     * Prefill behaves like a shopper tap, unlike the focus that pay asks for, so the field it lands on must not
+     * surface an error the shopper has not seen yet.
+     */
+    @Test
+    fun `when the field a scan focused was already showing an error, then the error is hidden on arrival`() {
+        val state = createInitialState().copy(
+            securityCode = TextInputComponentState(error = visibleError()),
+        )
+        val scanned = reducer.reduce(
+            state,
+            CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
+        )
+
+        val actual = reducer.reduce(scanned, CardIntent.UpdateFieldFocus(CardFieldId.SECURITY_CODE, true))
+
+        assertFalse(actual.securityCode.isErrorVisible)
+    }
+
+    @Test
     fun `when intent is UpdateInstallment, then selectedInstallment is updated`() {
         val state = createInitialState()
         val installment = InstallmentModel.Regular(
@@ -337,5 +535,14 @@ internal class CardComponentStateReducerTest {
             installmentOptions = emptyList(),
             selectedInstallment = null,
         ),
+    )
+
+    private fun hiddenField() = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden)
+
+    private fun hiddenError() = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
+
+    private fun visibleError() = TextInputComponentState.InputError(
+        message = CheckoutLocalizationKey.GENERAL_CLOSE,
+        isVisible = true,
     )
 }
