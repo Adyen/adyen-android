@@ -17,6 +17,8 @@ data class TextInputComponentState(
     val text: String = "",
     val description: CheckoutLocalizationKey? = null,
     val error: InputError? = null,
+    // TODO - Form fields cleanup: will be removed. FormState.focusRequest does this job instead. It stays until every
+    // component has moved over to it.
     val isFocused: Boolean = false,
     val requirementPolicy: RequirementPolicy = RequirementPolicy.Required,
 ) {
@@ -61,6 +63,9 @@ data class TextInputComponentState(
     @VisibleForTesting
     fun hideErrorIfPresent() = copy(error = error?.copy(isVisible = false))
 
+    // TODO - Form fields cleanup: will be removed. Reducers call showErrorIfPresent and hideErrorIfPresent themselves
+    // instead, because only the reducer can tell a focus gain the shopper caused from one a FormState.focusRequest
+    // caused. It stays until every component has moved over.
     fun updateFocus(hasFocus: Boolean): TextInputComponentState {
         val focused = copy(isFocused = hasFocus)
         return if (hasFocus) focused.hideErrorIfPresent() else focused.showErrorIfPresent()
