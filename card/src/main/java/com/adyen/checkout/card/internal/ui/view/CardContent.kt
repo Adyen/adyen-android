@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
+import com.adyen.checkout.card.internal.ui.state.CardFieldId
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
@@ -126,83 +128,131 @@ private fun CardDetailsSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
     ) {
-        if (viewState.cardNumber != null) {
+        // The order decides both what is shown and in which order, so there is no configuration to read here. A field
+        // is keyed on its id rather than its position, so that its text and focus follow it if the order changes.
+        viewState.fieldOrder.forEach { fieldId ->
+            key(fieldId) {
+                CardField(
+                    fieldId = fieldId,
+                    viewState = viewState,
+                    onIntent = onIntent,
+                    onScanButtonClick = onScanButtonClick,
+                    onInstallmentPickerClick = onInstallmentPickerClick,
+                )
+            }
+        }
+    }
+}
+
+@Suppress("LongMethod", "CyclomaticComplexMethod")
+@Composable
+private fun CardField(
+    fieldId: CardFieldId,
+    viewState: CardViewState,
+    onIntent: (CardIntent) -> Unit,
+    onScanButtonClick: () -> Unit,
+    onInstallmentPickerClick: () -> Unit,
+) {
+    val onFocusChange: (Boolean) -> Unit = { hasFocus -> onIntent(CardIntent.UpdateFieldFocus(fieldId, hasFocus)) }
+    val onFocusRequestConsumed: () -> Unit = { onIntent(CardIntent.FocusRequestConsumed(fieldId)) }
+
+    // A field in the order whose view state is missing is skipped rather than crashing. CardFieldOrderTest is what
+    // makes sure the two never disagree in the first place.
+    when (fieldId) {
+        CardFieldId.CARD_NUMBER -> viewState.cardNumber?.let { fieldViewState ->
             CardNumberField(
-                cardNumberState = viewState.cardNumber,
+                cardNumberState = fieldViewState,
                 supportedCardBrandsViewState = viewState.supportedCardBrandsViewState,
                 cardBrandViewState = viewState.cardBrandViewState,
                 cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
                 onScanButtonClick = onScanButtonClick,
                 onBrandSelect = { onIntent(CardIntent.SelectBrand(it)) },
             )
         }
-        if (viewState.expiryDate != null) {
+
+        CardFieldId.EXPIRY_DATE -> viewState.expiryDate?.let { fieldViewState ->
             ExpiryDateField(
-                expiryDateState = viewState.expiryDate,
+                expiryDateState = fieldViewState,
                 onValueChange = { onIntent(CardIntent.UpdateExpiryDate(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateExpiryDateFocus(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
             )
         }
-        if (viewState.securityCode != null) {
+
+        CardFieldId.SECURITY_CODE -> viewState.securityCode?.let { fieldViewState ->
             SecurityCodeField(
-                securityCodeState = viewState.securityCode,
+                securityCodeState = fieldViewState,
                 cardNumberFormat = viewState.cardNumberFormat,
                 onValueChange = { onIntent(CardIntent.UpdateSecurityCode(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateSecurityCodeFocus(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
             )
         }
-        if (viewState.holderName != null) {
+
+        CardFieldId.HOLDER_NAME -> viewState.holderName?.let { fieldViewState ->
             HolderNameField(
-                holderNameState = viewState.holderName,
+                holderNameState = fieldViewState,
                 onValueChange = { onIntent(CardIntent.UpdateHolderName(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateHolderNameFocus(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
             )
         }
-        if (viewState.socialSecurityNumber != null) {
+
+        CardFieldId.SOCIAL_SECURITY_NUMBER -> viewState.socialSecurityNumber?.let { fieldViewState ->
             SocialSecurityNumberField(
-                socialSecurityNumberState = viewState.socialSecurityNumber,
+                socialSecurityNumberState = fieldViewState,
                 onValueChange = { onIntent(CardIntent.UpdateSocialSecurityNumber(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateSocialSecurityNumberFocus(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
             )
         }
-        if (viewState.kcpBirthDateOrTaxNumber != null) {
+
+        CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> viewState.kcpBirthDateOrTaxNumber?.let { fieldViewState ->
             KCPBirthDateOrTaxNumberField(
-                kcpBirthDateOrTaxNumberState = viewState.kcpBirthDateOrTaxNumber,
+                kcpBirthDateOrTaxNumberState = fieldViewState,
                 onValueChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
             )
         }
-        if (viewState.kcpCardPassword != null) {
+
+        CardFieldId.KCP_CARD_PASSWORD -> viewState.kcpCardPassword?.let { fieldViewState ->
             KCPCardPasswordField(
-                kcpCardPasswordState = viewState.kcpCardPassword,
+                kcpCardPasswordState = fieldViewState,
                 onValueChange = { onIntent(CardIntent.UpdateKcpCardPassword(it)) },
-                onFocusChange = { onIntent(CardIntent.UpdateKcpCardPasswordFocus(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
             )
         }
-        if (viewState.postalCode != null) {
+
+        CardFieldId.POSTAL_CODE -> viewState.postalCode?.let { fieldViewState ->
             PostalCodeField(
-                postalCodeState = viewState.postalCode,
-                onFocusChange = { onIntent(CardIntent.UpdatePostalCodeFocus(it)) },
+                postalCodeState = fieldViewState,
                 onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
+                onFocusChange = onFocusChange,
+                onFocusRequestConsumed = onFocusRequestConsumed,
             )
         }
-        if (viewState.storePaymentViewState != null) {
+
+        CardFieldId.STORE_PAYMENT_METHOD -> viewState.storePaymentViewState?.let { fieldViewState ->
             SwitchContainer(
-                checked = viewState.storePaymentViewState.isSelected,
+                checked = fieldViewState.isSelected,
                 onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
             ) {
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
             }
         }
-        if (viewState.installmentViewState != null) {
+
+        CardFieldId.INSTALLMENTS -> viewState.installmentViewState?.let { fieldViewState ->
             Subtitle(
                 text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS),
                 modifier = Modifier.padding(top = Dimensions.Spacing.Small),
             )
             ValuePickerField(
-                value = viewState.installmentViewState.selectedInstallment?.toDisplayText() ?: "",
+                value = fieldViewState.selectedInstallment?.toDisplayText() ?: "",
                 label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
                 onClick = onInstallmentPickerClick,
                 modifier = Modifier.fillMaxWidth(),
@@ -219,6 +269,12 @@ private fun CardContentPreview(
     CheckoutThemePreviewWrapper(theme) {
         CardContent(
             viewState = CardViewState(
+                fieldOrder = listOf(
+                    CardFieldId.CARD_NUMBER,
+                    CardFieldId.EXPIRY_DATE,
+                    CardFieldId.SECURITY_CODE,
+                    CardFieldId.STORE_PAYMENT_METHOD,
+                ),
                 cardNumber = TextInputViewState(
                     text = "5555444433331111",
                 ),
@@ -262,6 +318,7 @@ private fun CardContentPreviewAllFields(
     CheckoutThemePreviewWrapper(theme) {
         CardContent(
             viewState = CardViewState(
+                fieldOrder = CardFieldId.entries,
                 cardNumber = TextInputViewState(
                     text = "5555444433331111",
                 ),

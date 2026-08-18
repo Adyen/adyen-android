@@ -12,6 +12,8 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class CardComponentState(
@@ -37,7 +39,25 @@ internal data class CardComponentState(
     val cardBrandState: CardBrandState,
     val networkBinLookupState: NetworkBinLookupState?,
     val installmentState: InstallmentState,
-) : ComponentState
+
+    // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
+    // records something that happened rather than something that is.
+    val focusRequest: FocusRequest<CardFieldId>? = null,
+) : ComponentState {
+
+    /**
+     * Which fields are on screen and in which order, plus any pending focus move. The order is derived from the fields
+     * above rather than stored, so that it cannot disagree with them, and computed once per state because both the
+     * reducer and the view state producer read it several times.
+     *
+     * [LazyThreadSafetyMode.PUBLICATION] because the merchant owns the coroutine scope this component runs in, so the
+     * same state can be read from more than one thread. Deriving the same value twice is harmless; publishing it
+     * unsafely would not be.
+     */
+    val form: FormState<CardFieldId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        FormState(order = visibleCardFields(this), focusRequest = focusRequest)
+    }
+}
 
 internal sealed class CardBrandState {
     // No brands
