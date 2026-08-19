@@ -54,6 +54,10 @@ internal class PaymentMethodListViewModel(
             }
 
         val paymentOptionsSection = paymentMethodRepository.paymentMethods
+            // Google Pay is rendered above the list by its own component, so it must not appear as a list item too.
+            // TODO - Prototype: it is filtered out even when Google Pay turns out to be unavailable, in which case the
+            //  shopper is left with no Google Pay entry at all.
+            .filterNot { it.type in GOOGLE_PAY_TYPES }
             // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
             .filter { paymentMethodSupportCheck.isSupported(it) }
             .takeIf { it.isNotEmpty() }

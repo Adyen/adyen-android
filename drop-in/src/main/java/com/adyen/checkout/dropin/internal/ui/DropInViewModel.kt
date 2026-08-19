@@ -62,7 +62,21 @@ internal class DropInViewModel(
         initializePaymentMethods()
         initializeDropInParams()
         initializeBackStack()
+        initializeGooglePayFlow()
         paymentFlowCoordinator.restoreFlow()
+    }
+
+    /**
+     * Google Pay is rendered on the payment method list rather than behind a list item, so its flow has to exist
+     * before the shopper picks anything.
+     */
+    private fun initializeGooglePayFlow() {
+        val googlePayType = paymentMethodRepository.paymentMethods
+            .firstOrNull { it.type in GOOGLE_PAY_TYPES }
+            ?.type
+            ?: return
+
+        paymentFlowCoordinator.prepareGooglePayFlow(DropInPaymentFlowType.RegularPaymentMethod(googlePayType))
     }
 
     private fun initializePaymentMethods() {

@@ -40,6 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
@@ -69,6 +71,8 @@ internal fun PaymentMethodListScreen(
         navigator = navigator,
         viewState = viewState,
         submittingItemId = submitting?.itemId,
+        // Created before this screen is composed, so it does not need to be observed.
+        googlePayController = paymentFlowCoordinator.googlePayController,
         onPaymentMethodClick = { paymentFlowCoordinator.startFlow(it) },
     )
 }
@@ -87,6 +91,7 @@ private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
     submittingItemId: String?,
+    googlePayController: CheckoutController?,
     onPaymentMethodClick: (DropInPaymentFlowType) -> Unit,
 ) {
     DropInScaffold(
@@ -117,6 +122,8 @@ private fun PaymentMethodListContent(
                     ),
             )
 
+            googlePayController?.let { GooglePayPaymentMethod(it) }
+
             viewState.storedPaymentMethodSection?.let {
                 Section(
                     title = it.title,
@@ -145,6 +152,22 @@ private fun PaymentMethodListContent(
             }
         }
     }
+}
+
+/**
+ * Google Pay is rendered here instead of behind a list item, so the shopper taps the real Google Pay button. No
+ * payment method screen is opened for it: the flow continues on the action screen, or Drop-in closes with a result.
+ */
+@Composable
+private fun GooglePayPaymentMethod(controller: CheckoutController) {
+    CheckoutPaymentMethod(
+        controller = controller,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimensions.Spacing.Large),
+    )
+
+    Spacer(Modifier.size(Dimensions.Spacing.Medium))
 }
 
 @Composable
@@ -255,7 +278,7 @@ private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem, isSubmitti
     // A payment method without UI is submitted straight from the list, so this is the only feedback the shopper gets
     // while the payments call runs.
     if (isSubmitting) {
-        ProgressBar(modifier = Modifier.size(Dimensions.LogoSize.small))
+        ProgressBar(modifier = Modifier.size(Dimensions.LogoSize.smallSquare))
         return
     }
 
@@ -333,6 +356,7 @@ private fun PaymentMethodListContentPreview(
         PaymentMethodListContent(
             navigator = DropInNavigator(persister),
             submittingItemId = "ideal",
+            googlePayController = null,
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
                 storedPaymentMethodSection = PaymentMethodListViewState.PaymentMethodListSection(

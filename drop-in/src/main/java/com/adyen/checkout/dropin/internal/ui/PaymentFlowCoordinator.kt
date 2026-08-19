@@ -25,6 +25,10 @@ import kotlinx.coroutines.launch
  *
  * Only one flow can be active at a time. Starting a new flow tears the previous one down. A flow stays alive as long
  * as at least one [PaymentFlowNavKey] is on the back stack, and is torn down as soon as none is left.
+ *
+ * Google Pay is the exception: its component is rendered on the payment method list and has to be alive before the
+ * shopper picks anything, so it gets a standby flow of its own that outlives the active one. It is promoted to the
+ * active flow once it returns an action.
  */
 internal class PaymentFlowCoordinator(
     private val navigator: DropInNavigator,
@@ -34,10 +38,18 @@ internal class PaymentFlowCoordinator(
 
     private var activeFlow: ActiveFlow? = null
 
+    private var googlePayFlow: ActiveFlow? = null
+
     /**
      * The controller of the active flow, or `null` if no flow is active.
      */
     val activeController: CheckoutController? get() = activeFlow?.controller
+
+    /**
+     * The controller that renders the Google Pay button on the payment method list, or `null` if Google Pay is not
+     * offered.
+     */
+    val googlePayController: CheckoutController? get() = googlePayFlow?.controller
 
     private val _submittingPaymentFlowType = MutableStateFlow<DropInPaymentFlowType?>(null)
 
@@ -62,7 +74,7 @@ internal class PaymentFlowCoordinator(
      * @param replaceBackStack Whether the current back stack should be replaced instead of being added to.
      */
     fun startFlow(paymentFlowType: DropInPaymentFlowType, replaceBackStack: Boolean = false) {
-        val controller = createFlow(paymentFlowType)
+        val controller = startActiveFlow(paymentFlowType).controller
 
         if (!controller.requiresUserInteraction()) {
             _submittingPaymentFlowType.value = paymentFlowType
@@ -89,22 +101,38 @@ internal class PaymentFlowCoordinator(
     //  an in-progress redirect) requires component state saving in the core module.
     fun restoreFlow() {
         when (val key = navigator.backStack.lastOrNull()) {
-            is PaymentMethodNavKey -> createFlow(key.paymentFlowType)
+            is PaymentMethodNavKey -> startActiveFlow(key.paymentFlowType)
             else -> Unit
         }
     }
 
-    private fun createFlow(paymentFlowType: DropInPaymentFlowType): CheckoutController {
+    /**
+     * Creates the standby flow that renders the Google Pay button on the payment method list. It is deliberately not
+     * the active flow: tapping another payment method must not tear it down.
+     */
+    fun prepareGooglePayFlow(paymentFlowType: DropInPaymentFlowType) {
+        if (googlePayFlow != null) return
+
+        val flow = createFlow(paymentFlowType)
+        googlePayFlow = flow
+        observeNavigation(flow)
+    }
+
+    private fun startActiveFlow(paymentFlowType: DropInPaymentFlowType): ActiveFlow {
         cancelActiveFlow()
 
+        val flow = createFlow(paymentFlowType)
+        activeFlow = flow
+        observeNavigation(flow)
+        return flow
+    }
+
+    private fun createFlow(paymentFlowType: DropInPaymentFlowType): ActiveFlow {
         val flowScope = createFlowScope()
-        val controller = controllerProvider.provide(paymentFlowType, flowScope)
-        activeFlow = ActiveFlow(
-            controller = controller,
+        return ActiveFlow(
+            controller = controllerProvider.provide(paymentFlowType, flowScope),
             coroutineScope = flowScope,
         )
-        observeNavigation(controller, flowScope)
-        return controller
     }
 
     /**
@@ -115,13 +143,14 @@ internal class PaymentFlowCoordinator(
      * immediately after this subscription is set up. [CoroutineStart.UNDISPATCHED] makes sure the subscription is
      * active before that submit happens, so the route cannot be missed.
      */
-    private fun observeNavigation(controller: CheckoutController, flowScope: CoroutineScope) {
-        flowScope.launch(start = CoroutineStart.UNDISPATCHED) {
-            controller.navigation.collect { route ->
+    private fun observeNavigation(flow: ActiveFlow) {
+        flow.coroutineScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            flow.controller.navigation.collect { route ->
                 when (route) {
                     // Replacing the back stack means going back from the action cancels Drop-in, and makes the stack
                     // identical whether the action came from the list or from the payment method screen.
                     is CheckoutRoute.Action -> {
+                        promoteToActiveFlow(flow)
                         _submittingPaymentFlowType.value = null
                         navigator.clearAndNavigateTo(ActionNavKey)
                     }
@@ -129,6 +158,18 @@ internal class PaymentFlowCoordinator(
                 }
             }
         }
+    }
+
+    /**
+     * The action screen renders [activeController], so the flow that returned the action has to be the active one.
+     * This only does something for the Google Pay standby flow; any other flow is already active.
+     */
+    private fun promoteToActiveFlow(flow: ActiveFlow) {
+        if (activeFlow === flow) return
+
+        activeFlow?.coroutineScope?.cancel()
+        activeFlow = flow
+        googlePayFlow = null
     }
 
     private fun observeBackStack() {

@@ -148,7 +148,8 @@ private fun actionNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
-    metadata = DropInTransitions.slideInAndOutHorizontally(),
+    // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
+    metadata = DropInTransitions.slideInHorizontallyAndOutVertically(),
 ) {
     // The controller is intentionally only read once, so this screen keeps rendering while it is navigated away from
     // and its flow is being torn down.

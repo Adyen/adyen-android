@@ -38,6 +38,24 @@ internal object DropInTransitions {
             slideOutHorizontally(targetOffsetX = { it })
     }
 
+    /**
+     * Enters from the side like any other screen, but leaves through the bottom edge. Meant for a screen that is
+     * opened by replacing the back stack: there is nothing left underneath to slide back in from the side, so a
+     * horizontal exit would look like it is uncovering the screen it came from.
+     */
+    @Stable
+    fun slideInHorizontallyAndOutVertically(): Map<String, Any> {
+        return NavDisplay.transitionSpec { addSlideInAndOutHorizontally() } +
+            NavDisplay.popTransitionSpec { popSlideInHorizontallyAndOutVertically() } +
+            NavDisplay.predictivePopTransitionSpec { popSlideInHorizontallyAndOutVertically() }
+    }
+
+    @Stable
+    private fun popSlideInHorizontallyAndOutVertically(): ContentTransform {
+        return slideInHorizontally(initialOffsetX = { -it }) togetherWith
+            slideOutVertically(targetOffsetY = { it })
+    }
+
     @Stable
     fun slideInAndOutVertically(): Map<String, Any> {
         return NavDisplay.transitionSpec { addSlideInAndOutVertically() } +
