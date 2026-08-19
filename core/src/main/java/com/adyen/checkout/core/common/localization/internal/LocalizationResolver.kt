@@ -28,7 +28,7 @@ internal class LocalizationResolver(
             ?: defaultLocalizationSource.getString(context, key)
         return if (formatArgs.isNotEmpty()) {
             @Suppress("SpreadOperator")
-            string.format(*formatArgs)
+            string.format(locale, *formatArgs)
         } else {
             string
         }
