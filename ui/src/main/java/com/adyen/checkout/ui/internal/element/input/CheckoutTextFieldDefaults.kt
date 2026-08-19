@@ -27,4 +27,19 @@ internal object CheckoutTextFieldDefaults {
             borderWidth = 1,
         )
     }
+
+    fun searchFieldStyle(
+        colors: InternalColors,
+        attributes: InternalAttributes,
+    ): InternalTextFieldStyle {
+        return InternalTextFieldStyle(
+            backgroundColor = colors.container,
+            textColor = colors.text,
+            activeColor = colors.primary,
+            errorColor = colors.destructive,
+            cornerRadius = attributes.cornerRadius,
+            borderColor = colors.container,
+            borderWidth = 1,
+        )
+    }
 }

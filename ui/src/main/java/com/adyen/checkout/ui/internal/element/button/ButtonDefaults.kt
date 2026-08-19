@@ -21,6 +21,8 @@ internal object ButtonDefaults {
         return InternalButtonStyle(
             backgroundColor = colors.primary,
             textColor = colors.textOnPrimary,
+            loadingBackgroundColor = colors.disabled,
+            loadingTextColor = colors.text,
             disabledBackgroundColor = colors.disabled,
             disabledTextColor = colors.textOnDisabled,
             cornerRadius = attributes.cornerRadius,
@@ -34,6 +36,8 @@ internal object ButtonDefaults {
         return InternalButtonStyle(
             backgroundColor = colors.container,
             textColor = colors.text,
+            loadingBackgroundColor = colors.disabled,
+            loadingTextColor = colors.text,
             disabledBackgroundColor = colors.disabled,
             disabledTextColor = colors.textOnDisabled,
             cornerRadius = attributes.cornerRadius,
@@ -47,6 +51,8 @@ internal object ButtonDefaults {
         return InternalButtonStyle(
             backgroundColor = Color.Transparent,
             textColor = colors.highlight,
+            loadingBackgroundColor = colors.disabled,
+            loadingTextColor = colors.highlight,
             disabledBackgroundColor = colors.disabled,
             disabledTextColor = colors.textOnDisabled,
             cornerRadius = attributes.cornerRadius,
@@ -60,6 +66,8 @@ internal object ButtonDefaults {
         return InternalButtonStyle(
             backgroundColor = colors.destructive,
             textColor = colors.textOnDestructive,
+            loadingBackgroundColor = colors.disabled,
+            loadingTextColor = colors.text,
             disabledBackgroundColor = colors.disabled,
             disabledTextColor = colors.textOnDisabled,
             cornerRadius = attributes.cornerRadius,

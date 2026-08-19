@@ -25,6 +25,7 @@ data class InternalElements(
     val buttons: InternalButtons,
     val switch: InternalSwitchStyle,
     val textField: InternalTextFieldStyle,
+    val searchField: InternalTextFieldStyle,
     val buttonGroup: InternalButtonGroupStyle,
 ) {
 
@@ -43,6 +44,7 @@ data class InternalElements(
                 ),
                 switch = SwitchDefaults.switchStyle(colors),
                 textField = CheckoutTextFieldDefaults.textFieldStyle(colors, attributes),
+                searchField = CheckoutTextFieldDefaults.searchFieldStyle(colors, attributes),
                 buttonGroup = CheckoutButtonGroupDefaults.buttonGroupStyle(colors),
             )
         }

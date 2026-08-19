@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 data class InternalButtonStyle(
     val backgroundColor: Color,
     val textColor: Color,
+    val loadingBackgroundColor: Color,
+    val loadingTextColor: Color,
     val disabledBackgroundColor: Color,
     val disabledTextColor: Color,
     val cornerRadius: Int,

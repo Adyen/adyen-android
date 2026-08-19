@@ -20,6 +20,7 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
+import com.adyen.checkout.ui.internal.element.button.CheckoutButtonState
 import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
@@ -37,11 +38,12 @@ fun PayButton(
         amount.value == 0L -> resolveString(CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT)
         else -> resolveString(CheckoutLocalizationKey.PAY_BUTTON_WITH_AMOUNT, amount.format(LocalLocale.current))
     }
+    val buttonState = if (payButtonViewState.isLoading) CheckoutButtonState.LOADING else CheckoutButtonState.ENABLED
 
     PrimaryButton(
         onClick = onClick,
         text = text,
-        isLoading = payButtonViewState.isLoading,
+        buttonState = buttonState,
         modifier = Modifier.fillMaxWidth(),
     )
 }

@@ -37,7 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Footnote
-import com.adyen.checkout.ui.internal.text.SubHeadline
+import com.adyen.checkout.ui.internal.text.Label
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
@@ -77,6 +77,7 @@ internal fun CheckoutTextFieldDecorationBox(
     label: String? = null,
     prefix: String? = null,
     hint: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val isFocused = interactionSource.collectIsFocusedAsState().value
@@ -86,7 +87,7 @@ internal fun CheckoutTextFieldDecorationBox(
         modifier = modifier,
     ) {
         label?.let {
-            SubHeadline(text = label)
+            Label(text = label)
         }
 
         Row(
@@ -100,6 +101,8 @@ internal fun CheckoutTextFieldDecorationBox(
                 .heightIn(Dimensions.MinTouchTarget)
                 .padding(horizontal = Dimensions.Spacing.Large),
         ) {
+            leadingIcon?.invoke()
+
             prefix?.let {
                 Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
             }
