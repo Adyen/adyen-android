@@ -82,7 +82,8 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
-        run: ./gradlew :example-app:assembleAcceptance -Pversion-name=$VERSION_NAME
+        # The version name is quoted to allow for spaces
+        run: ./gradlew :example-app:assembleAcceptance "-Pversion-name=$VERSION_NAME"
 
       - name: Upload to Firebase App Distribution
         # The version SHA refers to v1.7.1
