@@ -44,6 +44,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.ui.internal.element.ListItem
+import com.adyen.checkout.ui.internal.element.ProgressBar
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
@@ -63,17 +64,29 @@ internal fun PaymentMethodListScreen(
     viewModel: PaymentMethodListViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val submitting by paymentFlowCoordinator.submittingPaymentFlowType.collectAsStateWithLifecycle()
     PaymentMethodListContent(
         navigator = navigator,
         viewState = viewState,
+        submittingItemId = submitting?.itemId,
         onPaymentMethodClick = { paymentFlowCoordinator.startFlow(it) },
     )
 }
+
+/**
+ * The identifier a [DropInPaymentFlowType] was started from, so it can be matched back to its list item.
+ */
+private val DropInPaymentFlowType.itemId: String
+    get() = when (this) {
+        is DropInPaymentFlowType.RegularPaymentMethod -> txVariant
+        is DropInPaymentFlowType.StoredPaymentMethod -> id
+    }
 
 @Composable
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
+    submittingItemId: String?,
     onPaymentMethodClick: (DropInPaymentFlowType) -> Unit,
 ) {
     DropInScaffold(
@@ -109,6 +122,7 @@ private fun PaymentMethodListContent(
                     title = it.title,
                     actionText = it.action,
                     items = it.options,
+                    submittingItemId = submittingItemId,
                     onActionClick = { navigator.navigateTo(StoredPaymentMethodsNavKey) },
                     onPaymentMethodClick = { pm ->
                         onPaymentMethodClick(DropInPaymentFlowType.StoredPaymentMethod(pm.id))
@@ -123,6 +137,7 @@ private fun PaymentMethodListContent(
                     title = it.title,
                     actionText = it.action,
                     items = it.options,
+                    submittingItemId = submittingItemId,
                     onPaymentMethodClick = { pm ->
                         onPaymentMethodClick(DropInPaymentFlowType.RegularPaymentMethod(pm.id))
                     },
@@ -137,6 +152,7 @@ private fun Section(
     title: CheckoutLocalizationKey,
     actionText: CheckoutLocalizationKey?,
     items: List<PaymentMethodItem>,
+    submittingItemId: String?,
     onPaymentMethodClick: (PaymentMethodItem) -> Unit,
     onActionClick: (() -> Unit)? = null,
 ) {
@@ -149,6 +165,7 @@ private fun Section(
 
         PaymentMethodItemList(
             paymentMethodItems = items,
+            submittingItemId = submittingItemId,
             onItemClick = onPaymentMethodClick,
         )
     }
@@ -204,6 +221,7 @@ private fun TextButton(
 @Composable
 private fun PaymentMethodItemList(
     paymentMethodItems: List<PaymentMethodItem>,
+    submittingItemId: String?,
     onItemClick: (PaymentMethodItem) -> Unit,
 ) {
     Column(
@@ -220,7 +238,10 @@ private fun PaymentMethodItemList(
                 title = item.title,
                 subtitle = item.subtitle,
                 trailingContent = {
-                    PaymentMethodItemTrailingContent(item)
+                    PaymentMethodItemTrailingContent(
+                        item = item,
+                        isSubmitting = item.id == submittingItemId,
+                    )
                 },
                 onClick = { onItemClick(item) },
                 modifier = Modifier.padding(horizontal = Dimensions.Spacing.ExtraSmall),
@@ -230,7 +251,14 @@ private fun PaymentMethodItemList(
 }
 
 @Composable
-private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
+private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem, isSubmitting: Boolean) {
+    // A payment method without UI is submitted straight from the list, so this is the only feedback the shopper gets
+    // while the payments call runs.
+    if (isSubmitting) {
+        ProgressBar(modifier = Modifier.size(Dimensions.LogoSize.small))
+        return
+    }
+
     Row(
         horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
         verticalAlignment = Alignment.CenterVertically,
@@ -304,6 +332,7 @@ private fun PaymentMethodListContentPreview(
         val persister = SavedStateBackStackPersister(SavedStateHandle())
         PaymentMethodListContent(
             navigator = DropInNavigator(persister),
+            submittingItemId = "ideal",
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
                 storedPaymentMethodSection = PaymentMethodListViewState.PaymentMethodListSection(

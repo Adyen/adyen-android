@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutPaymentFlow
+import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -81,8 +81,12 @@ private fun PaymentMethodScreenContent(
                 )
             }
 
+            // The action is no longer rendered here: the coordinator navigates to the action screen instead, so this
+            // screen only renders the payment method itself.
+            // TODO - Prototype: secondary content (installments, MBWay country picker) was handled by
+            //  CheckoutPaymentFlow and is unavailable until a ModalBottomSheet hosting CheckoutSecondary is added.
             // TODO - Pass theme and localization provider
-            CheckoutPaymentFlow(
+            CheckoutPaymentMethod(
                 controller = controller,
                 modifier = Modifier
                     .fillMaxSize()

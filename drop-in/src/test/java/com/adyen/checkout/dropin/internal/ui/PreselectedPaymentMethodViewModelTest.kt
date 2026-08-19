@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
+import com.adyen.checkout.dropin.internal.helper.mockCheckoutController
 import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +27,6 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.kotlin.mock
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -62,7 +62,7 @@ internal class PreselectedPaymentMethodViewModelTest {
         coordinatorScope = CoroutineScope(UnconfinedTestDispatcher())
         paymentFlowCoordinator = PaymentFlowCoordinator(
             navigator = navigator,
-            controllerProvider = DropInControllerProvider { _, _ -> mock() },
+            controllerProvider = DropInControllerProvider { _, _ -> mockCheckoutController() },
             coroutineScope = coordinatorScope,
         )
     }

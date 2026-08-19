@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
+import com.adyen.checkout.dropin.internal.helper.mockCheckoutController
 import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.jupiter.api.AfterEach
@@ -22,11 +24,12 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNotSame
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(LoggingExtension::class)
@@ -34,11 +37,17 @@ internal class PaymentFlowCoordinatorTest {
 
     private val requestedPaymentFlowTypes = mutableListOf<DropInPaymentFlowType>()
     private val createdFlowScopes = mutableListOf<CoroutineScope>()
+    private val navigationFlow = MutableSharedFlow<CheckoutRoute>(extraBufferCapacity = 1)
+
+    private var requiresUserInteraction = true
 
     private val controllerProvider = DropInControllerProvider { paymentFlowType, flowScope ->
         requestedPaymentFlowTypes += paymentFlowType
         createdFlowScopes += flowScope
-        mock<CheckoutController>()
+        mockCheckoutController(
+            requiresUserInteraction = requiresUserInteraction,
+            navigationFlow = navigationFlow,
+        )
     }
 
     private lateinit var persister: InMemoryBackStackPersister
@@ -171,6 +180,41 @@ internal class PaymentFlowCoordinatorTest {
 
         assertEquals(emptyList<DropInPaymentFlowType>(), requestedPaymentFlowTypes)
         assertNull(coordinator.activeController)
+    }
+
+    @Test
+    fun `when the payment method needs no user interaction, then it is submitted without navigating`() {
+        requiresUserInteraction = false
+        navigator.navigateTo(PaymentMethodListNavKey)
+        val coordinator = createCoordinator()
+
+        coordinator.startFlow(REGULAR_TYPE)
+
+        verify(requireNotNull(coordinator.activeController)).submit()
+        assertEquals(listOf(EmptyNavKey, PaymentMethodListNavKey), navigator.backStack)
+    }
+
+    @Test
+    fun `when an action is returned, then it navigates to the action screen`() {
+        navigator.navigateTo(PaymentMethodListNavKey)
+        val coordinator = createCoordinator()
+        coordinator.startFlow(REGULAR_TYPE)
+
+        navigationFlow.tryEmit(CheckoutRoute.Action())
+
+        assertEquals(listOf(EmptyNavKey, ActionNavKey), navigator.backStack)
+    }
+
+    @Test
+    fun `when an action is returned, then the flow is kept alive`() {
+        val coordinator = createCoordinator()
+        coordinator.startFlow(REGULAR_TYPE)
+        val controller = coordinator.activeController
+
+        navigationFlow.tryEmit(CheckoutRoute.Action())
+
+        assertSame(controller, coordinator.activeController)
+        assertTrue(createdFlowScopes[0].isActive)
     }
 
     private fun createCoordinator(navigator: DropInNavigator = this.navigator) = PaymentFlowCoordinator(

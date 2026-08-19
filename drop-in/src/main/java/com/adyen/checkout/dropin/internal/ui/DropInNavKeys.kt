@@ -35,3 +35,8 @@ internal data object StoredPaymentMethodsNavKey : NavKey
 internal data class PaymentMethodNavKey(
     val paymentFlowType: DropInPaymentFlowType,
 ) : PaymentFlowNavKey
+
+// TODO - Prototype: an action cannot be restored after process death. A persisted key currently renders an empty
+//  screen; it should be truncated back to the starting point instead.
+@Serializable
+internal data object ActionNavKey : PaymentFlowNavKey

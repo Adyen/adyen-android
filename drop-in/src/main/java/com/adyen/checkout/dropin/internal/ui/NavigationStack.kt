@@ -37,6 +37,7 @@ internal fun NavigationStack(
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
                 is PaymentMethodNavKey -> paymentMethodNavEntry(key, viewModel)
+                is ActionNavKey -> actionNavEntry(key, viewModel)
                 else -> error("Unknown key: $key")
             }
         },
@@ -140,4 +141,26 @@ private fun paymentMethodNavEntry(
             ),
         )
     }
+}
+
+private fun actionNavEntry(
+    key: ActionNavKey,
+    viewModel: DropInViewModel,
+): NavEntry<NavKey> = NavEntry(
+    key = key,
+    metadata = DropInTransitions.slideInAndOutHorizontally(),
+) {
+    // The controller is intentionally only read once, so this screen keeps rendering while it is navigated away from
+    // and its flow is being torn down.
+    val controller = remember(key) { viewModel.paymentFlowCoordinator.activeController } ?: run {
+        adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
+            "No active payment flow, the ActionScreen cannot be displayed."
+        }
+        return@NavEntry
+    }
+
+    ActionScreen(
+        navigator = viewModel.navigator,
+        controller = controller,
+    )
 }

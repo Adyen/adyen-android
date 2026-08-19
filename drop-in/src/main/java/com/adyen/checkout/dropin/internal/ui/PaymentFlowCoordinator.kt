@@ -9,10 +9,15 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutRoute
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -34,6 +39,16 @@ internal class PaymentFlowCoordinator(
      */
     val activeController: CheckoutController? get() = activeFlow?.controller
 
+    private val _submittingPaymentFlowType = MutableStateFlow<DropInPaymentFlowType?>(null)
+
+    /**
+     * The payment flow type that is being submitted without a payment method screen, or `null` when nothing is in
+     * flight. The payment method list shows progress on the item the shopper tapped.
+     */
+    // TODO - Prototype: a failed or retried submit never clears this, so the progress indicator keeps spinning. Only
+    //  reaching the action screen, starting another flow or tearing the flow down resets it.
+    val submittingPaymentFlowType: StateFlow<DropInPaymentFlowType?> = _submittingPaymentFlowType.asStateFlow()
+
     init {
         observeBackStack()
     }
@@ -41,10 +56,19 @@ internal class PaymentFlowCoordinator(
     /**
      * Starts a new flow for [paymentFlowType] and navigates to its payment method screen.
      *
+     * Payment methods that need no input from the shopper are submitted straight away and no payment method screen is
+     * shown. The flow then continues on the action screen, or finishes Drop-in if no action is required.
+     *
      * @param replaceBackStack Whether the current back stack should be replaced instead of being added to.
      */
     fun startFlow(paymentFlowType: DropInPaymentFlowType, replaceBackStack: Boolean = false) {
-        createFlow(paymentFlowType)
+        val controller = createFlow(paymentFlowType)
+
+        if (!controller.requiresUserInteraction()) {
+            _submittingPaymentFlowType.value = paymentFlowType
+            controller.submit()
+            return
+        }
 
         val key = PaymentMethodNavKey(paymentFlowType)
         if (replaceBackStack) {
@@ -70,14 +94,41 @@ internal class PaymentFlowCoordinator(
         }
     }
 
-    private fun createFlow(paymentFlowType: DropInPaymentFlowType) {
+    private fun createFlow(paymentFlowType: DropInPaymentFlowType): CheckoutController {
         cancelActiveFlow()
 
         val flowScope = createFlowScope()
+        val controller = controllerProvider.provide(paymentFlowType, flowScope)
         activeFlow = ActiveFlow(
-            controller = controllerProvider.provide(paymentFlowType, flowScope),
+            controller = controller,
             coroutineScope = flowScope,
         )
+        observeNavigation(controller, flowScope)
+        return controller
+    }
+
+    /**
+     * Navigates to the action screen when the payments call returns an action. This covers both origins of a payments
+     * call, the payment method list and the payment method screen, because both submit through this controller.
+     *
+     * [CheckoutController.navigation] has no replay, and a payment method that needs no user interaction is submitted
+     * immediately after this subscription is set up. [CoroutineStart.UNDISPATCHED] makes sure the subscription is
+     * active before that submit happens, so the route cannot be missed.
+     */
+    private fun observeNavigation(controller: CheckoutController, flowScope: CoroutineScope) {
+        flowScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            controller.navigation.collect { route ->
+                when (route) {
+                    // Replacing the back stack means going back from the action cancels Drop-in, and makes the stack
+                    // identical whether the action came from the list or from the payment method screen.
+                    is CheckoutRoute.Action -> {
+                        _submittingPaymentFlowType.value = null
+                        navigator.clearAndNavigateTo(ActionNavKey)
+                    }
+                    else -> Unit
+                }
+            }
+        }
     }
 
     private fun observeBackStack() {
@@ -93,6 +144,7 @@ internal class PaymentFlowCoordinator(
     private fun cancelActiveFlow() {
         activeFlow?.coroutineScope?.cancel()
         activeFlow = null
+        _submittingPaymentFlowType.value = null
     }
 
     /**
