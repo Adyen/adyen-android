@@ -36,8 +36,7 @@ jobs:
           cache-read-only: true
 
       - name: Gradle update verification metadata
-        # We have to run assembleDebug to make sure dynamic dependencies (aapt2) are resolved.
-        run: ./gradlew --write-verification-metadata sha256 resolveDependencies assembleDebug
+        run: ./gradlew --write-verification-metadata sha256 resolveDependencies
 
       - name: Commit
         env:
