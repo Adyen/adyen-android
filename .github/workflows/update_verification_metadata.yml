@@ -36,7 +36,9 @@ jobs:
           cache-read-only: true
 
       - name: Gradle update verification metadata
-        run: ./gradlew --write-verification-metadata sha256 resolveDependencies
+        # --refresh-dependencies is required: metadata files (BOM and parent poms) that are already in the module
+        # metadata cache are not re-parsed, so they would not be recorded in the verification metadata.
+        run: ./gradlew --write-verification-metadata sha256 resolveDependencies --refresh-dependencies
 
       - name: Commit
         env:
