@@ -2,7 +2,7 @@
 
 import subprocess
 import sys
-import toml
+import tomllib
 
 def fetch_changed_dependencies() -> dict:
     toml_file_path = 'gradle/libs.versions.toml'
@@ -16,11 +16,11 @@ def fetch_changed_dependencies() -> dict:
     old_toml_file = subprocess.check_output(
         ['git', 'show', base_commit + ':' + toml_file_path]
     ).decode(sys.stdout.encoding).strip()
-    old_versions = toml.loads(old_toml_file)
+    old_versions = tomllib.loads(old_toml_file)
 
     # Load the current version of the file after the PR changes
-    with open(toml_file_path) as file:
-        new_versions = toml.load(file)
+    with open(toml_file_path, 'rb') as file:
+        new_versions = tomllib.load(file)
 
     # Combine libraries and plugins for both old and new versions
     old_dependencies = {**old_versions['libraries'], **old_versions['plugins']}
@@ -38,8 +38,8 @@ def fetch_changed_dependencies() -> dict:
     return added_dependencies
 
 def validate_new_dependencies(added_dependencies):
-    with open('.github/release_notes_dependency_list.toml') as file:
-        dependency_list = toml.load(file)
+    with open('.github/release_notes_dependency_list.toml', 'rb') as file:
+        dependency_list = tomllib.load(file)
 
     for value in added_dependencies.values():
         # Determine the identifier for matching

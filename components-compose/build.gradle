@@ -8,6 +8,7 @@
 
 plugins {
     alias libs.plugins.checkout.android.library
+    alias libs.plugins.kotlin.compose
 }
 
 checkoutPublishing {
@@ -21,10 +22,6 @@ android {
 
     buildFeatures {
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 }
 

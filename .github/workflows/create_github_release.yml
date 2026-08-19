@@ -6,6 +6,9 @@ on:
       version-name:
         required: true
         type: string
+    secrets:
+      github-token:
+        required: true
 
 permissions:
   contents: write
@@ -15,13 +18,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       # Create a Github release with release notes.
       - name: Create Github release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
           VERSION_NAME: ${{ inputs.version-name }}
         with:
           token: ${{ env.GITHUB_TOKEN }}

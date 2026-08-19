@@ -12,12 +12,15 @@ jobs:
     name: Validate newly added dependencies for release notes
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.14'
 
       - name: Validate dependencies for release notes
         run: |
           chmod +x scripts/validate_dependencies_for_release_notes.py
-          pip install toml
           python scripts/validate_dependencies_for_release_notes.py

@@ -17,7 +17,6 @@ dependencies {
     compileOnly(libs.detekt.gradle.plugin)
     compileOnly(libs.dokka.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
-    compileOnly(libs.kotlin.android.gradle.plugin)
     compileOnly(libs.kover.gradle.plugin)
     compileOnly(libs.sonarqube.gradle.plugin)
     compileOnly(libs.binary.compatibility.validator.gradle.plugin)

@@ -4,37 +4,36 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened ]
 
-permissions:
-  contents: write
-  pull-requests: write
-
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
-  code_analysis:
-    name: Code analysis
-    uses: ./.github/workflows/code_analysis.yml
-  assemble:
-    name: Assemble
-    uses: ./.github/workflows/assemble.yml
-    needs: code_analysis
-  test:
-    name: Test
-    uses: ./.github/workflows/run_tests.yml
-    needs: assemble
-  sonar_cloud:
-    name: SonarCloud
-    uses: ./.github/workflows/sonar_cloud.yml
-    secrets: inherit
+  build_and_test:
+    name: Build and test
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build_and_test.yml
+    secrets:
+      gradle-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
   validate_public_api:
     name: Validate public API
+    permissions:
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/validate_public_api.yml
-    secrets: inherit
+    secrets:
+      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
   verify_dependencies:
     name: Validate dependencies
+    permissions:
+      contents: read
     uses: ./.github/workflows/validate_dependencies.yml
   check_dependency_changes:
     name: Check dependency changes
+    permissions:
+      contents: write
+      pull-requests: write
     uses: ./.github/workflows/check_dependency_changes.yml

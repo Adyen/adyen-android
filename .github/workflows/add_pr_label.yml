@@ -11,25 +11,26 @@ on:
       - 'fix/**'
       - 'hotfix/**'
 
-permissions:
-  pull-requests: write
-
 jobs:
   get_label:
     if: startsWith(github.event.pull_request.head.ref, 'feature/') || startsWith(github.event.pull_request.head.ref, 'fix/') || startsWith(github.event.pull_request.head.ref, 'chore/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       label: ${{ steps.get_label.outputs.label }}
 
     steps:
       - name: Checkout to current branch
-        uses: actions/checkout@v5
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Get label
         id: get_label
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         run: |
           chmod +x scripts/generate_pr_label.sh
-          branch_name="${{github.event.pull_request.head.ref}}"
+          branch_name="$BRANCH_NAME"
           LABEL=$(./scripts/generate_pr_label.sh "$branch_name")
           echo -e "label=$LABEL" >> $GITHUB_OUTPUT
           echo -e $LABEL
@@ -37,13 +38,15 @@ jobs:
   add_label_to_pr:
     needs: get_label
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Checkout to current branch
-        uses: actions/checkout@v5
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Add label
-        uses: actions/github-script@v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           LABEL: ${{ needs.get_label.outputs.label }}
         with:

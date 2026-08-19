@@ -13,11 +13,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  assemble:
-    name: Assemble
-    uses: ./.github/workflows/assemble.yml
-  sonar_cloud:
-    name: SonarCloud
-    uses: ./.github/workflows/sonar_cloud.yml
-    needs: assemble
-    secrets: inherit
+  build_and_test:
+    name: Build and test
+    uses: ./.github/workflows/build_and_test.yml
+    secrets:
+      gradle-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      sonar-token: ${{ secrets.SONAR_TOKEN }}

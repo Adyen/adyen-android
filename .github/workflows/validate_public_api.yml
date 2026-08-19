@@ -1,7 +1,10 @@
 name: Validate public API
 
 on:
-  workflow_call
+  workflow_call:
+    secrets:
+      GRADLE_ENCRYPTION_KEY:
+        required: true
 
 permissions:
   contents: read
@@ -13,35 +16,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: 21
 
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
         with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           cache-read-only: true
 
       - name: Check public API
         run: |
-          ( ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt" ) || true
-          bash ./scripts/process_api_changes.sh
+          # Regenerate all .api files from the current source.
+          ./gradlew apiDump --quiet
+          # Mark any newly-created .api files (e.g. from a new module) as
+          # intent-to-add so they show up in `git diff` even though untracked.
+          git add --intent-to-add -- '**/*.api'
+          git diff --no-color -- '**/*.api' | bash ./scripts/process_api_changes.sh
 
       - name: Comment on PR
-        uses: thollander/actions-comment-pull-request@v3
+        # This step will only run on pull_request events.
+        # PR information is only available when workflow gets triggered with pull_request event.
+        # We also check that the PR is not from a fork, because this action will fail if it is.
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
         with:
           file-path: "${{ github.workspace }}/api_changes.md"
           comment-tag: api_changes
           mode: recreate
 
       - name: Check if successful
-        run : |
-          if [ -s api_changes.txt ]
-          then
-            # Fail workflow if there are API changes
-            exit 1
-          fi
+        run: |
+          # Fail the workflow if any `.api` file has uncommitted changes.
+          git diff --quiet -- '**/*.api'

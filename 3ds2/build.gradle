@@ -11,7 +11,6 @@ plugins {
     alias libs.plugins.kotlin.parcelize
 }
 
-// Maven artifact
 checkoutPublishing {
     id = "3ds2"
     name = "Adyen checkout 3DS2 component"

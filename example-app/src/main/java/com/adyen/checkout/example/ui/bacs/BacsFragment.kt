@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
@@ -77,10 +78,13 @@ class BacsFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object : BottomSheetDialog(requireContext(), theme) {
-            @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
-            override fun onBackPressed() {
-                if (bacsComponent?.handleBackPress() == true) return
-                super.onBackPressed()
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                onBackPressedDispatcher.addCallback(this@BacsFragment) {
+                    if (bacsComponent?.handleBackPress() == true) return@addCallback
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                }
             }
         }
     }
