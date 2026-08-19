@@ -47,7 +47,7 @@ Follow this loop for each phase below:
 
 1. **Tests first.** Write/move the tests for the layer before (or alongside) the implementation, using the given-when-then style. Every phase that adds a class adds its unit tests; the v5 tests for any code you move go with it.
 2. **Implement** the layer, defaulting to `internal` visibility.
-3. **Make it green**, then run the `android-check` skill scoped to the touched module(s) (`./gradlew :<module>:check`, plus `:core:check` when core changed).
+3. **Make it green**, then run the `android-check` skill scoped to the touched modules, plus `core` when core changed.
 4. **Commit** that single phase via the `android-commit` skill (one logical change per commit, `COSDK-XXXX` ticket). Never bundle multiple phases.
 
 ## Steps
