@@ -117,10 +117,10 @@ Do not write the entry before you get an answer. If you cannot work out a good l
 Dependency verification is enabled in `gradle/verification-metadata.xml`, so a new artifact fails the build until its checksum is recorded:
 
 ```bash
-./gradlew --write-verification-metadata sha256 resolveDependencies assembleDebug
+./gradlew --write-verification-metadata sha256 resolveDependencies --refresh-dependencies
 ```
 
-`assembleDebug` is included so dynamic dependencies such as `aapt2` resolve. Review the diff — it should only add entries for the new dependency and its transitives — and include the file in the commit.
+`--refresh-dependencies` is required: metadata files (BOM and parent poms) that are already in the module metadata cache are not re-parsed, so without it they are silently left out of the verification metadata and the build fails later on a machine with a cold cache. Review the diff — it should only add entries for the new dependency and its transitives — and include the file in the commit.
 
 ### 7. Verify
 
