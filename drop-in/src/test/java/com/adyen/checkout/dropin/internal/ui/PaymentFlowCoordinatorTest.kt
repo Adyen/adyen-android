@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.dropin.internal.helper.mockCheckoutController
@@ -40,6 +41,7 @@ internal class PaymentFlowCoordinatorTest {
     private val navigationFlow = MutableSharedFlow<CheckoutRoute>(extraBufferCapacity = 1)
 
     private var requiresUserInteraction = true
+    private var onSubmit: () -> Unit = {}
 
     private val controllerProvider = DropInControllerProvider { paymentFlowType, flowScope ->
         requestedPaymentFlowTypes += paymentFlowType
@@ -47,6 +49,8 @@ internal class PaymentFlowCoordinatorTest {
         mockCheckoutController(
             requiresUserInteraction = requiresUserInteraction,
             navigationFlow = navigationFlow,
+            // Wrapped so the hook is read when submit is called, not when the controller is created.
+            onSubmit = { onSubmit() },
         )
     }
 
@@ -183,7 +187,7 @@ internal class PaymentFlowCoordinatorTest {
     }
 
     @Test
-    fun `when the payment method needs no user interaction, then it is submitted without navigating`() {
+    fun `when the payment method needs no user interaction, then it navigates to its own screen and submits`() {
         requiresUserInteraction = false
         navigator.navigateTo(PaymentMethodListNavKey)
         val coordinator = createCoordinator()
@@ -191,7 +195,43 @@ internal class PaymentFlowCoordinatorTest {
         coordinator.startFlow(REGULAR_TYPE)
 
         verify(requireNotNull(coordinator.activeController)).submit()
-        assertEquals(listOf(EmptyNavKey, PaymentMethodListNavKey), navigator.backStack)
+        assertEquals(
+            listOf(EmptyNavKey, PaymentMethodListNavKey, NoUiPaymentMethodNavKey(REGULAR_TYPE)),
+            navigator.backStack,
+        )
+    }
+
+    @Test
+    fun `when the payment method needs no user interaction, then it is submitted only after navigating`() {
+        requiresUserInteraction = false
+        val backStackWhenSubmitted = mutableListOf<NavKey>()
+        navigator.navigateTo(PaymentMethodListNavKey)
+        val coordinator = createCoordinator()
+        onSubmit = { backStackWhenSubmitted += navigator.backStack }
+
+        coordinator.startFlow(REGULAR_TYPE)
+
+        // The action replaces the back stack as soon as the payments call returns, so the screen reporting progress
+        // has to be on it before the submit happens.
+        assertEquals(
+            listOf(EmptyNavKey, PaymentMethodListNavKey, NoUiPaymentMethodNavKey(REGULAR_TYPE)),
+            backStackWhenSubmitted,
+        )
+    }
+
+    @Test
+    fun `when restoring a flow with a payment method without UI on the back stack, then its controller is created`() {
+        requiresUserInteraction = false
+        navigator.navigateTo(PaymentMethodListNavKey)
+        createCoordinator().startFlow(REGULAR_TYPE)
+        requestedPaymentFlowTypes.clear()
+        val restoredNavigator = DropInNavigator(persister)
+        val coordinator = createCoordinator(restoredNavigator)
+
+        coordinator.restoreFlow()
+
+        assertEquals(listOf(REGULAR_TYPE), requestedPaymentFlowTypes)
+        assertNotNull(coordinator.activeController)
     }
 
     @Test

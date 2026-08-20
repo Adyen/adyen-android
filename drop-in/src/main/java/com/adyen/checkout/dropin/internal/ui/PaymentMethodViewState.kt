@@ -13,4 +13,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 internal data class PaymentMethodViewState(
     val paymentMethodName: String,
     val description: CheckoutLocalizationKey?,
+    // Only rendered by the no-UI screen, which shows the payment method itself instead of a component.
+    val logo: String,
+    val amount: String,
 )

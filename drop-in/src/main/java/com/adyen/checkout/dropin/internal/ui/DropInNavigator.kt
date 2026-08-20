@@ -66,6 +66,13 @@ internal class DropInNavigator(
         onBackStackChanged()
     }
 
+    /**
+     * Ends Drop-in from anywhere on the back stack, unlike [back], which only finishes once the last key is popped.
+     */
+    fun finish() {
+        _finishFlow.tryEmit(true)
+    }
+
     fun isEmptyAfterCurrent(): Boolean {
         return _backStack.filterNot { it is EmptyNavKey }.size <= 1
     }

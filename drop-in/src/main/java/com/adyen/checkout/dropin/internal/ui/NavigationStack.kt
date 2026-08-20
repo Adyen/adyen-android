@@ -37,6 +37,7 @@ internal fun NavigationStack(
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
                 is PaymentMethodNavKey -> paymentMethodNavEntry(key, viewModel)
+                is NoUiPaymentMethodNavKey -> noUiPaymentMethodNavEntry(key, viewModel)
                 is ActionNavKey -> actionNavEntry(key, viewModel)
                 else -> error("Unknown key: $key")
             }
@@ -134,6 +135,39 @@ private fun paymentMethodNavEntry(
                 factory = PaymentMethodViewModel.Factory(
                     paymentFlowType = key.paymentFlowType,
                     paymentMethodRepository = viewModel.paymentMethodRepository,
+                    dropInParams = viewModel.dropInParams,
+                ),
+                // View models are scoped to the activity, so each payment method needs a unique key of its own.
+                // TODO - Remove this key when view models are scoped to their nav entry instead.
+                key = key.toString(),
+            ),
+        )
+    }
+}
+
+private fun noUiPaymentMethodNavEntry(
+    key: NoUiPaymentMethodNavKey,
+    viewModel: DropInViewModel,
+): NavEntry<NavKey> {
+    val transitions = if (viewModel.navigator.isEmptyAfterCurrent()) {
+        DropInTransitions.slideInAndOutVertically()
+    } else {
+        DropInTransitions.slideInAndOutHorizontally()
+    }
+
+    return NavEntry(
+        key = key,
+        metadata = transitions,
+    ) {
+        // Unlike the payment method screen, no controller is read here: the payments call is already running and this
+        // screen renders the payment method itself rather than a component.
+        NoUiPaymentMethodScreen(
+            navigator = viewModel.navigator,
+            viewModel = viewModel(
+                factory = PaymentMethodViewModel.Factory(
+                    paymentFlowType = key.paymentFlowType,
+                    paymentMethodRepository = viewModel.paymentMethodRepository,
+                    dropInParams = viewModel.dropInParams,
                 ),
                 // View models are scoped to the activity, so each payment method needs a unique key of its own.
                 // TODO - Remove this key when view models are scoped to their nav entry instead.

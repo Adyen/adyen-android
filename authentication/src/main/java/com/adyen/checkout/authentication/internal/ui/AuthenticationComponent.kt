@@ -21,6 +21,7 @@ import com.adyen.checkout.authentication.internal.data.model.ChallengeToken
 import com.adyen.checkout.authentication.internal.data.model.FingerprintToken
 import com.adyen.checkout.authentication.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.authentication.internal.ui.model.AuthenticationComponentParams
+import com.adyen.checkout.authentication.internal.ui.view.AuthenticationContent
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.RedirectAction
@@ -99,6 +100,8 @@ constructor(
             viewEventFlow = authenticationEventFlow,
             onError = ::emitError,
         )
+
+        AuthenticationContent(modifier)
     }
 
     fun initialize(coroutineScope: CoroutineScope) {

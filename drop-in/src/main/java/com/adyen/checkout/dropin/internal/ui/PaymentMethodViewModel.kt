@@ -12,9 +12,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 internal class PaymentMethodViewModel(
     private val paymentFlowType: DropInPaymentFlowType,
     private val paymentMethodRepository: PaymentMethodRepository,
+    private val dropInParams: DropInParams,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(createViewState())
@@ -44,7 +48,13 @@ internal class PaymentMethodViewModel(
         return PaymentMethodViewState(
             paymentMethodName = paymentMethod.name,
             description = paymentMethod.getDescription(),
+            logo = paymentMethod.getLogo(),
+            amount = dropInParams.amount.format(dropInParams.shopperLocale),
         )
+    }
+
+    private fun PaymentMethodResponse.getLogo(): String {
+        return if (this is StoredPaymentMethod) StoredPaymentMethodFormatter.getIcon(this) else type
     }
 
     // TODO - Update this method once payment method refactor is done.
@@ -59,12 +69,14 @@ internal class PaymentMethodViewModel(
     class Factory(
         private val paymentFlowType: DropInPaymentFlowType,
         private val paymentMethodRepository: PaymentMethodRepository,
+        private val dropInParams: DropInParams,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             return PaymentMethodViewModel(
                 paymentFlowType = paymentFlowType,
                 paymentMethodRepository = paymentMethodRepository,
+                dropInParams = dropInParams,
             ) as T
         }
     }

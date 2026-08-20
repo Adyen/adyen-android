@@ -15,9 +15,6 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -51,42 +48,39 @@ internal class PaymentFlowCoordinator(
      */
     val googlePayController: CheckoutController? get() = googlePayFlow?.controller
 
-    private val _submittingPaymentFlowType = MutableStateFlow<DropInPaymentFlowType?>(null)
-
-    /**
-     * The payment flow type that is being submitted without a payment method screen, or `null` when nothing is in
-     * flight. The payment method list shows progress on the item the shopper tapped.
-     */
-    // TODO - Prototype: a failed or retried submit never clears this, so the progress indicator keeps spinning. Only
-    //  reaching the action screen, starting another flow or tearing the flow down resets it.
-    val submittingPaymentFlowType: StateFlow<DropInPaymentFlowType?> = _submittingPaymentFlowType.asStateFlow()
-
     init {
         observeBackStack()
     }
 
     /**
-     * Starts a new flow for [paymentFlowType] and navigates to its payment method screen.
+     * Starts a new flow for [paymentFlowType] and navigates to its screen.
      *
-     * Payment methods that need no input from the shopper are submitted straight away and no payment method screen is
-     * shown. The flow then continues on the action screen, or finishes Drop-in if no action is required.
+     * A payment method that takes no input from the shopper gets a screen of its own and is submitted right away, so
+     * the payments call runs while that screen reports progress. The flow then continues on the action screen, or
+     * finishes Drop-in if no action is required.
      *
      * @param replaceBackStack Whether the current back stack should be replaced instead of being added to.
      */
     fun startFlow(paymentFlowType: DropInPaymentFlowType, replaceBackStack: Boolean = false) {
         val controller = startActiveFlow(paymentFlowType).controller
+        val requiresUserInteraction = controller.requiresUserInteraction()
 
-        if (!controller.requiresUserInteraction()) {
-            _submittingPaymentFlowType.value = paymentFlowType
-            controller.submit()
-            return
+        val key = if (requiresUserInteraction) {
+            PaymentMethodNavKey(paymentFlowType)
+        } else {
+            NoUiPaymentMethodNavKey(paymentFlowType)
         }
 
-        val key = PaymentMethodNavKey(paymentFlowType)
         if (replaceBackStack) {
             navigator.clearAndNavigateTo(key)
         } else {
             navigator.navigateTo(key)
+        }
+
+        // Submitted only after navigating, so the screen reporting progress is already on the back stack by the time
+        // the payments call returns an action and replaces it.
+        if (!requiresUserInteraction) {
+            controller.submit()
         }
     }
 
@@ -98,10 +92,12 @@ internal class PaymentFlowCoordinator(
     // TODO - Revisit when action and result screens are added: when they are pushed on top of the payment method
     //  screen, its key is no longer last and the flow is not restored.
     // TODO - Only the navigation is restored. Restoring the contents of the flow (entered input, an in-flight submit or
-    //  an in-progress redirect) requires component state saving in the core module.
+    //  an in-progress redirect) requires component state saving in the core module. For a payment method without UI
+    //  this means the payments call is not resumed, leaving that screen reporting progress that never completes.
     fun restoreFlow() {
         when (val key = navigator.backStack.lastOrNull()) {
             is PaymentMethodNavKey -> startActiveFlow(key.paymentFlowType)
+            is NoUiPaymentMethodNavKey -> startActiveFlow(key.paymentFlowType)
             else -> Unit
         }
     }
@@ -151,7 +147,6 @@ internal class PaymentFlowCoordinator(
                     // identical whether the action came from the list or from the payment method screen.
                     is CheckoutRoute.Action -> {
                         promoteToActiveFlow(flow)
-                        _submittingPaymentFlowType.value = null
                         navigator.clearAndNavigateTo(ActionNavKey)
                     }
                     else -> Unit
@@ -185,7 +180,6 @@ internal class PaymentFlowCoordinator(
     private fun cancelActiveFlow() {
         activeFlow?.coroutineScope?.cancel()
         activeFlow = null
-        _submittingPaymentFlowType.value = null
     }
 
     /**

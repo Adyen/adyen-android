@@ -12,20 +12,25 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
 /**
  * A mocked [CheckoutController] with the members the coordinator relies on stubbed.
  *
- * Both stubs matter: an unstubbed [CheckoutController.requiresUserInteraction] defaults to `false`, which makes every
- * flow take the direct submit path, and an unstubbed [CheckoutController.navigation] returns `null`, which throws once
- * the coordinator collects it.
+ * Both stubs matter: an unstubbed [CheckoutController.requiresUserInteraction] defaults to `false`, which sends every
+ * flow down the no-UI path, and an unstubbed [CheckoutController.navigation] returns `null`, which throws once the
+ * coordinator collects it.
+ *
+ * @param onSubmit Invoked when the controller is submitted, to observe the state of the world at that moment.
  */
 internal fun mockCheckoutController(
     requiresUserInteraction: Boolean = true,
     navigationFlow: Flow<CheckoutRoute> = emptyFlow(),
+    onSubmit: () -> Unit = {},
 ): CheckoutController = mock {
     on { requiresUserInteraction() } doReturn requiresUserInteraction
     on { navigation } doReturn navigationFlow
+    on { submit() } doAnswer { onSubmit() }
 }

@@ -36,6 +36,15 @@ internal data class PaymentMethodNavKey(
     val paymentFlowType: DropInPaymentFlowType,
 ) : PaymentFlowNavKey
 
+/**
+ * The screen for a payment method that takes no input from the shopper. It only reports that the payments call is
+ * running; the flow continues on the action screen once that call returns an action.
+ */
+@Serializable
+internal data class NoUiPaymentMethodNavKey(
+    val paymentFlowType: DropInPaymentFlowType,
+) : PaymentFlowNavKey
+
 // TODO - Prototype: an action cannot be restored after process death. A persisted key currently renders an empty
 //  screen; it should be truncated back to the starting point instead.
 @Serializable
