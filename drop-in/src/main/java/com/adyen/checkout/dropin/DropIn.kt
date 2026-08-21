@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 // TODO - Discuss the current Drop-in approach. Do we need DropIn object and can we make improvement?
 // TODO - KDocs
@@ -32,16 +33,18 @@ object DropIn {
         dropInContext: CheckoutContext.Sessions,
         // TODO - define drop in session service
         serviceClass: Class<out DropInService> = DropInService::class.java,
+        theme: CheckoutTheme = CheckoutTheme(),
     ) {
-        launcher.launch(dropInContext, serviceClass)
+        launcher.launch(dropInContext, serviceClass, theme)
     }
 
     fun start(
         launcher: DropInLauncher,
         dropInContext: CheckoutContext.Advanced,
         serviceClass: Class<out DropInService>,
+        theme: CheckoutTheme = CheckoutTheme(),
     ) {
-        launcher.launch(dropInContext, serviceClass)
+        launcher.launch(dropInContext, serviceClass, theme)
     }
 }
 

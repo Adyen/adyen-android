@@ -18,6 +18,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.parcelize.Parcelize
 
 internal class DropInResultContract : ActivityResultContract<DropInResultContract.Input, DropInResult>() {
@@ -40,6 +41,7 @@ internal class DropInResultContract : ActivityResultContract<DropInResultContrac
     internal data class Input(
         val checkoutContext: CheckoutContext,
         val serviceClass: Class<out DropInService>,
+        val theme: CheckoutTheme,
     ) : Parcelable {
 
         companion object {
