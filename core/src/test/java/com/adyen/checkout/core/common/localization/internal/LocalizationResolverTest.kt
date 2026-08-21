@@ -86,6 +86,21 @@ internal class LocalizationResolverTest(
         assertEquals(expected, result)
     }
 
+    // The pay button with an amount is the common production path: no override, so the default localization
+    // is looked up and then formatted with the pre-formatted amount.
+    @Test
+    fun `when there is no provider and format args are passed, then the default localization is formatted`() {
+        whenever(context.getString(R.string.checkout_pay_button_with_amount)) doReturn "Pay %s"
+
+        val result = getLocalizedString(
+            localizationProvider = null,
+            key = CheckoutLocalizationKey.PAY_BUTTON_WITH_AMOUNT,
+            formatArgs = arrayOf("EUR 10.00"),
+        )
+
+        assertEquals("Pay EUR 10.00", result)
+    }
+
     @Test
     fun `when no format args are passed, then the string is returned unformatted`() {
         // "100%" is not a valid format string, so this would fail if formatting were applied unconditionally.

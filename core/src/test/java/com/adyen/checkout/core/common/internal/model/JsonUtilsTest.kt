@@ -9,9 +9,11 @@
 package com.adyen.checkout.core.common.internal.model
 
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -85,6 +87,13 @@ internal class JsonUtilsTest {
         fun `when the key does not exist, then null is returned`() {
             assertNull(JSONObject().getIntOrNull("key"))
         }
+
+        @Test
+        fun `when the value is a numeric string, then it is coerced to an int`() {
+            val jsonObject = JSONObject("""{"key":"1"}""")
+
+            assertEquals(1, jsonObject.getIntOrNull("key"))
+        }
     }
 
     @Nested
@@ -125,6 +134,21 @@ internal class JsonUtilsTest {
             val jsonObject = JSONObject("""{"array":["a","b"]}""")
 
             assertEquals(listOf("a", "b"), jsonObject.getStringList("array"))
+        }
+
+        // Unlike optStringList, getStringList is not lenient about a missing key.
+        @Test
+        fun `when the string list key does not exist, then a JSONException is thrown`() {
+            assertThrows(JSONException::class.java) {
+                JSONObject().getStringList("array")
+            }
+        }
+
+        @Test
+        fun `when the optional string list holds a null entry, then that entry is skipped`() {
+            val jsonArray = JSONArray("""["a",null]""")
+
+            assertEquals(listOf("a"), JsonUtils.parseOptStringList(jsonArray))
         }
 
         @Test

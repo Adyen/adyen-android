@@ -184,9 +184,10 @@ internal class SessionParamsFactoryTest {
         }
 
         @Test
-        fun `when the shopper locale is malformed, then it falls back to the root locale`() {
-            // Locale.forLanguageTag does not throw for malformed tags, it returns the root locale. The
-            // runCatching fallback in SessionParamsFactory is therefore never reached.
+        fun `when the shopper locale is malformed, then the root locale is returned`() {
+            // Documents current behaviour rather than intended behaviour: Locale.forLanguageTag does not throw
+            // for malformed tags, it returns the root locale, so the runCatching fallback in
+            // SessionParamsFactory is unreachable and the malformed locale is never turned into null.
             val session = createSession(shopperLocale = "not a language tag")
 
             val result = SessionParamsFactory.create(session)

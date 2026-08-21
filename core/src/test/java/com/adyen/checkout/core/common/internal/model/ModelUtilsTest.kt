@@ -18,6 +18,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -77,6 +78,18 @@ internal class ModelUtilsTest {
 
             assertNull(result)
         }
+
+        @Test
+        fun `when the result is mutated, then it throws because the list is unmodifiable`() {
+            val jsonArray = JSONArray("""[{"value":"a"}]""")
+
+            val result = deserializeOptList(jsonArray, TestModelObject.SERIALIZER)
+
+            @Suppress("UNCHECKED_CAST")
+            assertThrows(UnsupportedOperationException::class.java) {
+                (result as MutableList<TestModelObject>).add(TestModelObject("b"))
+            }
+        }
     }
 
     @Nested
@@ -97,6 +110,18 @@ internal class ModelUtilsTest {
             val result = deserializeOptMap(null, TestModelObject.SERIALIZER)
 
             assertNull(result)
+        }
+
+        @Test
+        fun `when the result is mutated, then it throws because the map is unmodifiable`() {
+            val jsonObject = JSONObject("""{"card":{"value":"a"}}""")
+
+            val result = deserializeOptMap(jsonObject, TestModelObject.SERIALIZER)
+
+            @Suppress("UNCHECKED_CAST")
+            assertThrows(UnsupportedOperationException::class.java) {
+                (result as MutableMap<String, TestModelObject?>)["ideal"] = TestModelObject("b")
+            }
         }
     }
 
