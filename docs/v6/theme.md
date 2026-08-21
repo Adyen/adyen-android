@@ -39,6 +39,20 @@ CheckoutPaymentFlow(
 
 The same theme is used for the payment component, action handling, and any secondary screens rendered by `CheckoutPaymentFlow(...)`.
 
+## Drop-in
+
+Drop-in renders in its own activity, so pass the theme when you start it:
+
+```kotlin
+DropIn.start(
+    launcher = dropInLauncher,
+    dropInContext = dropInContext,
+    theme = theme,
+)
+```
+
+The theme applies to every drop-in screen. It is fixed when drop-in starts, so if your app switches between light and dark mode while drop-in is open, drop-in keeps the theme it was started with.
+
 ## Light and dark mode
 
 Choose `CheckoutColors.light()` or `CheckoutColors.dark()` in the same place where your app decides which palette to render:
@@ -79,8 +93,8 @@ Start from `CheckoutColors.light()` or `CheckoutColors.dark()` and override only
 
 ## Scope
 
-- Configure the theme in the Compose UI layer, not on `CheckoutConfiguration`.
-- Theme changes apply across the `CheckoutPaymentFlow(...)` tree.
+- Configure the theme in the Compose UI layer for components, or pass it to `DropIn.start(...)` for drop-in. It is not part of `CheckoutConfiguration`.
+- Theme changes apply across the `CheckoutPaymentFlow(...)` tree and across all drop-in screens.
 - Localization is configured separately with `CheckoutLocalizationProvider`. See [README.md](README.md#localization).
 
 ## Related docs

@@ -120,6 +120,7 @@ private fun paymentMethodNavEntry(
                 ),
                 key = key.paymentFlowType.hashCode().toString(),
             ),
+            theme = viewModel.theme,
         )
     }
 }

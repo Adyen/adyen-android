@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin
 import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 // TODO - KDocs
 class DropInLauncher internal constructor(
@@ -20,10 +21,12 @@ class DropInLauncher internal constructor(
     internal fun launch(
         dropInContext: CheckoutContext,
         serviceClass: Class<out DropInService>,
+        theme: CheckoutTheme,
     ) {
         val input = DropInResultContract.Input(
             checkoutContext = dropInContext,
             serviceClass = serviceClass,
+            theme = theme,
         )
         activityResultLauncher.launch(input)
     }

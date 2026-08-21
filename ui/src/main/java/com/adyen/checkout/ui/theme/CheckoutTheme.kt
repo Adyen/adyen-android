@@ -8,7 +8,9 @@
 
 package com.adyen.checkout.ui.theme
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import kotlinx.parcelize.Parcelize
 
 /**
  * The theme configuration for the Checkout UI.
@@ -18,6 +20,7 @@ import androidx.compose.runtime.Immutable
  * @param colors The color palette to apply to the UI components. Defaults to [CheckoutColors.light].
  */
 @Immutable
+@Parcelize
 data class CheckoutTheme(
     val colors: CheckoutColors = CheckoutColors.light(),
-)
+) : Parcelable
