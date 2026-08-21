@@ -60,17 +60,30 @@ internal class LocaleUtilTest {
     }
 
     @Test
-    fun `when fromLanguageTag is called with valid tag then return locale`() {
-        val result = LocaleUtil.fromLanguageTag("en-US")
+    fun `when fromLanguageTagOrNull is called with valid tag then return locale`() {
+        val result = LocaleUtil.fromLanguageTagOrNull("en-US")
 
         assertEquals(Locale.US, result)
     }
 
-    @Test
-    fun `when fromLanguageTag is called with empty tag then return empty locale`() {
-        val result = LocaleUtil.fromLanguageTag("")
+    @ParameterizedTest
+    @MethodSource("unparsableLanguageTagsSource")
+    fun `when fromLanguageTagOrNull is called with an unparsable tag then return null`(tag: String) {
+        val result = LocaleUtil.fromLanguageTagOrNull(tag)
 
-        assertEquals(Locale(""), result)
+        assertNull(result)
+    }
+
+    // Locale.forLanguageTag recovers a usable language from these, so they are not treated as failures.
+    @ParameterizedTest
+    @MethodSource("leniantlyParsedLanguageTagsSource")
+    fun `when fromLanguageTagOrNull is called with a partially valid tag then return locale`(
+        tag: String,
+        expected: Locale,
+    ) {
+        val result = LocaleUtil.fromLanguageTagOrNull(tag)
+
+        assertEquals(expected, result)
     }
 
     companion object {
@@ -103,6 +116,25 @@ internal class LocaleUtilTest {
             arguments(Locale("toolongcode")),
             // Invalid characters in language
             arguments(Locale("en-US")),
+        )
+
+        @JvmStatic
+        fun unparsableLanguageTagsSource() = listOf(
+            arguments(""),
+            // Underscores instead of hyphens, a common mistake when a Java Locale is stringified
+            arguments("en_US"),
+            arguments("not a language tag"),
+            arguments("-en"),
+            // Language subtag longer than the 8 characters BCP 47 allows
+            arguments("abcdefghi"),
+        )
+
+        @JvmStatic
+        fun leniantlyParsedLanguageTagsSource() = listOf(
+            arguments("en-US", Locale.US),
+            arguments("en-", Locale("en")),
+            arguments("en--US", Locale("en")),
+            arguments("en-US-u-", Locale.US),
         )
     }
 }

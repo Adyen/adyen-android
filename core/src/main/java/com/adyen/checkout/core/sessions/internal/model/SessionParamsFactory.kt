@@ -55,9 +55,7 @@ object SessionParamsFactory {
 
     private fun getShopperLocale(shopperLocaleString: String?): Locale? {
         if (shopperLocaleString == null) return null
-        return runCatching {
-            LocaleUtil.fromLanguageTag(shopperLocaleString)
-        }.getOrElse {
+        return LocaleUtil.fromLanguageTagOrNull(shopperLocaleString) ?: run {
             // if we cannot parse the locale coming from the API we should not fail the payment
             adyenLog(AdyenLogLevel.ERROR) { "Failed to parse sessions locale $shopperLocaleString" }
             null

@@ -50,9 +50,7 @@ internal class CheckoutParamsFactory(
 
     private fun CheckoutSession.getShopperLocale(): Locale? {
         val shopperLocaleString = sessionSetupResponse.shopperLocale ?: return null
-        return runCatching {
-            LocaleUtil.fromLanguageTag(shopperLocaleString)
-        }.getOrElse {
+        return LocaleUtil.fromLanguageTagOrNull(shopperLocaleString) ?: run {
             // if we cannot parse the locale coming from the API we should not fail the payment
             adyenLog(AdyenLogLevel.ERROR) { "Failed to parse sessions locale $shopperLocaleString" }
             null
