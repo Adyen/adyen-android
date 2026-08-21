@@ -42,9 +42,12 @@ import com.adyen.checkout.example.ui.googlepay.GooglePayFragment
 import com.adyen.checkout.example.ui.googlepay.compose.SessionsGooglePayActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.example.ui.settings.SettingsActivity
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import com.adyen.checkout.example.ui.v6.V6Activity
 import com.adyen.checkout.example.ui.v6.V6SessionsActivity
 import com.adyen.checkout.redirect.old.RedirectComponent
+import com.adyen.checkout.ui.theme.CheckoutColors
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,6 +62,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     internal lateinit var externalConfigurationReader: ExternalConfigurationReader
+
+    @Inject
+    internal lateinit var uiThemeRepository: UIThemeRepository
 
     private val oldDropInLauncher = OldDropIn.registerForDropInResult(
         this,
@@ -193,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                     launcher = dropInLauncher,
                     dropInContext = navigation.dropInContext,
                     serviceClass = ExampleV6DropInService::class.java,
+                    theme = createCheckoutTheme(),
                 )
             }
 
@@ -201,6 +208,7 @@ class MainActivity : AppCompatActivity() {
                     launcher = dropInLauncher,
                     dropInContext = navigation.dropInContext,
                     serviceClass = DropInService::class.java,
+                    theme = createCheckoutTheme(),
                 )
             }
 
@@ -253,6 +261,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun createCheckoutTheme() = CheckoutTheme(
+        colors = if (uiThemeRepository.isDarkTheme(this)) {
+            CheckoutColors.dark()
+        } else {
+            CheckoutColors.light()
+        },
+    )
 
     private fun setLoading(isLoading: Boolean) {
         if (isLoading) {
