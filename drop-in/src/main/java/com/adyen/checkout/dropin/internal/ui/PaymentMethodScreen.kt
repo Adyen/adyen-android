@@ -29,14 +29,16 @@ import com.adyen.checkout.core.components.CheckoutPaymentFlow
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun PaymentMethodScreen(
     navigator: DropInNavigator,
     viewModel: PaymentMethodViewModel,
+    theme: CheckoutTheme,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PaymentMethodScreenContent(navigator, viewState, viewModel.controller)
+    PaymentMethodScreenContent(navigator, viewState, viewModel.controller, theme)
 }
 
 @Composable
@@ -44,6 +46,7 @@ private fun PaymentMethodScreenContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodViewState,
     controller: CheckoutController,
+    theme: CheckoutTheme,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -80,12 +83,13 @@ private fun PaymentMethodScreenContent(
                 )
             }
 
-            // TODO - Pass theme and localization provider
+            // TODO - Pass localization provider
             CheckoutPaymentFlow(
                 controller = controller,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.Spacing.Large),
+                theme = theme,
             )
         }
     }
