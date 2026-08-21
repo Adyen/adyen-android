@@ -41,10 +41,14 @@ internal object LocaleUtil {
     /**
      * Creates a Locale instance for a specific language tag.
      *
+     * [Locale.forLanguageTag] is lenient: when it cannot parse a tag it returns [Locale.ROOT] instead of
+     * failing, which is indistinguishable from a caller explicitly asking for the root locale. An empty
+     * language means nothing usable came out of the tag, so it is reported as a failure instead.
+     *
      * @param tag The tag of the language.
-     * @return The locale associated with that tag or null if tag in invalid.
+     * @return The locale associated with that tag, or null if the tag could not be parsed.
      */
-    fun fromLanguageTag(tag: String): Locale {
-        return Locale.forLanguageTag(tag)
+    fun fromLanguageTagOrNull(tag: String): Locale? {
+        return Locale.forLanguageTag(tag).takeIf { it.language.isNotEmpty() }
     }
 }
