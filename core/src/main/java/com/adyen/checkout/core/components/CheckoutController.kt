@@ -115,7 +115,9 @@ class CheckoutController internal constructor(
      * After calling this method, the input data is validated. If validation fails, the corresponding errors
      * are displayed in the UI and the submission is aborted.
      *
-     * If [requiresUserInteraction] returns `false`, this can be called directly without waiting for
+     * This method should be used when displaying a custom submit button.
+     *
+     * When [requiresUserInteraction] returns `false`, this can be called directly without waiting for
      * user input.
      */
     fun submit() {
@@ -125,8 +127,8 @@ class CheckoutController internal constructor(
     /**
      * Indicates whether the payment method requires user interaction before submitting.
      *
-     * When this returns `false`, no UI needs to be rendered and [submit] can be called directly
-     * without requiring a user action (e.g. a button click).
+     * When this returns `false`, [submit] can be called directly to skip a user action (e.g. a button click).
+     * Rendering the payment method UI is optional.
      *
      * When this returns `true`, the payment method UI should be displayed so the user can provide
      * the required input before calling [submit].
