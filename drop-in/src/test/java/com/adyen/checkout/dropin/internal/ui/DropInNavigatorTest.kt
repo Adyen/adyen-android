@@ -16,6 +16,8 @@ import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -89,6 +91,51 @@ internal class DropInNavigatorTest {
         navigator.back()
 
         assertEquals(1, finishFlow.values.size)
+    }
+
+    @Test
+    fun `when popping to a key then the keys above it are removed`() {
+        val key1 = TestNavKey("key1")
+        val key2 = TestNavKey("key2")
+        val key3 = TestNavKey("key3")
+        navigator.navigateTo(key1)
+        navigator.navigateTo(key2)
+        navigator.navigateTo(key3)
+
+        val result = navigator.popTo(key1)
+
+        assertTrue(result)
+        assertEquals(listOf(EmptyNavKey, key1), navigator.backStack)
+    }
+
+    @Test
+    fun `when popping to the current key then the back stack is unchanged`() {
+        val key = TestNavKey("key")
+        navigator.navigateTo(key)
+
+        val result = navigator.popTo(key)
+
+        assertTrue(result)
+        assertEquals(listOf(EmptyNavKey, key), navigator.backStack)
+    }
+
+    @Test
+    fun `when popping to a key that is not on the back stack then it returns false`() {
+        val key = TestNavKey("key")
+        navigator.navigateTo(key)
+
+        val result = navigator.popTo(TestNavKey("other"))
+
+        assertFalse(result)
+        assertEquals(listOf(EmptyNavKey, key), navigator.backStack)
+    }
+
+    @Test
+    fun `when navigating then current key is the last key`() {
+        val key = TestNavKey("key")
+        navigator.navigateTo(key)
+
+        assertEquals(key, navigator.currentKey)
     }
 
     @Test

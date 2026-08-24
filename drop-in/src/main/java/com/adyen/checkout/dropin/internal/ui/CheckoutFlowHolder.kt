@@ -12,6 +12,8 @@ import com.adyen.checkout.core.components.CheckoutController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.job
 
 /**
@@ -20,10 +22,14 @@ import kotlinx.coroutines.job
  * A controller outlives the screen that created it, because the same payment flow can be displayed by
  * multiple screens. Each flow runs in its own child scope of [parentScope], so it can be cancelled
  * independently when its flow is released.
+ *
+ * The routes of a controller are collected here rather than in a screen: they are emitted without
+ * replay, and typically while the screen that triggered them is being navigated away from.
  */
 internal class CheckoutFlowHolder(
     private val parentScope: CoroutineScope,
     private val controllerProvider: CheckoutControllerProvider,
+    private val routeHandler: CheckoutRouteHandler,
 ) {
 
     private val flows = mutableMapOf<DropInPaymentFlowType, CheckoutFlow>()
@@ -50,8 +56,14 @@ internal class CheckoutFlowHolder(
         val coroutineScope = CoroutineScope(
             parentScope.coroutineContext + SupervisorJob(parentScope.coroutineContext.job),
         )
+        val controller = controllerProvider.provide(paymentFlowType, coroutineScope)
+
+        controller.navigation
+            .onEach { route -> routeHandler.handle(route, paymentFlowType) }
+            .launchIn(coroutineScope)
+
         return CheckoutFlow(
-            controller = controllerProvider.provide(paymentFlowType, coroutineScope),
+            controller = controller,
             coroutineScope = coroutineScope,
         )
     }

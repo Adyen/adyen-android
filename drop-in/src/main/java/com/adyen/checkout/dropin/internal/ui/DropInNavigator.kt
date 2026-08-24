@@ -23,6 +23,8 @@ internal class DropInNavigator(
     private val _backStack: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
     val backStack: List<NavKey> get() = _backStack
 
+    val currentKey: NavKey? get() = _backStack.lastOrNull()
+
     private val _backStackFlow = MutableStateFlow<List<NavKey>>(_backStack.toList())
     val backStackFlow = _backStackFlow.asStateFlow()
 
@@ -60,6 +62,22 @@ internal class DropInNavigator(
             _finishFlow.tryEmit(true)
         }
         onBackStackChanged()
+    }
+
+    /**
+     * Removes every key above [key], making it the displayed one.
+     *
+     * @return `false` when [key] is not on the back stack, leaving it unchanged.
+     */
+    fun popTo(key: NavKey): Boolean {
+        val index = _backStack.indexOf(key)
+        if (index == -1) return false
+
+        while (_backStack.lastIndex > index) {
+            _backStack.removeAt(_backStack.lastIndex)
+        }
+        onBackStackChanged()
+        return true
     }
 
     fun isEmptyAfterCurrent(): Boolean {

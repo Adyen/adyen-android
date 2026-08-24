@@ -37,3 +37,14 @@ internal data object StoredPaymentMethodsNavKey : NavKey
 internal data class PaymentMethodNavKey(
     override val paymentFlowType: DropInPaymentFlowType,
 ) : PaymentFlowNavKey
+
+@Serializable
+internal data class ActionNavKey(
+    override val paymentFlowType: DropInPaymentFlowType,
+) : PaymentFlowNavKey
+
+@Serializable
+internal data class SecondaryNavKey(
+    override val paymentFlowType: DropInPaymentFlowType,
+    val identifier: String,
+) : PaymentFlowNavKey

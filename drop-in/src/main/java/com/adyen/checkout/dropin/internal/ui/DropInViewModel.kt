@@ -53,6 +53,7 @@ internal class DropInViewModel(
             checkoutContext = checkoutContext,
             dropInServiceManager = dropInServiceManager,
         ),
+        routeHandler = CheckoutRouteHandler(navigator),
     )
 
     val resultFlow: Flow<DropInResult> = merge(

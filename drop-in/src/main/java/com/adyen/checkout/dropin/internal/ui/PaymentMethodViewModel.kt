@@ -28,15 +28,7 @@ internal class PaymentMethodViewModel(
     val viewState: StateFlow<PaymentMethodViewState> = _viewState.asStateFlow()
 
     private fun createViewState(): PaymentMethodViewState {
-        val paymentMethod = when (paymentFlowType) {
-            is DropInPaymentFlowType.RegularPaymentMethod -> {
-                paymentMethodRepository.paymentMethods.first { it.type == paymentFlowType.txVariant }
-            }
-
-            is DropInPaymentFlowType.StoredPaymentMethod -> {
-                paymentMethodRepository.storedPaymentMethods.value.first { it.id == paymentFlowType.id }
-            }
-        }
+        val paymentMethod = paymentMethodRepository.findPaymentMethod(paymentFlowType)
 
         return PaymentMethodViewState(
             paymentMethodName = paymentMethod.name,

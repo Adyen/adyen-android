@@ -17,6 +17,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.adyen.checkout.core.components.CheckoutController
 
 @Composable
 internal fun NavigationStack(
@@ -39,6 +40,8 @@ internal fun NavigationStack(
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
                 is PaymentMethodNavKey -> paymentMethodNavEntry(key, viewModel)
+                is ActionNavKey -> actionNavEntry(key, viewModel)
+                is SecondaryNavKey -> secondaryNavEntry(key, viewModel)
                 else -> error("Unknown key: $key")
             }
         },
@@ -125,8 +128,56 @@ private fun paymentMethodNavEntry(
                     paymentMethodRepository = viewModel.paymentMethodRepository,
                 ),
             ),
-            controller = viewModel.flowHolder.getController(key.paymentFlowType),
+            controller = rememberController(key.paymentFlowType, viewModel),
             theme = viewModel.theme,
         )
     }
+}
+
+private fun actionNavEntry(
+    key: ActionNavKey,
+    viewModel: DropInViewModel,
+): NavEntry<NavKey> = NavEntry(
+    key = key,
+    metadata = DropInTransitions.slideInAndOutHorizontally(),
+) {
+    ActionScreen(
+        navigator = viewModel.navigator,
+        title = rememberPaymentMethodName(key.paymentFlowType, viewModel),
+        controller = rememberController(key.paymentFlowType, viewModel),
+    )
+}
+
+private fun secondaryNavEntry(
+    key: SecondaryNavKey,
+    viewModel: DropInViewModel,
+): NavEntry<NavKey> = NavEntry(
+    key = key,
+    metadata = DropInTransitions.slideInAndOutHorizontally(),
+) {
+    SecondaryScreen(
+        navigator = viewModel.navigator,
+        identifier = key.identifier,
+        title = rememberPaymentMethodName(key.paymentFlowType, viewModel),
+        controller = rememberController(key.paymentFlowType, viewModel),
+    )
+}
+
+// An entry keeps composing while it animates out, after its controller has been released. Holding the
+// controller here makes sure that does not create a new one.
+@Composable
+private fun rememberController(
+    paymentFlowType: DropInPaymentFlowType,
+    viewModel: DropInViewModel,
+): CheckoutController = remember(paymentFlowType) {
+    viewModel.flowHolder.getController(paymentFlowType)
+}
+
+// TODO - Show a title based on the action or secondary screen type instead of the payment method name
+@Composable
+private fun rememberPaymentMethodName(
+    paymentFlowType: DropInPaymentFlowType,
+    viewModel: DropInViewModel,
+): String = remember(paymentFlowType) {
+    viewModel.paymentMethodRepository.findPaymentMethod(paymentFlowType).name
 }
