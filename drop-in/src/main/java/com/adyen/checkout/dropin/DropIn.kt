@@ -28,6 +28,7 @@ object DropIn {
         return DropInLauncher(activityResultLauncher)
     }
 
+    @JvmOverloads
     fun start(
         launcher: DropInLauncher,
         dropInContext: CheckoutContext.Sessions,
@@ -38,6 +39,7 @@ object DropIn {
         launcher.launch(dropInContext, serviceClass, theme)
     }
 
+    @JvmOverloads
     fun start(
         launcher: DropInLauncher,
         dropInContext: CheckoutContext.Advanced,
