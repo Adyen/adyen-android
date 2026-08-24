@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.GiftCardPaymentMethod
@@ -25,20 +27,81 @@ import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodListSection
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
+/**
+ * Renders the payment method list, and owns the express payment method flows on top of that.
+ *
+ * Express payment methods are the exception to [PaymentMethodViewModel]: their buttons are part of this list rather
+ * than a screen behind a list item, so their controllers have to exist before the shopper picks anything.
+ * [PaymentMethodListNavKey] and the [ActionNavKey] that follows it declare the same [EXPRESS_PAYMENT_METHOD_FLOW_KEY],
+ * so this view model survives the navigation to the action screen and those flows continue on the same controller.
+ */
 internal class PaymentMethodListViewModel(
     private val dropInParams: DropInParams,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
+    private val navigator: DropInNavigator,
+    controllerProvider: DropInControllerProvider,
 ) : ViewModel() {
 
     val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.storedPaymentMethods
         .map { createInitialViewState(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(emptyList()))
+
+    // Google Pay is the only express payment method so far. Turn this into a list once there can be more.
+    private val expressPaymentMethodFlowType: DropInPaymentFlowType? = paymentMethodRepository.paymentMethods
+        .firstOrNull { it.type in GOOGLE_PAY_TYPES }
+        ?.type
+        ?.let { DropInPaymentFlowType.RegularPaymentMethod(it) }
+
+    /**
+     * Renders the express payment method button, or `null` when none is offered. Created eagerly rather than when the
+     * shopper taps it, because the button is drawn by the controller itself.
+     */
+    val expressPaymentMethodController: CheckoutController? = expressPaymentMethodFlowType
+        ?.let { controllerProvider.provide(it, viewModelScope) }
+
+    init {
+        observeExpressPaymentMethodNavigation()
+    }
+
+    /**
+     * The controller driving the flow of [paymentFlowType], or `null` when that flow is not one of the express payment
+     * methods this view model owns.
+     */
+    fun findExpressPaymentMethodController(paymentFlowType: DropInPaymentFlowType): CheckoutController? =
+        expressPaymentMethodController.takeIf { expressPaymentMethodFlowType == paymentFlowType }
+
+    /**
+     * Navigates to the express payment method action screen when its payments call returns an action.
+     *
+     * [CheckoutController.navigation] has no replay, so the subscription has to be active before the shopper can tap
+     * the button. [CoroutineStart.UNDISPATCHED] makes sure it is set up before this view model is handed out.
+     */
+    private fun observeExpressPaymentMethodNavigation() {
+        val paymentFlowType = expressPaymentMethodFlowType ?: return
+        val controller = expressPaymentMethodController ?: return
+
+        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            controller.navigation.collect { route ->
+                when (route) {
+                    // Replacing the back stack means going back from the action cancels Drop-in, matching what the
+                    // other payment methods do.
+                    is CheckoutRoute.Action -> navigator.clearAndNavigateTo(
+                        ActionNavKey(paymentFlowType, ActionFlowOwner.EXPRESS_PAYMENT_METHOD),
+                    )
+
+                    else -> Unit
+                }
+            }
+        }
+    }
 
     private fun createInitialViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
         val storedPaymentMethodSection = storedPaymentMethods
@@ -54,7 +117,8 @@ internal class PaymentMethodListViewModel(
             }
 
         val paymentOptionsSection = paymentMethodRepository.paymentMethods
-            // Google Pay is rendered above the list by its own component, so it must not appear as a list item too.
+            // Express payment methods are rendered above the list by their own component, so they must not appear as
+            // a list item too.
             // TODO - Prototype: it is filtered out even when Google Pay turns out to be unavailable, in which case the
             //  shopper is left with no Google Pay entry at all.
             .filterNot { it.type in GOOGLE_PAY_TYPES }
@@ -122,6 +186,8 @@ internal class PaymentMethodListViewModel(
     class Factory(
         private val dropInParams: DropInParams,
         private val paymentMethodRepository: PaymentMethodRepository,
+        private val navigator: DropInNavigator,
+        private val controllerProvider: DropInControllerProvider,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -130,6 +196,8 @@ internal class PaymentMethodListViewModel(
                 dropInParams = dropInParams,
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+                navigator = navigator,
+                controllerProvider = controllerProvider,
             ) as T
         }
     }

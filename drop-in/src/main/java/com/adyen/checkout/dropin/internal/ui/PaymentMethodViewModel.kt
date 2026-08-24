@@ -32,13 +32,13 @@ import kotlin.reflect.KClass
  * Owns the [CheckoutController] that drives the payment flow of a single payment method, on top of the state its
  * screen renders.
  *
- * [PaymentMethodNavKey] and [ActionNavKey] declare the same [paymentFlowContentKey], so they share a view model store
- * and therefore this view model. That is what lets the flow survive the navigation from the payment method screen to
- * the action screen without being handed over, and the store is cleared once the last of those entries leaves the
- * back stack, which cancels [viewModelScope] and tears the controller down with it.
+ * [PaymentMethodNavKey] and the [ActionNavKey] that follows it declare the same [paymentFlowKey], so they share a view
+ * model store and therefore this view model. That is what lets the flow survive the navigation from the payment method
+ * screen to the action screen without being handed over, and the store is cleared once the last of those entries
+ * leaves the back stack, which cancels [viewModelScope] and tears the controller down with it.
  *
  * Google Pay does not go through here. Its button lives on the payment method list rather than on a screen of its own,
- * so it gets [GooglePayViewModel] instead.
+ * so its flow is owned by [PaymentMethodListViewModel] instead.
  */
 // TODO - The view state never changes, so it could be a plain value instead of a state flow.
 internal class PaymentMethodViewModel(
@@ -84,7 +84,10 @@ internal class PaymentMethodViewModel(
                 when (route) {
                     // Replacing the back stack means going back from the action cancels Drop-in, and makes the stack
                     // identical whether the action came from the list or from the payment method screen.
-                    is CheckoutRoute.Action -> navigator.clearAndNavigateTo(ActionNavKey(paymentFlowType))
+                    is CheckoutRoute.Action -> navigator.clearAndNavigateTo(
+                        ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD),
+                    )
+
                     else -> Unit
                 }
             }

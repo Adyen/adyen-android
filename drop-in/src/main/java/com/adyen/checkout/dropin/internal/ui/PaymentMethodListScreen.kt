@@ -61,14 +61,13 @@ private const val AMOUNT_VISIBLE_BRANDS = 3
 @Composable
 internal fun PaymentMethodListScreen(
     navigator: DropInNavigator,
-    googlePayController: CheckoutController?,
     viewModel: PaymentMethodListViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     PaymentMethodListContent(
         navigator = navigator,
         viewState = viewState,
-        googlePayController = googlePayController,
+        expressPaymentMethodController = viewModel.expressPaymentMethodController,
         onPaymentMethodClick = { navigator.navigateTo(PaymentMethodNavKey(it)) },
     )
 }
@@ -77,7 +76,7 @@ internal fun PaymentMethodListScreen(
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
-    googlePayController: CheckoutController?,
+    expressPaymentMethodController: CheckoutController?,
     onPaymentMethodClick: (DropInPaymentFlowType) -> Unit,
 ) {
     DropInScaffold(
@@ -108,7 +107,7 @@ private fun PaymentMethodListContent(
                     ),
             )
 
-            googlePayController?.let { GooglePayPaymentMethod(it) }
+            expressPaymentMethodController?.let { ExpressPaymentMethod(it) }
 
             viewState.storedPaymentMethodSection?.let {
                 Section(
@@ -139,11 +138,12 @@ private fun PaymentMethodListContent(
 }
 
 /**
- * Google Pay is rendered here instead of behind a list item, so the shopper taps the real Google Pay button. No
- * payment method screen is opened for it: the flow continues on the action screen, or Drop-in closes with a result.
+ * An express payment method is rendered here instead of behind a list item, so the shopper taps its real button, such
+ * as the Google Pay one. No payment method screen is opened for it: the flow continues on the action screen, or
+ * Drop-in closes with a result.
  */
 @Composable
-private fun GooglePayPaymentMethod(controller: CheckoutController) {
+private fun ExpressPaymentMethod(controller: CheckoutController) {
     CheckoutPaymentMethod(
         controller = controller,
         modifier = Modifier
@@ -324,7 +324,7 @@ private fun PaymentMethodListContentPreview(
         val persister = SavedStateBackStackPersister(SavedStateHandle())
         PaymentMethodListContent(
             navigator = DropInNavigator(persister),
-            googlePayController = null,
+            expressPaymentMethodController = null,
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
                 storedPaymentMethodSection = PaymentMethodListViewState.PaymentMethodListSection(

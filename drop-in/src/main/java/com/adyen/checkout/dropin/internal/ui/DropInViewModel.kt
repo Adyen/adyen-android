@@ -47,13 +47,6 @@ internal class DropInViewModel(
         dropInServiceManager = dropInServiceManager,
     )
 
-    /**
-     * The Google Pay flow offered by this session, or `null` when Google Pay is not available. It is rendered on the
-     * payment method list rather than behind a list item, so the list needs to know about it.
-     */
-    var googlePayFlowType: DropInPaymentFlowType? = null
-        private set
-
     val resultFlow: Flow<DropInResult> = merge(
         dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
         dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },
@@ -64,16 +57,6 @@ internal class DropInViewModel(
         initializePaymentMethods()
         initializeDropInParams()
         initializeBackStack()
-        initializeGooglePayFlowType()
-    }
-
-    private fun initializeGooglePayFlowType() {
-        val googlePayType = paymentMethodRepository.paymentMethods
-            .firstOrNull { it.type in GOOGLE_PAY_TYPES }
-            ?.type
-            ?: return
-
-        googlePayFlowType = DropInPaymentFlowType.RegularPaymentMethod(googlePayType)
     }
 
     private fun initializePaymentMethods() {

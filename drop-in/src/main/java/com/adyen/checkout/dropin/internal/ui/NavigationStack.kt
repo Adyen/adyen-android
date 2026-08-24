@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -29,11 +28,11 @@ internal fun NavigationStack(
         sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
         onBack = { viewModel.navigator.back() },
         // The saveable decorator is the NavDisplay default and is required by the view model one, so both have to be
-        // listed once this list is passed explicitly. Together they scope a view model to the content key of its nav
-        // entry, so entries sharing a content key share their view models.
+        // listed once this list is passed explicitly. The view model one scopes a view model to the flow its entry
+        // declares through scopeTo, rather than to the entry itself.
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator(),
+            rememberFlowScopedViewModelStoreNavEntryDecorator(),
         ),
         entryProvider = { key ->
             when (key) {
@@ -43,7 +42,6 @@ internal fun NavigationStack(
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
                 is PaymentMethodNavKey -> paymentMethodNavEntry(key, viewModel)
                 is ActionNavKey -> actionNavEntry(key, viewModel)
-                is GooglePayActionNavKey -> googlePayActionNavEntry(key, viewModel)
                 else -> error("Unknown key: $key")
             }
         },
@@ -78,19 +76,11 @@ private fun paymentMethodListNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
-    contentKey = GOOGLE_PAY_FLOW_CONTENT_KEY,
-    metadata = DropInTransitions.slideInAndOutVertically(),
+    metadata = DropInTransitions.slideInAndOutVertically() + scopeTo(EXPRESS_PAYMENT_METHOD_FLOW_KEY),
 ) {
     PaymentMethodListScreen(
         navigator = viewModel.navigator,
-        // Created here rather than observed, because the button has to be ready before the shopper taps it.
-        googlePayController = googlePayViewModel(viewModel)?.controller,
-        viewModel = viewModel(
-            factory = PaymentMethodListViewModel.Factory(
-                dropInParams = viewModel.dropInParams,
-                paymentMethodRepository = viewModel.paymentMethodRepository,
-            ),
-        ),
+        viewModel = paymentMethodListViewModel(viewModel),
     )
 }
 
@@ -123,8 +113,7 @@ private fun paymentMethodNavEntry(
 
     return NavEntry(
         key = key,
-        contentKey = paymentFlowContentKey(key.paymentFlowType),
-        metadata = transitions,
+        metadata = transitions + scopeTo(paymentFlowKey(key.paymentFlowType)),
     ) {
         val paymentMethodViewModel = paymentMethodViewModel(key.paymentFlowType, viewModel)
 
@@ -150,42 +139,30 @@ private fun actionNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
-    contentKey = paymentFlowContentKey(key.paymentFlowType),
     // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
-    metadata = DropInTransitions.slideInHorizontallyAndOutVertically(),
+    // Scoping to the flow of the owner is what continues it on the controller that started it.
+    metadata = DropInTransitions.slideInHorizontallyAndOutVertically() + scopeTo(key.flowKey()),
 ) {
-    ActionScreen(
-        navigator = viewModel.navigator,
-        controller = paymentMethodViewModel(key.paymentFlowType, viewModel).controller,
-    )
-}
-
-private fun googlePayActionNavEntry(
-    key: GooglePayActionNavKey,
-    viewModel: DropInViewModel,
-): NavEntry<NavKey> = NavEntry(
-    key = key,
-    // Shared with the payment method list, so the flow that started there continues on the same controller.
-    contentKey = GOOGLE_PAY_FLOW_CONTENT_KEY,
-    // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
-    metadata = DropInTransitions.slideInHorizontallyAndOutVertically(),
-) {
-    val googlePayViewModel = googlePayViewModel(viewModel) ?: run {
-        adyenLog(AdyenLogLevel.ERROR, "googlePayActionNavEntry") {
-            "Google Pay is not available, the ActionScreen cannot be displayed."
+    val controller = when (key.owner) {
+        ActionFlowOwner.PAYMENT_METHOD -> paymentMethodViewModel(key.paymentFlowType, viewModel).controller
+        ActionFlowOwner.EXPRESS_PAYMENT_METHOD ->
+            paymentMethodListViewModel(viewModel).findExpressPaymentMethodController(key.paymentFlowType)
+    } ?: run {
+        adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
+            "No controller for ${key.paymentFlowType} on ${key.owner}, the ActionScreen cannot be displayed."
         }
         return@NavEntry
     }
 
     ActionScreen(
         navigator = viewModel.navigator,
-        controller = googlePayViewModel.controller,
+        controller = controller,
     )
 }
 
 /**
  * Resolves the view model of the payment flow [paymentFlowType] identifies. The payment method screen and the action
- * screen that follows it share a content key, so the first of them creates it and the other gets that same instance.
+ * screen that follows it share a flow key, so the first of them creates it and the other gets that same instance.
  */
 @Composable
 private fun paymentMethodViewModel(
@@ -202,18 +179,17 @@ private fun paymentMethodViewModel(
 )
 
 /**
- * Resolves the Google Pay view model, or `null` when Google Pay is not offered. The payment method list and the Google
- * Pay action screen share a content key, so both get the same instance.
+ * Resolves the view model of the payment method list, which owns the express payment method flows. The list and their
+ * action screen share a flow key, so the action screen gets the instance the list created.
  */
 @Composable
-private fun googlePayViewModel(viewModel: DropInViewModel): GooglePayViewModel? {
-    val paymentFlowType = viewModel.googlePayFlowType ?: return null
-
-    return viewModel(
-        factory = GooglePayViewModel.Factory(
-            paymentFlowType = paymentFlowType,
-            navigator = viewModel.navigator,
-            controllerProvider = viewModel.controllerProvider,
-        ),
-    )
-}
+private fun paymentMethodListViewModel(
+    viewModel: DropInViewModel,
+): PaymentMethodListViewModel = viewModel(
+    factory = PaymentMethodListViewModel.Factory(
+        dropInParams = viewModel.dropInParams,
+        paymentMethodRepository = viewModel.paymentMethodRepository,
+        navigator = viewModel.navigator,
+        controllerProvider = viewModel.controllerProvider,
+    ),
+)

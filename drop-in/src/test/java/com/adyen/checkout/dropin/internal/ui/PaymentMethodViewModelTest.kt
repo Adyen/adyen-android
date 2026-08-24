@@ -149,7 +149,10 @@ internal class PaymentMethodViewModelTest {
 
         navigationFlow.tryEmit(CheckoutRoute.Action())
 
-        assertEquals(listOf(EmptyNavKey, ActionNavKey(REGULAR_TYPE)), navigator.backStack)
+        assertEquals(
+            listOf(EmptyNavKey, ActionNavKey(REGULAR_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
+            navigator.backStack,
+        )
     }
 
     @Test
@@ -159,7 +162,10 @@ internal class PaymentMethodViewModelTest {
 
         navigationFlow.tryEmit(CheckoutRoute.Action())
 
-        assertEquals(listOf(EmptyNavKey, ActionNavKey(STORED_TYPE)), navigator.backStack)
+        assertEquals(
+            listOf(EmptyNavKey, ActionNavKey(STORED_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
+            navigator.backStack,
+        )
     }
 
     @Test

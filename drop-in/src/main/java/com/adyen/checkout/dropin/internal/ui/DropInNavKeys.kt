@@ -34,38 +34,55 @@ internal data class PaymentMethodNavKey(
     val paymentFlowType: DropInPaymentFlowType,
 ) : NavKey
 
+/**
+ * The action screen of a payment flow. [owner] says which view model holds the controller that continues it, which is
+ * also what the entry scopes its view model store to.
+ */
 // TODO - Prototype: an action cannot be restored after process death. A persisted key currently renders an empty
 //  screen; it should be truncated back to the starting point instead.
 @Serializable
 internal data class ActionNavKey(
     val paymentFlowType: DropInPaymentFlowType,
+    val owner: ActionFlowOwner,
 ) : NavKey
 
 /**
- * The action screen of the Google Pay flow, which is separate from [ActionNavKey] because that flow is owned by
- * [GooglePayViewModel] rather than by [PaymentMethodViewModel].
+ * The view model that owns a payment flow, and therefore the controller its action screen continues on.
  */
 @Serializable
-internal data class GooglePayActionNavKey(
-    val paymentFlowType: DropInPaymentFlowType,
-) : NavKey
+internal enum class ActionFlowOwner {
+
+    /** [PaymentMethodViewModel], for a payment method with a screen of its own. */
+    PAYMENT_METHOD,
+
+    /** [PaymentMethodListViewModel], for an express payment method rendered on the list. */
+    EXPRESS_PAYMENT_METHOD,
+}
 
 /**
- * The nav entries of one payment flow all declare this content key. Nav3 treats entries sharing a content key as
- * sharing their [androidx.navigation3.runtime.NavEntryDecorator] state, which gives them one view model store, and
- * only clears it once the last of those entries left the back stack.
+ * The flow key the action of [ActionNavKey] shares with the screens it continues from, so that it resolves the view
+ * model those screens created rather than a fresh one.
+ */
+internal fun ActionNavKey.flowKey(): String = when (owner) {
+    ActionFlowOwner.PAYMENT_METHOD -> paymentFlowKey(paymentFlowType)
+    ActionFlowOwner.EXPRESS_PAYMENT_METHOD -> EXPRESS_PAYMENT_METHOD_FLOW_KEY
+}
+
+/**
+ * The nav entries of one payment flow all declare this key through [scopeTo], which gives them a single view model
+ * store that is cleared once the last of them leaves the back stack.
  *
  * That is what scopes [PaymentMethodViewModel] to the flow instead of to a single screen.
  */
-internal fun paymentFlowContentKey(paymentFlowType: DropInPaymentFlowType): String =
+internal fun paymentFlowKey(paymentFlowType: DropInPaymentFlowType): String =
     "payment-flow-$paymentFlowType"
 
 /**
- * The content key of the Google Pay flow, declared by [PaymentMethodListNavKey] and [GooglePayActionNavKey].
+ * The flow key of the express payment methods, declared by [PaymentMethodListNavKey] and by an [ActionNavKey] owned
+ * by [ActionFlowOwner.EXPRESS_PAYMENT_METHOD].
  *
- * The list hosts the Google Pay button, so it is where [GooglePayViewModel] is created. Sharing this key with the
- * action screen keeps that view model alive when the list is replaced, so the flow carries on with the controller that
- * started it. It also means the list keeps its own view models around until the action is done, which is harmless
- * because the whole store is cleared as soon as neither entry is on the back stack.
+ * The list hosts their buttons, so their controllers are owned by [PaymentMethodListViewModel]. Sharing this key with
+ * the action screen keeps that view model alive when the list is replaced, so the flow carries on with the controller
+ * that started it.
  */
-internal const val GOOGLE_PAY_FLOW_CONTENT_KEY = "google-pay-flow"
+internal const val EXPRESS_PAYMENT_METHOD_FLOW_KEY = "express-payment-method-flow"
