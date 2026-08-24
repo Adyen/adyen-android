@@ -37,6 +37,7 @@ This is expected and self-correcting — the next quarterly run takes them. Do n
 | No `merge_group` triggers, no `github.event_name == 'pull_request'` guards, and simpler concurrency groups | v5 does not use merge queues. `main` needs the `pull_request.number \|\| sha` fallback because `head_ref` is empty in a merge group | #2886 |
 | `check_v5.yml` in place of `check_main.yml`, and `v5` branch triggers throughout | Branch identity | #2886 |
 | No prerelease handling — `create_github_release` has no `prerelease` input, `generate_version_name` has no prerelease outputs and uses `version_name.sh` rather than `version_info.sh` and `version_name_from_branch.sh`, `finalize_release` has no `version_info` job or `omitPrereleaseDuringUpdate`, and `update_release_notes` sets `draft: true` | v5 ships stable releases only; prereleases are a v6 concept | #2886 |
+| `update_verification_metadata.yml` has no `push` trigger | Step 7 regenerates the metadata once, when versions are final. On `main` the trigger serves single-dependency branches nobody touches. Kept dispatchable | #2956 |
 | `release_nightly_app.yml` absent | v5 has no nightly builds | #2886 |
 | `release_acceptance_app.yml` has no `workflow_call` block | That block exists on `main` only so `release_nightly_app.yml` can call it, and v5 does not have that workflow | #2886 |
 | `run_ui_tests.yml` absent | v5 is a maintenance branch and does not run instrumentation tests | #2886 |

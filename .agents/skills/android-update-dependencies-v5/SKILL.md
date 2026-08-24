@@ -144,11 +144,7 @@ Account for every removed line. If something does not fit a known codegen catego
 
 Do this **last**, once versions are final, as its own commit.
 
-```
-./gradlew --write-verification-metadata sha256 resolveDependencies assembleDebug --refresh-dependencies
-```
-
-`--refresh-dependencies` matters. The writer only records what the build actually resolves, so with a warm cache it silently misses artifacts and the failure surfaces later as a verification error on a cold CI runner.
+Run the command from `.github/workflows/update_verification_metadata.yml`, which step 1 keeps in sync with `main`.
 
 ### 8. Verify
 

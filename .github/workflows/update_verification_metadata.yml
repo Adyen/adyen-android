@@ -1,9 +1,6 @@
 name: Update verification metadata
 
 on:
-  push:
-    branches:
-      - 'renovate/v5-all-v5'
   workflow_dispatch:
 
 permissions:
