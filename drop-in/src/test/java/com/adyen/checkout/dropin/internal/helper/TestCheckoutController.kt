@@ -17,11 +17,11 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
 /**
- * A mocked [CheckoutController] with the members the coordinator relies on stubbed.
+ * A mocked [CheckoutController] with the members the view models owning it rely on stubbed.
  *
  * Both stubs matter: an unstubbed [CheckoutController.requiresUserInteraction] defaults to `false`, which sends every
- * flow down the no-UI path, and an unstubbed [CheckoutController.navigation] returns `null`, which throws once the
- * coordinator collects it.
+ * flow down the no-UI path, and an unstubbed [CheckoutController.navigation] returns `null`, which throws once it is
+ * collected.
  *
  * @param onSubmit Invoked when the controller is submitted, to observe the state of the world at that moment.
  */

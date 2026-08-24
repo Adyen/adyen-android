@@ -61,16 +61,15 @@ private const val AMOUNT_VISIBLE_BRANDS = 3
 @Composable
 internal fun PaymentMethodListScreen(
     navigator: DropInNavigator,
-    paymentFlowCoordinator: PaymentFlowCoordinator,
+    googlePayController: CheckoutController?,
     viewModel: PaymentMethodListViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     PaymentMethodListContent(
         navigator = navigator,
         viewState = viewState,
-        // Created before this screen is composed, so it does not need to be observed.
-        googlePayController = paymentFlowCoordinator.googlePayController,
-        onPaymentMethodClick = { paymentFlowCoordinator.startFlow(it) },
+        googlePayController = googlePayController,
+        onPaymentMethodClick = { navigator.navigateTo(PaymentMethodNavKey(it)) },
     )
 }
 

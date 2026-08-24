@@ -12,7 +12,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
@@ -43,14 +42,17 @@ internal class DropInViewModel(
 
     private val dropInServiceManager = DropInServiceManager(input.serviceClass)
 
-    val paymentFlowCoordinator = PaymentFlowCoordinator(
-        navigator = navigator,
-        controllerProvider = DefaultDropInControllerProvider(
-            checkoutContext = checkoutContext,
-            dropInServiceManager = dropInServiceManager,
-        ),
-        coroutineScope = viewModelScope,
+    val controllerProvider: DropInControllerProvider = DefaultDropInControllerProvider(
+        checkoutContext = checkoutContext,
+        dropInServiceManager = dropInServiceManager,
     )
+
+    /**
+     * The Google Pay flow offered by this session, or `null` when Google Pay is not available. It is rendered on the
+     * payment method list rather than behind a list item, so the list needs to know about it.
+     */
+    var googlePayFlowType: DropInPaymentFlowType? = null
+        private set
 
     val resultFlow: Flow<DropInResult> = merge(
         dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
@@ -62,21 +64,16 @@ internal class DropInViewModel(
         initializePaymentMethods()
         initializeDropInParams()
         initializeBackStack()
-        initializeGooglePayFlow()
-        paymentFlowCoordinator.restoreFlow()
+        initializeGooglePayFlowType()
     }
 
-    /**
-     * Google Pay is rendered on the payment method list rather than behind a list item, so its flow has to exist
-     * before the shopper picks anything.
-     */
-    private fun initializeGooglePayFlow() {
+    private fun initializeGooglePayFlowType() {
         val googlePayType = paymentMethodRepository.paymentMethods
             .firstOrNull { it.type in GOOGLE_PAY_TYPES }
             ?.type
             ?: return
 
-        paymentFlowCoordinator.prepareGooglePayFlow(DropInPaymentFlowType.RegularPaymentMethod(googlePayType))
+        googlePayFlowType = DropInPaymentFlowType.RegularPaymentMethod(googlePayType)
     }
 
     private fun initializePaymentMethods() {

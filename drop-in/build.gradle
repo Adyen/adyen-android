@@ -78,6 +78,7 @@ dependencies {
 
     // Dependencies
     implementation libs.androidx.lifecycle.service
+    implementation libs.androidx.lifecycle.viewmodel.navigation3
     implementation libs.androidx.recyclerview
     implementation libs.bundles.androidx.navigation3
     implementation libs.compose.material

@@ -81,8 +81,8 @@ private fun PaymentMethodScreenContent(
                 )
             }
 
-            // The action is no longer rendered here: the coordinator navigates to the action screen instead, so this
-            // screen only renders the payment method itself.
+            // The action is no longer rendered here: PaymentMethodViewModel navigates to the action screen instead,
+            // so this screen only renders the payment method itself.
             // TODO - Prototype: secondary content (installments, MBWay country picker) was handled by
             //  CheckoutPaymentFlow and is unavailable until a ModalBottomSheet hosting CheckoutSecondary is added.
             // TODO - Pass theme and localization provider

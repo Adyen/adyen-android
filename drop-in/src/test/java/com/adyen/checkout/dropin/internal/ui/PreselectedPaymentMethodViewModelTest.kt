@@ -14,13 +14,8 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
-import com.adyen.checkout.dropin.internal.helper.mockCheckoutController
 import com.adyen.checkout.test.LoggingExtension
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -34,8 +29,6 @@ import java.util.Locale
 internal class PreselectedPaymentMethodViewModelTest {
 
     private lateinit var navigator: DropInNavigator
-    private lateinit var coordinatorScope: CoroutineScope
-    private lateinit var paymentFlowCoordinator: PaymentFlowCoordinator
 
     private val dropInParams = DropInParams(
         shopperLocale = Locale.US,
@@ -59,17 +52,6 @@ internal class PreselectedPaymentMethodViewModelTest {
     @BeforeEach
     fun setUp() {
         navigator = DropInNavigator(InMemoryBackStackPersister())
-        coordinatorScope = CoroutineScope(UnconfinedTestDispatcher())
-        paymentFlowCoordinator = PaymentFlowCoordinator(
-            navigator = navigator,
-            controllerProvider = DropInControllerProvider { _, _ -> mockCheckoutController() },
-            coroutineScope = coordinatorScope,
-        )
-    }
-
-    @AfterEach
-    fun tearDown() {
-        coordinatorScope.cancel()
     }
 
     @Test
@@ -157,6 +139,5 @@ internal class PreselectedPaymentMethodViewModelTest {
         paymentMethodRepository = repository,
         storedPaymentMethodId = storedPaymentMethodId,
         navigator = navigator,
-        paymentFlowCoordinator = paymentFlowCoordinator,
     )
 }

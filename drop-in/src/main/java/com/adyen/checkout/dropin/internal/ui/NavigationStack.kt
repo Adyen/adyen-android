@@ -12,8 +12,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -22,14 +24,17 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 internal fun NavigationStack(
     viewModel: DropInViewModel,
 ) {
-    // TODO - Investigate scoping view models to their nav entry with rememberViewModelStoreNavEntryDecorator. It
-    //  requires the lifecycle-viewmodel-navigation3 dependency and clears a view model once its entry left the
-    //  composition, which makes the key below obsolete and would allow screens to get the controller from their own
-    //  view model.
     NavDisplay(
         backStack = viewModel.navigator.backStack,
         sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
         onBack = { viewModel.navigator.back() },
+        // The saveable decorator is the NavDisplay default and is required by the view model one, so both have to be
+        // listed once this list is passed explicitly. Together they scope a view model to the content key of its nav
+        // entry, so entries sharing a content key share their view models.
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator(),
+        ),
         entryProvider = { key ->
             when (key) {
                 is EmptyNavKey -> emptyNavEntry(key)
@@ -37,8 +42,8 @@ internal fun NavigationStack(
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
                 is PaymentMethodNavKey -> paymentMethodNavEntry(key, viewModel)
-                is NoUiPaymentMethodNavKey -> noUiPaymentMethodNavEntry(key, viewModel)
                 is ActionNavKey -> actionNavEntry(key, viewModel)
+                is GooglePayActionNavKey -> googlePayActionNavEntry(key, viewModel)
                 else -> error("Unknown key: $key")
             }
         },
@@ -63,7 +68,6 @@ private fun preselectedPaymentMethodNavEntry(
                 storedPaymentMethodId = key.storedPaymentMethodId,
                 paymentMethodRepository = viewModel.paymentMethodRepository,
                 navigator = viewModel.navigator,
-                paymentFlowCoordinator = viewModel.paymentFlowCoordinator,
             ),
         ),
     )
@@ -74,11 +78,13 @@ private fun paymentMethodListNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
+    contentKey = GOOGLE_PAY_FLOW_CONTENT_KEY,
     metadata = DropInTransitions.slideInAndOutVertically(),
 ) {
     PaymentMethodListScreen(
         navigator = viewModel.navigator,
-        paymentFlowCoordinator = viewModel.paymentFlowCoordinator,
+        // Created here rather than observed, because the button has to be ready before the shopper taps it.
+        googlePayController = googlePayViewModel(viewModel)?.controller,
         viewModel = viewModel(
             factory = PaymentMethodListViewModel.Factory(
                 dropInParams = viewModel.dropInParams,
@@ -117,63 +123,25 @@ private fun paymentMethodNavEntry(
 
     return NavEntry(
         key = key,
+        contentKey = paymentFlowContentKey(key.paymentFlowType),
         metadata = transitions,
     ) {
-        // The controller is intentionally only read once, so this screen keeps rendering while it is navigated away
-        // from and its flow is being torn down.
-        val controller = remember(key) { viewModel.paymentFlowCoordinator.activeController } ?: run {
-            adyenLog(AdyenLogLevel.ERROR, "paymentMethodNavEntry") {
-                "No active payment flow, the PaymentMethodScreen cannot be displayed."
-            }
-            return@NavEntry
+        val paymentMethodViewModel = paymentMethodViewModel(key.paymentFlowType, viewModel)
+
+        if (paymentMethodViewModel.requiresUserInteraction) {
+            PaymentMethodScreen(
+                navigator = viewModel.navigator,
+                controller = paymentMethodViewModel.controller,
+                viewModel = paymentMethodViewModel,
+            )
+        } else {
+            // No controller is rendered here: the payments call is already running and this screen reports its
+            // progress by rendering the payment method itself rather than a component.
+            NoUiPaymentMethodScreen(
+                navigator = viewModel.navigator,
+                viewModel = paymentMethodViewModel,
+            )
         }
-
-        PaymentMethodScreen(
-            navigator = viewModel.navigator,
-            controller = controller,
-            viewModel = viewModel(
-                factory = PaymentMethodViewModel.Factory(
-                    paymentFlowType = key.paymentFlowType,
-                    paymentMethodRepository = viewModel.paymentMethodRepository,
-                    dropInParams = viewModel.dropInParams,
-                ),
-                // View models are scoped to the activity, so each payment method needs a unique key of its own.
-                // TODO - Remove this key when view models are scoped to their nav entry instead.
-                key = key.toString(),
-            ),
-        )
-    }
-}
-
-private fun noUiPaymentMethodNavEntry(
-    key: NoUiPaymentMethodNavKey,
-    viewModel: DropInViewModel,
-): NavEntry<NavKey> {
-    val transitions = if (viewModel.navigator.isEmptyAfterCurrent()) {
-        DropInTransitions.slideInAndOutVertically()
-    } else {
-        DropInTransitions.slideInAndOutHorizontally()
-    }
-
-    return NavEntry(
-        key = key,
-        metadata = transitions,
-    ) {
-        // Unlike the payment method screen, no controller is read here: the payments call is already running and this
-        // screen renders the payment method itself rather than a component.
-        NoUiPaymentMethodScreen(
-            navigator = viewModel.navigator,
-            viewModel = viewModel(
-                factory = PaymentMethodViewModel.Factory(
-                    paymentFlowType = key.paymentFlowType,
-                    paymentMethodRepository = viewModel.paymentMethodRepository,
-                    dropInParams = viewModel.dropInParams,
-                ),
-                // View models are scoped to the activity, so each payment method needs a unique key of its own.
-                // TODO - Remove this key when view models are scoped to their nav entry instead.
-                key = key.toString(),
-            ),
-        )
     }
 }
 
@@ -182,20 +150,70 @@ private fun actionNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
+    contentKey = paymentFlowContentKey(key.paymentFlowType),
     // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
     metadata = DropInTransitions.slideInHorizontallyAndOutVertically(),
 ) {
-    // The controller is intentionally only read once, so this screen keeps rendering while it is navigated away from
-    // and its flow is being torn down.
-    val controller = remember(key) { viewModel.paymentFlowCoordinator.activeController } ?: run {
-        adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
-            "No active payment flow, the ActionScreen cannot be displayed."
+    ActionScreen(
+        navigator = viewModel.navigator,
+        controller = paymentMethodViewModel(key.paymentFlowType, viewModel).controller,
+    )
+}
+
+private fun googlePayActionNavEntry(
+    key: GooglePayActionNavKey,
+    viewModel: DropInViewModel,
+): NavEntry<NavKey> = NavEntry(
+    key = key,
+    // Shared with the payment method list, so the flow that started there continues on the same controller.
+    contentKey = GOOGLE_PAY_FLOW_CONTENT_KEY,
+    // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
+    metadata = DropInTransitions.slideInHorizontallyAndOutVertically(),
+) {
+    val googlePayViewModel = googlePayViewModel(viewModel) ?: run {
+        adyenLog(AdyenLogLevel.ERROR, "googlePayActionNavEntry") {
+            "Google Pay is not available, the ActionScreen cannot be displayed."
         }
         return@NavEntry
     }
 
     ActionScreen(
         navigator = viewModel.navigator,
-        controller = controller,
+        controller = googlePayViewModel.controller,
+    )
+}
+
+/**
+ * Resolves the view model of the payment flow [paymentFlowType] identifies. The payment method screen and the action
+ * screen that follows it share a content key, so the first of them creates it and the other gets that same instance.
+ */
+@Composable
+private fun paymentMethodViewModel(
+    paymentFlowType: DropInPaymentFlowType,
+    viewModel: DropInViewModel,
+): PaymentMethodViewModel = viewModel(
+    factory = PaymentMethodViewModel.Factory(
+        paymentFlowType = paymentFlowType,
+        paymentMethodRepository = viewModel.paymentMethodRepository,
+        dropInParams = viewModel.dropInParams,
+        navigator = viewModel.navigator,
+        controllerProvider = viewModel.controllerProvider,
+    ),
+)
+
+/**
+ * Resolves the Google Pay view model, or `null` when Google Pay is not offered. The payment method list and the Google
+ * Pay action screen share a content key, so both get the same instance.
+ */
+@Composable
+private fun googlePayViewModel(viewModel: DropInViewModel): GooglePayViewModel? {
+    val paymentFlowType = viewModel.googlePayFlowType ?: return null
+
+    return viewModel(
+        factory = GooglePayViewModel.Factory(
+            paymentFlowType = paymentFlowType,
+            navigator = viewModel.navigator,
+            controllerProvider = viewModel.controllerProvider,
+        ),
     )
 }
