@@ -28,6 +28,8 @@ internal class DropInNavigatorTest {
     private lateinit var persister: BackStackPersister
     private lateinit var navigator: DropInNavigator
 
+    private val paymentFlowType = DropInPaymentFlowType.RegularPaymentMethod("scheme")
+
     @BeforeEach
     fun setUp() {
         persister = InMemoryBackStackPersister()
@@ -185,6 +187,37 @@ internal class DropInNavigatorTest {
         val restoredNavigator = DropInNavigator(persister)
 
         assertEquals(listOf(EmptyNavKey, key), restoredNavigator.backStack)
+    }
+
+    @Test
+    fun `when restoring an action key then the payment method screen is restored instead`() {
+        navigator.navigateTo(ActionNavKey(paymentFlowType))
+
+        val restoredNavigator = DropInNavigator(persister)
+
+        assertEquals(listOf(EmptyNavKey, PaymentMethodNavKey(paymentFlowType)), restoredNavigator.backStack)
+        assertTrue(restoredNavigator.didRestoreState)
+    }
+
+    @Test
+    fun `when restoring a secondary key then the payment method screen below it is not duplicated`() {
+        navigator.navigateTo(PaymentMethodNavKey(paymentFlowType))
+        navigator.navigateTo(SecondaryNavKey(paymentFlowType, "INSTALLMENTS"))
+
+        val restoredNavigator = DropInNavigator(persister)
+
+        assertEquals(listOf(EmptyNavKey, PaymentMethodNavKey(paymentFlowType)), restoredNavigator.backStack)
+    }
+
+    @Test
+    fun `when restoring leaves nothing to display then the back stack is treated as not restored`() {
+        navigator.navigateTo(TestNavKey("test"))
+        navigator.back()
+
+        val restoredNavigator = DropInNavigator(persister)
+
+        assertEquals(listOf(EmptyNavKey), restoredNavigator.backStack)
+        assertFalse(restoredNavigator.didRestoreState)
     }
 
     @Serializable

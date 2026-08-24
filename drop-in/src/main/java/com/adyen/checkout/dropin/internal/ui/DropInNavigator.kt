@@ -34,14 +34,33 @@ internal class DropInNavigator(
     val didRestoreState: Boolean
 
     init {
-        val restored = backStackPersister.restore()
-        didRestoreState = restored != null
+        val restored = backStackPersister.restore()?.let(::sanitizeRestored)
+        // A back stack that only holds the empty key has nothing to display, the starting point is
+        // determined as if there was no state to restore
+        didRestoreState = restored != null && restored.size > 1
         if (didRestoreState) {
             _backStack.clear()
-            _backStack.addAll(restored)
+            _backStack.addAll(requireNotNull(restored))
             onBackStackChanged()
         }
     }
+
+    /**
+     * An action or secondary screen cannot be restored: its controller, and with it the action being
+     * handled, does not survive process death. The payment method of the same flow is displayed instead.
+     */
+    private fun sanitizeRestored(restored: List<NavKey>): List<NavKey> = restored
+        .map { key ->
+            when (key) {
+                is ActionNavKey -> PaymentMethodNavKey(key.paymentFlowType)
+                is SecondaryNavKey -> PaymentMethodNavKey(key.paymentFlowType)
+                else -> key
+            }
+        }
+        .fold(mutableListOf<NavKey>()) { backStack, key ->
+            if (backStack.lastOrNull() != key) backStack.add(key)
+            backStack
+        }
 
     fun navigateTo(key: NavKey) {
         _backStack.add(key)
