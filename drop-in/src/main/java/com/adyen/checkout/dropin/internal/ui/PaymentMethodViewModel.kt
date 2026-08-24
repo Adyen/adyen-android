@@ -10,42 +10,22 @@ package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.AdditionalDetailsResult
-import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
-import com.adyen.checkout.core.components.BeforeSubmitResult
-import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutTarget
-import com.adyen.checkout.core.components.SessionCheckoutCallbacks
-import com.adyen.checkout.core.components.SessionCheckoutResult
-import com.adyen.checkout.core.components.SubmitResult
-import com.adyen.checkout.core.components.data.BeforeSubmitData
-import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
-import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
-import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 internal class PaymentMethodViewModel(
     private val paymentFlowType: DropInPaymentFlowType,
     private val paymentMethodRepository: PaymentMethodRepository,
-    private val checkoutContext: CheckoutContext,
-    private val dropInServiceManager: DropInServiceManager,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(createViewState())
     val viewState: StateFlow<PaymentMethodViewState> = _viewState.asStateFlow()
-
-    val controller = createCheckoutController()
 
     private fun createViewState(): PaymentMethodViewState {
         val paymentMethod = when (paymentFlowType) {
@@ -73,87 +53,15 @@ internal class PaymentMethodViewModel(
         }
     }
 
-    private fun createCheckoutController(): CheckoutController {
-        val target = when (paymentFlowType) {
-            is DropInPaymentFlowType.RegularPaymentMethod -> {
-                CheckoutTarget.PaymentMethod(type = paymentFlowType.txVariant)
-            }
-
-            is DropInPaymentFlowType.StoredPaymentMethod -> {
-                CheckoutTarget.StoredPaymentMethod(id = paymentFlowType.id)
-            }
-        }
-
-        return when (checkoutContext) {
-            is CheckoutContext.Advanced -> {
-                CheckoutController(
-                    target = target,
-                    context = checkoutContext,
-                    callbacks = AdvancedCheckoutCallbacks(
-                        onSubmit = ::onSubmit,
-                        onAdditionalDetails = ::onAdditionalDetails,
-                        onFailure = ::onFailure,
-                    ),
-                    coroutineScope = viewModelScope,
-                )
-            }
-
-            is CheckoutContext.Sessions -> {
-                CheckoutController(
-                    target = target,
-                    context = checkoutContext,
-                    callbacks = SessionCheckoutCallbacks(
-                        onBeforeSubmit = ::onBeforeSubmit,
-                        onFailure = ::onFailure,
-                        onComplete = ::onComplete,
-                    ),
-                    coroutineScope = viewModelScope,
-                )
-            }
-
-            is CheckoutContext.ActionOnly -> error("Unsupported context: $checkoutContext")
-        }
-    }
-
-    private suspend fun onBeforeSubmit(data: BeforeSubmitData): BeforeSubmitResult {
-        // TODO - Implement after beforeSubmit is added to DropInService
-        return BeforeSubmitResult.Proceed(data)
-    }
-
-    private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): SubmitResult {
-        return dropInServiceManager.requestOnSubmit(paymentComponentData)
-    }
-
-    private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
-        return dropInServiceManager.requestOnAdditionalDetails(data)
-    }
-
-    private fun onFailure(error: CheckoutError) {
-        viewModelScope.launch {
-            dropInServiceManager.onFailure(error)
-        }
-    }
-
-    private fun onComplete(result: SessionCheckoutResult) {
-        // TODO - Implement after signature of onFinished is updated
-        viewModelScope.launch {
-            dropInServiceManager.onPaymentCompleted(result.resultCode)
-        }
-    }
-
     class Factory(
         private val paymentFlowType: DropInPaymentFlowType,
         private val paymentMethodRepository: PaymentMethodRepository,
-        private val checkoutContext: CheckoutContext,
-        private val dropInServiceManager: DropInServiceManager,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             return PaymentMethodViewModel(
                 paymentFlowType = paymentFlowType,
                 paymentMethodRepository = paymentMethodRepository,
-                checkoutContext = checkoutContext,
-                dropInServiceManager = dropInServiceManager,
             ) as T
         }
     }

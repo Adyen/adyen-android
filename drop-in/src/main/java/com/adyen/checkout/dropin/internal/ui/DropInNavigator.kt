@@ -23,6 +23,9 @@ internal class DropInNavigator(
     private val _backStack: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
     val backStack: List<NavKey> get() = _backStack
 
+    private val _backStackFlow = MutableStateFlow<List<NavKey>>(_backStack.toList())
+    val backStackFlow = _backStackFlow.asStateFlow()
+
     private val _finishFlow = MutableStateFlow(false)
     val finishFlow = _finishFlow.asStateFlow()
 
@@ -34,19 +37,20 @@ internal class DropInNavigator(
         if (didRestoreState) {
             _backStack.clear()
             _backStack.addAll(restored)
+            onBackStackChanged()
         }
     }
 
     fun navigateTo(key: NavKey) {
         _backStack.add(key)
-        persist()
+        onBackStackChanged()
     }
 
     fun clearAndNavigateTo(key: NavKey) {
         _backStack.clear()
         _backStack.add(EmptyNavKey)
         _backStack.add(key)
-        persist()
+        onBackStackChanged()
     }
 
     fun back() {
@@ -55,14 +59,15 @@ internal class DropInNavigator(
         if (_backStack.singleOrNull() == EmptyNavKey) {
             _finishFlow.tryEmit(true)
         }
-        persist()
+        onBackStackChanged()
     }
 
     fun isEmptyAfterCurrent(): Boolean {
         return _backStack.filterNot { it is EmptyNavKey }.size <= 1
     }
 
-    private fun persist() {
+    private fun onBackStackChanged() {
+        _backStackFlow.value = _backStack.toList()
         backStackPersister.store(_backStack)
     }
 }

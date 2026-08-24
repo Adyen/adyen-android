@@ -92,6 +92,45 @@ internal class DropInNavigatorTest {
     }
 
     @Test
+    fun `when initialized then back stack flow emits the current back stack`() = runTest {
+        val backStackFlow = navigator.backStackFlow.test(testScheduler)
+
+        assertEquals(listOf(EmptyNavKey), backStackFlow.latestValue)
+    }
+
+    @Test
+    fun `when navigating then back stack flow emits the updated back stack`() = runTest {
+        val backStackFlow = navigator.backStackFlow.test(testScheduler)
+        val key = TestNavKey("test")
+
+        navigator.navigateTo(key)
+
+        assertEquals(listOf(EmptyNavKey, key), backStackFlow.latestValue)
+    }
+
+    @Test
+    fun `when going back then back stack flow emits the updated back stack`() = runTest {
+        val key = TestNavKey("test")
+        navigator.navigateTo(key)
+        val backStackFlow = navigator.backStackFlow.test(testScheduler)
+
+        navigator.back()
+
+        assertEquals(listOf(EmptyNavKey), backStackFlow.latestValue)
+    }
+
+    @Test
+    fun `when clearing and navigating then back stack flow emits the updated back stack`() = runTest {
+        navigator.navigateTo(TestNavKey("initial"))
+        val backStackFlow = navigator.backStackFlow.test(testScheduler)
+        val newKey = TestNavKey("new")
+
+        navigator.clearAndNavigateTo(newKey)
+
+        assertEquals(listOf(EmptyNavKey, newKey), backStackFlow.latestValue)
+    }
+
+    @Test
     fun `when restoring from saved state then back stack is restored`() {
         val key = TestNavKey("test")
         navigator.navigateTo(key)

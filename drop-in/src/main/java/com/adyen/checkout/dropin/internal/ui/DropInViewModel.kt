@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
@@ -25,8 +26,10 @@ import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlin.reflect.KClass
 
 internal class DropInViewModel(
@@ -44,6 +47,14 @@ internal class DropInViewModel(
 
     val dropInServiceManager = DropInServiceManager(input.serviceClass)
 
+    val flowHolder = CheckoutFlowHolder(
+        parentScope = viewModelScope,
+        controllerProvider = DefaultCheckoutControllerProvider(
+            checkoutContext = checkoutContext,
+            dropInServiceManager = dropInServiceManager,
+        ),
+    )
+
     val resultFlow: Flow<DropInResult> = merge(
         dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
         dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },
@@ -54,6 +65,7 @@ internal class DropInViewModel(
         initializePaymentMethods()
         initializeDropInParams()
         initializeBackStack()
+        observeBackStack()
     }
 
     private fun initializePaymentMethods() {
@@ -96,6 +108,18 @@ internal class DropInViewModel(
             PreselectedPaymentMethodNavKey(storedPaymentMethods.first().id)
         }
         navigator.navigateTo(startingPoint)
+    }
+
+    private fun observeBackStack() {
+        navigator.backStackFlow
+            .onEach { backStack ->
+                val paymentFlowTypes = backStack
+                    .filterIsInstance<PaymentFlowNavKey>()
+                    .map { it.paymentFlowType }
+                    .toSet()
+                flowHolder.retainOnly(paymentFlowTypes)
+            }
+            .launchIn(viewModelScope)
     }
 
     fun startDropInService(context: Context) {

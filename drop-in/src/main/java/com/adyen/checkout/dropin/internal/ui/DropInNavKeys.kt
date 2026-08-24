@@ -11,6 +11,14 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+/**
+ * A key that belongs to the payment flow of a single payment method. All keys of the same payment flow
+ * share one [com.adyen.checkout.core.components.CheckoutController].
+ */
+internal interface PaymentFlowNavKey : NavKey {
+    val paymentFlowType: DropInPaymentFlowType
+}
+
 @Serializable
 internal data object EmptyNavKey : NavKey
 
@@ -27,5 +35,5 @@ internal data object StoredPaymentMethodsNavKey : NavKey
 
 @Serializable
 internal data class PaymentMethodNavKey(
-    val paymentFlowType: DropInPaymentFlowType,
-) : NavKey
+    override val paymentFlowType: DropInPaymentFlowType,
+) : PaymentFlowNavKey
