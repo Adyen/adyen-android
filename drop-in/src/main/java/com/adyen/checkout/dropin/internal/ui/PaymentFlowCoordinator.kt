@@ -66,6 +66,8 @@ internal class PaymentFlowCoordinator(
         val controller = startActiveFlow(paymentFlowType).controller
         val requiresUserInteraction = controller.requiresUserInteraction()
 
+        // TODO - This should probably be expanded to accommodate stored payment methods, which have
+        //  requiresUserInteraction false but will require user interaction
         val key = if (requiresUserInteraction) {
             PaymentMethodNavKey(paymentFlowType)
         } else {
@@ -80,6 +82,7 @@ internal class PaymentFlowCoordinator(
 
         // Submitted only after navigating, so the screen reporting progress is already on the back stack by the time
         // the payments call returns an action and replaces it.
+        // TODO - Move this out to the NoUiPaymentMethodViewModel or a similar class
         if (!requiresUserInteraction) {
             controller.submit()
         }
@@ -107,6 +110,7 @@ internal class PaymentFlowCoordinator(
      * Creates the standby flow that renders the Google Pay button on the payment method list. It is deliberately not
      * the active flow: tapping another payment method must not tear it down.
      */
+    // TODO - Maybe rename
     fun prepareGooglePayFlow(paymentFlowType: DropInPaymentFlowType) {
         if (googlePayFlow != null) return
 
@@ -115,6 +119,7 @@ internal class PaymentFlowCoordinator(
         observeNavigation(flow)
     }
 
+    // TODO - Does too many things, needs to be optimized or renamed
     private fun startActiveFlow(paymentFlowType: DropInPaymentFlowType): ActiveFlow {
         cancelActiveFlow()
 
