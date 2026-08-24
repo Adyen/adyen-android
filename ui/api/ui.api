@@ -10,9 +10,12 @@ public final class com/adyen/checkout/ui/internal/element/input/CheckoutTextFiel
 	public static final fun rememberTextFieldStateWithCurrentValue (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)Landroidx/compose/foundation/text/input/TextFieldState;
 }
 
-public final class com/adyen/checkout/ui/theme/CheckoutColor {
+public final class com/adyen/checkout/ui/theme/CheckoutColor : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final synthetic fun box-impl (J)Lcom/adyen/checkout/ui/theme/CheckoutColor;
 	public static fun constructor-impl (J)J
+	public final fun describeContents ()I
+	public static final fun describeContents-impl (J)I
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (JLjava/lang/Object;)Z
 	public static final fun equals-impl0 (JJ)Z
@@ -22,6 +25,8 @@ public final class com/adyen/checkout/ui/theme/CheckoutColor {
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (J)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()J
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+	public static final fun writeToParcel-impl (JLandroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutColors : android/os/Parcelable {
