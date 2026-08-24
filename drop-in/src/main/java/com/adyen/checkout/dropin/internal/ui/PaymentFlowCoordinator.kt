@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.runtime.snapshotFlow
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
 import kotlinx.coroutines.CoroutineScope
@@ -167,9 +168,13 @@ internal class PaymentFlowCoordinator(
         googlePayFlow = null
     }
 
+    /**
+     * Copied into a plain list on purpose: snapshotFlow only emits when the value differs from the previous one, and
+     * the back stack itself is a single mutable instance that always compares equal to itself.
+     */
     private fun observeBackStack() {
         coroutineScope.launch {
-            navigator.backStackFlow.collect { backStack ->
+            snapshotFlow { navigator.backStack.toList() }.collect { backStack ->
                 if (backStack.none { it is PaymentFlowNavKey }) {
                     cancelActiveFlow()
                 }

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
@@ -133,8 +134,12 @@ internal class PaymentFlowCoordinatorTest {
         navigator.navigateTo(PaymentMethodListNavKey)
         val coordinator = createCoordinator()
         coordinator.startFlow(REGULAR_TYPE)
+        // Without this the back stack is only observed after going back, when it is identical to what it was before
+        // the flow started, and snapshotFlow skips a value equal to the previous one.
+        applySnapshotChanges()
 
         navigator.back()
+        applySnapshotChanges()
 
         assertNull(coordinator.activeController)
         assertFalse(createdFlowScopes[0].isActive)
@@ -146,6 +151,7 @@ internal class PaymentFlowCoordinatorTest {
         coordinator.startFlow(REGULAR_TYPE)
 
         navigator.navigateTo(StoredPaymentMethodsNavKey)
+        applySnapshotChanges()
 
         assertNotNull(coordinator.activeController)
         assertTrue(createdFlowScopes[0].isActive)
@@ -255,6 +261,14 @@ internal class PaymentFlowCoordinatorTest {
 
         assertSame(controller, coordinator.activeController)
         assertTrue(createdFlowScopes[0].isActive)
+    }
+
+    /**
+     * The coordinator observes the back stack with snapshotFlow, which only sees a change once the global snapshot is
+     * applied. On Android the Recomposer takes care of that; here it has to be driven by hand.
+     */
+    private fun applySnapshotChanges() {
+        Snapshot.sendApplyNotifications()
     }
 
     private fun createCoordinator(navigator: DropInNavigator = this.navigator) = PaymentFlowCoordinator(

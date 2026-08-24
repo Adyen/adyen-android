@@ -13,22 +13,17 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.dropin.internal.helper.BackStackPersister
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 internal class DropInNavigator(
     private val backStackPersister: BackStackPersister,
 ) {
 
-    // The back stack is exposed in two shapes: [backStack] is observed by Compose, [backStackFlow] by everything
-    // outside of composition. Both are kept in sync by onBackStackChanged().
-
+    // Snapshot state, so both Compose and anything outside of composition observe the same list: the former by
+    // reading it during composition, the latter through snapshotFlow.
     // Initialized with an empty key to make the preselected bottom sheet possible
     private val _backStack: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
     val backStack: List<NavKey> get() = _backStack
-
-    private val _backStackFlow: MutableStateFlow<List<NavKey>> = MutableStateFlow(_backStack.toList())
-    val backStackFlow: StateFlow<List<NavKey>> = _backStackFlow.asStateFlow()
 
     private val _finishFlow = MutableStateFlow(false)
     val finishFlow = _finishFlow.asStateFlow()
@@ -41,7 +36,6 @@ internal class DropInNavigator(
         if (didRestoreState) {
             _backStack.clear()
             _backStack.addAll(restored)
-            _backStackFlow.value = _backStack.toList()
         }
     }
 
@@ -78,7 +72,6 @@ internal class DropInNavigator(
     }
 
     private fun onBackStackChanged() {
-        _backStackFlow.value = _backStack.toList()
         backStackPersister.store(_backStack)
     }
 }
