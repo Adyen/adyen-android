@@ -39,6 +39,14 @@ internal class CheckoutFlowHolder(
     }
 
     /**
+     * Returns the controller of [paymentFlowType], or `null` when that flow has none. Unlike
+     * [getController] this never creates one.
+     */
+    fun peekController(paymentFlowType: DropInPaymentFlowType): CheckoutController? {
+        return flows[paymentFlowType]?.controller
+    }
+
+    /**
      * Releases every flow that is not part of [paymentFlowTypes], cancelling its scope.
      */
     fun retainOnly(paymentFlowTypes: Set<DropInPaymentFlowType>) {

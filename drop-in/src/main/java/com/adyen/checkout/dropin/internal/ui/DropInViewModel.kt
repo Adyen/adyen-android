@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -55,6 +56,8 @@ internal class DropInViewModel(
         ),
         routeHandler = CheckoutRouteHandler(navigator),
     )
+
+    private val returnHandler = CheckoutReturnHandler(navigator, flowHolder)
 
     val resultFlow: Flow<DropInResult> = merge(
         dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
@@ -121,6 +124,13 @@ internal class DropInViewModel(
                 flowHolder.retainOnly(paymentFlowTypes)
             }
             .launchIn(viewModelScope)
+    }
+
+    /**
+     * Handles the intent received when the shopper returns from an external redirect.
+     */
+    fun handleReturn(intent: Intent) {
+        returnHandler.handle(intent)
     }
 
     fun startDropInService(context: Context) {

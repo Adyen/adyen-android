@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.test.LoggingExtension
@@ -16,20 +15,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotSame
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(LoggingExtension::class)
@@ -78,6 +75,36 @@ internal class CheckoutFlowHolderTest {
 
         assertNotSame(card, stored)
         assertEquals(2, provider.invocations)
+    }
+
+    @Test
+    fun `when peeking the controller of a flow without one then null is returned`() = runTest {
+        val provider = TestCheckoutControllerProvider()
+        val holder = createHolder(backgroundScope, provider)
+
+        assertNull(holder.peekController(cardFlowType))
+        assertEquals(0, provider.invocations)
+    }
+
+    @Test
+    fun `when peeking the controller of an existing flow then it is returned`() = runTest {
+        val provider = TestCheckoutControllerProvider()
+        val holder = createHolder(backgroundScope, provider)
+        val controller = holder.getController(cardFlowType)
+
+        assertSame(controller, holder.peekController(cardFlowType))
+        assertEquals(1, provider.invocations)
+    }
+
+    @Test
+    fun `when peeking the controller of a released flow then null is returned`() = runTest {
+        val provider = TestCheckoutControllerProvider()
+        val holder = createHolder(backgroundScope, provider)
+        holder.getController(cardFlowType)
+
+        holder.retainOnly(emptySet())
+
+        assertNull(holder.peekController(cardFlowType))
     }
 
     @Test
@@ -176,24 +203,5 @@ internal class CheckoutFlowHolderTest {
         provider.navigationFlows.getValue(cardFlowType).emit(CheckoutRoute.Secondary("INSTALLMENTS"))
 
         assertEquals(PaymentMethodNavKey(cardFlowType), navigator.currentKey)
-    }
-
-    private class TestCheckoutControllerProvider : CheckoutControllerProvider {
-
-        val scopes = mutableMapOf<DropInPaymentFlowType, CoroutineScope>()
-        val navigationFlows = mutableMapOf<DropInPaymentFlowType, MutableSharedFlow<CheckoutRoute>>()
-        var invocations = 0
-            private set
-
-        override fun provide(
-            paymentFlowType: DropInPaymentFlowType,
-            coroutineScope: CoroutineScope,
-        ): CheckoutController {
-            invocations++
-            scopes[paymentFlowType] = coroutineScope
-            val navigationFlow = MutableSharedFlow<CheckoutRoute>(extraBufferCapacity = 1)
-            navigationFlows[paymentFlowType] = navigationFlow
-            return mock { on { navigation } doReturn navigationFlow }
-        }
     }
 }

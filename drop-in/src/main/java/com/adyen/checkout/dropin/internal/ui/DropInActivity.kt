@@ -65,6 +65,19 @@ class DropInActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Receives the redirect intent forwarded by [DropInRedirectHandlingActivity], this activity is a
+     * `singleTask` one.
+     *
+     * [setIntent] is deliberately not called: [onCreate] parses its input from the launch intent, so
+     * replacing it would make the next recreation close drop-in.
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        adyenLog(AdyenLogLevel.DEBUG) { "onNewIntent" }
+        viewModel.handleReturn(intent)
+    }
+
     private fun sendResult(dropInResult: DropInResult) {
         adyenLog(AdyenLogLevel.DEBUG) { "sendResult: $dropInResult" }
         val resultIntent = Intent().putExtra(
