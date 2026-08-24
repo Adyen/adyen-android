@@ -12,8 +12,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 
 @Composable
@@ -22,6 +24,12 @@ internal fun NavigationStack(
 ) {
     NavDisplay(
         backStack = viewModel.navigator.backStack,
+        entryDecorators = listOf(
+            // Default decorator, required for rememberSaveable to work inside entries
+            rememberSaveableStateHolderNavEntryDecorator(),
+            // Scopes ViewModels to their entry, clearing them when the entry leaves the back stack
+            rememberViewModelStoreNavEntryDecorator(),
+        ),
         sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
         onBack = { viewModel.navigator.back() },
         entryProvider = { key ->
@@ -118,7 +126,6 @@ private fun paymentMethodNavEntry(
                     checkoutContext = viewModel.checkoutContext,
                     dropInServiceManager = viewModel.dropInServiceManager,
                 ),
-                key = key.paymentFlowType.hashCode().toString(),
             ),
             theme = viewModel.theme,
         )
