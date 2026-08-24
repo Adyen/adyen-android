@@ -67,6 +67,17 @@ internal class CheckoutParamsFactoryTest {
         }
 
         @Test
+        fun `when configuration has no shopperLocale and session locale is malformed, then use device locale`() {
+            val configuration = createConfiguration(shopperLocale = null)
+            // Underscores instead of hyphens, a common mistake when a Java Locale is stringified
+            val session = createSession(shopperLocale = "en_US")
+
+            val result = factory.create(configuration, session, null)
+
+            assertEquals(deviceLocale, result.shopperLocale)
+        }
+
+        @Test
         fun `when configuration has no shopperLocale and session is null, then use device locale`() {
             val configuration = createConfiguration(shopperLocale = null)
 
