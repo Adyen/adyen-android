@@ -39,8 +39,8 @@ import kotlinx.coroutines.launch
  *
  * Express payment methods are the exception to [PaymentMethodViewModel]: their buttons are part of this list rather
  * than a screen behind a list item, so their controllers have to exist before the shopper picks anything.
- * [PaymentMethodListNavKey] and the [ActionNavKey] that follows it declare the same [EXPRESS_PAYMENT_METHOD_FLOW_KEY],
- * so this view model survives the navigation to the action screen and those flows continue on the same controller.
+ * [PaymentMethodListNavKey] and the [ActionNavKey] that follows it report the same [FlowScopedNavKey.flowKey], so this
+ * view model survives the navigation to the action screen and those flows continue on the same controller.
  */
 internal class PaymentMethodListViewModel(
     private val dropInParams: DropInParams,
@@ -94,7 +94,7 @@ internal class PaymentMethodListViewModel(
                     // Replacing the back stack means going back from the action cancels Drop-in, matching what the
                     // other payment methods do.
                     is CheckoutRoute.Action -> navigator.clearAndNavigateTo(
-                        ActionNavKey(paymentFlowType, ActionFlowOwner.EXPRESS_PAYMENT_METHOD),
+                        ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD_LIST),
                     )
 
                     else -> Unit

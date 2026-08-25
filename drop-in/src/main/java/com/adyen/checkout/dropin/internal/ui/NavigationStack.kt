@@ -76,7 +76,7 @@ private fun paymentMethodListNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
-    metadata = DropInTransitions.slideInAndOutVertically() + scopeTo(EXPRESS_PAYMENT_METHOD_FLOW_KEY),
+    metadata = DropInTransitions.slideInAndOutVertically() + scopeTo(key.flowKey),
 ) {
     PaymentMethodListScreen(
         navigator = viewModel.navigator,
@@ -113,7 +113,7 @@ private fun paymentMethodNavEntry(
 
     return NavEntry(
         key = key,
-        metadata = transitions + scopeTo(paymentFlowKey(key.paymentFlowType)),
+        metadata = transitions + scopeTo(key.flowKey),
     ) {
         val paymentMethodViewModel = paymentMethodViewModel(key.paymentFlowType, viewModel)
 
@@ -141,11 +141,11 @@ private fun actionNavEntry(
     key = key,
     // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
     // Scoping to the flow of the owner is what continues it on the controller that started it.
-    metadata = DropInTransitions.slideInHorizontallyAndOutVertically() + scopeTo(key.flowKey()),
+    metadata = DropInTransitions.slideInHorizontallyAndOutVertically() + scopeTo(key.flowKey),
 ) {
     val controller = when (key.owner) {
         ActionFlowOwner.PAYMENT_METHOD -> paymentMethodViewModel(key.paymentFlowType, viewModel).controller
-        ActionFlowOwner.EXPRESS_PAYMENT_METHOD ->
+        ActionFlowOwner.PAYMENT_METHOD_LIST ->
             paymentMethodListViewModel(viewModel).findExpressPaymentMethodController(key.paymentFlowType)
     } ?: run {
         adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {

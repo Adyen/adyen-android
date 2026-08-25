@@ -19,8 +19,15 @@ internal data class PreselectedPaymentMethodNavKey(
     val storedPaymentMethodId: String,
 ) : NavKey
 
+/**
+ * The list hosts the express payment method buttons, so their controllers are owned by its view model and its store is
+ * the one their action screen has to join.
+ */
 @Serializable
-internal data object PaymentMethodListNavKey : NavKey
+internal data object PaymentMethodListNavKey : FlowScopedNavKey {
+
+    override val flowKey: String get() = PAYMENT_METHOD_LIST_FLOW_KEY
+}
 
 @Serializable
 internal data object StoredPaymentMethodsNavKey : NavKey
@@ -32,19 +39,46 @@ internal data object StoredPaymentMethodsNavKey : NavKey
 @Serializable
 internal data class PaymentMethodNavKey(
     val paymentFlowType: DropInPaymentFlowType,
-) : NavKey
+) : FlowScopedNavKey {
+
+    override val flowKey: String get() = paymentFlowKey(paymentFlowType)
+}
 
 /**
  * The action screen of a payment flow. [owner] says which view model holds the controller that continues it, which is
  * also what the entry scopes its view model store to.
  */
-// TODO - Prototype: an action cannot be restored after process death. A persisted key currently renders an empty
-//  screen; it should be truncated back to the starting point instead.
+// TODO - Prototype: a payment flow cannot be restored after process death. No action state is persisted and the
+//  controller is rebuilt from scratch, so this key renders an empty screen. Worse, when the payment method
+//  takes no shopper input, the rebuilt PaymentMethodViewModel submits the payment a second time: the guard in
+//  FullCheckoutFlow is an in-memory AtomicBoolean, so it resets with the process. A restored PaymentMethodNavKey
+//  submits twice for the same reason. Both should be truncated back to the starting point instead.
 @Serializable
 internal data class ActionNavKey(
     val paymentFlowType: DropInPaymentFlowType,
     val owner: ActionFlowOwner,
-) : NavKey
+) : FlowScopedNavKey {
+
+    override val flowKey: String get() = when (owner) {
+        ActionFlowOwner.PAYMENT_METHOD -> paymentFlowKey(paymentFlowType)
+        ActionFlowOwner.PAYMENT_METHOD_LIST -> PAYMENT_METHOD_LIST_FLOW_KEY
+    }
+}
+
+/**
+ * A nav key whose entry shares its view models with the other entries of the same payment flow, rather than keeping
+ * them to itself.
+ */
+internal sealed interface FlowScopedNavKey : NavKey {
+
+    /**
+     * The view model store the entry of this key joins, declared through [scopeTo].
+     *
+     * Every entry of one flow reports the same key, which gives them a single store that is cleared once the last of
+     * them leaves the back stack. That is what lets a controller outlive the screen that created it.
+     */
+    val flowKey: String
+}
 
 /**
  * The view model that owns a payment flow, and therefore the controller its action screen continues on.
@@ -56,33 +90,9 @@ internal enum class ActionFlowOwner {
     PAYMENT_METHOD,
 
     /** [PaymentMethodListViewModel], for an express payment method rendered on the list. */
-    EXPRESS_PAYMENT_METHOD,
+    PAYMENT_METHOD_LIST,
 }
 
-/**
- * The flow key the action of [ActionNavKey] shares with the screens it continues from, so that it resolves the view
- * model those screens created rather than a fresh one.
- */
-internal fun ActionNavKey.flowKey(): String = when (owner) {
-    ActionFlowOwner.PAYMENT_METHOD -> paymentFlowKey(paymentFlowType)
-    ActionFlowOwner.EXPRESS_PAYMENT_METHOD -> EXPRESS_PAYMENT_METHOD_FLOW_KEY
-}
+private fun paymentFlowKey(paymentFlowType: DropInPaymentFlowType): String = "payment-flow-$paymentFlowType"
 
-/**
- * The nav entries of one payment flow all declare this key through [scopeTo], which gives them a single view model
- * store that is cleared once the last of them leaves the back stack.
- *
- * That is what scopes [PaymentMethodViewModel] to the flow instead of to a single screen.
- */
-internal fun paymentFlowKey(paymentFlowType: DropInPaymentFlowType): String =
-    "payment-flow-$paymentFlowType"
-
-/**
- * The flow key of the express payment methods, declared by [PaymentMethodListNavKey] and by an [ActionNavKey] owned
- * by [ActionFlowOwner.EXPRESS_PAYMENT_METHOD].
- *
- * The list hosts their buttons, so their controllers are owned by [PaymentMethodListViewModel]. Sharing this key with
- * the action screen keeps that view model alive when the list is replaced, so the flow carries on with the controller
- * that started it.
- */
-internal const val EXPRESS_PAYMENT_METHOD_FLOW_KEY = "express-payment-method-flow"
+private const val PAYMENT_METHOD_LIST_FLOW_KEY = "payment-method-list-flow"

@@ -116,7 +116,7 @@ internal class PaymentMethodListViewModelTest {
         navigationFlow.tryEmit(CheckoutRoute.Action())
 
         assertEquals(
-            listOf(EmptyNavKey, ActionNavKey(GOOGLE_PAY_FLOW_TYPE, ActionFlowOwner.EXPRESS_PAYMENT_METHOD)),
+            listOf(EmptyNavKey, ActionNavKey(GOOGLE_PAY_FLOW_TYPE, ActionFlowOwner.PAYMENT_METHOD_LIST)),
             navigator.backStack,
         )
     }
