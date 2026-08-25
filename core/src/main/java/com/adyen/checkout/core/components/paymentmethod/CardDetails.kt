@@ -5,6 +5,7 @@
  *
  * Created by caiof on 29/5/2019.
  */
+
 package com.adyen.checkout.core.components.paymentmethod
 
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
@@ -14,17 +15,16 @@ import org.json.JSONObject
 @Parcelize
 data class CardDetails(
     override val type: String,
-    override val sdkData: String? = null,
-    val encryptedCardNumber: String? = null,
-    val encryptedExpiryMonth: String? = null,
-    val encryptedExpiryYear: String? = null,
-    val encryptedSecurityCode: String? = null,
-    val encryptedPassword: String? = null,
-    val holderName: String? = null,
-    val storedPaymentMethodId: String? = null,
-    val taxNumber: String? = null,
-    val brand: String? = null,
-    val fundingSource: String? = null,
+    override val sdkData: String?,
+    val encryptedCardNumber: String?,
+    val encryptedExpiryMonth: String?,
+    val encryptedExpiryYear: String?,
+    val encryptedSecurityCode: String?,
+    val encryptedPassword: String?,
+    val holderName: String?,
+    val taxNumber: String?,
+    val brand: String?,
+    val fundingSource: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -34,7 +34,6 @@ data class CardDetails(
         private const val ENCRYPTED_EXPIRY_YEAR = "encryptedExpiryYear"
         private const val ENCRYPTED_SECURITY_CODE = "encryptedSecurityCode"
         private const val HOLDER_NAME = "holderName"
-        private const val STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId"
         private const val ENCRYPTED_PASSWORD = "encryptedPassword"
         private const val TAX_NUMBER = "taxNumber"
         private const val BRAND = "brand"
@@ -51,7 +50,6 @@ data class CardDetails(
                     putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.encryptedExpiryYear)
                     putOpt(ENCRYPTED_SECURITY_CODE, modelObject.encryptedSecurityCode)
                     putOpt(HOLDER_NAME, modelObject.holderName)
-                    putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                     putOpt(ENCRYPTED_PASSWORD, modelObject.encryptedPassword)
                     putOpt(TAX_NUMBER, modelObject.taxNumber)
                     putOpt(BRAND, modelObject.brand)
@@ -69,10 +67,9 @@ data class CardDetails(
                     encryptedSecurityCode = jsonObject.getStringOrNull(ENCRYPTED_SECURITY_CODE),
                     encryptedPassword = jsonObject.getStringOrNull(ENCRYPTED_PASSWORD),
                     holderName = jsonObject.getStringOrNull(HOLDER_NAME),
-                    storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),
                     taxNumber = jsonObject.getStringOrNull(TAX_NUMBER),
                     brand = jsonObject.getStringOrNull(BRAND),
-                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE)
+                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
                 )
             }
         }

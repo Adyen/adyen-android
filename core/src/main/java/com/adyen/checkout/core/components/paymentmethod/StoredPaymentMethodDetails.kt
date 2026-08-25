@@ -34,10 +34,11 @@ abstract class StoredPaymentMethodDetails : PaymentMethodDetails() {
                 return serializer.deserialize(jsonObject)
             }
 
-            @Suppress("UnusedParameter")
             fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethodDetails> {
-                // TODO add more payment methods
-                val serializer = GenericStoredDetails.SERIALIZER
+                val serializer = when (paymentMethodType) {
+                    StoredCardDetails.PAYMENT_METHOD_TYPE -> StoredCardDetails.SERIALIZER
+                    else -> GenericStoredDetails.SERIALIZER
+                }
                 @Suppress("UNCHECKED_CAST")
                 return serializer as Serializer<StoredPaymentMethodDetails>
             }

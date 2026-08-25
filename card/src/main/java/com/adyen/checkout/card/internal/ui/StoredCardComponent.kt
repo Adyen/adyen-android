@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
+import com.adyen.checkout.card.internal.ui.state.StoredCardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.card.internal.ui.view.StoredCardContent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -34,7 +34,7 @@ import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.getPaymentDataValue
 import com.adyen.checkout.core.components.internal.ui.state.viewState
-import com.adyen.checkout.core.components.paymentmethod.CardDetails
+import com.adyen.checkout.core.components.paymentmethod.StoredCardDetails
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.EncryptedCard
@@ -137,8 +137,8 @@ constructor(
         sdkDataProvider: SdkDataProvider,
         storedPaymentMethodId: String,
         paymentMethodType: String,
-    ): CardPaymentComponentState {
-        val cardDetails = CardDetails(
+    ): StoredCardPaymentComponentState {
+        val storedCardDetails = StoredCardDetails(
             type = paymentMethodType,
             sdkData = sdkDataProvider.createEncodedSdkData(
                 threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull(),
@@ -148,12 +148,12 @@ constructor(
         )
 
         val paymentComponentData = PaymentComponentData(
-            paymentMethod = cardDetails,
+            paymentMethod = storedCardDetails,
             storePaymentMethod = null,
             order = null,
         )
 
-        return CardPaymentComponentState(
+        return StoredCardPaymentComponentState(
             data = paymentComponentData,
             isValid = true,
         )

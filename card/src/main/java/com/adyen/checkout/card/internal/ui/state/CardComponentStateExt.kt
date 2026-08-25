@@ -154,6 +154,8 @@ private fun createCardDetails(
     brand = cardBrand?.txVariant,
     encryptedPassword = encryptedKcpCardPassword,
     taxNumber = kcpBirthDateOrTaxNumber,
+    // TODO support this
+    fundingSource = null,
 )
 
 private fun CardComponentState.getBillingAddress(): Address? {
@@ -190,6 +192,7 @@ private fun CardComponentState.getInstallments(): Installments? {
             plan = InstallmentPlan.REVOLVING.type,
             value = 1, // The number of installments for revolving is always 1
         )
+
         is InstallmentModel.Regular ->
             Installments(
                 plan = InstallmentPlan.REGULAR.type,

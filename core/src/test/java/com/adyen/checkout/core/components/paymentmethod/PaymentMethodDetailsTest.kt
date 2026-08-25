@@ -31,6 +31,23 @@ internal class PaymentMethodDetailsTest {
     }
 
     @Test
+    fun `when serializing stored card details then the stored card serializer is used`() {
+        val details = StoredCardDetails(
+            type = StoredCardDetails.PAYMENT_METHOD_TYPE,
+            sdkData = "test_sdk_data",
+            storedPaymentMethodId = "stored_pm_id",
+            encryptedSecurityCode = "encrypted_cvc",
+        )
+
+        val json = PaymentMethodDetails.SERIALIZER.serialize(details)
+
+        assertEquals(StoredCardDetails.PAYMENT_METHOD_TYPE, json.getString("type"))
+        assertEquals("stored_pm_id", json.getString("storedPaymentMethodId"))
+        assertEquals("encrypted_cvc", json.getString("encryptedSecurityCode"))
+        assertFalse(json.has("encryptedCardNumber"))
+    }
+
+    @Test
     fun `when serializing regular details then the serializer for the type is used`() {
         val details = BlikDetails(
             type = BlikDetails.PAYMENT_METHOD_TYPE,
