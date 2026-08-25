@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.paymentmethod
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import org.json.JSONObject
 
@@ -18,7 +19,9 @@ import org.json.JSONObject
  * [PaymentMethodDetails.SERIALIZER] can be used to serialize and deserialize the subclasses of [PaymentMethodDetails]
  * without having to know the exact type of the subclass.
  */
-abstract class PaymentMethodDetails : ModelObject() {
+abstract class PaymentMethodDetails
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor() : ModelObject() {
 
     abstract val type: String
     abstract val sdkData: String?
@@ -30,6 +33,12 @@ abstract class PaymentMethodDetails : ModelObject() {
         @JvmField
         val SERIALIZER: Serializer<PaymentMethodDetails> = object : Serializer<PaymentMethodDetails> {
             override fun serialize(modelObject: PaymentMethodDetails): JSONObject {
+                // Stored details cannot be resolved by type, since a type can have both a regular and a stored
+                // implementation. Therefore they are handled by their own serializer.
+                if (modelObject is StoredPaymentMethodDetails) {
+                    return StoredPaymentMethodDetails.SERIALIZER.serialize(modelObject)
+                }
+
                 val serializer = getChildSerializer(modelObject.type)
                 return serializer.serialize(modelObject)
             }
@@ -42,7 +51,7 @@ abstract class PaymentMethodDetails : ModelObject() {
         }
 
         @Suppress("CyclomaticComplexMethod")
-        fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethodDetails> {
+        private fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethodDetails> {
             val serializer = when (paymentMethodType) {
                 // TODO - Uncomment payment methods as we support new ones
 //                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
