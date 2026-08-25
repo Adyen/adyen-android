@@ -33,8 +33,8 @@ import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
-import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.CardContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContentEntry
@@ -45,7 +45,6 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
@@ -82,15 +81,14 @@ constructor(
     componentStateFactory: CardComponentStateFactory,
     componentStateReducer: CardComponentStateReducer,
     viewStateProducer: CardViewStateProducer,
+    private val cardPaymentComponentStateFactory: CardPaymentComponentStateFactory,
     private val coroutineScope: CoroutineScope,
-    private val sdkDataProvider: SdkDataProvider,
     private val paymentMethodType: String,
     private val onBinChangeCallback: OnBinChangeCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
     private val cardScannerWrapper: CardScannerWrapper,
     private val publicKey: String?,
     private val environment: Environment,
-    private val fundingSource: String?,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) : PaymentComponent,
     SecondaryScreenComponent {
@@ -168,13 +166,10 @@ constructor(
                 ) ?: return
             }
 
-            val paymentComponentState = currentState.toPaymentComponentState(
-                componentParams = componentParams,
+            val paymentComponentState = cardPaymentComponentStateFactory.createPaymentComponentState(
+                cardComponentState = currentState,
                 encryptedCard = encryptedCard,
                 encryptedKcpCardPassword = encryptedKcpCardPassword,
-                sdkDataProvider = sdkDataProvider,
-                paymentMethodType = paymentMethodType,
-                fundingSource = fundingSource,
             )
             val event = PaymentComponentEvent.Submit(paymentComponentState)
             eventChannel.trySend(event)

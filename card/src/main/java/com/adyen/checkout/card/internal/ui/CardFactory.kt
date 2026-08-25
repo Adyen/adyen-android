@@ -22,6 +22,7 @@ import com.adyen.checkout.card.internal.ui.state.CardBrandIntentsHandler
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
+import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
@@ -49,6 +50,7 @@ internal class CardFactory :
     PaymentComponentFactory<CardComponent>,
     StoredPaymentComponentFactory<StoredCardComponent> {
 
+    @Suppress("LongMethod")
     override fun create(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
@@ -93,6 +95,13 @@ internal class CardFactory :
             networkCardBrandDetectionService,
         )
 
+        val cardPaymentComponentStateFactory = CardPaymentComponentStateFactory(
+            componentParams = cardComponentParams,
+            sdkDataProvider = sdkDataProvider,
+            paymentMethodType = paymentMethodType,
+            fundingSource = paymentMethod.fundingSource,
+        )
+
         return CardComponent(
             analyticsManager = analyticsManager,
             cardEncryptor = cardEncryptor,
@@ -103,15 +112,14 @@ internal class CardFactory :
             componentStateFactory = componentStateFactory,
             componentStateReducer = componentStateReducer,
             viewStateProducer = viewStateProducer,
+            cardPaymentComponentStateFactory = cardPaymentComponentStateFactory,
             coroutineScope = coroutineScope,
-            sdkDataProvider = sdkDataProvider,
             paymentMethodType = paymentMethodType,
             onBinChangeCallback = additionalCallbacks.getAdditionalCallback<OnBinChangeCallback>(),
             onBinLookupCallback = additionalCallbacks.getAdditionalCallback<OnBinLookupCallback>(),
             cardScannerWrapper = CardScannerWrapper(),
             publicKey = params.publicKey,
             environment = params.environment,
-            fundingSource = paymentMethod.fundingSource,
             cardConfigDataGenerator = CardConfigDataGenerator(params),
         )
     }
