@@ -10,9 +10,12 @@ public final class com/adyen/checkout/ui/internal/element/input/CheckoutTextFiel
 	public static final fun rememberTextFieldStateWithCurrentValue (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)Landroidx/compose/foundation/text/input/TextFieldState;
 }
 
-public final class com/adyen/checkout/ui/theme/CheckoutColor {
+public final class com/adyen/checkout/ui/theme/CheckoutColor : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final synthetic fun box-impl (J)Lcom/adyen/checkout/ui/theme/CheckoutColor;
 	public static fun constructor-impl (J)J
+	public final fun describeContents ()I
+	public static final fun describeContents-impl (J)I
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (JLjava/lang/Object;)Z
 	public static final fun equals-impl0 (JJ)Z
@@ -22,10 +25,13 @@ public final class com/adyen/checkout/ui/theme/CheckoutColor {
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (J)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()J
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+	public static final fun writeToParcel-impl (JLandroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/ui/theme/CheckoutColors {
+public final class com/adyen/checkout/ui/theme/CheckoutColors : android/os/Parcelable {
 	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/ui/theme/CheckoutColors$Companion;
 	public synthetic fun <init> (JJJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-26fMgeE ()J
@@ -43,6 +49,7 @@ public final class com/adyen/checkout/ui/theme/CheckoutColors {
 	public final fun component9-26fMgeE ()J
 	public final fun copy--GY1CCY (JJJJJJJJJJJJJ)Lcom/adyen/checkout/ui/theme/CheckoutColors;
 	public static synthetic fun copy--GY1CCY$default (Lcom/adyen/checkout/ui/theme/CheckoutColors;JJJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBackground-26fMgeE ()J
 	public final fun getContainer-26fMgeE ()J
@@ -59,6 +66,7 @@ public final class com/adyen/checkout/ui/theme/CheckoutColors {
 	public final fun getTextSecondary-26fMgeE ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutColors$Companion {
@@ -68,17 +76,20 @@ public final class com/adyen/checkout/ui/theme/CheckoutColors$Companion {
 	public static synthetic fun light--GY1CCY$default (Lcom/adyen/checkout/ui/theme/CheckoutColors$Companion;JJJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
 }
 
-public final class com/adyen/checkout/ui/theme/CheckoutTheme {
+public final class com/adyen/checkout/ui/theme/CheckoutTheme : android/os/Parcelable {
 	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun <init> ()V
 	public fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutColors;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutColors;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lcom/adyen/checkout/ui/theme/CheckoutColors;
 	public final fun copy (Lcom/adyen/checkout/ui/theme/CheckoutColors;)Lcom/adyen/checkout/ui/theme/CheckoutTheme;
 	public static synthetic fun copy$default (Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/ui/theme/CheckoutColors;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutTheme;
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getColors ()Lcom/adyen/checkout/ui/theme/CheckoutColors;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 

@@ -8,18 +8,23 @@
 
 package com.adyen.checkout.ui.theme
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import com.adyen.checkout.ui.internal.theme.DefaultColorsDark
 import com.adyen.checkout.ui.internal.theme.DefaultColorsLight
+import com.adyen.checkout.ui.theme.CheckoutColors.Companion.dark
+import com.adyen.checkout.ui.theme.CheckoutColors.Companion.light
+import kotlinx.parcelize.Parcelize
 
 /**
  * Represents a color value used by the Checkout UI.
  *
  * @param value The color value encoded as an ARGB [Long]. For example, `0xFF000000` represents black.
  */
+@Parcelize
 @Immutable
 @JvmInline
-value class CheckoutColor(val value: Long)
+value class CheckoutColor(val value: Long) : Parcelable
 
 /**
  * The color palette for the Checkout UI.
@@ -42,6 +47,7 @@ value class CheckoutColor(val value: Long)
  * @param textSecondary The secondary text color.
  */
 @Immutable
+@Parcelize
 data class CheckoutColors(
     val background: CheckoutColor,
     val container: CheckoutColor,
@@ -56,7 +62,7 @@ data class CheckoutColors(
     val separator: CheckoutColor,
     val text: CheckoutColor,
     val textSecondary: CheckoutColor,
-) {
+) : Parcelable {
 
     companion object {
 

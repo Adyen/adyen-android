@@ -40,6 +40,8 @@ internal class DropInViewModel(
 
     val checkoutContext = input.checkoutContext
 
+    val theme = input.theme
+
     val dropInServiceManager = DropInServiceManager(input.serviceClass)
 
     val resultFlow: Flow<DropInResult> = merge(
