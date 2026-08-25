@@ -145,6 +145,7 @@ private fun actionNavEntry(
         navigator = viewModel.navigator,
         title = rememberPaymentMethodName(key.paymentFlowType, viewModel),
         controller = rememberController(key.paymentFlowType, viewModel),
+        theme = viewModel.theme,
     )
 }
 
@@ -160,6 +161,7 @@ private fun secondaryNavEntry(
         identifier = key.identifier,
         title = rememberPaymentMethodName(key.paymentFlowType, viewModel),
         controller = rememberController(key.paymentFlowType, viewModel),
+        theme = viewModel.theme,
     )
 }
 

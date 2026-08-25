@@ -88,10 +88,10 @@ private fun PaymentMethodScreenContent(
             // TODO - Pass localization provider
             CheckoutPaymentMethod(
                 controller = controller,
+                theme = theme,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.Spacing.Large),
-                theme = theme,
             )
 
             if (!controller.requiresUserInteraction()) {

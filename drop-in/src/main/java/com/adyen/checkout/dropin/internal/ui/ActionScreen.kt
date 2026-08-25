@@ -24,6 +24,7 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.CheckoutAction
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * Displays the action of a payment flow.
@@ -35,6 +36,7 @@ internal fun ActionScreen(
     navigator: DropInNavigator,
     title: String,
     controller: CheckoutController,
+    theme: CheckoutTheme,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -52,9 +54,10 @@ internal fun ActionScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
         ) {
-            // TODO - Pass theme and localization provider
+            // TODO - Pass localization provider
             CheckoutAction(
                 controller = controller,
+                theme = theme,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.Spacing.Large),

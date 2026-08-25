@@ -24,6 +24,7 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutSecondary
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * Displays a secondary screen of a payment flow, identified by [identifier].
@@ -34,6 +35,7 @@ internal fun SecondaryScreen(
     identifier: String,
     title: String,
     controller: CheckoutController,
+    theme: CheckoutTheme,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -51,10 +53,11 @@ internal fun SecondaryScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
         ) {
-            // TODO - Pass theme and localization provider
+            // TODO - Pass localization provider
             CheckoutSecondary(
                 identifier = identifier,
                 controller = controller,
+                theme = theme,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(Dimensions.Spacing.Large),
