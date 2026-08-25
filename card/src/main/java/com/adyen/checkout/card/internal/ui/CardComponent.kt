@@ -85,6 +85,7 @@ constructor(
     private val cardScannerWrapper: CardScannerWrapper,
     private val publicKey: String?,
     private val environment: Environment,
+    private val fundingSource: String?,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) : PaymentComponent,
     SecondaryScreenComponent {
@@ -150,6 +151,7 @@ constructor(
                 genericEncryptor = genericEncryptor,
                 sdkDataProvider = sdkDataProvider,
                 paymentMethodType = paymentMethodType,
+                fundingSource = fundingSource,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,
             )

@@ -41,6 +41,7 @@ internal fun CardComponentState.toPaymentComponentState(
     paymentMethodType: String,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (InternalCheckoutError) -> Unit,
+    fundingSource: String?,
 ): CardPaymentComponentState {
     publicKey ?: run {
         onPublicKeyNotFound(GenericError("Public key is missing."))
@@ -70,6 +71,7 @@ internal fun CardComponentState.toPaymentComponentState(
         paymentMethodType = paymentMethodType,
         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber.getPaymentDataValue(),
         encryptedKcpCardPassword = encryptedKcpCardPassword,
+        fundingSource = fundingSource,
     )
 
     val paymentComponentData = createPaymentComponentData(
@@ -141,6 +143,7 @@ private fun createCardDetails(
     paymentMethodType: String,
     encryptedKcpCardPassword: String?,
     kcpBirthDateOrTaxNumber: String?,
+    fundingSource: String?,
 ) = CardDetails(
     type = paymentMethodType,
     sdkData = sdkDataProvider.createEncodedSdkData(
@@ -154,8 +157,7 @@ private fun createCardDetails(
     brand = cardBrand?.txVariant,
     encryptedPassword = encryptedKcpCardPassword,
     taxNumber = kcpBirthDateOrTaxNumber,
-    // TODO support this
-    fundingSource = null,
+    fundingSource = fundingSource,
 )
 
 private fun CardComponentState.getBillingAddress(): Address? {

@@ -57,9 +57,10 @@ internal class CardFactory :
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): CardComponent {
+        require(paymentMethod is CardPaymentMethod) { "Payment method should be of type CardPaymentMethod" }
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             params = params,
-            paymentMethod = paymentMethod as? CardPaymentMethod,
+            paymentMethod = paymentMethod,
         )
 
         val detectCardTypeBinHelper = DetectCardTypeBinHelper()
@@ -110,6 +111,7 @@ internal class CardFactory :
             cardScannerWrapper = CardScannerWrapper(),
             publicKey = params.publicKey,
             environment = params.environment,
+            fundingSource = paymentMethod.fundingSource,
             cardConfigDataGenerator = CardConfigDataGenerator(params),
         )
     }
