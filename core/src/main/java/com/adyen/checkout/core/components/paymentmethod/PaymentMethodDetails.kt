@@ -48,16 +48,15 @@ constructor() : ModelObject() {
                 val serializer = getChildSerializer(paymentMethodType)
                 return serializer.deserialize(jsonObject)
             }
-        }
 
-        @Suppress("CyclomaticComplexMethod")
-        private fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethodDetails> {
-            val serializer = when (paymentMethodType) {
-                // TODO - Uncomment payment methods as we support new ones
+            @Suppress("CyclomaticComplexMethod")
+            private fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethodDetails> {
+                val serializer = when (paymentMethodType) {
+                    // TODO - Uncomment payment methods as we support new ones
 //                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
 //                BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
-                BlikDetails.PAYMENT_METHOD_TYPE -> BlikDetails.SERIALIZER
-                CardDetails.PAYMENT_METHOD_TYPE -> CardDetails.SERIALIZER
+                    BlikDetails.PAYMENT_METHOD_TYPE -> BlikDetails.SERIALIZER
+                    CardDetails.PAYMENT_METHOD_TYPE -> CardDetails.SERIALIZER
 //                CashAppPayPaymentMethod.PAYMENT_METHOD_TYPE -> CashAppPayPaymentMethod.SERIALIZER
 //                ConvenienceStoresJPPaymentMethod.PAYMENT_METHOD_TYPE -> ConvenienceStoresJPPaymentMethod.SERIALIZER
 //                DotpayPaymentMethod.PAYMENT_METHOD_TYPE -> DotpayPaymentMethod.SERIALIZER
@@ -70,7 +69,7 @@ constructor() : ModelObject() {
 //                PaymentMethodTypes.MEAL_VOUCHER_FR -> GiftCardPaymentMethod.SERIALIZER
 //
 //                IdealPaymentMethod.PAYMENT_METHOD_TYPE -> IdealPaymentMethod.SERIALIZER
-                MBWayDetails.PAYMENT_METHOD_TYPE -> MBWayDetails.SERIALIZER
+                    MBWayDetails.PAYMENT_METHOD_TYPE -> MBWayDetails.SERIALIZER
 //                OnlineBankingCZPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingCZPaymentMethod.SERIALIZER
 //                OnlineBankingJPPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingJPPaymentMethod.SERIALIZER
 //                OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethod.SERIALIZER
@@ -80,8 +79,8 @@ constructor() : ModelObject() {
 //                PaymentMethodTypes.PAY_BY_BANK_US -> PayByBankUSPaymentMethod.SERIALIZER
 //                PayEasyPaymentMethod.PAYMENT_METHOD_TYPE -> PayEasyPaymentMethod.SERIALIZER
 //                PayToPaymentMethod.PAYMENT_METHOD_TYPE -> PayToPaymentMethod.SERIALIZER
-                PaymentMethodTypes.GOOGLE_PAY,
-                PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayDetails.SERIALIZER
+                    PaymentMethodTypes.GOOGLE_PAY,
+                    PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayDetails.SERIALIZER
 //
 //                PaymentMethodTypes.MOLPAY_MALAYSIA,
 //                PaymentMethodTypes.MOLPAY_THAILAND,
@@ -96,10 +95,11 @@ constructor() : ModelObject() {
 //
 //                SepaPaymentMethod.PAYMENT_METHOD_TYPE -> SepaPaymentMethod.SERIALIZER
 //                SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
-                else -> GenericDetails.SERIALIZER
+                    else -> GenericDetails.SERIALIZER
+                }
+                @Suppress("UNCHECKED_CAST")
+                return serializer as Serializer<PaymentMethodDetails>
             }
-            @Suppress("UNCHECKED_CAST")
-            return serializer as Serializer<PaymentMethodDetails>
         }
     }
 }

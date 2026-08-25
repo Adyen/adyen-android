@@ -44,7 +44,7 @@ constructor() : PaymentMethodResponse() {
         }
 
         @Suppress("CyclomaticComplexMethod")
-        fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethod> {
+        private fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethod> {
             val serializer = when (paymentMethodType) {
                 PaymentMethodTypes.SCHEME -> StoredCardPaymentMethod.SERIALIZER
                 PaymentMethodTypes.BCMC -> StoredBCMCPaymentMethod.SERIALIZER

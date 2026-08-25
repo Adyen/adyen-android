@@ -34,7 +34,7 @@ abstract class StoredPaymentMethodDetails : PaymentMethodDetails() {
                 return serializer.deserialize(jsonObject)
             }
 
-            fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethodDetails> {
+            private fun getChildSerializer(paymentMethodType: String): Serializer<StoredPaymentMethodDetails> {
                 val serializer = when (paymentMethodType) {
                     StoredCardDetails.PAYMENT_METHOD_TYPE -> StoredCardDetails.SERIALIZER
                     else -> GenericStoredDetails.SERIALIZER

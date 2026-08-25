@@ -43,23 +43,23 @@ abstract class Action : ModelObject() {
                 val serializer = getChildSerializer(actionType)
                 return serializer.deserialize(jsonObject)
             }
-        }
 
-        fun getChildSerializer(actionType: String): Serializer<Action> {
-            val childSerializer = when (actionType) {
-                AwaitAction.ACTION_TYPE -> AwaitAction.SERIALIZER
-                RedirectAction.ACTION_TYPE -> RedirectAction.SERIALIZER
-                Threeds2Action.ACTION_TYPE -> Threeds2Action.SERIALIZER
-                else -> {
-                    val error = CheckoutError(
-                        code = CheckoutError.ErrorCode.GENERIC,
-                        message = "Action type not found - $actionType",
-                    )
-                    throw CheckoutException(error)
+            private fun getChildSerializer(actionType: String): Serializer<Action> {
+                val childSerializer = when (actionType) {
+                    AwaitAction.ACTION_TYPE -> AwaitAction.SERIALIZER
+                    RedirectAction.ACTION_TYPE -> RedirectAction.SERIALIZER
+                    Threeds2Action.ACTION_TYPE -> Threeds2Action.SERIALIZER
+                    else -> {
+                        val error = CheckoutError(
+                            code = CheckoutError.ErrorCode.GENERIC,
+                            message = "Action type not found - $actionType",
+                        )
+                        throw CheckoutException(error)
+                    }
                 }
+                @Suppress("UNCHECKED_CAST")
+                return childSerializer as Serializer<Action>
             }
-            @Suppress("UNCHECKED_CAST")
-            return childSerializer as Serializer<Action>
         }
     }
 }
