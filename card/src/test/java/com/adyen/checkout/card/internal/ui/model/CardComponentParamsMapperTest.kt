@@ -440,6 +440,69 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
+    fun `when funding source is debit then installmentParams is null regardless of merchant config`() {
+        val installmentConfiguration = createInstallmentConfiguration(
+            defaultOptions = createInstallmentOptions(values = listOf(2, 3, 6)),
+        )
+
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            ),
+            paymentMethod = createCardPaymentMethod(fundingSource = "debit"),
+        )
+
+        assertEquals(null, params.installmentParams)
+    }
+
+    @Test
+    fun `when funding source is debit then installmentParams is null regardless of session config`() {
+        val additionalSessionParams = createAdditionalSessionParams(
+            installmentPlans = listOf("regular"),
+            installmentValues = listOf(2, 3),
+        )
+
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(additionalSessionParams = additionalSessionParams),
+            paymentMethod = createCardPaymentMethod(fundingSource = "debit"),
+        )
+
+        assertEquals(null, params.installmentParams)
+    }
+
+    @Test
+    fun `when funding source is credit then installmentConfiguration is used`() {
+        val installmentConfiguration = createInstallmentConfiguration(
+            defaultOptions = createInstallmentOptions(values = listOf(2, 3, 6)),
+        )
+
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            ),
+            paymentMethod = createCardPaymentMethod(fundingSource = "credit"),
+        )
+
+        assertEquals(listOf(2, 3, 6), params.installmentParams?.defaultOptions?.values)
+    }
+
+    @Test
+    fun `when funding source is null then installmentConfiguration is used`() {
+        val installmentConfiguration = createInstallmentConfiguration(
+            defaultOptions = createInstallmentOptions(values = listOf(2, 3, 6)),
+        )
+
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(installmentConfiguration = installmentConfiguration),
+            ),
+            paymentMethod = createCardPaymentMethod(fundingSource = null),
+        )
+
+        assertEquals(listOf(2, 3, 6), params.installmentParams?.defaultOptions?.values)
+    }
+
+    @Test
     fun `when all custom configuration fields are set then all fields should match`() {
         val customBrands = listOf(CardBrand(CardType.DINERS.txVariant), CardBrand(CardType.MAESTRO.txVariant))
 
@@ -558,11 +621,12 @@ internal class CardComponentParamsMapperTest {
 
     private fun createCardPaymentMethod(
         brands: List<String> = emptyList(),
+        fundingSource: String? = null,
     ) = CardPaymentMethod(
         type = "scheme",
         name = "Card",
         brands = brands,
-        fundingSource = null,
+        fundingSource = fundingSource,
     )
 
     @Suppress("LongParameterList")
