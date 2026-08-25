@@ -43,7 +43,6 @@ internal class BlikComponentStateExtTest {
             type = BlikDetails.PAYMENT_METHOD_TYPE,
             sdkData = TestSdkDataProvider.TEST_SDK_DATA,
             blikCode = "123456",
-            storedPaymentMethodId = null,
         )
         val expectedPaymentComponentData = PaymentComponentData(
             paymentMethod = expectedBlikDetails,

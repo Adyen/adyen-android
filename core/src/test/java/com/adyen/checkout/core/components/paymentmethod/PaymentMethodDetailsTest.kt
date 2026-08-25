@@ -36,7 +36,6 @@ internal class PaymentMethodDetailsTest {
             type = BlikDetails.PAYMENT_METHOD_TYPE,
             sdkData = "test_sdk_data",
             blikCode = "123456",
-            storedPaymentMethodId = null,
         )
 
         val json = PaymentMethodDetails.SERIALIZER.serialize(details)

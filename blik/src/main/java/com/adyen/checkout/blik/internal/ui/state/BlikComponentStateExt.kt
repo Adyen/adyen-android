@@ -20,7 +20,6 @@ internal fun BlikComponentState.toPaymentComponentState(
         type = BlikDetails.PAYMENT_METHOD_TYPE,
         sdkData = sdkDataProvider.createEncodedSdkData(),
         blikCode = blikCode.getPaymentDataValue(),
-        storedPaymentMethodId = null,
     )
 
     val paymentComponentData = PaymentComponentData(

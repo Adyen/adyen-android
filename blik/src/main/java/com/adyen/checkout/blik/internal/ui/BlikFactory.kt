@@ -20,6 +20,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.ui.GenericStoredPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateReducer
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateValidator
@@ -28,7 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 
 internal class BlikFactory :
     PaymentComponentFactory<BlikComponent>,
-    StoredPaymentComponentFactory<StoredBlikComponent> {
+    StoredPaymentComponentFactory<GenericStoredPaymentComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,
@@ -55,8 +56,8 @@ internal class BlikFactory :
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
-    ): StoredBlikComponent {
-        return StoredBlikComponent(
+    ): GenericStoredPaymentComponent {
+        return GenericStoredPaymentComponent(
             storedPaymentMethod = storedPaymentMethod,
             analyticsManager = analyticsManager,
             sdkDataProvider = sdkDataProvider,

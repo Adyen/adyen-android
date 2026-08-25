@@ -17,13 +17,11 @@ data class BlikDetails(
     override val type: String,
     override val sdkData: String?,
     val blikCode: String?,
-    val storedPaymentMethodId: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.BLIK
         private const val BLIK_CODE = "blikCode"
-        private const val STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId"
 
         @JvmField
         val SERIALIZER: Serializer<BlikDetails> = object : Serializer<BlikDetails> {
@@ -32,7 +30,6 @@ data class BlikDetails(
                     putOpt(TYPE, modelObject.type)
                     putOpt(SDK_DATA, modelObject.sdkData)
                     putOpt(BLIK_CODE, modelObject.blikCode)
-                    putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                 }
             }
 
@@ -41,7 +38,6 @@ data class BlikDetails(
                     type = jsonObject.getString(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     blikCode = jsonObject.getStringOrNull(BLIK_CODE),
-                    storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),
                 )
             }
         }
