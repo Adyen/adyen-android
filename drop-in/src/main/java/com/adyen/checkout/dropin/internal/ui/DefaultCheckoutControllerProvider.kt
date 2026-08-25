@@ -10,13 +10,13 @@ package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
-import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -53,6 +53,7 @@ internal class DefaultCheckoutControllerProvider(
                         onSubmit = ::onSubmit,
                         onAdditionalDetails = ::onAdditionalDetails,
                         onFailure = { error -> onFailure(error, coroutineScope) },
+                        onComplete = { result -> onComplete(result.resultCode, coroutineScope) },
                     ),
                     coroutineScope = coroutineScope,
                 )
@@ -65,7 +66,7 @@ internal class DefaultCheckoutControllerProvider(
                     callbacks = SessionCheckoutCallbacks(
                         onBeforeSubmit = ::onBeforeSubmit,
                         onFailure = { error -> onFailure(error, coroutineScope) },
-                        onComplete = { result -> onComplete(result, coroutineScope) },
+                        onComplete = { result -> onComplete(result.resultCode, coroutineScope) },
                     ),
                     coroutineScope = coroutineScope,
                 )
@@ -94,10 +95,10 @@ internal class DefaultCheckoutControllerProvider(
         }
     }
 
-    private fun onComplete(result: SessionCheckoutResult, coroutineScope: CoroutineScope) {
+    private fun onComplete(resultCode: CheckoutResultCode, coroutineScope: CoroutineScope) {
         // TODO - Implement after signature of onFinished is updated
         coroutineScope.launch {
-            dropInServiceManager.onPaymentCompleted(result.resultCode)
+            dropInServiceManager.onPaymentCompleted(resultCode)
         }
     }
 }
