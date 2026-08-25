@@ -20,7 +20,7 @@ internal data class PreselectedPaymentMethodNavKey(
 ) : NavKey
 
 /**
- * The list hosts the express payment method buttons, so their controllers are owned by its view model and its store is
+ * The list hosts the promoted payment method buttons, so their controllers are owned by its view model and its store is
  * the one their action screen has to join.
  */
 @Serializable
@@ -89,7 +89,7 @@ internal enum class ActionFlowOwner {
     /** [PaymentMethodViewModel], for a payment method with a screen of its own. */
     PAYMENT_METHOD,
 
-    /** [PaymentMethodListViewModel], for an express payment method rendered on the list. */
+    /** [PaymentMethodListViewModel], for a promoted payment method rendered on the list. */
     PAYMENT_METHOD_LIST,
 }
 

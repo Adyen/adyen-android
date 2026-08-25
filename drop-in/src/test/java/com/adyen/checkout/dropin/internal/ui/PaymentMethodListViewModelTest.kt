@@ -58,25 +58,25 @@ internal class PaymentMethodListViewModelTest {
     }
 
     @Test
-    fun `when an express payment method is offered, then a controller is created for its flow type`() {
+    fun `when a promoted payment method is offered, then a controller is created for its flow type`() {
         val viewModel = createViewModel()
 
         assertEquals(listOf(GOOGLE_PAY_FLOW_TYPE), requestedPaymentFlowTypes)
-        assertSame(createdControllers.single(), viewModel.expressPaymentMethodController)
+        assertSame(createdControllers.single(), viewModel.promotedPaymentMethodController)
     }
 
     @Test
-    fun `when no express payment method is offered, then no controller is created`() {
+    fun `when no promoted payment method is offered, then no controller is created`() {
         val viewModel = createViewModel(
             paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Cards")),
         )
 
-        assertNull(viewModel.expressPaymentMethodController)
+        assertNull(viewModel.promotedPaymentMethodController)
         assertEquals(emptyList<DropInPaymentFlowType>(), requestedPaymentFlowTypes)
     }
 
     @Test
-    fun `when an express payment method is offered, then its controller is scoped to the view model`() {
+    fun `when a promoted payment method is offered, then its controller is scoped to the view model`() {
         val viewModel = createViewModel()
 
         // The list and the action screen share a flow key, so this scope outlives the list itself.
@@ -84,32 +84,32 @@ internal class PaymentMethodListViewModelTest {
     }
 
     @Test
-    fun `when created, then the express payment method is not submitted`() {
+    fun `when created, then the promoted payment method is not submitted`() {
         // Unlike the other payment methods, it is submitted by the shopper tapping its own button.
         val viewModel = createViewModel()
 
-        verify(requireNotNull(viewModel.expressPaymentMethodController), never()).submit()
+        verify(requireNotNull(viewModel.promotedPaymentMethodController), never()).submit()
     }
 
     @Test
-    fun `when the flow type is an express payment method, then its controller is found`() {
+    fun `when the flow type is a promoted payment method, then its controller is found`() {
         val viewModel = createViewModel()
 
         assertSame(
-            viewModel.expressPaymentMethodController,
-            viewModel.findExpressPaymentMethodController(GOOGLE_PAY_FLOW_TYPE),
+            viewModel.promotedPaymentMethodController,
+            viewModel.findPromotedPaymentMethodController(GOOGLE_PAY_FLOW_TYPE),
         )
     }
 
     @Test
-    fun `when the flow type is not an express payment method, then no controller is found`() {
+    fun `when the flow type is not a promoted payment method, then no controller is found`() {
         val viewModel = createViewModel()
 
-        assertNull(viewModel.findExpressPaymentMethodController(DropInPaymentFlowType.RegularPaymentMethod("scheme")))
+        assertNull(viewModel.findPromotedPaymentMethodController(DropInPaymentFlowType.RegularPaymentMethod("scheme")))
     }
 
     @Test
-    fun `when an action is returned, then it navigates to the express payment method action screen`() {
+    fun `when an action is returned, then it navigates to the promoted payment method action screen`() {
         navigator.navigateTo(PaymentMethodListNavKey)
         createViewModel()
 

@@ -146,7 +146,7 @@ private fun actionNavEntry(
     val controller = when (key.owner) {
         ActionFlowOwner.PAYMENT_METHOD -> paymentMethodViewModel(key.paymentFlowType, viewModel).controller
         ActionFlowOwner.PAYMENT_METHOD_LIST ->
-            paymentMethodListViewModel(viewModel).findExpressPaymentMethodController(key.paymentFlowType)
+            paymentMethodListViewModel(viewModel).findPromotedPaymentMethodController(key.paymentFlowType)
     } ?: run {
         adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
             "No controller for ${key.paymentFlowType} on ${key.owner}, the ActionScreen cannot be displayed."
@@ -179,7 +179,7 @@ private fun paymentMethodViewModel(
 )
 
 /**
- * Resolves the view model of the payment method list, which owns the express payment method flows. The list and their
+ * Resolves the view model of the payment method list, which owns the promoted payment method flows. The list and their
  * action screen share a flow key, so the action screen gets the instance the list created.
  */
 @Composable

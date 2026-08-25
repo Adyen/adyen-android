@@ -35,9 +35,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * Renders the payment method list, and owns the express payment method flows on top of that.
+ * Renders the payment method list, and owns the promoted payment method flows on top of that.
  *
- * Express payment methods are the exception to [PaymentMethodViewModel]: their buttons are part of this list rather
+ * Promoted payment methods are the exception to [PaymentMethodViewModel]: their buttons are part of this list rather
  * than a screen behind a list item, so their controllers have to exist before the shopper picks anything.
  * [PaymentMethodListNavKey] and the [ActionNavKey] that follows it report the same [FlowScopedNavKey.flowKey], so this
  * view model survives the navigation to the action screen and those flows continue on the same controller.
@@ -54,39 +54,39 @@ internal class PaymentMethodListViewModel(
         .map { createInitialViewState(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(emptyList()))
 
-    // Google Pay is the only express payment method so far. Turn this into a list once there can be more.
-    private val expressPaymentMethodFlowType: DropInPaymentFlowType? = paymentMethodRepository.paymentMethods
+    // Google Pay is the only promoted payment method so far. Turn this into a list once there can be more.
+    private val promotedPaymentMethodFlowType: DropInPaymentFlowType? = paymentMethodRepository.paymentMethods
         .firstOrNull { it.type in GOOGLE_PAY_TYPES }
         ?.type
         ?.let { DropInPaymentFlowType.RegularPaymentMethod(it) }
 
     /**
-     * Renders the express payment method button, or `null` when none is offered. Created eagerly rather than when the
+     * Renders the promoted payment method button, or `null` when none is offered. Created eagerly rather than when the
      * shopper taps it, because the button is drawn by the controller itself.
      */
-    val expressPaymentMethodController: CheckoutController? = expressPaymentMethodFlowType
+    val promotedPaymentMethodController: CheckoutController? = promotedPaymentMethodFlowType
         ?.let { controllerProvider.provide(it, viewModelScope) }
 
     init {
-        observeExpressPaymentMethodNavigation()
+        observePromotedPaymentMethodNavigation()
     }
 
     /**
-     * The controller driving the flow of [paymentFlowType], or `null` when that flow is not one of the express payment
+     * The controller driving the flow of [paymentFlowType], or `null` when that flow is not one of the promoted payment
      * methods this view model owns.
      */
-    fun findExpressPaymentMethodController(paymentFlowType: DropInPaymentFlowType): CheckoutController? =
-        expressPaymentMethodController.takeIf { expressPaymentMethodFlowType == paymentFlowType }
+    fun findPromotedPaymentMethodController(paymentFlowType: DropInPaymentFlowType): CheckoutController? =
+        promotedPaymentMethodController.takeIf { promotedPaymentMethodFlowType == paymentFlowType }
 
     /**
-     * Navigates to the express payment method action screen when its payments call returns an action.
+     * Navigates to the promoted payment method action screen when its payments call returns an action.
      *
      * [CheckoutController.navigation] has no replay, so the subscription has to be active before the shopper can tap
      * the button. [CoroutineStart.UNDISPATCHED] makes sure it is set up before this view model is handed out.
      */
-    private fun observeExpressPaymentMethodNavigation() {
-        val paymentFlowType = expressPaymentMethodFlowType ?: return
-        val controller = expressPaymentMethodController ?: return
+    private fun observePromotedPaymentMethodNavigation() {
+        val paymentFlowType = promotedPaymentMethodFlowType ?: return
+        val controller = promotedPaymentMethodController ?: return
 
         viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
             controller.navigation.collect { route ->
@@ -117,7 +117,7 @@ internal class PaymentMethodListViewModel(
             }
 
         val paymentOptionsSection = paymentMethodRepository.paymentMethods
-            // Express payment methods are rendered above the list by their own component, so they must not appear as
+            // Promoted payment methods are rendered above the list by their own component, so they must not appear as
             // a list item too.
             // TODO - Prototype: it is filtered out even when Google Pay turns out to be unavailable, in which case the
             //  shopper is left with no Google Pay entry at all.

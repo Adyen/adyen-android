@@ -67,7 +67,7 @@ internal fun PaymentMethodListScreen(
     PaymentMethodListContent(
         navigator = navigator,
         viewState = viewState,
-        expressPaymentMethodController = viewModel.expressPaymentMethodController,
+        promotedPaymentMethodController = viewModel.promotedPaymentMethodController,
         onPaymentMethodClick = { navigator.navigateTo(PaymentMethodNavKey(it)) },
     )
 }
@@ -76,7 +76,7 @@ internal fun PaymentMethodListScreen(
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
-    expressPaymentMethodController: CheckoutController?,
+    promotedPaymentMethodController: CheckoutController?,
     onPaymentMethodClick: (DropInPaymentFlowType) -> Unit,
 ) {
     DropInScaffold(
@@ -107,7 +107,7 @@ private fun PaymentMethodListContent(
                     ),
             )
 
-            expressPaymentMethodController?.let { ExpressPaymentMethod(it) }
+            promotedPaymentMethodController?.let { PromotedPaymentMethod(it) }
 
             viewState.storedPaymentMethodSection?.let {
                 Section(
@@ -138,12 +138,12 @@ private fun PaymentMethodListContent(
 }
 
 /**
- * An express payment method is rendered here instead of behind a list item, so the shopper taps its real button, such
+ * A promoted payment method is rendered here instead of behind a list item, so the shopper taps its real button, such
  * as the Google Pay one. No payment method screen is opened for it: the flow continues on the action screen, or
  * Drop-in closes with a result.
  */
 @Composable
-private fun ExpressPaymentMethod(controller: CheckoutController) {
+private fun PromotedPaymentMethod(controller: CheckoutController) {
     CheckoutPaymentMethod(
         controller = controller,
         modifier = Modifier
@@ -324,7 +324,7 @@ private fun PaymentMethodListContentPreview(
         val persister = SavedStateBackStackPersister(SavedStateHandle())
         PaymentMethodListContent(
             navigator = DropInNavigator(persister),
-            expressPaymentMethodController = null,
+            promotedPaymentMethodController = null,
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
                 storedPaymentMethodSection = PaymentMethodListViewState.PaymentMethodListSection(
