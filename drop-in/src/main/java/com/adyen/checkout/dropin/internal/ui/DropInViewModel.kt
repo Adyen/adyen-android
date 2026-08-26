@@ -31,18 +31,16 @@ import kotlin.reflect.KClass
 
 internal class DropInViewModel(
     private val input: DropInResultContract.Input,
-    val navigator: DropInNavigator
+    val navigator: DropInNavigator,
+    val controllerProvider: DropInControllerProvider,
+    private val dropInServiceManager: DropInServiceManager,
 ) : ViewModel() {
 
     lateinit var dropInParams: DropInParams
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
 
-    val checkoutContext = input.checkoutContext
-
     val theme = input.theme
-
-    val dropInServiceManager = DropInServiceManager(input.serviceClass)
 
     val resultFlow: Flow<DropInResult> = merge(
         dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
@@ -112,13 +110,21 @@ internal class DropInViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
+            val input = inputProvider()
+            val dropInServiceManager = DropInServiceManager(input.serviceClass)
+
             return DropInViewModel(
-                input = inputProvider(),
+                input = input,
                 navigator = DropInNavigator(
                     backStackPersister = SavedStateBackStackPersister(
                         savedStateHandle = extras.createSavedStateHandle(),
                     ),
                 ),
+                controllerProvider = DefaultDropInControllerProvider(
+                    checkoutContext = input.checkoutContext,
+                    dropInServiceManager = dropInServiceManager,
+                ),
+                dropInServiceManager = dropInServiceManager,
             ) as T
         }
     }
