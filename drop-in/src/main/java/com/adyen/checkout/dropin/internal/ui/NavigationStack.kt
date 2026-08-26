@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 
 @Composable
@@ -24,6 +25,14 @@ internal fun NavigationStack(
         backStack = viewModel.navigator.backStack,
         sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
         onBack = { viewModel.navigator.back() },
+        // Without a view model decorator every view model would go into the activity's store and only be cleared when
+        // the activity is destroyed, so a payment flow would outlive the screen that started it. The saveable
+        // decorator is the NavDisplay default and is required by the view model one, so both have to be listed once
+        // this list is passed explicitly.
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberSharedViewModelStoreNavEntryDecorator(),
+        ),
         entryProvider = { key ->
             when (key) {
                 is EmptyNavKey -> emptyNavEntry(key)
@@ -117,7 +126,6 @@ private fun paymentMethodNavEntry(
                     paymentMethodRepository = viewModel.paymentMethodRepository,
                     controllerProvider = viewModel.controllerProvider,
                 ),
-                key = key.paymentFlowType.hashCode().toString(),
             ),
             theme = viewModel.theme,
         )
