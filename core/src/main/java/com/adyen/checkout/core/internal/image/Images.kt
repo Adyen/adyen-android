@@ -6,7 +6,7 @@
  * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal.image
+package com.adyen.checkout.core.internal.image
 
 import android.graphics.Bitmap
 import androidx.annotation.DrawableRes

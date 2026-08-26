@@ -16,7 +16,7 @@ import android.graphics.BitmapFactory
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.error.internal.HttpError
-import com.adyen.checkout.ui.internal.image.ImageLoader
+import com.adyen.checkout.core.internal.image.ImageLoader
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request

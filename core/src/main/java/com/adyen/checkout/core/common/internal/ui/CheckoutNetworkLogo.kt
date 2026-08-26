@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.common.internal.helper.LocalEnvironment
 import com.adyen.checkout.core.common.internal.imageLoader
+import com.adyen.checkout.core.internal.image.ImageLoader
+import com.adyen.checkout.core.internal.image.LogoSize
+import com.adyen.checkout.core.internal.image.NetworkImage
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.internal.image.ImageLoader
-import com.adyen.checkout.ui.internal.image.LogoSize
-import com.adyen.checkout.ui.internal.image.NetworkImage
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
