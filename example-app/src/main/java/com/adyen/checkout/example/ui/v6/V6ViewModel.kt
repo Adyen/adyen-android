@@ -106,7 +106,7 @@ internal class V6ViewModel @Inject constructor(
                     storedPaymentMethods = checkoutContext.getStoredPaymentMethods(),
                     selectedPaymentMethod = paymentMethods.first(),
                     checkoutController = checkoutController,
-                    showCustomButton = showCustomButton(checkoutController),
+                    showCustomButton = showCustomButton(),
                 )
             }
         }
@@ -189,7 +189,7 @@ internal class V6ViewModel @Inject constructor(
         val newState = (uiState as? V6UiState.Component)?.copy(
             selectedPaymentMethod = paymentMethod,
             checkoutController = checkoutController,
-            showCustomButton = showCustomButton(checkoutController),
+            showCustomButton = showCustomButton(),
         )
 
         if (newState != null) {
@@ -227,8 +227,8 @@ internal class V6ViewModel @Inject constructor(
         }
     }
 
-    private fun showCustomButton(checkoutController: CheckoutController): Boolean {
-        return checkoutConfiguration.showSubmitButton == false || !checkoutController.requiresUserInteraction()
+    private fun showCustomButton(): Boolean {
+        return checkoutConfiguration.showSubmitButton == false
     }
 
     fun onNewIntent(intent: Intent) {

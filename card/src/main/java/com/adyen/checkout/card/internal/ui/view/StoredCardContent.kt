@@ -55,26 +55,27 @@ private fun StoredCardContent(
     onSubmitClick: () -> Unit,
     modifier: Modifier,
 ) {
-    // If security code is not displayed, we should not display anything
-    if (viewState.securityCode != null) {
-        ComponentScaffold(
-            modifier = modifier,
-            disableInteraction = viewState.isLoading,
-            footer = payButtonAsComponentScaffoldFooter(viewState.payButtonViewState, onSubmitClick),
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
-            ) {
-                SecurityCodeField(
-                    securityCodeState = viewState.securityCode,
-                    cardNumberFormat = viewState.cardNumberFormat,
-                    onValueChange = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
-                    onFocusChange = { onIntent(StoredCardIntent.UpdateSecurityCodeFocus(it)) },
-                )
+    ComponentScaffold(
+        modifier = modifier,
+        disableInteraction = viewState.isLoading,
+        footer = payButtonAsComponentScaffoldFooter(viewState.payButtonViewState, onSubmitClick),
+        // If security code is not displayed, we should not display any content
+        content = viewState.securityCode?.let { securityCodeState ->
+            @Composable {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
+                ) {
+                    SecurityCodeField(
+                        securityCodeState = securityCodeState,
+                        cardNumberFormat = viewState.cardNumberFormat,
+                        onValueChange = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
+                        onFocusChange = { onIntent(StoredCardIntent.UpdateSecurityCodeFocus(it)) },
+                    )
+                }
             }
-        }
-    }
+        },
+    )
 }
 
 @Preview
@@ -87,6 +88,29 @@ private fun StoredCardContentPreview(
             securityCode = TextInputViewState(
                 customTrailingIcon = SecurityCodeTrailingIcon.PlaceholderDefault,
             ),
+            brand = CardBrand(""),
+            cardNumberFormat = CardNumberFormat.DEFAULT,
+            isLoading = false,
+            payButtonViewState = PayButtonViewState(null, false),
+        )
+
+        StoredCardContent(
+            viewState = viewState,
+            onIntent = {},
+            onSubmitClick = {},
+            modifier = Modifier,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun StoredCardContentWithoutSecurityCodePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        val viewState = StoredCardViewState(
+            securityCode = null,
             brand = CardBrand(""),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             isLoading = false,
