@@ -41,6 +41,7 @@ import kotlin.reflect.KClass
  * so its flow is owned by [PaymentMethodListViewModel] instead.
  */
 // TODO - The view state never changes, so it could be a plain value instead of a state flow.
+// TODO - Decide which payment method type we have and pass it down to the view through the viewState.
 internal class PaymentMethodViewModel(
     private val paymentFlowType: DropInPaymentFlowType,
     private val paymentMethodRepository: PaymentMethodRepository,

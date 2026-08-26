@@ -30,6 +30,8 @@ import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
+// TODO - Here handle payment method, stored payment method as one Composable, Stored with no UI as a separate one and
+//  Non stored no UI as a separate one. The viewState will come from the viewModel.
 @Composable
 internal fun PaymentMethodScreen(
     navigator: DropInNavigator,
