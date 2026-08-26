@@ -32,10 +32,10 @@ import kotlin.reflect.KClass
  * Owns the [CheckoutController] that drives the payment flow of a single payment method, on top of the state its
  * screen renders.
  *
- * [PaymentMethodNavKey] and the [ActionNavKey] that follows it report the same [FlowScopedNavKey.flowKey], so they
- * share a view model store and therefore this view model. That is what lets the flow survive the navigation from the
- * payment method screen to the action screen without being handed over, and the store is cleared once the last of those
- * entries leaves the back stack, which cancels [viewModelScope] and tears the controller down with it.
+ * This view model belongs to the [PaymentMethodNavKey] entry, and the [ActionNavKey] that follows declares that entry
+ * as its parent, so it reads this same instance back out of that store. That is what lets the flow survive the
+ * navigation from the payment method screen to the action screen without being handed over. The store is only cleared
+ * once neither entry references it any more, which cancels [viewModelScope] and tears the controller down with it.
  *
  * Google Pay does not go through here. Its button lives on the payment method list rather than on a screen of its own,
  * so its flow is owned by [PaymentMethodListViewModel] instead.

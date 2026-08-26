@@ -39,8 +39,8 @@ import kotlinx.coroutines.launch
  *
  * Promoted payment methods are the exception to [PaymentMethodViewModel]: their buttons are part of this list rather
  * than a screen behind a list item, so their controllers have to exist before the shopper picks anything.
- * [PaymentMethodListNavKey] and the [ActionNavKey] that follows it report the same [FlowScopedNavKey.flowKey], so this
- * view model survives the navigation to the action screen and those flows continue on the same controller.
+ * The [ActionNavKey] that follows declares [PaymentMethodListNavKey] as its parent, so it reads this view model back
+ * out of the list's store and those flows continue on the same controller even once the list itself is gone.
  */
 internal class PaymentMethodListViewModel(
     private val dropInParams: DropInParams,
@@ -51,8 +51,8 @@ internal class PaymentMethodListViewModel(
 ) : ViewModel() {
 
     val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.storedPaymentMethods
-        .map { createInitialViewState(it) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(emptyList()))
+        .map { createViewState(it) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createViewState(emptyList()))
 
     // Google Pay is the only promoted payment method so far. Turn this into a list once there can be more.
     private val promotedPaymentMethodFlowType: DropInPaymentFlowType? = paymentMethodRepository.paymentMethods
@@ -103,7 +103,7 @@ internal class PaymentMethodListViewModel(
         }
     }
 
-    private fun createInitialViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
+    private fun createViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
         val storedPaymentMethodSection = storedPaymentMethods
             .filter { paymentMethodSupportCheck.isSupported(it) }
             .takeIf { it.isNotEmpty() }

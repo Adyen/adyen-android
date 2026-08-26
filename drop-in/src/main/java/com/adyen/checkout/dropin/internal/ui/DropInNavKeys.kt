@@ -20,14 +20,11 @@ internal data class PreselectedPaymentMethodNavKey(
 ) : NavKey
 
 /**
- * The list hosts the promoted payment method buttons, so their controllers are owned by its view model and its store is
- * the one their action screen has to join.
+ * The list hosts the promoted payment method buttons, so their controllers are owned by its view model and this entry
+ * is the parent their action screen declares.
  */
 @Serializable
-internal data object PaymentMethodListNavKey : FlowScopedNavKey {
-
-    override val flowKey: String get() = PAYMENT_METHOD_LIST_FLOW_KEY
-}
+internal data object PaymentMethodListNavKey : NavKey
 
 @Serializable
 internal data object StoredPaymentMethodsNavKey : NavKey
@@ -39,14 +36,11 @@ internal data object StoredPaymentMethodsNavKey : NavKey
 @Serializable
 internal data class PaymentMethodNavKey(
     val paymentFlowType: DropInPaymentFlowType,
-) : FlowScopedNavKey {
-
-    override val flowKey: String get() = paymentFlowKey(paymentFlowType)
-}
+) : NavKey
 
 /**
  * The action screen of a payment flow. [owner] says which view model holds the controller that continues it, which is
- * also what the entry scopes its view model store to.
+ * also the entry this one declares as its parent.
  */
 // TODO - Prototype: a payment flow cannot be restored after process death. No action state is persisted and the
 //  controller is rebuilt from scratch, so this key renders an empty screen. Worse, when the payment method
@@ -57,27 +51,19 @@ internal data class PaymentMethodNavKey(
 internal data class ActionNavKey(
     val paymentFlowType: DropInPaymentFlowType,
     val owner: ActionFlowOwner,
-) : FlowScopedNavKey {
-
-    override val flowKey: String get() = when (owner) {
-        ActionFlowOwner.PAYMENT_METHOD -> paymentFlowKey(paymentFlowType)
-        ActionFlowOwner.PAYMENT_METHOD_LIST -> PAYMENT_METHOD_LIST_FLOW_KEY
-    }
-}
-
-/**
- * A nav key whose entry shares its view models with the other entries of the same payment flow, rather than keeping
- * them to itself.
- */
-internal sealed interface FlowScopedNavKey : NavKey {
+) : NavKey {
 
     /**
-     * The view model store the entry of this key joins, declared through [scopeTo].
+     * The entry holding the view model that owns this flow, declared to the decorator through
+     * [SharedViewModelStoreNavEntryDecorator.parent].
      *
-     * Every entry of one flow reports the same key, which gives them a single store that is cleared once the last of
-     * them leaves the back stack. That is what lets a controller outlive the screen that created it.
+     * Reaching into the parent's store rather than sharing one is what lets a controller outlive the screen that
+     * created it, even though this screen replaces that screen on the back stack.
      */
-    val flowKey: String
+    val parentContentKey: Any get() = when (owner) {
+        ActionFlowOwner.PAYMENT_METHOD -> PaymentMethodNavKey(paymentFlowType).toContentKey()
+        ActionFlowOwner.PAYMENT_METHOD_LIST -> PaymentMethodListNavKey.toContentKey()
+    }
 }
 
 /**
@@ -92,7 +78,3 @@ internal enum class ActionFlowOwner {
     /** [PaymentMethodListViewModel], for a promoted payment method rendered on the list. */
     PAYMENT_METHOD_LIST,
 }
-
-private fun paymentFlowKey(paymentFlowType: DropInPaymentFlowType): String = "payment-flow-$paymentFlowType"
-
-private const val PAYMENT_METHOD_LIST_FLOW_KEY = "payment-method-list-flow"

@@ -11,6 +11,8 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -28,11 +30,11 @@ internal fun NavigationStack(
         sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
         onBack = { viewModel.navigator.back() },
         // The saveable decorator is the NavDisplay default and is required by the view model one, so both have to be
-        // listed once this list is passed explicitly. The view model one scopes a view model to the flow its entry
-        // declares through scopeTo, rather than to the entry itself.
+        // listed once this list is passed explicitly. The view model one additionally hands an entry the store of the
+        // parent it declares, on top of the one of its own.
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
-            rememberFlowScopedViewModelStoreNavEntryDecorator(),
+            rememberSharedViewModelStoreNavEntryDecorator(),
         ),
         entryProvider = { key ->
             when (key) {
@@ -76,7 +78,7 @@ private fun paymentMethodListNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
-    metadata = DropInTransitions.slideInAndOutVertically() + scopeTo(key.flowKey),
+    metadata = DropInTransitions.slideInAndOutVertically(),
 ) {
     PaymentMethodListScreen(
         navigator = viewModel.navigator,
@@ -113,7 +115,7 @@ private fun paymentMethodNavEntry(
 
     return NavEntry(
         key = key,
-        metadata = transitions + scopeTo(key.flowKey),
+        metadata = transitions,
     ) {
         val paymentMethodViewModel = paymentMethodViewModel(key.paymentFlowType, viewModel)
 
@@ -140,13 +142,17 @@ private fun actionNavEntry(
 ): NavEntry<NavKey> = NavEntry(
     key = key,
     // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
-    // Scoping to the flow of the owner is what continues it on the controller that started it.
-    metadata = DropInTransitions.slideInHorizontallyAndOutVertically() + scopeTo(key.flowKey),
+    // Declaring the owner as the parent is what continues it on the controller that started it.
+    metadata = DropInTransitions.slideInHorizontallyAndOutVertically() +
+        SharedViewModelStoreNavEntryDecorator.parent(key.parentContentKey),
 ) {
+    // The controller belongs to the entry this one declared as its parent, so it is read from that entry's store.
+    val parentOwner = LocalSharedViewModelStoreOwner.current
     val controller = when (key.owner) {
-        ActionFlowOwner.PAYMENT_METHOD -> paymentMethodViewModel(key.paymentFlowType, viewModel).controller
+        ActionFlowOwner.PAYMENT_METHOD ->
+            paymentMethodViewModel(key.paymentFlowType, viewModel, parentOwner).controller
         ActionFlowOwner.PAYMENT_METHOD_LIST ->
-            paymentMethodListViewModel(viewModel).findPromotedPaymentMethodController(key.paymentFlowType)
+            paymentMethodListViewModel(viewModel, parentOwner).findPromotedPaymentMethodController(key.paymentFlowType)
     } ?: run {
         adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
             "No controller for ${key.paymentFlowType} on ${key.owner}, the ActionScreen cannot be displayed."
@@ -161,14 +167,16 @@ private fun actionNavEntry(
 }
 
 /**
- * Resolves the view model of the payment flow [paymentFlowType] identifies. The payment method screen and the action
- * screen that follows it share a flow key, so the first of them creates it and the other gets that same instance.
+ * Resolves the view model of the payment flow [paymentFlowType] identifies. The payment method screen owns it, and the
+ * action screen that follows reads it back out of that screen's store by passing it as [viewModelStoreOwner].
  */
 @Composable
 private fun paymentMethodViewModel(
     paymentFlowType: DropInPaymentFlowType,
     viewModel: DropInViewModel,
+    viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current),
 ): PaymentMethodViewModel = viewModel(
+    viewModelStoreOwner = viewModelStoreOwner,
     factory = PaymentMethodViewModel.Factory(
         paymentFlowType = paymentFlowType,
         paymentMethodRepository = viewModel.paymentMethodRepository,
@@ -179,13 +187,15 @@ private fun paymentMethodViewModel(
 )
 
 /**
- * Resolves the view model of the payment method list, which owns the promoted payment method flows. The list and their
- * action screen share a flow key, so the action screen gets the instance the list created.
+ * Resolves the view model of the payment method list, which owns the promoted payment method flows. Their action screen
+ * reads it back out of the list's store by passing it as [viewModelStoreOwner].
  */
 @Composable
 private fun paymentMethodListViewModel(
     viewModel: DropInViewModel,
+    viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current),
 ): PaymentMethodListViewModel = viewModel(
+    viewModelStoreOwner = viewModelStoreOwner,
     factory = PaymentMethodListViewModel.Factory(
         dropInParams = viewModel.dropInParams,
         paymentMethodRepository = viewModel.paymentMethodRepository,
