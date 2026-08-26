@@ -32,5 +32,6 @@ dependencies {
     api project(':ui-core')
 
     implementation platform(libs.compose.bom)
+    implementation libs.compose.ui.main
     implementation libs.compose.viewmodel
 }
