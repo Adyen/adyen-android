@@ -16,8 +16,14 @@ import android.graphics.BitmapFactory
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.error.internal.HttpError
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -38,6 +44,10 @@ internal object DefaultImageLoader : ImageLoader {
 
     private val cache = InMemoryCache(calculateInMemoryCacheSize(ApplicationContextHolder.require()))
 
+    private val scope = CoroutineScope(SupervisorJob() + DispatcherProvider.IO)
+    private val inFlightMutex = Mutex()
+    private val inFlight = mutableMapOf<String, Deferred<Result<Bitmap>>>()
+
     private fun calculateInMemoryCacheSize(context: Context): Int = try {
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val percent = if (activityManager.isLowRamDevice) LOW_MEMORY_PERCENT else DEFAULT_MEMORY_PERCENT
@@ -50,18 +60,35 @@ internal object DefaultImageLoader : ImageLoader {
     }
 
     override suspend fun load(url: String): Result<Bitmap> {
-        val cachedBitmap = cache[url]
-        if (cachedBitmap != null) {
-            return Result.success(cachedBitmap)
+        cache[url]?.let { Result.success(it) }
+
+        val deferred = inFlightMutex.withLock {
+            inFlight[url] ?: scope.async { fetch(url) }
+                .also { new ->
+                    inFlight[url] = new
+                    new.invokeOnCompletion {
+                        scope.launch {
+                            inFlightMutex.withLock {
+                                @Suppress("DeferredResultUnused")
+                                inFlight.remove(url)
+                            }
+                        }
+                    }
+                }
         }
 
-        return withContext(DispatcherProvider.IO) {
-            val request = Request.Builder()
-                .url(url)
-                .get()
-                .build()
+        return deferred.await()
+    }
 
-            okHttpClient.newCall(request).await().use { response ->
+    private suspend fun fetch(url: String): Result<Bitmap> {
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        return okHttpClient.newCall(request)
+            .await()
+            .use { response ->
                 if (response.isSuccessful) {
                     val bytes = response.body?.bytes() ?: ByteArray(0)
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
@@ -76,7 +103,6 @@ internal object DefaultImageLoader : ImageLoader {
                     Result.failure(HttpError(response.code, response.message, null))
                 }
             }
-        }
     }
 
     private suspend fun Call.await(): Response = suspendCancellableCoroutine { continuation ->
