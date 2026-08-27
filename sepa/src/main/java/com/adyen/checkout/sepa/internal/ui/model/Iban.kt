@@ -137,7 +137,7 @@ internal class Iban private constructor(val value: String) {
         @JvmStatic
         fun format(ibanValue: String?): String {
             val normalizedValue = normalize(ibanValue)
-            return normalizedValue.replace("(.{4})".toRegex(), "$1 ").trim { it <= ' ' }
+            return normalizedValue.replace("(.{4})".toRegex(), "$1 ").trim()
         }
 
         /**
