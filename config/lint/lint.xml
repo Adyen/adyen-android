@@ -1,13 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+
+    <!-- ============================================================================================================
+         Baseline severity
+         ============================================================================================================ -->
+
     <!-- Enforce all lint errors. Equivalent to "warningsAsErrors true" -->
     <issue id="all" severity="error" />
 
-    <!-- We update dependecies as necessary. Just keep the warning as a reminder -->
-    <issue id="GradleDependency" severity="warning"/>
+    <!-- ============================================================================================================
+         Code and resources that will be deleted once everything is migrated to Compose. The "old" packages hold the v5
+         implementation and the XML layouts are being replaced, so no findings in either are worth acting on. Both are
+         scoped by path so that they stop applying once that code is gone.
+         ============================================================================================================ -->
 
-    <!-- We update dependecies as necessary. Just keep the warning as a reminder -->
+    <issue id="all">
+        <ignore regexp=".*/old/.*"/>
+        <ignore regexp=".*src/main/res/layout.*"/>
+    </issue>
+
+    <!-- ============================================================================================================
+         Dependency freshness. We update these as necessary, so keep them as a reminder rather than a build failure.
+         ============================================================================================================ -->
+
+    <issue id="GradleDependency" severity="warning"/>
     <issue id="NewerVersionAvailable" severity="warning"/>
+    <issue id="AndroidGradlePluginVersion" severity="warning"/>
+
+    <!-- ============================================================================================================
+         The example app. It is a sample that is never published, so its debug logging does not need to be conditional
+         and its unimplemented branches do not need to block a build.
+         ============================================================================================================ -->
+
+    <issue id="LogConditional">
+        <ignore regexp=".*example-app/src/.*"/>
+    </issue>
+    <issue id="StopShip">
+        <ignore regexp=".*example-app/src/.*"/>
+    </issue>
+
+    <!-- ============================================================================================================
+         Strings and translations. Translations are delivered by an external localization process and must not be hand
+         edited, so Typos only applies to the default locale that we author ourselves, and lint's dictionary reports
+         false positives for languages like pt-PT anyway. Separate resources legitimately share copy and must stay
+         separate for translation, and changing apostrophes would alter user visible copy that the translations do not
+         match.
+         ============================================================================================================ -->
+
+    <issue id="Typos">
+        <ignore regexp=".*src/main/res/values-.*/strings\.xml"/>
+    </issue>
+    <issue id="DuplicateStrings" severity="ignore"/>
+    <issue id="TypographyQuotes" severity="ignore"/>
+
+    <!-- ============================================================================================================
+         Checks that do not fit a payment SDK of this shape.
+         ============================================================================================================ -->
 
     <!-- We don't use App Indexing -->
     <issue id="GoogleAppIndexingApiWarning" severity="ignore"/>
@@ -15,31 +63,16 @@
     <!-- SyntheticAccessor is a minor optimization we don't want to manually do. -->
     <issue id="SyntheticAccessor" severity="ignore"/>
 
-    <!-- Google Pay UI elements were imported from google, only file renames for clarity -->
-    <issue id="UnusedAttribute" >
-        <ignore regexp=".*src\/main\/res\/.*googlepay.*"/>
-    </issue>
-
-    <issue id="UnusedAttribute" >
-        <ignore regexp=".*src\/main\/res\/.*googlepay.*"/>
-    </issue>
-
     <!-- False positive because of ViewBinding -->
     <issue id="UnusedIds" severity="warning"/>
 
-    <issue id="NegativeMargin">
-        <ignore path="src/main/res/values/styles.xml"/>
-    </issue>
-    <issue id="DuplicateStrings">
-        <ignore path="src/main/res/values*/strings.xml"/>
-    </issue>
-    <issue id="RedundantNamespace" >
-        <ignore path="src/main/res/drawable-v21/googlepay_white_button_background.xml"/>
-        <ignore path="src/main/res/drawable-v21/googlepay_white_button_no_shadow_background.xml"/>
-    </issue>
+    <!-- Only ever reported for the internals of third party dependencies, which we cannot fix. -->
+    <issue id="InvalidPackage" severity="ignore"/>
 
-    <issue id="InvalidPackage">
-        <ignore path="*/net.bytebuddy/byte-buddy-agent/*"/>
-    </issue>
+    <!--
+      The SDK deliberately overrides the configuration to render in the shopper locale. The suggested Play Core
+      language APIs are the integrating app's concern, not ours.
+    -->
+    <issue id="AppBundleLocaleChanges" severity="ignore"/>
 
 </lint>
