@@ -15,13 +15,7 @@ Invoke this skill when you are ready to open a PR for the current branch. The sk
 
 ### 1. Gather context
 
-Collect the following information:
-
-```bash
-git rev-parse --abbrev-ref HEAD              # current branch name
-git log --oneline <base-branch>..HEAD        # commits on this branch (base is main, v5, or parent branch)
-git diff <base-branch> --stat                # files changed summary
-```
+Collect the current branch name, the commits it adds on top of its base (`main`, `v5`, or the parent branch in a stack), and a summary of the files they change.
 
 Determine from the branch name:
 - **Branch type**: `feature/`, `fix/`, `chore/`, or `renovate/`
@@ -74,10 +68,7 @@ Rules:
 - ✅ for completed phases — include a link to the PR
 - ➡️ **bold** for the current phase (this PR)
 - Plain text (no emoji) for future phases
-- To find links for completed phases, search for related PRs:
-  ```bash
-  gh pr list --state all --base <base-branch> --search "<search term>" --json number,title,url
-  ```
+- To find links for completed phases, search the repository's open and merged PRs on the same base branch
 - If there is an implementation plan file (`*_IMPLEMENTATION_PLAN.md`), use it to identify the phases
 - If the work is not phased, omit this section entirely
 

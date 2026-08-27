@@ -65,14 +65,7 @@ Present the proposed branch name and base branch. Ask for approval before creati
 
 ### 5. Create and checkout
 
-**Single branch** (not part of a chain):
-
-```bash
-git checkout <base-branch>
-git pull
-git checkout -b <branch-name>
-git push --set-upstream origin <branch-name>
-```
+**Single branch** (not part of a chain): create it from an up-to-date base branch, then push it with upstream tracking so it is ready for a PR.
 
 **Chained branches** — build a stack so each layer targets the one below it, with `main`/`v5` as the trunk. If stacking is unavailable, base each branch on the previous phase and set each PR's base manually.
 

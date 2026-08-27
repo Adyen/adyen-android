@@ -15,7 +15,7 @@ Invoke this skill after completing a phase of work and you are ready to commit. 
 
 ### 1. Verify branch
 
-Check the current branch with `git rev-parse --abbrev-ref HEAD`. If the current branch is `main` or `v5`, **stop immediately** and warn the user. Never commit directly to `main` or `v5`. Suggest using the `android-branch-create` skill to create a feature/fix/chore branch first.
+Check the current branch. If it is `main` or `v5`, **stop immediately** and warn the user. Never commit directly to `main` or `v5`. Suggest using the `android-branch-create` skill to create a feature/fix/chore branch first.
 
 Also ensure the branch is up to date with its upstream branch. If behind, pull the latest changes before proceeding.
 
@@ -27,7 +27,7 @@ Use the `android-check` skill (`.agents/skills/android-check/SKILL.md`) to run v
 
 ### 3. Review changes
 
-Run `git status` and `git diff` to understand what will be committed. Present a brief summary of changed files to the user.
+Understand what will be committed, and present a brief summary of the changed files to the user.
 
 ### 4. Ask for ticket number
 
@@ -43,7 +43,7 @@ Include any `.api` files if they were updated (e.g., after running `apiDump` for
 
 ### 6. Security scan
 
-Run `git diff --cached` to review the staged diff for:
+Review the staged diff for:
 - API keys, tokens, or secrets
 - Credentials or passwords
 - `.env` values or sensitive configuration
@@ -73,9 +73,7 @@ Ask for approval before executing the commit. If the user wants changes, adjust 
 
 ### 9. Execute commit
 
-Run `git commit -m "..."` with the approved message.
-
-Confirm the commit was created successfully by running `git log --oneline -1`.
+Create the commit with the approved message, then confirm it was created and contains exactly the intended files.
 
 ## Important
 

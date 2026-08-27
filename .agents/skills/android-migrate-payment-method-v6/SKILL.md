@@ -1,6 +1,6 @@
 ---
 name: android-migrate-payment-method-v6
-description: Plan and execute the migration of a v5 payment method to the v6 component architecture.
+description: Plan and execute the migration of a v5 payment method to the v6 component architecture. Use when moving an existing payment method module to v6.
 ---
 
 # android-migrate-payment-method-v6
@@ -34,7 +34,7 @@ Each v6 payment method is a small set of collaborators wired by a factory. No si
 
 ## Before you start
 
-1. **Read `AGENTS.md`.** This skill defers to it for visibility/API rules, sealed-vs-abstract, styles/strings, external-SDK handling, and TDD.
+1. **Read `AGENTS.md`.** This skill defers to it for the working agreement and testing rules, and to the skills it routes to: `android-public-api-change` (visibility, sealed vs abstract), `android-ui-resources` (styles and strings), and `android-add-module` (external SDK handling).
 2. **Create a plan document first.** Per `AGENTS.md`, write `<METHOD>_V6_MIGRATION_PLAN.md`, get it approved, and do not start coding until then. Keep it updated as phases complete. Do not commit the plan file.
 3. **Inventory the v5 sources.** List the existing v5 files (delegate, views, provider, configuration, tests) and map each onto the v6 collaborators above. Note what already exists (some methods are partially migrated — e.g. Google Pay's `XDetails` already existed) so you don't recreate it.
 4. **Flag method-specific concerns** in the plan: external SDK handoff (`compileOnly` + `runCompileOnly`/`checkCompileOnly` + ProGuard `dontwarn`), availability pre-checks, action/redirect handling, and any bridging of out-of-composition events into the Composable (see Google Pay's `viewEventChannel`). Also decide which **optional capabilities** apply: a params/mapper, **input fields** (validation + error display), a **stored variant**, and a **secondary screen** (pickers/sheets).
@@ -47,7 +47,7 @@ Follow this loop for each phase below:
 
 1. **Tests first.** Write/move the tests for the layer before (or alongside) the implementation, using the given-when-then style. Every phase that adds a class adds its unit tests; the v5 tests for any code you move go with it.
 2. **Implement** the layer, defaulting to `internal` visibility.
-3. **Make it green**, then run the `android-check` skill scoped to the touched module(s) (`./gradlew :<module>:check`, plus `:core:check` when core changed).
+3. **Make it green**, then run the `android-check` skill scoped to the touched modules, plus `core` when core changed.
 4. **Commit** that single phase via the `android-commit` skill (one logical change per commit, `COSDK-XXXX` ticket). Never bundle multiple phases.
 
 ## Steps
@@ -93,7 +93,7 @@ Use the `android-branch-create` skill to create a `chore/` branch (base `main` d
 - Add `XContent`: a wrapper that collects the view-state flow and hosts effects/launchers, delegating to a **private pure-UI composable**. **Reuse shared composables from the `ui` module** (`ComponentScaffold`, `PayButton`, input fields, `ValuePickerField`) instead of building from scratch.
 - **If the method has a secondary screen**, add its `SecondaryContent` composable (e.g. `XSecondaryContent`) to render the component's `SecondaryScreenComponent.SecondaryContent()` slot (see MBWay's picker).
 - **Add `@Preview` composables for the meaningful UI cases**, not just one happy path — e.g. default/empty, loading, validation error, available vs unavailable, and any method-specific variants (light/dark via `uiMode`, RTL, different styles). Previews take the `ViewState` (or a small UI model) directly so each case is rendered in isolation.
-- Follow `AGENTS.md` and other payment methods for styles and strings.
+- Follow the `android-ui-resources` skill and other payment methods for styles and strings.
 - **Tests:** logic/UI tests where applicable.
 - **Gate:** `:module:check`. Commit.
 
@@ -117,7 +117,7 @@ Use the `android-branch-create` skill to create a `chore/` branch (base `main` d
 
 ### 10. Public configuration / DSL
 
-- Add/confirm the public `XConfiguration` and the `CheckoutConfiguration.x { }` DSL extension. Everything else stays `internal` or `@RestrictTo(LIBRARY_GROUP)`. Prefer abstract classes over sealed for merchant-facing `when` safety (see `AGENTS.md`).
+- Add/confirm the public `XConfiguration` and the `CheckoutConfiguration.x { }` DSL extension. Everything else stays `internal` or `@RestrictTo(LIBRARY_GROUP)`. Prefer abstract classes over sealed for merchant-facing `when` safety (see the `android-public-api-change` skill).
 - **Gate:** if the public API changed intentionally, run `:module:apiDump` and commit the `.api` files. Commit.
 
 ### 11. Example-app wiring
