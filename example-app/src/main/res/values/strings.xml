@@ -18,8 +18,6 @@
     <string name="google_pay_unavailable_error">Google Pay is unavailable on this device</string>
 
     <string name="blik_component_entry">Blik</string>
-    <string name="blik_component_await">Waiting for approval</string>
-    <string name="blik_component_image_description">Blik Logo</string>
     <string name="blik_title">Blik</string>
 
     <string name="klarna_component_entry">Klarna</string>

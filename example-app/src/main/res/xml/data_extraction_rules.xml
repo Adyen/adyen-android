@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  -->
+
+<data-extraction-rules>
+    <!--
+      The example app holds API credentials and payment state, so nothing should leave the device. This is the
+      Android 12 and higher equivalent of android:allowBackup="false", which now only covers cloud backups.
+
+      Every domain is listed explicitly rather than relying on "root" to cover the others, because each domain is a
+      separate location and the credentials live in the sharedpref one. Both attributes are required on an exclude.
+    -->
+    <cloud-backup>
+        <exclude domain="root" path="." />
+        <exclude domain="file" path="." />
+        <exclude domain="database" path="." />
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="external" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" path="." />
+        <exclude domain="file" path="." />
+        <exclude domain="database" path="." />
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="external" path="." />
+    </device-transfer>
+</data-extraction-rules>

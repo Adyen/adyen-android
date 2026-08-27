@@ -6,6 +6,10 @@
  * Created by oscars on 15/12/2025.
  */
 
+// The navigationIcon slot is named and ordered after its Material 3 counterpart. Renaming it to "content" or moving it
+// last would make this component inconsistent with the framework API it wraps.
+@file:Suppress("ComposableLambdaParameterNaming", "ComposableLambdaParameterPosition")
+
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.material.icons.Icons

@@ -7,10 +7,12 @@
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:width="48dp"
     android:height="34dp"
     android:viewportWidth="48"
-    android:viewportHeight="34">
+    android:viewportHeight="34"
+    tools:ignore="VectorPath">
   <group>
     <clip-path
         android:pathData="M7,2L41,2A3,3 0,0 1,44 5L44,25A3,3 0,0 1,41 28L7,28A3,3 0,0 1,4 25L4,5A3,3 0,0 1,7 2z"/>
