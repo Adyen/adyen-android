@@ -16,11 +16,16 @@ import android.graphics.BitmapFactory
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.error.internal.HttpError
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import java.io.IOException
-import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 internal object DefaultImageLoader : ImageLoader {
 
@@ -44,55 +49,43 @@ internal object DefaultImageLoader : ImageLoader {
         (DEFAULT_MEMORY_PERCENT * DEFAULT_MEMORY_MEGABYTES * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
     }
 
-    override suspend fun load(
-        url: String,
-        onSuccess: suspend (Bitmap) -> Unit,
-        onError: suspend (Throwable) -> Unit
-    ) = withContext(DispatcherProvider.IO) {
+    override suspend fun load(url: String): Result<Bitmap> {
         val cachedBitmap = cache[url]
         if (cachedBitmap != null) {
-            withContext(DispatcherProvider.Main) {
-                onSuccess(cachedBitmap)
-            }
-            return@withContext
+            return Result.success(cachedBitmap)
         }
 
-        val request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
+        return withContext(DispatcherProvider.IO) {
+            val request = Request.Builder()
+                .url(url)
+                .get()
+                .build()
 
-        val call = okHttpClient.newCall(request)
-
-        try {
-            call.execute().use { response ->
+            okHttpClient.newCall(request).await().use { response ->
                 if (response.isSuccessful) {
                     val bytes = response.body?.bytes() ?: ByteArray(0)
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 
                     if (bitmap != null) {
                         cache[url] = bitmap
-                        withContext(DispatcherProvider.Main) {
-                            onSuccess(bitmap)
-                        }
+                        Result.success(bitmap)
                     } else {
-                        withContext(DispatcherProvider.Main) {
-                            onError(IOException("Failed to decode bitmap."))
-                        }
+                        Result.failure(IOException("Failed to decode bitmap."))
                     }
                 } else {
-                    withContext(DispatcherProvider.Main) {
-                        onError(HttpError(response.code, response.message, null))
-                    }
+                    Result.failure(HttpError(response.code, response.message, null))
                 }
             }
-        } catch (e: CancellationException) {
-            call.cancel()
-            throw e
-        } catch (e: IOException) {
-            withContext(DispatcherProvider.Main) {
-                onError(e)
-            }
         }
+    }
+
+    private suspend fun Call.await(): Response = suspendCancellableCoroutine { continuation ->
+        continuation.invokeOnCancellation { cancel() }
+        enqueue(
+            object : Callback {
+                override fun onResponse(call: Call, response: Response) = continuation.resume(response)
+                override fun onFailure(call: Call, e: IOException) = continuation.resumeWithException(e)
+            },
+        )
     }
 }

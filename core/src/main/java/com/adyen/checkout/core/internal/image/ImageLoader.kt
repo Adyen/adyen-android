@@ -12,9 +12,5 @@ import android.graphics.Bitmap
 
 internal interface ImageLoader {
 
-    suspend fun load(
-        url: String,
-        onSuccess: suspend (Bitmap) -> Unit,
-        onError: suspend (Throwable) -> Unit
-    )
+    suspend fun load(url: String): Result<Bitmap>
 }

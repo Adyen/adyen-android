@@ -12,26 +12,21 @@ import android.graphics.Bitmap
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.test.R
 
 /**
  * Represents the state of an image loading operation.
  */
 private sealed class ImageLoadState {
-    object Loading : ImageLoadState()
+    data object Loading : ImageLoadState()
     data class Success(val bitmap: Bitmap) : ImageLoadState()
-    object Error : ImageLoadState()
+    data object Error : ImageLoadState()
 }
 
 /**
@@ -53,26 +48,13 @@ internal fun NetworkImage(
     errorFallback: Painter,
     modifier: Modifier = Modifier,
 ) {
-    // State to hold the result of the image loading
-    var imageLoadState by remember(url) { mutableStateOf<ImageLoadState>(ImageLoadState.Loading) }
-
-    // Trigger the image loading effect when the URL or imageLoader changes
-    LaunchedEffect(url) {
-        DefaultImageLoader.load(
-            url = url,
-            onSuccess = { bitmap ->
-                imageLoadState = ImageLoadState.Success(bitmap)
-            },
-            onError = {
-                adyenLog(AdyenLogLevel.WARN) {
-                    "Failed loading image for $url - ${it::class.simpleName}: ${it.message}"
-                }
-                imageLoadState = ImageLoadState.Error
-            },
+    val imageLoadState by produceState<ImageLoadState>(ImageLoadState.Loading, url) {
+        value = DefaultImageLoader.load(url).fold(
+            onSuccess = { ImageLoadState.Success(it) },
+            onFailure = { ImageLoadState.Error },
         )
     }
 
-    // Display the image based on the current state
     when (val state = imageLoadState) {
         is ImageLoadState.Loading -> {
             Image(
