@@ -34,6 +34,8 @@ object Dimensions {
         val DoubleExtraLarge = 32.dp
 
         val TripleExtraLarge = 48.dp
+
+        val QuadrupleExtraLarge = 64.dp
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
