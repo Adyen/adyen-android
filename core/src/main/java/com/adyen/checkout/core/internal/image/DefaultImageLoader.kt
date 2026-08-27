@@ -14,6 +14,7 @@ import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
+import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.error.internal.HttpError
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -21,21 +22,27 @@ import okhttp3.Request
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
-// Re-use the same instance to ensure the cache is working optimally
-private var localImageLoader: ImageLoader? = null
+internal object DefaultImageLoader : ImageLoader {
 
-internal val Context.imageLoader: ImageLoader
-    get() {
-        return localImageLoader ?: synchronized(this) {
-            localImageLoader ?: DefaultImageLoader(this.applicationContext).also { localImageLoader = it }
-        }
-    }
-
-private class DefaultImageLoader(context: Context) : ImageLoader {
+    private const val LOW_MEMORY_PERCENT = 0.15
+    private const val DEFAULT_MEMORY_PERCENT = 0.2
+    private const val DEFAULT_MEMORY_MEGABYTES = 256
+    private const val BYTE_CONVERSION = 1024
 
     private val okHttpClient = OkHttpClient()
 
-    private val cache = InMemoryCache(calculateInMemoryCacheSize(context))
+    private val cache = InMemoryCache(calculateInMemoryCacheSize(ApplicationContextHolder.require()))
+
+    private fun calculateInMemoryCacheSize(context: Context): Int = try {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val percent = if (activityManager.isLowRamDevice) LOW_MEMORY_PERCENT else DEFAULT_MEMORY_PERCENT
+        val isLargeHeap = (context.applicationInfo.flags and ApplicationInfo.FLAG_LARGE_HEAP) != 0
+        val memoryMegabytes = if (isLargeHeap) activityManager.largeMemoryClass else activityManager.memoryClass
+        // Available megabytes to kilobytes to bytes
+        (percent * memoryMegabytes * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
+    } catch (_: Exception) {
+        (DEFAULT_MEMORY_PERCENT * DEFAULT_MEMORY_MEGABYTES * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
+    }
 
     override suspend fun load(
         url: String,
@@ -86,25 +93,6 @@ private class DefaultImageLoader(context: Context) : ImageLoader {
             withContext(DispatcherProvider.Main) {
                 onError(e)
             }
-        }
-    }
-
-    private companion object {
-
-        private const val LOW_MEMORY_PERCENT = 0.15
-        private const val DEFAULT_MEMORY_PERCENT = 0.2
-        private const val DEFAULT_MEMORY_MEGABYTES = 256
-        private const val BYTE_CONVERSION = 1024
-
-        private fun calculateInMemoryCacheSize(context: Context): Int = try {
-            val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val percent = if (activityManager.isLowRamDevice) LOW_MEMORY_PERCENT else DEFAULT_MEMORY_PERCENT
-            val isLargeHeap = (context.applicationInfo.flags and ApplicationInfo.FLAG_LARGE_HEAP) != 0
-            val memoryMegabytes = if (isLargeHeap) activityManager.largeMemoryClass else activityManager.memoryClass
-            // Available megabytes to kilobytes to bytes
-            (percent * memoryMegabytes * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
-        } catch (_: Exception) {
-            (DEFAULT_MEMORY_PERCENT * DEFAULT_MEMORY_MEGABYTES * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
         }
     }
 }
