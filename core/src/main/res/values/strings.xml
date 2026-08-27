@@ -45,6 +45,8 @@
     <string name="checkout_card_installments_option_revolving" translatable="false">Revolving payment</string>
     <string name="checkout_card_installments_option_regular" translatable="false">%s months</string>
     <string name="checkout_card_installments_option_regular_with_price" translatable="false">%1$sx %2$s</string>
+    <string name="checkout_drop_in_action_description" translatable="false">You are being redirected to complete the next step of the process.</string>
+    <string name="checkout_drop_in_action_processing" translatable="false">Processing..</string>
     <string name="checkout_drop_in_manage_favorites_title" translatable="false">Manage your favorite payment options</string>
     <string name="checkout_drop_in_manage_favorites_cards_section_title" translatable="false">Cards</string>
     <string name="checkout_drop_in_manage_favorites_others_section_title" translatable="false">Others</string>
