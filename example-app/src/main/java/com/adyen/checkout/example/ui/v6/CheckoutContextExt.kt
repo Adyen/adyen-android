@@ -22,6 +22,9 @@ private val SUPPORTED_V6_PAYMENT_METHODS = listOf(
     PaymentMethodTypes.SCHEME,
 )
 
+// TODO - read the payment methods from the public session data API once it is available, instead of reaching into
+//  SessionSetupResponse directly.
+@Suppress("RestrictedApi")
 internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
     val paymentMethods = when (this) {
         is CheckoutContext.Advanced -> this.paymentMethods.paymentMethods
@@ -36,6 +39,9 @@ internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
         .filter { SUPPORTED_V6_PAYMENT_METHODS.contains(it.type) || it is GenericPaymentMethod }
 }
 
+// TODO - read the payment methods from the public session data API once it is available, instead of reaching into
+//  SessionSetupResponse directly.
+@Suppress("RestrictedApi")
 internal fun CheckoutContext.getStoredPaymentMethods(): List<StoredPaymentMethod> {
     return when (this) {
         is CheckoutContext.Advanced -> this.paymentMethods.storedPaymentMethods.orEmpty()

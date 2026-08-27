@@ -211,6 +211,9 @@ internal class V6SessionsViewModel @Inject constructor(
         }
     }
 
+    // TODO - read the session id and data from the public session data API once it is available, instead of reaching
+    //  into SessionSetupResponse directly.
+    @Suppress("RestrictedApi")
     private suspend fun patchSession(data: BeforeSubmitData): BeforeSubmitResult {
         val currentAmount = keyValueStorage.getAmount()
         val patchedAmount = currentAmount.copy(value = currentAmount.value + 100L)
