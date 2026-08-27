@@ -14,3 +14,12 @@ import org.gradle.kotlin.dsl.the
 
 val Project.libs
     get(): LibrariesForLibs = the<LibrariesForLibs>()
+
+/**
+ * The Maven group ID that all Checkout modules are published under.
+ *
+ * This is both the `groupId` of every publication and the Gradle group of every library module. The latter is what
+ * allows Android Lint to tell library modules apart from consumer modules like the example app, which it needs in
+ * order to enforce `@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)`.
+ */
+const val CHECKOUT_GROUP_ID = "com.adyen.checkout"

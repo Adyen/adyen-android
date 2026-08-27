@@ -6,6 +6,7 @@
  * Created by oscars on 3/12/2025.
  */
 
+import com.adyen.checkout.CHECKOUT_GROUP_ID
 import com.adyen.checkout.libs
 import com.android.build.api.dsl.LibraryExtension
 import kotlinx.validation.ApiValidationExtension
@@ -30,6 +31,10 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
             apply(plugin = "checkout.ktlint")
             apply(plugin = "checkout.publish")
             apply(plugin = "checkout.sonar")
+
+            // Required by Android Lint to enforce @RestrictTo(LIBRARY_GROUP): without it every module falls back to
+            // Gradle's default group, making the SDK and the example app indistinguishable to the RestrictedApi check.
+            group = CHECKOUT_GROUP_ID
 
             extensions.configure<LibraryExtension> {
                 compileSdk = libs.versions.compile.sdk.get().toInt()
