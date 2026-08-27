@@ -14,6 +14,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
@@ -65,8 +66,9 @@ internal fun NetworkImage(
         }
 
         is ImageLoadState.Success -> {
+            val bitmap = state.bitmap
             Image(
-                bitmap = state.bitmap.asImageBitmap(),
+                bitmap = remember(bitmap) { bitmap.asImageBitmap() },
                 contentDescription = contentDescription,
                 modifier = modifier,
             )

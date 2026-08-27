@@ -62,9 +62,10 @@ internal object DefaultImageLoader : ImageLoader {
         (DEFAULT_MEMORY_PERCENT * DEFAULT_MEMORY_MEGABYTES * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
     }
 
+    @Suppress("ReturnCount")
     override suspend fun load(url: String): Result<Bitmap> {
-        cache[url]?.let { Result.success(it) }
-        failureCache[url]?.let { Result.failure<HttpError>(it) }
+        cache[url]?.let { return Result.success(it) }
+        failureCache[url]?.let { return Result.failure(it) }
 
         val deferred = inFlightMutex.withLock {
             inFlight[url] ?: scope.async { fetch(url) }
@@ -99,6 +100,7 @@ internal object DefaultImageLoader : ImageLoader {
 
                     if (bitmap != null) {
                         cache[url] = bitmap
+                        bitmap.prepareToDraw()
                         Result.success(bitmap)
                     } else {
                         Result.failure(IOException("Failed to decode bitmap."))
