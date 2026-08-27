@@ -9,10 +9,8 @@
 package com.adyen.checkout.core.internal.image
 
 import android.graphics.Bitmap
-import androidx.annotation.RestrictTo
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ImageLoader {
+internal interface ImageLoader {
 
     suspend fun load(
         url: String,

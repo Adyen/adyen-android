@@ -621,9 +621,6 @@ public final class com/adyen/checkout/core/common/helper/CardSecurityCodeValidat
 	public static synthetic fun validateSecurityCode$default (Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidator;Ljava/lang/String;Lcom/adyen/checkout/core/common/CardBrand;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult;
 }
 
-public final class com/adyen/checkout/core/common/internal/DefaultImageLoader$Companion {
-}
-
 public final class com/adyen/checkout/core/common/internal/model/EmptyResponse$Companion {
 }
 

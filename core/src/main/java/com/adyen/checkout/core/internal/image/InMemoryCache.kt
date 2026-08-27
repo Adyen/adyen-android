@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2025 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 25/8/2025.
+ * Created by oscars on 27/8/2026.
  */
 
-package com.adyen.checkout.core.common.internal
+package com.adyen.checkout.core.internal.image
 
 import android.graphics.Bitmap
 import android.os.Build
