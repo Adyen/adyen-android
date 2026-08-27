@@ -20,7 +20,14 @@ Invoke this skill when creating a new module (for example a new payment method o
 
 Copy the Gradle setup from the existing module closest to what you are adding, then diff the two files and account for every difference. Add the module to `settings.gradle`, keeping the list alphabetical.
 
-### 2. Handle optional external SDKs with compileOnly
+### 2. Register a published module elsewhere
+
+A published module is not done when its own `build.gradle` is right — two lists outside it have to know about it:
+
+- **Documentation.** Add `dokka(project(':<module>'))` to the `dependencies` block at the bottom of the root `build.gradle`. Every published module has an entry there, so a missing one means the module is silently absent from the generated API documentation.
+- **Drop-in.** If merchants reach the payment method through Drop-in, add `api project(':<module>')` to `drop-in/build.gradle` so it ships with Drop-in. Shared infrastructure such as `core`, `ui-core` and `components-core`, and action modules such as `redirect` and `await`, arrive transitively and are not listed.
+
+### 3. Handle optional external SDKs with compileOnly
 
 Some modules wrap a third-party SDK: 3DS2, Twint, WeChat Pay, Cash App Pay, Google Pay, card scanning. Merchants who use standalone components should not be forced to pull these in, so the dependent module declares them as `compileOnly` and tolerates their absence at runtime.
 
@@ -37,7 +44,7 @@ Because the classes are absent at runtime, R8 warns about the missing references
 -dontwarn com.adyen.checkout.adyen3ds2.**
 ```
 
-### 3. Guard every call into an optional SDK
+### 4. Guard every call into an optional SDK
 
 Never touch a `compileOnly` type directly. Wrap the call so a missing class degrades gracefully instead of throwing `NoClassDefFoundError`:
 
@@ -51,7 +58,7 @@ The optional type must not appear outside the `runCompileOnly` block — not in 
 
 For a boolean availability check, use `checkCompileOnly`.
 
-### 4. Verify
+### 5. Verify
 
 Run the `android-check` skill (`.agents/skills/android-check/SKILL.md`) for the new module and for every module that depends on it.
 
