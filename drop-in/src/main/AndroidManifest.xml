@@ -13,7 +13,8 @@
             android:name=".old.internal.ui.DropInActivity"
             android:enableOnBackInvokedCallback="false"
             android:launchMode="singleTask"
-            android:theme="@style/AdyenCheckout.Translucent" />
+            android:theme="@style/AdyenCheckout.Translucent"
+            tools:targetApi="33" />
 
         <activity
             android:name=".old.DropInRedirectHandlingActivity"
@@ -25,16 +26,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!--
+                  Android merges the attributes of every data tag in a filter into sets and then matches any
+                  combination of them, so these are declared one attribute per tag to make that explicit. The two
+                  paths match the redirect URL both with and without a trailing slash.
+                -->
+                <data android:scheme="${checkoutRedirectScheme}" />
+                <data android:host="${applicationId}" />
                 <data
-                    android:host="${applicationId}"
                     android:path=""
-                    android:scheme="${checkoutRedirectScheme}"
                     tools:ignore="AppLinkUrlError" />
-
-                <data
-                    android:host="${applicationId}"
-                    android:path="/"
-                    android:scheme="${checkoutRedirectScheme}" />
+                <data android:path="/" />
             </intent-filter>
         </activity>
 
