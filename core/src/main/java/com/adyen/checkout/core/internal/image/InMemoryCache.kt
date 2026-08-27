@@ -10,7 +10,7 @@ package com.adyen.checkout.core.internal.image
 
 import android.graphics.Bitmap
 import android.os.Build
-import android.util.LruCache
+import androidx.collection.LruCache
 
 internal class InMemoryCache(
     maxSize: Int,
@@ -21,7 +21,7 @@ internal class InMemoryCache(
     }
 
     operator fun get(key: String): Bitmap? {
-        return cache.get(key)?.bitmap
+        return cache[key]?.bitmap
     }
 
     @Suppress("DEPRECATION", "MagicNumber")

@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.collection.LruCache
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.error.internal.HttpError
@@ -39,10 +40,12 @@ internal object DefaultImageLoader : ImageLoader {
     private const val DEFAULT_MEMORY_PERCENT = 0.2
     private const val DEFAULT_MEMORY_MEGABYTES = 256
     private const val BYTE_CONVERSION = 1024
+    private const val FAILURE_CACHE_SIZE = 64
 
     private val okHttpClient = OkHttpClient()
 
     private val cache = InMemoryCache(calculateInMemoryCacheSize(ApplicationContextHolder.require()))
+    private val failureCache = LruCache<String, HttpError>(FAILURE_CACHE_SIZE)
 
     private val scope = CoroutineScope(SupervisorJob() + DispatcherProvider.IO)
     private val inFlightMutex = Mutex()
@@ -61,6 +64,7 @@ internal object DefaultImageLoader : ImageLoader {
 
     override suspend fun load(url: String): Result<Bitmap> {
         cache[url]?.let { Result.success(it) }
+        failureCache[url]?.let { Result.failure<HttpError>(it) }
 
         val deferred = inFlightMutex.withLock {
             inFlight[url] ?: scope.async { fetch(url) }
@@ -100,7 +104,12 @@ internal object DefaultImageLoader : ImageLoader {
                         Result.failure(IOException("Failed to decode bitmap."))
                     }
                 } else {
-                    Result.failure(HttpError(response.code, response.message, null))
+                    val error = HttpError(response.code, response.message, null)
+                    @Suppress("MagicNumber")
+                    if (error.code in 400..499) {
+                        failureCache.put(url, error)
+                    }
+                    Result.failure(error)
                 }
             }
     }
