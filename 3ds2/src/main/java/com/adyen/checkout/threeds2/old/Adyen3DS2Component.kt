@@ -80,7 +80,6 @@ class Adyen3DS2Component internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         delegate.onCleared()
     }

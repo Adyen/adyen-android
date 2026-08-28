@@ -90,7 +90,6 @@ class PayToComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         payToDelegate.onCleared()
         genericActionDelegate.onCleared()

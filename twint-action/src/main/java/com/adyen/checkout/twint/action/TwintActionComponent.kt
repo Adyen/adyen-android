@@ -62,7 +62,6 @@ class TwintActionComponent internal constructor(
 
     override fun onCleared() {
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
-        super.onCleared()
         delegate.onCleared()
     }
 

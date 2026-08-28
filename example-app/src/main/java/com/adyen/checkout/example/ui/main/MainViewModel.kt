@@ -352,7 +352,6 @@ internal class MainViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         Log.d(TAG, "onCleared")
     }
 

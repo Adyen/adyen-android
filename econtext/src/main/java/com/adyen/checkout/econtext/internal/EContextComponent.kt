@@ -87,7 +87,6 @@ abstract class EContextComponent<
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         eContextDelegate.onCleared()
         genericActionDelegate.onCleared()

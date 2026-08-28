@@ -117,7 +117,6 @@ class BacsDirectDebitComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         bacsDelegate.onCleared()
         genericActionDelegate.onCleared()

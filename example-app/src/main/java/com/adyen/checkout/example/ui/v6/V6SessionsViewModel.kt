@@ -186,7 +186,6 @@ internal class V6SessionsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         checkoutController = null
     }
 

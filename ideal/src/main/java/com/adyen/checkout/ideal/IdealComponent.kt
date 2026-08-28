@@ -84,7 +84,6 @@ class IdealComponent internal constructor(
     override fun submit() = Unit
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         idealDelegate.onCleared()
         genericActionDelegate.onCleared()

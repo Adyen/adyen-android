@@ -90,7 +90,6 @@ class UPIComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         upiDelegate.onCleared()
         genericActionDelegate.onCleared()

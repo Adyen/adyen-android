@@ -88,7 +88,6 @@ class BlikComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         blikDelegate.onCleared()
         genericActionDelegate.onCleared()

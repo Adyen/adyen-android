@@ -84,7 +84,6 @@ abstract class OnlineBankingComponent<
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         onlineBankingDelegate.onCleared()
         genericActionDelegate.onCleared()

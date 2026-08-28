@@ -87,7 +87,6 @@ abstract class IssuerListComponent<
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         issuerListDelegate.onCleared()
         genericActionDelegate.onCleared()

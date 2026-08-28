@@ -91,7 +91,6 @@ class ACHDirectDebitComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         achDirectDebitDelegate.onCleared()
         genericActionDelegate.onCleared()
