@@ -92,7 +92,6 @@ class CashAppPayComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         cashAppPayDelegate.onCleared()
         genericActionDelegate.onCleared()

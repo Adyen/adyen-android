@@ -481,7 +481,6 @@ internal class DropInViewModel(
     }
 
     override fun onCleared() {
-        super.onCleared()
         analyticsManager.clear(this)
     }
 

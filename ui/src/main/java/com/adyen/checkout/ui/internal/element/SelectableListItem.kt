@@ -6,6 +6,10 @@
  * Created by oscars on 5/12/2025.
  */
 
+// The optional slot parameters below are named after their Material 3 counterparts. Renaming them to "content" would
+// make these components inconsistent with the framework APIs they wrap.
+@file:Suppress("ComposableLambdaParameterNaming")
+
 package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo

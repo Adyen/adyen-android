@@ -93,6 +93,10 @@ class DefaultRedirectHandler : RedirectHandler {
         }
     }
 
+    // Package visibility filtering, and therefore the <queries> manifest declaration that lint asks for, only applies
+    // from API 30 onwards. This function is only reached below API 30, so the queries are unfiltered here and adding
+    // <queries> to this library manifest would needlessly merge it into every integrating app.
+    @Suppress("QueryPermissionsNeeded")
     private fun launchNativeBeforeApi30(context: Context, uri: Uri): Boolean {
         val pm = context.packageManager
 

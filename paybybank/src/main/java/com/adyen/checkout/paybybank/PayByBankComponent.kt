@@ -79,7 +79,6 @@ class PayByBankComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         payByBankDelegate.onCleared()
         genericActionDelegate.onCleared()

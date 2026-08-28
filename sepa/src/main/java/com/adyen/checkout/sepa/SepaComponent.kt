@@ -88,7 +88,6 @@ class SepaComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         sepaDelegate.onCleared()
         genericActionDelegate.onCleared()

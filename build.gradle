@@ -55,6 +55,10 @@ subprojects {
                 merges += "META-INF/LICENSE.md"
                 merges += "META-INF/LICENSE-notice.md"
             }
+
+            lint {
+                lintConfig = rootProject.file("config/lint/lint.xml")
+            }
         }
     }
 

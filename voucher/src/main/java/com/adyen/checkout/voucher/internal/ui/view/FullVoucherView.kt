@@ -6,6 +6,10 @@
  * Created by atef on 15/3/2023.
  */
 
+// This is v5 code that will be removed, and adopting the KTX extension would mean adding androidx.core:core-ktx to
+// :voucher for a style change only.
+@file:Suppress("UseKtx")
+
 package com.adyen.checkout.voucher.internal.ui.view
 
 import android.content.Context

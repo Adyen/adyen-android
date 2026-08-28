@@ -79,7 +79,6 @@ class PayByBankUSComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         payByBankUSDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()

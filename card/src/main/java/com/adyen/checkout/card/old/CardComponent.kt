@@ -142,7 +142,6 @@ constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         cardDelegate.onCleared()
         genericActionDelegate.onCleared()

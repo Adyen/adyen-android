@@ -74,7 +74,6 @@ class WeChatPayActionComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         delegate.onCleared()
     }

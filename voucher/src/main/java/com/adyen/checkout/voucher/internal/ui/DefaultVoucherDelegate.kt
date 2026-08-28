@@ -6,6 +6,9 @@
  * Created by josephj on 23/8/2022.
  */
 
+// This is v5 code that will be removed, so it is not worth restructuring the format strings here.
+@file:Suppress("StringFormatTrivial")
+
 package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity

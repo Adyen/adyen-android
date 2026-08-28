@@ -88,7 +88,6 @@ class MBWayComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         mbWayDelegate.onCleared()
         genericActionDelegate.onCleared()

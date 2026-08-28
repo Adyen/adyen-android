@@ -32,6 +32,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,9 +60,6 @@ import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.stringFromUIText
 import com.adyen.checkout.example.ui.theme.ExampleTheme
-import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.text.SubHeadline
-import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -220,20 +218,22 @@ private fun PaymentMethodOptionsDialog(
                 modifier = Modifier.padding(vertical = ExampleTheme.dimensions.grid_1),
             ) {
                 item {
-                    Subtitle(
+                    Text(
                         text = "Regular",
                         modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
                         color = Color(theme.colors.text.value),
+                        style = MaterialTheme.typography.titleLarge,
                     )
                 }
                 items(paymentMethods) { paymentMethod ->
                     PaymentMethodItem(paymentMethod, onItemClick, theme)
                 }
                 item {
-                    Subtitle(
+                    Text(
                         text = "Stored",
                         modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
                         color = Color(theme.colors.text.value),
+                        style = MaterialTheme.typography.titleLarge,
                     )
                 }
                 items(storedPaymentMethods) { paymentMethod ->
@@ -262,12 +262,15 @@ private fun PaymentMethodItem(
                 vertical = ExampleTheme.dimensions.grid_1_5,
             ),
     ) {
-        @Suppress("RestrictedApi")
-        Body(paymentMethod.name, color = Color(theme.colors.text.value))
-        @Suppress("RestrictedApi")
-        SubHeadline(
+        Text(
+            paymentMethod.name,
+            color = Color(theme.colors.text.value),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
             paymentMethod.type,
             color = Color(theme.colors.textSecondary.value),
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

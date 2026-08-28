@@ -92,7 +92,6 @@ class BoletoComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         boletoDelegate.onCleared()
         genericActionDelegate.onCleared()

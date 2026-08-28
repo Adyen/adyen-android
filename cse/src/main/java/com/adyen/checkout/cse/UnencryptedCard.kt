@@ -96,7 +96,7 @@ class UnencryptedCard internal constructor(
         }
 
         private fun trimAndRemoveMultipleWhiteSpaces(string: String?): String? {
-            return string?.trim { it <= ' ' }?.replace("\\s{2,}".toRegex(), " ")
+            return string?.trim()?.replace("\\s{2,}".toRegex(), " ")
         }
     }
 }

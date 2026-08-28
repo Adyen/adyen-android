@@ -6,6 +6,10 @@
  * Created by oscars on 5/12/2025.
  */
 
+// The optional slot parameters below are named and ordered after their Material 3 counterparts. Renaming them to
+// "content" or moving them last would make these components inconsistent with the framework APIs they wrap.
+@file:Suppress("ComposableLambdaParameterNaming", "ComposableLambdaParameterPosition")
+
 package com.adyen.checkout.ui.internal.element.button
 
 import androidx.annotation.RestrictTo

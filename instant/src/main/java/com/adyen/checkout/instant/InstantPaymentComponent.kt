@@ -69,7 +69,6 @@ class InstantPaymentComponent internal constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         instantPaymentDelegate.onCleared()
         genericActionDelegate.onCleared()
