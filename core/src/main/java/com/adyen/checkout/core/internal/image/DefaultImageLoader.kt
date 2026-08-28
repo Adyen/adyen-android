@@ -34,7 +34,7 @@ import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-internal object DefaultImageLoader : ImageLoader {
+internal object DefaultImageLoader {
 
     private const val LOW_MEMORY_PERCENT = 0.15
     private const val DEFAULT_MEMORY_PERCENT = 0.2
@@ -63,7 +63,7 @@ internal object DefaultImageLoader : ImageLoader {
     }
 
     @Suppress("ReturnCount")
-    override suspend fun load(url: String): Result<Bitmap> {
+    suspend fun load(url: String): Result<Bitmap> {
         cache[url]?.let { return Result.success(it) }
         failureCache[url]?.let { return Result.failure(it) }
 
