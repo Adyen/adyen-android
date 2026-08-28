@@ -8,15 +8,12 @@
 
 package com.adyen.checkout.core.internal.image
 
-import android.app.ActivityManager
-import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.collection.LruCache
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
-import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.error.internal.HttpError
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.SupervisorJob
@@ -34,34 +31,16 @@ import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-internal object DefaultImageLoader {
+internal class DefaultImageLoader(
+    private val cache: InMemoryCache,
+    private val failureCache: LruCache<String, HttpError>,
+    private val okHttpClient: OkHttpClient = OkHttpClient(),
+    dispatcher: CoroutineDispatcher = DispatcherProvider.IO,
+) {
 
-    private const val LOW_MEMORY_PERCENT = 0.15
-    private const val DEFAULT_MEMORY_PERCENT = 0.2
-    private const val DEFAULT_MEMORY_MEGABYTES = 256
-    private const val BYTE_CONVERSION = 1024
-    private const val FAILURE_CACHE_SIZE = 64
-    private val HTTP_4XX_RANGE = 400..499
-
-    private val okHttpClient = OkHttpClient()
-
-    private val cache = InMemoryCache(calculateInMemoryCacheSize(ApplicationContextHolder.require()))
-    private val failureCache = LruCache<String, HttpError>(FAILURE_CACHE_SIZE)
-
-    private val scope = CoroutineScope(SupervisorJob() + DispatcherProvider.IO)
+    private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     private val inFlightMutex = Mutex()
     private val inFlight = mutableMapOf<String, Deferred<Result<Bitmap>>>()
-
-    private fun calculateInMemoryCacheSize(context: Context): Int = try {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val percent = if (activityManager.isLowRamDevice) LOW_MEMORY_PERCENT else DEFAULT_MEMORY_PERCENT
-        val isLargeHeap = (context.applicationInfo.flags and ApplicationInfo.FLAG_LARGE_HEAP) != 0
-        val memoryMegabytes = if (isLargeHeap) activityManager.largeMemoryClass else activityManager.memoryClass
-        // Available megabytes to kilobytes to bytes
-        (percent * memoryMegabytes * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
-    } catch (_: Exception) {
-        (DEFAULT_MEMORY_PERCENT * DEFAULT_MEMORY_MEGABYTES * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
-    }
 
     @Suppress("ReturnCount")
     suspend fun load(url: String): Result<Bitmap> {
@@ -139,5 +118,9 @@ internal object DefaultImageLoader {
                 override fun onFailure(call: Call, e: IOException) = continuation.resumeWithException(e)
             },
         )
+    }
+
+    private companion object {
+        private val HTTP_4XX_RANGE = 400..499
     }
 }

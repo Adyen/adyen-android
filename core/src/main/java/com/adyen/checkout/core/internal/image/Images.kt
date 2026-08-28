@@ -52,7 +52,7 @@ internal fun NetworkImage(
     modifier: Modifier = Modifier,
 ) {
     val imageLoadState by produceState<ImageLoadState>(ImageLoadState.Loading, url) {
-        value = DefaultImageLoader.load(url).fold(
+        value = ImageLoaderProvider.instance.load(url).fold(
             onSuccess = { ImageLoadState.Success(it) },
             onFailure = { error ->
                 adyenLog(AdyenLogLevel.WARN) { "Failed to load image from $url: ${error.message}" }
