@@ -41,6 +41,7 @@ internal object DefaultImageLoader {
     private const val DEFAULT_MEMORY_MEGABYTES = 256
     private const val BYTE_CONVERSION = 1024
     private const val FAILURE_CACHE_SIZE = 64
+    private val HTTP_4XX_RANGE = 400..499
 
     private val okHttpClient = OkHttpClient()
 
@@ -91,29 +92,34 @@ internal object DefaultImageLoader {
             .get()
             .build()
 
-        return okHttpClient.newCall(request)
-            .await()
-            .use { response ->
-                if (response.isSuccessful) {
-                    val bytes = response.body?.bytes() ?: ByteArray(0)
-                    val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        return try {
+            okHttpClient.newCall(request)
+                .await()
+                .use { response -> handleResponse(url, response) }
+        } catch (e: IOException) {
+            Result.failure(e)
+        }
+    }
 
-                    if (bitmap != null) {
-                        cache[url] = bitmap
-                        bitmap.prepareToDraw()
-                        Result.success(bitmap)
-                    } else {
-                        Result.failure(IOException("Failed to decode bitmap."))
-                    }
-                } else {
-                    val error = HttpError(response.code, response.message, null)
-                    @Suppress("MagicNumber")
-                    if (error.code in 400..499) {
-                        failureCache.put(url, error)
-                    }
-                    Result.failure(error)
-                }
+    private fun handleResponse(url: String, response: Response): Result<Bitmap> {
+        if (!response.isSuccessful) {
+            val error = HttpError(response.code, response.message, null)
+            if (error.code in HTTP_4XX_RANGE) {
+                failureCache.put(url, error)
             }
+            return Result.failure(error)
+        }
+
+        val bytes = response.body?.bytes() ?: ByteArray(0)
+        val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+
+        return if (bitmap != null) {
+            cache[url] = bitmap
+            bitmap.prepareToDraw()
+            Result.success(bitmap)
+        } else {
+            Result.failure(IOException("Failed to decode bitmap."))
+        }
     }
 
     private suspend fun Call.await(): Response = suspendCancellableCoroutine { continuation ->
