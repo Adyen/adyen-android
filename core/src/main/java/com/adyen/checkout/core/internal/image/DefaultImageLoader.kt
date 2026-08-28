@@ -69,21 +69,30 @@ internal object DefaultImageLoader {
         failureCache[url]?.let { return Result.failure(it) }
 
         val deferred = inFlightMutex.withLock {
-            inFlight[url] ?: scope.async { fetch(url) }
-                .also { new ->
-                    inFlight[url] = new
-                    new.invokeOnCompletion {
-                        scope.launch {
-                            inFlightMutex.withLock {
-                                @Suppress("DeferredResultUnused")
-                                inFlight.remove(url)
-                            }
-                        }
-                    }
+            // Only join a request that is still running. Joining a finished one would replay its
+            // result, which is wrong for failures that are not negatively cached (5xx, IOException).
+            inFlight[url]?.takeIf { it.isActive } ?: scope.async { fetch(url) }.also { new ->
+                inFlight[url] = new
+
+                // Finished requests have to be evicted, because a completed [Deferred] holds on to its result, and
+                // therefore to the bitmap, keeping it alive even after the in memory cache has evicted it.
+                new.invokeOnCompletion {
+                    scope.launch { evict(url, new) }
                 }
+            }
         }
 
         return deferred.await()
+    }
+
+    private suspend fun evict(url: String, deferred: Deferred<Result<Bitmap>>) {
+        inFlightMutex.withLock {
+            // Only evict this request, it might already have been replaced by a newer one.
+            if (inFlight[url] === deferred) {
+                @Suppress("DeferredResultUnused")
+                inFlight.remove(url)
+            }
+        }
     }
 
     private suspend fun fetch(url: String): Result<Bitmap> {

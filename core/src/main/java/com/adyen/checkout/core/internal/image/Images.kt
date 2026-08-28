@@ -33,7 +33,7 @@ private sealed class ImageLoadState {
 }
 
 /**
- * Composable that loads an image from a URL using the provided ImageLoader.
+ * Composable that loads an image from a URL.
  *
  * This is the core composable that handles the state management of the image loading process.
  *
