@@ -14,7 +14,17 @@ internal sealed interface BlikIntent : ComponentStateIntent {
 
     data class UpdateBlikCode(val code: String) : BlikIntent
 
-    data class UpdateBlikCodeFocus(val hasFocus: Boolean) : BlikIntent
+    /**
+     * A field gained or lost focus. Keyed on the field rather than named after it, because focus is plumbing with no
+     * meaning of its own — unlike a value change, which carries the field's own rules.
+     */
+    data class UpdateFieldFocus(val id: BlikFieldId, val hasFocus: Boolean) : BlikIntent
+
+    /**
+     * The UI has acted on a focus request. Only needed for a request it could not fulfil, since a request that results
+     * in a focus gain is cleared by that gain instead.
+     */
+    data class FocusRequestConsumed(val id: BlikFieldId) : BlikIntent
 
     data class UpdateLoading(val isLoading: Boolean) : BlikIntent
 

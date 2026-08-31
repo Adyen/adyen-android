@@ -9,6 +9,7 @@
 package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -32,9 +33,10 @@ internal class BlikComponentStateFactoryTest {
                 text = "",
                 description = CheckoutLocalizationKey.BLIK_CODE_HINT,
                 error = null,
-                isFocused = true
             ),
             isLoading = false,
+            // Opens the keyboard on the only field as soon as the screen appears.
+            focusRequest = FocusRequest(BlikFieldId.BLIK_CODE),
         )
         assertEquals(expected, actual)
     }

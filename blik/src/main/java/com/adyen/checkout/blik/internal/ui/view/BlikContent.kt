@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.blik.internal.ui.state.BlikFormElement
 import com.adyen.checkout.blik.internal.ui.state.BlikIntent
 import com.adyen.checkout.blik.internal.ui.state.BlikViewState
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -62,17 +64,30 @@ private fun BlikContent(
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         ) {
-            // Helper text
+            // Static screen copy rather than a form field, so it is not one of the elements below.
             Body(text = resolveString(CheckoutLocalizationKey.BLIK_HELPER_TEXT))
 
-            if (viewState.blikCode != null) {
-                BlikCodeField(
-                    blikCodeState = viewState.blikCode,
-                    onValueChange = { onIntent(BlikIntent.UpdateBlikCode(it)) },
-                    onFocusChange = { onIntent(BlikIntent.UpdateBlikCodeFocus(it)) },
-                )
+            viewState.elements.forEach { element ->
+                key(element.id) {
+                    BlikFormElementContent(element = element, onIntent = onIntent)
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun BlikFormElementContent(
+    element: BlikFormElement,
+    onIntent: (BlikIntent) -> Unit,
+) {
+    when (element) {
+        is BlikFormElement.BlikCode -> BlikCodeField(
+            blikCodeState = element.textInputViewState,
+            onValueChange = { onIntent(BlikIntent.UpdateBlikCode(it)) },
+            onFocusChange = { onIntent(BlikIntent.UpdateFieldFocus(element.id, it)) },
+            onFocusRequestConsumed = { onIntent(BlikIntent.FocusRequestConsumed(element.id)) },
+        )
     }
 }
 
@@ -84,7 +99,7 @@ private fun BlikContentPreview(
     CheckoutThemePreviewWrapper(theme) {
         BlikContent(
             viewState = BlikViewState(
-                blikCode = TextInputViewState(),
+                elements = listOf(BlikFormElement.BlikCode(TextInputViewState())),
                 isLoading = false,
                 payButtonViewState = PayButtonViewState(null, false),
             ),
