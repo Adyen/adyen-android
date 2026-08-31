@@ -176,9 +176,24 @@ internal class TextInputViewStateTest {
     }
 
     @Test
-    fun `when field is hidden, then view state should be null so it doesn't get displayed`() {
+    fun `when field is hidden, then toViewStateIfVisible returns null so it doesn't get displayed`() {
         // GIVEN
         val state = TextInputComponentState(
+            requirementPolicy = RequirementPolicy.Hidden,
+        )
+
+        // WHEN
+        val viewState = state.toViewStateIfVisible()
+
+        // THEN
+        assertNull(viewState)
+    }
+
+    @Test
+    fun `when field is hidden, then toViewState still maps it because visibility is not its decision`() {
+        // GIVEN
+        val state = TextInputComponentState(
+            text = "1234",
             requirementPolicy = RequirementPolicy.Hidden,
         )
 
@@ -186,7 +201,7 @@ internal class TextInputViewStateTest {
         val viewState = state.toViewState()
 
         // THEN
-        assertNull(viewState)
+        assertEquals("1234", viewState.text)
     }
 
     @Test

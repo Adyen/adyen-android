@@ -181,9 +181,10 @@ internal class CardFieldOrderTest {
     }
 
     /**
-     * The UI renders a field by looking up the matching property of the view state, so a field in the order whose
-     * property is null would be silently dropped, and a field on screen that is not in the order would be unreachable
-     * by focus and have the wrong keyboard action. These are the states in which those two can disagree.
+     * The order and what reaches the screen can no longer disagree, because the view state producer builds one element
+     * per member of the order. What it can still get wrong is which element it builds for a given id: each element
+     * reports its own id, and a wrong one would give the field the wrong composition key and send its focus events to
+     * another field.
      */
     @Nested
     inner class AgreementWithViewStateTest {
@@ -191,8 +192,8 @@ internal class CardFieldOrderTest {
         private val producer = CardViewStateProducer(amount = null, showSubmitButton = false)
 
         @Test
-        fun `when every field is configured, then the order agrees with the view state`() {
-            assertOrderAgreesWithViewState(
+        fun `when every field is configured, then every element reports the id it was built for`() {
+            assertElementsMatchOrder(
                 createState(
                     holderName = required(),
                     socialSecurityNumber = required(),
@@ -206,40 +207,26 @@ internal class CardFieldOrderTest {
         }
 
         @Test
-        fun `when only the mandatory fields are configured, then the order agrees with the view state`() {
-            assertOrderAgreesWithViewState(createState())
+        fun `when only the mandatory fields are configured, then every element reports the id it was built for`() {
+            assertElementsMatchOrder(createState())
         }
 
         @Test
-        fun `when the security code is hidden, then the order agrees with the view state`() {
-            assertOrderAgreesWithViewState(createState(securityCode = hidden()))
+        fun `when the security code is hidden, then every element reports the id it was built for`() {
+            assertElementsMatchOrder(createState(securityCode = hidden()))
         }
 
         @Test
-        fun `when a field is optional, then the order agrees with the view state`() {
-            assertOrderAgreesWithViewState(createState(holderName = optional()))
+        fun `when a field is optional, then every element reports the id it was built for`() {
+            assertElementsMatchOrder(createState(holderName = optional()))
         }
 
-        private fun assertOrderAgreesWithViewState(state: CardComponentState) {
+        private fun assertElementsMatchOrder(state: CardComponentState) {
             val order = visibleCardFields(state)
-            val viewState = producer.produce(state)
 
-            CardFieldId.entries.forEach { id ->
-                val isDisplayed = when (id) {
-                    CardFieldId.CARD_NUMBER -> viewState.cardNumber != null
-                    CardFieldId.EXPIRY_DATE -> viewState.expiryDate != null
-                    CardFieldId.SECURITY_CODE -> viewState.securityCode != null
-                    CardFieldId.HOLDER_NAME -> viewState.holderName != null
-                    CardFieldId.SOCIAL_SECURITY_NUMBER -> viewState.socialSecurityNumber != null
-                    CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> viewState.kcpBirthDateOrTaxNumber != null
-                    CardFieldId.KCP_CARD_PASSWORD -> viewState.kcpCardPassword != null
-                    CardFieldId.POSTAL_CODE -> viewState.postalCode != null
-                    CardFieldId.STORE_PAYMENT_METHOD -> viewState.storePaymentViewState != null
-                    CardFieldId.INSTALLMENTS -> viewState.installmentViewState != null
-                }
+            val elements = producer.produce(state).elements
 
-                assertEquals(isDisplayed, order.contains(id), "Order and view state disagree on $id")
-            }
+            assertEquals(order, elements.map { it.id })
         }
     }
 
