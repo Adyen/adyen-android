@@ -15,6 +15,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.getPaymentMethods
+import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.DropInResult
@@ -57,18 +59,10 @@ internal class DropInViewModel(
     }
 
     private fun initializePaymentMethods() {
-        val paymentMethods = when (val context = input.checkoutContext) {
-            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethods
-            is CheckoutContext.Advanced -> context.paymentMethods
-            is CheckoutContext.ActionOnly -> error("Unsupported context: $context")
-        }
-
-        if (paymentMethods == null) {
-            // TODO - Return DropInResult.Failed and close drop-in
-            return
-        }
-
-        paymentMethodRepository = DefaultPaymentMethodRepository(paymentMethods)
+        paymentMethodRepository = DefaultPaymentMethodRepository(
+            paymentMethods = input.checkoutContext.getPaymentMethods(),
+            storedPaymentMethods = input.checkoutContext.getStoredPaymentMethods(),
+        )
     }
 
     private fun initializeDropInParams() {

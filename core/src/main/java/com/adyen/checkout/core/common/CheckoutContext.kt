@@ -52,7 +52,7 @@ sealed interface CheckoutContext : Parcelable {
     @Parcelize
     @ConsistentCopyVisibility
     data class Advanced internal constructor(
-        val paymentMethods: PaymentMethods,
+        internal val paymentMethods: PaymentMethods,
         override val checkoutConfiguration: CheckoutConfiguration,
         internal val checkoutAttemptId: String,
         internal val publicKey: String?,
