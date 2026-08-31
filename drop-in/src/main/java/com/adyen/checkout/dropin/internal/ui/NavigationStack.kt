@@ -115,8 +115,7 @@ private fun paymentMethodNavEntry(
                 factory = PaymentMethodViewModel.Factory(
                     paymentFlowType = key.paymentFlowType,
                     paymentMethodRepository = viewModel.paymentMethodRepository,
-                    checkoutContext = viewModel.checkoutContext,
-                    dropInServiceManager = viewModel.dropInServiceManager,
+                    controllerProvider = viewModel.controllerProvider,
                 ),
                 key = key.paymentFlowType.hashCode().toString(),
             ),
