@@ -17,6 +17,7 @@ import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
+import com.adyen.checkout.card.internal.ui.state.StoredCardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -24,6 +25,7 @@ import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.paymentmethod.StoredCardDetails
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
@@ -34,6 +36,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -109,6 +112,38 @@ internal class StoredCardComponentTest(
             val event = eventFlow.latestValue
             assertTrue(event is PaymentComponentEvent.Submit)
             assertTrue((event as PaymentComponentEvent.Submit).state.isValid)
+        }
+
+        @Test
+        fun `and state is valid then the state contains the stored card details`() = runTest {
+            // GIVEN
+            val encryptedCard = EncryptedCard(
+                encryptedCardNumber = null,
+                encryptedExpiryMonth = null,
+                encryptedExpiryYear = null,
+                encryptedSecurityCode = "encrypted_cvc",
+            )
+            whenever(cardEncryptor.encryptFields(any(), any())).thenReturn(encryptedCard)
+            whenever(sdkDataProvider.createEncodedSdkData(any())).thenReturn("sdk_data")
+            val component = createComponent(
+                storedCVCVisibility = StoredCVCVisibility.HIDE,
+                publicKey = "test_public_key",
+            )
+            val eventFlow = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            val state = (eventFlow.latestValue as PaymentComponentEvent.Submit).state
+            assertInstanceOf(StoredCardPaymentComponentState::class.java, state)
+            val expectedDetails = StoredCardDetails(
+                type = PAYMENT_METHOD_TYPE,
+                sdkData = "sdk_data",
+                storedPaymentMethodId = "stored_pm_id",
+                encryptedSecurityCode = "encrypted_cvc",
+            )
+            assertEquals(expectedDetails, (state as StoredCardPaymentComponentState).data.paymentMethod)
         }
 
         @Test

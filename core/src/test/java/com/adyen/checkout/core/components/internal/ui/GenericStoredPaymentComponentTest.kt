@@ -3,13 +3,14 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 8/7/2026.
+ * Created by josephj on 25/8/2026.
  */
 
-package com.adyen.checkout.blik.internal.ui
+package com.adyen.checkout.core.components.internal.ui
 
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
+import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -17,14 +18,16 @@ import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateReducer
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.GenericStoredPaymentComponentState
 import com.adyen.checkout.core.components.internal.ui.state.GenericViewStateProducer
-import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.core.components.paymentmethod.GenericStoredDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -38,7 +41,7 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class StoredBlikComponentTest(
+internal class GenericStoredPaymentComponentTest(
     @param:Mock private val storedPaymentMethod: StoredPaymentMethod,
     @param:Mock private val sdkDataProvider: SdkDataProvider,
 ) {
@@ -69,9 +72,7 @@ internal class StoredBlikComponentTest(
     @Test
     fun `when submit is called then Submit event is emitted`() = runTest {
         // GIVEN
-        whenever(storedPaymentMethod.type) doReturn PAYMENT_METHOD_TYPE
-        whenever(storedPaymentMethod.id) doReturn "stored_pm_id"
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn "sdk_data"
+        stubStoredPaymentMethod()
         val component = createComponent()
         val eventFlow = component.eventFlow.test(testScheduler)
 
@@ -83,6 +84,42 @@ internal class StoredBlikComponentTest(
         val event = eventFlow.latestValue
         assertTrue(event is PaymentComponentEvent.Submit)
         assertTrue((event as PaymentComponentEvent.Submit).state.isValid)
+    }
+
+    @Test
+    fun `when submit is called then state contains the stored payment method details`() = runTest {
+        // GIVEN
+        stubStoredPaymentMethod()
+        val component = createComponent()
+        val eventFlow = component.eventFlow.test(testScheduler)
+
+        // WHEN
+        component.submit()
+
+        // THEN
+        val state = (eventFlow.latestValue as PaymentComponentEvent.Submit).state
+        assertInstanceOf(GenericStoredPaymentComponentState::class.java, state)
+        val expectedDetails = GenericStoredDetails(
+            type = PAYMENT_METHOD_TYPE,
+            sdkData = TEST_SDK_DATA,
+            storedPaymentMethodId = STORED_PAYMENT_METHOD_ID,
+        )
+        assertEquals(expectedDetails, (state as GenericStoredPaymentComponentState).data.paymentMethod)
+    }
+
+    @Test
+    fun `when submit is called then state order is null`() = runTest {
+        // GIVEN
+        stubStoredPaymentMethod()
+        val component = createComponent()
+        val eventFlow = component.eventFlow.test(testScheduler)
+
+        // WHEN
+        component.submit()
+
+        // THEN
+        val state = (eventFlow.latestValue as PaymentComponentEvent.Submit).state
+        assertNull(state.data.order)
     }
 
     @Test
@@ -158,11 +195,17 @@ internal class StoredBlikComponentTest(
         assertFalse(requireNotNull(viewState.latestValue.payButtonViewState).isLoading)
     }
 
+    private fun stubStoredPaymentMethod() {
+        whenever(storedPaymentMethod.type) doReturn PAYMENT_METHOD_TYPE
+        whenever(storedPaymentMethod.id) doReturn STORED_PAYMENT_METHOD_ID
+        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+    }
+
     private fun createComponent(
         coroutineScope: CoroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         showSubmitButton: Boolean = true,
-    ): StoredBlikComponent {
-        return StoredBlikComponent(
+    ): GenericStoredPaymentComponent {
+        return GenericStoredPaymentComponent(
             storedPaymentMethod = storedPaymentMethod,
             analyticsManager = analyticsManager,
             sdkDataProvider = sdkDataProvider,
@@ -178,7 +221,9 @@ internal class StoredBlikComponentTest(
     }
 
     companion object {
-        private const val PAYMENT_METHOD_TYPE = "blik"
+        private const val PAYMENT_METHOD_TYPE = "test_payment_method"
+        private const val STORED_PAYMENT_METHOD_ID = "stored_pm_id"
+        private const val TEST_SDK_DATA = "test_sdk_data"
         private val TEST_AMOUNT = Amount(currency = "EUR", value = 1337)
     }
 }

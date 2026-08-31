@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2025 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 8/1/2026.
+ * Created by josephj on 24/8/2026.
  */
 
-package com.adyen.checkout.blik.internal.ui
+package com.adyen.checkout.core.components.internal.ui
 
+import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.adyen.checkout.blik.internal.ui.state.BlikPaymentComponentState
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -18,22 +18,22 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
-import com.adyen.checkout.core.components.internal.ui.GenericContent
-import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateReducer
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.GenericIntent
+import com.adyen.checkout.core.components.internal.ui.state.GenericStoredPaymentComponentState
 import com.adyen.checkout.core.components.internal.ui.state.GenericViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.viewState
-import com.adyen.checkout.core.components.paymentmethod.BlikDetails
+import com.adyen.checkout.core.components.paymentmethod.GenericStoredDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("LongParameterList")
-internal class StoredBlikComponent(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class GenericStoredPaymentComponent(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
@@ -86,20 +86,19 @@ internal class StoredBlikComponent(
         }
     }
 
-    private fun createPaymentComponentState(): BlikPaymentComponentState {
-        val blikDetails = BlikDetails(
-            type = BlikDetails.PAYMENT_METHOD_TYPE,
-            blikCode = null,
+    private fun createPaymentComponentState(): GenericStoredPaymentComponentState {
+        val storedDetails = GenericStoredDetails(
+            type = storedPaymentMethod.type,
             storedPaymentMethodId = storedPaymentMethod.id,
             sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         val paymentComponentData = PaymentComponentData(
-            paymentMethod = blikDetails,
+            paymentMethod = storedDetails,
             order = null,
         )
 
-        return BlikPaymentComponentState(
+        return GenericStoredPaymentComponentState(
             data = paymentComponentData,
             isValid = true,
         )

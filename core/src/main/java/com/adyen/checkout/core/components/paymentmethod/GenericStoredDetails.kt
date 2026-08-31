@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2025 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 17/12/2025.
+ * Created by josephj on 24/8/2026.
  */
 
 package com.adyen.checkout.core.components.paymentmethod
@@ -13,31 +13,28 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 
 @Parcelize
-data class BlikDetails(
+data class GenericStoredDetails(
     override val type: String,
     override val sdkData: String?,
-    val blikCode: String?,
-) : PaymentMethodDetails() {
+    override val storedPaymentMethodId: String?,
+) : StoredPaymentMethodDetails() {
 
     companion object {
-        const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.BLIK
-        private const val BLIK_CODE = "blikCode"
-
         @JvmField
-        val SERIALIZER: Serializer<BlikDetails> = object : Serializer<BlikDetails> {
-            override fun serialize(modelObject: BlikDetails): JSONObject {
+        val SERIALIZER: Serializer<GenericStoredDetails> = object : Serializer<GenericStoredDetails> {
+            override fun serialize(modelObject: GenericStoredDetails): JSONObject {
                 return JSONObject().apply {
                     putOpt(TYPE, modelObject.type)
                     putOpt(SDK_DATA, modelObject.sdkData)
-                    putOpt(BLIK_CODE, modelObject.blikCode)
+                    putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): BlikDetails {
-                return BlikDetails(
+            override fun deserialize(jsonObject: JSONObject): GenericStoredDetails {
+                return GenericStoredDetails(
                     type = jsonObject.getString(TYPE),
                     sdkData = jsonObject.getStringOrNull(SDK_DATA),
-                    blikCode = jsonObject.getStringOrNull(BLIK_CODE),
+                    storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),
                 )
             }
         }
