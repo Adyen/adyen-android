@@ -12,13 +12,8 @@ import com.adyen.checkout.card.internal.helper.isHiddenCardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
-import com.adyen.checkout.core.components.internal.ui.state.form.keyboardActionFor
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
-import com.adyen.checkout.ui.internal.element.input.FocusRequestToken
 
 internal class CardViewStateProducer(
     private val amount: Amount?,
@@ -36,43 +31,38 @@ internal class CardViewStateProducer(
 
     private fun CardComponentState.toElement(id: CardFieldId): CardFormElement = when (id) {
         CardFieldId.CARD_NUMBER -> CardFormElement.CardNumber(
-            textInputViewState = getInputViewState(
-                id = id,
-                field = cardNumber.copy(description = getCardNumberInputDescription(cardBrandState)),
-                customTrailingIcon = getCardNumberTrailingIcon(isCardScanButtonVisible()),
-            ),
+            textInputViewState = cardNumber
+                .copy(description = getCardNumberInputDescription(cardBrandState))
+                .toViewState(form, id, getCardNumberTrailingIcon(isCardScanButtonVisible())),
             cardBrandViewState = getCardBrandViewState(cardBrandState),
             cardNumberFormat = getCardNumberFormat(cardBrandState),
             supportedCardBrandsViewState = getSupportedCardBrandsViewState(this),
         )
 
         CardFieldId.EXPIRY_DATE -> CardFormElement.ExpiryDate(
-            textInputViewState = getInputViewState(id, expiryDate, getExpiryDateTrailingIcon(expiryDate)),
+            textInputViewState = expiryDate.toViewState(form, id, getExpiryDateTrailingIcon(expiryDate)),
         )
 
         CardFieldId.SECURITY_CODE -> {
             val cardNumberFormat = getCardNumberFormat(cardBrandState)
             CardFormElement.SecurityCode(
-                textInputViewState = getInputViewState(
-                    id = id,
-                    field = securityCode,
-                    customTrailingIcon = getSecurityCodeTrailingIcon(securityCode, cardNumberFormat),
-                ),
+                textInputViewState = securityCode
+                    .toViewState(form, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
                 cardNumberFormat = cardNumberFormat,
             )
         }
 
-        CardFieldId.HOLDER_NAME -> CardFormElement.HolderName(getInputViewState(id, holderName))
+        CardFieldId.HOLDER_NAME -> CardFormElement.HolderName(holderName.toViewState(form, id))
 
         CardFieldId.SOCIAL_SECURITY_NUMBER ->
-            CardFormElement.SocialSecurityNumber(getInputViewState(id, socialSecurityNumber))
+            CardFormElement.SocialSecurityNumber(socialSecurityNumber.toViewState(form, id))
 
         CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER ->
-            CardFormElement.KcpBirthDateOrTaxNumber(getInputViewState(id, kcpBirthDateOrTaxNumber))
+            CardFormElement.KcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber.toViewState(form, id))
 
-        CardFieldId.KCP_CARD_PASSWORD -> CardFormElement.KcpCardPassword(getInputViewState(id, kcpCardPassword))
+        CardFieldId.KCP_CARD_PASSWORD -> CardFormElement.KcpCardPassword(kcpCardPassword.toViewState(form, id))
 
-        CardFieldId.POSTAL_CODE -> CardFormElement.PostalCode(getInputViewState(id, postalCode))
+        CardFieldId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toViewState(form, id))
 
         CardFieldId.STORE_PAYMENT_METHOD -> CardFormElement.StorePaymentMethod(isSelected = storePaymentMethod)
 
@@ -102,20 +92,6 @@ internal class CardViewStateProducer(
             is CardBrandState.DualBrand,
             is CardBrandState.DualBrandWithShopperSelection -> false
         },
-    )
-
-    /**
-     * Builds the view state of one text input, adding the two things only the form as a whole can answer: which action
-     * key the field shows, and whether it is the one being asked to take focus.
-     */
-    private fun CardComponentState.getInputViewState(
-        id: CardFieldId,
-        field: TextInputComponentState,
-        customTrailingIcon: TrailingIcon? = null,
-    ): TextInputViewState = field.toViewState(
-        customTrailingIcon = customTrailingIcon,
-        keyboardAction = form.keyboardActionFor(id),
-        focusRequest = form.focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
     )
 
     private fun getCardNumberInputDescription(cardBrandState: CardBrandState): CheckoutLocalizationKey? {
