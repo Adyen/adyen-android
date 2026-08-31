@@ -179,19 +179,8 @@ internal class TextInputViewStateTest {
         assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
     }
 
-    @Test
-    fun `when field is hidden, then toViewStateIfVisible returns null so it doesn't get displayed`() {
-        // GIVEN
-        val state = TextInputComponentState(
-            requirementPolicy = RequirementPolicy.Hidden,
-        )
-
-        // WHEN
-        val viewState = state.toViewStateIfVisible()
-
-        // THEN
-        assertNull(viewState)
-    }
+    // A hidden field never reaches this mapping at all: it is not in its form's order, so no element is built for it.
+    // Each component's view state producer test covers that.
 
     @Test
     fun `when a form is given, then the keyboard action comes from it`() {

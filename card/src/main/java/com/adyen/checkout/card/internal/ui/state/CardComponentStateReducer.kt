@@ -128,13 +128,10 @@ internal class CardComponentStateReducer(
     private fun CardComponentState.updateFieldFocus(id: CardFieldId, hasFocus: Boolean): CardComponentState {
         val request = focusRequest?.takeIf { it.id == id }
         val updated = updateTextInput(id) { field ->
-            // TODO - Form fields cleanup: will be removed. FormState.focusRequest does this job instead, but the UI
-            // does not read it yet, so this flag is still what moves focus on screen and has to be kept up to date.
-            val focused = field.copy(isFocused = hasFocus)
             when {
-                !hasFocus -> focused.showErrorIfPresent()
-                request?.keepErrorHighlight == true -> focused
-                else -> focused.hideErrorIfPresent()
+                !hasFocus -> field.showErrorIfPresent()
+                request?.keepErrorHighlight == true -> field
+                else -> field.hideErrorIfPresent()
             }
         }
 
@@ -153,11 +150,7 @@ internal class CardComponentStateReducer(
         val firstInvalid = state.form.firstInvalid { state.isFieldValid(it) }
 
         val highlighted = CardFieldId.entries.fold(state) { current, id ->
-            current.updateTextInput(id) { field ->
-                // TODO - Form fields cleanup: will be removed. The focusRequest below does this job instead. Setting
-                // the flag on the chosen field and clearing it on the rest is what moves focus until the UI reads it.
-                field.showErrorIfPresent().copy(isFocused = id == firstInvalid)
-            }
+            current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
         return highlighted.copy(

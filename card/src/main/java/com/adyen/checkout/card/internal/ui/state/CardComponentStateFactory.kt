@@ -28,9 +28,7 @@ internal class CardComponentStateFactory(
             ?: emptyList()
 
         return CardComponentState(
-            // TODO - Form fields cleanup: will be removed. The focusRequest below is what focuses the card number
-            // now. The flag is still read by the components that have not moved over yet.
-            cardNumber = TextInputComponentState(isFocused = true),
+            cardNumber = TextInputComponentState(),
             expiryDate = TextInputComponentState(),
             securityCode = TextInputComponentState(
                 requirementPolicy = getSecurityCodeRequirementPolicy(),

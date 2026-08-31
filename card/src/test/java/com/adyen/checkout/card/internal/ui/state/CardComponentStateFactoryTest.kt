@@ -30,10 +30,10 @@ internal class CardComponentStateFactoryTest {
 
     // region cardNumber
     @Test
-    fun `when initial state is created, then card number is focused`() {
+    fun `when initial state is created, then the card number is asked for focus`() {
         val state = createFactory().createInitialState()
 
-        assertTrue(state.cardNumber.isFocused)
+        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), state.focusRequest)
     }
     // endregion
 

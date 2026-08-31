@@ -106,9 +106,6 @@ fun CheckoutTextField(
     imeAction: ImeAction = ImeAction.Unspecified,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
-    // TODO - Form fields cleanup: will be removed. Use focusRequest below instead. This stays until every field
-    // composable has moved over to it.
-    shouldFocus: Boolean = false,
     focusRequest: FocusRequestToken? = null,
     onFocusRequestConsumed: (() -> Unit)? = null,
     prefix: String? = null,
@@ -181,16 +178,6 @@ fun CheckoutTextField(
                 .collectLatest { value ->
                     currentOnValueChange(value.toString())
                 }
-        }
-    }
-
-    // TODO - Form fields cleanup: will be removed together with the shouldFocus parameter. The focusRequest effect
-    // below does the same job.
-    LaunchedEffect(shouldFocus) {
-        if (shouldFocus) {
-            // Throws if the requester is not attached to a focusable node, which can happen when the field leaves
-            // composition between composition and this effect running. Losing the focus is preferable to crashing.
-            runCatching { focusRequester.requestFocus() }
         }
     }
 

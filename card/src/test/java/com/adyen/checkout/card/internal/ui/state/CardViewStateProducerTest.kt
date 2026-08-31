@@ -344,7 +344,6 @@ internal class CardViewStateProducerTest {
             cardNumber = TextInputComponentState(
                 text = "4111",
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
-                isFocused = true, // Focus gain hides the error
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -365,7 +364,6 @@ internal class CardViewStateProducerTest {
             cardNumber = TextInputComponentState(
                 text = "123",
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
-                isFocused = true, // Focus gain hides the error
             ),
             cardBrandState = CardBrandState.NoBrandsDetected,
         )
@@ -410,14 +408,12 @@ internal class CardViewStateProducerTest {
             cardNumber = TextInputComponentState(
                 text = "4111",
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
-                isFocused = true, // Text change hides the error
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
         val componentStateWithoutError = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
-                isFocused = true
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -901,8 +897,8 @@ internal class CardViewStateProducerTest {
     }
 }
 
-// TODO - POC: these read the element list the way the deleted named properties did, so that the existing assertions
-// keep working. Rewrite them to assert on elements directly.
+// Named readers for the element list, so that each assertion below says which field it is about rather than repeating
+// the lookup.
 private inline fun <reified T : CardFormElement> CardViewState.element(): T? =
     elements.filterIsInstance<T>().firstOrNull()
 

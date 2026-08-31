@@ -43,9 +43,6 @@ fun SearchField(
     enabled: Boolean = true,
     supportingText: String? = null,
     isError: Boolean = false,
-    // TODO - Form fields cleanup: will either be removed, or be changed to pass CheckoutTextField.focusRequest. No
-    // caller sets it today, so decide first whether a search field should focus itself at all.
-    shouldFocus: Boolean = false,
 ) {
     val state = rememberTextFieldState()
     val style = CheckoutThemeProvider.elements.textField
@@ -58,7 +55,6 @@ fun SearchField(
         isError = isError,
         enabled = enabled,
         innerIndication = null,
-        shouldFocus = shouldFocus,
         trailingIcon = {
             TrailingSearchIcon(
                 isQueryEmpty = state.text.isEmpty(),

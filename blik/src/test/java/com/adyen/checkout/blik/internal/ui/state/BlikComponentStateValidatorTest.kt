@@ -108,7 +108,6 @@ internal class BlikComponentStateValidatorTest {
         blikCode = TextInputComponentState(
             text = blikCode,
             error = errorKey?.let { TextInputComponentState.InputError(it) },
-            isFocused = false,
         ),
         isLoading = false,
     )

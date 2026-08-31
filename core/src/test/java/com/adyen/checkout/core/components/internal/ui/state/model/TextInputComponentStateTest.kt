@@ -180,92 +180,21 @@ internal class TextInputComponentStateTest {
         @Test
         fun `when user is typing with an error present, then error is not displayed in view state`() {
             // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = visibleError(), isFocused = true)
+            val state = TextInputComponentState(text = "invalid", error = visibleError())
 
             // WHEN
             val typingState = state.updateText("still_invalid")
             val viewState = typingState.toViewState()
 
             // THEN
-            assertEquals(false, viewState?.isError)
+            assertEquals(false, viewState.isError)
             assertFalse(typingState.isErrorVisible)
         }
     }
 
-    @Nested
-    inner class UpdateFocusTest {
-
-        // UC2: Error Cleared on Focus
-        @Test
-        fun `when field gains focus, then the error is hidden`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = visibleError(), isFocused = false)
-
-            // WHEN
-            val updatedState = state.updateFocus(hasFocus = true)
-
-            // THEN
-            assertFalse(updatedState.isErrorVisible)
-            assertTrue(updatedState.isFocused)
-        }
-
-        // UC2: Error Cleared on Focus - verify view state
-        @Test
-        fun `when field gains focus with error, then error is not displayed in view state`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = visibleError())
-
-            // WHEN
-            val focusedState = state.updateFocus(hasFocus = true)
-            val viewState = focusedState.toViewState()
-
-            // THEN
-            assertEquals(false, viewState?.isError)
-        }
-
-        // UC3: Error on Focus Loss
-        @Test
-        fun `when field loses focus, then the error is shown`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = hiddenError(), isFocused = true)
-
-            // WHEN
-            val updatedState = state.updateFocus(hasFocus = false)
-
-            // THEN
-            assertTrue(updatedState.isErrorVisible)
-            assertFalse(updatedState.isFocused)
-        }
-
-        // UC3: Error on Focus Loss - verify view state displays error
-        @Test
-        fun `when field loses focus with invalid input, then error is displayed in view state`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = hiddenError(), isFocused = true)
-
-            // WHEN
-            val blurredState = state.updateFocus(hasFocus = false)
-            val viewState = blurredState.toViewState()
-
-            // THEN
-            assertEquals(true, viewState?.isError)
-            assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
-        }
-
-        // UC14: Empty Field - No Error on Focus Loss
-        @Test
-        fun `when a valid field loses focus, then no error is shown`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "", error = null, isFocused = true)
-
-            // WHEN
-            val blurredState = state.updateFocus(hasFocus = false)
-            val viewState = blurredState.toViewState()
-
-            // THEN
-            assertEquals(false, viewState?.isError)
-        }
-    }
+    // The rules that decide when a focus change shows or hides an error live in each component's reducer, because only
+    // the reducer can tell a focus gain the shopper caused from one a FormState.focusRequest caused. They are tested
+    // there. showErrorIfPresent and hideErrorIfPresent, which those rules are built from, are covered below.
 
     @Nested
     inner class ShowAndHideErrorTest {

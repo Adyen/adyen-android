@@ -117,7 +117,6 @@ internal class MBWayComponentStateReducerTest {
         selectedCountryCode = CountryModel("NL", "Netherlands", "+31"),
         phoneNumber = TextInputComponentState(
             text = "",
-            isFocused = false,
             error = null
         ),
         isLoading = false,

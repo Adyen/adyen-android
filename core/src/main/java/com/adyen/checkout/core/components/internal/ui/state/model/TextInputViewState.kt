@@ -23,9 +23,6 @@ data class TextInputViewState(
     // with the latest value of the input field.
     val text: String = "",
     val supportingText: CheckoutLocalizationKey? = null,
-    // TODO - Form fields cleanup: will be removed. FormState.focusRequest does this job instead. It stays until every
-    // component has moved over to it.
-    val isFocused: Boolean = false,
     val isError: Boolean = false,
     // The field specific icon, shown while the field is not in an error state. Do not render this directly, use
     // [trailingIcon] instead.
@@ -49,21 +46,18 @@ data class TextInputViewState(
 /**
  * Maps a text input onto what the UI renders for it.
  *
- * This says nothing about whether the field is shown. A producer that decides visibility per field, rather than from a
- * form's field order, wants [toViewStateIfVisible] instead.
+ * This says nothing about whether the field is shown: a field that is not shown is not in its form's order, so nothing
+ * asks for its view state. Producers use the overload below, which reads the keyboard action and the focus request from
+ * the form rather than being told them.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun TextInputComponentState.toViewState(
     customTrailingIcon: TrailingIcon? = null,
-    // TODO - Form fields rollout: the default will be removed, so that every producer states the action its own form
-    // decided on. DONE until then, because every component still without a form has a single text field, and that
-    // field closes the keyboard.
     keyboardAction: KeyboardAction = KeyboardAction.DONE,
     focusRequest: FocusRequestToken? = null,
 ): TextInputViewState = TextInputViewState(
     text = text,
     supportingText = if (isErrorVisible) error?.message else description,
-    isFocused = isFocused,
     isError = isErrorVisible,
     customTrailingIcon = customTrailingIcon,
     isOptional = requirementPolicy is RequirementPolicy.Optional,
@@ -88,24 +82,3 @@ fun <Id : FormFieldId> TextInputComponentState.toViewState(
     keyboardAction = form.keyboardActionFor(id),
     focusRequest = form.focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
 )
-
-/**
- * Maps a text input onto what the UI renders for it, or null if the field is not shown.
- *
- * A component whose form publishes an ordered list of the fields it shows does not need this: a field that is not shown
- * is not in the list, so nothing asks for its view state in the first place.
- */
-// TODO - POC: remove once every component publishes an element list
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun TextInputComponentState.toViewStateIfVisible(
-    customTrailingIcon: TrailingIcon? = null,
-    keyboardAction: KeyboardAction = KeyboardAction.DONE,
-    focusRequest: FocusRequestToken? = null,
-): TextInputViewState? {
-    if (!isVisible) return null
-    return toViewState(
-        customTrailingIcon = customTrailingIcon,
-        keyboardAction = keyboardAction,
-        focusRequest = focusRequest,
-    )
-}
