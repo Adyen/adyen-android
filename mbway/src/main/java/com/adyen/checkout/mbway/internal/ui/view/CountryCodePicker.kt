@@ -16,9 +16,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.state.CountryPickerViewState
 import com.adyen.checkout.ui.internal.element.SearchableValuePicker
 import com.adyen.checkout.ui.internal.element.ValuePickerItem
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
@@ -27,17 +25,17 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun CountryCodePicker(
-    viewState: MBWayViewState,
+    viewState: CountryPickerViewState,
     onItemClick: (CountryModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val countries = remember(viewState.countries) {
+    val countries = remember(viewState) {
         viewState.countries.map {
             ValuePickerItem(
                 id = it.isoCode,
                 title = it.callingCode,
                 subtitle = "${it.isoCode} • ${it.countryName}",
-                isSelected = it == viewState.selectedCountryCode,
+                isSelected = it == viewState.selectedCountry,
             )
         }
     }
@@ -45,7 +43,7 @@ internal fun CountryCodePicker(
         searchHint = resolveString(CheckoutLocalizationKey.GENERAL_SEARCH_HINT),
         items = countries,
         onItemClick = { item ->
-            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountryCode
+            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountry
             onItemClick(country)
         },
         modifier = modifier,
@@ -63,12 +61,9 @@ private fun CountryCodePickerPreview(
             CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
         )
         CountryCodePicker(
-            viewState = MBWayViewState(
+            viewState = CountryPickerViewState(
                 countries = countries,
-                isLoading = false,
-                selectedCountryCode = countries.first(),
-                phoneNumber = TextInputViewState(),
-                payButtonViewState = PayButtonViewState(null, false),
+                selectedCountry = countries.first(),
             ),
             onItemClick = {},
         )

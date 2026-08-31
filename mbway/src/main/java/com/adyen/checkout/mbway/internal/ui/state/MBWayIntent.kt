@@ -19,7 +19,17 @@ internal sealed interface MBWayIntent : ComponentStateIntent {
 
     data class UpdatePhoneNumber(val number: String) : MBWayIntent
 
-    data class UpdatePhoneNumberFocus(val hasFocus: Boolean) : MBWayIntent
+    /**
+     * A field gained or lost focus. Keyed on the field rather than named after it, because focus is plumbing with no
+     * meaning of its own — unlike a value change, which carries the field's own rules.
+     */
+    data class UpdateFieldFocus(val id: MBWayFieldId, val hasFocus: Boolean) : MBWayIntent
+
+    /**
+     * The UI has acted on a focus request. Only needed for a request it could not fulfil, since a request that results
+     * in a focus gain is cleared by that gain instead.
+     */
+    data class FocusRequestConsumed(val id: MBWayFieldId) : MBWayIntent
 
     data object HighlightValidationErrors : MBWayIntent
 }

@@ -1,6 +1,7 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -34,9 +35,10 @@ internal class MBWayComponentStateFactoryTest {
                 text = "",
                 description = null,
                 error = null,
-                isFocused = true
             ),
             isLoading = false,
+            // Opens the keyboard on the phone number as soon as the screen appears, skipping the country picker.
+            focusRequest = FocusRequest(MBWayFieldId.PHONE_NUMBER),
         )
         assertEquals(expected, actual)
     }
