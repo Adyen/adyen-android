@@ -36,6 +36,8 @@ internal fun canonicalCardFieldOrder(): List<CardFieldId> = CANONICAL_ORDER
 internal fun visibleCardFields(state: CardComponentState): List<CardFieldId> =
     canonicalCardFieldOrder().filter { state.isVisible(it) }
 
+// Every id is listed rather than falling back to an else, so that adding one to CardFieldId does not compile until its
+// visibility is decided. Getting that wrong means a field silently missing from the screen.
 private fun CardComponentState.isVisible(id: CardFieldId): Boolean = when (id) {
     CardFieldId.CARD_NUMBER -> cardNumber.isVisible
     CardFieldId.EXPIRY_DATE -> expiryDate.isVisible

@@ -13,7 +13,6 @@ import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReduce
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.firstInvalid
 import com.adyen.checkout.core.components.internal.ui.state.form.nextTextInputAfter
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class CardComponentStateReducer(
     private val cardBrandIntentsHandler: CardBrandIntentsHandler,
@@ -124,11 +123,11 @@ internal class CardComponentStateReducer(
      * Losing focus is the same event whatever caused it, and always shows an error the field is holding back.
      */
     // TODO - Form fields rollout: will move to core, so that every component shares these rules instead of copying
-    // them. Nothing here is about cards. Only updateTextField stays behind, because just the card state knows which
+    // them. Nothing here is about cards. Only updateTextInput stays behind, because just the card state knows which
     // property each id points at.
     private fun CardComponentState.updateFieldFocus(id: CardFieldId, hasFocus: Boolean): CardComponentState {
         val request = focusRequest?.takeIf { it.id == id }
-        val updated = updateTextField(id) { field ->
+        val updated = updateTextInput(id) { field ->
             // TODO - Form fields cleanup: will be removed. FormState.focusRequest does this job instead, but the UI
             // does not read it yet, so this flag is still what moves focus on screen and has to be kept up to date.
             val focused = field.copy(isFocused = hasFocus)
@@ -154,7 +153,7 @@ internal class CardComponentStateReducer(
         val firstInvalid = state.form.firstInvalid { state.isFieldValid(it) }
 
         val highlighted = CardFieldId.entries.fold(state) { current, id ->
-            current.updateTextField(id) { field ->
+            current.updateTextInput(id) { field ->
                 // TODO - Form fields cleanup: will be removed. The focusRequest below does this job instead. Setting
                 // the flag on the chosen field and clearing it on the rest is what moves focus until the UI reads it.
                 field.showErrorIfPresent().copy(isFocused = id == firstInvalid)
@@ -164,26 +163,6 @@ internal class CardComponentStateReducer(
         return highlighted.copy(
             focusRequest = firstInvalid?.let { FocusRequest(id = it, keepErrorHighlight = true) },
         )
-    }
-
-    /**
-     * Applies [transform] to the text input [id] identifies. Fields that are not text inputs have nothing to
-     * transform, so they are left alone.
-     */
-    private fun CardComponentState.updateTextField(
-        id: CardFieldId,
-        transform: (TextInputComponentState) -> TextInputComponentState,
-    ): CardComponentState = when (id) {
-        CardFieldId.CARD_NUMBER -> copy(cardNumber = transform(cardNumber))
-        CardFieldId.EXPIRY_DATE -> copy(expiryDate = transform(expiryDate))
-        CardFieldId.SECURITY_CODE -> copy(securityCode = transform(securityCode))
-        CardFieldId.HOLDER_NAME -> copy(holderName = transform(holderName))
-        CardFieldId.SOCIAL_SECURITY_NUMBER -> copy(socialSecurityNumber = transform(socialSecurityNumber))
-        CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> copy(kcpBirthDateOrTaxNumber = transform(kcpBirthDateOrTaxNumber))
-        CardFieldId.KCP_CARD_PASSWORD -> copy(kcpCardPassword = transform(kcpCardPassword))
-        CardFieldId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
-        CardFieldId.STORE_PAYMENT_METHOD,
-        CardFieldId.INSTALLMENTS -> this
     }
 
     /**
