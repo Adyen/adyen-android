@@ -59,6 +59,29 @@ internal data class CardComponentState(
     }
 }
 
+/**
+ * Applies [transform] to the text input [id] names. Elements that are not text inputs have nothing to transform, so
+ * they leave the state unchanged.
+ *
+ * It lives next to the state it updates rather than in the reducer, so that adding a field above does not compile until
+ * it is mapped here. `CardComponentStateTest` asserts that no two ids write the same property.
+ */
+internal fun CardComponentState.updateTextInput(
+    id: CardFieldId,
+    transform: (TextInputComponentState) -> TextInputComponentState,
+): CardComponentState = when (id) {
+    CardFieldId.CARD_NUMBER -> copy(cardNumber = transform(cardNumber))
+    CardFieldId.EXPIRY_DATE -> copy(expiryDate = transform(expiryDate))
+    CardFieldId.SECURITY_CODE -> copy(securityCode = transform(securityCode))
+    CardFieldId.HOLDER_NAME -> copy(holderName = transform(holderName))
+    CardFieldId.SOCIAL_SECURITY_NUMBER -> copy(socialSecurityNumber = transform(socialSecurityNumber))
+    CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> copy(kcpBirthDateOrTaxNumber = transform(kcpBirthDateOrTaxNumber))
+    CardFieldId.KCP_CARD_PASSWORD -> copy(kcpCardPassword = transform(kcpCardPassword))
+    CardFieldId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
+    CardFieldId.STORE_PAYMENT_METHOD,
+    CardFieldId.INSTALLMENTS -> this
+}
+
 internal sealed class CardBrandState {
     // No brands
     data object NoBrandsDetected : CardBrandState()
