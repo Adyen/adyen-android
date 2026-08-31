@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.common.internal.ui
 
+import android.util.DisplayMetrics
 import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
@@ -82,11 +83,11 @@ fun CheckoutNetworkLogo(
 
 private fun Int.getDensityExtension(): String {
     return when {
-        this <= android.util.DisplayMetrics.DENSITY_LOW -> "-ldpi"
-        this <= android.util.DisplayMetrics.DENSITY_MEDIUM -> "" // no extension
-        this <= android.util.DisplayMetrics.DENSITY_HIGH -> "-hdpi"
-        this <= android.util.DisplayMetrics.DENSITY_XHIGH -> "-xhdpi"
-        this <= android.util.DisplayMetrics.DENSITY_XXHIGH -> "-xxhdpi"
+        this <= DisplayMetrics.DENSITY_LOW -> "-ldpi"
+        this <= DisplayMetrics.DENSITY_MEDIUM -> "" // no extension
+        this <= DisplayMetrics.DENSITY_HIGH -> "-hdpi"
+        this <= DisplayMetrics.DENSITY_XHIGH -> "-xhdpi"
+        this <= DisplayMetrics.DENSITY_XXHIGH -> "-xxhdpi"
         else -> "-xxxhdpi"
     }
 }
@@ -98,5 +99,5 @@ private fun buildLogoPath(
     densityExtension: String,
 ): String {
     val txString = if (txSubVariant.isEmpty()) txVariant else "$txVariant/$txSubVariant"
-    return "images/logos/$size/$txString$densityExtension.png"
+    return "images/logos/${size.value}/$txString$densityExtension.png"
 }

@@ -10,27 +10,20 @@ package com.adyen.checkout.core.internal.image
 
 import androidx.annotation.RestrictTo
 
-/**
- * The logo size.
- */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class LogoSize {
+enum class LogoSize(val value: String) {
     /**
      * Size for small logos (height: 26dp).
      */
-    SMALL,
+    SMALL("small"),
 
     /**
      * Size for medium logos (height: 50dp).
      */
-    MEDIUM,
+    MEDIUM("medium"),
 
     /**
      * Size for large logos (height: 100dp).
      */
-    LARGE;
-
-    override fun toString(): String {
-        return name.lowercase()
-    }
+    LARGE("large"),
 }
