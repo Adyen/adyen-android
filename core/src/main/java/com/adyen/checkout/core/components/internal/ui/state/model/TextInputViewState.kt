@@ -43,7 +43,10 @@ data class TextInputViewState(
 }
 
 /**
- * Maps a TextInputComponentState to a TextInputViewState or returns null if the view should not be displayed on the UI.
+ * Maps a text input onto what the UI renders for it.
+ *
+ * This says nothing about whether the field is shown. A producer that decides visibility per field, rather than from a
+ * form's field order, wants [toViewStateIfVisible] instead.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun TextInputComponentState.toViewState(
@@ -53,15 +56,33 @@ fun TextInputComponentState.toViewState(
     // field closes the keyboard.
     keyboardAction: KeyboardAction = KeyboardAction.DONE,
     focusRequest: FocusRequestToken? = null,
+): TextInputViewState = TextInputViewState(
+    text = text,
+    supportingText = if (isErrorVisible) error?.message else description,
+    isFocused = isFocused,
+    isError = isErrorVisible,
+    customTrailingIcon = customTrailingIcon,
+    isOptional = requirementPolicy is RequirementPolicy.Optional,
+    keyboardAction = keyboardAction,
+    focusRequest = focusRequest,
+)
+
+/**
+ * Maps a text input onto what the UI renders for it, or null if the field is not shown.
+ *
+ * A component whose form publishes an ordered list of the fields it shows does not need this: a field that is not shown
+ * is not in the list, so nothing asks for its view state in the first place.
+ */
+// TODO - POC: remove once every component publishes an element list
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun TextInputComponentState.toViewStateIfVisible(
+    customTrailingIcon: TrailingIcon? = null,
+    keyboardAction: KeyboardAction = KeyboardAction.DONE,
+    focusRequest: FocusRequestToken? = null,
 ): TextInputViewState? {
     if (!isVisible) return null
-    return TextInputViewState(
-        text = text,
-        supportingText = if (isErrorVisible) error?.message else description,
-        isFocused = isFocused,
-        isError = isErrorVisible,
+    return toViewState(
         customTrailingIcon = customTrailingIcon,
-        isOptional = requirementPolicy is RequirementPolicy.Optional,
         keyboardAction = keyboardAction,
         focusRequest = focusRequest,
     )

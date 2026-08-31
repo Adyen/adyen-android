@@ -11,7 +11,7 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.toViewStateIfVisible
 
 internal class MBWayViewStateProducer(
     private val amount: Amount?,
@@ -22,7 +22,8 @@ internal class MBWayViewStateProducer(
         return MBWayViewState(
             countries = state.countries,
             selectedCountryCode = state.selectedCountryCode,
-            phoneNumber = state.phoneNumber.toViewState(),
+            // TODO - POC: replace with an element list, like card
+            phoneNumber = state.phoneNumber.toViewStateIfVisible(),
             isLoading = state.isLoading,
             payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
         )

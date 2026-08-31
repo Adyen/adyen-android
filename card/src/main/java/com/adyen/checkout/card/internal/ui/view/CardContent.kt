@@ -30,12 +30,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
-import com.adyen.checkout.card.internal.ui.state.CardFieldId
+import com.adyen.checkout.card.internal.ui.state.CardFormElement
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
-import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
-import com.adyen.checkout.card.internal.ui.state.StorePaymentViewState
 import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -115,7 +113,6 @@ private fun CardContent(
     }
 }
 
-@Suppress("LongMethod")
 @Composable
 private fun CardDetailsSection(
     viewState: CardViewState,
@@ -128,13 +125,13 @@ private fun CardDetailsSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
     ) {
-        // The order decides both what is shown and in which order, so there is no configuration to read here. A field
-        // is keyed on its id rather than its position, so that its text and focus follow it if the order changes.
-        viewState.fieldOrder.forEach { fieldId ->
-            key(fieldId) {
-                CardField(
-                    fieldId = fieldId,
-                    viewState = viewState,
+        // Each element carries its own data, so there is no configuration and no other view state to read here. An
+        // element is keyed on its id rather than its position, so that its text and focus follow it if the order
+        // changes.
+        viewState.elements.forEach { element ->
+            key(element.id) {
+                CardFormElementContent(
+                    element = element,
                     onIntent = onIntent,
                     onScanButtonClick = onScanButtonClick,
                     onInstallmentPickerClick = onInstallmentPickerClick,
@@ -144,115 +141,96 @@ private fun CardDetailsSection(
     }
 }
 
-@Suppress("LongMethod", "CyclomaticComplexMethod")
+// TODO - POC: field composables take the element's data rather than the element itself, so that they stay usable from
+// other components. Revisit with a core TextInputFormElement interface once a shared field composable exists.
+@Suppress("LongMethod")
 @Composable
-private fun CardField(
-    fieldId: CardFieldId,
-    viewState: CardViewState,
+private fun CardFormElementContent(
+    element: CardFormElement,
     onIntent: (CardIntent) -> Unit,
     onScanButtonClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
 ) {
-    val onFocusChange: (Boolean) -> Unit = { hasFocus -> onIntent(CardIntent.UpdateFieldFocus(fieldId, hasFocus)) }
-    val onFocusRequestConsumed: () -> Unit = { onIntent(CardIntent.FocusRequestConsumed(fieldId)) }
+    val onFocusChange: (Boolean) -> Unit = { hasFocus -> onIntent(CardIntent.UpdateFieldFocus(element.id, hasFocus)) }
+    val onFocusRequestConsumed: () -> Unit = { onIntent(CardIntent.FocusRequestConsumed(element.id)) }
 
-    // A field in the order whose view state is missing is skipped rather than crashing. CardFieldOrderTest is what
-    // makes sure the two never disagree in the first place.
-    when (fieldId) {
-        CardFieldId.CARD_NUMBER -> viewState.cardNumber?.let { fieldViewState ->
-            CardNumberField(
-                cardNumberState = fieldViewState,
-                supportedCardBrandsViewState = viewState.supportedCardBrandsViewState,
-                cardBrandViewState = viewState.cardBrandViewState,
-                cardNumberFormat = viewState.cardNumberFormat,
-                onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-                onScanButtonClick = onScanButtonClick,
-                onBrandSelect = { onIntent(CardIntent.SelectBrand(it)) },
-            )
+    when (element) {
+        is CardFormElement.CardNumber -> CardNumberField(
+            cardNumberState = element.textInputViewState,
+            supportedCardBrandsViewState = element.supportedCardBrandsViewState,
+            cardBrandViewState = element.cardBrandViewState,
+            cardNumberFormat = element.cardNumberFormat,
+            onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+            onScanButtonClick = onScanButtonClick,
+            onBrandSelect = { onIntent(CardIntent.SelectBrand(it)) },
+        )
+
+        is CardFormElement.ExpiryDate -> ExpiryDateField(
+            expiryDateState = element.textInputViewState,
+            onValueChange = { onIntent(CardIntent.UpdateExpiryDate(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+        )
+
+        is CardFormElement.SecurityCode -> SecurityCodeField(
+            securityCodeState = element.textInputViewState,
+            cardNumberFormat = element.cardNumberFormat,
+            onValueChange = { onIntent(CardIntent.UpdateSecurityCode(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+        )
+
+        is CardFormElement.HolderName -> HolderNameField(
+            holderNameState = element.textInputViewState,
+            onValueChange = { onIntent(CardIntent.UpdateHolderName(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+        )
+
+        is CardFormElement.SocialSecurityNumber -> SocialSecurityNumberField(
+            socialSecurityNumberState = element.textInputViewState,
+            onValueChange = { onIntent(CardIntent.UpdateSocialSecurityNumber(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+        )
+
+        is CardFormElement.KcpBirthDateOrTaxNumber -> KCPBirthDateOrTaxNumberField(
+            kcpBirthDateOrTaxNumberState = element.textInputViewState,
+            onValueChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+        )
+
+        is CardFormElement.KcpCardPassword -> KCPCardPasswordField(
+            kcpCardPasswordState = element.textInputViewState,
+            onValueChange = { onIntent(CardIntent.UpdateKcpCardPassword(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+        )
+
+        is CardFormElement.PostalCode -> PostalCodeField(
+            postalCodeState = element.textInputViewState,
+            onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
+        )
+
+        is CardFormElement.StorePaymentMethod -> SwitchContainer(
+            checked = element.isSelected,
+            onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
+        ) {
+            Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
         }
 
-        CardFieldId.EXPIRY_DATE -> viewState.expiryDate?.let { fieldViewState ->
-            ExpiryDateField(
-                expiryDateState = fieldViewState,
-                onValueChange = { onIntent(CardIntent.UpdateExpiryDate(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-            )
-        }
-
-        CardFieldId.SECURITY_CODE -> viewState.securityCode?.let { fieldViewState ->
-            SecurityCodeField(
-                securityCodeState = fieldViewState,
-                cardNumberFormat = viewState.cardNumberFormat,
-                onValueChange = { onIntent(CardIntent.UpdateSecurityCode(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-            )
-        }
-
-        CardFieldId.HOLDER_NAME -> viewState.holderName?.let { fieldViewState ->
-            HolderNameField(
-                holderNameState = fieldViewState,
-                onValueChange = { onIntent(CardIntent.UpdateHolderName(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-            )
-        }
-
-        CardFieldId.SOCIAL_SECURITY_NUMBER -> viewState.socialSecurityNumber?.let { fieldViewState ->
-            SocialSecurityNumberField(
-                socialSecurityNumberState = fieldViewState,
-                onValueChange = { onIntent(CardIntent.UpdateSocialSecurityNumber(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-            )
-        }
-
-        CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> viewState.kcpBirthDateOrTaxNumber?.let { fieldViewState ->
-            KCPBirthDateOrTaxNumberField(
-                kcpBirthDateOrTaxNumberState = fieldViewState,
-                onValueChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-            )
-        }
-
-        CardFieldId.KCP_CARD_PASSWORD -> viewState.kcpCardPassword?.let { fieldViewState ->
-            KCPCardPasswordField(
-                kcpCardPasswordState = fieldViewState,
-                onValueChange = { onIntent(CardIntent.UpdateKcpCardPassword(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-            )
-        }
-
-        CardFieldId.POSTAL_CODE -> viewState.postalCode?.let { fieldViewState ->
-            PostalCodeField(
-                postalCodeState = fieldViewState,
-                onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
-                onFocusChange = onFocusChange,
-                onFocusRequestConsumed = onFocusRequestConsumed,
-            )
-        }
-
-        CardFieldId.STORE_PAYMENT_METHOD -> viewState.storePaymentViewState?.let { fieldViewState ->
-            SwitchContainer(
-                checked = fieldViewState.isSelected,
-                onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
-            ) {
-                Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
-            }
-        }
-
-        CardFieldId.INSTALLMENTS -> viewState.installmentViewState?.let { fieldViewState ->
+        is CardFormElement.Installments -> {
             Subtitle(
                 text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS),
                 modifier = Modifier.padding(top = Dimensions.Spacing.Small),
             )
             ValuePickerField(
-                value = fieldViewState.selectedInstallment?.toDisplayText() ?: "",
+                value = element.selectedInstallment?.toDisplayText() ?: "",
                 label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
                 onClick = onInstallmentPickerClick,
                 modifier = Modifier.fillMaxWidth(),
@@ -269,38 +247,15 @@ private fun CardContentPreview(
     CheckoutThemePreviewWrapper(theme) {
         CardContent(
             viewState = CardViewState(
-                fieldOrder = listOf(
-                    CardFieldId.CARD_NUMBER,
-                    CardFieldId.EXPIRY_DATE,
-                    CardFieldId.SECURITY_CODE,
-                    CardFieldId.STORE_PAYMENT_METHOD,
-                ),
-                cardNumber = TextInputViewState(
-                    text = "5555444433331111",
-                ),
-                expiryDate = TextInputViewState(
-                    text = "1234",
-                ),
-                securityCode = TextInputViewState(
-                    text = "737",
-                ),
-                holderName = null,
-                socialSecurityNumber = null,
-                kcpBirthDateOrTaxNumber = null,
-                kcpCardPassword = null,
-                postalCode = null,
-                storePaymentViewState = StorePaymentViewState(isSelected = true),
-
-                supportedCardBrandsViewState = SupportedCardBrandsViewState(
-                    supportedCardBrands = emptyList(),
-                    isVisible = false,
+                elements = listOf(
+                    previewCardNumber(),
+                    CardFormElement.ExpiryDate(TextInputViewState(text = "1234")),
+                    CardFormElement.SecurityCode(TextInputViewState(text = "737"), CardNumberFormat.DEFAULT),
+                    CardFormElement.StorePaymentMethod(isSelected = true),
                 ),
                 isLoading = false,
-                isCardScanButtonVisible = false,
-                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
-                cardNumberFormat = CardNumberFormat.DEFAULT,
-                installmentViewState = null,
                 payButtonViewState = PayButtonViewState(null, false),
+                installmentPickerViewState = null,
             ),
             onIntent = {},
             onSubmitClick = {},
@@ -318,46 +273,21 @@ private fun CardContentPreviewAllFields(
     CheckoutThemePreviewWrapper(theme) {
         CardContent(
             viewState = CardViewState(
-                fieldOrder = CardFieldId.entries,
-                cardNumber = TextInputViewState(
-                    text = "5555444433331111",
-                ),
-                expiryDate = TextInputViewState(
-                    text = "1234",
-                ),
-                securityCode = TextInputViewState(
-                    text = "737",
-                ),
-                holderName = TextInputViewState(
-                    text = "J. Smith",
-                ),
-                socialSecurityNumber = TextInputViewState(
-                    text = "12123123123412",
-                ),
-                kcpBirthDateOrTaxNumber = TextInputViewState(
-                    text = "1234567890",
-                ),
-                kcpCardPassword = TextInputViewState(
-                    text = "12",
-                ),
-                postalCode = TextInputViewState(
-                    text = "1234 AB",
-                ),
-                storePaymentViewState = StorePaymentViewState(isSelected = true),
-
-                supportedCardBrandsViewState = SupportedCardBrandsViewState(
-                    supportedCardBrands = emptyList(),
-                    isVisible = false,
+                elements = listOf(
+                    previewCardNumber(),
+                    CardFormElement.ExpiryDate(TextInputViewState(text = "1234")),
+                    CardFormElement.SecurityCode(TextInputViewState(text = "737"), CardNumberFormat.DEFAULT),
+                    CardFormElement.HolderName(TextInputViewState(text = "J. Smith")),
+                    CardFormElement.SocialSecurityNumber(TextInputViewState(text = "12123123123412")),
+                    CardFormElement.KcpBirthDateOrTaxNumber(TextInputViewState(text = "1234567890")),
+                    CardFormElement.KcpCardPassword(TextInputViewState(text = "12")),
+                    CardFormElement.PostalCode(TextInputViewState(text = "1234 AB")),
+                    CardFormElement.StorePaymentMethod(isSelected = true),
+                    CardFormElement.Installments(selectedInstallment = InstallmentModel.OneTime),
                 ),
                 isLoading = false,
-                isCardScanButtonVisible = false,
-                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
-                cardNumberFormat = CardNumberFormat.DEFAULT,
-                installmentViewState = InstallmentViewState(
-                    installmentOptions = listOf(InstallmentModel.OneTime),
-                    selectedInstallment = InstallmentModel.OneTime,
-                ),
                 payButtonViewState = PayButtonViewState(null, false),
+                installmentPickerViewState = null,
             ),
             onIntent = {},
             onSubmitClick = {},
@@ -366,3 +296,10 @@ private fun CardContentPreviewAllFields(
         )
     }
 }
+
+private fun previewCardNumber() = CardFormElement.CardNumber(
+    textInputViewState = TextInputViewState(text = "5555444433331111"),
+    cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+    cardNumberFormat = CardNumberFormat.DEFAULT,
+    supportedCardBrandsViewState = SupportedCardBrandsViewState(supportedCardBrands = emptyList(), isVisible = false),
+)
