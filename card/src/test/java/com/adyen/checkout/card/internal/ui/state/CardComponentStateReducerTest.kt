@@ -48,30 +48,12 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateFieldFocus for CardNumber, then cardNumber focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.CARD_NUMBER, true))
-
-        assertTrue(actual.cardNumber.isFocused)
-    }
-
-    @Test
     fun `when intent is UpdateExpiryDate, then expiryDate state is updated`() {
         val state = createInitialState()
 
         val actual = reducer.reduce(state, CardIntent.UpdateExpiryDate("1225"))
 
         assertEquals("1225", actual.expiryDate.text)
-    }
-
-    @Test
-    fun `when intent is UpdateFieldFocus for ExpiryDate, then expiryDate focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
-
-        assertTrue(actual.expiryDate.isFocused)
     }
 
     @Test
@@ -84,30 +66,12 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateFieldFocus for SecurityCode, then securityCode focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.SECURITY_CODE, true))
-
-        assertTrue(actual.securityCode.isFocused)
-    }
-
-    @Test
     fun `when intent is UpdateHolderName, then holderName state is updated`() {
         val state = createInitialState()
 
         val actual = reducer.reduce(state, CardIntent.UpdateHolderName("John Doe"))
 
         assertEquals("John Doe", actual.holderName.text)
-    }
-
-    @Test
-    fun `when intent is UpdateFieldFocus for HolderName, then holderName focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.HOLDER_NAME, true))
-
-        assertTrue(actual.holderName.isFocused)
     }
 
     @Test
@@ -120,30 +84,12 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateFieldFocus for SocialSecurityNumber, then socialSecurityNumber focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.SOCIAL_SECURITY_NUMBER, true))
-
-        assertTrue(actual.socialSecurityNumber.isFocused)
-    }
-
-    @Test
     fun `when intent is UpdateKcpBirthDateOrTaxNumber, then kcpBirthDateOrTaxNumber state is updated`() {
         val state = createInitialState()
 
         val actual = reducer.reduce(state, CardIntent.UpdateKcpBirthDateOrTaxNumber("123456"))
 
         assertEquals("123456", actual.kcpBirthDateOrTaxNumber.text)
-    }
-
-    @Test
-    fun `when intent is UpdateFieldFocus for KcpBirthDateOrTaxNumber, then kcpBirthDateOrTaxNumber focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER, true))
-
-        assertTrue(actual.kcpBirthDateOrTaxNumber.isFocused)
     }
 
     @Test
@@ -156,30 +102,12 @@ internal class CardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateFieldFocus for KcpCardPassword, then kcpCardPassword focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.KCP_CARD_PASSWORD, true))
-
-        assertTrue(actual.kcpCardPassword.isFocused)
-    }
-
-    @Test
     fun `when intent is UpdatePostalCode, then postalCode state is updated`() {
         val state = createInitialState()
 
         val actual = reducer.reduce(state, CardIntent.UpdatePostalCode("1234 AB"))
 
         assertEquals("1234 AB", actual.postalCode.text)
-    }
-
-    @Test
-    fun `when intent is UpdateFieldFocus for PostalCode, then postalCode focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.POSTAL_CODE, true))
-
-        assertTrue(actual.postalCode.isFocused)
     }
 
     @Test
@@ -205,7 +133,6 @@ internal class CardComponentStateReducerTest {
         val state = createInitialState().copy(
             cardNumber = TextInputComponentState(
                 text = "",
-                isFocused = false,
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
             ),
         )
@@ -213,7 +140,7 @@ internal class CardComponentStateReducerTest {
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
         assertTrue(actual.cardNumber.isErrorVisible)
-        assertTrue(actual.cardNumber.isFocused)
+        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test
@@ -243,9 +170,7 @@ internal class CardComponentStateReducerTest {
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        assertFalse(actual.cardNumber.isFocused)
-        assertTrue(actual.expiryDate.isFocused)
-        assertFalse(actual.securityCode.isFocused)
+        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test

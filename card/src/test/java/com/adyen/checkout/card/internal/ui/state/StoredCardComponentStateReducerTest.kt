@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 
 internal class StoredCardComponentStateReducerTest {
 
@@ -94,7 +95,6 @@ internal class StoredCardComponentStateReducerTest {
         val state = createInitialState().copy(
             securityCode = TextInputComponentState(
                 text = "",
-                isFocused = false,
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
             ),
         )
@@ -115,7 +115,7 @@ internal class StoredCardComponentStateReducerTest {
         val actual = reducer.reduce(state, StoredCardIntent.HighlightValidationErrors)
 
         assertFalse(actual.securityCode.isErrorVisible)
-        assertFalse(actual.securityCode.isFocused)
+        assertNull(actual.focusRequest)
     }
 
     private fun createInitialState() = StoredCardComponentState(

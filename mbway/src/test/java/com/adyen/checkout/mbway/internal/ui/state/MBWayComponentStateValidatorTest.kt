@@ -31,7 +31,6 @@ internal class MBWayComponentStateValidatorTest {
                 phoneNumber = TextInputComponentState(
                     text = VALID_PHONE_NUMBER,
                     error = null,
-                    isFocused = false
                 ),
                 isLoading = false,
             )
@@ -49,7 +48,6 @@ internal class MBWayComponentStateValidatorTest {
                 phoneNumber = TextInputComponentState(
                     text = INVALID_PHONE_NUMBER,
                     error = null,
-                    isFocused = false
                 ),
                 isLoading = false,
             )
@@ -71,7 +69,6 @@ internal class MBWayComponentStateValidatorTest {
                 phoneNumber = TextInputComponentState(
                     text = VALID_PHONE_NUMBER,
                     error = null,
-                    isFocused = false
                 ),
                 isLoading = false,
             )
@@ -89,7 +86,6 @@ internal class MBWayComponentStateValidatorTest {
                 phoneNumber = TextInputComponentState(
                     text = INVALID_PHONE_NUMBER,
                     error = TextInputComponentState.InputError(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER),
-                    isFocused = false
                 ),
                 isLoading = false,
             )
