@@ -16,6 +16,7 @@ import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -44,10 +45,18 @@ internal class StoredCardComponentStateFactoryTest {
         }
 
         @Test
-        fun `when initial state is created, then securityCode is focused`() {
+        fun `when initial state is created, then the security code is asked for focus`() {
             val state = createFactory().createInitialState()
 
-            assertTrue(state.securityCode.isFocused)
+            assertEquals(FocusRequest(StoredCardFieldId.SECURITY_CODE), state.focusRequest)
+        }
+
+        @Test
+        fun `when the stored card asks for no security code, then nothing is asked for focus`() {
+            val state = createFactory(storedCVCVisibility = StoredCVCVisibility.HIDE).createInitialState()
+
+            // A request for a field that is not on screen would never be reported back, so it must not be made.
+            assertNull(state.focusRequest)
         }
     }
 

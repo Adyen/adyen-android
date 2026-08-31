@@ -68,7 +68,7 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertNull(viewState.securityCode)
+        assertNull(viewState.securityCodeElement)
         assertEquals(PayButtonViewState(TEST_AMOUNT, false), viewState.payButtonViewState)
     }
 
@@ -93,8 +93,7 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertNull(viewState.brand)
-        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
+        assertEquals(CardNumberFormat.DEFAULT, viewState.securityCodeElement?.cardNumberFormat)
     }
 
     @Test
@@ -109,8 +108,7 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(cardBrand, viewState.brand)
-        assertEquals(CardNumberFormat.AMEX, viewState.cardNumberFormat)
+        assertEquals(CardNumberFormat.AMEX, viewState.securityCodeElement?.cardNumberFormat)
     }
 
     @Test
@@ -125,8 +123,7 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(cardBrand, viewState.brand)
-        assertEquals(CardNumberFormat.DEFAULT, viewState.cardNumberFormat)
+        assertEquals(CardNumberFormat.DEFAULT, viewState.securityCodeElement?.cardNumberFormat)
     }
 
     @Test
@@ -143,7 +140,10 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(SecurityCodeTrailingIcon.Checkmark, viewState.securityCode?.trailingIcon)
+        assertEquals(
+            SecurityCodeTrailingIcon.Checkmark,
+            viewState.securityCodeElement?.textInputViewState?.trailingIcon,
+        )
     }
 
     @Test
@@ -164,7 +164,10 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(TrailingIcon.Error, viewState.securityCode?.trailingIcon)
+        assertEquals(
+            TrailingIcon.Error,
+            viewState.securityCodeElement?.textInputViewState?.trailingIcon,
+        )
     }
 
     @Test
@@ -182,7 +185,10 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(SecurityCodeTrailingIcon.PlaceholderAmex, viewState.securityCode?.trailingIcon)
+        assertEquals(
+            SecurityCodeTrailingIcon.PlaceholderAmex,
+            viewState.securityCodeElement?.textInputViewState?.trailingIcon,
+        )
     }
 
     @Test
@@ -200,7 +206,10 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(SecurityCodeTrailingIcon.PlaceholderDefault, viewState.securityCode?.trailingIcon)
+        assertEquals(
+            SecurityCodeTrailingIcon.PlaceholderDefault,
+            viewState.securityCodeElement?.textInputViewState?.trailingIcon,
+        )
     }
 
     @Test
@@ -218,7 +227,10 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(SecurityCodeTrailingIcon.PlaceholderDefault, viewState.securityCode?.trailingIcon)
+        assertEquals(
+            SecurityCodeTrailingIcon.PlaceholderDefault,
+            viewState.securityCodeElement?.textInputViewState?.trailingIcon,
+        )
     }
 
     @Test
@@ -232,7 +244,7 @@ internal class StoredCardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals("737", viewState.securityCode?.text)
+        assertEquals("737", viewState.securityCodeElement?.textInputViewState?.text)
     }
 
     private fun createComponentState(
@@ -262,3 +274,9 @@ internal class StoredCardViewStateProducerTest {
         private val TEST_AMOUNT = Amount(currency = "EUR", value = 1337)
     }
 }
+
+/**
+ * The security code element, or null when the stored card asks for none and the form is empty.
+ */
+private val StoredCardViewState.securityCodeElement
+    get() = elements.filterIsInstance<StoredCardFormElement.SecurityCode>().firstOrNull()

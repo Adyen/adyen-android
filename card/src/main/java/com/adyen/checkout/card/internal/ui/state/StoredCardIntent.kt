@@ -15,7 +15,17 @@ internal sealed interface StoredCardIntent : ComponentStateIntent {
     // User input intents
     data class UpdateSecurityCode(val securityCode: String) : StoredCardIntent
 
-    data class UpdateSecurityCodeFocus(val hasFocus: Boolean) : StoredCardIntent
+    /**
+     * A field gained or lost focus. Keyed on the field rather than named after it, because focus is plumbing with no
+     * meaning of its own — unlike a value change, which carries the field's own rules.
+     */
+    data class UpdateFieldFocus(val id: StoredCardFieldId, val hasFocus: Boolean) : StoredCardIntent
+
+    /**
+     * The UI has acted on a focus request. Only needed for a request it could not fulfil, since a request that results
+     * in a focus gain is cleared by that gain instead.
+     */
+    data class FocusRequestConsumed(val id: StoredCardFieldId) : StoredCardIntent
 
     // System intents
     data class UpdateLoading(val isLoading: Boolean) : StoredCardIntent

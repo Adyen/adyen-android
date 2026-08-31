@@ -92,9 +92,6 @@ internal fun SecurityCodeField(
         focusRequest = securityCodeState.focusRequest,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = securityCodeState.keyboardAction.toImeAction(),
-        // TODO - Form fields rollout: will be removed. This field is shared with the stored card screen, which still
-        // moves focus with isFocused. Remove it when stored card moves to the focus request above.
-        shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
             SecurityCodeTrailingIcon(securityCodeState.trailingIcon)
         },

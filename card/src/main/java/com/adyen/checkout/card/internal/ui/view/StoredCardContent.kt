@@ -13,15 +13,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
+import com.adyen.checkout.card.internal.ui.state.StoredCardFormElement
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
-import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.payButtonAsComponentScaffoldFooter
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -59,26 +60,40 @@ private fun StoredCardContent(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
         footer = payButtonAsComponentScaffoldFooter(viewState.payButtonViewState, onSubmitClick),
-        // If security code is not displayed, we should not display any content
-        content = viewState.securityCode?.let { securityCodeState ->
-            @Composable {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
-                ) {
-                    SecurityCodeField(
-                        securityCodeState = securityCodeState,
-                        cardNumberFormat = viewState.cardNumberFormat,
-                        onValueChange = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
-                        onFocusChange = { onIntent(StoredCardIntent.UpdateSecurityCodeFocus(it)) },
-                        // TODO - Form fields rollout: stored card has no form state yet, so it never asks for focus
-                        // and has nothing to report back. Wire this up when stored card gets its form.
-                        onFocusRequestConsumed = {},
-                    )
+        // A stored card that asks for no security code has an empty form, and then there is no content to show at all.
+        content = viewState.elements
+            .takeIf { it.isNotEmpty() }
+            ?.let { elements ->
+                @Composable {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
+                    ) {
+                        elements.forEach { element ->
+                            key(element.id) {
+                                StoredCardFormElementContent(element = element, onIntent = onIntent)
+                            }
+                        }
+                    }
                 }
-            }
-        },
+            },
     )
+}
+
+@Composable
+private fun StoredCardFormElementContent(
+    element: StoredCardFormElement,
+    onIntent: (StoredCardIntent) -> Unit,
+) {
+    when (element) {
+        is StoredCardFormElement.SecurityCode -> SecurityCodeField(
+            securityCodeState = element.textInputViewState,
+            cardNumberFormat = element.cardNumberFormat,
+            onValueChange = { onIntent(StoredCardIntent.UpdateSecurityCode(it)) },
+            onFocusChange = { onIntent(StoredCardIntent.UpdateFieldFocus(element.id, it)) },
+            onFocusRequestConsumed = { onIntent(StoredCardIntent.FocusRequestConsumed(element.id)) },
+        )
+    }
 }
 
 @Preview
@@ -87,18 +102,19 @@ private fun StoredCardContentPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        val viewState = StoredCardViewState(
-            securityCode = TextInputViewState(
-                customTrailingIcon = SecurityCodeTrailingIcon.PlaceholderDefault,
-            ),
-            brand = CardBrand(""),
-            cardNumberFormat = CardNumberFormat.DEFAULT,
-            isLoading = false,
-            payButtonViewState = PayButtonViewState(null, false),
-        )
-
         StoredCardContent(
-            viewState = viewState,
+            viewState = StoredCardViewState(
+                elements = listOf(
+                    StoredCardFormElement.SecurityCode(
+                        textInputViewState = TextInputViewState(
+                            customTrailingIcon = SecurityCodeTrailingIcon.PlaceholderDefault,
+                        ),
+                        cardNumberFormat = CardNumberFormat.DEFAULT,
+                    ),
+                ),
+                isLoading = false,
+                payButtonViewState = PayButtonViewState(null, false),
+            ),
             onIntent = {},
             onSubmitClick = {},
             modifier = Modifier,
@@ -112,16 +128,12 @@ private fun StoredCardContentWithoutSecurityCodePreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        val viewState = StoredCardViewState(
-            securityCode = null,
-            brand = CardBrand(""),
-            cardNumberFormat = CardNumberFormat.DEFAULT,
-            isLoading = false,
-            payButtonViewState = PayButtonViewState(null, false),
-        )
-
         StoredCardContent(
-            viewState = viewState,
+            viewState = StoredCardViewState(
+                elements = emptyList(),
+                isLoading = false,
+                payButtonViewState = PayButtonViewState(null, false),
+            ),
             onIntent = {},
             onSubmitClick = {},
             modifier = Modifier,
