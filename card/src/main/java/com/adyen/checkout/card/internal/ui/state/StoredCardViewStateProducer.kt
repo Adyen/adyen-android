@@ -11,25 +11,29 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.toViewStateIfVisible
+import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class StoredCardViewStateProducer(
     private val amount: Amount?,
     private val showSubmitButton: Boolean,
 ) : ViewStateProducer<StoredCardComponentState, StoredCardViewState> {
 
-    override fun produce(state: StoredCardComponentState): StoredCardViewState {
-        val cardNumberFormat = state.detectedCardType?.cardBrand.toCardNumberFormat()
+    override fun produce(state: StoredCardComponentState) = StoredCardViewState(
+        // The form decides which fields are shown and in which order, so building one element per member of that order
+        // is the only place either question is answered.
+        elements = state.form.order.map { id -> state.toElement(id) },
+        isLoading = state.isLoading,
+        payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
+    )
 
-        return StoredCardViewState(
-            // TODO - POC: replace with an element list, like card
-            securityCode = state.securityCode.toViewStateIfVisible(
-                customTrailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
-            ),
-            brand = state.detectedCardType?.cardBrand,
-            cardNumberFormat = cardNumberFormat,
-            isLoading = state.isLoading,
-            payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
-        )
+    private fun StoredCardComponentState.toElement(id: StoredCardFieldId): StoredCardFormElement = when (id) {
+        StoredCardFieldId.SECURITY_CODE -> {
+            val cardNumberFormat = detectedCardType?.cardBrand.toCardNumberFormat()
+            StoredCardFormElement.SecurityCode(
+                textInputViewState = securityCode
+                    .toViewState(form, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
+                cardNumberFormat = cardNumberFormat,
+            )
+        }
     }
 }
