@@ -23,15 +23,32 @@ internal fun InstallmentModel.toDisplayText(): String {
         InstallmentModel.Revolving ->
             resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REVOLVING)
 
+        is InstallmentModel.Regular ->
+            resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR, numberOfInstallments)
+    }
+}
+
+@Composable
+internal fun InstallmentModel.toSubtitleText(): String {
+    return when (this) {
+        InstallmentModel.OneTime ->
+            resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME_DESCRIPTION)
+
+        InstallmentModel.Revolving ->
+            resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REVOLVING_DESCRIPTION)
+
         is InstallmentModel.Regular -> {
             if (showAmount && amountPerInstallment != null) {
                 resolveString(
-                    CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_WITH_PRICE,
+                    CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_DESCRIPTION_WITH_PRICE,
                     numberOfInstallments,
                     amountPerInstallment.format(LocalLocale.current),
                 )
             } else {
-                resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR, numberOfInstallments)
+                resolveString(
+                    CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_DESCRIPTION,
+                    numberOfInstallments,
+                )
             }
         }
     }
