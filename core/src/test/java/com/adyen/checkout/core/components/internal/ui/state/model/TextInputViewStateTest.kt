@@ -9,6 +9,10 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormFieldId
+import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -187,6 +191,55 @@ internal class TextInputViewStateTest {
 
         // THEN
         assertNull(viewState)
+    }
+
+    @Test
+    fun `when a form is given, then the keyboard action comes from it`() {
+        // GIVEN
+        val form = FormState(order = listOf(TestFieldId.FIRST, TestFieldId.LAST))
+
+        // WHEN
+        val first = TextInputComponentState().toViewState(form, TestFieldId.FIRST)
+        val last = TextInputComponentState().toViewState(form, TestFieldId.LAST)
+
+        // THEN
+        assertEquals(KeyboardAction.NEXT, first.keyboardAction)
+        assertEquals(KeyboardAction.DONE, last.keyboardAction)
+    }
+
+    @Test
+    fun `when the form asks this field for focus, then it carries a token`() {
+        // GIVEN
+        val form = FormState(
+            order = listOf(TestFieldId.FIRST, TestFieldId.LAST),
+            focusRequest = FocusRequest(TestFieldId.LAST),
+        )
+
+        // WHEN
+        val viewState = TextInputComponentState().toViewState(form, TestFieldId.LAST)
+
+        // THEN
+        assertNotNull(viewState.focusRequest)
+    }
+
+    @Test
+    fun `when the form asks another field for focus, then this field carries no token`() {
+        // GIVEN
+        val form = FormState(
+            order = listOf(TestFieldId.FIRST, TestFieldId.LAST),
+            focusRequest = FocusRequest(TestFieldId.LAST),
+        )
+
+        // WHEN
+        val viewState = TextInputComponentState().toViewState(form, TestFieldId.FIRST)
+
+        // THEN
+        assertNull(viewState.focusRequest)
+    }
+
+    private enum class TestFieldId(override val isTextInput: Boolean = true) : FormFieldId {
+        FIRST,
+        LAST,
     }
 
     @Test
