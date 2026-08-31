@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldVisibility
@@ -53,6 +54,7 @@ internal class CardComponentParamsMapper {
                 sessionParams = params.additionalSessionParams,
                 cardConfiguration = cardConfiguration,
                 amount = params.amount,
+                paymentMethod = paymentMethod,
             ),
         )
     }
@@ -96,21 +98,25 @@ internal class CardComponentParamsMapper {
     private fun makeInstallmentParams(
         sessionParams: AdditionalSessionParams?,
         cardConfiguration: CardConfiguration?,
-        amount: Amount?
+        amount: Amount?,
+        paymentMethod: CardPaymentMethod?,
     ): InstallmentParams? {
-        return if (sessionParams != null) {
+        return when {
+            paymentMethod?.fundingSource.equals(DEBIT_FUNDING_SOURCE, ignoreCase = true) -> null
             // if sessionParams.installmentOptions is null we want installmentParams to be also null
-            sessionParams.installmentConfiguration?.mapToInstallmentParams(amount)
-        } else {
-            cardConfiguration?.installmentConfiguration?.mapToInstallmentParams(amount)
+            sessionParams != null -> sessionParams.installmentConfiguration?.mapToInstallmentParams(amount)
+            else -> cardConfiguration?.installmentConfiguration?.mapToInstallmentParams(amount)
         }
     }
 
     companion object {
-        val DEFAULT_SUPPORTED_CARDS_LIST: List<CardBrand> = listOf(
+        @VisibleForTesting
+        internal val DEFAULT_SUPPORTED_CARDS_LIST: List<CardBrand> = listOf(
             CardBrand(CardType.VISA.txVariant),
             CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
             CardBrand(CardType.MASTERCARD.txVariant),
         )
+
+        private const val DEBIT_FUNDING_SOURCE = "debit"
     }
 }
