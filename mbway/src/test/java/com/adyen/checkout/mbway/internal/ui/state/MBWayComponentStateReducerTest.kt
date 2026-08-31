@@ -2,12 +2,14 @@ package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 
 internal class MBWayComponentStateReducerTest {
 
@@ -50,39 +52,64 @@ internal class MBWayComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdatePhoneNumberFocus, then state is updated`() {
-        val state = createInitialState()
+    fun `when the phone number loses focus, then an error it was holding back is shown`() {
+        val state = createInitialState().copy(
+            phoneNumber = TextInputComponentState(
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE),
+            ),
+        )
 
-        val actual = reducer.reduce(state, MBWayIntent.UpdatePhoneNumberFocus(true))
+        val actual = reducer.reduce(state, MBWayIntent.UpdateFieldFocus(MBWayFieldId.PHONE_NUMBER, hasFocus = false))
 
-        val expected = state.copy(phoneNumber = state.phoneNumber.updateFocus(true))
-        assertEquals(expected, actual)
+        assertTrue(actual.phoneNumber.isErrorVisible)
     }
 
     @Test
-    fun `when intent is HighlightValidationErrors and phone number has error, then state is updated`() {
+    fun `when the shopper focuses the phone number, then a visible error is hidden`() {
+        val state = createInitialState().copy(
+            phoneNumber = TextInputComponentState(
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE, isVisible = true),
+            ),
+            focusRequest = null,
+        )
+
+        val actual = reducer.reduce(state, MBWayIntent.UpdateFieldFocus(MBWayFieldId.PHONE_NUMBER, hasFocus = true))
+
+        assertFalse(actual.phoneNumber.isErrorVisible)
+    }
+
+    @Test
+    fun `when pay is pressed and the phone number is invalid, then its error shows and it is asked for focus`() {
         val state = createInitialState().copy(
             phoneNumber = TextInputComponentState(
                 text = "",
-                isFocused = false,
-                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE),
             ),
         )
 
         val actual = reducer.reduce(state, MBWayIntent.HighlightValidationErrors)
 
         assertTrue(actual.phoneNumber.isErrorVisible)
-        assertTrue(actual.phoneNumber.isFocused)
+        assertEquals(FocusRequest(MBWayFieldId.PHONE_NUMBER, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test
-    fun `when intent is HighlightValidationErrors and phone number has no error, then state is not updated`() {
+    fun `when pay is pressed and the phone number is valid, then nothing shows and no focus is asked for`() {
         val state = createInitialState()
 
         val actual = reducer.reduce(state, MBWayIntent.HighlightValidationErrors)
 
         assertFalse(actual.phoneNumber.isErrorVisible)
-        assertFalse(actual.phoneNumber.isFocused)
+        assertNull(actual.focusRequest)
+    }
+
+    @Test
+    fun `when the country picker cannot be focused, then asking to focus it changes nothing`() {
+        val state = createInitialState()
+
+        val actual = reducer.reduce(state, MBWayIntent.UpdateFieldFocus(MBWayFieldId.COUNTRY_CODE, hasFocus = true))
+
+        assertEquals(state, actual)
     }
 
     private fun createInitialState() = MBWayComponentState(

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -23,6 +24,8 @@ import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.payButtonAsComponentScaffoldFooter
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
+import com.adyen.checkout.mbway.internal.ui.state.CountryPickerViewState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayFormElement
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
@@ -68,26 +71,41 @@ private fun MBWayContent(
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         ) {
-            // CountryCode
-            val country = viewState.selectedCountryCode
-            ValuePickerField(
-                value = "${country.callingCode} • ${country.countryName}",
-                label = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE),
-                onClick = onCountryCodePickerClick,
-                modifier = Modifier
-                    .fillMaxWidth(),
-            )
-
-            if (viewState.phoneNumber != null) {
-                // PhoneNumber
-                MBWayPhoneNumberField(
-                    mbWayPhoneNumberFieldState = viewState.phoneNumber,
-                    countryCode = country.callingCode,
-                    onValueChange = { onIntent(MBWayIntent.UpdatePhoneNumber(it)) },
-                    onFocusChange = { onIntent(MBWayIntent.UpdatePhoneNumberFocus(it)) },
-                )
+            // Each element carries its own data, so there is no configuration and no other view state to read here.
+            viewState.elements.forEach { element ->
+                key(element.id) {
+                    MBWayFormElementContent(
+                        element = element,
+                        onIntent = onIntent,
+                        onCountryCodePickerClick = onCountryCodePickerClick,
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun MBWayFormElementContent(
+    element: MBWayFormElement,
+    onIntent: (MBWayIntent) -> Unit,
+    onCountryCodePickerClick: () -> Unit,
+) {
+    when (element) {
+        is MBWayFormElement.CountryCode -> ValuePickerField(
+            value = "${element.selectedCountry.callingCode} • ${element.selectedCountry.countryName}",
+            label = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE),
+            onClick = onCountryCodePickerClick,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        is MBWayFormElement.PhoneNumber -> MBWayPhoneNumberField(
+            mbWayPhoneNumberFieldState = element.textInputViewState,
+            countryCode = element.callingCode,
+            onValueChange = { onIntent(MBWayIntent.UpdatePhoneNumber(it)) },
+            onFocusChange = { onIntent(MBWayIntent.UpdateFieldFocus(element.id, it)) },
+            onFocusRequestConsumed = { onIntent(MBWayIntent.FocusRequestConsumed(element.id)) },
+        )
     }
 }
 
@@ -103,11 +121,13 @@ private fun MBWayContentPreview(
         )
         MBWayContent(
             viewState = MBWayViewState(
-                countries = countries,
+                elements = listOf(
+                    MBWayFormElement.CountryCode(selectedCountry = countries.first()),
+                    MBWayFormElement.PhoneNumber(TextInputViewState(), callingCode = countries.first().callingCode),
+                ),
                 isLoading = false,
-                selectedCountryCode = countries.first(),
-                phoneNumber = TextInputViewState(),
                 payButtonViewState = PayButtonViewState(null, false),
+                countryPickerViewState = CountryPickerViewState(countries, countries.first()),
             ),
             onIntent = {},
             onSubmitClick = {},
