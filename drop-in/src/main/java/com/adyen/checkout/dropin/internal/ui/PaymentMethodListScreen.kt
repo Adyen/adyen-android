@@ -10,16 +10,16 @@ package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -81,43 +81,42 @@ private fun PaymentMethodListContent(
         },
         title = viewState.amount,
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
+                .padding(innerPadding),
         ) {
-            Body(
-                text = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
-                color = CheckoutThemeProvider.colors.textSecondary,
-                modifier = Modifier
-                    .padding(
-                        start = Dimensions.Spacing.Large,
-                        top = Dimensions.Spacing.ExtraSmall,
-                        end = Dimensions.Spacing.Large,
-                        bottom = Dimensions.Spacing.Medium,
-                    ),
-            )
+            item {
+                Body(
+                    text = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
+                    color = CheckoutThemeProvider.colors.textSecondary,
+                    modifier = Modifier
+                        .padding(
+                            start = Dimensions.Spacing.Large,
+                            top = Dimensions.Spacing.ExtraSmall,
+                            end = Dimensions.Spacing.Large,
+                            bottom = Dimensions.Spacing.Medium,
+                        ),
+                )
+            }
 
-            viewState.storedPaymentMethodSection?.let {
-                Section(
-                    title = it.title,
-                    actionText = it.action,
-                    items = it.options,
+            viewState.storedPaymentMethodSection?.let { storedSection ->
+                section(
+                    title = storedSection.title,
+                    actionText = storedSection.action,
+                    items = storedSection.options,
                     onActionClick = { navigator.navigateTo(StoredPaymentMethodsNavKey) },
                     onPaymentMethodClick = { pm ->
                         onPaymentMethodClick(PaymentMethodNavKey(DropInPaymentFlowType.StoredPaymentMethod(pm.id)))
                     },
                 )
-
-                Spacer(Modifier.size(Dimensions.Spacing.Small))
             }
 
-            viewState.paymentOptionsSection?.let {
-                Section(
-                    title = it.title,
-                    actionText = it.action,
-                    items = it.options,
+            viewState.paymentOptionsSection?.let { paymentOptionsSection ->
+                section(
+                    title = paymentOptionsSection.title,
+                    actionText = paymentOptionsSection.action,
+                    items = paymentOptionsSection.options,
                     onPaymentMethodClick = { pm ->
                         onPaymentMethodClick(PaymentMethodNavKey(DropInPaymentFlowType.RegularPaymentMethod(pm.id)))
                     },
@@ -127,24 +126,30 @@ private fun PaymentMethodListContent(
     }
 }
 
-@Composable
-private fun Section(
+private fun LazyListScope.section(
     title: CheckoutLocalizationKey,
     actionText: CheckoutLocalizationKey?,
     items: List<PaymentMethodItem>,
     onPaymentMethodClick: (PaymentMethodItem) -> Unit,
     onActionClick: (() -> Unit)? = null,
 ) {
-    Column {
+    item {
         SectionHeader(
             title = resolveString(title),
             actionText = actionText?.let { resolveString(it) },
             onActionClick = onActionClick,
         )
+    }
 
-        PaymentMethodItemList(
-            paymentMethodItems = items,
-            onItemClick = onPaymentMethodClick,
+    items(items) { item ->
+        PaymentMethodListItem(
+            item = item,
+            onClick = onPaymentMethodClick,
+            modifier = Modifier.padding(
+                start = Dimensions.Spacing.ExtraSmall,
+                end = Dimensions.Spacing.ExtraSmall,
+                bottom = Dimensions.Spacing.Small,
+            ),
         )
     }
 }
@@ -197,31 +202,26 @@ private fun TextButton(
 }
 
 @Composable
-private fun PaymentMethodItemList(
-    paymentMethodItems: List<PaymentMethodItem>,
-    onItemClick: (PaymentMethodItem) -> Unit,
+private fun PaymentMethodListItem(
+    item: PaymentMethodItem,
+    onClick: (PaymentMethodItem) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
-    ) {
-        paymentMethodItems.forEach { item ->
-            ListItem(
-                leadingIcon = {
-                    CheckoutNetworkLogo(
-                        txVariant = item.icon,
-                        modifier = Modifier.size(Dimensions.LogoSize.medium),
-                    )
-                },
-                title = item.title,
-                subtitle = item.subtitle,
-                trailingContent = {
-                    PaymentMethodItemTrailingContent(item)
-                },
-                onClick = { onItemClick(item) },
-                modifier = Modifier.padding(horizontal = Dimensions.Spacing.ExtraSmall),
+    ListItem(
+        leadingIcon = {
+            CheckoutNetworkLogo(
+                txVariant = item.icon,
+                modifier = Modifier.size(Dimensions.LogoSize.medium),
             )
-        }
-    }
+        },
+        title = item.title,
+        subtitle = item.subtitle,
+        trailingContent = {
+            PaymentMethodItemTrailingContent(item)
+        },
+        onClick = { onClick(item) },
+        modifier = modifier,
+    )
 }
 
 @Composable
