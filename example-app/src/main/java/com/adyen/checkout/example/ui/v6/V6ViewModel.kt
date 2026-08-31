@@ -21,6 +21,8 @@ import com.adyen.checkout.card.card
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.getPaymentMethods
+import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.AdvancedCheckoutResult
@@ -96,7 +98,7 @@ internal class V6ViewModel @Inject constructor(
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.error.message.orEmpty()))
             is Checkout.Result.Success -> {
                 checkoutContext = result.checkoutContext
-                val paymentMethods = checkoutContext.getPaymentMethods()
+                val paymentMethods = checkoutContext.getPaymentMethods().filterSupportedPaymentMethods()
                 val checkoutController = createAndSetCheckoutController(
                     paymentMethod = paymentMethods.first(),
                     checkoutContext = result.checkoutContext,

@@ -10,10 +10,11 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.getPaymentMethods
+import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 
 internal object PaymentMethodResolver {
 
@@ -42,24 +43,10 @@ internal object PaymentMethodResolver {
     private fun resolvePaymentMethod(
         target: CheckoutTarget.PaymentMethod,
         context: CheckoutContext,
-    ): PaymentMethodResponse? {
-        val paymentMethods = context.getPaymentMethodResponse()?.paymentMethods
-        return paymentMethods?.find { it.type == target.type }
-    }
+    ): PaymentMethodResponse? = context.getPaymentMethods().find { it.type == target.type }
 
     private fun resolveStoredPaymentMethod(
         target: CheckoutTarget.StoredPaymentMethod,
         context: CheckoutContext,
-    ): PaymentMethodResponse? {
-        val storedPaymentMethods = context.getPaymentMethodResponse()?.storedPaymentMethods
-        return storedPaymentMethods?.find { it.id == target.id }
-    }
-
-    private fun CheckoutContext.getPaymentMethodResponse(): PaymentMethods? {
-        return when (this) {
-            is CheckoutContext.Advanced -> paymentMethods
-            is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods
-            is CheckoutContext.ActionOnly -> null
-        }
-    }
+    ): PaymentMethodResponse? = context.getStoredPaymentMethods().find { it.id == target.id }
 }

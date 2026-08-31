@@ -317,6 +317,11 @@ public final class com/adyen/checkout/core/common/CheckoutContext$Sessions : com
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
+public final class com/adyen/checkout/core/common/CheckoutContextKt {
+	public static final fun getPaymentMethods (Lcom/adyen/checkout/core/common/CheckoutContext;)Ljava/util/List;
+	public static final fun getStoredPaymentMethods (Lcom/adyen/checkout/core/common/CheckoutContext;)Ljava/util/List;
+}
+
 public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/Enum {
 	public static final field AED Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field ALL Lcom/adyen/checkout/core/common/CheckoutCurrency;
