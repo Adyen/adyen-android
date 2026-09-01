@@ -26,19 +26,20 @@ import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
+import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
+import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
-import com.adyen.checkout.core.components.paymentmethod.CardDetails
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
-import com.adyen.checkout.cse.internal.BaseGenericEncryptor
+import com.adyen.checkout.cse.internal.TestCardEncryptor
+import com.adyen.checkout.cse.internal.TestGenericEncryptor
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,35 +47,40 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class CardComponentTest(
-    @param:Mock private val cardEncryptor: BaseCardEncryptor,
-    @param:Mock private val genericEncryptor: BaseGenericEncryptor,
     @param:Mock private val detectCardTypeRepository: DetectCardTypeRepository,
-    @param:Mock private val sdkDataProvider: SdkDataProvider,
+    @param:Mock private val cardPaymentComponentStateFactory: CardPaymentComponentStateFactory,
     @param:Mock private val cardScannerWrapper: CardScannerWrapper,
     @param:Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) {
 
+    private lateinit var cardEncryptor: TestCardEncryptor
+    private lateinit var genericEncryptor: TestGenericEncryptor
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var component: CardComponent
 
     @BeforeEach
     fun beforeEach() {
+        cardEncryptor = TestCardEncryptor()
+        genericEncryptor = TestGenericEncryptor()
         analyticsManager = TestAnalyticsManager()
         component = createComponent()
     }
@@ -253,11 +259,39 @@ internal class CardComponentTest(
     inner class SubmitTest {
 
         @Test
-        fun `and state is valid then Submit event is emitted`() = runTest {
-            // GIVEN
-            mockSuccessfulEncryption()
+        fun `and state is invalid then no event is emitted`() = runTest {
+            // GIVEN - the card number and the expiry date are empty
             val component = createComponent(publicKey = TEST_PUBLIC_KEY)
-            fillInValidCard(component)
+            val eventFlow = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            assertTrue(eventFlow.values.isEmpty())
+        }
+
+        @Test
+        fun `and state is invalid then the validation errors are highlighted`() = runTest {
+            // GIVEN - the card number and the expiry date are empty
+            val componentStateReducer = spy(createComponentStateReducer(createCardComponentParams()))
+            val component = createComponent(
+                publicKey = TEST_PUBLIC_KEY,
+                componentStateReducer = componentStateReducer,
+            )
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            verify(componentStateReducer).reduce(any(), eq(CardIntent.HighlightValidationErrors))
+        }
+
+        @Test
+        fun `and state is valid then the state created by the factory is submitted`() = runTest {
+            // GIVEN
+            val expectedState = mockCreatedPaymentComponentState()
+            val component = createValidComponent()
             val eventFlow = component.eventFlow.test(testScheduler)
 
             // WHEN
@@ -265,74 +299,217 @@ internal class CardComponentTest(
 
             // THEN
             val event = eventFlow.latestValue
-            assertInstanceOf(PaymentComponentEvent.Submit::class.java, event)
-            assertTrue((event as PaymentComponentEvent.Submit).state.isValid)
+            assertInstanceOf<PaymentComponentEvent.Submit>(event)
+            assertEquals(expectedState, event.state)
         }
 
         @Test
-        fun `and funding source is set then it is part of the card details`() = runTest {
+        fun `and state is valid then the card number, expiry date and security code are encrypted`() = runTest {
             // GIVEN
-            mockSuccessfulEncryption()
-            val component = createComponent(publicKey = TEST_PUBLIC_KEY, fundingSource = "debit")
-            fillInValidCard(component)
-            val eventFlow = component.eventFlow.test(testScheduler)
-
-            // WHEN
-            component.submit()
-
-            // THEN
-            val state = (eventFlow.latestValue as PaymentComponentEvent.Submit).state
-            assertInstanceOf(CardPaymentComponentState::class.java, state)
-            assertEquals(createExpectedCardDetails(fundingSource = "debit"), state.data.paymentMethod)
-        }
-
-        @Test
-        fun `and funding source is null then card details funding source is null`() = runTest {
-            // GIVEN
-            mockSuccessfulEncryption()
-            val component = createComponent(publicKey = TEST_PUBLIC_KEY, fundingSource = null)
-            fillInValidCard(component)
-            val eventFlow = component.eventFlow.test(testScheduler)
-
-            // WHEN
-            component.submit()
-
-            // THEN
-            val state = (eventFlow.latestValue as PaymentComponentEvent.Submit).state
-            assertEquals(createExpectedCardDetails(fundingSource = null), state.data.paymentMethod)
-        }
-
-        private fun mockSuccessfulEncryption() {
-            whenever(cardEncryptor.encryptFields(any(), any())).thenReturn(
-                EncryptedCard(
-                    encryptedCardNumber = "encrypted_card_number",
-                    encryptedExpiryMonth = "encrypted_expiry_month",
-                    encryptedExpiryYear = "encrypted_expiry_year",
-                    encryptedSecurityCode = null,
-                ),
+            mockCreatedPaymentComponentState()
+            val component = createValidComponent(
+                cardComponentParams = createCardComponentParams().copy(cvcVisibility = CVCVisibility.ALWAYS_SHOW),
             )
-            whenever(sdkDataProvider.createEncodedSdkData(any())).thenReturn("sdk_data")
+            component.handleIntent(CardIntent.UpdateSecurityCode("737"))
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            verify(cardPaymentComponentStateFactory).createPaymentComponentState(
+                cardComponentState = any(),
+                encryptedCard = eq(createExpectedEncryptedCard(securityCode = "737")),
+                encryptedKcpCardPassword = anyOrNull(),
+            )
         }
 
-        private fun fillInValidCard(component: CardComponent) {
-            whenever(detectCardTypeRepository.detectCardTypes(any())).thenReturn(emptyFlow())
-            component.handleIntent(CardIntent.UpdateCardNumber("4111111111111111"))
-            component.handleIntent(CardIntent.UpdateExpiryDate("1230"))
+        @Test
+        fun `and the security code is hidden then it is not encrypted`() = runTest {
+            // GIVEN - a security code was filled in while it was still visible
+            mockCreatedPaymentComponentState()
+            val component = createValidComponent(
+                cardComponentParams = createCardComponentParams().copy(cvcVisibility = CVCVisibility.ALWAYS_HIDE),
+            )
+            component.handleIntent(CardIntent.UpdateSecurityCode("737"))
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            verify(cardPaymentComponentStateFactory).createPaymentComponentState(
+                cardComponentState = any(),
+                encryptedCard = eq(createExpectedEncryptedCard(securityCode = null)),
+                encryptedKcpCardPassword = anyOrNull(),
+            )
         }
 
-        private fun createExpectedCardDetails(fundingSource: String?) = CardDetails(
-            type = PAYMENT_METHOD_TYPE,
-            sdkData = "sdk_data",
-            encryptedCardNumber = "encrypted_card_number",
-            encryptedExpiryMonth = "encrypted_expiry_month",
-            encryptedExpiryYear = "encrypted_expiry_year",
-            encryptedSecurityCode = null,
-            encryptedPassword = null,
-            holderName = null,
-            taxNumber = null,
-            brand = null,
-            fundingSource = fundingSource,
+        @Test
+        fun `and publicKey is null then an Error event is emitted and nothing is submitted`() = runTest {
+            // GIVEN
+            val component = createValidComponent(publicKey = null)
+            val eventFlow = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            assertInstanceOf<PaymentComponentEvent.Error>(eventFlow.latestValue)
+            assertTrue(eventFlow.values.none { it is PaymentComponentEvent.Submit })
+        }
+
+        @Test
+        fun `and publicKey is null then API_PUBLIC_KEY analytics error is tracked`() = runTest {
+            // GIVEN
+            val component = createValidComponent(publicKey = null)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+            analyticsManager.assertHasEventEquals(expected)
+        }
+
+        @Test
+        fun `and card encryption fails then an Error event is emitted and nothing is submitted`() = runTest {
+            // GIVEN
+            cardEncryptor.shouldThrowException = true
+            val component = createValidComponent()
+            val eventFlow = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            assertInstanceOf<PaymentComponentEvent.Error>(eventFlow.latestValue)
+            assertTrue(eventFlow.values.none { it is PaymentComponentEvent.Submit })
+        }
+
+        @Test
+        fun `and card encryption fails then ENCRYPTION analytics error is tracked`() = runTest {
+            // GIVEN
+            cardEncryptor.shouldThrowException = true
+            val component = createValidComponent()
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+            analyticsManager.assertHasEventEquals(expected)
+        }
+
+        @Test
+        fun `and the kcp card password is filled in then it is encrypted and passed to the factory`() = runTest {
+            // GIVEN - TestGenericEncryptor echoes the value it encrypts
+            mockCreatedPaymentComponentState()
+            val component = createKoreanAuthenticationComponent()
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            verify(cardPaymentComponentStateFactory).createPaymentComponentState(
+                cardComponentState = any(),
+                encryptedCard = any(),
+                encryptedKcpCardPassword = eq("12"),
+            )
+        }
+
+        @Test
+        fun `and the kcp card password is not filled in then no password is passed to the factory`() = runTest {
+            // GIVEN
+            mockCreatedPaymentComponentState()
+            val component = createValidComponent()
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            verify(cardPaymentComponentStateFactory).createPaymentComponentState(
+                cardComponentState = any(),
+                encryptedCard = any(),
+                encryptedKcpCardPassword = eq(null),
+            )
+        }
+
+        @Test
+        fun `and the kcp password encryption fails then an Error event is emitted and nothing is submitted`() =
+            runTest {
+                // GIVEN
+                genericEncryptor.shouldThrowException = true
+                val component = createKoreanAuthenticationComponent()
+                val eventFlow = component.eventFlow.test(testScheduler)
+
+                // WHEN
+                component.submit()
+
+                // THEN
+                assertInstanceOf<PaymentComponentEvent.Error>(eventFlow.latestValue)
+                assertTrue(eventFlow.values.none { it is PaymentComponentEvent.Submit })
+            }
+
+        @Test
+        fun `and the kcp card password encryption fails then ENCRYPTION analytics error is tracked`() = runTest {
+            // GIVEN
+            genericEncryptor.shouldThrowException = true
+            val component = createKoreanAuthenticationComponent()
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+            analyticsManager.assertHasEventEquals(expected)
+        }
+
+        /**
+         * [TestCardEncryptor] echoes the values it encrypts, so the expected result mirrors the filled in card.
+         */
+        private fun createExpectedEncryptedCard(securityCode: String?) = EncryptedCard(
+            encryptedCardNumber = TEST_CARD_NUMBER,
+            encryptedExpiryMonth = "12",
+            encryptedExpiryYear = "2030",
+            encryptedSecurityCode = securityCode,
         )
+
+        private fun mockCreatedPaymentComponentState(): CardPaymentComponentState {
+            val state = CardPaymentComponentState(
+                data = PaymentComponentData(paymentMethod = null, order = null),
+                isValid = true,
+            )
+            whenever(
+                cardPaymentComponentStateFactory.createPaymentComponentState(any(), any(), anyOrNull()),
+            ).thenReturn(state)
+            return state
+        }
+
+        /**
+         * Creates a component with a valid card number and expiry date filled in, so that it can be submitted.
+         */
+        private fun createValidComponent(
+            cardComponentParams: CardComponentParams = createCardComponentParams(),
+            publicKey: String? = TEST_PUBLIC_KEY,
+        ): CardComponent {
+            val component = createComponent(
+                cardComponentParams = cardComponentParams,
+                publicKey = publicKey,
+            )
+            whenever(detectCardTypeRepository.detectCardTypes(any())).thenReturn(emptyFlow())
+            component.handleIntent(CardIntent.UpdateCardNumber(TEST_CARD_NUMBER))
+            component.handleIntent(CardIntent.UpdateExpiryDate("1230"))
+            return component
+        }
+
+        private fun createKoreanAuthenticationComponent(): CardComponent {
+            val component = createValidComponent(
+                cardComponentParams = createCardComponentParams()
+                    .copy(koreanAuthenticationVisibility = FieldVisibility.SHOW),
+            )
+            component.handleIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber("260403"))
+            component.handleIntent(CardIntent.UpdateKcpCardPassword("12"))
+            return component
+        }
     }
 
     private fun createEmptyDetectedCardTypeList() = DetectedCardTypeList(
@@ -379,15 +556,18 @@ internal class CardComponentTest(
         localizedBrand = null,
     )
 
+    private fun createComponentStateReducer(cardComponentParams: CardComponentParams) = CardComponentStateReducer(
+        CardBrandIntentsHandler(
+            componentParams = cardComponentParams,
+            detectCardTypeBinHelper = DetectCardTypeBinHelper(),
+        ),
+    )
+
     private fun createComponent(
         cardComponentParams: CardComponentParams = createCardComponentParams(),
         publicKey: String? = null,
-        fundingSource: String? = null,
+        componentStateReducer: CardComponentStateReducer = createComponentStateReducer(cardComponentParams),
     ): CardComponent {
-        val cardBrandIntentsHandler = CardBrandIntentsHandler(
-            componentParams = cardComponentParams,
-            detectCardTypeBinHelper = DetectCardTypeBinHelper(),
-        )
         return CardComponent(
             analyticsManager = analyticsManager,
             cardEncryptor = cardEncryptor,
@@ -396,17 +576,16 @@ internal class CardComponentTest(
             detectCardTypeRepository = detectCardTypeRepository,
             componentStateValidator = CardComponentStateValidator(CardValidationMapper()),
             componentStateFactory = CardComponentStateFactory(cardComponentParams),
-            componentStateReducer = CardComponentStateReducer(cardBrandIntentsHandler),
+            componentStateReducer = componentStateReducer,
             viewStateProducer = CardViewStateProducer(amount = null, showSubmitButton = true),
+            cardPaymentComponentStateFactory = cardPaymentComponentStateFactory,
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
-            sdkDataProvider = sdkDataProvider,
             paymentMethodType = PAYMENT_METHOD_TYPE,
             onBinChangeCallback = null,
             onBinLookupCallback = null,
             cardScannerWrapper = cardScannerWrapper,
             publicKey = publicKey,
             environment = Environment.TEST,
-            fundingSource = fundingSource,
             cardConfigDataGenerator = cardConfigDataGenerator,
         )
     }
@@ -428,5 +607,6 @@ internal class CardComponentTest(
     companion object {
         private const val PAYMENT_METHOD_TYPE = "scheme"
         private const val TEST_PUBLIC_KEY = "test_public_key"
+        private const val TEST_CARD_NUMBER = "4111111111111111"
     }
 }

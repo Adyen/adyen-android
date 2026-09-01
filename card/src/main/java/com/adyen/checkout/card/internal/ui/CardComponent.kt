@@ -24,15 +24,17 @@ import com.adyen.checkout.card.internal.analytics.DualBrandCardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.helper.CardBinHelper
 import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
+import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardBrandState
+import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
-import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.CardContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContentEntry
@@ -43,14 +45,16 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
+import com.adyen.checkout.core.components.internal.ui.state.model.getPaymentDataValue
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
+import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
+import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import kotlinx.coroutines.CoroutineScope
@@ -77,15 +81,14 @@ constructor(
     componentStateFactory: CardComponentStateFactory,
     componentStateReducer: CardComponentStateReducer,
     viewStateProducer: CardViewStateProducer,
+    private val cardPaymentComponentStateFactory: CardPaymentComponentStateFactory,
     private val coroutineScope: CoroutineScope,
-    private val sdkDataProvider: SdkDataProvider,
     private val paymentMethodType: String,
     private val onBinChangeCallback: OnBinChangeCallback?,
     private val onBinLookupCallback: OnBinLookupCallback?,
     private val cardScannerWrapper: CardScannerWrapper,
     private val publicKey: String?,
     private val environment: Environment,
-    private val fundingSource: String?,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) : PaymentComponent,
     SecondaryScreenComponent {
@@ -141,24 +144,84 @@ constructor(
         )
     }
 
+    @Suppress("ReturnCount")
     override fun submit() {
-        if (componentStateValidator.isValid(componentState.value)) {
-            // TODO - Move encryption out of this method to prevent submission
-            val paymentComponentState = componentState.value.toPaymentComponentState(
-                publicKey = publicKey,
-                componentParams = componentParams,
+        val currentState = componentState.value
+        if (componentStateValidator.isValid(currentState)) {
+            if (publicKey == null) {
+                onPublicKeyNotFound(GenericError("Public key is missing."))
+                return
+            }
+
+            val encryptedCard = currentState.encryptCard(
                 cardEncryptor = cardEncryptor,
-                genericEncryptor = genericEncryptor,
-                sdkDataProvider = sdkDataProvider,
-                paymentMethodType = paymentMethodType,
-                fundingSource = fundingSource,
-                onEncryptionFailed = ::onEncryptionError,
-                onPublicKeyNotFound = ::onPublicKeyNotFound,
+                publicKey = publicKey,
+            ) ?: return
+
+            val encryptedKcpCardPassword = currentState.kcpCardPassword.getPaymentDataValue()?.let { password ->
+                encryptKcpCardPassword(
+                    genericEncryptor = genericEncryptor,
+                    publicKey = publicKey,
+                    kcpCardPassword = password,
+                ) ?: return
+            }
+
+            val paymentComponentState = cardPaymentComponentStateFactory.createPaymentComponentState(
+                cardComponentState = currentState,
+                encryptedCard = encryptedCard,
+                encryptedKcpCardPassword = encryptedKcpCardPassword,
             )
             val event = PaymentComponentEvent.Submit(paymentComponentState)
             eventChannel.trySend(event)
         } else {
             onIntent(CardIntent.HighlightValidationErrors)
+        }
+    }
+
+    private fun CardComponentState.encryptCard(
+        cardEncryptor: BaseCardEncryptor,
+        publicKey: String,
+    ): EncryptedCard? {
+        return try {
+            val unencryptedCardBuilder = UnencryptedCard.Builder()
+            cardNumber.getPaymentDataValue()?.let {
+                unencryptedCardBuilder.setNumber(it)
+            }
+
+            securityCode.getPaymentDataValue()?.let {
+                unencryptedCardBuilder.setCvc(it)
+            }
+
+            expiryDate.getPaymentDataValue()?.let {
+                ExpiryDateParser.parseToMonthAndYear(it, returnFullYear = true)
+            }?.let { (expiryMonth, expiryYear) ->
+                unencryptedCardBuilder.setExpiryDate(
+                    expiryMonth = expiryMonth,
+                    expiryYear = expiryYear,
+                )
+            }
+
+            cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
+        } catch (e: EncryptionException) {
+            onEncryptionError(e)
+            null
+        }
+    }
+
+    private fun encryptKcpCardPassword(
+        genericEncryptor: BaseGenericEncryptor,
+        publicKey: String,
+        kcpCardPassword: String,
+    ): String? {
+        return try {
+            genericEncryptor.encryptField(
+                fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_KCP_PASSWORD,
+                fieldValueToEncrypt = kcpCardPassword,
+                publicKey = publicKey,
+            )
+        } catch (e: EncryptionException) {
+            onEncryptionError(e)
+            null
         }
     }
 
@@ -355,5 +418,9 @@ constructor(
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
+    }
+
+    companion object {
+        private const val ENCRYPTION_KEY_FOR_KCP_PASSWORD = "password"
     }
 }
