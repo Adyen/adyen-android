@@ -8,12 +8,16 @@
 
 package com.adyen.checkout.core.components.internal.ui.state.form
 
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.HOLDER_NAME
 import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.NUMBER
 import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.STORE_DETAILS
 import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.VERIFICATION_CODE
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -239,6 +243,131 @@ internal class FormStateExtTest {
 
             // THEN
             assertNull(firstInvalid)
+        }
+    }
+
+    @Nested
+    inner class ApplyFocusChangeTest {
+
+        @Test
+        fun `when a field loses focus, then an error it was holding back is shown`() {
+            val form = formOf(NUMBER)
+
+            val field = fieldWithHiddenError().applyFocusChange(form, NUMBER, hasFocus = false)
+
+            assertTrue(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when the shopper focuses a field, then a visible error is hidden`() {
+            val form = formOf(NUMBER)
+
+            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
+
+            assertFalse(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when pay asked for this focus, then the error it revealed stays visible`() {
+            val form = FormState(
+                order = listOf(NUMBER),
+                focusRequest = FocusRequest(NUMBER, keepErrorHighlight = true),
+            )
+
+            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
+
+            assertTrue(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when a request without the highlight asked for this focus, then the error is hidden like a tap`() {
+            // A prefill or auto-advance lands the shopper on a field to type in, so a stale error must not greet them.
+            val form = FormState(order = listOf(NUMBER), focusRequest = FocusRequest(NUMBER))
+
+            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
+
+            assertFalse(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when the request names another field, then this field behaves like a tap`() {
+            val form = FormState(
+                order = listOf(NUMBER, HOLDER_NAME),
+                focusRequest = FocusRequest(HOLDER_NAME, keepErrorHighlight = true),
+            )
+
+            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
+
+            assertFalse(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when the field has no error, then neither direction invents one`() {
+            val form = formOf(NUMBER)
+            val field = TextInputComponentState()
+
+            assertFalse(field.applyFocusChange(form, NUMBER, hasFocus = false).isErrorVisible)
+            assertFalse(field.applyFocusChange(form, NUMBER, hasFocus = true).isErrorVisible)
+        }
+
+        private fun fieldWithHiddenError() = TextInputComponentState(
+            error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
+        )
+
+        private fun fieldWithVisibleError() = TextInputComponentState(
+            error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID, isVisible = true),
+        )
+    }
+
+    @Nested
+    inner class AnswersFocusRequestTest {
+
+        @Test
+        fun `when the requested field gains focus, then the request is answered`() {
+            val form = FormState(order = listOf(NUMBER), focusRequest = FocusRequest(NUMBER))
+
+            assertTrue(form.answersFocusRequest(NUMBER, hasFocus = true))
+        }
+
+        @Test
+        fun `when the requested field loses focus, then the request is not answered`() {
+            val form = FormState(order = listOf(NUMBER), focusRequest = FocusRequest(NUMBER))
+
+            assertFalse(form.answersFocusRequest(NUMBER, hasFocus = false))
+        }
+
+        @Test
+        fun `when another field gains focus, then the request is not answered`() {
+            val form = FormState(order = listOf(NUMBER, HOLDER_NAME), focusRequest = FocusRequest(NUMBER))
+
+            assertFalse(form.answersFocusRequest(HOLDER_NAME, hasFocus = true))
+        }
+
+        @Test
+        fun `when there is no request, then nothing answers it`() {
+            val form = formOf(NUMBER)
+
+            assertFalse(form.answersFocusRequest(NUMBER, hasFocus = true))
+        }
+    }
+
+    @Nested
+    inner class RequestFocusOnFirstInvalidTest {
+
+        @Test
+        fun `when a field is invalid, then it is asked for focus and keeps its error`() {
+            val form = formOf(NUMBER, VERIFICATION_CODE)
+
+            val request = form.requestFocusOnFirstInvalid { it != VERIFICATION_CODE }
+
+            assertEquals(FocusRequest(VERIFICATION_CODE, keepErrorHighlight = true), request)
+        }
+
+        @Test
+        fun `when every field is valid, then no focus is asked for`() {
+            val form = formOf(NUMBER, VERIFICATION_CODE)
+
+            assertNull(form.requestFocusOnFirstInvalid { true })
         }
     }
 

@@ -22,8 +22,8 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
  * security code both need it, the view state producer derives it once, and this way neither element depends on anything
  * outside itself.
  */
-// TODO - POC: the five elements below that carry only a text input are the same shape in every component. Extract a
-// shared simple text input element to core once the other components have their own lists to compare against.
+// TODO - Form fields: the elements below that carry nothing but a text input have the same shape in every component.
+// Weigh a shared core element type against the exhaustive `when` it would cost each component.
 internal sealed interface CardFormElement {
 
     /**
