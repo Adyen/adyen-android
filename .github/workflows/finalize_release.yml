@@ -18,7 +18,7 @@ jobs:
     outputs:
       prerelease: ${{ steps.version_info.outputs.prerelease }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - name: Resolve version info
         id: version_info
         env:
@@ -49,7 +49,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
       # Publish Github release and the tag
       - name: Publish Github release
@@ -78,7 +78,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
       - name: Remove release branch
         env:
