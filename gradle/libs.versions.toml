@@ -35,7 +35,7 @@ material3 = "1.5.0-alpha15"
 navigation3 = "1.1.4"
 recyclerview = "1.4.0"
 startup = "1.2.0"
-constraintlayout = "2.2.1"
+constraintlayout = "2.2.2"
 constraintlayout-compose = "1.1.1"
 
 # Compose dependencies
