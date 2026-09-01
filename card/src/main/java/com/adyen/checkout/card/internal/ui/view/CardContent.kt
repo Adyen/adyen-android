@@ -141,8 +141,9 @@ private fun CardDetailsSection(
     }
 }
 
-// TODO - POC: field composables take the element's data rather than the element itself, so that they stay usable from
-// other components. Revisit with a core TextInputFormElement interface once a shared field composable exists.
+// Field composables take the element's data rather than the element itself, so that they stay usable from more than one
+// component. The security code field is shared with the stored card screen, and the billing address will be shared more
+// widely still.
 @Suppress("LongMethod")
 @Composable
 private fun CardFormElementContent(
