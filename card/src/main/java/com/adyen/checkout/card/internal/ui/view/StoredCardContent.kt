@@ -61,23 +61,32 @@ private fun StoredCardContent(
         disableInteraction = viewState.isLoading,
         footer = payButtonAsComponentScaffoldFooter(viewState.payButtonViewState, onSubmitClick),
         // A stored card that asks for no security code has an empty form, and then there is no content to show at all.
-        content = viewState.elements
-            .takeIf { it.isNotEmpty() }
-            ?.let { elements ->
-                @Composable {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
-                    ) {
-                        elements.forEach { element ->
-                            key(element.id) {
-                                StoredCardFormElementContent(element = element, onIntent = onIntent)
-                            }
-                        }
-                    }
-                }
-            },
+        content = viewState.elements.takeIf { it.isNotEmpty() }?.let { elements ->
+            @Composable {
+                StoredCardForm(
+                    elements = elements,
+                    onIntent = onIntent,
+                )
+            }
+        },
     )
+}
+
+@Composable
+private fun StoredCardForm(
+    elements: List<StoredCardFormElement>,
+    onIntent: (StoredCardIntent) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
+    ) {
+        elements.forEach { element ->
+            key(element.id) {
+                StoredCardFormElementContent(element = element, onIntent = onIntent)
+            }
+        }
+    }
 }
 
 @Composable
