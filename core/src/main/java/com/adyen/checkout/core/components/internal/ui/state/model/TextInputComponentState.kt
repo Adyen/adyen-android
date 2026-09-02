@@ -30,18 +30,15 @@ data class TextInputComponentState(
         val isVisible: Boolean = false,
     )
 
-    val isValid: Boolean
-        get() = error == null
+    val isValid: Boolean = error == null
 
     /**
      * Whether the shopper can see this field at all. A hidden field is not on screen, so it is neither rendered nor
      * one of its form's elements.
      */
-    internal val isVisible: Boolean
-        get() = requirementPolicy != RequirementPolicy.Hidden
+    internal val isVisible: Boolean = requirementPolicy != RequirementPolicy.Hidden
 
-    val isErrorVisible: Boolean
-        get() = error?.isVisible == true
+    val isErrorVisible: Boolean = error?.isVisible == true
 
     fun updateText(text: String) = copy(text = text).hideErrorIfPresent()
 

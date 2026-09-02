@@ -39,8 +39,7 @@ data class TextInputViewState(
      * The trailing icon to render. The generic [TrailingIcon.Error] icon always takes precedence over
      * [customTrailingIcon], so that every field shows the error state consistently.
      */
-    val trailingIcon: TrailingIcon
-        get() = if (isError) TrailingIcon.Error else customTrailingIcon ?: TrailingIcon.Empty
+    val trailingIcon: TrailingIcon = if (isError) TrailingIcon.Error else customTrailingIcon ?: TrailingIcon.Empty
 }
 
 /**
