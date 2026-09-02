@@ -40,8 +40,6 @@ internal data class CardComponentState(
     val networkBinLookupState: NetworkBinLookupState?,
     val installmentState: InstallmentState,
 
-    // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
-    // records something that happened rather than something that is.
     val focusRequest: FocusRequest<CardFormElementId>? = null,
 ) : ComponentState {
 

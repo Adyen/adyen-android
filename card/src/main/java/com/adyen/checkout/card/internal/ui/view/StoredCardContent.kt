@@ -75,12 +75,13 @@ private fun StoredCardContent(
 @Composable
 private fun StoredCardForm(
     elements: List<StoredCardFormElement>,
-    onIntent: (StoredCardIntent) -> Unit
+    onIntent: (StoredCardIntent) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraLarge),
     ) {
+        // Keyed on the id rather than the position, so a field's text and focus follow it when the order changes.
         elements.forEach { element ->
             key(element.id) {
                 StoredCardFormElementContent(element = element, onIntent = onIntent)

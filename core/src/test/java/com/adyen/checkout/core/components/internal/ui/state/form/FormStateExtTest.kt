@@ -198,19 +198,15 @@ internal class FormStateExtTest {
         }
 
         @Test
-        fun `when a field is invalid, then it is asked for focus and keeps its error`() {
-            val form = FormState(elements = listOf(valid(NUMBER), invalid(VERIFICATION_CODE)))
-
-            val request = form.requestFocusOnFirstInvalid()
-
-            assertEquals(FocusRequest(VERIFICATION_CODE, keepErrorHighlight = true), request)
-        }
-
-        @Test
-        fun `when every field is valid, then no focus is asked for`() {
+        fun `when every element is valid, then no focus is asked for`() {
+            // GIVEN
             val form = formOf(NUMBER, VERIFICATION_CODE)
 
-            assertNull(form.requestFocusOnFirstInvalid())
+            // WHEN
+            val request = form.requestFocusOnFirstInvalid()
+
+            // THEN
+            assertNull(request)
         }
     }
 

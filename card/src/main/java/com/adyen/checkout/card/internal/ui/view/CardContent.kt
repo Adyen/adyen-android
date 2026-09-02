@@ -104,8 +104,8 @@ private fun CardContent(
         disableInteraction = viewState.isLoading,
         footer = payButtonAsComponentScaffoldFooter(viewState.payButtonViewState, onSubmitClick),
     ) {
-        CardDetailsSection(
-            viewState = viewState,
+        CardForm(
+            elements = viewState.elements,
             onIntent = onIntent,
             onScanButtonClick = onScanButtonClick,
             onInstallmentPickerClick = onInstallmentPickerClick,
@@ -114,8 +114,8 @@ private fun CardContent(
 }
 
 @Composable
-private fun CardDetailsSection(
-    viewState: CardViewState,
+private fun CardForm(
+    elements: List<CardFormElement>,
     onIntent: (CardIntent) -> Unit,
     onScanButtonClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
@@ -125,10 +125,8 @@ private fun CardDetailsSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
     ) {
-        // Each element carries its own data, so there is no configuration and no other view state to read here. An
-        // element is keyed on its id rather than its position, so that its text and focus follow it if the order
-        // changes.
-        viewState.elements.forEach { element ->
+        // Keyed on the id rather than the position, so a field's text and focus follow it when the order changes.
+        elements.forEach { element ->
             key(element.id) {
                 CardFormElementContent(
                     element = element,

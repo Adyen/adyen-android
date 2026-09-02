@@ -19,8 +19,6 @@ internal class BlikViewStateProducer(
 ) : ViewStateProducer<BlikComponentState, BlikViewState> {
 
     override fun produce(state: BlikComponentState) = BlikViewState(
-        // The form decides which fields are shown and in which order, so building one element per member of that order
-        // is the only place either question is answered.
         elements = state.form.elements.map { state.toElement(it.id) },
         isLoading = state.isLoading,
         payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,

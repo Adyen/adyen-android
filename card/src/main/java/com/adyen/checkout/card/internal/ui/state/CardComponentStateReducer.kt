@@ -12,7 +12,6 @@ import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.nextTextInputAfter
-import com.adyen.checkout.core.components.internal.ui.state.form.remainingAfter
 import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
 import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
@@ -119,11 +118,8 @@ internal class CardComponentStateReducer(
         return copy(focusRequest = focusTarget?.let { FocusRequest(id = it) })
     }
 
-    private fun CardComponentState.updateFieldFocus(id: CardFormElementId, hasFocus: Boolean): CardComponentState {
-        val updated = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
-
-        return updated.copy(focusRequest = focusRequest.remainingAfter(id, hasFocus))
-    }
+    private fun CardComponentState.updateFieldFocus(id: CardFormElementId, hasFocus: Boolean): CardComponentState =
+        updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
     private fun highlightValidationErrors(state: CardComponentState): CardComponentState {
         val highlighted = CardFormElementId.entries.fold(state) { current, id ->

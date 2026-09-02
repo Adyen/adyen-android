@@ -12,18 +12,14 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 /**
- * One element of a form, as the form layer sees it.
+ * One element of a form, holding what the form's own rules need to know about it rather than the element's state. A
+ * component owns its fields and is the only thing that can change them, so copying one in here would put the same value
+ * behind two routes.
  *
- * This deliberately holds facts rather than the element's own state. A component owns its fields and is the only thing
- * that can change them, so copying them in here would mean the same value could be read by two routes. Everything the
- * form's own rules need is derived instead, and anything else is asked of the component.
+ * Add a fact when a rule in this package needs it and only the component can answer it. Each one costs a line in every
+ * component's builder and can drift from what it was derived from.
  *
- * Add a fact here when a rule in this package needs it and only the component can answer it. Every fact costs a line in
- * every component's builder, and is a value that can drift from the field it was derived from.
- *
- * @param id Which element this is.
- * @param isValid Whether the element currently holds a valid value, so that the form can find the first one that does
- * not. Elements that cannot be invalid, such as a switch, pass true.
+ * @param isValid Elements that cannot be invalid, such as a switch, pass true.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class FormElementState<Id : FormElementId>(
@@ -32,14 +28,11 @@ data class FormElementState<Id : FormElementId>(
 )
 
 /**
- * This field as the form sees it, or null when the field is not on screen.
+ * This field as the form sees it, or null when it is not on screen, which is how a component's builder leaves a hidden
+ * field out. Visibility and validity are read off the same value, so they cannot disagree.
  *
- * Being absent is how the form represents a hidden field, so this is what a component's builder uses for a text input:
- * visibility and validity are then read off the same value and cannot disagree.
- *
- * Note that [TextInputComponentState.isValid] reflects the last time the validator ran, which is after the reducer that
- * is usually building this. That is accurate for a reduction that changes no text, which is the case for every rule
- * that asks about validity today.
+ * [TextInputComponentState.isValid] reflects the last validation pass, which ran before the reducer now building this.
+ * That is accurate as long as the same reduction changed no text, which holds for everything that asks today.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> TextInputComponentState.toFormElementIfVisible(id: Id): FormElementState<Id>? =

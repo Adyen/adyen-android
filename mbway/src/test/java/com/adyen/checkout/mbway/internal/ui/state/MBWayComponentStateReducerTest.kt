@@ -121,6 +121,15 @@ internal class MBWayComponentStateReducerTest {
         assertEquals(state, actual)
     }
 
+    @Test
+    fun `when a focus request could not be fulfilled, then reporting it back clears it`() {
+        val state = createInitialState().copy(focusRequest = FocusRequest(MBWayFormElementId.PHONE_NUMBER))
+
+        val actual = reducer.reduce(state, MBWayIntent.FocusRequestConsumed(MBWayFormElementId.PHONE_NUMBER))
+
+        assertNull(actual.focusRequest)
+    }
+
     private fun createInitialState() = MBWayComponentState(
         countries = emptyList(),
         selectedCountryCode = CountryModel("NL", "Netherlands", "+31"),

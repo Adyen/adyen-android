@@ -19,8 +19,6 @@ internal data class StoredCardComponentState(
     val securityCode: TextInputComponentState,
     val isLoading: Boolean,
     val detectedCardType: DetectedCardType?,
-    // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
-    // records something that happened rather than something that is.
     val focusRequest: FocusRequest<StoredCardFormElementId>? = null,
 ) : ComponentState {
 

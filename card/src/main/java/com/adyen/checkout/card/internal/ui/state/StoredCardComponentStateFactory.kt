@@ -42,7 +42,6 @@ internal class StoredCardComponentStateFactory(
             detectedCardType = storedDetectedCardType,
         )
 
-        // Opens the keyboard on the first field the shopper can type in, as soon as the screen appears.
         // A stored card that asks for no security code has an empty form, so this leaves nothing pending.
         return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
     }

@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
-import com.adyen.checkout.core.components.internal.ui.state.form.remainingAfter
 import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
 import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
@@ -40,19 +39,13 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
     private fun StoredCardComponentState.updateFieldFocus(
         id: StoredCardFormElementId,
         hasFocus: Boolean,
-    ): StoredCardComponentState {
-        val updated = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
-
-        return updated.copy(focusRequest = focusRequest.remainingAfter(id, hasFocus))
-    }
+    ): StoredCardComponentState = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
     private fun highlightValidationErrors(state: StoredCardComponentState): StoredCardComponentState {
         val highlighted = StoredCardFormElementId.entries.fold(state) { current, id ->
             current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
-        return highlighted.copy(
-            focusRequest = state.form.requestFocusOnFirstInvalid(),
-        )
+        return highlighted.copy(focusRequest = state.form.requestFocusOnFirstInvalid())
     }
 }

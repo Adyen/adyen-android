@@ -71,7 +71,7 @@ private fun MBWayContent(
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         ) {
-            // Each element carries its own data, so there is no configuration and no other view state to read here.
+            // Keyed on the id rather than the position, so a field's text and focus follow it when the order changes.
             viewState.elements.forEach { element ->
                 key(element.id) {
                     MBWayFormElementContent(
