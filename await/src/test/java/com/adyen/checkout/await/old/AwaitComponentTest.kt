@@ -38,8 +38,8 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class AwaitComponentTest(
-    @Mock private val awaitDelegate: AwaitDelegate,
-    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
+    @param:Mock private val awaitDelegate: AwaitDelegate,
+    @param:Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: AwaitComponent

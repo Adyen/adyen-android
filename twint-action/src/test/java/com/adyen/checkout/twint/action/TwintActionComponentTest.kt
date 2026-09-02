@@ -38,8 +38,8 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class TwintActionComponentTest(
-    @Mock private val twintActionDelegate: TwintActionDelegate,
-    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
+    @param:Mock private val twintActionDelegate: TwintActionDelegate,
+    @param:Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: TwintActionComponent

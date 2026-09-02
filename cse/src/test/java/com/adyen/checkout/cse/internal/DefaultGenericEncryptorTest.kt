@@ -23,8 +23,8 @@ import java.util.TimeZone
 
 @ExtendWith(MockitoExtension::class)
 internal class DefaultGenericEncryptorTest(
-    @Mock private val dateGenerator: DateGenerator,
-    @Mock private val jsonWebEncryptor: JSONWebEncryptor,
+    @param:Mock private val dateGenerator: DateGenerator,
+    @param:Mock private val jsonWebEncryptor: JSONWebEncryptor,
 ) {
     private val genericEncryptor = DefaultGenericEncryptor(dateGenerator, jsonWebEncryptor)
 

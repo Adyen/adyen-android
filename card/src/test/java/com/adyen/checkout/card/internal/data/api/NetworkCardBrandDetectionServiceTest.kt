@@ -40,7 +40,7 @@ import java.util.UUID
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class NetworkCardBrandDetectionServiceTest(
-    @Mock private val binLookupService: BinLookupService,
+    @param:Mock private val binLookupService: BinLookupService,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor

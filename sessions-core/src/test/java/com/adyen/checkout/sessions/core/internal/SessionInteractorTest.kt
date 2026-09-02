@@ -57,7 +57,7 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class SessionInteractorTest(
-    @Mock private val sessionRepository: SessionRepository,
+    @param:Mock private val sessionRepository: SessionRepository,
 ) {
 
     private lateinit var sessionInteractor: SessionInteractor

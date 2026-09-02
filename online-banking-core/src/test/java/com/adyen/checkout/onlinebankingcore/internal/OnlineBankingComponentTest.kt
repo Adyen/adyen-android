@@ -44,13 +44,13 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class OnlineBankingComponentTest(
-    @Mock private val onlineBankingDelegate: OnlineBankingDelegate<
+    @param:Mock private val onlineBankingDelegate: OnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
         TestOnlineBankingComponentState
         >,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock
     private val componentEventHandler: ComponentEventHandler<TestOnlineBankingComponentState>,
 ) {
 

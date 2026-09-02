@@ -41,9 +41,9 @@ import java.util.Locale
 
 @ExtendWith(MockitoExtension::class, LoggingExtension::class, TestDispatcherExtension::class)
 internal class DropInViewModelTest(
-    @Mock private val bundleHandler: DropInSavedStateHandleContainer,
-    @Mock private val orderStatusRepository: OrderStatusRepository,
-    @Mock private val dropInConfigDataGenerator: DropInConfigDataGenerator,
+    @param:Mock private val bundleHandler: DropInSavedStateHandleContainer,
+    @param:Mock private val orderStatusRepository: OrderStatusRepository,
+    @param:Mock private val dropInConfigDataGenerator: DropInConfigDataGenerator,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

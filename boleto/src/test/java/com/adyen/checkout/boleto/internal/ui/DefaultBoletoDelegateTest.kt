@@ -60,7 +60,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultBoletoDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<BoletoComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<BoletoComponentState>,
 ) {
 
     private lateinit var addressRepository: TestAddressRepository

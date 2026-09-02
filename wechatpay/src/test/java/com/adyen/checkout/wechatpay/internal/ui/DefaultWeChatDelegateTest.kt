@@ -54,8 +54,8 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultWeChatDelegateTest(
-    @Mock private val iwxApi: IWXAPI,
-    @Mock private val weChatRequestGenerator: WeChatRequestGenerator<*>
+    @param:Mock private val iwxApi: IWXAPI,
+    @param:Mock private val weChatRequestGenerator: WeChatRequestGenerator<*>
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

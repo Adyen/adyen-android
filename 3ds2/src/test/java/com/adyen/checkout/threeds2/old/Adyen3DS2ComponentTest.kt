@@ -39,8 +39,8 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class Adyen3DS2ComponentTest(
-    @Mock private val adyen3DS2Delegate: Adyen3DS2Delegate,
-    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
+    @param:Mock private val adyen3DS2Delegate: Adyen3DS2Delegate,
+    @param:Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: Adyen3DS2Component

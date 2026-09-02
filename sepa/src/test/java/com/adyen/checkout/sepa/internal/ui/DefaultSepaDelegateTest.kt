@@ -57,7 +57,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultSepaDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<SepaComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<SepaComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

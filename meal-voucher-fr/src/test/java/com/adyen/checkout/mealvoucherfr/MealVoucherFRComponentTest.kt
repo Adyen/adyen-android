@@ -44,10 +44,10 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class MealVoucherFRComponentTest(
-    @Mock private val giftCardDelegate: GiftCardDelegate,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<MealVoucherFRComponentState>,
+    @param:Mock private val giftCardDelegate: GiftCardDelegate,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock private val componentEventHandler: ComponentEventHandler<MealVoucherFRComponentState>,
 ) {
     private lateinit var component: MealVoucherFRComponent
 

@@ -21,8 +21,8 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class)
 internal class DefaultActionHandlingComponentTest(
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val paymentDelegate: PaymentComponentDelegate<*>,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val paymentDelegate: PaymentComponentDelegate<*>,
 ) {
 
     private lateinit var actionHandlingComponent: DefaultActionHandlingComponent

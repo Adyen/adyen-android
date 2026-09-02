@@ -31,7 +31,7 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class, DirectAnalyticsEventCreation::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class, TestDispatcherExtension::class)
 internal class DefaultAnalyticsManagerTest(
-    @Mock private val analyticsRepository: AnalyticsRepository,
+    @param:Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
     private lateinit var analyticsManager: DefaultAnalyticsManager

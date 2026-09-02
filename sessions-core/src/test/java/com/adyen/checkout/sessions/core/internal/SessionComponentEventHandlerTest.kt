@@ -50,8 +50,8 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class SessionComponentEventHandlerTest(
-    @Mock private val sessionInteractor: SessionInteractor,
-    @Mock private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
+    @param:Mock private val sessionInteractor: SessionInteractor,
+    @param:Mock private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
 ) {
 
     private lateinit var sessionComponentEventHandler: SessionComponentEventHandler<PaymentComponentState<*>>

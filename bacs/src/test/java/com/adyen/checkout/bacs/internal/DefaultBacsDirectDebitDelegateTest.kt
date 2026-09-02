@@ -62,7 +62,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultBacsDirectDebitDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

@@ -78,9 +78,9 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultCashAppPayDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<CashAppPayComponentState>,
-    @Mock private val cashAppPayFactory: CashAppPayFactory,
-    @Mock private val cashAppPay: CashAppPay,
+    @param:Mock private val submitHandler: SubmitHandler<CashAppPayComponentState>,
+    @param:Mock private val cashAppPayFactory: CashAppPayFactory,
+    @param:Mock private val cashAppPay: CashAppPay,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

@@ -58,7 +58,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultPayByBankDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<PayByBankComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<PayByBankComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

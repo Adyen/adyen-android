@@ -58,7 +58,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultEContextDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<TestEContextComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<TestEContextComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

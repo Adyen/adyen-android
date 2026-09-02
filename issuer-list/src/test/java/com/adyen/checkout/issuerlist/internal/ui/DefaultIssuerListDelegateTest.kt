@@ -59,7 +59,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultIssuerListDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<TestIssuerComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<TestIssuerComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

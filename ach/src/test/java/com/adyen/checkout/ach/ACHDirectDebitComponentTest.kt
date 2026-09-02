@@ -41,11 +41,11 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class ACHDirectDebitComponentTest(
-    @Mock private val defaultAchDelegate: DefaultACHDirectDebitDelegate,
-    @Mock private val storedAchDelegate: StoredACHDirectDebitDelegate,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<ACHDirectDebitComponentState>,
+    @param:Mock private val defaultAchDelegate: DefaultACHDirectDebitDelegate,
+    @param:Mock private val storedAchDelegate: StoredACHDirectDebitDelegate,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock private val componentEventHandler: ComponentEventHandler<ACHDirectDebitComponentState>,
 ) {
 
     private lateinit var defaultAchComponent: ACHDirectDebitComponent

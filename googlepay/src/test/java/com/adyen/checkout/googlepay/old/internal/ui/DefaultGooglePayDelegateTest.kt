@@ -73,9 +73,9 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultGooglePayDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<GooglePayComponentState>,
-    @Mock private val paymentsClient: PaymentsClient,
-    @Mock private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
+    @param:Mock private val submitHandler: SubmitHandler<GooglePayComponentState>,
+    @param:Mock private val paymentsClient: PaymentsClient,
+    @param:Mock private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
