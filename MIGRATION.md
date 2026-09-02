@@ -55,11 +55,15 @@ lifecycleScope.launch {
         is Checkout.Result.Error -> showError(result.error.message.orEmpty())
         is Checkout.Result.Success -> {
             val sessionsContext = result.checkoutContext
+            val paymentMethods = sessionsContext.getPaymentMethods()
+            val storedPaymentMethods = sessionsContext.getStoredPaymentMethods()
             // Use sessionsContext with your payment-method-specific integration.
         }
     }
 }
 ```
+
+The v6 accessors expose non-null lists directly from `CheckoutContext`; do not traverse the internal Sessions setup response. Missing payment-method data is represented by an empty list.
 
 For a complete card example, see [docs/v6/card-session-flow.md](docs/v6/card-session-flow.md).
 
@@ -158,6 +162,7 @@ For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-ad
 - `Checkout.setup(...)` replaces `CheckoutSessionProvider.createSession(...)` and the legacy component-first setup as the main public v6 flow entry point.
 - `CheckoutConfiguration` now refers to the new `com.adyen.checkout.core.components.CheckoutConfiguration` type.
 - `CheckoutContext.Sessions` and `CheckoutContext.Advanced` represent the initialized flow state.
+- `CheckoutContext.getPaymentMethods()` and `getStoredPaymentMethods()` expose non-null method lists across checkout flows.
 - `CheckoutController(...)` binds a checkout target and callbacks for rendering.
 - `CheckoutPaymentFlow(...)` becomes the main Compose rendering entry point.
 

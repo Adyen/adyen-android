@@ -35,6 +35,8 @@ import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.card
 import com.adyen.checkout.authentication.authentication
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.getPaymentMethods
+import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.StringResourceLocalizationProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
@@ -126,6 +128,17 @@ lifecycleScope.launch {
 ```
 
 For a complete card example that wires `AdvancedCheckoutCallbacks(...)` and renders `CheckoutPaymentFlow(...)`, see [card-advanced-flow.md](card-advanced-flow.md).
+
+## Available payment methods
+
+Use the same accessors to inspect the available regular and stored payment methods in any checkout flow:
+
+```kotlin
+val paymentMethods = checkoutContext.getPaymentMethods()
+val storedPaymentMethods = checkoutContext.getStoredPaymentMethods()
+```
+
+Both accessors return non-null lists and preserve the response order. They return an empty list when no methods are available, including for an action-only checkout context.
 
 ## Rendering the Compose flow
 

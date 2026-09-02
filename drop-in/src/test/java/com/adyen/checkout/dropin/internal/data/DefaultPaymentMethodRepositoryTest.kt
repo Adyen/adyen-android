@@ -9,7 +9,6 @@
 package com.adyen.checkout.dropin.internal.data
 
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -21,18 +20,20 @@ internal class DefaultPaymentMethodRepositoryTest {
     @Test
     fun `when initialized with payment methods, then regulars are set`() {
         val paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Cards"))
-        val response = PaymentMethods(paymentMethods = paymentMethods)
-
-        val repository = DefaultPaymentMethodRepository(response)
+        val repository = DefaultPaymentMethodRepository(
+            paymentMethods = paymentMethods,
+            storedPaymentMethods = emptyList(),
+        )
 
         assertEquals(paymentMethods, repository.paymentMethods)
     }
 
     @Test
-    fun `when initialized with null payment methods, then regulars are empty`() {
-        val response = PaymentMethods(paymentMethods = null)
-
-        val repository = DefaultPaymentMethodRepository(response)
+    fun `when initialized with empty payment methods, then regulars are empty`() {
+        val repository = DefaultPaymentMethodRepository(
+            paymentMethods = emptyList(),
+            storedPaymentMethods = emptyList(),
+        )
 
         assertEquals(emptyList<GenericPaymentMethod>(), repository.paymentMethods)
     }
@@ -53,18 +54,20 @@ internal class DefaultPaymentMethodRepositoryTest {
                 fundingSource = null,
             ),
         )
-        val response = PaymentMethods(storedPaymentMethods = storedPaymentMethods)
-
-        val repository = DefaultPaymentMethodRepository(response)
+        val repository = DefaultPaymentMethodRepository(
+            paymentMethods = emptyList(),
+            storedPaymentMethods = storedPaymentMethods,
+        )
 
         assertEquals(storedPaymentMethods, repository.storedPaymentMethods.first())
     }
 
     @Test
-    fun `when initialized with null stored payment methods, then favorites are empty`() = runTest {
-        val response = PaymentMethods(storedPaymentMethods = null)
-
-        val repository = DefaultPaymentMethodRepository(response)
+    fun `when initialized with empty stored payment methods, then favorites are empty`() = runTest {
+        val repository = DefaultPaymentMethodRepository(
+            paymentMethods = emptyList(),
+            storedPaymentMethods = emptyList(),
+        )
 
         assertEquals(emptyList<StoredCardPaymentMethod>(), repository.storedPaymentMethods.first())
     }
@@ -95,10 +98,10 @@ internal class DefaultPaymentMethodRepositoryTest {
             holderName = null,
             fundingSource = null,
         )
-        val response = PaymentMethods(
+        val repository = DefaultPaymentMethodRepository(
+            paymentMethods = emptyList(),
             storedPaymentMethods = listOf(storedPaymentMethod1, storedPaymentMethod2),
         )
-        val repository = DefaultPaymentMethodRepository(response)
 
         repository.removeStoredPaymentMethod("1")
 
@@ -120,10 +123,10 @@ internal class DefaultPaymentMethodRepositoryTest {
             holderName = null,
             fundingSource = null,
         )
-        val response = PaymentMethods(
+        val repository = DefaultPaymentMethodRepository(
+            paymentMethods = emptyList(),
             storedPaymentMethods = listOf(storedPaymentMethod1),
         )
-        val repository = DefaultPaymentMethodRepository(response)
 
         repository.removeStoredPaymentMethod("999")
 

@@ -19,6 +19,8 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.card
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.getPaymentMethods
+import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutController
@@ -95,7 +97,7 @@ internal class V6SessionsViewModel @Inject constructor(
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.error.message.orEmpty()))
             is Checkout.Result.Success -> {
                 checkoutContext = result.checkoutContext
-                val paymentMethods = checkoutContext.getPaymentMethods()
+                val paymentMethods = checkoutContext.getPaymentMethods().filterSupportedPaymentMethods()
                 val checkoutController = createAndSetCheckoutController(
                     paymentMethod = paymentMethods.first(),
                     checkoutContext = checkoutContext,

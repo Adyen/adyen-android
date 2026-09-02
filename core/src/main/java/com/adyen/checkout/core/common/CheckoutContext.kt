@@ -13,7 +13,9 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.sessions.CheckoutSession
 import kotlinx.parcelize.Parcelize
 
@@ -50,7 +52,7 @@ sealed interface CheckoutContext : Parcelable {
     @Parcelize
     @ConsistentCopyVisibility
     data class Advanced internal constructor(
-        val paymentMethods: PaymentMethods,
+        internal val paymentMethods: PaymentMethods,
         override val checkoutConfiguration: CheckoutConfiguration,
         internal val checkoutAttemptId: String,
         internal val publicKey: String?,
@@ -68,4 +70,26 @@ sealed interface CheckoutContext : Parcelable {
         internal val checkoutAttemptId: String,
         internal val publicKey: String?,
     ) : CheckoutContext
+}
+
+/**
+ * Returns the regular payment methods available for this checkout context.
+ *
+ * Returns an empty list when no regular payment methods are available.
+ */
+fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> = when (this) {
+    is CheckoutContext.Advanced -> paymentMethods.paymentMethods.orEmpty()
+    is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods?.paymentMethods.orEmpty()
+    is CheckoutContext.ActionOnly -> emptyList()
+}
+
+/**
+ * Returns the stored payment methods available for this checkout context.
+ *
+ * Returns an empty list when no stored payment methods are available.
+ */
+fun CheckoutContext.getStoredPaymentMethods(): List<StoredPaymentMethod> = when (this) {
+    is CheckoutContext.Advanced -> paymentMethods.storedPaymentMethods.orEmpty()
+    is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods?.storedPaymentMethods.orEmpty()
+    is CheckoutContext.ActionOnly -> emptyList()
 }
