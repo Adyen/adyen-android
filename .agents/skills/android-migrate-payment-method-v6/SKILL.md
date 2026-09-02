@@ -135,7 +135,7 @@ Use the `android-branch-create` skill to create a `chore/` branch (base `main` d
 
 - **Plan first, code after approval.** No implementation before the plan document is approved.
 - **Tests are part of every step** — created for new layers, moved with relocated v5 code. Never weaken or delete tests to make a phase pass.
-- **Small commits; PRs at an agreed cadence.** One logical change per commit via `android-commit`. PRs do **not** have to be per commit — group cohesive phases into stacked draft PRs (`android-branch-create` + `android-pr-create`), and agree the per-phase vs per-group cadence with the developer during planning. When review feedback lands on a lower layer, fix it on that branch and rebase the layers above — see `.agents/PR_REVIEWS.md`.
+- **Small commits; PRs at an agreed cadence.** One logical change per commit via `android-commit`. PRs do **not** have to be per commit — group cohesive phases into stacked draft PRs (`android-branch-create` + `android-pr-create`), and agree the per-phase vs per-group cadence with the developer during planning. When review feedback lands on a lower layer, fix it on that branch and rebase the layers above.
 - **Don't skip serializer registration** in `PaymentMethodDetails.getChildSerializer`.
 - **Default to `internal`.** Only the configuration/DSL is public. Discuss any breaking change before proceeding.
 - **Adapt per method.** No single reference is complete: Google Pay (external SDK, no fields), MBWay (input + secondary screen, no params/mapper), Card (input + stored). Confirm which collaborators and optional capabilities — params/mapper, input/validation, stored variant, secondary screen — your method actually needs rather than copying all of them.
