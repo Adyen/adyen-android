@@ -67,6 +67,7 @@ private fun BlikContent(
             // Static screen copy rather than a form field, so it is not one of the elements below.
             Body(text = resolveString(CheckoutLocalizationKey.BLIK_HELPER_TEXT))
 
+            // Keyed on the id rather than the position, so a field's text and focus follow it when the order changes.
             viewState.elements.forEach { element ->
                 key(element.id) {
                     BlikFormElementContent(element = element, onIntent = onIntent)

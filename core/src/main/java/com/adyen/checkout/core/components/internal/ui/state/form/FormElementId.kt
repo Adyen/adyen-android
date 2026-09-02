@@ -11,20 +11,16 @@ package com.adyen.checkout.core.components.internal.ui.state.form
 import androidx.annotation.RestrictTo
 
 /**
- * Identifies a single element of a form. Every component that has a form declares its own set of ids, usually as an
- * enum.
- *
- * Elements that are not text inputs, such as a switch or a picker, are also form fields: they take part in the
- * ordering, because the UI renders the form by walking [FormState.elements].
+ * Identifies a single element of a form. Every component declares its own set, usually as an enum.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface FormElementId {
 
     /**
-     * Whether this field is a text input.
+     * Whether this element is a text input.
      *
-     * This governs the derivation of the keyboard action only, since only a text input has a keyboard. It has no
-     * effect on ordering or on focus.
+     * A switch or a picker is still part of the form and still takes its place in the order, but the rules that move a
+     * keyboard or the focus it carries skip it.
      */
     val isTextInput: Boolean
 }

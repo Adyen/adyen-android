@@ -21,8 +21,6 @@ internal data class MBWayComponentState(
     val selectedCountryCode: CountryModel,
     val phoneNumber: TextInputComponentState,
     val isLoading: Boolean,
-    // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
-    // records something that happened rather than something that is.
     val focusRequest: FocusRequest<MBWayFormElementId>? = null,
 ) : ComponentState {
 

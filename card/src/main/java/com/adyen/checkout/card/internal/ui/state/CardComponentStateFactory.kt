@@ -62,7 +62,6 @@ internal class CardComponentStateFactory(
             ),
         )
 
-        // Opens the keyboard on the first field the shopper can type in, as soon as the screen appears.
         return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
     }
 

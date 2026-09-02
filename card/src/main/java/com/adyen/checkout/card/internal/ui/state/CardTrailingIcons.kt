@@ -13,10 +13,9 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
-/**
- * Which icon each card field shows while it is not in an error state. Shared by the card and stored card producers,
- * which show the same security code icons.
- */
+// Which icon each field shows while it is not in an error state. Out of the producers because the card and stored card
+// screens show the same security code icons.
+
 internal fun getCardNumberTrailingIcon(isCardScanButtonVisible: Boolean): CardNumberTrailingIcon {
     return if (isCardScanButtonVisible) {
         CardNumberTrailingIcon.ScanButton

@@ -9,7 +9,6 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
-import com.adyen.checkout.core.components.internal.ui.state.form.remainingAfter
 import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
 import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
@@ -37,19 +36,14 @@ internal class MBWayComponentStateReducer : ComponentStateReducer<MBWayComponent
         }
     }
 
-    private fun MBWayComponentState.updateFieldFocus(id: MBWayFormElementId, hasFocus: Boolean): MBWayComponentState {
-        val updated = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
-
-        return updated.copy(focusRequest = focusRequest.remainingAfter(id, hasFocus))
-    }
+    private fun MBWayComponentState.updateFieldFocus(id: MBWayFormElementId, hasFocus: Boolean): MBWayComponentState =
+        updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
     private fun highlightValidationErrors(state: MBWayComponentState): MBWayComponentState {
         val highlighted = MBWayFormElementId.entries.fold(state) { current, id ->
             current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
-        return highlighted.copy(
-            focusRequest = state.form.requestFocusOnFirstInvalid(),
-        )
+        return highlighted.copy(focusRequest = state.form.requestFocusOnFirstInvalid())
     }
 }

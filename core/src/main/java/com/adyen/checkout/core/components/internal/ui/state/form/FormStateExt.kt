@@ -11,19 +11,16 @@ package com.adyen.checkout.core.components.internal.ui.state.form
 import androidx.annotation.RestrictTo
 
 /**
- * The request that opens a form on the first field the shopper can type in, or null when it has none — a stored card
- * asking for no security code has an empty form and nothing to focus.
- *
- * Text inputs only, so a form that opens with a picker above its first field still puts the keyboard on the field.
- * Every component wants this same rule, which is why none of them names a field.
+ * The request that opens a form on the first field the shopper can type in, or null when it has none. Text inputs only,
+ * so a form that opens with a picker above its first field still puts the keyboard on the field.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.requestFocusOnFirstTextInput(): FocusRequest<Id>? =
     elements.firstOrNull { it.id.isTextInput }?.let { FocusRequest(id = it.id) }
 
 /**
- * Returns the first text input after [id], or null if [id] is the last one or is not part of the form. Fields that are
- * not text inputs are skipped, since focus is being moved on behalf of a keyboard.
+ * The first text input after [id], or null if [id] is the last one or is not part of the form. Anything without a
+ * keyboard is skipped, since this moves focus on a keyboard's behalf.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.nextTextInputAfter(id: Id): Id? {
@@ -33,10 +30,7 @@ fun <Id : FormElementId> FormState<Id>.nextTextInputAfter(id: Id): Id? {
 }
 
 /**
- * Returns the keyboard action [id] should show. Only the last text input closes the keyboard, everything before it
- * moves on to the next field.
- *
- * This is only meaningful for a text input, as it is the only kind of field that has a keyboard.
+ * The keyboard action [id] should show. Only the last text input closes the keyboard; everything before it moves on.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.keyboardActionFor(id: Id): KeyboardAction {
@@ -46,10 +40,7 @@ fun <Id : FormElementId> FormState<Id>.keyboardActionFor(id: Id): KeyboardAction
 
 /**
  * The focus request to make when the shopper presses pay on a form that cannot be submitted, or null when every element
- * is valid.
- *
- * It carries `keepErrorHighlight`, because the point of this move is to show the shopper the error rather than to let
- * them start typing.
+ * is valid. It keeps the error highlight, because the point of the move is to show the shopper what is wrong.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.requestFocusOnFirstInvalid(): FocusRequest<Id>? {

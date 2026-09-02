@@ -82,8 +82,6 @@ internal class BlikComponentStateReducerTest {
         val actual = reducer.reduce(state, BlikIntent.UpdateFieldFocus(BlikFormElementId.BLIK_CODE, hasFocus = true))
 
         assertTrue(actual.blikCode.isErrorVisible)
-        // The request has been answered, so it must not make the shopper's next tap look programmatic.
-        assertNull(actual.focusRequest)
     }
 
     @Test

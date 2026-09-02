@@ -233,11 +233,11 @@ internal class CardComponentStateReducerTest {
     }
 
     /**
-     * Without this the request would outlive the focus move it asked for, and the shopper's next tap on the same field
-     * would be read as programmatic and keep an error it should clear.
+     * A focus change never clears the request, because the UI reports back even when focus did not move — which is what
+     * happens when pay targets a field that already has focus.
      */
     @Test
-    fun `when the requested field gains focus, then the request is cleared`() {
+    fun `when the requested field gains focus, then the request is left for the UI to report back`() {
         val state = createInitialState().copy(
             expiryDate = TextInputComponentState(error = hiddenError()),
         )
@@ -245,17 +245,29 @@ internal class CardComponentStateReducerTest {
 
         val focused = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, true))
 
-        assertNull(focused.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), focused.focusRequest)
     }
 
     @Test
-    fun `when a field other than the requested one gains focus, then the request is left alone`() {
+    fun `when the UI reports the request back, then it is cleared`() {
         val state = createInitialState().copy(
             expiryDate = TextInputComponentState(error = hiddenError()),
         )
         val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        val actual = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFormElementId.CARD_NUMBER, true))
+        val actual = reducer.reduce(highlighted, CardIntent.FocusRequestConsumed(CardFormElementId.EXPIRY_DATE))
+
+        assertNull(actual.focusRequest)
+    }
+
+    @Test
+    fun `when the UI reports back a request for another field, then the pending one is left alone`() {
+        val state = createInitialState().copy(
+            expiryDate = TextInputComponentState(error = hiddenError()),
+        )
+        val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
+
+        val actual = reducer.reduce(highlighted, CardIntent.FocusRequestConsumed(CardFormElementId.CARD_NUMBER))
 
         assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
     }

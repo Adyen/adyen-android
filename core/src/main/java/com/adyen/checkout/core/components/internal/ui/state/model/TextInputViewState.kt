@@ -28,10 +28,9 @@ data class TextInputViewState(
     // [trailingIcon] instead.
     val customTrailingIcon: TrailingIcon? = null,
     val isOptional: Boolean = false,
-    // The action key this field shows on the keyboard. Only the last text input of a form closes the keyboard, so this
-    // can only be derived from the form as a whole, through `FormState.keyboardActionFor`.
+    // Only the last text input of a form closes the keyboard, so this is the form's answer, not the field's.
     val keyboardAction: KeyboardAction = KeyboardAction.DONE,
-    // Set when the form is asking this field to take focus. The field reports back once it has acted on it.
+    // Set while the form is asking this field to take focus. The field reports back once it has.
     val focusRequest: FocusRequestToken? = null,
 ) {
 

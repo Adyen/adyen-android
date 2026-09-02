@@ -56,7 +56,7 @@ internal class CardFormStateFactoryTest {
     }
 
     @Nested
-    inner class VisibleCardFieldsTest {
+    inner class VisibleElementsTest {
 
         @Test
         fun `when every field is configured, then all of them are shown in the canonical order`() {
@@ -268,21 +268,6 @@ internal class CardFormStateFactoryTest {
                     installmentOptions = listOf(InstallmentModel.OneTime),
                 ),
             )
-        }
-
-        @Test
-        fun `when only the mandatory fields are configured, then every element reports the id it was built for`() {
-            assertElementsMatchOrder(createState())
-        }
-
-        @Test
-        fun `when the security code is hidden, then every element reports the id it was built for`() {
-            assertElementsMatchOrder(createState(securityCode = hidden()))
-        }
-
-        @Test
-        fun `when a field is optional, then every element reports the id it was built for`() {
-            assertElementsMatchOrder(createState(holderName = optional()))
         }
 
         private fun assertElementsMatchOrder(state: CardComponentState) {

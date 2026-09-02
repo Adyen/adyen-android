@@ -118,6 +118,18 @@ internal class StoredCardComponentStateReducerTest {
         assertNull(actual.focusRequest)
     }
 
+    @Test
+    fun `when a focus request could not be fulfilled, then reporting it back clears it`() {
+        val state = createInitialState().copy(focusRequest = FocusRequest(StoredCardFormElementId.SECURITY_CODE))
+
+        val actual = reducer.reduce(
+            state,
+            StoredCardIntent.FocusRequestConsumed(StoredCardFormElementId.SECURITY_CODE),
+        )
+
+        assertNull(actual.focusRequest)
+    }
+
     private fun createInitialState() = StoredCardComponentState(
         securityCode = TextInputComponentState(),
         isLoading = false,
