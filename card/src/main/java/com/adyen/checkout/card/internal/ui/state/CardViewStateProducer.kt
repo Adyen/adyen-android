@@ -36,7 +36,7 @@ internal class CardViewStateProducer(
                 .toViewState(form, focusRequest, id, getCardNumberTrailingIcon(isCardScanButtonVisible())),
             cardBrandViewState = getCardBrandViewState(cardBrandState),
             cardNumberFormat = getCardNumberFormat(cardBrandState),
-            supportedCardBrandsViewState = getSupportedCardBrandsViewState(this),
+            supportedCardBrandsViewState = getSupportedCardBrandsViewState(),
         )
 
         CardFormElementId.EXPIRY_DATE -> CardFormElement.ExpiryDate(
@@ -61,7 +61,7 @@ internal class CardViewStateProducer(
             CardFormElement.KcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber.toViewState(form, focusRequest, id))
 
         CardFormElementId.KCP_CARD_PASSWORD -> CardFormElement.KcpCardPassword(
-            kcpCardPassword.toViewState(form, focusRequest, id)
+            kcpCardPassword.toViewState(form, focusRequest, id),
         )
 
         CardFormElementId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toViewState(form, focusRequest, id))
@@ -79,11 +79,11 @@ internal class CardViewStateProducer(
      */
     private fun CardComponentState.isCardScanButtonVisible() = isCardScanningAvailable && cardNumber.text.isEmpty()
 
-    private fun getSupportedCardBrandsViewState(state: CardComponentState) = SupportedCardBrandsViewState(
-        supportedCardBrands = state.supportedCardBrands.filterNot { isHiddenCardType(it.txVariant) },
+    private fun CardComponentState.getSupportedCardBrandsViewState() = SupportedCardBrandsViewState(
+        supportedCardBrands = supportedCardBrands.filterNot { isHiddenCardType(it.txVariant) },
         // Every supported brand is only worth showing while the setting is on and no brand has been detected for the
         // number the shopper is typing.
-        isVisible = state.showSupportedCardBrandLogos && when (state.cardBrandState) {
+        isVisible = showSupportedCardBrandLogos && when (cardBrandState) {
             is CardBrandState.NoBrandsDetected,
             is CardBrandState.UnsupportedBrand,
             is CardBrandState.HiddenBrand -> true
