@@ -41,7 +41,7 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultDetectCardTypeRepositoryTest(
-    @Mock private val binLookupService: BinLookupService,
+    @param:Mock private val binLookupService: BinLookupService,
 ) {
 
     private lateinit var networkCardBrandDetectionService: NetworkCardBrandDetectionService

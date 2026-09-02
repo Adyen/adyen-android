@@ -77,7 +77,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultACHDirectDebitDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>
+    @param:Mock private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>
 ) {
 
     private lateinit var publicKeyRepository: TestPublicKeyRepository

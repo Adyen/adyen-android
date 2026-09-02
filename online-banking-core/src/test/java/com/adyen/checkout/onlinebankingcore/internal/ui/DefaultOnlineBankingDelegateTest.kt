@@ -60,9 +60,9 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultOnlineBankingDelegateTest(
-    @Mock private val context: Context,
-    @Mock private val pdfOpener: PdfOpener,
-    @Mock private val submitHandler: SubmitHandler<TestOnlineBankingComponentState>,
+    @param:Mock private val context: Context,
+    @param:Mock private val pdfOpener: PdfOpener,
+    @param:Mock private val submitHandler: SubmitHandler<TestOnlineBankingComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

@@ -38,8 +38,8 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class QRCodeComponentTest(
-    @Mock private val qrCodeDelegate: QRCodeDelegate,
-    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
+    @param:Mock private val qrCodeDelegate: QRCodeDelegate,
+    @param:Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: QRCodeComponent

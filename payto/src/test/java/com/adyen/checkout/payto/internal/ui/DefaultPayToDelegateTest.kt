@@ -60,7 +60,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultPayToDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<PayToComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<PayToComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

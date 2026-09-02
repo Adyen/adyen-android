@@ -44,10 +44,10 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class EContextComponentTest(
-    @Mock private val eContextDelegate: EContextDelegate<TestEContextPaymentMethod, TestEContextComponentState>,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<TestEContextComponentState>,
+    @param:Mock private val eContextDelegate: EContextDelegate<TestEContextPaymentMethod, TestEContextComponentState>,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock private val componentEventHandler: ComponentEventHandler<TestEContextComponentState>,
 ) {
 
     // We created TestEContextComponent to be able to run our tests, because EContextComponent is an abstract class

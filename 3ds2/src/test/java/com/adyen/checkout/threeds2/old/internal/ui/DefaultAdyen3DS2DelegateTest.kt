@@ -90,7 +90,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(LoggingExtension::class, MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultAdyen3DS2DelegateTest(
-    @Mock private val submitFingerprintRepository: SubmitFingerprintRepository,
+    @param:Mock private val submitFingerprintRepository: SubmitFingerprintRepository,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

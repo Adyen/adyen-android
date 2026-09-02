@@ -45,10 +45,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class UPIComponentTest(
-    @Mock private val upiDelegate: UPIDelegate,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<UPIComponentState>,
+    @param:Mock private val upiDelegate: UPIDelegate,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock private val componentEventHandler: ComponentEventHandler<UPIComponentState>,
 ) {
 
     private lateinit var component: UPIComponent

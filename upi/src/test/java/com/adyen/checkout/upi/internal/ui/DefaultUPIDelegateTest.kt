@@ -67,7 +67,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultUPIDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<UPIComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<UPIComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

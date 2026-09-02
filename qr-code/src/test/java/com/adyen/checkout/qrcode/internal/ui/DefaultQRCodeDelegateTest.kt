@@ -75,9 +75,9 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultQRCodeDelegateTest(
-    @Mock private val countDownTimer: QRCodeCountDownTimer,
-    @Mock private val context: Context,
-    @Mock private val imageSaver: ImageSaver
+    @param:Mock private val countDownTimer: QRCodeCountDownTimer,
+    @param:Mock private val context: Context,
+    @param:Mock private val imageSaver: ImageSaver
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

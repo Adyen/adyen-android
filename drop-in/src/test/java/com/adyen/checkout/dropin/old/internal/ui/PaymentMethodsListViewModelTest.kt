@@ -47,7 +47,7 @@ import java.util.Locale
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class PaymentMethodsListViewModelTest(
-    @Mock private val application: Application
+    @param:Mock private val application: Application
 ) {
 
     private lateinit var viewModel: PaymentMethodsListViewModel

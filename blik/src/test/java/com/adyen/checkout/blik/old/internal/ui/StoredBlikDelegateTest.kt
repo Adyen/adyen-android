@@ -50,7 +50,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 class StoredBlikDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<BlikComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<BlikComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

@@ -12,7 +12,7 @@ import org.mockito.kotlin.verify
 
 @ExtendWith(MockitoExtension::class)
 internal class NativeRedirectServiceTest(
-    @Mock private val httpClient: HttpClient
+    @param:Mock private val httpClient: HttpClient
 ) {
 
     private lateinit var nativeRedirectService: NativeRedirectService

@@ -55,7 +55,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultMBWayDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<MBWayComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<MBWayComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

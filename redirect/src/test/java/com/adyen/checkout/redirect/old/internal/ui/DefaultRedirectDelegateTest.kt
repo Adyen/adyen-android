@@ -58,7 +58,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultRedirectDelegateTest(
-    @Mock private val nativeRedirectService: NativeRedirectService,
+    @param:Mock private val nativeRedirectService: NativeRedirectService,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

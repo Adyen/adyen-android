@@ -45,10 +45,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class BoletoComponentTest(
-    @Mock private val boletoDelegate: BoletoDelegate,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<BoletoComponentState>,
+    @param:Mock private val boletoDelegate: BoletoDelegate,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock private val componentEventHandler: ComponentEventHandler<BoletoComponentState>,
 ) {
     private lateinit var component: BoletoComponent
 

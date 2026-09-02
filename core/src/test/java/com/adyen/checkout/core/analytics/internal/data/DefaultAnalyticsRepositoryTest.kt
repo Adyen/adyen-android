@@ -38,12 +38,12 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class)
 internal class DefaultAnalyticsRepositoryTest(
-    @Mock private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
-    @Mock private val localLogDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Log>,
-    @Mock private val localErrorDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Error>,
-    @Mock private val remoteDataStore: AnalyticsRemoteDataStore,
-    @Mock private val analyticsSetupProvider: AnalyticsSetupProvider,
-    @Mock private val analyticsTrackRequestProvider: AnalyticsTrackRequestProvider,
+    @param:Mock private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
+    @param:Mock private val localLogDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Log>,
+    @param:Mock private val localErrorDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Error>,
+    @param:Mock private val remoteDataStore: AnalyticsRemoteDataStore,
+    @param:Mock private val analyticsSetupProvider: AnalyticsSetupProvider,
+    @param:Mock private val analyticsTrackRequestProvider: AnalyticsTrackRequestProvider,
 ) {
 
     private lateinit var analyticsRepository: DefaultAnalyticsRepository

@@ -41,10 +41,10 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class BacsDirectDebitComponentTest(
-    @Mock private val bacsDirectDebitDelegate: BacsDirectDebitDelegate,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<BacsDirectDebitComponentState>,
+    @param:Mock private val bacsDirectDebitDelegate: BacsDirectDebitDelegate,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock private val componentEventHandler: ComponentEventHandler<BacsDirectDebitComponentState>,
 ) {
 
     private lateinit var component: BacsDirectDebitComponent

@@ -68,7 +68,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultGiftCardDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<GiftCardComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<GiftCardComponentState>,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor

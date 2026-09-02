@@ -29,7 +29,7 @@ import java.util.Locale
 // tests in this project, so the default localizations cannot be resolved for real here.
 @ExtendWith(MockitoExtension::class)
 internal class LocalizationResolverTest(
-    @Mock private val context: Context,
+    @param:Mock private val context: Context,
 ) {
 
     @Test

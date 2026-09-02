@@ -39,9 +39,9 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class GenericActionComponentTest(
-    @Mock private val actionDelegate: ActionDelegate,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
+    @param:Mock private val actionDelegate: ActionDelegate,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: GenericActionComponent

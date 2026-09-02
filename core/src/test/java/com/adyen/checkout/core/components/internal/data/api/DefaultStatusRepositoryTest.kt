@@ -38,7 +38,7 @@ import kotlin.time.TimeSource
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class DefaultStatusRepositoryTest(
-    @Mock private val statusService: StatusService
+    @param:Mock private val statusService: StatusService
 ) {
 
     private lateinit var statusRepository: DefaultStatusRepository

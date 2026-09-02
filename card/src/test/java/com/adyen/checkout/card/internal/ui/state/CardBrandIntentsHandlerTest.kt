@@ -33,7 +33,7 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class)
 internal class CardBrandIntentsHandlerTest(
-    @Mock private val cardComponentParams: CardComponentParams,
+    @param:Mock private val cardComponentParams: CardComponentParams,
 ) {
 
     private val detectCardTypeBinHelper = DetectCardTypeBinHelper()

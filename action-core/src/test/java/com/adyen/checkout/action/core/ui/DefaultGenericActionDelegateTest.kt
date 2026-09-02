@@ -52,8 +52,8 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultGenericActionDelegateTest(
-    @Mock private val activity: Activity,
-    @Mock private val actionDelegateProvider: ActionDelegateProvider,
+    @param:Mock private val activity: Activity,
+    @param:Mock private val actionDelegateProvider: ActionDelegateProvider,
 ) {
 
     private lateinit var genericActionDelegate: DefaultGenericActionDelegate

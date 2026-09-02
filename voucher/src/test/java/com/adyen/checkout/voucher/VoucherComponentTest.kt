@@ -37,8 +37,8 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class VoucherComponentTest(
-    @Mock private val voucherDelegate: VoucherDelegate,
-    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
+    @param:Mock private val voucherDelegate: VoucherDelegate,
+    @param:Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: VoucherComponent

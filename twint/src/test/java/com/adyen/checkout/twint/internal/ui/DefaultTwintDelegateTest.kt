@@ -53,7 +53,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultTwintDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<TwintComponentState>,
+    @param:Mock private val submitHandler: SubmitHandler<TwintComponentState>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

@@ -47,7 +47,7 @@ import java.util.Locale
 
 @ExtendWith(MockitoExtension::class)
 internal class ActionDelegateProviderTest(
-    @Mock private val localeProvider: LocaleProvider
+    @param:Mock private val localeProvider: LocaleProvider
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager

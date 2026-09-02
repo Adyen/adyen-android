@@ -27,7 +27,7 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class AnalyticsServiceTest(
-    @Mock private val httpClient: HttpClient
+    @param:Mock private val httpClient: HttpClient
 ) {
 
     private lateinit var analyticsService: AnalyticsService

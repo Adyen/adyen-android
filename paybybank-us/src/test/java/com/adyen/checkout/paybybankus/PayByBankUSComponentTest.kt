@@ -40,10 +40,10 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class PayByBankUSComponentTest(
-    @Mock private val payByBankUSDelegate: PayByBankUSDelegate,
-    @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PayByBankUSComponentState>,
+    @param:Mock private val payByBankUSDelegate: PayByBankUSDelegate,
+    @param:Mock private val genericActionDelegate: GenericActionDelegate,
+    @param:Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @param:Mock private val componentEventHandler: ComponentEventHandler<PayByBankUSComponentState>,
 ) {
 
     private lateinit var component: PayByBankUSComponent
