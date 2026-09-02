@@ -21,12 +21,12 @@ internal class BlikViewStateProducer(
     override fun produce(state: BlikComponentState) = BlikViewState(
         // The form decides which fields are shown and in which order, so building one element per member of that order
         // is the only place either question is answered.
-        elements = state.form.order.map { id -> state.toElement(id) },
+        elements = state.form.elements.map { state.toElement(it.id) },
         isLoading = state.isLoading,
         payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
     )
 
-    private fun BlikComponentState.toElement(id: BlikFieldId): BlikFormElement = when (id) {
-        BlikFieldId.BLIK_CODE -> BlikFormElement.BlikCode(blikCode.toViewState(form, id))
+    private fun BlikComponentState.toElement(id: BlikFormElementId): BlikFormElement = when (id) {
+        BlikFormElementId.BLIK_CODE -> BlikFormElement.BlikCode(blikCode.toViewState(form, focusRequest, id))
     }
 }

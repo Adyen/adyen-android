@@ -18,11 +18,11 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
  */
 internal sealed interface BlikFormElement {
 
-    val id: BlikFieldId
+    val id: BlikFormElementId
 
     data class BlikCode(
         val textInputViewState: TextInputViewState,
     ) : BlikFormElement {
-        override val id get() = BlikFieldId.BLIK_CODE
+        override val id get() = BlikFormElementId.BLIK_CODE
     }
 }

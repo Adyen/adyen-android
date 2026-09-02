@@ -8,16 +8,12 @@
 
 package com.adyen.checkout.core.components.internal.ui.state.form
 
-import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.HOLDER_NAME
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.NUMBER
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.STORE_DETAILS
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFieldId.VERIFICATION_CODE
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.HOLDER_NAME
+import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.NUMBER
+import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.STORE_DETAILS
+import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.VERIFICATION_CODE
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -26,58 +22,6 @@ import org.junit.jupiter.api.Test
  * text input, such as [STORE_DETAILS], takes part in the order but never in a keyboard decision.
  */
 internal class FormStateExtTest {
-
-    @Nested
-    inner class LastTextInputTest {
-
-        @Test
-        fun `when the form has several text inputs, then the last one is returned`() {
-            // GIVEN
-            val form = formOf(NUMBER, VERIFICATION_CODE, HOLDER_NAME)
-
-            // WHEN
-            val lastTextInput = form.lastTextInput()
-
-            // THEN
-            assertEquals(HOLDER_NAME, lastTextInput)
-        }
-
-        @Test
-        fun `when the form ends with a field that is not a text input, then the last text input is returned`() {
-            // GIVEN
-            val form = formOf(NUMBER, VERIFICATION_CODE, STORE_DETAILS)
-
-            // WHEN
-            val lastTextInput = form.lastTextInput()
-
-            // THEN
-            assertEquals(VERIFICATION_CODE, lastTextInput)
-        }
-
-        @Test
-        fun `when the form has no text input at all, then null is returned`() {
-            // GIVEN
-            val form = formOf(STORE_DETAILS)
-
-            // WHEN
-            val lastTextInput = form.lastTextInput()
-
-            // THEN
-            assertNull(lastTextInput)
-        }
-
-        @Test
-        fun `when the form is empty, then null is returned`() {
-            // GIVEN
-            val form = formOf()
-
-            // WHEN
-            val lastTextInput = form.lastTextInput()
-
-            // THEN
-            assertNull(lastTextInput)
-        }
-    }
 
     @Nested
     inner class NextTextInputAfterTest {
@@ -177,6 +121,22 @@ internal class FormStateExtTest {
             assertEquals(KeyboardAction.DONE, keyboardAction)
         }
 
+        /**
+         * A field that is not part of the form has no field after it to move to either, but nothing renders such a
+         * field, so this only pins down that the lookup does not fail.
+         */
+        @Test
+        fun `when the field is not part of the form, then the keyboard moves on`() {
+            // GIVEN
+            val form = formOf(NUMBER)
+
+            // WHEN
+            val keyboardAction = form.keyboardActionFor(HOLDER_NAME)
+
+            // THEN
+            assertEquals(KeyboardAction.NEXT, keyboardAction)
+        }
+
         @Test
         fun `when the form has a single text input, then it closes the keyboard`() {
             // GIVEN
@@ -190,175 +150,58 @@ internal class FormStateExtTest {
         }
     }
 
-    @Nested
-    inner class FirstInvalidTest {
-
-        @Test
-        fun `when several fields are invalid, then the first one in visual order is returned`() {
-            // GIVEN
-            val form = formOf(NUMBER, VERIFICATION_CODE, HOLDER_NAME)
-
-            // WHEN
-            val firstInvalid = form.firstInvalid { it != VERIFICATION_CODE && it != HOLDER_NAME }
-
-            // THEN
-            assertEquals(VERIFICATION_CODE, firstInvalid)
-        }
-
-        @Test
-        fun `when every field is valid, then null is returned`() {
-            // GIVEN
-            val form = formOf(NUMBER, VERIFICATION_CODE)
-
-            // WHEN
-            val firstInvalid = form.firstInvalid { true }
-
-            // THEN
-            assertNull(firstInvalid)
-        }
-
-        /**
-         * No field that is not a text input can currently be invalid, but the lookup is keyed on any id so that the
-         * first one that can does not need new logic.
-         */
-        @Test
-        fun `when the invalid field is not a text input, then it is still returned`() {
-            // GIVEN
-            val form = formOf(NUMBER, STORE_DETAILS, HOLDER_NAME)
-
-            // WHEN
-            val firstInvalid = form.firstInvalid { it != STORE_DETAILS }
-
-            // THEN
-            assertEquals(STORE_DETAILS, firstInvalid)
-        }
-
-        @Test
-        fun `when the form is empty, then null is returned`() {
-            // GIVEN
-            val form = formOf()
-
-            // WHEN
-            val firstInvalid = form.firstInvalid { false }
-
-            // THEN
-            assertNull(firstInvalid)
-        }
-    }
-
-    @Nested
-    inner class ApplyFocusChangeTest {
-
-        @Test
-        fun `when a field loses focus, then an error it was holding back is shown`() {
-            val form = formOf(NUMBER)
-
-            val field = fieldWithHiddenError().applyFocusChange(form, NUMBER, hasFocus = false)
-
-            assertTrue(field.isErrorVisible)
-        }
-
-        @Test
-        fun `when the shopper focuses a field, then a visible error is hidden`() {
-            val form = formOf(NUMBER)
-
-            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
-
-            assertFalse(field.isErrorVisible)
-        }
-
-        @Test
-        fun `when pay asked for this focus, then the error it revealed stays visible`() {
-            val form = FormState(
-                order = listOf(NUMBER),
-                focusRequest = FocusRequest(NUMBER, keepErrorHighlight = true),
-            )
-
-            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
-
-            assertTrue(field.isErrorVisible)
-        }
-
-        @Test
-        fun `when a request without the highlight asked for this focus, then the error is hidden like a tap`() {
-            // A prefill or auto-advance lands the shopper on a field to type in, so a stale error must not greet them.
-            val form = FormState(order = listOf(NUMBER), focusRequest = FocusRequest(NUMBER))
-
-            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
-
-            assertFalse(field.isErrorVisible)
-        }
-
-        @Test
-        fun `when the request names another field, then this field behaves like a tap`() {
-            val form = FormState(
-                order = listOf(NUMBER, HOLDER_NAME),
-                focusRequest = FocusRequest(HOLDER_NAME, keepErrorHighlight = true),
-            )
-
-            val field = fieldWithVisibleError().applyFocusChange(form, NUMBER, hasFocus = true)
-
-            assertFalse(field.isErrorVisible)
-        }
-
-        @Test
-        fun `when the field has no error, then neither direction invents one`() {
-            val form = formOf(NUMBER)
-            val field = TextInputComponentState()
-
-            assertFalse(field.applyFocusChange(form, NUMBER, hasFocus = false).isErrorVisible)
-            assertFalse(field.applyFocusChange(form, NUMBER, hasFocus = true).isErrorVisible)
-        }
-
-        private fun fieldWithHiddenError() = TextInputComponentState(
-            error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
-        )
-
-        private fun fieldWithVisibleError() = TextInputComponentState(
-            error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID, isVisible = true),
-        )
-    }
-
-    @Nested
-    inner class AnswersFocusRequestTest {
-
-        @Test
-        fun `when the requested field gains focus, then the request is answered`() {
-            val form = FormState(order = listOf(NUMBER), focusRequest = FocusRequest(NUMBER))
-
-            assertTrue(form.answersFocusRequest(NUMBER, hasFocus = true))
-        }
-
-        @Test
-        fun `when the requested field loses focus, then the request is not answered`() {
-            val form = FormState(order = listOf(NUMBER), focusRequest = FocusRequest(NUMBER))
-
-            assertFalse(form.answersFocusRequest(NUMBER, hasFocus = false))
-        }
-
-        @Test
-        fun `when another field gains focus, then the request is not answered`() {
-            val form = FormState(order = listOf(NUMBER, HOLDER_NAME), focusRequest = FocusRequest(NUMBER))
-
-            assertFalse(form.answersFocusRequest(HOLDER_NAME, hasFocus = true))
-        }
-
-        @Test
-        fun `when there is no request, then nothing answers it`() {
-            val form = formOf(NUMBER)
-
-            assertFalse(form.answersFocusRequest(NUMBER, hasFocus = true))
-        }
-    }
-
+    /**
+     * Which element pay sends focus to, and that it arrives carrying `keepErrorHighlight` so the error it just
+     * revealed survives the move.
+     */
     @Nested
     inner class RequestFocusOnFirstInvalidTest {
 
         @Test
-        fun `when a field is invalid, then it is asked for focus and keeps its error`() {
-            val form = formOf(NUMBER, VERIFICATION_CODE)
+        fun `when several elements are invalid, then the first one in visual order is asked for focus`() {
+            // GIVEN
+            val form = FormState(elements = listOf(valid(NUMBER), invalid(VERIFICATION_CODE), invalid(HOLDER_NAME)))
 
-            val request = form.requestFocusOnFirstInvalid { it != VERIFICATION_CODE }
+            // WHEN
+            val request = form.requestFocusOnFirstInvalid()
+
+            // THEN
+            assertEquals(FocusRequest(VERIFICATION_CODE, keepErrorHighlight = true), request)
+        }
+
+        /**
+         * No element that is not a text input can currently be invalid, but the lookup is keyed on any id so that the
+         * first one that can does not need new logic.
+         */
+        @Test
+        fun `when the invalid element is not a text input, then it is still asked for focus`() {
+            // GIVEN
+            val form = FormState(elements = listOf(valid(NUMBER), invalid(STORE_DETAILS), valid(HOLDER_NAME)))
+
+            // WHEN
+            val request = form.requestFocusOnFirstInvalid()
+
+            // THEN
+            assertEquals(FocusRequest(STORE_DETAILS, keepErrorHighlight = true), request)
+        }
+
+        @Test
+        fun `when the form is empty, then no focus is asked for`() {
+            // GIVEN
+            val form = formOf()
+
+            // WHEN
+            val request = form.requestFocusOnFirstInvalid()
+
+            // THEN
+            assertNull(request)
+        }
+
+        @Test
+        fun `when a field is invalid, then it is asked for focus and keeps its error`() {
+            val form = FormState(elements = listOf(valid(NUMBER), invalid(VERIFICATION_CODE)))
+
+            val request = form.requestFocusOnFirstInvalid()
 
             assertEquals(FocusRequest(VERIFICATION_CODE, keepErrorHighlight = true), request)
         }
@@ -367,13 +210,18 @@ internal class FormStateExtTest {
         fun `when every field is valid, then no focus is asked for`() {
             val form = formOf(NUMBER, VERIFICATION_CODE)
 
-            assertNull(form.requestFocusOnFirstInvalid { true })
+            assertNull(form.requestFocusOnFirstInvalid())
         }
     }
 
-    private fun formOf(vararg ids: TestFieldId) = FormState(order = ids.toList())
+    // Most rules here do not care about validity, so the common helper takes bare ids and treats them all as valid.
+    private fun formOf(vararg ids: TestFormElementId) = FormState(elements = ids.map { valid(it) })
 
-    private enum class TestFieldId(override val isTextInput: Boolean) : FormFieldId {
+    private fun valid(id: TestFormElementId) = FormElementState(id, isValid = true)
+
+    private fun invalid(id: TestFormElementId) = FormElementState(id, isValid = false)
+
+    private enum class TestFormElementId(override val isTextInput: Boolean) : FormElementId {
         NUMBER(true),
         VERIFICATION_CODE(true),
         HOLDER_NAME(true),

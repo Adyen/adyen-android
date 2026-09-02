@@ -15,10 +15,10 @@ import androidx.annotation.RestrictTo
  * enum.
  *
  * Elements that are not text inputs, such as a switch or a picker, are also form fields: they take part in the
- * ordering, because the UI renders the form by walking [FormState.order].
+ * ordering, because the UI renders the form by walking [FormState.elements].
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface FormFieldId {
+interface FormElementId {
 
     /**
      * Whether this field is a text input.

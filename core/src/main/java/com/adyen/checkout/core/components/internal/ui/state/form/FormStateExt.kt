@@ -11,21 +11,14 @@ package com.adyen.checkout.core.components.internal.ui.state.form
 import androidx.annotation.RestrictTo
 
 /**
- * Returns the last text input of the form, or null if the form has none. This is the field that shows
- * [KeyboardAction.DONE].
- */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <Id : FormFieldId> FormState<Id>.lastTextInput(): Id? = order.lastOrNull { it.isTextInput }
-
-/**
  * Returns the first text input after [id], or null if [id] is the last one or is not part of the form. Fields that are
  * not text inputs are skipped, since focus is being moved on behalf of a keyboard.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <Id : FormFieldId> FormState<Id>.nextTextInputAfter(id: Id): Id? {
-    val index = order.indexOf(id)
+fun <Id : FormElementId> FormState<Id>.nextTextInputAfter(id: Id): Id? {
+    val index = elements.indexOfFirst { it.id == id }
     if (index == -1) return null
-    return order.subList(index + 1, order.size).firstOrNull { it.isTextInput }
+    return elements.subList(index + 1, elements.size).firstOrNull { it.id.isTextInput }?.id
 }
 
 /**
@@ -35,18 +28,20 @@ fun <Id : FormFieldId> FormState<Id>.nextTextInputAfter(id: Id): Id? {
  * This is only meaningful for a text input, as it is the only kind of field that has a keyboard.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <Id : FormFieldId> FormState<Id>.keyboardActionFor(id: Id): KeyboardAction {
-    return if (id == lastTextInput()) KeyboardAction.DONE else KeyboardAction.NEXT
+fun <Id : FormElementId> FormState<Id>.keyboardActionFor(id: Id): KeyboardAction {
+    val lastTextInputId = elements.lastOrNull { it.id.isTextInput }?.id
+    return if (id == lastTextInputId) KeyboardAction.DONE else KeyboardAction.NEXT
 }
 
 /**
- * Returns the first invalid field in the order the shopper sees, or null if every field is valid. This is the field
- * that receives focus when the shopper presses pay on a form that cannot be submitted.
+ * The focus request to make when the shopper presses pay on a form that cannot be submitted, or null when every element
+ * is valid.
  *
- * Validity is passed in as a function so that the form does not need to know how a component stores its values. Any
- * field can be reported invalid, including one that is not a text input.
+ * It carries `keepErrorHighlight`, because the point of this move is to show the shopper the error rather than to let
+ * them start typing.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <Id : FormFieldId> FormState<Id>.firstInvalid(isValid: (Id) -> Boolean): Id? {
-    return order.firstOrNull { !isValid(it) }
+fun <Id : FormElementId> FormState<Id>.requestFocusOnFirstInvalid(): FocusRequest<Id>? {
+    val firstInvalidElement = elements.firstOrNull { !it.isValid }
+    return firstInvalidElement?.let { FocusRequest(id = it.id, keepErrorHighlight = true) }
 }

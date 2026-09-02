@@ -9,9 +9,9 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
-import com.adyen.checkout.core.components.internal.ui.state.form.answersFocusRequest
-import com.adyen.checkout.core.components.internal.ui.state.form.applyFocusChange
+import com.adyen.checkout.core.components.internal.ui.state.form.remainingAfter
 import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
+import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
 internal class MBWayComponentStateReducer : ComponentStateReducer<MBWayComponentState, MBWayIntent> {
 
@@ -37,28 +37,19 @@ internal class MBWayComponentStateReducer : ComponentStateReducer<MBWayComponent
         }
     }
 
-    private fun MBWayComponentState.updateFieldFocus(id: MBWayFieldId, hasFocus: Boolean): MBWayComponentState {
-        val updated = updateTextInput(id) { field -> field.applyFocusChange(form, id, hasFocus) }
+    private fun MBWayComponentState.updateFieldFocus(id: MBWayFormElementId, hasFocus: Boolean): MBWayComponentState {
+        val updated = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
-        return if (form.answersFocusRequest(id, hasFocus)) updated.copy(focusRequest = null) else updated
+        return updated.copy(focusRequest = focusRequest.remainingAfter(id, hasFocus))
     }
 
     private fun highlightValidationErrors(state: MBWayComponentState): MBWayComponentState {
-        val highlighted = MBWayFieldId.entries.fold(state) { current, id ->
+        val highlighted = MBWayFormElementId.entries.fold(state) { current, id ->
             current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
         return highlighted.copy(
-            focusRequest = state.form.requestFocusOnFirstInvalid { state.isFieldValid(it) },
+            focusRequest = state.form.requestFocusOnFirstInvalid(),
         )
-    }
-
-    /**
-     * Whether the field [id] names is currently valid. The country picker always holds a country, so it can never hold
-     * up a submission.
-     */
-    private fun MBWayComponentState.isFieldValid(id: MBWayFieldId): Boolean = when (id) {
-        MBWayFieldId.PHONE_NUMBER -> phoneNumber.isValid
-        MBWayFieldId.COUNTRY_CODE -> true
     }
 }

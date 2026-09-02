@@ -9,6 +9,10 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentStateTest.TestFormElementId.HOLDER_NAME
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentStateTest.TestFormElementId.NUMBER
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -178,16 +182,15 @@ internal class TextInputComponentStateTest {
 
         // UC4: No Error While Typing - verify error not shown even if an error exists
         @Test
-        fun `when user is typing with an error present, then error is not displayed in view state`() {
+        fun `when user is typing with an error present, then the error is not shown`() {
             // GIVEN
             val state = TextInputComponentState(text = "invalid", error = visibleError())
 
             // WHEN
             val typingState = state.updateText("still_invalid")
-            val viewState = typingState.toViewState()
 
             // THEN
-            assertEquals(false, viewState.isError)
+            // What the UI makes of this is TextInputViewStateTest's business, and it needs a form to answer.
             assertFalse(typingState.isErrorVisible)
         }
     }
@@ -262,4 +265,73 @@ internal class TextInputComponentStateTest {
         message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
         isVisible = true,
     )
+
+    @Nested
+    inner class ApplyFocusChangeTest {
+
+        @Test
+        fun `when a field loses focus, then an error it was holding back is shown`() {
+            val field = fieldWithHiddenError().applyFocusChange(noRequest, NUMBER, hasFocus = false)
+
+            assertTrue(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when the shopper focuses a field, then a visible error is hidden`() {
+            val field = fieldWithVisibleError().applyFocusChange(noRequest, NUMBER, hasFocus = true)
+
+            assertFalse(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when pay asked for this focus, then the error it revealed stays visible`() {
+            val request = FocusRequest(NUMBER, keepErrorHighlight = true)
+
+            val field = fieldWithVisibleError().applyFocusChange(request, NUMBER, hasFocus = true)
+
+            assertTrue(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when a request without the highlight asked for this focus, then the error is hidden like a tap`() {
+            // A prefill or auto-advance lands the shopper on a field to type in, so a stale error must not greet them.
+            val request = FocusRequest(NUMBER)
+
+            val field = fieldWithVisibleError().applyFocusChange(request, NUMBER, hasFocus = true)
+
+            assertFalse(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when the request names another field, then this field behaves like a tap`() {
+            val request = FocusRequest(HOLDER_NAME, keepErrorHighlight = true)
+
+            val field = fieldWithVisibleError().applyFocusChange(request, NUMBER, hasFocus = true)
+
+            assertFalse(field.isErrorVisible)
+        }
+
+        @Test
+        fun `when the field has no error, then neither direction invents one`() {
+            val field = TextInputComponentState()
+
+            assertFalse(field.applyFocusChange(noRequest, NUMBER, hasFocus = false).isErrorVisible)
+            assertFalse(field.applyFocusChange(noRequest, NUMBER, hasFocus = true).isErrorVisible)
+        }
+
+        private val noRequest: FocusRequest<TestFormElementId>? = null
+
+        private fun fieldWithHiddenError() = TextInputComponentState(
+            error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
+        )
+
+        private fun fieldWithVisibleError() = TextInputComponentState(
+            error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID, isVisible = true),
+        )
+    }
+
+    private enum class TestFormElementId(override val isTextInput: Boolean = true) : FormElementId {
+        NUMBER,
+        HOLDER_NAME,
+    }
 }

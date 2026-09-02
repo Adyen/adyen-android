@@ -16,7 +16,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
  */
 internal sealed interface MBWayFormElement {
 
-    val id: MBWayFieldId
+    val id: MBWayFormElementId
 
     /**
      * The row that shows the chosen country and opens the country picker. The countries themselves belong to that
@@ -25,13 +25,13 @@ internal sealed interface MBWayFormElement {
     data class CountryCode(
         val selectedCountry: CountryModel,
     ) : MBWayFormElement {
-        override val id get() = MBWayFieldId.COUNTRY_CODE
+        override val id get() = MBWayFormElementId.COUNTRY_CODE
     }
 
     data class PhoneNumber(
         val textInputViewState: TextInputViewState,
         val callingCode: String,
     ) : MBWayFormElement {
-        override val id get() = MBWayFieldId.PHONE_NUMBER
+        override val id get() = MBWayFormElementId.PHONE_NUMBER
     }
 }

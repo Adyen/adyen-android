@@ -10,9 +10,12 @@ package com.adyen.checkout.core.components.internal.ui.state.model
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
-import com.adyen.checkout.core.components.internal.ui.state.form.FormFieldId
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementState
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
 import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewStateTest.TestFormElementId.FIRST
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewStateTest.TestFormElementId.LAST
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -82,10 +85,10 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState(customTrailingIcon = TestTrailingIcon)
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST, TestTrailingIcon)
 
         // THEN
-        assertEquals(TrailingIcon.Error, viewState?.trailingIcon)
+        assertEquals(TrailingIcon.Error, viewState.trailingIcon)
     }
 
     @Test
@@ -97,10 +100,10 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState(customTrailingIcon = TestTrailingIcon)
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST, TestTrailingIcon)
 
         // THEN
-        assertEquals(TestTrailingIcon, viewState?.trailingIcon)
+        assertEquals(TestTrailingIcon, viewState.trailingIcon)
     }
 
     @Test
@@ -109,10 +112,10 @@ internal class TextInputViewStateTest {
         val componentState = TextInputComponentState(text = "1234")
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(TrailingIcon.Empty, viewState?.trailingIcon)
+        assertEquals(TrailingIcon.Empty, viewState.trailingIcon)
     }
 
     @Test
@@ -121,11 +124,11 @@ internal class TextInputViewStateTest {
         val componentState = TextInputComponentState(text = "invalid", error = visibleError())
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(true, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
+        assertEquals(true, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState.supportingText)
     }
 
     @Test
@@ -138,11 +141,11 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(false, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
+        assertEquals(false, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState.supportingText)
     }
 
     @Test
@@ -155,11 +158,11 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(false, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
+        assertEquals(false, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState.supportingText)
     }
 
     @Test
@@ -172,24 +175,24 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(true, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
+        assertEquals(true, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState.supportingText)
     }
 
-    // A hidden field never reaches this mapping at all: it is not in its form's order, so no element is built for it.
+    // A hidden field never reaches this mapping at all: it is not one of its form's elements, so nothing is built.
     // Each component's view state producer test covers that.
 
     @Test
     fun `when a form is given, then the keyboard action comes from it`() {
         // GIVEN
-        val form = FormState(order = listOf(TestFieldId.FIRST, TestFieldId.LAST))
+        val form = formOf(FIRST, LAST)
 
         // WHEN
-        val first = TextInputComponentState().toViewState(form, TestFieldId.FIRST)
-        val last = TextInputComponentState().toViewState(form, TestFieldId.LAST)
+        val first = TextInputComponentState().toViewState(form, null, FIRST)
+        val last = TextInputComponentState().toViewState(form, null, LAST)
 
         // THEN
         assertEquals(KeyboardAction.NEXT, first.keyboardAction)
@@ -197,36 +200,30 @@ internal class TextInputViewStateTest {
     }
 
     @Test
-    fun `when the form asks this field for focus, then it carries a token`() {
+    fun `when a request names this field, then it carries a token`() {
         // GIVEN
-        val form = FormState(
-            order = listOf(TestFieldId.FIRST, TestFieldId.LAST),
-            focusRequest = FocusRequest(TestFieldId.LAST),
-        )
+        val form = formOf(FIRST, LAST)
 
         // WHEN
-        val viewState = TextInputComponentState().toViewState(form, TestFieldId.LAST)
+        val viewState = TextInputComponentState().toViewState(form, FocusRequest(LAST), LAST)
 
         // THEN
         assertNotNull(viewState.focusRequest)
     }
 
     @Test
-    fun `when the form asks another field for focus, then this field carries no token`() {
+    fun `when a request names another field, then this field carries no token`() {
         // GIVEN
-        val form = FormState(
-            order = listOf(TestFieldId.FIRST, TestFieldId.LAST),
-            focusRequest = FocusRequest(TestFieldId.LAST),
-        )
+        val form = formOf(FIRST, LAST)
 
         // WHEN
-        val viewState = TextInputComponentState().toViewState(form, TestFieldId.FIRST)
+        val viewState = TextInputComponentState().toViewState(form, FocusRequest(LAST), FIRST)
 
         // THEN
         assertNull(viewState.focusRequest)
     }
 
-    private enum class TestFieldId(override val isTextInput: Boolean = true) : FormFieldId {
+    private enum class TestFormElementId(override val isTextInput: Boolean = true) : FormElementId {
         FIRST,
         LAST,
     }
@@ -240,7 +237,7 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = state.toViewState()
+        val viewState = state.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
         assertEquals("1234", viewState.text)
@@ -254,11 +251,14 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = state.toViewState()
+        val viewState = state.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
         assertNotNull(viewState)
     }
+
+    private fun formOf(vararg ids: TestFormElementId) =
+        FormState(elements = ids.map { FormElementState(it, isValid = true) })
 
     private fun hiddenError() = TextInputComponentState.InputError(
         message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,

@@ -15,12 +15,12 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
  */
 internal sealed interface StoredCardFormElement {
 
-    val id: StoredCardFieldId
+    val id: StoredCardFormElementId
 
     data class SecurityCode(
         val textInputViewState: TextInputViewState,
         val cardNumberFormat: CardNumberFormat,
     ) : StoredCardFormElement {
-        override val id get() = StoredCardFieldId.SECURITY_CODE
+        override val id get() = StoredCardFormElementId.SECURITY_CODE
     }
 }

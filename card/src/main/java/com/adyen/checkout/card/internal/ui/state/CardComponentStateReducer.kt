@@ -11,10 +11,10 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
-import com.adyen.checkout.core.components.internal.ui.state.form.answersFocusRequest
-import com.adyen.checkout.core.components.internal.ui.state.form.applyFocusChange
 import com.adyen.checkout.core.components.internal.ui.state.form.nextTextInputAfter
+import com.adyen.checkout.core.components.internal.ui.state.form.remainingAfter
 import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
+import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
 internal class CardComponentStateReducer(
     private val cardBrandIntentsHandler: CardBrandIntentsHandler,
@@ -110,43 +110,26 @@ internal class CardComponentStateReducer(
         intent: CardIntent.UpdateCardScanResult,
     ): CardComponentState {
         val focusTarget = when {
-            intent.pan.isNullOrBlank() -> CardFieldId.CARD_NUMBER
-            intent.expiryMonth == null || intent.expiryYear == null -> form.nextTextInputAfter(CardFieldId.CARD_NUMBER)
-            else -> form.nextTextInputAfter(CardFieldId.EXPIRY_DATE)
+            intent.pan.isNullOrBlank() -> CardFormElementId.CARD_NUMBER
+            intent.expiryMonth == null || intent.expiryYear == null -> form.nextTextInputAfter(
+                CardFormElementId.CARD_NUMBER
+            )
+            else -> form.nextTextInputAfter(CardFormElementId.EXPIRY_DATE)
         }
         return copy(focusRequest = focusTarget?.let { FocusRequest(id = it) })
     }
 
-    private fun CardComponentState.updateFieldFocus(id: CardFieldId, hasFocus: Boolean): CardComponentState {
-        val updated = updateTextInput(id) { field -> field.applyFocusChange(form, id, hasFocus) }
+    private fun CardComponentState.updateFieldFocus(id: CardFormElementId, hasFocus: Boolean): CardComponentState {
+        val updated = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
-        return if (form.answersFocusRequest(id, hasFocus)) updated.copy(focusRequest = null) else updated
+        return updated.copy(focusRequest = focusRequest.remainingAfter(id, hasFocus))
     }
 
     private fun highlightValidationErrors(state: CardComponentState): CardComponentState {
-        val highlighted = CardFieldId.entries.fold(state) { current, id ->
+        val highlighted = CardFormElementId.entries.fold(state) { current, id ->
             current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
-        return highlighted.copy(
-            focusRequest = state.form.requestFocusOnFirstInvalid { state.isFieldValid(it) },
-        )
-    }
-
-    /**
-     * Whether the field [id] identifies is currently valid. Nothing that is not a text input can be invalid today, so
-     * those never hold up a submission.
-     */
-    private fun CardComponentState.isFieldValid(id: CardFieldId): Boolean = when (id) {
-        CardFieldId.CARD_NUMBER -> cardNumber.isValid
-        CardFieldId.EXPIRY_DATE -> expiryDate.isValid
-        CardFieldId.SECURITY_CODE -> securityCode.isValid
-        CardFieldId.HOLDER_NAME -> holderName.isValid
-        CardFieldId.SOCIAL_SECURITY_NUMBER -> socialSecurityNumber.isValid
-        CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> kcpBirthDateOrTaxNumber.isValid
-        CardFieldId.KCP_CARD_PASSWORD -> kcpCardPassword.isValid
-        CardFieldId.POSTAL_CODE -> postalCode.isValid
-        CardFieldId.STORE_PAYMENT_METHOD,
-        CardFieldId.INSTALLMENTS -> true
+        return highlighted.copy(focusRequest = state.form.requestFocusOnFirstInvalid())
     }
 }

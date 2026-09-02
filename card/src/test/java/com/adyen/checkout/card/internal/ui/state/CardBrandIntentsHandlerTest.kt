@@ -655,7 +655,7 @@ internal class CardBrandIntentsHandlerTest(
 
         val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
 
-        assertFalse(actual.form.order.contains(CardFieldId.SECURITY_CODE))
+        assertFalse(actual.form.elements.map { it.id }.contains(CardFormElementId.SECURITY_CODE))
     }
 
     @Test

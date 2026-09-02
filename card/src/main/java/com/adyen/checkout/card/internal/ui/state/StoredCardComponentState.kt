@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class StoredCardComponentState(
@@ -20,7 +21,7 @@ internal data class StoredCardComponentState(
     val detectedCardType: DetectedCardType?,
     // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
     // records something that happened rather than something that is.
-    val focusRequest: FocusRequest<StoredCardFieldId>? = null,
+    val focusRequest: FocusRequest<StoredCardFormElementId>? = null,
 ) : ComponentState {
 
     /**
@@ -28,11 +29,8 @@ internal data class StoredCardComponentState(
      * above rather than stored, so that it cannot disagree with it: a stored card that asks for no security code has an
      * empty form, and the screen shows no content at all.
      */
-    val form: FormState<StoredCardFieldId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
-        FormState(
-            order = listOfNotNull(StoredCardFieldId.SECURITY_CODE.takeIf { securityCode.isVisible }),
-            focusRequest = focusRequest,
-        )
+    val form: FormState<StoredCardFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        FormState(elements = listOfNotNull(securityCode.toFormElementIfVisible(StoredCardFormElementId.SECURITY_CODE)))
     }
 }
 
@@ -42,8 +40,8 @@ internal data class StoredCardComponentState(
  * It lives next to the state it updates so that adding a field above does not compile until it is mapped here.
  */
 internal fun StoredCardComponentState.updateTextInput(
-    id: StoredCardFieldId,
+    id: StoredCardFormElementId,
     transform: (TextInputComponentState) -> TextInputComponentState,
 ): StoredCardComponentState = when (id) {
-    StoredCardFieldId.SECURITY_CODE -> copy(securityCode = transform(securityCode))
+    StoredCardFormElementId.SECURITY_CODE -> copy(securityCode = transform(securityCode))
 }

@@ -9,9 +9,9 @@
 package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
-import com.adyen.checkout.core.components.internal.ui.state.form.answersFocusRequest
-import com.adyen.checkout.core.components.internal.ui.state.form.applyFocusChange
+import com.adyen.checkout.core.components.internal.ui.state.form.remainingAfter
 import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
+import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
 internal class BlikComponentStateReducer : ComponentStateReducer<BlikComponentState, BlikIntent> {
 
@@ -35,23 +35,19 @@ internal class BlikComponentStateReducer : ComponentStateReducer<BlikComponentSt
         }
     }
 
-    private fun BlikComponentState.updateFieldFocus(id: BlikFieldId, hasFocus: Boolean): BlikComponentState {
-        val updated = updateTextInput(id) { field -> field.applyFocusChange(form, id, hasFocus) }
+    private fun BlikComponentState.updateFieldFocus(id: BlikFormElementId, hasFocus: Boolean): BlikComponentState {
+        val updated = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
-        return if (form.answersFocusRequest(id, hasFocus)) updated.copy(focusRequest = null) else updated
+        return updated.copy(focusRequest = focusRequest.remainingAfter(id, hasFocus))
     }
 
     private fun highlightValidationErrors(state: BlikComponentState): BlikComponentState {
-        val highlighted = BlikFieldId.entries.fold(state) { current, id ->
+        val highlighted = BlikFormElementId.entries.fold(state) { current, id ->
             current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
         return highlighted.copy(
-            focusRequest = state.form.requestFocusOnFirstInvalid { state.isFieldValid(it) },
+            focusRequest = state.form.requestFocusOnFirstInvalid(),
         )
-    }
-
-    private fun BlikComponentState.isFieldValid(id: BlikFieldId): Boolean = when (id) {
-        BlikFieldId.BLIK_CODE -> blikCode.isValid
     }
 }

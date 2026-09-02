@@ -36,13 +36,13 @@ internal sealed interface CardIntent : ComponentStateIntent {
      * A field has gained or lost focus. Unlike a value change, which carries the meaning of the field it belongs to,
      * focus is the same event whichever field reports it, so one intent covers all of them.
      */
-    data class UpdateFieldFocus(val id: CardFieldId, val hasFocus: Boolean) : CardIntent
+    data class UpdateFieldFocus(val id: CardFormElementId, val hasFocus: Boolean) : CardIntent
 
     /**
      * A field has acted on a focus request. Normally the resulting focus gain clears the request on its own, so this
      * only matters when the field could not take focus at all and no gain ever arrives.
      */
-    data class FocusRequestConsumed(val id: CardFieldId) : CardIntent
+    data class FocusRequestConsumed(val id: CardFormElementId) : CardIntent
 
     data class UpdateStorePaymentMethod(val isChecked: Boolean) : CardIntent
 

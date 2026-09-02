@@ -8,14 +8,14 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.core.components.internal.ui.state.form.FormFieldId
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
 
 /**
  * Every element of the card form, whether or not the shopper can currently see it.
  *
- * The declaration order carries no meaning; the order the shopper sees is `canonicalCardFieldOrder`.
+ * The declaration order carries no meaning; the order the shopper sees is `CardFormStateFactory.CANONICAL_ORDER`.
  */
-internal enum class CardFieldId(override val isTextInput: Boolean) : FormFieldId {
+internal enum class CardFormElementId(override val isTextInput: Boolean) : FormElementId {
     CARD_NUMBER(isTextInput = true),
     EXPIRY_DATE(isTextInput = true),
     SECURITY_CODE(isTextInput = true),

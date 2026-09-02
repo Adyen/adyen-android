@@ -33,7 +33,7 @@ internal class CardComponentStateFactoryTest {
     fun `when initial state is created, then the card number is asked for focus`() {
         val state = createFactory().createInitialState()
 
-        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), state.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER), state.focusRequest)
     }
     // endregion
 
@@ -41,7 +41,7 @@ internal class CardComponentStateFactoryTest {
     fun `when initial state is created, then focus is requested on the card number`() {
         val state = createFactory().createInitialState()
 
-        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), state.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER), state.focusRequest)
     }
 
     // region form
@@ -49,14 +49,14 @@ internal class CardComponentStateFactoryTest {
     fun `when a field is hidden by configuration, then it is left out of the field order`() {
         val state = createFactory(showCardholderName = false).createInitialState()
 
-        assertFalse(state.form.order.contains(CardFieldId.HOLDER_NAME))
+        assertFalse(state.form.elements.map { it.id }.contains(CardFormElementId.HOLDER_NAME))
     }
 
     @Test
     fun `when a field is shown by configuration, then it is part of the field order`() {
         val state = createFactory(showCardholderName = true).createInitialState()
 
-        assertTrue(state.form.order.contains(CardFieldId.HOLDER_NAME))
+        assertTrue(state.form.elements.map { it.id }.contains(CardFormElementId.HOLDER_NAME))
     }
     // endregion
 

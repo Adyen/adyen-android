@@ -42,7 +42,7 @@ internal data class CardComponentState(
 
     // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
     // records something that happened rather than something that is.
-    val focusRequest: FocusRequest<CardFieldId>? = null,
+    val focusRequest: FocusRequest<CardFormElementId>? = null,
 ) : ComponentState {
 
     /**
@@ -54,8 +54,8 @@ internal data class CardComponentState(
      * same state can be read from more than one thread. Deriving the same value twice is harmless; publishing it
      * unsafely would not be.
      */
-    val form: FormState<CardFieldId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
-        FormState(order = visibleCardFields(this), focusRequest = focusRequest)
+    val form: FormState<CardFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        CardFormStateFactory(this).create()
     }
 }
 
@@ -67,19 +67,19 @@ internal data class CardComponentState(
  * it is mapped here. `CardComponentStateTest` asserts that no two ids write the same property.
  */
 internal fun CardComponentState.updateTextInput(
-    id: CardFieldId,
+    id: CardFormElementId,
     transform: (TextInputComponentState) -> TextInputComponentState,
 ): CardComponentState = when (id) {
-    CardFieldId.CARD_NUMBER -> copy(cardNumber = transform(cardNumber))
-    CardFieldId.EXPIRY_DATE -> copy(expiryDate = transform(expiryDate))
-    CardFieldId.SECURITY_CODE -> copy(securityCode = transform(securityCode))
-    CardFieldId.HOLDER_NAME -> copy(holderName = transform(holderName))
-    CardFieldId.SOCIAL_SECURITY_NUMBER -> copy(socialSecurityNumber = transform(socialSecurityNumber))
-    CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> copy(kcpBirthDateOrTaxNumber = transform(kcpBirthDateOrTaxNumber))
-    CardFieldId.KCP_CARD_PASSWORD -> copy(kcpCardPassword = transform(kcpCardPassword))
-    CardFieldId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
-    CardFieldId.STORE_PAYMENT_METHOD,
-    CardFieldId.INSTALLMENTS -> this
+    CardFormElementId.CARD_NUMBER -> copy(cardNumber = transform(cardNumber))
+    CardFormElementId.EXPIRY_DATE -> copy(expiryDate = transform(expiryDate))
+    CardFormElementId.SECURITY_CODE -> copy(securityCode = transform(securityCode))
+    CardFormElementId.HOLDER_NAME -> copy(holderName = transform(holderName))
+    CardFormElementId.SOCIAL_SECURITY_NUMBER -> copy(socialSecurityNumber = transform(socialSecurityNumber))
+    CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> copy(kcpBirthDateOrTaxNumber = transform(kcpBirthDateOrTaxNumber))
+    CardFormElementId.KCP_CARD_PASSWORD -> copy(kcpCardPassword = transform(kcpCardPassword))
+    CardFormElementId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
+    CardFormElementId.STORE_PAYMENT_METHOD,
+    CardFormElementId.INSTALLMENTS -> this
 }
 
 internal sealed class CardBrandState {

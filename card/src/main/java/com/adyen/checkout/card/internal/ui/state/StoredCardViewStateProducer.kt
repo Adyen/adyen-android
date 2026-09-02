@@ -21,17 +21,17 @@ internal class StoredCardViewStateProducer(
     override fun produce(state: StoredCardComponentState) = StoredCardViewState(
         // The form decides which fields are shown and in which order, so building one element per member of that order
         // is the only place either question is answered.
-        elements = state.form.order.map { id -> state.toElement(id) },
+        elements = state.form.elements.map { state.toElement(it.id) },
         isLoading = state.isLoading,
         payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
     )
 
-    private fun StoredCardComponentState.toElement(id: StoredCardFieldId): StoredCardFormElement = when (id) {
-        StoredCardFieldId.SECURITY_CODE -> {
+    private fun StoredCardComponentState.toElement(id: StoredCardFormElementId): StoredCardFormElement = when (id) {
+        StoredCardFormElementId.SECURITY_CODE -> {
             val cardNumberFormat = detectedCardType?.cardBrand.toCardNumberFormat()
             StoredCardFormElement.SecurityCode(
                 textInputViewState = securityCode
-                    .toViewState(form, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
+                    .toViewState(form, focusRequest, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
                 cardNumberFormat = cardNumberFormat,
             )
         }
