@@ -11,6 +11,17 @@ package com.adyen.checkout.core.components.internal.ui.state.form
 import androidx.annotation.RestrictTo
 
 /**
+ * The request that opens a form on the first field the shopper can type in, or null when it has none — a stored card
+ * asking for no security code has an empty form and nothing to focus.
+ *
+ * Text inputs only, so a form that opens with a picker above its first field still puts the keyboard on the field.
+ * Every component wants this same rule, which is why none of them names a field.
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <Id : FormElementId> FormState<Id>.requestFocusOnFirstTextInput(): FocusRequest<Id>? =
+    elements.firstOrNull { it.id.isTextInput }?.let { FocusRequest(id = it.id) }
+
+/**
  * Returns the first text input after [id], or null if [id] is the last one or is not part of the form. Fields that are
  * not text inputs are skipped, since focus is being moved on behalf of a keyboard.
  */

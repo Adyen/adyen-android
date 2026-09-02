@@ -10,15 +10,18 @@ package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstTextInput
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class BlikComponentStateFactory : ComponentStateFactory<BlikComponentState> {
 
-    override fun createInitialState() = BlikComponentState(
-        blikCode = TextInputComponentState(description = CheckoutLocalizationKey.BLIK_CODE_HINT),
-        isLoading = false,
-        // Opens the keyboard on the only field as soon as the screen appears.
-        focusRequest = FocusRequest(id = BlikFormElementId.BLIK_CODE),
-    )
+    override fun createInitialState(): BlikComponentState {
+        val state = BlikComponentState(
+            blikCode = TextInputComponentState(description = CheckoutLocalizationKey.BLIK_CODE_HINT),
+            isLoading = false,
+        )
+
+        // Opens the keyboard on the first field the shopper can type in, as soon as the screen appears.
+        return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
+    }
 }

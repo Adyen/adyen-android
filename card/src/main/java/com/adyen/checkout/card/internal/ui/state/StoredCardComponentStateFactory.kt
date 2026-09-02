@@ -14,7 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstTextInput
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -36,13 +36,14 @@ internal class StoredCardComponentStateFactory(
             },
         )
 
-        return StoredCardComponentState(
+        val state = StoredCardComponentState(
             securityCode = securityCode,
             isLoading = false,
             detectedCardType = storedDetectedCardType,
-            // Opens the keyboard on the security code as soon as the screen appears. A stored card that asks for none
-            // has nothing to focus, and a request for a field that is not on screen would never be reported back.
-            focusRequest = FocusRequest(id = StoredCardFormElementId.SECURITY_CODE).takeIf { securityCode.isVisible },
         )
+
+        // Opens the keyboard on the first field the shopper can type in, as soon as the screen appears.
+        // A stored card that asks for no security code has an empty form, so this leaves nothing pending.
+        return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
     }
 }
