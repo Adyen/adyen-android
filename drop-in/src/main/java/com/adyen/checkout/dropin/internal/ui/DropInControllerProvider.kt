@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.internal.withCheckoutConfiguration
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.BeforeSubmitResult
@@ -20,6 +21,7 @@ import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.internal.copy
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
@@ -41,9 +43,11 @@ internal fun interface DropInControllerProvider {
 }
 
 internal class DefaultDropInControllerProvider(
-    private val checkoutContext: CheckoutContext,
+    checkoutContext: CheckoutContext,
     private val dropInServiceManager: DropInServiceManager,
 ) : DropInControllerProvider {
+
+    private val checkoutContext = checkoutContext.withSubmitButtonEnforced()
 
     override fun provide(
         paymentFlowType: DropInPaymentFlowType,
@@ -119,4 +123,8 @@ internal class DefaultDropInControllerProvider(
             dropInServiceManager.onPaymentCompleted(result.resultCode)
         }
     }
+}
+
+internal fun CheckoutContext.withSubmitButtonEnforced(): CheckoutContext {
+    return withCheckoutConfiguration(checkoutConfiguration.copy(showSubmitButton = true))
 }
