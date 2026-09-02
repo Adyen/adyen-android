@@ -14,7 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstTextInput
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -27,7 +27,7 @@ internal class CardComponentStateFactory(
             ?.mapToInstallmentModels()
             ?: emptyList()
 
-        return CardComponentState(
+        val state = CardComponentState(
             cardNumber = TextInputComponentState(),
             expiryDate = TextInputComponentState(),
             securityCode = TextInputComponentState(
@@ -60,9 +60,10 @@ internal class CardComponentStateFactory(
                 installmentOptions = installmentOptions,
                 selectedInstallment = getPreselectedInstallment(installmentOptions),
             ),
-            // The shopper starts at the first field, with the keyboard already open.
-            focusRequest = FocusRequest(id = CardFormElementId.CARD_NUMBER),
         )
+
+        // Opens the keyboard on the first field the shopper can type in, as soon as the screen appears.
+        return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
     }
 
     private fun getSecurityCodeRequirementPolicy(): RequirementPolicy =

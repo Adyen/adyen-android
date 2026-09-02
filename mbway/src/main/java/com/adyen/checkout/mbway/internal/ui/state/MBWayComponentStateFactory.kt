@@ -11,7 +11,7 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstTextInput
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import java.util.Locale
 
@@ -19,14 +19,17 @@ internal class MBWayComponentStateFactory(
     private val shopperLocale: Locale,
 ) : ComponentStateFactory<MBWayComponentState> {
 
-    override fun createInitialState() = MBWayComponentState(
-        countries = getSupportedCountries(shopperLocale),
-        selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
-        phoneNumber = TextInputComponentState(),
-        isLoading = false,
-        // Opens the keyboard on the phone number as soon as the screen appears, skipping the country picker.
-        focusRequest = FocusRequest(id = MBWayFormElementId.PHONE_NUMBER),
-    )
+    override fun createInitialState(): MBWayComponentState {
+        val state = MBWayComponentState(
+            countries = getSupportedCountries(shopperLocale),
+            selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
+            phoneNumber = TextInputComponentState(),
+            isLoading = false,
+        )
+
+        // Opens the keyboard on the first field the shopper can type in, as soon as the screen appears.
+        return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
+    }
 
     private fun getSupportedCountries(shopperLocale: Locale): List<CountryModel> =
         CountryUtils.getLocalizedCountries(shopperLocale, SUPPORTED_COUNTRIES)

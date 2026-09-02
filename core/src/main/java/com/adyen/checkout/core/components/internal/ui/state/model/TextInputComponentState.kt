@@ -37,7 +37,7 @@ data class TextInputComponentState(
      * Whether the shopper can see this field at all. A hidden field is not on screen, so it is neither rendered nor
      * one of its form's elements.
      */
-    val isVisible: Boolean
+    internal val isVisible: Boolean
         get() = requirementPolicy != RequirementPolicy.Hidden
 
     val isErrorVisible: Boolean

@@ -28,17 +28,8 @@ import org.junit.jupiter.api.assertInstanceOf
 
 internal class CardComponentStateFactoryTest {
 
-    // region cardNumber
     @Test
     fun `when initial state is created, then the card number is asked for focus`() {
-        val state = createFactory().createInitialState()
-
-        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER), state.focusRequest)
-    }
-    // endregion
-
-    @Test
-    fun `when initial state is created, then focus is requested on the card number`() {
         val state = createFactory().createInitialState()
 
         assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER), state.focusRequest)
