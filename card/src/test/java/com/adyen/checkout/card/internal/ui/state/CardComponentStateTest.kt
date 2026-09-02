@@ -26,7 +26,7 @@ internal class CardComponentStateTest {
         @Test
         fun `when each text input is updated in turn, then each one writes a different field`() {
             // GIVEN
-            val textInputIds = CardFieldId.entries.filter { it.isTextInput }
+            val textInputIds = CardFormElementId.entries.filter { it.isTextInput }
 
             // WHEN
             val states = textInputIds.map { id -> createState().updateTextInput(id) { it.updateText(MARKER) } }
@@ -39,7 +39,7 @@ internal class CardComponentStateTest {
 
         @Test
         fun `when the field is not a text input, then there is nothing to update`() {
-            CardFieldId.entries.filterNot { it.isTextInput }.forEach { id ->
+            CardFormElementId.entries.filterNot { it.isTextInput }.forEach { id ->
                 // GIVEN
                 val state = createState()
 

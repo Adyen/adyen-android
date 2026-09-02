@@ -25,7 +25,7 @@ internal class MBWayComponentStateFactory(
         phoneNumber = TextInputComponentState(),
         isLoading = false,
         // Opens the keyboard on the phone number as soon as the screen appears, skipping the country picker.
-        focusRequest = FocusRequest(id = MBWayFieldId.PHONE_NUMBER),
+        focusRequest = FocusRequest(id = MBWayFormElementId.PHONE_NUMBER),
     )
 
     private fun getSupportedCountries(shopperLocale: Locale): List<CountryModel> =

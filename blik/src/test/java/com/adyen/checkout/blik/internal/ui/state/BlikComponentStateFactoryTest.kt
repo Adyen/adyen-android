@@ -36,7 +36,7 @@ internal class BlikComponentStateFactoryTest {
             ),
             isLoading = false,
             // Opens the keyboard on the only field as soon as the screen appears.
-            focusRequest = FocusRequest(BlikFieldId.BLIK_CODE),
+            focusRequest = FocusRequest(BlikFormElementId.BLIK_CODE),
         )
         assertEquals(expected, actual)
     }

@@ -30,7 +30,7 @@ internal sealed interface CardFormElement {
      * Identifies the field this element renders. Used as the composition key, and to tell the state layer which field
      * gained focus or acted on a focus request.
      */
-    val id: CardFieldId
+    val id: CardFormElementId
 
     data class CardNumber(
         val textInputViewState: TextInputViewState,
@@ -38,56 +38,56 @@ internal sealed interface CardFormElement {
         val cardNumberFormat: CardNumberFormat,
         val supportedCardBrandsViewState: SupportedCardBrandsViewState,
     ) : CardFormElement {
-        override val id get() = CardFieldId.CARD_NUMBER
+        override val id get() = CardFormElementId.CARD_NUMBER
     }
 
     data class ExpiryDate(
         val textInputViewState: TextInputViewState,
     ) : CardFormElement {
-        override val id get() = CardFieldId.EXPIRY_DATE
+        override val id get() = CardFormElementId.EXPIRY_DATE
     }
 
     data class SecurityCode(
         val textInputViewState: TextInputViewState,
         val cardNumberFormat: CardNumberFormat,
     ) : CardFormElement {
-        override val id get() = CardFieldId.SECURITY_CODE
+        override val id get() = CardFormElementId.SECURITY_CODE
     }
 
     data class HolderName(
         val textInputViewState: TextInputViewState,
     ) : CardFormElement {
-        override val id get() = CardFieldId.HOLDER_NAME
+        override val id get() = CardFormElementId.HOLDER_NAME
     }
 
     data class SocialSecurityNumber(
         val textInputViewState: TextInputViewState,
     ) : CardFormElement {
-        override val id get() = CardFieldId.SOCIAL_SECURITY_NUMBER
+        override val id get() = CardFormElementId.SOCIAL_SECURITY_NUMBER
     }
 
     data class KcpBirthDateOrTaxNumber(
         val textInputViewState: TextInputViewState,
     ) : CardFormElement {
-        override val id get() = CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER
+        override val id get() = CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER
     }
 
     data class KcpCardPassword(
         val textInputViewState: TextInputViewState,
     ) : CardFormElement {
-        override val id get() = CardFieldId.KCP_CARD_PASSWORD
+        override val id get() = CardFormElementId.KCP_CARD_PASSWORD
     }
 
     data class PostalCode(
         val textInputViewState: TextInputViewState,
     ) : CardFormElement {
-        override val id get() = CardFieldId.POSTAL_CODE
+        override val id get() = CardFormElementId.POSTAL_CODE
     }
 
     data class StorePaymentMethod(
         val isSelected: Boolean,
     ) : CardFormElement {
-        override val id get() = CardFieldId.STORE_PAYMENT_METHOD
+        override val id get() = CardFormElementId.STORE_PAYMENT_METHOD
     }
 
     /**
@@ -98,6 +98,6 @@ internal sealed interface CardFormElement {
     data class Installments(
         val selectedInstallment: InstallmentModel?,
     ) : CardFormElement {
-        override val id get() = CardFieldId.INSTALLMENTS
+        override val id get() = CardFormElementId.INSTALLMENTS
     }
 }

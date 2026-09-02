@@ -19,6 +19,6 @@ internal class BlikComponentStateFactory : ComponentStateFactory<BlikComponentSt
         blikCode = TextInputComponentState(description = CheckoutLocalizationKey.BLIK_CODE_HINT),
         isLoading = false,
         // Opens the keyboard on the only field as soon as the screen appears.
-        focusRequest = FocusRequest(id = BlikFieldId.BLIK_CODE),
+        focusRequest = FocusRequest(id = BlikFormElementId.BLIK_CODE),
     )
 }

@@ -38,7 +38,7 @@ internal class MBWayComponentStateFactoryTest {
             ),
             isLoading = false,
             // Opens the keyboard on the phone number as soon as the screen appears, skipping the country picker.
-            focusRequest = FocusRequest(MBWayFieldId.PHONE_NUMBER),
+            focusRequest = FocusRequest(MBWayFormElementId.PHONE_NUMBER),
         )
         assertEquals(expected, actual)
     }

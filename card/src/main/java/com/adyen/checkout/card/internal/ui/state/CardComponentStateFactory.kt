@@ -61,7 +61,7 @@ internal class CardComponentStateFactory(
                 selectedInstallment = getPreselectedInstallment(installmentOptions),
             ),
             // The shopper starts at the first field, with the keyboard already open.
-            focusRequest = FocusRequest(id = CardFieldId.CARD_NUMBER),
+            focusRequest = FocusRequest(id = CardFormElementId.CARD_NUMBER),
         )
     }
 

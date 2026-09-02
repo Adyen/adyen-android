@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.core.components.internal.ui.state.form.FormFieldId
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
 
 /**
  * Every element of the stored card form, whether or not the shopper can currently see it. The security code is hidden
  * for a stored card that does not ask for one, which leaves the form empty.
  */
-internal enum class StoredCardFieldId(override val isTextInput: Boolean) : FormFieldId {
+internal enum class StoredCardFormElementId(override val isTextInput: Boolean) : FormElementId {
     SECURITY_CODE(isTextInput = true),
 }

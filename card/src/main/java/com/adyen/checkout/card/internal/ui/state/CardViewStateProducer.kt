@@ -23,50 +23,52 @@ internal class CardViewStateProducer(
     override fun produce(state: CardComponentState) = CardViewState(
         // The form decides which fields are shown and in which order, so building one element per member of that order
         // is the only place either question is answered.
-        elements = state.form.order.map { id -> state.toElement(id) },
+        elements = state.form.elements.map { state.toElement(it.id) },
         isLoading = state.isLoading,
         payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
         installmentPickerViewState = state.installmentState.toPickerViewState(),
     )
 
-    private fun CardComponentState.toElement(id: CardFieldId): CardFormElement = when (id) {
-        CardFieldId.CARD_NUMBER -> CardFormElement.CardNumber(
+    private fun CardComponentState.toElement(id: CardFormElementId): CardFormElement = when (id) {
+        CardFormElementId.CARD_NUMBER -> CardFormElement.CardNumber(
             textInputViewState = cardNumber
                 .copy(description = getCardNumberInputDescription(cardBrandState))
-                .toViewState(form, id, getCardNumberTrailingIcon(isCardScanButtonVisible())),
+                .toViewState(form, focusRequest, id, getCardNumberTrailingIcon(isCardScanButtonVisible())),
             cardBrandViewState = getCardBrandViewState(cardBrandState),
             cardNumberFormat = getCardNumberFormat(cardBrandState),
             supportedCardBrandsViewState = getSupportedCardBrandsViewState(this),
         )
 
-        CardFieldId.EXPIRY_DATE -> CardFormElement.ExpiryDate(
-            textInputViewState = expiryDate.toViewState(form, id, getExpiryDateTrailingIcon(expiryDate)),
+        CardFormElementId.EXPIRY_DATE -> CardFormElement.ExpiryDate(
+            textInputViewState = expiryDate.toViewState(form, focusRequest, id, getExpiryDateTrailingIcon(expiryDate)),
         )
 
-        CardFieldId.SECURITY_CODE -> {
+        CardFormElementId.SECURITY_CODE -> {
             val cardNumberFormat = getCardNumberFormat(cardBrandState)
             CardFormElement.SecurityCode(
                 textInputViewState = securityCode
-                    .toViewState(form, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
+                    .toViewState(form, focusRequest, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
                 cardNumberFormat = cardNumberFormat,
             )
         }
 
-        CardFieldId.HOLDER_NAME -> CardFormElement.HolderName(holderName.toViewState(form, id))
+        CardFormElementId.HOLDER_NAME -> CardFormElement.HolderName(holderName.toViewState(form, focusRequest, id))
 
-        CardFieldId.SOCIAL_SECURITY_NUMBER ->
-            CardFormElement.SocialSecurityNumber(socialSecurityNumber.toViewState(form, id))
+        CardFormElementId.SOCIAL_SECURITY_NUMBER ->
+            CardFormElement.SocialSecurityNumber(socialSecurityNumber.toViewState(form, focusRequest, id))
 
-        CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER ->
-            CardFormElement.KcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber.toViewState(form, id))
+        CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER ->
+            CardFormElement.KcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber.toViewState(form, focusRequest, id))
 
-        CardFieldId.KCP_CARD_PASSWORD -> CardFormElement.KcpCardPassword(kcpCardPassword.toViewState(form, id))
+        CardFormElementId.KCP_CARD_PASSWORD -> CardFormElement.KcpCardPassword(
+            kcpCardPassword.toViewState(form, focusRequest, id)
+        )
 
-        CardFieldId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toViewState(form, id))
+        CardFormElementId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toViewState(form, focusRequest, id))
 
-        CardFieldId.STORE_PAYMENT_METHOD -> CardFormElement.StorePaymentMethod(isSelected = storePaymentMethod)
+        CardFormElementId.STORE_PAYMENT_METHOD -> CardFormElement.StorePaymentMethod(isSelected = storePaymentMethod)
 
-        CardFieldId.INSTALLMENTS -> CardFormElement.Installments(
+        CardFormElementId.INSTALLMENTS -> CardFormElement.Installments(
             selectedInstallment = installmentState.selectedInstallment,
         )
     }

@@ -779,7 +779,7 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(componentState.form.order, viewState.fieldOrder)
+        assertEquals(componentState.form.elements.map { it.id }, viewState.elementIds)
     }
 
     @Test
@@ -824,7 +824,7 @@ internal class CardViewStateProducerTest {
     fun `when the form asks a field to take focus, then only that field carries the request`() {
         // GIVEN
         val componentState = createComponentState().copy(
-            focusRequest = FocusRequest(CardFieldId.SECURITY_CODE),
+            focusRequest = FocusRequest(CardFormElementId.SECURITY_CODE),
         )
 
         // WHEN
@@ -911,7 +911,7 @@ private val CardViewState.kcpCardPassword get() = element<CardFormElement.KcpCar
 private val CardViewState.supportedCardBrandsViewState get() = cardNumberElement.supportedCardBrandsViewState
 private val CardViewState.cardBrandViewState get() = cardNumberElement.cardBrandViewState
 private val CardViewState.cardNumberFormat get() = cardNumberElement.cardNumberFormat
-private val CardViewState.fieldOrder get() = elements.map { it.id }
+private val CardViewState.elementIds get() = elements.map { it.id }
 
 // The scan button was never more than a choice of trailing icon, so this is what it always actually meant.
 private val CardViewState.isCardScanButtonVisible

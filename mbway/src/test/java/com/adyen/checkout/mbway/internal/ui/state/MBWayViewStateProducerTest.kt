@@ -76,7 +76,7 @@ internal class MBWayViewStateProducerTest {
         val actual = producer.produce(componentState)
 
         assertEquals(
-            listOf(MBWayFieldId.COUNTRY_CODE, MBWayFieldId.PHONE_NUMBER),
+            listOf(MBWayFormElementId.COUNTRY_CODE, MBWayFormElementId.PHONE_NUMBER),
             actual.elements.map { it.id },
         )
     }

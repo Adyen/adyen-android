@@ -66,7 +66,7 @@ internal class BlikViewStateProducerTest {
         val componentState = BlikComponentState(
             blikCode = TextInputComponentState(),
             isLoading = false,
-            focusRequest = FocusRequest(BlikFieldId.BLIK_CODE),
+            focusRequest = FocusRequest(BlikFormElementId.BLIK_CODE),
         )
 
         val actual = producer.produce(componentState)

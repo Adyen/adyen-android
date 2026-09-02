@@ -11,7 +11,7 @@ package com.adyen.checkout.core.components.internal.ui.state.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
-import com.adyen.checkout.core.components.internal.ui.state.form.FormFieldId
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
 import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
 import com.adyen.checkout.core.components.internal.ui.state.form.keyboardActionFor
@@ -44,41 +44,28 @@ data class TextInputViewState(
 }
 
 /**
- * Maps a text input onto what the UI renders for it.
+ * Maps a text input onto what the UI renders for it, together with the two things a single field cannot answer about
+ * itself: which action key it shows, which depends on what follows it in [form], and whether it is the field
+ * [focusRequest] is asking for.
  *
- * This says nothing about whether the field is shown: a field that is not shown is not in its form's order, so nothing
- * asks for its view state. Producers use the overload below, which reads the keyboard action and the focus request from
- * the form rather than being told them.
+ * This says nothing about whether the field is shown: a field that is not shown is not one of its form's elements, so
+ * nothing asks for its view state.
+ *
+ * The token the UI compares is built here rather than by the caller, because turning a [FocusRequest] into a
+ * [FocusRequestToken] is this layer's plumbing and says nothing about any one component.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun TextInputComponentState.toViewState(
+fun <Id : FormElementId> TextInputComponentState.toViewState(
+    form: FormState<Id>,
+    focusRequest: FocusRequest<Id>?,
+    id: Id,
     customTrailingIcon: TrailingIcon? = null,
-    keyboardAction: KeyboardAction = KeyboardAction.DONE,
-    focusRequest: FocusRequestToken? = null,
 ): TextInputViewState = TextInputViewState(
     text = text,
     supportingText = if (isErrorVisible) error?.message else description,
     isError = isErrorVisible,
     customTrailingIcon = customTrailingIcon,
     isOptional = requirementPolicy is RequirementPolicy.Optional,
-    keyboardAction = keyboardAction,
-    focusRequest = focusRequest,
-)
-
-/**
- * Maps a text input onto what the UI renders for it, taking from [form] the two things only the form as a whole can
- * answer: which action key the field shows, and whether it is the one being asked to take focus.
- *
- * The token the UI compares is built here rather than by the caller, because turning a form's [FocusRequest] into a
- * [FocusRequestToken] is this layer's plumbing and says nothing about any one component.
- */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <Id : FormFieldId> TextInputComponentState.toViewState(
-    form: FormState<Id>,
-    id: Id,
-    customTrailingIcon: TrailingIcon? = null,
-): TextInputViewState = toViewState(
-    customTrailingIcon = customTrailingIcon,
     keyboardAction = form.keyboardActionFor(id),
-    focusRequest = form.focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
+    focusRequest = focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
 )

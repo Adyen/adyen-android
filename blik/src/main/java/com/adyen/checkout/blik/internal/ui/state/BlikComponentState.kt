@@ -11,6 +11,7 @@ package com.adyen.checkout.blik.internal.ui.state
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class BlikComponentState(
@@ -18,15 +19,15 @@ internal data class BlikComponentState(
     val isLoading: Boolean,
     // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
     // records something that happened rather than something that is.
-    val focusRequest: FocusRequest<BlikFieldId>? = null,
+    val focusRequest: FocusRequest<BlikFormElementId>? = null,
 ) : ComponentState {
 
     /**
      * Which fields are on screen and in which order, plus any pending focus move. The Blik code is always required, so
      * unlike card there is nothing to derive: the form is one field.
      */
-    val form: FormState<BlikFieldId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
-        FormState(order = listOf(BlikFieldId.BLIK_CODE), focusRequest = focusRequest)
+    val form: FormState<BlikFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        FormState(elements = listOfNotNull(blikCode.toFormElementIfVisible(BlikFormElementId.BLIK_CODE)))
     }
 }
 
@@ -36,8 +37,8 @@ internal data class BlikComponentState(
  * It lives next to the state it updates so that adding a field above does not compile until it is mapped here.
  */
 internal fun BlikComponentState.updateTextInput(
-    id: BlikFieldId,
+    id: BlikFormElementId,
     transform: (TextInputComponentState) -> TextInputComponentState,
 ): BlikComponentState = when (id) {
-    BlikFieldId.BLIK_CODE -> copy(blikCode = transform(blikCode))
+    BlikFormElementId.BLIK_CODE -> copy(blikCode = transform(blikCode))
 }

@@ -45,7 +45,7 @@ internal class BlikComponentStateReducerTest {
             ),
         )
 
-        val actual = reducer.reduce(state, BlikIntent.UpdateFieldFocus(BlikFieldId.BLIK_CODE, hasFocus = false))
+        val actual = reducer.reduce(state, BlikIntent.UpdateFieldFocus(BlikFormElementId.BLIK_CODE, hasFocus = false))
 
         assertTrue(actual.blikCode.isErrorVisible)
     }
@@ -62,7 +62,7 @@ internal class BlikComponentStateReducerTest {
             focusRequest = null,
         )
 
-        val actual = reducer.reduce(state, BlikIntent.UpdateFieldFocus(BlikFieldId.BLIK_CODE, hasFocus = true))
+        val actual = reducer.reduce(state, BlikIntent.UpdateFieldFocus(BlikFormElementId.BLIK_CODE, hasFocus = true))
 
         assertFalse(actual.blikCode.isErrorVisible)
     }
@@ -76,10 +76,10 @@ internal class BlikComponentStateReducerTest {
                     isVisible = true,
                 ),
             ),
-            focusRequest = FocusRequest(BlikFieldId.BLIK_CODE, keepErrorHighlight = true),
+            focusRequest = FocusRequest(BlikFormElementId.BLIK_CODE, keepErrorHighlight = true),
         )
 
-        val actual = reducer.reduce(state, BlikIntent.UpdateFieldFocus(BlikFieldId.BLIK_CODE, hasFocus = true))
+        val actual = reducer.reduce(state, BlikIntent.UpdateFieldFocus(BlikFormElementId.BLIK_CODE, hasFocus = true))
 
         assertTrue(actual.blikCode.isErrorVisible)
         // The request has been answered, so it must not make the shopper's next tap look programmatic.
@@ -88,9 +88,9 @@ internal class BlikComponentStateReducerTest {
 
     @Test
     fun `when a focus request could not be fulfilled, then reporting it back clears it`() {
-        val state = createInitialState().copy(focusRequest = FocusRequest(BlikFieldId.BLIK_CODE))
+        val state = createInitialState().copy(focusRequest = FocusRequest(BlikFormElementId.BLIK_CODE))
 
-        val actual = reducer.reduce(state, BlikIntent.FocusRequestConsumed(BlikFieldId.BLIK_CODE))
+        val actual = reducer.reduce(state, BlikIntent.FocusRequestConsumed(BlikFormElementId.BLIK_CODE))
 
         assertNull(actual.focusRequest)
     }
@@ -118,7 +118,7 @@ internal class BlikComponentStateReducerTest {
 
         assertTrue(actual.blikCode.isErrorVisible)
         // keepErrorHighlight, so taking focus does not clear the error pay just revealed.
-        assertEquals(FocusRequest(BlikFieldId.BLIK_CODE, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(BlikFormElementId.BLIK_CODE, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test

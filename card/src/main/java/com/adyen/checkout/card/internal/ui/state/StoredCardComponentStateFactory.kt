@@ -42,7 +42,7 @@ internal class StoredCardComponentStateFactory(
             detectedCardType = storedDetectedCardType,
             // Opens the keyboard on the security code as soon as the screen appears. A stored card that asks for none
             // has nothing to focus, and a request for a field that is not on screen would never be reported back.
-            focusRequest = FocusRequest(id = StoredCardFieldId.SECURITY_CODE).takeIf { securityCode.isVisible },
+            focusRequest = FocusRequest(id = StoredCardFormElementId.SECURITY_CODE).takeIf { securityCode.isVisible },
         )
     }
 }

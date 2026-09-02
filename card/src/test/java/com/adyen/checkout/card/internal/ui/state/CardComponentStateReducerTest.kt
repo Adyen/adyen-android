@@ -140,7 +140,7 @@ internal class CardComponentStateReducerTest {
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
         assertTrue(actual.cardNumber.isErrorVisible)
-        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test
@@ -170,7 +170,7 @@ internal class CardComponentStateReducerTest {
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test
@@ -182,7 +182,7 @@ internal class CardComponentStateReducerTest {
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test
@@ -205,7 +205,7 @@ internal class CardComponentStateReducerTest {
         )
         val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        val actual = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
+        val actual = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, true))
 
         assertTrue(actual.expiryDate.isErrorVisible)
     }
@@ -216,7 +216,7 @@ internal class CardComponentStateReducerTest {
             expiryDate = TextInputComponentState(error = visibleError()),
         )
 
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, true))
 
         assertFalse(actual.expiryDate.isErrorVisible)
     }
@@ -227,7 +227,7 @@ internal class CardComponentStateReducerTest {
             expiryDate = TextInputComponentState(error = hiddenError()),
         )
 
-        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, false))
+        val actual = reducer.reduce(state, CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, false))
 
         assertTrue(actual.expiryDate.isErrorVisible)
     }
@@ -243,7 +243,7 @@ internal class CardComponentStateReducerTest {
         )
         val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        val focused = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFieldId.EXPIRY_DATE, true))
+        val focused = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, true))
 
         assertNull(focused.focusRequest)
     }
@@ -255,9 +255,9 @@ internal class CardComponentStateReducerTest {
         )
         val highlighted = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        val actual = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFieldId.CARD_NUMBER, true))
+        val actual = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFormElementId.CARD_NUMBER, true))
 
-        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test
@@ -326,7 +326,7 @@ internal class CardComponentStateReducerTest {
             CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
         )
 
-        assertEquals(FocusRequest(CardFieldId.SECURITY_CODE), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.SECURITY_CODE), actual.focusRequest)
     }
 
     @Test
@@ -340,7 +340,7 @@ internal class CardComponentStateReducerTest {
             CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
         )
 
-        assertEquals(FocusRequest(CardFieldId.HOLDER_NAME), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.HOLDER_NAME), actual.focusRequest)
     }
 
     /**
@@ -356,7 +356,7 @@ internal class CardComponentStateReducerTest {
             CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = null, expiryYear = null),
         )
 
-        assertEquals(FocusRequest(CardFieldId.EXPIRY_DATE), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE), actual.focusRequest)
     }
 
     /**
@@ -372,7 +372,7 @@ internal class CardComponentStateReducerTest {
             CardIntent.UpdateCardScanResult(pan = null, expiryMonth = 12, expiryYear = 2025),
         )
 
-        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER), actual.focusRequest)
     }
 
     @Test
@@ -384,7 +384,7 @@ internal class CardComponentStateReducerTest {
             CardIntent.UpdateCardScanResult(pan = null, expiryMonth = null, expiryYear = null),
         )
 
-        assertEquals(FocusRequest(CardFieldId.CARD_NUMBER), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER), actual.focusRequest)
     }
 
     @Test
@@ -420,7 +420,7 @@ internal class CardComponentStateReducerTest {
             CardIntent.UpdateCardScanResult(pan = "4111111111111111", expiryMonth = 12, expiryYear = 2025),
         )
 
-        val actual = reducer.reduce(scanned, CardIntent.UpdateFieldFocus(CardFieldId.SECURITY_CODE, true))
+        val actual = reducer.reduce(scanned, CardIntent.UpdateFieldFocus(CardFormElementId.SECURITY_CODE, true))
 
         assertFalse(actual.securityCode.isErrorVisible)
     }

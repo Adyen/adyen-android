@@ -59,7 +59,10 @@ internal class MBWayComponentStateReducerTest {
             ),
         )
 
-        val actual = reducer.reduce(state, MBWayIntent.UpdateFieldFocus(MBWayFieldId.PHONE_NUMBER, hasFocus = false))
+        val actual = reducer.reduce(
+            state,
+            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = false)
+        )
 
         assertTrue(actual.phoneNumber.isErrorVisible)
     }
@@ -73,7 +76,10 @@ internal class MBWayComponentStateReducerTest {
             focusRequest = null,
         )
 
-        val actual = reducer.reduce(state, MBWayIntent.UpdateFieldFocus(MBWayFieldId.PHONE_NUMBER, hasFocus = true))
+        val actual = reducer.reduce(
+            state,
+            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = true)
+        )
 
         assertFalse(actual.phoneNumber.isErrorVisible)
     }
@@ -90,7 +96,7 @@ internal class MBWayComponentStateReducerTest {
         val actual = reducer.reduce(state, MBWayIntent.HighlightValidationErrors)
 
         assertTrue(actual.phoneNumber.isErrorVisible)
-        assertEquals(FocusRequest(MBWayFieldId.PHONE_NUMBER, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(MBWayFormElementId.PHONE_NUMBER, keepErrorHighlight = true), actual.focusRequest)
     }
 
     @Test
@@ -107,7 +113,10 @@ internal class MBWayComponentStateReducerTest {
     fun `when the country picker cannot be focused, then asking to focus it changes nothing`() {
         val state = createInitialState()
 
-        val actual = reducer.reduce(state, MBWayIntent.UpdateFieldFocus(MBWayFieldId.COUNTRY_CODE, hasFocus = true))
+        val actual = reducer.reduce(
+            state,
+            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.COUNTRY_CODE, hasFocus = true)
+        )
 
         assertEquals(state, actual)
     }

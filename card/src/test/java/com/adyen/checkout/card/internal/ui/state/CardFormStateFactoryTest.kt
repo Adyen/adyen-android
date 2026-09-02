@@ -9,21 +9,25 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
-import com.adyen.checkout.core.components.internal.ui.state.form.lastTextInput
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
+import com.adyen.checkout.core.components.internal.ui.state.form.keyboardActionFor
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 
 /**
- * Tests `CardFieldOrder.kt`: which fields the card form shows and in which order.
+ * Tests `CardFormStateFactory`: which elements the card form shows, in which order, and whether each is valid.
  *
  * The order is the single source of truth for the layout, the keyboard action of each field, and which field receives
  * focus when the shopper presses pay, so a field missing from it is a field missing from the screen.
  */
-internal class CardFieldOrderTest {
+internal class CardFormStateFactoryTest {
 
     @Nested
     inner class CanonicalOrderTest {
@@ -34,20 +38,20 @@ internal class CardFieldOrderTest {
         @Test
         fun `when the canonical order is read, then it contains every card field exactly once`() {
             // WHEN
-            val order = canonicalCardFieldOrder()
+            val order = CardFormStateFactory.CANONICAL_ORDER
 
             // THEN
-            assertEquals(CardFieldId.entries.toSet(), order.toSet())
-            assertEquals(CardFieldId.entries.size, order.size)
+            assertEquals(CardFormElementId.entries.toSet(), order.toSet())
+            assertEquals(CardFormElementId.entries.size, order.size)
         }
 
         @Test
         fun `when the canonical order is read, then the card number comes first`() {
             // WHEN
-            val order = canonicalCardFieldOrder()
+            val order = CardFormStateFactory.CANONICAL_ORDER
 
             // THEN
-            assertEquals(CardFieldId.CARD_NUMBER, order.first())
+            assertEquals(CardFormElementId.CARD_NUMBER, order.first())
         }
     }
 
@@ -68,10 +72,10 @@ internal class CardFieldOrderTest {
             )
 
             // WHEN
-            val order = visibleCardFields(state)
+            val order = state.form.elements.map { it.id }
 
             // THEN
-            assertEquals(canonicalCardFieldOrder(), order)
+            assertEquals(CardFormStateFactory.CANONICAL_ORDER, order)
         }
 
         @Test
@@ -80,11 +84,11 @@ internal class CardFieldOrderTest {
             val state = createState()
 
             // WHEN
-            val order = visibleCardFields(state)
+            val order = state.form.elements.map { it.id }
 
             // THEN
             assertEquals(
-                listOf(CardFieldId.CARD_NUMBER, CardFieldId.EXPIRY_DATE, CardFieldId.SECURITY_CODE),
+                listOf(CardFormElementId.CARD_NUMBER, CardFormElementId.EXPIRY_DATE, CardFormElementId.SECURITY_CODE),
                 order,
             )
         }
@@ -102,11 +106,11 @@ internal class CardFieldOrderTest {
             )
 
             // WHEN
-            val order = visibleCardFields(state)
+            val order = state.form.elements.map { it.id }
 
             // THEN
             assertEquals(
-                listOf(CardFieldId.CARD_NUMBER, CardFieldId.EXPIRY_DATE, CardFieldId.POSTAL_CODE),
+                listOf(CardFormElementId.CARD_NUMBER, CardFormElementId.EXPIRY_DATE, CardFormElementId.POSTAL_CODE),
                 order,
             )
         }
@@ -117,10 +121,10 @@ internal class CardFieldOrderTest {
             val state = createState(holderName = optional())
 
             // WHEN
-            val order = visibleCardFields(state)
+            val order = state.form.elements.map { it.id }
 
             // THEN
-            assertTrue(order.contains(CardFieldId.HOLDER_NAME))
+            assertTrue(order.contains(CardFormElementId.HOLDER_NAME))
         }
 
         @Test
@@ -129,10 +133,70 @@ internal class CardFieldOrderTest {
             val state = createState(installmentOptions = emptyList())
 
             // WHEN
-            val order = visibleCardFields(state)
+            val order = state.form.elements.map { it.id }
 
             // THEN
-            assertTrue(!order.contains(CardFieldId.INSTALLMENTS))
+            assertFalse(order.contains(CardFormElementId.INSTALLMENTS))
+        }
+    }
+
+    /**
+     * Each element reports whether it is valid, which is what decides the field focus moves to when the shopper presses
+     * pay. The builder derives it per id, so a field wired to the wrong value would never hold up a payment.
+     */
+    @Nested
+    inner class ValidityTest {
+
+        @Test
+        fun `when a text input holds an error, then the element built for it is invalid`() {
+            CardFormElementId.entries.filter { it.isTextInput }.forEach { id ->
+                // GIVEN
+                val state = createStateWithErrorOn(id)
+
+                // WHEN
+                val element = state.form.elements.first { it.id == id }
+
+                // THEN
+                // A field the builder wired to a constant, or to another field's value, would still report valid here.
+                assertFalse(element.isValid, "$id holds an error but the element built for it reports valid")
+            }
+        }
+
+        @Test
+        fun `when every field holds a value, then no element is invalid`() {
+            // GIVEN
+            val state = createState(
+                holderName = required(),
+                postalCode = required(),
+                isStorePaymentFieldVisible = true,
+                installmentOptions = listOf(mock<InstallmentModel>()),
+            )
+
+            // WHEN
+            val elements = state.form.elements
+
+            // THEN
+            assertTrue(elements.all { it.isValid }, "every field holds a value but an element reports invalid")
+        }
+
+        @Test
+        fun `when the shopper has not reached a field that holds an error, then it is still invalid`() {
+            // The shopper pressing pay is what surfaces these, so an error that is not yet on screen still counts.
+            val state = createStateWithErrorOn(CardFormElementId.CARD_NUMBER)
+
+            assertFalse(state.form.elements.first { it.id == CardFormElementId.CARD_NUMBER }.isValid)
+            assertFalse(state.cardNumber.isErrorVisible)
+        }
+
+        private fun createStateWithErrorOn(id: CardFormElementId): CardComponentState {
+            val state = createState(
+                holderName = required(),
+                socialSecurityNumber = required(),
+                kcpBirthDateOrTaxNumber = required(),
+                kcpCardPassword = required(),
+                postalCode = required(),
+            )
+            return state.updateTextInput(id) { field -> field.updateError(CheckoutLocalizationKey.CARD_NUMBER_INVALID) }
         }
     }
 
@@ -141,42 +205,42 @@ internal class CardFieldOrderTest {
      * the keyboard rather than moving on.
      */
     @Nested
-    inner class LastTextInputTest {
+    inner class KeyboardActionTest {
 
         @Test
-        fun `when the last field is a text input, then it is the last text input`() {
+        fun `when the last field is a text input, then it closes the keyboard`() {
             // GIVEN
             val state = createState(postalCode = required())
 
             // WHEN
-            val lastTextInput = state.form.lastTextInput()
+            val keyboardAction = state.form.keyboardActionFor(CardFormElementId.POSTAL_CODE)
 
             // THEN
-            assertEquals(CardFieldId.POSTAL_CODE, lastTextInput)
+            assertEquals(KeyboardAction.DONE, keyboardAction)
         }
 
         @Test
-        fun `when the form ends with the store payment switch, then the last text input is the field before it`() {
+        fun `when the store payment switch follows the last text input, then that field still closes the keyboard`() {
             // GIVEN
             val state = createState(postalCode = required(), isStorePaymentFieldVisible = true)
 
             // WHEN
-            val lastTextInput = state.form.lastTextInput()
+            val keyboardAction = state.form.keyboardActionFor(CardFormElementId.POSTAL_CODE)
 
             // THEN
-            assertEquals(CardFieldId.POSTAL_CODE, lastTextInput)
+            assertEquals(KeyboardAction.DONE, keyboardAction)
         }
 
         @Test
-        fun `when the security code is hidden, then the expiry date becomes the last text input`() {
+        fun `when the security code is hidden, then the expiry date closes the keyboard`() {
             // GIVEN
             val state = createState(securityCode = hidden())
 
             // WHEN
-            val lastTextInput = state.form.lastTextInput()
+            val keyboardAction = state.form.keyboardActionFor(CardFormElementId.EXPIRY_DATE)
 
             // THEN
-            assertEquals(CardFieldId.EXPIRY_DATE, lastTextInput)
+            assertEquals(KeyboardAction.DONE, keyboardAction)
         }
     }
 
@@ -222,7 +286,7 @@ internal class CardFieldOrderTest {
         }
 
         private fun assertElementsMatchOrder(state: CardComponentState) {
-            val order = visibleCardFields(state)
+            val order = state.form.elements.map { it.id }
 
             val elements = producer.produce(state).elements
 

@@ -9,9 +9,9 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
-import com.adyen.checkout.core.components.internal.ui.state.form.answersFocusRequest
-import com.adyen.checkout.core.components.internal.ui.state.form.applyFocusChange
+import com.adyen.checkout.core.components.internal.ui.state.form.remainingAfter
 import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
+import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
 internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCardComponentState, StoredCardIntent> {
 
@@ -38,25 +38,21 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
     }
 
     private fun StoredCardComponentState.updateFieldFocus(
-        id: StoredCardFieldId,
+        id: StoredCardFormElementId,
         hasFocus: Boolean,
     ): StoredCardComponentState {
-        val updated = updateTextInput(id) { field -> field.applyFocusChange(form, id, hasFocus) }
+        val updated = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
-        return if (form.answersFocusRequest(id, hasFocus)) updated.copy(focusRequest = null) else updated
+        return updated.copy(focusRequest = focusRequest.remainingAfter(id, hasFocus))
     }
 
     private fun highlightValidationErrors(state: StoredCardComponentState): StoredCardComponentState {
-        val highlighted = StoredCardFieldId.entries.fold(state) { current, id ->
+        val highlighted = StoredCardFormElementId.entries.fold(state) { current, id ->
             current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
         return highlighted.copy(
-            focusRequest = state.form.requestFocusOnFirstInvalid { state.isFieldValid(it) },
+            focusRequest = state.form.requestFocusOnFirstInvalid(),
         )
-    }
-
-    private fun StoredCardComponentState.isFieldValid(id: StoredCardFieldId): Boolean = when (id) {
-        StoredCardFieldId.SECURITY_CODE -> securityCode.isValid
     }
 }

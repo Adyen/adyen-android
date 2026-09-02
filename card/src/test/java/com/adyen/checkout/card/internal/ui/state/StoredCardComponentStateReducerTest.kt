@@ -46,7 +46,7 @@ internal class StoredCardComponentStateReducerTest {
 
         val actual = reducer.reduce(
             state,
-            StoredCardIntent.UpdateFieldFocus(StoredCardFieldId.SECURITY_CODE, hasFocus = false),
+            StoredCardIntent.UpdateFieldFocus(StoredCardFormElementId.SECURITY_CODE, hasFocus = false),
         )
 
         assertTrue(actual.securityCode.isErrorVisible)
@@ -66,7 +66,7 @@ internal class StoredCardComponentStateReducerTest {
 
         val actual = reducer.reduce(
             state,
-            StoredCardIntent.UpdateFieldFocus(StoredCardFieldId.SECURITY_CODE, hasFocus = true),
+            StoredCardIntent.UpdateFieldFocus(StoredCardFormElementId.SECURITY_CODE, hasFocus = true),
         )
 
         assertFalse(actual.securityCode.isErrorVisible)
@@ -103,7 +103,7 @@ internal class StoredCardComponentStateReducerTest {
 
         assertTrue(actual.securityCode.isErrorVisible)
         assertEquals(
-            FocusRequest(StoredCardFieldId.SECURITY_CODE, keepErrorHighlight = true),
+            FocusRequest(StoredCardFormElementId.SECURITY_CODE, keepErrorHighlight = true),
             actual.focusRequest,
         )
     }
