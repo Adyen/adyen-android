@@ -100,13 +100,21 @@ internal class PaymentMethodViewModel(
     }
 
     private fun createPaymentMethodViewState(): PaymentMethodViewState {
-        return if (controller.requiresUserInteraction()) {
-            PaymentMethodViewState.RegularInput(
+        val isStored = paymentFlowType is DropInPaymentFlowType.StoredPaymentMethod
+
+        return when {
+            isStored -> PaymentMethodViewState.Stored(
+                logoTxVariant = paymentMethod.getLogoTxVariant(),
+                title = paymentMethod.getStoredTitle(),
+                paymentMethodName = paymentMethod.name,
+            )
+
+            controller.requiresUserInteraction() -> PaymentMethodViewState.Regular(
                 paymentMethodName = paymentMethod.name,
                 description = paymentMethod.getDescription(),
             )
-        } else {
-            PaymentMethodViewState.Progress(
+
+            else -> PaymentMethodViewState.Progress(
                 logoTxVariant = paymentMethod.getLogoTxVariant(),
                 paymentMethodName = paymentMethod.name,
             )
@@ -119,6 +127,11 @@ internal class PaymentMethodViewModel(
         logoTxVariant = paymentMethod.getLogoTxVariant(),
         paymentMethodName = paymentMethod.name,
     )
+
+    private fun PaymentMethodResponse.getStoredTitle(): String = when (this) {
+        is StoredPaymentMethod -> StoredPaymentMethodFormatter.getTitle(this)
+        else -> name
+    }
 
     private fun PaymentMethodResponse.getLogoTxVariant() = when (this) {
         is StoredPaymentMethod -> StoredPaymentMethodFormatter.getIcon(this)
