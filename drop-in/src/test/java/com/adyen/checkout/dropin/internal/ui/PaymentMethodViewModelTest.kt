@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
@@ -26,9 +27,13 @@ import kotlinx.coroutines.flow.flowOf
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(LoggingExtension::class, TestDispatcherExtension::class)
@@ -40,6 +45,7 @@ internal class PaymentMethodViewModelTest {
     private val navigator = DropInNavigator(InMemoryBackStackPersister())
 
     private var navigationFlow: Flow<CheckoutRoute> = emptyFlow()
+    private var requiresUserInteraction: Boolean = true
 
     private val controllerProvider = DropInControllerProvider { paymentFlowType, coroutineScope ->
         requestedPaymentFlowTypes += paymentFlowType
@@ -73,31 +79,57 @@ internal class PaymentMethodViewModelTest {
     )
 
     @Test
-    fun `when created, then the view state describes the payment method`() {
+    fun `when the component takes input, then the component renders it`() {
+        requiresUserInteraction = true
+
         val viewModel = createViewModel(REGULAR_TYPE)
 
-        assertEquals("Cards", viewModel.paymentMethodViewState.value.paymentMethodName)
+        val input = assertInstanceOf<PaymentMethodViewState.RegularInput>(viewModel.paymentMethodViewState)
+        assertEquals("Cards", input.paymentMethodName)
+        assertEquals(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION, input.description)
     }
 
     @Test
-    fun `when created for a stored payment method, then the view state describes that payment method`() {
-        val viewModel = createViewModel(STORED_TYPE)
+    fun `when a payment method takes no input, then progress is reported`() {
+        requiresUserInteraction = false
 
-        assertEquals("Visa", viewModel.paymentMethodViewState.value.paymentMethodName)
+        val viewModel = createViewModel(REGULAR_TYPE)
+
+        val progress = assertInstanceOf<PaymentMethodViewState.Progress>(viewModel.paymentMethodViewState)
+        assertEquals("card", progress.logoTxVariant)
+        assertEquals("Cards", progress.paymentMethodName)
+    }
+
+    @Test
+    fun `when a payment method takes no input, then it is submitted once`() {
+        requiresUserInteraction = false
+
+        val viewModel = createViewModel(REGULAR_TYPE)
+
+        verify(viewModel.controller, times(1)).submit()
+    }
+
+    @Test
+    fun `when the component takes input, then nothing is submitted`() {
+        requiresUserInteraction = true
+
+        val viewModel = createViewModel(REGULAR_TYPE)
+
+        verify(viewModel.controller, never()).submit()
     }
 
     @Test
     fun `when created, then the action state carries the logo of the payment method`() {
         val viewModel = createViewModel(REGULAR_TYPE)
 
-        assertEquals("card", viewModel.actionViewState.value.logoTxVariant)
+        assertEquals("card", viewModel.actionViewState.logoTxVariant)
     }
 
     @Test
     fun `when created for a stored payment method, then the action state carries the logo of its brand`() {
         val viewModel = createViewModel(STORED_TYPE)
 
-        assertEquals("visa", viewModel.actionViewState.value.logoTxVariant)
+        assertEquals("visa", viewModel.actionViewState.logoTxVariant)
     }
 
     @Test
@@ -150,6 +182,38 @@ internal class PaymentMethodViewModelTest {
         assertEquals(listOf(EmptyNavKey), navigator.backStack)
     }
 
+    @Test
+    fun `when a payment method takes no input, then the back stack is kept`() {
+        requiresUserInteraction = false
+        navigateToPaymentMethod(REGULAR_TYPE)
+
+        createViewModel(REGULAR_TYPE)
+
+        assertEquals(
+            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
+            navigator.backStack,
+        )
+    }
+
+    @Test
+    fun `when the component takes input, then the back stack is kept`() {
+        requiresUserInteraction = true
+        navigateToPaymentMethod(REGULAR_TYPE)
+
+        createViewModel(REGULAR_TYPE)
+
+        assertEquals(
+            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
+            navigator.backStack,
+        )
+    }
+
+    /** Puts the screen under test on the back stack the way the payment method list does, with the list below it. */
+    private fun navigateToPaymentMethod(paymentFlowType: DropInPaymentFlowType) {
+        navigator.navigateTo(StoredPaymentMethodsNavKey)
+        navigator.navigateTo(PaymentMethodNavKey(paymentFlowType))
+    }
+
     private fun createViewModel(paymentFlowType: DropInPaymentFlowType) = PaymentMethodViewModel(
         paymentFlowType = paymentFlowType,
         paymentMethodRepository = paymentMethodRepository,
@@ -164,6 +228,7 @@ internal class PaymentMethodViewModelTest {
      */
     private fun mockCheckoutController(): CheckoutController = mock {
         on { navigation } doReturn navigationFlow
+        on { requiresUserInteraction() } doReturn requiresUserInteraction
     }
 
     private companion object {
