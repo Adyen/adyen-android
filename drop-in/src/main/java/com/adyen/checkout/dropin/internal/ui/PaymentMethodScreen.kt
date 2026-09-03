@@ -40,7 +40,9 @@ private fun PaymentMethodScreenContent(
     content: @Composable () -> Unit,
 ) {
     when (viewState) {
-        is PaymentMethodViewState.RegularInput -> RegularPaymentMethodInputScreen(navigator, viewState, content)
+        is PaymentMethodViewState.Regular -> RegularPaymentMethodScreen(navigator, viewState, content)
+
+        is PaymentMethodViewState.Stored -> StoredPaymentMethodScreen(navigator, viewState, content)
 
         is PaymentMethodViewState.Progress -> PaymentMethodProgressScreen(navigator, viewState)
     }

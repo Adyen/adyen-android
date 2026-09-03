@@ -15,9 +15,15 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
  */
 internal sealed interface PaymentMethodViewState {
 
-    data class RegularInput(
+    data class Regular(
         val paymentMethodName: String,
         val description: CheckoutLocalizationKey?,
+    ) : PaymentMethodViewState
+
+    data class Stored(
+        val logoTxVariant: String,
+        val title: String,
+        val paymentMethodName: String,
     ) : PaymentMethodViewState
 
     data class Progress(
