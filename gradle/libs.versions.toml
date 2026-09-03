@@ -8,6 +8,7 @@ min-sdk = "23"
 version-code = "1"
 
 # Build script
+jvm-target = "17"
 android-gradle-plugin = "9.3.1"
 kotlin = "2.4.10"
 ksp = "2.3.11"

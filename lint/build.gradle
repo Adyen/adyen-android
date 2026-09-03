@@ -10,13 +10,15 @@ plugins {
     alias libs.plugins.kotlin
 }
 
+def javaVersion = libs.versions.jvm.target.get().toInteger()
+
 java {
-    targetCompatibility = JavaVersion.VERSION_17
-    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = javaVersion
+    sourceCompatibility = javaVersion
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(javaVersion)
 }
 
 dependencies {

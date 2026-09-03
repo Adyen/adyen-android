@@ -28,9 +28,9 @@ ext {
     checkoutRedirectScheme = "adyencheckout"
 }
 
-subprojects {
-    def javaVersion = 11
+def javaVersion = libs.versions.jvm.target.get().toInteger()
 
+subprojects {
     plugins.withType(com.android.build.gradle.BasePlugin).configureEach {
         android {
             if (project.hasProperty("strip-resources") && project.property("strip-resources") == "true") {

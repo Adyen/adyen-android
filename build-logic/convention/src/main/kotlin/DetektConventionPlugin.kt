@@ -9,7 +9,6 @@
 import com.adyen.checkout.libs
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -41,8 +40,6 @@ class DetektConventionPlugin : Plugin<Project> {
                     }
                     html.required = false
                 }
-
-                jvmTarget = JavaVersion.VERSION_11.toString()
             }
 
             dependencies {
