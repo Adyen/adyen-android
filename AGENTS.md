@@ -50,7 +50,6 @@ For the architecture and the public surface, read [README.md](README.md), the v6
 | A new Gradle module, or an optional external SDK | `android-add-module` |
 | Adding, updating, or removing an external library | `android-add-dependency` |
 | Moving a v5 payment method to v6 | `android-migrate-payment-method-v6` |
-| Addressing review comments on a PR | [.agents/PR_REVIEWS.md](.agents/PR_REVIEWS.md) |
 
 Skills live in `.agents/skills/<name>/SKILL.md`. Not every skill might be mentioned above.
 
