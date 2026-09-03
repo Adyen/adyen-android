@@ -87,6 +87,12 @@ internal class DefaultLocalizationSource {
             // Drop-in
             CheckoutLocalizationKey.DROP_IN_ACTION_DESCRIPTION -> R.string.checkout_drop_in_action_description
             CheckoutLocalizationKey.DROP_IN_ACTION_PROCESSING -> R.string.checkout_drop_in_action_processing
+            CheckoutLocalizationKey.DROP_IN_GENERIC_PAYMENT_METHOD_DESCRIPTION ->
+                R.string.checkout_drop_in_generic_payment_method_description
+
+            CheckoutLocalizationKey.DROP_IN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE ->
+                R.string.checkout_drop_in_generic_payment_method_progress_title
+
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->
                 R.string.checkout_drop_in_manage_favorites_cards_section_title
@@ -118,6 +124,7 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION ->
                 R.string.checkout_drop_in_payment_method_screen_card_description
+
             // General
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CANCEL -> R.string.checkout_general_cancel

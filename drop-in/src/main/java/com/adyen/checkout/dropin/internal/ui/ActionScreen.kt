@@ -20,9 +20,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.CheckoutAction
@@ -36,8 +34,7 @@ internal fun ActionScreen(
     navigator: DropInNavigator,
     viewModel: PaymentMethodViewModel,
 ) {
-    val viewState by viewModel.actionViewState.collectAsStateWithLifecycle()
-    ActionScreenContent(navigator, viewState, viewModel.controller)
+    ActionScreenContent(navigator, viewModel.actionViewState, viewModel.controller)
 }
 
 // TODO - Improve the presentation of this screen when design is final
