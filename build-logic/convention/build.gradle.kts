@@ -6,11 +6,25 @@
  * Created by oscars on 3/12/2025.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     `kotlin-dsl`
 }
 
 group = "com.adyen.checkout.buildlogic"
+
+// build-logic is a separate build, so nothing the main build configures reaches it and it has to pin the version here.
+java {
+    sourceCompatibility = JavaVersion.toVersion(libs.versions.jvm.target.get())
+    targetCompatibility = JavaVersion.toVersion(libs.versions.jvm.target.get())
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(libs.versions.jvm.target.get())
+    }
+}
 
 dependencies {
     compileOnly(libs.android.gradle.plugin)
