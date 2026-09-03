@@ -1,6 +1,6 @@
 ---
 name: android-public-api-change
-description: Change the public API surface: visibility, breaking changes, and apiDump.
+description: "Change the public API surface: visibility, breaking changes, and apiDump."
 ---
 
 # android-public-api-change
