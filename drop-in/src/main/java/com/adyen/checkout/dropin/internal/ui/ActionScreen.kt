@@ -8,9 +8,13 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -23,7 +27,8 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.CheckoutAction
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.dropin.internal.ui.progress.PaymentProgressContent
+import com.adyen.checkout.dropin.internal.ui.element.PaymentMethodHeader
+import com.adyen.checkout.dropin.internal.ui.element.PaymentProgressStatus
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
@@ -50,9 +55,6 @@ private fun ActionScreenContent(
                 Icon(Icons.Filled.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
             }
         },
-        // TODO - Decide what the title of this screen should be. Empty for now, because the progress content below
-        //  already names the payment method.
-        title = "",
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -62,12 +64,20 @@ private fun ActionScreenContent(
         ) {
             // The backdrop of the screen. A redirect and an authentication render nothing of their own, so without
             // this the shopper would be looking at a blank screen while the payment is being completed elsewhere.
-            PaymentProgressContent(
-                logoTxVariant = viewState.logoTxVariant,
-                paymentMethodName = viewState.paymentMethodName,
-                description = resolveString(CheckoutLocalizationKey.DROP_IN_ACTION_DESCRIPTION),
-                progressTitle = resolveString(CheckoutLocalizationKey.DROP_IN_ACTION_PROCESSING),
-            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                PaymentMethodHeader(
+                    logoTxVariant = viewState.logoTxVariant,
+                    paymentMethodName = viewState.paymentMethodName,
+                    description = resolveString(CheckoutLocalizationKey.DROP_IN_ACTION_DESCRIPTION),
+                )
+
+                Spacer(Modifier.size(Dimensions.Spacing.QuadrupleExtraLarge))
+
+                PaymentProgressStatus(title = resolveString(CheckoutLocalizationKey.DROP_IN_ACTION_PROCESSING))
+            }
 
             // Drawn on top, because only some actions have content of their own.
             // TODO - Nothing tells us whether an action needs user interaction, so the two cannot be shown as either
