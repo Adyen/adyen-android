@@ -217,6 +217,7 @@ binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibil
 checkout-android-library = { id = "checkout.android.library" }
 checkout-detekt = { id = "checkout.detekt" }
 checkout-dokka = { id = "checkout.dokka" }
+checkout-java = { id = "checkout.java" }
 checkout-kover = { id = "checkout.kover" }
 checkout-ktlint = { id = "checkout.ktlint" }
 checkout-publish = { id = "checkout.publish" }

@@ -8,17 +8,7 @@
 
 plugins {
     alias libs.plugins.kotlin
-}
-
-def javaVersion = libs.versions.jvm.target.get().toInteger()
-
-java {
-    targetCompatibility = javaVersion
-    sourceCompatibility = javaVersion
-}
-
-kotlin {
-    jvmToolchain(javaVersion)
+    alias libs.plugins.checkout.java
 }
 
 dependencies {

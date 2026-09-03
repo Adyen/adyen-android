@@ -64,6 +64,11 @@ gradlePlugin {
             implementationClass = "DokkaConventionPlugin"
         }
 
+        register("checkoutJava") {
+            id = libs.plugins.checkout.java.get().pluginId
+            implementationClass = "JavaConventionPlugin"
+        }
+
         register("checkoutKover") {
             id = libs.plugins.checkout.kover.get().pluginId
             implementationClass = "KoverConventionPlugin"

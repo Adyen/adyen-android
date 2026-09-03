@@ -27,6 +27,7 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
             apply(plugin = "checkout.dependency.list.generate")
             apply(plugin = "checkout.detekt")
             apply(plugin = "checkout.dokka")
+            apply(plugin = "checkout.java")
             apply(plugin = "checkout.kover")
             apply(plugin = "checkout.ktlint")
             apply(plugin = "checkout.publish")
