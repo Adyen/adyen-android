@@ -69,6 +69,7 @@ internal fun StoredPaymentMethodScreen(
                     description = resolveString(
                         CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_STORED_DESCRIPTION,
                         viewState.paymentMethodName,
+                        viewState.formattedAmount,
                     ),
                 )
 
@@ -92,6 +93,7 @@ private fun StoredPaymentMethodScreenPreview(
                 logoTxVariant = "visa",
                 title = "•••• 4556",
                 paymentMethodName = "Visa",
+                formattedAmount = "$140.98",
             ),
             // Stands in for the payment method component, which cannot be built without a controller.
             content = {

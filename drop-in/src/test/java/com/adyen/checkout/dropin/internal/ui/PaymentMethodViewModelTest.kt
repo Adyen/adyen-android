@@ -9,9 +9,11 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -34,6 +36,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(LoggingExtension::class, TestDispatcherExtension::class)
@@ -43,6 +46,12 @@ internal class PaymentMethodViewModelTest {
     private val createdFlowScopes = mutableListOf<CoroutineScope>()
     private val createdControllers = mutableListOf<CheckoutController>()
     private val navigator = DropInNavigator(InMemoryBackStackPersister())
+
+    private val dropInParams = DropInParams(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        amount = Amount(currency = "USD", value = 999L),
+    )
 
     private var navigationFlow: Flow<CheckoutRoute> = emptyFlow()
     private var requiresUserInteraction: Boolean = true
@@ -87,6 +96,7 @@ internal class PaymentMethodViewModelTest {
         val input = assertInstanceOf<PaymentMethodViewState.Regular>(viewModel.paymentMethodViewState)
         assertEquals("Cards", input.paymentMethodName)
         assertEquals(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION, input.description)
+        assertEquals("$9.99", input.formattedAmount)
     }
 
     @Test
@@ -99,6 +109,7 @@ internal class PaymentMethodViewModelTest {
         assertEquals("\u2022\u2022\u2022\u2022 1234", stored.title)
         assertEquals("visa", stored.logoTxVariant)
         assertEquals("Visa", stored.paymentMethodName)
+        assertEquals("$9.99", stored.formattedAmount)
     }
 
     @Test
@@ -113,6 +124,7 @@ internal class PaymentMethodViewModelTest {
         assertEquals("\u2022\u2022\u2022\u2022 1234", stored.title)
         assertEquals("visa", stored.logoTxVariant)
         assertEquals("Visa", stored.paymentMethodName)
+        assertEquals("$9.99", stored.formattedAmount)
     }
 
     @Test
@@ -264,6 +276,7 @@ internal class PaymentMethodViewModelTest {
 
     private fun createViewModel(paymentFlowType: DropInPaymentFlowType) = PaymentMethodViewModel(
         paymentFlowType = paymentFlowType,
+        dropInParams = dropInParams,
         paymentMethodRepository = paymentMethodRepository,
         navigator = navigator,
         controllerProvider = controllerProvider,

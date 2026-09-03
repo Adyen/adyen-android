@@ -53,7 +53,7 @@ internal fun RegularPaymentMethodScreen(
         ) {
             viewState.description?.let {
                 Body(
-                    text = resolveString(it),
+                    text = resolveString(it, viewState.formattedAmount),
                     color = CheckoutThemeProvider.colors.textSecondary,
                     modifier = Modifier.padding(
                         start = Dimensions.Spacing.Large,
@@ -82,6 +82,7 @@ private fun RegularPaymentMethodScreenPreview(
             viewState = PaymentMethodViewState.Regular(
                 paymentMethodName = "Cards",
                 description = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION,
+                formattedAmount = "$140.98",
             ),
             // Stands in for the payment method component, which cannot be built without a controller.
             content = {
