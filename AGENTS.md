@@ -8,9 +8,27 @@ Adyen Android is a modular payments SDK: merchants integrate either Drop-in or i
 
 - `main` is **v6, in alpha** — the public API can still change, but it is released, so changes on `main` are already merchant-observable.
 - `v5` is the stable maintenance branch. Only essential v5 work goes there.
-- v6 is **Compose-first**. The XML-based v5 UI still lives in the repo, largely under `old/` packages.
+- v6 is **Compose-first**. The XML-based v5 implementation still lives on `main` alongside it, and is being removed module by module.
 
 For the architecture and the public surface, read [README.md](README.md), the v6 guides in [docs/v6/](docs/v6/README.md). Manual testing happens in [example-app/](example-app/README.md).
+
+## Recognizing v5 code
+
+`main` carries both generations. **v5 is deprecated and scheduled for deletion — never extend it.** Most of the repo is still v5, so check before you start reading.
+
+v6 is rooted in exactly two modules: **`core`** (`com.adyen.checkout.core`) and **`ui`** (Compose). Everything v6 builds on those and nothing else. That is the one fixed point — the rest of v6 is in flux, so discover it rather than assuming.
+
+**Treat code as v5 when any of these hold:**
+
+- It is in an **`old/` package** (`src/main`, `src/test` or `src/testFixtures`). This is the boundary inside partly migrated modules: their `build.gradle` still declares v5 dependencies for the sake of the `old/` code, so the module's deps prove nothing there.
+- It lives in a **v5 core module**: `checkout-core`, `components-core`, `ui-core`, `action-core`, `sessions-core`. v6 absorbed these into `core` and `ui`; they will be removed, along with `components-compose` and `drop-in-compose`. An `import` from one of them is a strong v5 signal — a few still leak into migrated code as migration leftovers, so do not add more.
+- It is in a **payment method that has not been migrated yet**. These have no `old/` package — the whole module is v5. Absence of `old/` means *not started*, not *done*.
+- It is annotated **`@Deprecated("Deprecated. This will be removed in a future release.")`**.
+- It uses **v5 patterns**: `XComponentProvider` / `PROVIDER` and `XDelegate` to wire components, `AdyenComponentView` with XML layouts under `res/layout`, or `Configuration.Builder`.
+
+`cse`, `card-scanning`, `test-core` and `lint` are shared infrastructure serving both generations — they are not going away.
+
+To move a v5 payment method to v6, use the `android-migrate-payment-method-v6` skill.
 
 ## Working agreement
 
