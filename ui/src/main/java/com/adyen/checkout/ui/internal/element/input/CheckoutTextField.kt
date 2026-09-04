@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -53,7 +52,6 @@ import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 /**
  * A composable that provides a styled text field with Adyen's theming.
@@ -117,7 +115,6 @@ fun CheckoutTextField(
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val coroutineScope = rememberCoroutineScope()
     val focusModifier = modifier
         .focusRequester(focusRequester)
         .bringIntoViewRequester(bringIntoViewRequester)
@@ -183,15 +180,15 @@ fun CheckoutTextField(
 
     LaunchedEffect(focusRequest) {
         if (focusRequest != null) {
-            // Throws if the requester is not attached to a focusable node, which can happen when the field leaves
-            // composition between composition and this effect running. Losing the focus is preferable to crashing.
+            // runCatching is there to prevent a crash caused by the requester not being attached to a focusable node
+            // this can happen if the field leaves composition between composition and this effect running
             runCatching { focusRequester.requestFocus() }
 
-            // Taking focus scrolls the field into view on its own, but a field that already has focus is told nothing
-            // and would stay off screen, so ask directly. This runs outside the effect because acting on the request
-            // clears it, which would otherwise cancel the scroll a frame or two in.
-            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+            // This is needed when the focus is requested on a field that already has focus but is not visible (e.g.
+            // hidden by scrolling)
+            bringIntoViewRequester.bringIntoView()
 
+            // Should be called last because it clears the request, which ends this effect
             onFocusRequestConsumed?.invoke()
         }
     }
