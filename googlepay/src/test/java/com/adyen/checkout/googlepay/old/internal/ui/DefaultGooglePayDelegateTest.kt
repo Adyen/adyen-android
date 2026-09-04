@@ -364,7 +364,7 @@ internal class DefaultGooglePayDelegateTest(
         if (isSuccess) {
             assertEquals(result.result, componentStateFlow.latestValue.paymentData)
         } else {
-            assertInstanceOf(exceptionClass, exceptionFlow.latestValue)
+            assertInstanceOf(requireNotNull(exceptionClass), exceptionFlow.latestValue)
         }
     }
 
