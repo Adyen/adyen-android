@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 
 /**
  * Tests `CardFormStateFactory`: which elements the card form shows, in which order, and whether each is valid.
@@ -169,7 +168,7 @@ internal class CardFormStateFactoryTest {
                 holderName = required(),
                 postalCode = required(),
                 isStorePaymentFieldVisible = true,
-                installmentOptions = listOf(mock<InstallmentModel>()),
+                installmentOptions = listOf(InstallmentModel.OneTime),
             )
 
             // WHEN
