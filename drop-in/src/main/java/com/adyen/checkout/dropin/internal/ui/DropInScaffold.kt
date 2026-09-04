@@ -27,11 +27,18 @@ import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
+/**
+ * A screen that introduces itself with a title, collapsing it as the content scrolls.
+ *
+ * @param modifier The [Modifier] to be applied to the layout. The nested scroll connection the collapsing title
+ * needs is applied on top of it.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DropInScaffold(
     navigationIcon: @Composable () -> Unit,
     title: String,
+    modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -44,7 +51,29 @@ internal fun DropInScaffold(
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { innerPadding ->
+        content(innerPadding)
+    }
+}
+
+/**
+ * A screen with no title of its own.
+ *
+ * @param modifier The [Modifier] to be applied to the layout.
+ */
+@Composable
+internal fun DropInScaffold(
+    navigationIcon: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable (PaddingValues) -> Unit,
+) {
+    Scaffold(
+        containerColor = CheckoutThemeProvider.colors.background,
+        topBar = {
+            DropInTopAppBar(navigationIcon = navigationIcon)
+        },
+        modifier = modifier,
     ) { innerPadding ->
         content(innerPadding)
     }
@@ -65,6 +94,25 @@ private fun DropInScaffoldPreview(
                 }
             },
             title = "Title",
+            content = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DropInScaffoldWithoutTitlePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        DropInScaffold(
+            navigationIcon = {
+                IconButton(
+                    onClick = {},
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                }
+            },
             content = {},
         )
     }
