@@ -8,10 +8,16 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -22,47 +28,52 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
+import com.adyen.checkout.dropin.internal.ui.element.PaymentMethodHeader
 import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
-import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
- * @param content What the payment method component renders: the form and its own button.
+ * @param content What the payment method component renders.
  */
 @Composable
-internal fun RegularPaymentMethodInputScreen(
+internal fun StoredPaymentMethodScreen(
     navigator: DropInNavigator,
-    viewState: PaymentMethodViewState.RegularInput,
+    viewState: PaymentMethodViewState.Stored,
     content: @Composable () -> Unit,
 ) {
     DropInScaffold(
         navigationIcon = { PaymentMethodNavigationIcon(navigator) },
-        title = viewState.paymentMethodName,
     ) { innerPadding ->
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
+                .imePadding(),
         ) {
-            viewState.description?.let {
-                Body(
-                    text = resolveString(it),
-                    color = CheckoutThemeProvider.colors.textSecondary,
-                    modifier = Modifier.padding(
-                        start = Dimensions.Spacing.Large,
-                        top = Dimensions.Spacing.ExtraSmall,
-                        end = Dimensions.Spacing.Large,
-                        bottom = Dimensions.Spacing.Medium,
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .heightIn(min = maxHeight)
+                    .padding(Dimensions.Spacing.Large),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                // TODO - This header is not final. When the component takes input the design names what is being
+                //  asked for, such as "Security code", and says what it is for. Only the component knows what it is
+                //  asking for, so this introduces the payment method for now.
+                PaymentMethodHeader(
+                    logoTxVariant = viewState.logoTxVariant,
+                    paymentMethodName = viewState.title,
+                    description = resolveString(
+                        CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_STORED_DESCRIPTION,
+                        viewState.paymentMethodName,
                     ),
                 )
-            }
 
-            Column(modifier = Modifier.padding(Dimensions.Spacing.Large)) {
+                Spacer(Modifier.size(Dimensions.Spacing.DoubleExtraLarge))
+
                 content()
             }
         }
@@ -71,15 +82,16 @@ internal fun RegularPaymentMethodInputScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun RegularPaymentMethodInputScreenPreview(
+private fun StoredPaymentMethodScreenPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        RegularPaymentMethodInputScreen(
+        StoredPaymentMethodScreen(
             navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
-            viewState = PaymentMethodViewState.RegularInput(
-                paymentMethodName = "Cards",
-                description = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION,
+            viewState = PaymentMethodViewState.Stored(
+                logoTxVariant = "visa",
+                title = "•••• 4556",
+                paymentMethodName = "Visa",
             ),
             // Stands in for the payment method component, which cannot be built without a controller.
             content = {
