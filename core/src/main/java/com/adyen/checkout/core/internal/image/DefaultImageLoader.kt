@@ -1,0 +1,126 @@
+/*
+ * Copyright (c) 2026 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 27/8/2026.
+ */
+
+package com.adyen.checkout.core.internal.image
+
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.collection.LruCache
+import com.adyen.checkout.core.common.internal.api.DispatcherProvider
+import com.adyen.checkout.core.error.internal.HttpError
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+
+internal class DefaultImageLoader(
+    private val cache: InMemoryCache,
+    private val failureCache: LruCache<String, HttpError>,
+    private val okHttpClient: OkHttpClient = OkHttpClient(),
+    dispatcher: CoroutineDispatcher = DispatcherProvider.IO,
+) {
+
+    private val scope = CoroutineScope(SupervisorJob() + dispatcher)
+    private val inFlightMutex = Mutex()
+    private val inFlight = mutableMapOf<String, Deferred<Result<Bitmap>>>()
+
+    @Suppress("ReturnCount")
+    suspend fun load(url: String): Result<Bitmap> {
+        cache[url]?.let { return Result.success(it) }
+        failureCache[url]?.let { return Result.failure(it) }
+
+        val deferred = inFlightMutex.withLock {
+            // Only join a request that is still running. Joining a finished one would replay its
+            // result, which is wrong for failures that are not negatively cached (5xx, IOException).
+            inFlight[url]?.takeIf { it.isActive } ?: scope.async { fetch(url) }.also { new ->
+                inFlight[url] = new
+
+                // Finished requests have to be evicted, because a completed [Deferred] holds on to its result, and
+                // therefore to the bitmap, keeping it alive even after the in memory cache has evicted it.
+                new.invokeOnCompletion {
+                    scope.launch { evict(url, new) }
+                }
+            }
+        }
+
+        return deferred.await()
+    }
+
+    private suspend fun evict(url: String, deferred: Deferred<Result<Bitmap>>) {
+        inFlightMutex.withLock {
+            // Only evict this request, it might already have been replaced by a newer one.
+            if (inFlight[url] === deferred) {
+                @Suppress("DeferredResultUnused")
+                inFlight.remove(url)
+            }
+        }
+    }
+
+    private suspend fun fetch(url: String): Result<Bitmap> {
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        return try {
+            okHttpClient.newCall(request)
+                .await()
+                .use { response -> handleResponse(url, response) }
+        } catch (e: IOException) {
+            Result.failure(e)
+        }
+    }
+
+    private fun handleResponse(url: String, response: Response): Result<Bitmap> {
+        if (!response.isSuccessful) {
+            val error = HttpError(response.code, response.message, null)
+            if (error.code in HTTP_4XX_RANGE) {
+                failureCache.put(url, error)
+            }
+            return Result.failure(error)
+        }
+
+        val bytes = response.body?.bytes() ?: ByteArray(0)
+        val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+
+        return if (bitmap != null) {
+            cache[url] = bitmap
+            bitmap.prepareToDraw()
+            Result.success(bitmap)
+        } else {
+            Result.failure(IOException("Failed to decode bitmap."))
+        }
+    }
+
+    private suspend fun Call.await(): Response = suspendCancellableCoroutine { continuation ->
+        continuation.invokeOnCancellation { cancel() }
+        enqueue(
+            object : Callback {
+                override fun onResponse(call: Call, response: Response) = continuation.resume(response)
+                override fun onFailure(call: Call, e: IOException) = continuation.resumeWithException(e)
+            },
+        )
+    }
+
+    private companion object {
+        private val HTTP_4XX_RANGE = 400..499
+    }
+}

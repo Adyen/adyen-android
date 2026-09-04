@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.common.internal.ui
 
+import android.util.DisplayMetrics
 import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
@@ -19,16 +20,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.common.internal.helper.LocalEnvironment
-import com.adyen.checkout.core.common.internal.imageLoader
+import com.adyen.checkout.core.internal.image.LogoSize
+import com.adyen.checkout.core.internal.image.NetworkImage
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.internal.image.ImageLoader
-import com.adyen.checkout.ui.internal.image.LogoSize
-import com.adyen.checkout.ui.internal.image.NetworkImage
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
@@ -37,19 +35,16 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
  *
  * @param txVariant The txVariant to be handled.
  * @param modifier The modifier to be applied to the Image.
- * @param imageLoader The ImageLoader instance to use. Defaults to the one provided by the Context.
  * @param size The [LogoSize] required to download the correct sized image.
  * @param contentDescription The content description for accessibility.
  * @param placeholder A drawable resource to show while the image is loading.
  * @param errorFallback A drawable resource to show if the image fails to load.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@Suppress("LongParameterList")
 @Composable
 fun CheckoutNetworkLogo(
     txVariant: String,
     modifier: Modifier = Modifier,
-    imageLoader: ImageLoader = LocalContext.current.imageLoader,
     txSubVariant: String = "",
     size: LogoSize = LogoSize.SMALL,
     contentDescription: String? = null,
@@ -81,7 +76,6 @@ fun CheckoutNetworkLogo(
             .background(CheckoutThemeProvider.colors.background)
             .clip(RoundedCornerShape(Dimensions.CornerRadius)),
         contentDescription = contentDescription,
-        imageLoader = imageLoader,
         placeholder = placeholder,
         errorFallback = errorFallback,
     )
@@ -89,11 +83,11 @@ fun CheckoutNetworkLogo(
 
 private fun Int.getDensityExtension(): String {
     return when {
-        this <= android.util.DisplayMetrics.DENSITY_LOW -> "-ldpi"
-        this <= android.util.DisplayMetrics.DENSITY_MEDIUM -> "" // no extension
-        this <= android.util.DisplayMetrics.DENSITY_HIGH -> "-hdpi"
-        this <= android.util.DisplayMetrics.DENSITY_XHIGH -> "-xhdpi"
-        this <= android.util.DisplayMetrics.DENSITY_XXHIGH -> "-xxhdpi"
+        this <= DisplayMetrics.DENSITY_LOW -> "-ldpi"
+        this <= DisplayMetrics.DENSITY_MEDIUM -> "" // no extension
+        this <= DisplayMetrics.DENSITY_HIGH -> "-hdpi"
+        this <= DisplayMetrics.DENSITY_XHIGH -> "-xhdpi"
+        this <= DisplayMetrics.DENSITY_XXHIGH -> "-xxhdpi"
         else -> "-xxxhdpi"
     }
 }
@@ -105,5 +99,5 @@ private fun buildLogoPath(
     densityExtension: String,
 ): String {
     val txString = if (txSubVariant.isEmpty()) txVariant else "$txVariant/$txSubVariant"
-    return "images/logos/$size/$txString$densityExtension.png"
+    return "images/logos/${size.value}/$txString$densityExtension.png"
 }
