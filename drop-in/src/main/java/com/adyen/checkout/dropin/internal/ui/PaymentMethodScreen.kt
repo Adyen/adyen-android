@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutPaymentFlow
+import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -37,7 +37,7 @@ internal fun PaymentMethodScreen(
     viewModel: PaymentMethodViewModel,
     theme: CheckoutTheme,
 ) {
-    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val viewState by viewModel.paymentMethodViewState.collectAsStateWithLifecycle()
     PaymentMethodScreenContent(navigator, viewState, viewModel.controller, theme)
 }
 
@@ -84,7 +84,7 @@ private fun PaymentMethodScreenContent(
             }
 
             // TODO - Pass localization provider
-            CheckoutPaymentFlow(
+            CheckoutPaymentMethod(
                 controller = controller,
                 modifier = Modifier
                     .fillMaxSize()

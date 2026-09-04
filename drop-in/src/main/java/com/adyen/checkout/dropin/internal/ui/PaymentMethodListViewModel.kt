@@ -15,11 +15,11 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PayByBankUSPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.helper.PaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
@@ -91,11 +91,7 @@ internal class PaymentMethodListViewModel(
     }
 
     private fun PaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
-        val icon = when (this) {
-            is CardPaymentMethod -> CARD_LOGO
-            is GiftCardPaymentMethod -> brand
-            else -> type
-        }
+        val icon = PaymentMethodFormatter.getIcon(this)
 
         val brands = when (this) {
             is CardPaymentMethod -> brands
@@ -109,10 +105,6 @@ internal class PaymentMethodListViewModel(
             title = name,
             brands = brands,
         )
-    }
-
-    companion object {
-        private const val CARD_LOGO = "card"
     }
 
     class Factory(

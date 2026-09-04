@@ -85,6 +85,8 @@ internal class DefaultLocalizationSource {
                 R.string.checkout_card_installments_option_regular_with_price
 
             // Drop-in
+            CheckoutLocalizationKey.DROP_IN_ACTION_DESCRIPTION -> R.string.checkout_drop_in_action_description
+            CheckoutLocalizationKey.DROP_IN_ACTION_PROCESSING -> R.string.checkout_drop_in_action_processing
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->
                 R.string.checkout_drop_in_manage_favorites_cards_section_title

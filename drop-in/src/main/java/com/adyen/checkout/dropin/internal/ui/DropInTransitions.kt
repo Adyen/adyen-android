@@ -39,6 +39,19 @@ internal object DropInTransitions {
     }
 
     @Stable
+    fun slideInHorizontallyAndOutVertically(): Map<String, Any> {
+        return NavDisplay.transitionSpec { addSlideInAndOutHorizontally() } +
+            NavDisplay.popTransitionSpec { popSlideInHorizontallyAndOutVertically() } +
+            NavDisplay.predictivePopTransitionSpec { popSlideInHorizontallyAndOutVertically() }
+    }
+
+    @Stable
+    private fun popSlideInHorizontallyAndOutVertically(): ContentTransform {
+        return slideInHorizontally(initialOffsetX = { -it }) togetherWith
+            slideOutVertically(targetOffsetY = { it })
+    }
+
+    @Stable
     fun slideInAndOutVertically(): Map<String, Any> {
         return NavDisplay.transitionSpec { addSlideInAndOutVertically() } +
             NavDisplay.popTransitionSpec { popSlideInAndOutVertically() } +

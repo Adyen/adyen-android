@@ -678,6 +678,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_SOCIAL_SECURITY_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SOCIAL_SECURITY_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_STORE_PAYMENT_METHOD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROP_IN_ACTION_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROP_IN_ACTION_PROCESSING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_REMOVE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
