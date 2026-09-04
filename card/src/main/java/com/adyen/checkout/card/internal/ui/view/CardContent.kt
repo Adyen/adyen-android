@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
+import com.adyen.checkout.card.internal.ui.model.toSubtitleText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
@@ -198,12 +199,13 @@ private fun CardDetailsSection(
         }
         if (viewState.installmentViewState != null) {
             Subtitle(
-                text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS),
+                text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
                 modifier = Modifier.padding(top = Dimensions.Spacing.Small),
             )
             ValuePickerField(
                 value = viewState.installmentViewState.selectedInstallment?.toDisplayText() ?: "",
-                label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
+                label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_PICKER_TITLE),
+                supportingText = viewState.installmentViewState.selectedInstallment?.toSubtitleText(),
                 onClick = onInstallmentPickerClick,
                 modifier = Modifier.fillMaxWidth(),
             )
