@@ -154,6 +154,7 @@ private fun paymentMethodViewModelFactory(
     viewModel: DropInViewModel,
 ) = PaymentMethodViewModel.Factory(
     paymentFlowType = paymentFlowType,
+    dropInParams = viewModel.dropInParams,
     paymentMethodRepository = viewModel.paymentMethodRepository,
     navigator = viewModel.navigator,
     controllerProvider = viewModel.controllerProvider,

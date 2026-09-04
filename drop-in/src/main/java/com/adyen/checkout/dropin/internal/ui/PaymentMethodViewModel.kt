@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
+import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -41,6 +42,7 @@ import kotlinx.coroutines.launch
  */
 internal class PaymentMethodViewModel(
     private val paymentFlowType: DropInPaymentFlowType,
+    private val dropInParams: DropInParams,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val navigator: DropInNavigator,
     controllerProvider: DropInControllerProvider,
@@ -101,17 +103,20 @@ internal class PaymentMethodViewModel(
 
     private fun createPaymentMethodViewState(): PaymentMethodViewState {
         val isStored = paymentFlowType is DropInPaymentFlowType.StoredPaymentMethod
+        val formattedAmount = dropInParams.amount.format(dropInParams.shopperLocale)
 
         return when {
             isStored -> PaymentMethodViewState.Stored(
                 logoTxVariant = paymentMethod.getLogoTxVariant(),
                 title = paymentMethod.getStoredTitle(),
                 paymentMethodName = paymentMethod.name,
+                formattedAmount = formattedAmount,
             )
 
             controller.requiresUserInteraction() -> PaymentMethodViewState.Regular(
                 paymentMethodName = paymentMethod.name,
                 description = paymentMethod.getDescription(),
+                formattedAmount = formattedAmount,
             )
 
             else -> PaymentMethodViewState.Progress(
@@ -150,6 +155,7 @@ internal class PaymentMethodViewModel(
 
     class Factory(
         private val paymentFlowType: DropInPaymentFlowType,
+        private val dropInParams: DropInParams,
         private val paymentMethodRepository: PaymentMethodRepository,
         private val navigator: DropInNavigator,
         private val controllerProvider: DropInControllerProvider,
@@ -158,6 +164,7 @@ internal class PaymentMethodViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             return PaymentMethodViewModel(
                 paymentFlowType = paymentFlowType,
+                dropInParams = dropInParams,
                 paymentMethodRepository = paymentMethodRepository,
                 navigator = navigator,
                 controllerProvider = controllerProvider,

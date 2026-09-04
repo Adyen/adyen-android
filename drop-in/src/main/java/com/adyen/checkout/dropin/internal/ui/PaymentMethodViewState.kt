@@ -18,12 +18,14 @@ internal sealed interface PaymentMethodViewState {
     data class Regular(
         val paymentMethodName: String,
         val description: CheckoutLocalizationKey?,
+        val formattedAmount: String,
     ) : PaymentMethodViewState
 
     data class Stored(
         val logoTxVariant: String,
         val title: String,
         val paymentMethodName: String,
+        val formattedAmount: String,
     ) : PaymentMethodViewState
 
     data class Progress(
