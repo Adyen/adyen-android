@@ -16,7 +16,10 @@
 
 package com.adyen.checkout.core.common.internal
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.CheckoutConfiguration
 
 internal val CheckoutContext.checkoutAttemptId: String
     get() = when (this) {
@@ -31,3 +34,18 @@ internal val CheckoutContext.publicKey: String?
         is CheckoutContext.Advanced -> publicKey
         is CheckoutContext.ActionOnly -> publicKey
     }
+
+/**
+ * Creates a copy of this context with a different [checkoutConfiguration], keeping the subtype and all of its other
+ * values.
+ *
+ * The copy of each subtype is internal, since a [CheckoutContext] is only ever meant to come out of [Checkout.setup].
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun CheckoutContext.withCheckoutConfiguration(checkoutConfiguration: CheckoutConfiguration): CheckoutContext {
+    return when (this) {
+        is CheckoutContext.Advanced -> copy(checkoutConfiguration = checkoutConfiguration)
+        is CheckoutContext.Sessions -> copy(checkoutConfiguration = checkoutConfiguration)
+        is CheckoutContext.ActionOnly -> copy(checkoutConfiguration = checkoutConfiguration)
+    }
+}
