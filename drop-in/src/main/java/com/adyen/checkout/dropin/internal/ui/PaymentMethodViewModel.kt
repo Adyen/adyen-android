@@ -23,9 +23,6 @@ import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -53,19 +50,24 @@ internal class PaymentMethodViewModel(
 
     private val paymentMethod = resolvePaymentMethod()
 
-    private val _paymentMethodViewState = MutableStateFlow(createPaymentMethodViewState())
-    val paymentMethodViewState: StateFlow<PaymentMethodViewState> = _paymentMethodViewState.asStateFlow()
+    val paymentMethodViewState: PaymentMethodViewState = createPaymentMethodViewState()
 
-    private val _actionViewState = MutableStateFlow(createActionViewState())
-    val actionViewState: StateFlow<ActionViewState> = _actionViewState.asStateFlow()
+    val actionViewState: ActionViewState = createActionViewState()
 
     init {
         observeNavigation()
+        startPaymentIfNothingToConfirm()
+    }
+
+    // TODO - This submits the payment a second time when the view model is recreated after process death. The guard
+    //  against that lives in FullCheckoutFlow, but it is in memory only. To be solved as part of process death
+    //  handling.
+    private fun startPaymentIfNothingToConfirm() {
+        if (paymentMethodViewState !is PaymentMethodViewState.Progress) return
+        controller.submit()
     }
 
     /**
-     * Navigates to the action screen once the payments call returns an action.
-     *
      * [CheckoutController.navigation] has no replay, so the subscription has to be active before anything can be
      * submitted on the controller. [CoroutineStart.UNDISPATCHED] guarantees that by running the collection before the
      * constructor returns.
@@ -97,10 +99,19 @@ internal class PaymentMethodViewModel(
         return checkNotNull(paymentMethod) { "No payment method found for $paymentFlowType" }
     }
 
-    private fun createPaymentMethodViewState() = PaymentMethodViewState(
-        paymentMethodName = paymentMethod.name,
-        description = paymentMethod.getDescription(),
-    )
+    private fun createPaymentMethodViewState(): PaymentMethodViewState {
+        return if (controller.requiresUserInteraction()) {
+            PaymentMethodViewState.RegularInput(
+                paymentMethodName = paymentMethod.name,
+                description = paymentMethod.getDescription(),
+            )
+        } else {
+            PaymentMethodViewState.Progress(
+                logoTxVariant = paymentMethod.getLogoTxVariant(),
+                paymentMethodName = paymentMethod.name,
+            )
+        }
+    }
 
     // TODO - A card resolves to the generic card logo rather than the brand the shopper selected, which is what this
     //  screen should be showing. Either show the brand here, or resolve the logo another way.
