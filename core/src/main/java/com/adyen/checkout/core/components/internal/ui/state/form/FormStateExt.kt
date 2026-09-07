@@ -11,16 +11,16 @@ package com.adyen.checkout.core.components.internal.ui.state.form
 import androidx.annotation.RestrictTo
 
 /**
- * The request that opens a form on the first field the shopper can type in, or null when it has none. Text inputs only,
- * so a form that opens with a picker above its first field still puts the keyboard on the field.
+ * Returns a request for the first text input, or null if the form has none. Pickers and switches are skipped, so a form
+ * that starts with a picker still opens on the field below it.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.requestFocusOnFirstTextInput(): FocusRequest<Id>? =
     elements.firstOrNull { it.id.isTextInput }?.let { FocusRequest(id = it.id) }
 
 /**
- * The first text input after [id], or null if [id] is the last one or is not part of the form. Anything without a
- * keyboard is skipped, since this moves focus on a keyboard's behalf.
+ * Returns the next text input after [id], or null if [id] is the last one or is not in the form. Pickers and switches
+ * are skipped, because this answers on a keyboard's behalf.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.nextTextInputAfter(id: Id): Id? {
@@ -30,7 +30,7 @@ fun <Id : FormElementId> FormState<Id>.nextTextInputAfter(id: Id): Id? {
 }
 
 /**
- * The keyboard action [id] should show. Only the last text input closes the keyboard; everything before it moves on.
+ * Returns DONE for the last text input and NEXT for every other element.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.keyboardActionFor(id: Id): KeyboardAction {
@@ -39,11 +39,14 @@ fun <Id : FormElementId> FormState<Id>.keyboardActionFor(id: Id): KeyboardAction
 }
 
 /**
- * The focus request to make when the shopper presses pay on a form that cannot be submitted, or null when every element
- * is valid. It keeps the error highlight, because the point of the move is to show the shopper what is wrong.
+ * Returns a request for the first invalid element, or null if all of them are valid. Call this when the shopper presses
+ * pay. The request keeps the error highlight, so the field it lands on shows what is wrong.
+ *
+ * Do not call this from a reducer that changed a field's text or requirement policy. Validation runs after the
+ * reducer, so the validity read here is from before that change.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.requestFocusOnFirstInvalid(): FocusRequest<Id>? {
     val firstInvalidElement = elements.firstOrNull { !it.isValid }
-    return firstInvalidElement?.let { FocusRequest(id = it.id, keepErrorHighlight = true) }
+    return firstInvalidElement?.let { FocusRequest(id = it.id, showErrorIfPresent = true) }
 }

@@ -16,11 +16,24 @@ import androidx.annotation.RestrictTo
  * The order lives here rather than falling out of the layout because Compose fixes a text input's keyboard action when
  * the field is created and offers no way to ask whether another focusable field follows it.
  *
- * @param elements Being in the list is what makes an element visible, and its position is its position on screen.
- * Visibility is not a flag on [FormElementState], because every rule here wants the visible elements and a flag would
- * be a filter each of them could forget.
+ * Only visible items are added to the list.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class FormState<Id : FormElementId>(
     val elements: List<FormElementState<Id>>,
-)
+) {
+
+    /**
+     * Whether all visible elements are valid.
+     */
+    val isFormValid: Boolean = elements.all { it.isValid }
+
+    /**
+     * Whether an element is visible and valid.
+     *
+     * A hidden element does not exist in the list and therefore returns false here.
+     */
+    fun isElementVisibleAndValid(id: Id): Boolean {
+        return elements.find { it.id == id }?.isValid == true
+    }
+}

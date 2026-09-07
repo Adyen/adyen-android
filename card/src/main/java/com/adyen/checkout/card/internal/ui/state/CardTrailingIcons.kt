@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 // Which icon each field shows while it is not in an error state. Out of the producers because the card and stored card
 // screens show the same security code icons.
@@ -24,8 +23,8 @@ internal fun getCardNumberTrailingIcon(isCardScanButtonVisible: Boolean): CardNu
     }
 }
 
-internal fun getExpiryDateTrailingIcon(expiryDate: TextInputComponentState): ExpiryDateTrailingIcon {
-    return if (expiryDate.isValid && expiryDate.text.isNotEmpty()) {
+internal fun getExpiryDateTrailingIcon(isValid: Boolean, isEmpty: Boolean): ExpiryDateTrailingIcon {
+    return if (isValid && !isEmpty) {
         ExpiryDateTrailingIcon.Checkmark
     } else {
         ExpiryDateTrailingIcon.Placeholder
@@ -33,11 +32,12 @@ internal fun getExpiryDateTrailingIcon(expiryDate: TextInputComponentState): Exp
 }
 
 internal fun getSecurityCodeTrailingIcon(
-    securityCode: TextInputComponentState,
+    isValid: Boolean,
+    isEmpty: Boolean,
     cardNumberFormat: CardNumberFormat,
 ): SecurityCodeTrailingIcon {
     return when {
-        securityCode.isValid && securityCode.text.isNotEmpty() -> SecurityCodeTrailingIcon.Checkmark
+        isValid && !isEmpty -> SecurityCodeTrailingIcon.Checkmark
         cardNumberFormat == CardNumberFormat.AMEX -> SecurityCodeTrailingIcon.PlaceholderAmex
         else -> SecurityCodeTrailingIcon.PlaceholderDefault
     }

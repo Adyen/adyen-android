@@ -25,8 +25,8 @@ internal data class MBWayComponentState(
 ) : ComponentState {
 
     /**
-     * Which fields are on screen and in which order, plus any pending focus move. Both MB Way fields are always shown,
-     * so unlike card there is nothing to derive.
+     * Which fields are on screen and in which order. Both MB Way fields are always shown, so unlike card there is
+     * nothing to derive.
      */
     val form: FormState<MBWayFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
         FormState(
@@ -40,7 +40,7 @@ internal data class MBWayComponentState(
 }
 
 /**
- * Applies [transform] to the text input [id] names. The country code is a picker, so it has nothing to transform and
+ * Applies [transform] to the text input that [id] names. The country code is a picker, so it transforms nothing and
  * leaves the state unchanged.
  *
  * It lives next to the state it updates so that adding a field above does not compile until it is mapped here.

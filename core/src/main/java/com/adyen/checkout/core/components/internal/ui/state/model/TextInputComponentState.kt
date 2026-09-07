@@ -22,8 +22,8 @@ data class TextInputComponentState(
 ) {
 
     /**
-     * An error and whether the shopper should see it yet. Validation finds a problem long before the shopper is ready
-     * to be told about it.
+     * An error and whether the shopper should see it yet. The two are held together so a field cannot show an error it
+     * does not have.
      */
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class InputError(
@@ -31,19 +31,12 @@ data class TextInputComponentState(
         val isVisible: Boolean = false,
     )
 
-    val isValid: Boolean = error == null
-
-    /** A hidden field is not rendered and is not one of its form's elements. */
-    internal val isVisible: Boolean = requirementPolicy != RequirementPolicy.Hidden
-
-    val isErrorVisible: Boolean = error?.isVisible == true
-
     /** Typing hides the error, so the shopper is not corrected while fixing the thing they were corrected about. */
     fun updateText(text: String) = copy(text = text).hideErrorIfPresent()
 
     /**
-     * Replaces the error, keeping whether it is currently visible. Validators call this on every pass, so replacing a
-     * message must not hide an error the shopper is already looking at.
+     * Replaces the error, keeping whether it is currently visible. Use this from a validator: it runs on every pass,
+     * and replacing a message must not hide an error the shopper is already reading.
      */
     fun updateError(message: CheckoutLocalizationKey?): TextInputComponentState {
         return when {
@@ -59,10 +52,9 @@ data class TextInputComponentState(
 }
 
 /**
- * This field after gaining or losing focus, which comes down to whether the shopper is now shown the error it holds.
- *
- * A gain normally means the shopper tapped the field, and a field being worked on should not be showing an error. The
- * exception is focus that follows pay, which exists to show the error. A loss is the same event whatever caused it.
+ * Call this on every focus change, gain or loss, whatever caused it. Gaining focus hides the error, because the
+ * shopper is working on the field, unless [focusRequest] asked for this field and set showErrorIfPresent. Losing
+ * focus shows the error.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> TextInputComponentState.applyFocusChange(
@@ -71,6 +63,6 @@ fun <Id : FormElementId> TextInputComponentState.applyFocusChange(
     hasFocus: Boolean,
 ): TextInputComponentState = when {
     !hasFocus -> showErrorIfPresent()
-    focusRequest?.takeIf { it.id == id }?.keepErrorHighlight == true -> showErrorIfPresent()
+    focusRequest?.takeIf { it.id == id }?.showErrorIfPresent == true -> showErrorIfPresent()
     else -> hideErrorIfPresent()
 }

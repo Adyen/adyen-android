@@ -4,6 +4,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.isErrorVisible
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -61,7 +62,7 @@ internal class MBWayComponentStateReducerTest {
 
         val actual = reducer.reduce(
             state,
-            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = false)
+            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = false),
         )
 
         assertTrue(actual.phoneNumber.isErrorVisible)
@@ -78,7 +79,7 @@ internal class MBWayComponentStateReducerTest {
 
         val actual = reducer.reduce(
             state,
-            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = true)
+            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = true),
         )
 
         assertFalse(actual.phoneNumber.isErrorVisible)
@@ -96,7 +97,7 @@ internal class MBWayComponentStateReducerTest {
         val actual = reducer.reduce(state, MBWayIntent.HighlightValidationErrors)
 
         assertTrue(actual.phoneNumber.isErrorVisible)
-        assertEquals(FocusRequest(MBWayFormElementId.PHONE_NUMBER, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(MBWayFormElementId.PHONE_NUMBER, showErrorIfPresent = true), actual.focusRequest)
     }
 
     @Test
@@ -115,7 +116,7 @@ internal class MBWayComponentStateReducerTest {
 
         val actual = reducer.reduce(
             state,
-            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.COUNTRY_CODE, hasFocus = true)
+            MBWayIntent.UpdateFieldFocus(MBWayFormElementId.COUNTRY_CODE, hasFocus = true),
         )
 
         assertEquals(state, actual)
@@ -135,7 +136,7 @@ internal class MBWayComponentStateReducerTest {
         selectedCountryCode = CountryModel("NL", "Netherlands", "+31"),
         phoneNumber = TextInputComponentState(
             text = "",
-            error = null
+            error = null,
         ),
         isLoading = false,
     )

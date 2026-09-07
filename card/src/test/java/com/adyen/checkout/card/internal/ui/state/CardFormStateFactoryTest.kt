@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
 import com.adyen.checkout.core.components.internal.ui.state.form.keyboardActionFor
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.isErrorVisible
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -171,11 +172,8 @@ internal class CardFormStateFactoryTest {
                 installmentOptions = listOf(InstallmentModel.OneTime),
             )
 
-            // WHEN
-            val elements = state.form.elements
-
             // THEN
-            assertTrue(elements.all { it.isValid }, "every field holds a value but an element reports invalid")
+            assertTrue(state.form.isFormValid, "every field holds a value but an element reports invalid")
         }
 
         @Test
@@ -183,7 +181,7 @@ internal class CardFormStateFactoryTest {
             // The shopper pressing pay is what surfaces these, so an error that is not yet on screen still counts.
             val state = createStateWithErrorOn(CardFormElementId.CARD_NUMBER)
 
-            assertFalse(state.form.elements.first { it.id == CardFormElementId.CARD_NUMBER }.isValid)
+            assertFalse(state.form.isElementVisibleAndValid(CardFormElementId.CARD_NUMBER))
             assertFalse(state.cardNumber.isErrorVisible)
         }
 

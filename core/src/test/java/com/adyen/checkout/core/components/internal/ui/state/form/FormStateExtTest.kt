@@ -151,8 +151,8 @@ internal class FormStateExtTest {
     }
 
     /**
-     * Which element pay sends focus to, and that it arrives carrying `keepErrorHighlight` so the error it just
-     * revealed survives the move.
+     * Which element pay sends focus to, and that the request sets `showErrorIfPresent` so the move does not hide the
+     * error.
      */
     @Nested
     inner class RequestFocusOnFirstInvalidTest {
@@ -166,7 +166,7 @@ internal class FormStateExtTest {
             val request = form.requestFocusOnFirstInvalid()
 
             // THEN
-            assertEquals(FocusRequest(VERIFICATION_CODE, keepErrorHighlight = true), request)
+            assertEquals(FocusRequest(VERIFICATION_CODE, showErrorIfPresent = true), request)
         }
 
         /**
@@ -182,7 +182,7 @@ internal class FormStateExtTest {
             val request = form.requestFocusOnFirstInvalid()
 
             // THEN
-            assertEquals(FocusRequest(STORE_DETAILS, keepErrorHighlight = true), request)
+            assertEquals(FocusRequest(STORE_DETAILS, showErrorIfPresent = true), request)
         }
 
         @Test

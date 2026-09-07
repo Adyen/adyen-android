@@ -23,9 +23,8 @@ internal data class StoredCardComponentState(
 ) : ComponentState {
 
     /**
-     * Which fields are on screen and in which order, plus any pending focus move. The order is derived from the field
-     * above rather than stored, so that it cannot disagree with it: a stored card that asks for no security code has an
-     * empty form, and the screen shows no content at all.
+     * Which fields are on screen and in which order. Derived from the field above, so it cannot disagree with it: a
+     * stored card that asks for no security code has an empty form, and the screen shows no content at all.
      */
     val form: FormState<StoredCardFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
         FormState(elements = listOfNotNull(securityCode.toFormElementIfVisible(StoredCardFormElementId.SECURITY_CODE)))
@@ -33,7 +32,7 @@ internal data class StoredCardComponentState(
 }
 
 /**
- * Applies [transform] to the text input [id] names.
+ * Applies [transform] to the text input that [id] names.
  *
  * It lives next to the state it updates so that adding a field above does not compile until it is mapped here.
  */

@@ -31,21 +31,42 @@ internal class CardViewStateProducer(
         CardFormElementId.CARD_NUMBER -> CardFormElement.CardNumber(
             textInputViewState = cardNumber
                 .copy(description = getCardNumberInputDescription(cardBrandState))
-                .toViewState(form, focusRequest, id, getCardNumberTrailingIcon(isCardScanButtonVisible())),
+                .toViewState(
+                    form = form,
+                    focusRequest = focusRequest,
+                    id = id,
+                    customTrailingIcon = getCardNumberTrailingIcon(isCardScanButtonVisible()),
+                ),
             cardBrandViewState = getCardBrandViewState(cardBrandState),
             cardNumberFormat = getCardNumberFormat(cardBrandState),
             supportedCardBrandsViewState = getSupportedCardBrandsViewState(),
         )
 
         CardFormElementId.EXPIRY_DATE -> CardFormElement.ExpiryDate(
-            textInputViewState = expiryDate.toViewState(form, focusRequest, id, getExpiryDateTrailingIcon(expiryDate)),
+            textInputViewState = expiryDate.toViewState(
+                form = form,
+                focusRequest = focusRequest,
+                id = id,
+                customTrailingIcon = getExpiryDateTrailingIcon(
+                    isValid = form.isElementVisibleAndValid(CardFormElementId.EXPIRY_DATE),
+                    isEmpty = expiryDate.text.isEmpty(),
+                ),
+            ),
         )
 
         CardFormElementId.SECURITY_CODE -> {
             val cardNumberFormat = getCardNumberFormat(cardBrandState)
             CardFormElement.SecurityCode(
-                textInputViewState = securityCode
-                    .toViewState(form, focusRequest, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
+                textInputViewState = securityCode.toViewState(
+                    form = form,
+                    focusRequest = focusRequest,
+                    id = id,
+                    customTrailingIcon = getSecurityCodeTrailingIcon(
+                        isValid = form.isElementVisibleAndValid(CardFormElementId.SECURITY_CODE),
+                        isEmpty = securityCode.text.isEmpty(),
+                        cardNumberFormat = cardNumberFormat,
+                    ),
+                ),
                 cardNumberFormat = cardNumberFormat,
             )
         }

@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
@@ -35,22 +36,18 @@ data class TextInputViewState(
 ) {
 
     /**
-     * The trailing icon to render. The generic [TrailingIcon.Error] icon always takes precedence over
-     * [customTrailingIcon], so that every field shows the error state consistently.
+     * The icon to render. Render this, not [customTrailingIcon]: the error icon wins, so every field shows an error
+     * the same way.
      */
     val trailingIcon: TrailingIcon = if (isError) TrailingIcon.Error else customTrailingIcon ?: TrailingIcon.Empty
 }
 
 /**
- * Maps a text input onto what the UI renders for it, together with the two things a single field cannot answer about
- * itself: which action key it shows, which depends on what follows it in [form], and whether it is the field
- * [focusRequest] is asking for.
+ * Maps a field onto what the UI renders for it. Pass the whole [form] and [focusRequest]: this needs them to work out
+ * the action key, which depends on what follows the field, and whether the field is the one being asked to take focus.
  *
- * This says nothing about whether the field is shown: a field that is not shown is not one of its form's elements, so
- * nothing asks for its view state.
- *
- * The token the UI compares is built here rather than by the caller, because turning a [FocusRequest] into a
- * [FocusRequestToken] is this layer's plumbing and says nothing about any one component.
+ * Nothing here decides whether the field is shown. A hidden field is not one of its form's elements, so nothing asks
+ * for its view state.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> TextInputComponentState.toViewState(
@@ -58,12 +55,20 @@ fun <Id : FormElementId> TextInputComponentState.toViewState(
     focusRequest: FocusRequest<Id>?,
     id: Id,
     customTrailingIcon: TrailingIcon? = null,
-): TextInputViewState = TextInputViewState(
-    text = text,
-    supportingText = if (isErrorVisible) error?.message else description,
-    isError = isErrorVisible,
-    customTrailingIcon = customTrailingIcon,
-    isOptional = requirementPolicy is RequirementPolicy.Optional,
-    keyboardAction = form.keyboardActionFor(id),
-    focusRequest = focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
-)
+): TextInputViewState {
+    val isError = isErrorVisible
+    return TextInputViewState(
+        text = text,
+        supportingText = if (isError) error?.message else description,
+        isError = isError,
+        customTrailingIcon = customTrailingIcon,
+        isOptional = requirementPolicy is RequirementPolicy.Optional,
+        keyboardAction = form.keyboardActionFor(id),
+        focusRequest = focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
+    )
+}
+
+@get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@VisibleForTesting
+val TextInputComponentState.isErrorVisible: Boolean
+    get() = error?.isVisible == true

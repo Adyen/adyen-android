@@ -12,16 +12,12 @@ import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
 
 /**
- * A pending request to move focus to a field, as far as the field itself is concerned.
+ * A pending request to move focus to a field. Opaque, because the state layer that describes the request lives in a
+ * module this one cannot see, and a field only needs to tell one request from the next.
  *
- * The state layer decides which field should receive focus and why, but it lives in a module this one cannot see, so
- * the request arrives here as an opaque value. All a field needs from it is to tell one request from the next, which
- * is why the wrapped value is not readable: wrap whatever the state layer uses to describe the request, and make sure
- * it is comparable by equality.
- *
- * **Only wrap an immutable value.** [Any] tells the Compose compiler nothing, so without the [Immutable] promise below
- * every view state holding a token would be treated as unstable, and every field would recompose on every keystroke.
- * The annotation is what buys that back, and it is only true if callers keep their end of the bargain.
+ * Only wrap an immutable value that compares by equality. Two fields depend on it: the [Immutable] promise below is
+ * what stops every view state holding a token from being treated as unstable, and a token that never changes value
+ * stops a second request to the same field from being acted on.
  */
 @Immutable
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -13,11 +13,10 @@ import androidx.annotation.RestrictTo
 /**
  * A request for the UI to move focus to a field.
  *
- * @param keepErrorHighlight Whether the field keeps an error it is already showing. Only focus that follows pay uses
- * true, because the point of that move is to show the error. Everything else behaves as if the shopper had tapped.
+ * @param showErrorIfPresent A focus request hides a shown error by default. Pass true to show it instead.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class FocusRequest<Id : FormElementId>(
     val id: Id,
-    val keepErrorHighlight: Boolean = false,
+    val showErrorIfPresent: Boolean = false,
 )

@@ -56,16 +56,7 @@ internal class CardComponentStateValidator(
         )
     }
 
-    override fun isValid(state: CardComponentState): Boolean {
-        return state.cardNumber.isValid &&
-            state.expiryDate.isValid &&
-            state.securityCode.isValid &&
-            state.holderName.isValid &&
-            state.socialSecurityNumber.isValid &&
-            state.kcpBirthDateOrTaxNumber.isValid &&
-            state.kcpCardPassword.isValid &&
-            state.postalCode.isValid
-    }
+    override fun isValid(state: CardComponentState): Boolean = state.form.isFormValid
 
     private fun validateCardNumber(
         cardNumber: TextInputComponentState,

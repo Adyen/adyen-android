@@ -17,10 +17,8 @@ import androidx.annotation.RestrictTo
 interface FormElementId {
 
     /**
-     * Whether this element is a text input.
-     *
-     * A switch or a picker is still part of the form and still takes its place in the order, but the rules that move a
-     * keyboard or the focus it carries skip it.
+     * Whether this element is a text input. Return false for switches and pickers: they keep their place in the order,
+     * but the keyboard and focus rules skip them.
      */
     val isTextInput: Boolean
 }

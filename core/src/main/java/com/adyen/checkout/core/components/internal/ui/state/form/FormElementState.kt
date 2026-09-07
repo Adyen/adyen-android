@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal.ui.state.form
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 /**
@@ -28,12 +29,19 @@ data class FormElementState<Id : FormElementId>(
 )
 
 /**
- * This field as the form sees it, or null when it is not on screen, which is how a component's builder leaves a hidden
- * field out. Visibility and validity are read off the same value, so they cannot disagree.
- *
- * [TextInputComponentState.isValid] reflects the last validation pass, which ran before the reducer now building this.
- * That is accurate as long as the same reduction changed no text, which holds for everything that asks today.
+ * This field as the form sees it, or null when it is not visible on screen.
+ * The only source of truth for visibility and validity of a field exists here.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <Id : FormElementId> TextInputComponentState.toFormElementIfVisible(id: Id): FormElementState<Id>? =
-    if (isVisible) FormElementState(id, isValid) else null
+fun <Id : FormElementId> TextInputComponentState.toFormElementIfVisible(id: Id): FormElementState<Id>? {
+    val isVisible = requirementPolicy != RequirementPolicy.Hidden
+    return if (isVisible) {
+        val isValid = error == null
+        FormElementState(
+            id = id,
+            isValid = isValid,
+        )
+    } else {
+        null
+    }
+}

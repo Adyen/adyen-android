@@ -14,11 +14,9 @@ import com.adyen.checkout.core.components.internal.ui.state.form.FormState
 import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 
 /**
- * Derives the card form from a card state: which elements the shopper can see, in which order, and what the form's own
- * rules need to know about each of them.
+ * Derives the card form from a card state: which elements the shopper can see, and in which order.
  *
- * Both of those facts are read from the state rather than kept alongside it, so that neither can drift from what the
- * view state producer puts on screen.
+ * Both are read from the state rather than stored, so neither can drift from what the producer puts on screen.
  */
 internal class CardFormStateFactory(
     private val state: CardComponentState,
@@ -29,9 +27,9 @@ internal class CardFormStateFactory(
     )
 
     /**
-     * Every id is listed rather than falling back to an else, so that adding one to [CardFormElementId] does not
-     * compile until its visibility and validity are decided. Getting that wrong means a field silently missing from
-     * the screen, or one that never holds up a payment.
+     * Do not add an else branch. Every id is listed so that a new [CardFormElementId] fails to compile until its
+     * visibility and validity are decided; the alternative is a field silently missing from the screen, or one that
+     * never holds up a payment.
      */
     private fun elementFor(id: CardFormElementId): FormElementState<CardFormElementId>? = with(state) {
         when (id) {
@@ -57,11 +55,10 @@ internal class CardFormStateFactory(
     companion object {
 
         /**
-         * The order the card form is laid out in, ignoring which fields are currently visible. This is the one place
-         * the sequence is decided, so it is also where a future experiment would reorder it.
+         * The order the card form is laid out in, ignoring visibility. Change the order here and nowhere else.
          *
-         * Only [create] needs it. It is reachable from tests so that the sequence itself can be asserted, rather than
-         * inferred from a state built to make every field visible.
+         * Only [create] needs it. Tests reach it so the sequence can be asserted directly, rather than inferred from
+         * a state built to make every field visible.
          */
         @VisibleForTesting
         internal val CANONICAL_ORDER = listOf(

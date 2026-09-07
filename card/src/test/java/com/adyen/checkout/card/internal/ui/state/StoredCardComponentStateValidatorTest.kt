@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -91,6 +92,21 @@ internal class StoredCardComponentStateValidatorTest {
 
         assertTrue(result)
         assertNull(validatedState.securityCode.error?.message)
+    }
+
+    @Test
+    fun `when the security code is hidden and empty, then isValid returns true`() {
+        // GIVEN a stored card configured not to ask for the security code
+        val state = createValidState().copy(
+            securityCode = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Hidden),
+        )
+
+        // WHEN validated
+        val validatedState = validator.validate(state)
+        val result = validator.isValid(validatedState)
+
+        // THEN the missing code does not hold up the payment
+        assertTrue(result)
     }
 
     private fun createValidState() = StoredCardComponentState(

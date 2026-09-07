@@ -28,8 +28,16 @@ internal class StoredCardViewStateProducer(
         StoredCardFormElementId.SECURITY_CODE -> {
             val cardNumberFormat = detectedCardType?.cardBrand.toCardNumberFormat()
             StoredCardFormElement.SecurityCode(
-                textInputViewState = securityCode
-                    .toViewState(form, focusRequest, id, getSecurityCodeTrailingIcon(securityCode, cardNumberFormat)),
+                textInputViewState = securityCode.toViewState(
+                    form = form,
+                    focusRequest = focusRequest,
+                    id = id,
+                    customTrailingIcon = getSecurityCodeTrailingIcon(
+                        isValid = form.isElementVisibleAndValid(StoredCardFormElementId.SECURITY_CODE),
+                        isEmpty = securityCode.text.isEmpty(),
+                        cardNumberFormat = cardNumberFormat,
+                    ),
+                ),
                 cardNumberFormat = cardNumberFormat,
             )
         }

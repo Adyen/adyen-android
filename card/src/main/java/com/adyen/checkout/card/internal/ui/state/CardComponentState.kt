@@ -44,13 +44,11 @@ internal data class CardComponentState(
 ) : ComponentState {
 
     /**
-     * Which fields are on screen and in which order, plus any pending focus move. The order is derived from the fields
-     * above rather than stored, so that it cannot disagree with them, and computed once per state because both the
-     * reducer and the view state producer read it several times.
+     * Which fields are on screen and in which order. Derived from the fields above, so it cannot disagree with them,
+     * and cached because the reducer and the producer both read it several times.
      *
-     * [LazyThreadSafetyMode.PUBLICATION] because the merchant owns the coroutine scope this component runs in, so the
-     * same state can be read from more than one thread. Deriving the same value twice is harmless; publishing it
-     * unsafely would not be.
+     * [LazyThreadSafetyMode.PUBLICATION] because the merchant owns the coroutine scope, so the same state can be read
+     * from several threads. Deriving twice is harmless; publishing unsafely is not.
      */
     val form: FormState<CardFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
         CardFormStateFactory(this).create()
@@ -58,8 +56,8 @@ internal data class CardComponentState(
 }
 
 /**
- * Applies [transform] to the text input [id] names. Elements that are not text inputs have nothing to transform, so
- * they leave the state unchanged.
+ * Applies [transform] to the text input that [id] names. Elements that are not text inputs have nothing to
+ * transform, so they leave the state unchanged.
  *
  * It lives next to the state it updates rather than in the reducer, so that adding a field above does not compile until
  * it is mapped here. `CardComponentStateTest` asserts that no two ids write the same property.

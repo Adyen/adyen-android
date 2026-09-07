@@ -21,8 +21,8 @@ internal data class BlikComponentState(
 ) : ComponentState {
 
     /**
-     * Which fields are on screen and in which order, plus any pending focus move. The Blik code is always required, so
-     * unlike card there is nothing to derive: the form is one field.
+     * Which fields are on screen and in which order. The Blik code is always required, so unlike card there is
+     * nothing to derive: the form is one field.
      */
     val form: FormState<BlikFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
         FormState(elements = listOfNotNull(blikCode.toFormElementIfVisible(BlikFormElementId.BLIK_CODE)))
@@ -30,7 +30,7 @@ internal data class BlikComponentState(
 }
 
 /**
- * Applies [transform] to the text input [id] names.
+ * Applies [transform] to the text input that [id] names.
  *
  * It lives next to the state it updates so that adding a field above does not compile until it is mapped here.
  */

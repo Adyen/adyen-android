@@ -15,6 +15,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.isErrorVisible
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -140,7 +141,7 @@ internal class CardComponentStateReducerTest {
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
         assertTrue(actual.cardNumber.isErrorVisible)
-        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER, showErrorIfPresent = true), actual.focusRequest)
     }
 
     @Test
@@ -170,7 +171,7 @@ internal class CardComponentStateReducerTest {
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, showErrorIfPresent = true), actual.focusRequest)
     }
 
     @Test
@@ -182,7 +183,7 @@ internal class CardComponentStateReducerTest {
 
         val actual = reducer.reduce(state, CardIntent.HighlightValidationErrors)
 
-        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, showErrorIfPresent = true), actual.focusRequest)
     }
 
     @Test
@@ -245,7 +246,7 @@ internal class CardComponentStateReducerTest {
 
         val focused = reducer.reduce(highlighted, CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, true))
 
-        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), focused.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, showErrorIfPresent = true), focused.focusRequest)
     }
 
     @Test
@@ -269,7 +270,7 @@ internal class CardComponentStateReducerTest {
 
         val actual = reducer.reduce(highlighted, CardIntent.FocusRequestConsumed(CardFormElementId.CARD_NUMBER))
 
-        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, keepErrorHighlight = true), actual.focusRequest)
+        assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, showErrorIfPresent = true), actual.focusRequest)
     }
 
     @Test
