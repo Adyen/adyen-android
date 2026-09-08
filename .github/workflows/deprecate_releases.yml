@@ -20,12 +20,11 @@ on:
           - '[DEPRECATED]'
           - '[END-OF-LIFE]'
 
-permissions:
-  contents: write
-
 jobs:
   deprecate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Repository

@@ -36,6 +36,6 @@ jobs:
   check_dependency_changes:
     name: Check dependency changes
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
     uses: ./.github/workflows/check_dependency_changes.yml

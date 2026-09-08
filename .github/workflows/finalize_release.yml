@@ -96,7 +96,6 @@ jobs:
     name: Publish docs to Github pages
     permissions:
       contents: write
-      deployments: write
     uses: ./.github/workflows/publish_docs.yml
     secrets:
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}

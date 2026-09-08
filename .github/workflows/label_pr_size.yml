@@ -3,13 +3,12 @@ name: Label PR size
 on:
   pull_request:
 
-permissions:
-  pull-requests: write
-  contents: read
-
 jobs:
   label_pr_size:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Label PR size
         uses: codelytv/pr-size-labeler@095a41fca88b8764fd9e008ad269bcdb82bb38b9 # v1.10.4
