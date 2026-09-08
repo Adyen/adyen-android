@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -30,6 +31,9 @@ import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
+/**
+ * The app bar of a screen that introduces itself with a title, which collapses as the content below it scrolls.
+ */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun DropInTopAppBar(
@@ -38,11 +42,7 @@ internal fun DropInTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     MediumFlexibleTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = CheckoutThemeProvider.colors.background,
-            scrolledContainerColor = CheckoutThemeProvider.colors.background,
-            navigationIconContentColor = CheckoutThemeProvider.colors.text,
-        ),
+        colors = dropInTopAppBarColors(),
         title = {
             Title(title)
         },
@@ -50,6 +50,29 @@ internal fun DropInTopAppBar(
         scrollBehavior = scrollBehavior,
     )
 }
+
+/**
+ * The app bar of a screen that has no title of its own.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun DropInTopAppBar(
+    navigationIcon: @Composable () -> Unit,
+) {
+    TopAppBar(
+        colors = dropInTopAppBarColors(),
+        title = {},
+        navigationIcon = navigationIcon,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun dropInTopAppBarColors() = TopAppBarDefaults.topAppBarColors(
+    containerColor = CheckoutThemeProvider.colors.background,
+    scrolledContainerColor = CheckoutThemeProvider.colors.background,
+    navigationIconContentColor = CheckoutThemeProvider.colors.text,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -68,6 +91,24 @@ private fun DropInTopAppBarPreview(
                 }
             },
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DropInTopAppBarWithoutTitlePreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        DropInTopAppBar(
+            navigationIcon = {
+                IconButton(
+                    onClick = {},
+                ) {
+                    Icon(Icons.Default.Close, null)
+                }
+            },
         )
     }
 }
