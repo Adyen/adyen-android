@@ -11,11 +11,15 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 
 @Composable
 internal fun NavigationStack(
@@ -76,16 +80,12 @@ private fun paymentMethodListNavEntry(
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> = NavEntry(
     key = key,
+    contentKey = PAYMENT_METHOD_LIST_CONTENT_KEY,
     metadata = DropInTransitions.slideInAndOutVertically(),
 ) {
     PaymentMethodListScreen(
-        viewModel.navigator,
-        viewModel(
-            factory = PaymentMethodListViewModel.Factory(
-                dropInParams = viewModel.dropInParams,
-                paymentMethodRepository = viewModel.paymentMethodRepository,
-            ),
-        ),
+        navigator = viewModel.navigator,
+        viewModel = paymentMethodListViewModel(viewModel),
     )
 }
 
@@ -123,7 +123,7 @@ private fun paymentMethodNavEntry(
     ) {
         PaymentMethodScreen(
             navigator = viewModel.navigator,
-            viewModel = viewModel(factory = paymentMethodViewModelFactory(key.paymentFlowType, viewModel)),
+            viewModel = paymentMethodViewModel(key.paymentFlowType, viewModel),
             theme = viewModel.theme,
         )
     }
@@ -132,32 +132,80 @@ private fun paymentMethodNavEntry(
 private fun actionNavEntry(
     key: ActionNavKey,
     viewModel: DropInViewModel,
-): NavEntry<NavKey> = NavEntry(
-    key = key,
-    // The action screen replaces the back stack, so it cannot slide back out sideways onto the screen it came from.
-    metadata = DropInTransitions.slideInHorizontallyAndOutVertically() +
-        SharedViewModelStoreNavEntryDecorator.parent(paymentFlowContentKey(key.paymentFlowType)),
-) {
-    ActionScreen(
-        navigator = viewModel.navigator,
+): NavEntry<NavKey> {
+    // Naming the owning entry as the parent is what continues the flow on the controller that started it.
+    val parentContentKey = when (key.owner) {
+        ActionFlowOwner.PAYMENT_METHOD -> paymentFlowContentKey(key.paymentFlowType)
+        ActionFlowOwner.PAYMENT_METHOD_LIST -> PAYMENT_METHOD_LIST_CONTENT_KEY
+    }
+
+    return NavEntry(
+        key = key,
+        metadata = DropInTransitions.slideInHorizontallyAndOutVertically() +
+            SharedViewModelStoreNavEntryDecorator.parent(parentContentKey),
+    ) {
         // Resolved against the parent's store rather than this entry's own, so this is the instance that already owns
         // the flow rather than a second one built from the same factory.
-        viewModel = viewModel(
-            viewModelStoreOwner = LocalSharedViewModelStoreOwner.current,
-            factory = paymentMethodViewModelFactory(key.paymentFlowType, viewModel),
-        ),
-    )
+        val parentOwner = LocalSharedViewModelStoreOwner.current
+
+        when (key.owner) {
+            ActionFlowOwner.PAYMENT_METHOD -> {
+                val paymentMethodViewModel = paymentMethodViewModel(key.paymentFlowType, viewModel, parentOwner)
+                ActionScreen(
+                    navigator = viewModel.navigator,
+                    viewState = paymentMethodViewModel.actionViewState,
+                    controller = paymentMethodViewModel.controller,
+                )
+            }
+
+            ActionFlowOwner.PAYMENT_METHOD_LIST -> {
+                val instantPaymentMethod = paymentMethodListViewModel(viewModel, parentOwner)
+                    .findInstantPaymentMethod(key.paymentFlowType)
+
+                if (instantPaymentMethod == null) {
+                    adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
+                        "No instant payment method for ${key.paymentFlowType}, the action cannot be displayed."
+                    }
+                } else {
+                    ActionScreen(
+                        navigator = viewModel.navigator,
+                        viewState = instantPaymentMethod.actionViewState,
+                        controller = instantPaymentMethod.controller,
+                    )
+                }
+            }
+        }
+    }
 }
 
-private fun paymentMethodViewModelFactory(
+@Composable
+private fun paymentMethodViewModel(
     paymentFlowType: DropInPaymentFlowType,
     viewModel: DropInViewModel,
-) = PaymentMethodViewModel.Factory(
-    paymentFlowType = paymentFlowType,
-    dropInParams = viewModel.dropInParams,
-    paymentMethodRepository = viewModel.paymentMethodRepository,
-    navigator = viewModel.navigator,
-    controllerProvider = viewModel.controllerProvider,
+    viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current),
+): PaymentMethodViewModel = viewModel(
+    viewModelStoreOwner = viewModelStoreOwner,
+    factory = PaymentMethodViewModel.Factory(
+        paymentFlowType = paymentFlowType,
+        dropInParams = viewModel.dropInParams,
+        paymentMethodRepository = viewModel.paymentMethodRepository,
+        navigator = viewModel.navigator,
+        controllerProvider = viewModel.controllerProvider,
+    ),
+)
+
+@Composable
+private fun paymentMethodListViewModel(
+    viewModel: DropInViewModel,
+    viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current),
+): PaymentMethodListViewModel = viewModel(
+    viewModelStoreOwner = viewModelStoreOwner,
+    factory = PaymentMethodListViewModel.Factory(
+        dropInParams = viewModel.dropInParams,
+        paymentMethodRepository = viewModel.paymentMethodRepository,
+        navigator = viewModel.navigator,
+        controllerProvider = viewModel.controllerProvider,
+    ),
 )
 
 /**
@@ -166,3 +214,9 @@ private fun paymentMethodViewModelFactory(
  * shared view model store.
  */
 private fun paymentFlowContentKey(paymentFlowType: DropInPaymentFlowType): String = paymentFlowType.toString()
+
+/**
+ * The [NavEntry.contentKey] of the payment method list entry. Declared explicitly rather than left to nav3's default,
+ * because the action screen of an instant payment method names this same value as its parent.
+ */
+private const val PAYMENT_METHOD_LIST_CONTENT_KEY = "PaymentMethodList"
