@@ -15,6 +15,9 @@
   "prHourlyLimit": 10,
   "packageRules": [
     {
+      "description": [
+        "[main] Group Kotlin Coroutines updates."
+      ],
       "matchBaseBranches": [
         "main"
       ],
@@ -24,6 +27,9 @@
       ]
     },
     {
+      "description": [
+        "[main] Group Kotlin updates."
+      ],
       "matchBaseBranches": [
         "main"
       ],
@@ -35,6 +41,9 @@
       ]
     },
     {
+      "description": [
+        "[main] Open PRs on the second Sunday of the month."
+      ],
       "matchBaseBranches": [
         "main"
       ],
@@ -44,6 +53,9 @@
       ]
     },
     {
+      "description": [
+        "[v5] Open one PR on the second Sunday of the month, every three months."
+      ],
       "matchBaseBranches": [
         "v5"
       ],
