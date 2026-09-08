@@ -11,6 +11,8 @@
     "main",
     "v5"
   ],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 10,
   "packageRules": [
     {
       "matchBaseBranches": [
