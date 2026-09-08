@@ -78,7 +78,9 @@ internal class PaymentMethodViewModel(
         viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
             controller.navigation.collect { route ->
                 when (route) {
-                    is CheckoutRoute.Action -> navigator.clearAndNavigateTo(ActionNavKey(paymentFlowType))
+                    is CheckoutRoute.Action -> navigator.clearAndNavigateTo(
+                        ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD),
+                    )
                     else -> Unit
                 }
             }
