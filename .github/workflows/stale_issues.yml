@@ -9,12 +9,11 @@ on:
   schedule:
     - cron: '0 0 * * *'  # Run every day at midnight
 
-permissions:
-  issues: write
-
 jobs:
   close_stale_prs:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - name: Close stale issues
         uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
