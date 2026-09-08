@@ -8,17 +8,23 @@
     "Dependencies"
   ],
   "baseBranchPatterns": [
-    "$default",
+    "main",
     "v5"
   ],
   "packageRules": [
     {
+      "matchBaseBranches": [
+        "main"
+      ],
       "groupName": "Kotlin Coroutines",
       "matchPackageNames": [
         "/org.jetbrains.kotlinx:kotlinx-coroutines.*/"
       ]
     },
     {
+      "matchBaseBranches": [
+        "main"
+      ],
       "groupName": "Kotlin",
       "matchPackageNames": [
         "/androidx.compose.compiler:compiler/",
@@ -27,12 +33,12 @@
       ]
     },
     {
+      "matchBaseBranches": [
+        "main"
+      ],
       "minimumReleaseAge": "14 days",
       "schedule": [
         "on the first day of the month"
-      ],
-      "matchPackageNames": [
-        "*"
       ]
     },
     {
@@ -42,6 +48,7 @@
       "groupName": "All v5 dependencies",
       "groupSlug": "all-v5",
       "separateMajorMinor": false,
+      "minimumReleaseAge": "14 days",
       "schedule": [
         "* * 1 */3 *"
       ]
