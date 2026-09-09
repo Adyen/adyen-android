@@ -8,17 +8,31 @@
     "Dependencies"
   ],
   "baseBranchPatterns": [
-    "$default",
+    "main",
     "v5"
   ],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 10,
   "packageRules": [
     {
+      "description": [
+        "[main] Group Kotlin Coroutines updates."
+      ],
+      "matchBaseBranches": [
+        "main"
+      ],
       "groupName": "Kotlin Coroutines",
       "matchPackageNames": [
         "/org.jetbrains.kotlinx:kotlinx-coroutines.*/"
       ]
     },
     {
+      "description": [
+        "[main] Group Kotlin updates."
+      ],
+      "matchBaseBranches": [
+        "main"
+      ],
       "groupName": "Kotlin",
       "matchPackageNames": [
         "/androidx.compose.compiler:compiler/",
@@ -27,23 +41,30 @@
       ]
     },
     {
+      "description": [
+        "[main] Open PRs on the second Sunday of the month."
+      ],
+      "matchBaseBranches": [
+        "main"
+      ],
       "minimumReleaseAge": "14 days",
       "schedule": [
-        "on the first day of the month"
-      ],
-      "matchPackageNames": [
-        "*"
+        "* * 8-14 * 0"
       ]
     },
     {
+      "description": [
+        "[v5] Open one PR on the second Sunday of the month, every three months."
+      ],
       "matchBaseBranches": [
         "v5"
       ],
       "groupName": "All v5 dependencies",
       "groupSlug": "all-v5",
       "separateMajorMinor": false,
+      "minimumReleaseAge": "14 days",
       "schedule": [
-        "* * 1 */3 *"
+        "* * 8-14 */3 0"
       ]
     }
   ],
