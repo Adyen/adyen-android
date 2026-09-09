@@ -1,34 +1,32 @@
 name: Trigger Finalize Release
 
 on:
-  push:
+  pull_request:
+    types: [ closed ]
     branches:
       - 'release-notes'
 
 jobs:
-  fetch_version_name:
-    name: Fetch version name
-    permissions:
-      contents: read
-    uses: ./.github/workflows/fetch_version_name_from_release_notes.yml
-
   trigger_finalize_release:
     name: Trigger Finalize Release on Release Branch
     runs-on: ubuntu-latest
-    needs: fetch_version_name
+    if: >-
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release-notes-')
     # Dispatching another workflow is what actions: write is for. No other scope is needed here,
     # since this job never touches the repository itself.
     permissions:
       actions: write
-    env:
-      VERSION_NAME: ${{ needs.fetch_version_name.outputs.version-name }}
 
     steps:
-      - name: Checkout to Release and Trigger Finalize Release
+      - name: Trigger Finalize Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
+          VERSION_NAME="${HEAD_REF#release-notes-}"
+
           # jq builds the payload so that the version name is encoded as JSON rather than pasted
           # into it.
           PAYLOAD=$(jq -n --arg version "$VERSION_NAME" \
