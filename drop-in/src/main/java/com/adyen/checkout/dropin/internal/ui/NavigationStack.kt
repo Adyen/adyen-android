@@ -6,6 +6,8 @@
  * Created by oscars on 3/2/2026.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +47,7 @@ internal fun NavigationStack(
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
                 is PaymentMethodNavKey -> paymentMethodNavEntry(key, viewModel)
+                is SecondaryNavKey -> secondaryNavEntry(key, viewModel)
                 is ActionNavKey -> actionNavEntry(key, viewModel)
                 else -> error("Unknown key: $key")
             }
@@ -127,6 +130,30 @@ private fun paymentMethodNavEntry(
             theme = viewModel.theme,
         )
     }
+}
+
+private fun secondaryNavEntry(
+    key: SecondaryNavKey,
+    viewModel: DropInViewModel,
+): NavEntry<NavKey> = NavEntry(
+    key = key,
+    // The entry that owns the flow stays on the back stack below this one, so naming it as the parent resolves the
+    // view model already holding the controller rather than building a second one from the same factory.
+    metadata = DropInTransitions.slideInAndOutHorizontally() +
+        SharedViewModelStoreNavEntryDecorator.parent(paymentFlowContentKey(key.paymentFlowType)),
+) {
+    val paymentMethodViewModel = paymentMethodViewModel(
+        paymentFlowType = key.paymentFlowType,
+        viewModel = viewModel,
+        viewModelStoreOwner = LocalSharedViewModelStoreOwner.current,
+    )
+
+    SecondaryScreen(
+        navigator = viewModel.navigator,
+        identifier = key.identifier,
+        controller = paymentMethodViewModel.controller,
+        theme = viewModel.theme,
+    )
 }
 
 private fun actionNavEntry(
