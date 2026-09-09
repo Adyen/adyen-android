@@ -10,7 +10,7 @@ on:
     - cron: '0 0 * * *'  # Run every day at midnight
 
 jobs:
-  close_stale_prs:
+  close_stale_issues:
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -23,3 +23,7 @@ jobs:
           close-issue-message: 'This issue is now closed because it has been stalled for 14 days with no activity.'
           days-before-issue-stale: 14
           days-before-issue-close: 14
+          # Only issues are managed here. Without this, pull requests fall back to the 60 day
+          # default of days-before-stale, which this job has no permissions to act on.
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
