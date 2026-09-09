@@ -229,6 +229,53 @@ internal class PaymentMethodViewModelTest {
     }
 
     @Test
+    fun `when the controller routes to a secondary screen, then it is stacked on the payment method`() {
+        navigationFlow = flowOf(CheckoutRoute.Secondary(SECONDARY_ID))
+        navigateToPaymentMethod(REGULAR_TYPE)
+
+        createViewModel(REGULAR_TYPE)
+
+        // Stacked rather than replacing, so that going back returns to the form the shopper was filling in.
+        assertEquals(
+            listOf(
+                EmptyNavKey,
+                StoredPaymentMethodsNavKey,
+                PaymentMethodNavKey(REGULAR_TYPE),
+                SecondaryNavKey(REGULAR_TYPE, SECONDARY_ID),
+            ),
+            navigator.backStack,
+        )
+    }
+
+    @Test
+    fun `when the controller closes the secondary screen, then the payment method is back on top`() {
+        navigationFlow = flowOf(CheckoutRoute.Secondary(SECONDARY_ID), CheckoutRoute.PaymentMethod())
+        navigateToPaymentMethod(REGULAR_TYPE)
+
+        createViewModel(REGULAR_TYPE)
+
+        assertEquals(
+            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
+            navigator.backStack,
+        )
+    }
+
+    @Test
+    fun `when the controller routes to the payment method with no secondary screen open, then nothing is popped`() {
+        navigationFlow = flowOf(CheckoutRoute.PaymentMethod())
+        navigateToPaymentMethod(REGULAR_TYPE)
+
+        createViewModel(REGULAR_TYPE)
+
+        // The shopper can dismiss the secondary screen before the component asks to close it, so this arrives with the
+        // payment method already on top. Popping then would take the form away.
+        assertEquals(
+            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
+            navigator.backStack,
+        )
+    }
+
+    @Test
     fun `when the controller routes nowhere, then the back stack is untouched`() {
         createViewModel(REGULAR_TYPE)
 
@@ -300,6 +347,7 @@ internal class PaymentMethodViewModelTest {
 
     private companion object {
         private const val STORED_ID = "stored-id-1"
+        private const val SECONDARY_ID = "INSTALLMENTS"
         private val REGULAR_TYPE = DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.SCHEME)
         private val STORED_TYPE = DropInPaymentFlowType.StoredPaymentMethod(STORED_ID)
     }

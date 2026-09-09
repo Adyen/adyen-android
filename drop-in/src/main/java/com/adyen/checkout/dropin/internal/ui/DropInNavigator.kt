@@ -58,6 +58,15 @@ internal class DropInNavigator(
         persist()
     }
 
+    fun backTo(key: NavKey) {
+        if (_backStack.lastOrNull() == key || key !in _backStack) return
+
+        while (_backStack.lastOrNull() != key) {
+            _backStack.removeLastOrNull()
+        }
+        persist()
+    }
+
     fun isEmptyAfterCurrent(): Boolean {
         return _backStack.filterNot { it is EmptyNavKey }.size <= 1
     }

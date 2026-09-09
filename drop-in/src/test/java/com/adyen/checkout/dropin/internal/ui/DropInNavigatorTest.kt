@@ -66,6 +66,38 @@ internal class DropInNavigatorTest {
     }
 
     @Test
+    fun `when going back to a key then everything stacked on it is removed`() {
+        val target = TestNavKey("target")
+        navigator.navigateTo(target)
+        navigator.navigateTo(TestNavKey("stacked"))
+        navigator.navigateTo(TestNavKey("stackedOnTop"))
+
+        navigator.backTo(target)
+
+        assertEquals(listOf(EmptyNavKey, target), navigator.backStack)
+    }
+
+    @Test
+    fun `when going back to the key already on top then the back stack is untouched`() {
+        val target = TestNavKey("target")
+        navigator.navigateTo(target)
+
+        navigator.backTo(target)
+
+        assertEquals(listOf(EmptyNavKey, target), navigator.backStack)
+    }
+
+    @Test
+    fun `when going back to a key that is not stacked then the back stack is untouched`() {
+        val key = TestNavKey("first")
+        navigator.navigateTo(key)
+
+        navigator.backTo(TestNavKey("missing"))
+
+        assertEquals(listOf(EmptyNavKey, key), navigator.backStack)
+    }
+
+    @Test
     fun `when going back to empty key then finish flow emits true`() = runTest {
         val key = TestNavKey("test")
         navigator.navigateTo(key)

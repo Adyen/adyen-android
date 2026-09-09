@@ -39,6 +39,12 @@ internal data class ActionNavKey(
     val owner: ActionFlowOwner,
 ) : NavKey
 
+@Serializable
+internal data class SecondaryNavKey(
+    val paymentFlowType: DropInPaymentFlowType,
+    val identifier: String,
+) : NavKey
+
 /** The view model owning a payment flow, and with it the controller its action screen continues on. */
 @Serializable
 internal enum class ActionFlowOwner {
