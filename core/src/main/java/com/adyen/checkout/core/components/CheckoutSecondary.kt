@@ -24,7 +24,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * @param identifier The identifier of the secondary screen to display.
  * @param controller The [CheckoutController] driving this flow.
  * @param modifier The [Modifier] to be applied to the secondary UI.
- * @param theme The [CheckoutTheme] used to style the UI.
+ * @param theme An optional [CheckoutTheme] to override the UI styling.
  * @param localizationProvider An optional [CheckoutLocalizationProvider] to override the displayed strings.
  */
 @Composable
@@ -32,7 +32,7 @@ fun CheckoutSecondary(
     identifier: String,
     controller: CheckoutController,
     modifier: Modifier = Modifier,
-    theme: CheckoutTheme = CheckoutTheme(),
+    theme: CheckoutTheme? = null,
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
     CheckoutCompositionLocalProvider(

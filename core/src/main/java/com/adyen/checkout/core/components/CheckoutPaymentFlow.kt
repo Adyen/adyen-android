@@ -32,14 +32,14 @@ import kotlinx.parcelize.Parcelize
  *
  * @param controller The [CheckoutController] driving this flow.
  * @param modifier The [Modifier] to be applied to the checkout UI.
- * @param theme The [CheckoutTheme] used to style the UI.
+ * @param theme An optional [CheckoutTheme] to override the UI styling.
  * @param localizationProvider An optional [CheckoutLocalizationProvider] to override the displayed strings.
  */
 @Composable
 fun CheckoutPaymentFlow(
     controller: CheckoutController,
     modifier: Modifier = Modifier,
-    theme: CheckoutTheme = CheckoutTheme(),
+    theme: CheckoutTheme? = null,
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
     var state by rememberSaveable(controller) {

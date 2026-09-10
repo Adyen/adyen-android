@@ -127,7 +127,6 @@ private fun paymentMethodNavEntry(
         PaymentMethodScreen(
             navigator = viewModel.navigator,
             viewModel = paymentMethodViewModel(key.paymentFlowType, viewModel),
-            theme = viewModel.theme,
         )
     }
 }
@@ -152,7 +151,6 @@ private fun secondaryNavEntry(
         navigator = viewModel.navigator,
         identifier = key.identifier,
         controller = paymentMethodViewModel.controller,
-        theme = viewModel.theme,
     )
 }
 
