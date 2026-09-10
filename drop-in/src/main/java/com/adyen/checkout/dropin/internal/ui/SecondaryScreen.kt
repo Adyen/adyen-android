@@ -15,14 +15,12 @@ import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutSecondary
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun SecondaryScreen(
     navigator: DropInNavigator,
     identifier: String,
     controller: CheckoutController,
-    theme: CheckoutTheme,
 ) {
     DropInScaffold(
         navigationIcon = { PaymentMethodNavigationIcon(navigator) },
@@ -34,7 +32,6 @@ internal fun SecondaryScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(Dimensions.Spacing.Large),
-            theme = theme,
         )
     }
 }
