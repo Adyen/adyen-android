@@ -9,7 +9,9 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
@@ -30,6 +32,7 @@ internal class SessionComponentRequestDispatcher(
 ) : SubmittableComponentRequestDispatcher {
 
     private var sessionData: String = initialSessionData
+    private var sessionResult: String = ""
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
         val beforeSubmitResult = handleBeforeSubmit(data)
@@ -46,6 +49,7 @@ internal class SessionComponentRequestDispatcher(
                 ).fold(
                     onSuccess = { response ->
                         sessionData = response.sessionData
+                        sessionResult = response.sessionResult.orEmpty()
                         // TODO - Check if we need to support partial payment flow
                         when {
                             response.action != null -> SubmitResult.Action(response.action)
@@ -86,6 +90,7 @@ internal class SessionComponentRequestDispatcher(
         ).fold(
             onSuccess = { response ->
                 sessionData = response.sessionData
+                sessionResult = response.sessionResult.orEmpty()
                 return AdditionalDetailsResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
             },
             onFailure = { error ->
@@ -96,10 +101,14 @@ internal class SessionComponentRequestDispatcher(
     }
 
     override fun complete(resultCode: CheckoutResultCode) {
+        if (sessionId.isBlank() || sessionResult.isBlank()) {
+            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without sessionId or sessionResult." }
+        }
+
         val result = SessionCheckoutResult(
             resultCode = resultCode,
             sessionId = sessionId,
-            sessionData = sessionData,
+            sessionResult = sessionResult,
         )
         callbacks.onComplete(result)
     }
