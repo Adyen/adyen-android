@@ -22,14 +22,14 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  *
  * @param controller The [CheckoutController] driving this flow.
  * @param modifier The [Modifier] to be applied to the payment method UI.
- * @param theme The [CheckoutTheme] used to style the UI.
+ * @param theme An optional [CheckoutTheme] to override the UI styling.
  * @param localizationProvider An optional [CheckoutLocalizationProvider] to override the displayed strings.
  */
 @Composable
 fun CheckoutPaymentMethod(
     controller: CheckoutController,
     modifier: Modifier = Modifier,
-    theme: CheckoutTheme = CheckoutTheme(),
+    theme: CheckoutTheme? = null,
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
     CheckoutCompositionLocalProvider(
