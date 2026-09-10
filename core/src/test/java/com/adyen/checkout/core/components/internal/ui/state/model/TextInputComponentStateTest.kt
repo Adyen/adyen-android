@@ -9,6 +9,10 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentStateTest.TestFormElementId.HOLDER_NAME
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentStateTest.TestFormElementId.NUMBER
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -324,6 +328,67 @@ internal class TextInputComponentStateTest {
         }
     }
 
+    @Nested
+    inner class ApplyFocusChangeTest {
+
+        @Test
+        fun `when a field loses focus, then an error it was holding back is shown`() {
+            // GIVEN
+            val field = TextInputComponentState(error = hiddenError(), isFocused = true)
+
+            // WHEN
+            val updated = field.applyFocusChange(noRequest, NUMBER, hasFocus = false)
+
+            // THEN
+            assertTrue(updated.isErrorVisible)
+            assertFalse(updated.isFocused)
+        }
+
+        @Test
+        fun `when pay requested this focus, then the revealed error stays visible`() {
+            // GIVEN
+            val field = TextInputComponentState(error = visibleError())
+            val request = FocusRequest(NUMBER, showErrorIfPresent = true)
+
+            // WHEN
+            val updated = field.applyFocusChange(request, NUMBER, hasFocus = true)
+
+            // THEN
+            assertTrue(updated.isErrorVisible)
+            assertTrue(updated.isFocused)
+        }
+
+        @Test
+        fun `when a request without a highlight asks for focus, then the error is hidden like a shopper tap`() {
+            // GIVEN
+            val field = TextInputComponentState(error = visibleError())
+            val request = FocusRequest(NUMBER)
+
+            // WHEN
+            val updated = field.applyFocusChange(request, NUMBER, hasFocus = true)
+
+            // THEN
+            assertFalse(updated.isErrorVisible)
+            assertTrue(updated.isFocused)
+        }
+
+        @Test
+        fun `when another field was requested, then focus hides the error like a shopper tap`() {
+            // GIVEN
+            val field = TextInputComponentState(error = visibleError())
+            val request = FocusRequest(HOLDER_NAME, showErrorIfPresent = true)
+
+            // WHEN
+            val updated = field.applyFocusChange(request, NUMBER, hasFocus = true)
+
+            // THEN
+            assertFalse(updated.isErrorVisible)
+            assertTrue(updated.isFocused)
+        }
+
+        private val noRequest: FocusRequest<TestFormElementId>? = null
+    }
+
     private fun hiddenError() = TextInputComponentState.InputError(
         message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
         isVisible = false,
@@ -333,4 +398,9 @@ internal class TextInputComponentStateTest {
         message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
         isVisible = true,
     )
+
+    private enum class TestFormElementId(override val isTextInput: Boolean = true) : FormElementId {
+        NUMBER,
+        HOLDER_NAME,
+    }
 }

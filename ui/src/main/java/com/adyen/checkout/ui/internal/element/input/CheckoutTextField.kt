@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
@@ -67,10 +68,16 @@ import kotlinx.coroutines.flow.collectLatest
  * @param isError Indicates whether the text field is in an error state. When `true`,
  * the text field's appearance may change to reflect an error.
  * @param keyboardOptions Optional keyboard options that can be used to configure the keyboard.
+ * @param imeAction The action key the keyboard shows. It takes precedence over the one in [keyboardOptions] and over
+ * the one an [inputTransformation] asks for, so that the field the form considers last is the one that closes the
+ * keyboard. Leave it unspecified to keep whatever those two ask for.
  * @param interactionSource Optional [MutableInteractionSource] representing the stream of
  * interactions for this text field.
  * @param innerIndication Optional [Indication] that will be used for the internal
  * [CheckoutTextFieldDecorationBox].
+ * @param focusRequest A pending request to give this field focus, or null if there is none. Each new request moves
+ * focus once, and is reported back through [onFocusRequestConsumed].
+ * @param onFocusRequestConsumed Called after a [focusRequest] has been acted on, so that the state layer can clear it.
  * @param prefix An optional string to be displayed at the beginning of the input area,
  * before the user's input.
  * @param trailingIcon A composable function that provides a trailing icon to be displayed at the end
@@ -78,7 +85,9 @@ import kotlinx.coroutines.flow.collectLatest
  * `CheckoutTextFieldTrailingIcon`, which handles the generic empty and error icons for every field.
  * This parameter is required so that every new field has to make a deliberate choice about it.
  */
-@Suppress("LongMethod")
+// TODO - Form fields phase 5: Card fields will use the parameters below when they adopt form-driven focus and IME
+// actions, allowing the UnusedParameter suppression to be removed.
+@Suppress("LongMethod", "UnusedParameter")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutTextField(
@@ -92,9 +101,12 @@ fun CheckoutTextField(
     inputTransformation: InputTransformation? = null,
     outputTransformation: OutputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    imeAction: ImeAction = ImeAction.Unspecified,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
     shouldFocus: Boolean = false,
+    focusRequest: FocusRequestToken? = null,
+    onFocusRequestConsumed: (() -> Unit)? = null,
     prefix: String? = null,
     hint: String? = null,
     isSecureField: Boolean = false,
