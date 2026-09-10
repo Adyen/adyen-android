@@ -81,6 +81,15 @@ internal class PaymentMethodViewModel(
                     is CheckoutRoute.Action -> navigator.clearAndNavigateTo(
                         ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD),
                     )
+
+                    is CheckoutRoute.Secondary -> navigator.navigateTo(
+                        SecondaryNavKey(paymentFlowType, route.identifier),
+                    )
+
+                    is CheckoutRoute.PaymentMethod -> navigator.backTo(
+                        PaymentMethodNavKey(paymentFlowType)
+                    )
+
                     else -> Unit
                 }
             }
