@@ -29,17 +29,9 @@ import com.adyen.checkout.dropin.internal.ui.element.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.element.PaymentProgressStatus
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
-@Composable
-internal fun ActionScreen(
-    navigator: DropInNavigator,
-    viewModel: PaymentMethodViewModel,
-) {
-    ActionScreenContent(navigator, viewModel.actionViewState, viewModel.controller)
-}
-
 // TODO - Improve the presentation of this screen when design is final
 @Composable
-private fun ActionScreenContent(
+internal fun ActionScreen(
     navigator: DropInNavigator,
     viewState: ActionViewState,
     controller: CheckoutController,

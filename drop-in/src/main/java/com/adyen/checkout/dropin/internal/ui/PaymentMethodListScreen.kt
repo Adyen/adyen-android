@@ -40,6 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
@@ -62,13 +64,19 @@ internal fun PaymentMethodListScreen(
     viewModel: PaymentMethodListViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    PaymentMethodListContent(navigator, viewState, navigator::navigateTo)
+    PaymentMethodListContent(
+        navigator = navigator,
+        viewState = viewState,
+        instantPaymentMethodController = viewModel.instantPaymentMethod?.controller,
+        onPaymentMethodClick = navigator::navigateTo,
+    )
 }
 
 @Composable
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
+    instantPaymentMethodController: CheckoutController?,
     onPaymentMethodClick: (PaymentMethodNavKey) -> Unit,
 ) {
     DropInScaffold(
@@ -100,6 +108,10 @@ private fun PaymentMethodListContent(
                 )
             }
 
+            instantPaymentMethodController?.let { controller ->
+                item { InstantPaymentMethod(controller = controller) }
+            }
+
             viewState.storedPaymentMethodSection?.let { storedSection ->
                 section(
                     title = storedSection.title,
@@ -124,6 +136,22 @@ private fun PaymentMethodListContent(
             }
         }
     }
+}
+
+// TODO - Renders against the default theme, because CheckoutPaymentMethod re-provides the composition
+//  locals from its own parameters and so discards the one Drop-in established. Provide Drop-in theme.
+@Composable
+private fun InstantPaymentMethod(
+    controller: CheckoutController,
+    modifier: Modifier = Modifier,
+) {
+    CheckoutPaymentMethod(
+        controller = controller,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimensions.Spacing.Large)
+            .padding(bottom = Dimensions.Spacing.Large),
+    )
 }
 
 private fun LazyListScope.section(
@@ -299,6 +327,8 @@ private fun PaymentMethodListContentPreview(
         val persister = SavedStateBackStackPersister(SavedStateHandle())
         PaymentMethodListContent(
             navigator = DropInNavigator(persister),
+            // A CheckoutController cannot be built in a preview.
+            instantPaymentMethodController = null,
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
                 storedPaymentMethodSection = PaymentMethodListViewState.PaymentMethodListSection(
