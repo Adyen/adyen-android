@@ -20,8 +20,8 @@ internal class DropInNavigator(
 ) {
 
     // Initialized with an empty key to make the preselected bottom sheet possible
-    private val _backStack: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
-    val backStack: List<NavKey> get() = _backStack
+    val backStack: List<NavKey>
+        field: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
 
     private val _finishFlow = MutableStateFlow(false)
     val finishFlow = _finishFlow.asStateFlow()
@@ -32,46 +32,46 @@ internal class DropInNavigator(
         val restored = backStackPersister.restore()
         didRestoreState = restored != null
         if (didRestoreState) {
-            _backStack.clear()
-            _backStack.addAll(restored)
+            backStack.clear()
+            backStack.addAll(restored)
         }
     }
 
     fun navigateTo(key: NavKey) {
-        _backStack.add(key)
+        backStack.add(key)
         persist()
     }
 
     fun clearAndNavigateTo(key: NavKey) {
-        _backStack.clear()
-        _backStack.add(EmptyNavKey)
-        _backStack.add(key)
+        backStack.clear()
+        backStack.add(EmptyNavKey)
+        backStack.add(key)
         persist()
     }
 
     fun back() {
-        _backStack.removeLastOrNull()
+        backStack.removeLastOrNull()
 
-        if (_backStack.singleOrNull() == EmptyNavKey) {
+        if (backStack.singleOrNull() == EmptyNavKey) {
             _finishFlow.tryEmit(true)
         }
         persist()
     }
 
     fun backTo(key: NavKey) {
-        if (_backStack.lastOrNull() == key || key !in _backStack) return
+        if (backStack.lastOrNull() == key || key !in backStack) return
 
-        while (_backStack.lastOrNull() != key) {
-            _backStack.removeLastOrNull()
+        while (backStack.lastOrNull() != key) {
+            backStack.removeLastOrNull()
         }
         persist()
     }
 
     fun isEmptyAfterCurrent(): Boolean {
-        return _backStack.filterNot { it is EmptyNavKey }.size <= 1
+        return backStack.filterNot { it is EmptyNavKey }.size <= 1
     }
 
     private fun persist() {
-        backStackPersister.store(_backStack)
+        backStackPersister.store(backStack)
     }
 }
