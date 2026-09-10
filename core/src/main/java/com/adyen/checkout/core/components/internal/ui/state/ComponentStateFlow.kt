@@ -31,10 +31,12 @@ fun <C : ComponentState, I : ComponentStateIntent> ComponentStateFlow(
     initialState: C,
     reducer: ComponentStateReducer<C, I>,
     validator: ComponentStateValidator<C>,
+    postProcessor: ComponentStatePostProcessor<C, I> = NoPostProcessing(),
 ): ComponentStateFlow<C, I> = ComponentStateFlowImplementation(
     initialState = initialState,
     reducer = reducer,
     validator = validator,
+    postProcessor = postProcessor,
 )
 
 // Owns its state directly in a MutableStateFlow rather than folding intents over a cold flow. A cold flow's
@@ -43,17 +45,16 @@ fun <C : ComponentState, I : ComponentStateIntent> ComponentStateFlow(
 // shopper input would silently be discarded. Owning the state directly means there is no subscription whose
 // cancellation could lose anything.
 //
-// This requires reducer.reduce and validator.validate to be pure (no side effects), because MutableStateFlow.update
-// can re-invoke its lambda under contention.
+// This requires reducer.reduce, validator.validate and postProcessor.process to be pure (no side effects), because
+// MutableStateFlow.update can re-invoke its lambda under contention.
 private class ComponentStateFlowImplementation<C : ComponentState, I : ComponentStateIntent>(
     initialState: C,
     private val reducer: ComponentStateReducer<C, I>,
     private val validator: ComponentStateValidator<C>,
+    private val postProcessor: ComponentStatePostProcessor<C, I>,
 ) : ComponentStateFlow<C, I> {
 
-    // Validated up front: isValid reads the error that validate() writes, so an unvalidated state reports itself
-    // valid no matter what it contains.
-    private val state = MutableStateFlow(validator.validate(initialState))
+    private val state = MutableStateFlow(createInitialState(initialState))
 
     override val value: C
         get() = state.value
@@ -66,7 +67,16 @@ private class ComponentStateFlowImplementation<C : ComponentState, I : Component
     }
 
     override fun handleIntent(intent: I) {
-        state.update { validator.validate(reducer.reduce(it, intent)) }
+        state.update { currentState ->
+            val reducedState = reducer.reduce(currentState, intent)
+            val validatedState = validator.validate(reducedState)
+            postProcessor.process(validatedState, intent)
+        }
+    }
+
+    private fun createInitialState(initialState: C): C {
+        val validatedState = validator.validate(initialState)
+        return postProcessor.processInitialState(validatedState)
     }
 }
 
