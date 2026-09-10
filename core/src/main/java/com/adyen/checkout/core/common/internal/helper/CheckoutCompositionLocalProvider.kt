@@ -30,24 +30,30 @@ import java.util.Locale
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutCompositionLocalProvider(
-    theme: CheckoutTheme,
+    theme: CheckoutTheme?,
     locale: Locale,
     localizationProvider: CheckoutLocalizationProvider?,
     environment: Environment,
     content: @Composable () -> Unit,
 ) {
-    InternalCheckoutTheme(theme) {
-        val context = LocalContext.current
-        val localizedContext = remember(context, locale) {
-            context.createLocalizedContext(locale)
-        }
-        CompositionLocalProvider(
-            LocalLocalizationResolver provides LocalizationResolver(localizationProvider),
-            LocalLocalizedContext provides localizedContext,
-            LocalLocale provides locale,
-            LocalEnvironment provides environment,
-        ) {
+    val context = LocalContext.current
+    val localizedContext = remember(context, locale) {
+        context.createLocalizedContext(locale)
+    }
+    val localizationResolver = remember(localizationProvider) {
+        localizationProvider?.let { LocalizationResolver(it) }
+    } ?: LocalLocalizationResolver.current
+
+    CompositionLocalProvider(
+        LocalLocalizationResolver provides localizationResolver,
+        LocalLocalizedContext provides localizedContext,
+        LocalLocale provides locale,
+        LocalEnvironment provides environment,
+    ) {
+        if (theme == null) {
             content()
+        } else {
+            InternalCheckoutTheme(theme, content)
         }
     }
 }
