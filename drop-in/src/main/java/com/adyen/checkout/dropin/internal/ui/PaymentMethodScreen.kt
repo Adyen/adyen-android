@@ -26,14 +26,17 @@ internal fun PaymentMethodScreen(
     theme: CheckoutTheme,
 ) {
     when (val viewState = viewModel.paymentMethodViewState) {
-        is PaymentMethodViewState.RegularInput ->
-            RegularPaymentMethodInputContent(navigator, viewState) {
-                // TODO - Pass localization provider
-                CheckoutPaymentMethod(controller = viewModel.controller, theme = theme)
-            }
+        is PaymentMethodViewState.Regular -> RegularPaymentMethodContent(navigator, viewState) {
+            // TODO - Pass localization provider
+            CheckoutPaymentMethod(controller = viewModel.controller, theme = theme)
+        }
 
-        is PaymentMethodViewState.Progress ->
-            PaymentMethodProgressContent(navigator, viewState)
+        is PaymentMethodViewState.Stored -> StoredPaymentMethodContent(navigator, viewState) {
+            // TODO - Pass localization provider
+            CheckoutPaymentMethod(controller = viewModel.controller, theme = theme)
+        }
+
+        is PaymentMethodViewState.Progress -> PaymentMethodProgressContent(navigator, viewState)
     }
 }
 

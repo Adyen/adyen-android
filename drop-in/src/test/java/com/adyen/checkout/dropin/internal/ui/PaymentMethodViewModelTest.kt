@@ -84,9 +84,44 @@ internal class PaymentMethodViewModelTest {
 
         val viewModel = createViewModel(REGULAR_TYPE)
 
-        val input = assertInstanceOf<PaymentMethodViewState.RegularInput>(viewModel.paymentMethodViewState)
+        val input = assertInstanceOf<PaymentMethodViewState.Regular>(viewModel.paymentMethodViewState)
         assertEquals("Cards", input.paymentMethodName)
         assertEquals(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION, input.description)
+    }
+
+    @Test
+    fun `when a stored payment method takes input, then the screen introduces it above the form`() {
+        requiresUserInteraction = true
+
+        val viewModel = createViewModel(STORED_TYPE)
+
+        val stored = assertInstanceOf<PaymentMethodViewState.Stored>(viewModel.paymentMethodViewState)
+        assertEquals("\u2022\u2022\u2022\u2022 1234", stored.title)
+        assertEquals("visa", stored.logoTxVariant)
+        assertEquals("Visa", stored.paymentMethodName)
+    }
+
+    @Test
+    fun `when a stored payment method takes no input, then it is confirmed before being charged`() {
+        requiresUserInteraction = false
+
+        val viewModel = createViewModel(STORED_TYPE)
+
+        // Core reports that a stored payment method needs no interaction. Routing it to progress would charge the
+        // shopper on arrival, so this must stay a screen with a button.
+        val stored = assertInstanceOf<PaymentMethodViewState.Stored>(viewModel.paymentMethodViewState)
+        assertEquals("\u2022\u2022\u2022\u2022 1234", stored.title)
+        assertEquals("visa", stored.logoTxVariant)
+        assertEquals("Visa", stored.paymentMethodName)
+    }
+
+    @Test
+    fun `when a stored payment method takes no input, then it is not submitted`() {
+        requiresUserInteraction = false
+
+        val viewModel = createViewModel(STORED_TYPE)
+
+        verify(viewModel.controller, never()).submit()
     }
 
     @Test
@@ -191,6 +226,19 @@ internal class PaymentMethodViewModelTest {
 
         assertEquals(
             listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
+            navigator.backStack,
+        )
+    }
+
+    @Test
+    fun `when a stored payment method takes no input, then the back stack is kept`() {
+        requiresUserInteraction = false
+        navigateToPaymentMethod(STORED_TYPE)
+
+        createViewModel(STORED_TYPE)
+
+        assertEquals(
+            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(STORED_TYPE)),
             navigator.backStack,
         )
     }
