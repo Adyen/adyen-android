@@ -23,11 +23,11 @@ internal class MBWayComponentStateValidator : ComponentStateValidator<MBWayCompo
             null
         }
         return state.copy(
-            phoneNumber = state.phoneNumber.copy(errorMessage = phoneNumberError),
+            phoneNumber = state.phoneNumber.updateError(phoneNumberError),
         )
     }
 
     override fun isValid(state: MBWayComponentState): Boolean {
-        return state.phoneNumber.errorMessage == null
+        return state.phoneNumber.isValid
     }
 }

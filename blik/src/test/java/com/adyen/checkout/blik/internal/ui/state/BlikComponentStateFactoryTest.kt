@@ -31,9 +31,8 @@ internal class BlikComponentStateFactoryTest {
             blikCode = TextInputComponentState(
                 text = "",
                 description = CheckoutLocalizationKey.BLIK_CODE_HINT,
-                errorMessage = null,
-                isFocused = true,
-                showError = false,
+                error = null,
+                isFocused = true
             ),
             isLoading = false,
         )

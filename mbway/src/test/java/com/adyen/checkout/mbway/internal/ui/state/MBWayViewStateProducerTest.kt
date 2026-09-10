@@ -31,8 +31,7 @@ internal class MBWayViewStateProducerTest {
             phoneNumber = TextInputComponentState(
                 text = "123456789",
                 isFocused = true,
-                errorMessage = CheckoutLocalizationKey.GENERAL_CLOSE,
-                showError = true,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE, isVisible = true)
             ),
             isLoading = true,
         )

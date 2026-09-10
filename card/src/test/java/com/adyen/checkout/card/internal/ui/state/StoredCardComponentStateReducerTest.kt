@@ -73,19 +73,18 @@ internal class StoredCardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is HighlightValidationErrors and securityCode has error, then securityCode showError and focus are set`() {
+    fun `when intent is HighlightValidationErrors and securityCode has error, then the securityCode error is shown and focus is set`() {
         val state = createInitialState().copy(
             securityCode = TextInputComponentState(
                 text = "",
                 isFocused = false,
-                errorMessage = CheckoutLocalizationKey.GENERAL_CLOSE,
-                showError = false,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
             ),
         )
 
         val actual = reducer.reduce(state, StoredCardIntent.HighlightValidationErrors)
 
-        assertTrue(actual.securityCode.showError)
+        assertTrue(actual.securityCode.isErrorVisible)
         assertTrue(actual.securityCode.isFocused)
     }
 
@@ -95,7 +94,7 @@ internal class StoredCardComponentStateReducerTest {
 
         val actual = reducer.reduce(state, StoredCardIntent.HighlightValidationErrors)
 
-        assertFalse(actual.securityCode.showError)
+        assertFalse(actual.securityCode.isErrorVisible)
         assertFalse(actual.securityCode.isFocused)
     }
 

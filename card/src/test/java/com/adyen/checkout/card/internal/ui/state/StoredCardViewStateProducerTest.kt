@@ -135,8 +135,7 @@ internal class StoredCardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "123",
-                errorMessage = null,
-                showError = false,
+                error = null
             ),
         )
 
@@ -153,8 +152,10 @@ internal class StoredCardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "12",
-                errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
-                showError = true,
+                error = TextInputComponentState.InputError(
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+                    isVisible = true
+                )
             ),
             detectedCardType = getDetectedCardType(CardBrand("visa")),
         )
@@ -172,8 +173,7 @@ internal class StoredCardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "",
-                errorMessage = null,
-                showError = false,
+                error = null
             ),
             detectedCardType = getDetectedCardType(CardBrand("amex")),
         )
@@ -191,8 +191,7 @@ internal class StoredCardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "",
-                errorMessage = null,
-                showError = false,
+                error = null
             ),
             detectedCardType = getDetectedCardType(CardBrand("visa")),
         )
@@ -210,8 +209,7 @@ internal class StoredCardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "12",
-                errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
-                showError = false,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID)
             ),
             detectedCardType = getDetectedCardType(CardBrand("visa")),
         )

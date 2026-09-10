@@ -51,8 +51,8 @@ private class ComponentStateFlowImplementation<C : ComponentState, I : Component
     private val validator: ComponentStateValidator<C>,
 ) : ComponentStateFlow<C, I> {
 
-    // Validated up front: isValid reads the errorMessage that validate() writes, so an unvalidated state reports
-    // itself valid no matter what it contains.
+    // Validated up front: isValid reads the error that validate() writes, so an unvalidated state reports itself
+    // valid no matter what it contains.
     private val state = MutableStateFlow(validator.validate(initialState))
 
     override val value: C

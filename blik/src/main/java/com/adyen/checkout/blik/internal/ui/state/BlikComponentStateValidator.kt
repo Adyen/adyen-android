@@ -20,12 +20,12 @@ internal class BlikComponentStateValidator : ComponentStateValidator<BlikCompone
             null
         }
         return state.copy(
-            blikCode = state.blikCode.copy(errorMessage = blikCodeError),
+            blikCode = state.blikCode.updateError(blikCodeError),
         )
     }
 
     override fun isValid(state: BlikComponentState): Boolean {
-        return state.blikCode.errorMessage == null
+        return state.blikCode.isValid
     }
 
     private fun isBlikCodeValid(blikCode: String): Boolean {
