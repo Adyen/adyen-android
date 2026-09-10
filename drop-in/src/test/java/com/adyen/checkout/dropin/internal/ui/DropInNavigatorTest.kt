@@ -92,6 +92,21 @@ internal class DropInNavigatorTest {
     }
 
     @Test
+    fun `when the current key is the only one then nothing is after it`() {
+        navigator.navigateTo(TestNavKey("only"))
+
+        assertEquals(true, navigator.isEmptyAfterCurrent())
+    }
+
+    @Test
+    fun `when a key is stacked on another then something is after it`() {
+        navigator.navigateTo(TestNavKey("first"))
+        navigator.navigateTo(TestNavKey("second"))
+
+        assertEquals(false, navigator.isEmptyAfterCurrent())
+    }
+
+    @Test
     fun `when restoring from saved state then back stack is restored`() {
         val key = TestNavKey("test")
         navigator.navigateTo(key)

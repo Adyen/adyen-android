@@ -10,7 +10,18 @@ package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
-internal data class PaymentMethodViewState(
-    val paymentMethodName: String,
-    val description: CheckoutLocalizationKey?,
-)
+/**
+ * What [PaymentMethodScreen] renders for a payment flow.
+ */
+internal sealed interface PaymentMethodViewState {
+
+    data class RegularInput(
+        val paymentMethodName: String,
+        val description: CheckoutLocalizationKey?,
+    ) : PaymentMethodViewState
+
+    data class Progress(
+        val logoTxVariant: String,
+        val paymentMethodName: String,
+    ) : PaymentMethodViewState
+}
