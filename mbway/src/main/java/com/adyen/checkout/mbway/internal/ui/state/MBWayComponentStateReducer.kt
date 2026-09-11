@@ -29,11 +29,6 @@ internal class MBWayComponentStateReducer : ComponentStateReducer<MBWayComponent
                 state
             }
 
-            // TODO - Form fields Layer 7: The second commit removes this legacy focus intent.
-            is MBWayIntent.UpdatePhoneNumberFocus -> state.copy(
-                phoneNumber = state.phoneNumber.updateFocus(intent.hasFocus),
-            )
-
             is MBWayIntent.HighlightValidationErrors -> highlightValidationErrors(state)
         }
     }
