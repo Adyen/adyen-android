@@ -94,15 +94,6 @@ internal class BlikComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateBlikCodeFocus, then legacy focus state is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, BlikIntent.UpdateBlikCodeFocus(true))
-
-        assertTrue(actual.blikCode.isFocused)
-    }
-
-    @Test
     fun `when intent is UpdateLoading, then state is updated`() {
         val state = createInitialState()
 
