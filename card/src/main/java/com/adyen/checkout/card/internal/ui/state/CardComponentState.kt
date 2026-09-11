@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.form.FormState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class CardComponentState(
@@ -37,7 +38,38 @@ internal data class CardComponentState(
     val cardBrandState: CardBrandState,
     val networkBinLookupState: NetworkBinLookupState?,
     val installmentState: InstallmentState,
-) : ComponentState
+) : ComponentState {
+
+    /**
+     * Which fields are on screen and in which order. This form is derived from the fields above and never manually
+     * created or modified.
+     *
+     * It is cached because the reducer and the producer both read it several times. [LazyThreadSafetyMode.PUBLICATION]
+     * is used because the same state might be read from several threads.
+     */
+    val form: FormState<CardFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        CardFormStateFactory(this).create()
+    }
+}
+
+/**
+ * Updates the text input corresponding to the provided [id]. Elements that are not text inputs are ignored.
+ */
+internal fun CardComponentState.updateTextInput(
+    id: CardFormElementId,
+    transform: (TextInputComponentState) -> TextInputComponentState,
+): CardComponentState = when (id) {
+    CardFormElementId.CARD_NUMBER -> copy(cardNumber = transform(cardNumber))
+    CardFormElementId.EXPIRY_DATE -> copy(expiryDate = transform(expiryDate))
+    CardFormElementId.SECURITY_CODE -> copy(securityCode = transform(securityCode))
+    CardFormElementId.HOLDER_NAME -> copy(holderName = transform(holderName))
+    CardFormElementId.SOCIAL_SECURITY_NUMBER -> copy(socialSecurityNumber = transform(socialSecurityNumber))
+    CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> copy(kcpBirthDateOrTaxNumber = transform(kcpBirthDateOrTaxNumber))
+    CardFormElementId.KCP_CARD_PASSWORD -> copy(kcpCardPassword = transform(kcpCardPassword))
+    CardFormElementId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
+    CardFormElementId.STORE_PAYMENT_METHOD,
+    CardFormElementId.INSTALLMENTS -> this
+}
 
 internal sealed class CardBrandState {
     // No brands
