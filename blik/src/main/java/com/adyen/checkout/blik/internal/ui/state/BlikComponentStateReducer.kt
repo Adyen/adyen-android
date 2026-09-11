@@ -28,11 +28,6 @@ internal class BlikComponentStateReducer : ComponentStateReducer<BlikComponentSt
                 state
             }
 
-            // TODO - Form fields Layer 7: The second commit removes this legacy focus intent.
-            is BlikIntent.UpdateBlikCodeFocus -> state.copy(
-                blikCode = state.blikCode.updateFocus(intent.hasFocus),
-            )
-
             is BlikIntent.UpdateLoading -> state.copy(isLoading = intent.isLoading)
 
             is BlikIntent.HighlightValidationErrors -> highlightValidationErrors(state)
