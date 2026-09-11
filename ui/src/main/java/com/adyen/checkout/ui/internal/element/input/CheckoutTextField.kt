@@ -15,6 +15,8 @@ package com.adyen.checkout.ui.internal.element.input
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -75,6 +77,7 @@ import kotlinx.coroutines.flow.collectLatest
  * interactions for this text field.
  * @param innerIndication Optional [Indication] that will be used for the internal
  * [CheckoutTextFieldDecorationBox].
+ * @param shouldFocus Whether the field should be focused on first composition.
  * @param focusRequest A pending request to give this field focus, or null if there is none. Each new request moves
  * focus once, and is reported back through [onFocusRequestConsumed].
  * @param onFocusRequestConsumed Called after a [focusRequest] has been acted on, so that the state layer can clear it.
@@ -85,9 +88,7 @@ import kotlinx.coroutines.flow.collectLatest
  * `CheckoutTextFieldTrailingIcon`, which handles the generic empty and error icons for every field.
  * This parameter is required so that every new field has to make a deliberate choice about it.
  */
-// TODO - Form fields phase 5: Card fields will use the parameters below when they adopt form-driven focus and IME
-// actions, allowing the UnusedParameter suppression to be removed.
-@Suppress("LongMethod", "UnusedParameter")
+@Suppress("LongMethod")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutTextField(
@@ -104,6 +105,7 @@ fun CheckoutTextField(
     imeAction: ImeAction = ImeAction.Unspecified,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
+    // TODO - Form fields cleanup: Layer 8 removes this once every component uses [focusRequest].
     shouldFocus: Boolean = false,
     focusRequest: FocusRequestToken? = null,
     onFocusRequestConsumed: (() -> Unit)? = null,
@@ -115,7 +117,10 @@ fun CheckoutTextField(
     val style = CheckoutThemeProvider.elements.textField
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
-    val focusModifier = modifier.focusRequester(focusRequester)
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val focusModifier = modifier
+        .focusRequester(focusRequester)
+        .bringIntoViewRequester(bringIntoViewRequester)
     val textStyle = TextStyle(
         color = style.textColor,
         fontSize = innerTextStyle.size.sp,
@@ -123,6 +128,7 @@ fun CheckoutTextField(
         lineHeight = innerTextStyle.lineHeight.sp,
     )
     val cursorBrush = SolidColor(style.activeColor)
+    val resolvedKeyboardOptions = keyboardOptions.merge(KeyboardOptions(imeAction = imeAction))
     val decorator = TextFieldDecorator { innerTextField ->
         CheckoutTextFieldDecorationBox(
             label = label,
@@ -147,7 +153,7 @@ fun CheckoutTextField(
             textStyle = textStyle,
             lineLimits = TextFieldLineLimits.SingleLine,
             cursorBrush = cursorBrush,
-            keyboardOptions = keyboardOptions,
+            keyboardOptions = resolvedKeyboardOptions,
             interactionSource = interactionSource,
             decorator = decorator,
         )
@@ -159,7 +165,7 @@ fun CheckoutTextField(
             inputTransformation = inputTransformation,
             textStyle = textStyle,
             cursorBrush = cursorBrush,
-            keyboardOptions = keyboardOptions,
+            keyboardOptions = resolvedKeyboardOptions,
             interactionSource = interactionSource,
             decorator = decorator,
         )
@@ -172,6 +178,21 @@ fun CheckoutTextField(
                 .collectLatest { value ->
                     currentOnValueChange(value.toString())
                 }
+        }
+    }
+
+    LaunchedEffect(focusRequest) {
+        if (focusRequest != null) {
+            // runCatching is there to prevent a crash caused by the requester not being attached to a focusable node
+            // this can happen if the field leaves composition between composition and this effect running
+            runCatching { focusRequester.requestFocus() }
+
+            // This is needed when the focus is requested on a field that already has focus but is not visible (e.g.
+            // hidden by scrolling)
+            bringIntoViewRequester.bringIntoView()
+
+            // Should be called last because it clears the request, which ends this effect
+            onFocusRequestConsumed?.invoke()
         }
     }
 

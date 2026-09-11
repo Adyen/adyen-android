@@ -9,6 +9,13 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementState
+import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewStateTest.TestFormElementId.FIRST
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewStateTest.TestFormElementId.LAST
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -190,6 +197,54 @@ internal class TextInputViewStateTest {
     }
 
     @Test
+    fun `when another text input follows, then the keyboard action is next`() {
+        // GIVEN
+        val form = formOf(FIRST, LAST)
+
+        // WHEN
+        val viewState = TextInputComponentState().toViewState(form, null, FIRST)
+
+        // THEN
+        assertEquals(KeyboardAction.NEXT, viewState.keyboardAction)
+    }
+
+    @Test
+    fun `when no text input follows, then the keyboard action is done`() {
+        // GIVEN
+        val form = formOf(FIRST, LAST)
+
+        // WHEN
+        val viewState = TextInputComponentState().toViewState(form, null, LAST)
+
+        // THEN
+        assertEquals(KeyboardAction.DONE, viewState.keyboardAction)
+    }
+
+    @Test
+    fun `when focus is requested for the field, then the view state contains a focus token`() {
+        // GIVEN
+        val form = formOf(FIRST)
+
+        // WHEN
+        val viewState = TextInputComponentState().toViewState(form, FocusRequest(FIRST), FIRST)
+
+        // THEN
+        assertNotNull(viewState.focusRequest)
+    }
+
+    @Test
+    fun `when focus is requested for another field, then the view state has no focus token`() {
+        // GIVEN
+        val form = formOf(FIRST, LAST)
+
+        // WHEN
+        val viewState = TextInputComponentState().toViewState(form, FocusRequest(LAST), FIRST)
+
+        // THEN
+        assertNull(viewState.focusRequest)
+    }
+
+    @Test
     fun `when field is optional, then view state should exist`() {
         // GIVEN
         val state = TextInputComponentState(
@@ -212,6 +267,14 @@ internal class TextInputViewStateTest {
         message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
         isVisible = true,
     )
+
+    private fun formOf(vararg ids: TestFormElementId) =
+        FormState(elements = ids.map { FormElementState(it, isValid = true) })
+
+    private enum class TestFormElementId(override val isTextInput: Boolean = true) : FormElementId {
+        FIRST,
+        LAST,
+    }
 
     private data object TestTrailingIcon : TrailingIcon()
 }
