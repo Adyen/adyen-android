@@ -14,11 +14,53 @@ import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTes
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 internal class FormStateExtTest {
+
+    @Nested
+    inner class FormValidityTest {
+
+        @Test
+        fun `when every visible element is valid, then the form is valid`() {
+            // GIVEN
+            val form = FormState(elements = listOf(valid(NUMBER), valid(HOLDER_NAME)))
+
+            // WHEN
+            val isFormValid = form.isFormValid
+
+            // THEN
+            assertTrue(isFormValid)
+        }
+
+        @Test
+        fun `when a visible element is invalid, then the form is invalid`() {
+            // GIVEN
+            val form = FormState(elements = listOf(valid(NUMBER), invalid(HOLDER_NAME)))
+
+            // WHEN
+            val isFormValid = form.isFormValid
+
+            // THEN
+            assertFalse(isFormValid)
+        }
+
+        @Test
+        fun `when an element is absent, then it is not visible and valid`() {
+            // GIVEN
+            val form = formOf(NUMBER)
+
+            // WHEN
+            val isVisibleAndValid = form.isElementVisibleAndValid(HOLDER_NAME)
+
+            // THEN
+            assertFalse(isVisibleAndValid)
+        }
+    }
 
     @Nested
     inner class FormElementStateTest {
