@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
-internal class InstallmentViewStateTest {
+internal class InstallmentPickerViewStateTest {
 
     @Test
-    fun `when installmentOptions is empty, then toViewState returns null`() {
+    fun `when installmentOptions is empty, then toPickerViewState returns null`() {
         // GIVEN
         val state = InstallmentState(
             installmentOptions = emptyList(),
@@ -24,14 +24,14 @@ internal class InstallmentViewStateTest {
         )
 
         // WHEN
-        val result = state.toViewState()
+        val result = state.toPickerViewState()
 
         // THEN
         assertNull(result)
     }
 
     @Test
-    fun `when installmentOptions is non-empty and selectedInstallment is set, then toViewState returns correct ViewState`() {
+    fun `when installmentOptions is non-empty and selectedInstallment is set, then toPickerViewState returns correct ViewState`() {
         // GIVEN
         val options = listOf(
             InstallmentModel.Regular(numberOfInstallments = 3, amountPerInstallment = null, showAmount = false),
@@ -44,7 +44,7 @@ internal class InstallmentViewStateTest {
         )
 
         // WHEN
-        val result = state.toViewState()
+        val result = state.toPickerViewState()
 
         // THEN
         assertEquals(options, result?.installmentOptions)
@@ -52,7 +52,7 @@ internal class InstallmentViewStateTest {
     }
 
     @Test
-    fun `when installmentOptions is non-empty and selectedInstallment is null, then toViewState returns ViewState with null selection`() {
+    fun `when installmentOptions is non-empty and selectedInstallment is null, then toPickerViewState returns ViewState with null selection`() {
         // GIVEN
         val options = listOf(
             InstallmentModel.Regular(numberOfInstallments = 2, amountPerInstallment = null, showAmount = false),
@@ -63,7 +63,7 @@ internal class InstallmentViewStateTest {
         )
 
         // WHEN
-        val result = state.toViewState()
+        val result = state.toPickerViewState()
 
         // THEN
         assertEquals(options, result?.installmentOptions)

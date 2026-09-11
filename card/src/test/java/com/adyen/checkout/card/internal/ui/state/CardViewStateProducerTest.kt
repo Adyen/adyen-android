@@ -341,7 +341,6 @@ internal class CardViewStateProducerTest {
             cardNumber = TextInputComponentState(
                 text = "4111",
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
-                isFocused = true, // Focus gain hides the error
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -362,7 +361,6 @@ internal class CardViewStateProducerTest {
             cardNumber = TextInputComponentState(
                 text = "123",
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
-                isFocused = true, // Focus gain hides the error
             ),
             cardBrandState = CardBrandState.NoBrandsDetected,
         )
@@ -407,14 +405,12 @@ internal class CardViewStateProducerTest {
             cardNumber = TextInputComponentState(
                 text = "4111",
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
-                isFocused = true, // Text change hides the error
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
         val componentStateWithoutError = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
-                isFocused = true
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -739,7 +735,7 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
-    fun `when installment state has options and selection, then viewState contains same options and selection`() {
+    fun `when installment state has options and selection, then the options go to the picker and the selection to the form`() {
         // GIVEN
         val options = listOf(
             InstallmentModel.Regular(3, amountPerInstallment = null, showAmount = false),
@@ -753,8 +749,34 @@ internal class CardViewStateProducerTest {
         val viewState = producer.produce(componentState)
 
         // THEN
-        assertEquals(options, viewState.installmentViewState?.installmentOptions)
-        assertEquals(selection, viewState.installmentViewState?.selectedInstallment)
+        assertEquals(options, viewState.installmentPickerViewState?.installmentOptions)
+        assertEquals(selection, viewState.installmentPickerViewState?.selectedInstallment)
+        assertEquals(selection, viewState.element<CardFormElement.Installments>()?.selectedInstallment)
+    }
+
+    @Test
+    fun `when there are no installment options, then there is no picker and no row on the form`() {
+        // GIVEN
+        val componentState = createComponentState(installmentState = InstallmentState(emptyList(), null))
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.installmentPickerViewState)
+        assertNull(viewState.element<CardFormElement.Installments>())
+    }
+
+    @Test
+    fun `when the view state is produced, then the field order comes from the form`() {
+        // GIVEN
+        val componentState = createComponentState()
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(componentState.form.elements.map { it.id }, viewState.elementIds)
     }
 
     @Suppress("LongParameterList")
@@ -804,3 +826,23 @@ internal class CardViewStateProducerTest {
         private val TEST_AMOUNT = Amount(currency = "EUR", value = 1337)
     }
 }
+
+// Named readers for the element list, so that each assertion below says which field it is about rather than repeating
+// the lookup.
+private inline fun <reified T : CardFormElement> CardViewState.element(): T? =
+    elements.filterIsInstance<T>().firstOrNull()
+
+private val CardViewState.cardNumberElement get() = requireNotNull(element<CardFormElement.CardNumber>())
+private val CardViewState.cardNumber get() = element<CardFormElement.CardNumber>()?.textInputViewState
+private val CardViewState.expiryDate get() = element<CardFormElement.ExpiryDate>()?.textInputViewState
+private val CardViewState.securityCode get() = element<CardFormElement.SecurityCode>()?.textInputViewState
+private val CardViewState.postalCode get() = element<CardFormElement.PostalCode>()?.textInputViewState
+private val CardViewState.kcpCardPassword get() = element<CardFormElement.KcpCardPassword>()?.textInputViewState
+private val CardViewState.supportedCardBrandsViewState get() = cardNumberElement.supportedCardBrandsViewState
+private val CardViewState.cardBrandViewState get() = cardNumberElement.cardBrandViewState
+private val CardViewState.cardNumberFormat get() = cardNumberElement.cardNumberFormat
+private val CardViewState.elementIds get() = elements.map { it.id }
+
+// The scan button was never more than a choice of trailing icon, so this is what it always actually meant.
+private val CardViewState.isCardScanButtonVisible
+    get() = cardNumber?.customTrailingIcon == CardNumberTrailingIcon.ScanButton
