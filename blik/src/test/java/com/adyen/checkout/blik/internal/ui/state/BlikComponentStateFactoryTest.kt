@@ -33,7 +33,6 @@ internal class BlikComponentStateFactoryTest {
                 text = "",
                 description = CheckoutLocalizationKey.BLIK_CODE_HINT,
                 error = null,
-                isFocused = true,
             ),
             isLoading = false,
             focusRequest = FocusRequest(BlikFormElementId.BLIK_CODE),

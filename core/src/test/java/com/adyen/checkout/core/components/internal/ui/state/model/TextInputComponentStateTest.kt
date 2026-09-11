@@ -179,96 +179,6 @@ internal class TextInputComponentStateTest {
             assertEquals("new", updatedState.text)
             assertFalse(updatedState.isErrorVisible)
         }
-
-        // UC4: No Error While Typing - verify error not shown even if an error exists
-        @Test
-        fun `when user is typing with an error present, then error is not displayed in view state`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = visibleError(), isFocused = true)
-
-            // WHEN
-            val typingState = state.updateText("still_invalid")
-            val viewState = typingState.toViewState()
-
-            // THEN
-            assertEquals(false, viewState?.isError)
-            assertFalse(typingState.isErrorVisible)
-        }
-    }
-
-    @Nested
-    inner class UpdateFocusTest {
-
-        // UC2: Error Cleared on Focus
-        @Test
-        fun `when field gains focus, then the error is hidden`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = visibleError(), isFocused = false)
-
-            // WHEN
-            val updatedState = state.updateFocus(hasFocus = true)
-
-            // THEN
-            assertFalse(updatedState.isErrorVisible)
-            assertTrue(updatedState.isFocused)
-        }
-
-        // UC2: Error Cleared on Focus - verify view state
-        @Test
-        fun `when field gains focus with error, then error is not displayed in view state`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = visibleError())
-
-            // WHEN
-            val focusedState = state.updateFocus(hasFocus = true)
-            val viewState = focusedState.toViewState()
-
-            // THEN
-            assertEquals(false, viewState?.isError)
-        }
-
-        // UC3: Error on Focus Loss
-        @Test
-        fun `when field loses focus, then the error is shown`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = hiddenError(), isFocused = true)
-
-            // WHEN
-            val updatedState = state.updateFocus(hasFocus = false)
-
-            // THEN
-            assertTrue(updatedState.isErrorVisible)
-            assertFalse(updatedState.isFocused)
-        }
-
-        // UC3: Error on Focus Loss - verify view state displays error
-        @Test
-        fun `when field loses focus with invalid input, then error is displayed in view state`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = hiddenError(), isFocused = true)
-
-            // WHEN
-            val blurredState = state.updateFocus(hasFocus = false)
-            val viewState = blurredState.toViewState()
-
-            // THEN
-            assertEquals(true, viewState?.isError)
-            assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
-        }
-
-        // UC14: Empty Field - No Error on Focus Loss
-        @Test
-        fun `when a valid field loses focus, then no error is shown`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "", error = null, isFocused = true)
-
-            // WHEN
-            val blurredState = state.updateFocus(hasFocus = false)
-            val viewState = blurredState.toViewState()
-
-            // THEN
-            assertEquals(false, viewState?.isError)
-        }
     }
 
     @Nested
@@ -334,14 +244,13 @@ internal class TextInputComponentStateTest {
         @Test
         fun `when a field loses focus, then an error it was holding back is shown`() {
             // GIVEN
-            val field = TextInputComponentState(error = hiddenError(), isFocused = true)
+            val field = TextInputComponentState(error = hiddenError())
 
             // WHEN
             val updated = field.applyFocusChange(noRequest, NUMBER, hasFocus = false)
 
             // THEN
             assertTrue(updated.isErrorVisible)
-            assertFalse(updated.isFocused)
         }
 
         @Test
@@ -355,7 +264,6 @@ internal class TextInputComponentStateTest {
 
             // THEN
             assertTrue(updated.isErrorVisible)
-            assertTrue(updated.isFocused)
         }
 
         @Test
@@ -369,7 +277,6 @@ internal class TextInputComponentStateTest {
 
             // THEN
             assertFalse(updated.isErrorVisible)
-            assertTrue(updated.isFocused)
         }
 
         @Test
@@ -383,7 +290,6 @@ internal class TextInputComponentStateTest {
 
             // THEN
             assertFalse(updated.isErrorVisible)
-            assertTrue(updated.isFocused)
         }
 
         private val noRequest: FocusRequest<TestFormElementId>? = null

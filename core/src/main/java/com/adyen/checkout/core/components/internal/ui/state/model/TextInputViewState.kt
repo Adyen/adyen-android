@@ -23,9 +23,6 @@ data class TextInputViewState(
     // with the latest value of the input field.
     val text: String = "",
     val supportingText: CheckoutLocalizationKey? = null,
-    // TODO - Form fields cleanup: Layer 8 removes this once focus is requested through [focusRequest] in every
-    // component.
-    val isFocused: Boolean = false,
     val isError: Boolean = false,
     // The field specific icon, shown while the field is not in an error state. Do not render this directly, use
     // [trailingIcon] instead.
@@ -46,24 +43,6 @@ data class TextInputViewState(
 }
 
 /**
- * Maps a TextInputComponentState to a TextInputViewState or returns null if the view should not be displayed on the UI.
- */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun TextInputComponentState.toViewState(
-    customTrailingIcon: TrailingIcon? = null,
-): TextInputViewState? {
-    if (requirementPolicy == RequirementPolicy.Hidden) return null
-    return TextInputViewState(
-        text = text,
-        supportingText = if (isErrorVisible) error?.message else description,
-        isFocused = isFocused,
-        isError = isErrorVisible,
-        customTrailingIcon = customTrailingIcon,
-        isOptional = requirementPolicy is RequirementPolicy.Optional,
-    )
-}
-
-/**
  * Maps a field onto what the UI renders for it. Pass the whole [form] and [focusRequest]: this needs them to work out
  * the action key, which depends on what follows the field, and whether the field is the one being asked to take focus.
  *
@@ -80,7 +59,6 @@ fun <Id : FormElementId> TextInputComponentState.toViewState(
     return TextInputViewState(
         text = text,
         supportingText = if (isErrorVisible) error?.message else description,
-        isFocused = isFocused,
         isError = isErrorVisible,
         customTrailingIcon = customTrailingIcon,
         isOptional = requirementPolicy is RequirementPolicy.Optional,
