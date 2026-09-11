@@ -31,7 +31,7 @@ internal class SessionComponentRequestDispatcher(
     private val sessionRepository: SessionRepository,
 ) : SubmittableComponentRequestDispatcher {
 
-    private var sessionData: String = initialSessionData
+    private var currentSessionData: String = initialSessionData
     private var sessionResult: String = ""
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
@@ -40,15 +40,15 @@ internal class SessionComponentRequestDispatcher(
         return when (beforeSubmitResult) {
             is BeforeSubmitResult.Abort -> SubmitResult.Retry()
             is BeforeSubmitResult.Proceed -> {
-                beforeSubmitResult.sessionData?.let { sessionData = it }
+                beforeSubmitResult.sessionData?.let { currentSessionData = it }
                 val finalData = data.applyBeforeSubmitData(beforeSubmitResult.data)
                 sessionRepository.submitPayment(
                     sessionId = sessionId,
-                    sessionData = sessionData,
+                    sessionData = currentSessionData,
                     paymentComponentData = finalData,
                 ).fold(
                     onSuccess = { response ->
-                        sessionData = response.sessionData
+                        currentSessionData = response.sessionData
                         sessionResult = response.sessionResult.orEmpty()
                         // TODO - Check if we need to support partial payment flow
                         when {
@@ -85,11 +85,11 @@ internal class SessionComponentRequestDispatcher(
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         sessionRepository.submitDetails(
             sessionId = sessionId,
-            sessionData = sessionData,
+            sessionData = currentSessionData,
             actionComponentData = data,
         ).fold(
             onSuccess = { response ->
-                sessionData = response.sessionData
+                currentSessionData = response.sessionData
                 sessionResult = response.sessionResult.orEmpty()
                 return AdditionalDetailsResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
             },
@@ -101,7 +101,8 @@ internal class SessionComponentRequestDispatcher(
     }
 
     override fun complete(resultCode: CheckoutResultCode) {
-        if (sessionId.isBlank() || sessionResult.isBlank()) {
+        val isExpectedToBeMissing = resultCode == CheckoutResultCode.CANCELLED || resultCode == CheckoutResultCode.ERROR
+        if (sessionId.isBlank() || (sessionResult.isBlank() && !isExpectedToBeMissing)) {
             adyenLog(AdyenLogLevel.ERROR) { "Session completion called without sessionId or sessionResult." }
         }
 

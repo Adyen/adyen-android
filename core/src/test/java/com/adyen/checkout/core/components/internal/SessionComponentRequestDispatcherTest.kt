@@ -275,6 +275,31 @@ internal class SessionComponentRequestDispatcherTest(
                 )
                 assertEquals(listOf(expected), capturedResults)
             }
+
+        @Test
+        fun `when a later response has a null sessionResult, then it overwrites the previous sessionResult`() =
+            runTest {
+                val paymentsResponse = createPaymentsResponse(
+                    action = mock(),
+                    sessionResult = "payments-session-result",
+                )
+                whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(paymentsResponse)
+
+                val detailsResponse = createDetailsResponse(
+                    resultCode = "Authorised",
+                    sessionResult = null,
+                )
+                whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(detailsResponse)
+
+                val capturedResults = mutableListOf<SessionCheckoutResult>()
+                val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+                dispatcher.submit(emptyPaymentComponentData())
+                dispatcher.additionalDetails(ActionComponentData())
+                dispatcher.complete(CheckoutResultCode.AUTHORISED)
+
+                assertEquals("", capturedResults.single().sessionResult)
+            }
     }
 
     @Nested
