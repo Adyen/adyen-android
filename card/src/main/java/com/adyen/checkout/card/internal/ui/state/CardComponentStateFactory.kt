@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstTextInput
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -26,8 +27,8 @@ internal class CardComponentStateFactory(
             ?.mapToInstallmentModels()
             ?: emptyList()
 
-        return CardComponentState(
-            cardNumber = TextInputComponentState(isFocused = true),
+        val state = CardComponentState(
+            cardNumber = TextInputComponentState(),
             expiryDate = TextInputComponentState(),
             securityCode = TextInputComponentState(
                 requirementPolicy = getSecurityCodeRequirementPolicy(),
@@ -60,6 +61,8 @@ internal class CardComponentStateFactory(
                 selectedInstallment = getPreselectedInstallment(installmentOptions),
             ),
         )
+
+        return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
     }
 
     private fun getSecurityCodeRequirementPolicy(): RequirementPolicy =

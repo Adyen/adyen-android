@@ -10,11 +10,16 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.helper.ExpiryDateParser
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.nextTextInputAfter
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
+import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
 internal class CardComponentStateReducer(
     private val cardBrandIntentsHandler: CardBrandIntentsHandler,
 ) : ComponentStateReducer<CardComponentState, CardIntent> {
 
+    // TODO - Form fields phase 5: Remove LongMethod when the legacy focus intents are removed.
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun reduce(state: CardComponentState, intent: CardIntent): CardComponentState {
         return when (intent) {
@@ -22,65 +27,65 @@ internal class CardComponentStateReducer(
                 cardNumber = state.cardNumber.updateText(intent.number),
             )
 
-            is CardIntent.UpdateCardNumberFocus -> state.copy(
-                cardNumber = state.cardNumber.updateFocus(intent.hasFocus),
-            )
-
             is CardIntent.UpdateExpiryDate -> state.copy(
                 expiryDate = state.expiryDate.updateText(intent.expiryDate),
-            )
-
-            is CardIntent.UpdateExpiryDateFocus -> state.copy(
-                expiryDate = state.expiryDate.updateFocus(intent.hasFocus),
             )
 
             is CardIntent.UpdateSecurityCode -> state.copy(
                 securityCode = state.securityCode.updateText(intent.securityCode),
             )
 
-            is CardIntent.UpdateSecurityCodeFocus -> state.copy(
-                securityCode = state.securityCode.updateFocus(intent.hasFocus),
-            )
-
             is CardIntent.UpdateHolderName -> state.copy(
                 holderName = state.holderName.updateText(intent.holderName),
-            )
-
-            is CardIntent.UpdateHolderNameFocus -> state.copy(
-                holderName = state.holderName.updateFocus(intent.hasFocus),
             )
 
             is CardIntent.UpdateSocialSecurityNumber -> state.copy(
                 socialSecurityNumber = state.socialSecurityNumber.updateText(intent.socialSecurityNumber),
             )
 
-            is CardIntent.UpdateSocialSecurityNumberFocus -> state.copy(
-                socialSecurityNumber = state.socialSecurityNumber.updateFocus(intent.hasFocus),
-            )
-
             is CardIntent.UpdateKcpBirthDateOrTaxNumber -> state.copy(
                 kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.updateText(intent.kcpBirthDateOrTaxNumber),
-            )
-
-            is CardIntent.UpdateKcpBirthDateOrTaxNumberFocus -> state.copy(
-                kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.updateFocus(intent.hasFocus),
             )
 
             is CardIntent.UpdateKcpCardPassword -> state.copy(
                 kcpCardPassword = state.kcpCardPassword.updateText(intent.kcpCardPassword),
             )
 
-            is CardIntent.UpdateKcpCardPasswordFocus -> state.copy(
-                kcpCardPassword = state.kcpCardPassword.updateFocus(intent.hasFocus),
-            )
-
             is CardIntent.UpdatePostalCode -> state.copy(
                 postalCode = state.postalCode.updateText(intent.postalCode)
             )
 
-            is CardIntent.UpdatePostalCodeFocus -> state.copy(
-                postalCode = state.postalCode.updateFocus(intent.hasFocus)
-            )
+            is CardIntent.UpdateCardNumberFocus ->
+                state.updateFieldFocus(CardFormElementId.CARD_NUMBER, intent.hasFocus)
+
+            is CardIntent.UpdateExpiryDateFocus ->
+                state.updateFieldFocus(CardFormElementId.EXPIRY_DATE, intent.hasFocus)
+
+            is CardIntent.UpdateSecurityCodeFocus ->
+                state.updateFieldFocus(CardFormElementId.SECURITY_CODE, intent.hasFocus)
+
+            is CardIntent.UpdateHolderNameFocus ->
+                state.updateFieldFocus(CardFormElementId.HOLDER_NAME, intent.hasFocus)
+
+            is CardIntent.UpdateSocialSecurityNumberFocus ->
+                state.updateFieldFocus(CardFormElementId.SOCIAL_SECURITY_NUMBER, intent.hasFocus)
+
+            is CardIntent.UpdateKcpBirthDateOrTaxNumberFocus ->
+                state.updateFieldFocus(CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER, intent.hasFocus)
+
+            is CardIntent.UpdateKcpCardPasswordFocus ->
+                state.updateFieldFocus(CardFormElementId.KCP_CARD_PASSWORD, intent.hasFocus)
+
+            is CardIntent.UpdatePostalCodeFocus ->
+                state.updateFieldFocus(CardFormElementId.POSTAL_CODE, intent.hasFocus)
+
+            is CardIntent.UpdateFieldFocus -> state.updateFieldFocus(intent.id, intent.hasFocus)
+
+            is CardIntent.FocusRequestConsumed -> if (state.focusRequest?.id == intent.id) {
+                state.copy(focusRequest = null)
+            } else {
+                state
+            }
 
             is CardIntent.UpdateStorePaymentMethod -> state.copy(
                 storePaymentMethod = intent.isChecked,
@@ -111,47 +116,41 @@ internal class CardComponentStateReducer(
                 expiryDate = state.expiryDate.updateText(
                     ExpiryDateParser.formatToMMyy(intent.expiryMonth, intent.expiryYear),
                 ),
-            )
+            ).requestFocusAfterScan(intent)
 
             is CardIntent.HighlightValidationErrors -> highlightValidationErrors(state)
         }
     }
 
-    private fun highlightValidationErrors(state: CardComponentState): CardComponentState {
-        var isFocusConsumed = false
+    /**
+     * Moves the shopper to the first field the scan did not fill. A scan can come back with only part of a card, or
+     * with nothing usable at all, and a scan that returns no card number also clears the one that was there, so the
+     * shopper has to go back rather than forward.
+     *
+     * This goes by what the scanner returned rather than by what is still invalid, because the reducer runs before the
+     * validator: at this point every error still describes the text from before the scan.
+     */
+    private fun CardComponentState.requestFocusAfterScan(
+        intent: CardIntent.UpdateCardScanResult,
+    ): CardComponentState {
+        val focusTarget = when {
+            intent.pan.isNullOrBlank() -> CardFormElementId.CARD_NUMBER
+            intent.expiryMonth == null || intent.expiryYear == null -> form.nextTextInputAfter(
+                CardFormElementId.CARD_NUMBER
+            )
+            else -> form.nextTextInputAfter(CardFormElementId.EXPIRY_DATE)
+        }
+        return copy(focusRequest = focusTarget?.let { FocusRequest(id = it) })
+    }
 
-        fun shouldFocus(hasError: Boolean): Boolean {
-            return (hasError && !isFocusConsumed).also { shouldFocus ->
-                if (shouldFocus) isFocusConsumed = true
-            }
+    private fun CardComponentState.updateFieldFocus(id: CardFormElementId, hasFocus: Boolean): CardComponentState =
+        updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
+
+    private fun highlightValidationErrors(state: CardComponentState): CardComponentState {
+        val highlighted = CardFormElementId.entries.fold(state) { current, id ->
+            current.updateTextInput(id) { field -> field.showErrorIfPresent() }
         }
 
-        val hasCardNumberError = !state.cardNumber.isValid
-        val hasExpiryDateError = !state.expiryDate.isValid
-        val hasSecurityCodeError = !state.securityCode.isValid
-        val hasHolderNameError = !state.holderName.isValid
-        val hasSocialSecurityNumberError = !state.socialSecurityNumber.isValid
-        val hasKcpBirthDateOrTaxNumberError = !state.kcpBirthDateOrTaxNumber.isValid
-        val hasKcpCardPasswordError = !state.kcpCardPassword.isValid
-        val hasPostalCodeError = !state.postalCode.isValid
-
-        return state.copy(
-            cardNumber = state.cardNumber.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasCardNumberError)),
-            expiryDate = state.expiryDate.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasExpiryDateError)),
-            securityCode = state.securityCode.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasSecurityCodeError)),
-            holderName = state.holderName.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasHolderNameError)),
-            socialSecurityNumber = state.socialSecurityNumber.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasSocialSecurityNumberError)),
-            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasKcpBirthDateOrTaxNumberError)),
-            kcpCardPassword = state.kcpCardPassword.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasKcpCardPasswordError)),
-            postalCode = state.postalCode.showErrorIfPresent()
-                .copy(isFocused = shouldFocus(hasPostalCodeError)),
-        )
+        return highlighted.copy(focusRequest = state.form.requestFocusOnFirstInvalid())
     }
 }

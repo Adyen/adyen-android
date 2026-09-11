@@ -69,7 +69,6 @@ data class TextInputComponentState(
  * shopper is working on the field, unless [focusRequest] asked for this field and set showErrorIfPresent. Losing
  * focus shows the error.
  */
-// TODO - Form fields phase 5: Card reducers will use this function when they adopt form-driven focus.
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> TextInputComponentState.applyFocusChange(
     focusRequest: FocusRequest<Id>?,
