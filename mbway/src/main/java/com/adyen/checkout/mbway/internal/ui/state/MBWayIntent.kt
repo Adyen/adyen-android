@@ -23,8 +23,5 @@ internal sealed interface MBWayIntent : ComponentStateIntent {
 
     data class FocusRequestConsumed(val id: MBWayFormElementId) : MBWayIntent
 
-    // TODO - Form fields Layer 7: The second commit removes this legacy focus intent.
-    data class UpdatePhoneNumberFocus(val hasFocus: Boolean) : MBWayIntent
-
     data object HighlightValidationErrors : MBWayIntent
 }

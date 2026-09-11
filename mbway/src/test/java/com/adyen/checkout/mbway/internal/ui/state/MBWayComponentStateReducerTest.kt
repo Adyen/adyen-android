@@ -52,15 +52,6 @@ internal class MBWayComponentStateReducerTest {
     }
 
     @Test
-    fun `when legacy phone number focus intent is received, then state is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, MBWayIntent.UpdatePhoneNumberFocus(true))
-
-        assertTrue(actual.phoneNumber.isFocused)
-    }
-
-    @Test
     fun `when the phone number loses focus, then an error it was holding back is shown`() {
         val state = createInitialState().copy(
             phoneNumber = TextInputComponentState(
