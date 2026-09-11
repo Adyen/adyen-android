@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstTextInput
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -28,16 +29,21 @@ internal class StoredCardComponentStateFactory(
             hideCvc = componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE,
         )
 
-        return StoredCardComponentState(
-            securityCode = TextInputComponentState(
-                isFocused = true,
-                requirementPolicy = when (componentParams.storedCVCVisibility) {
-                    StoredCVCVisibility.SHOW -> RequirementPolicy.Required
-                    StoredCVCVisibility.HIDE -> RequirementPolicy.Hidden
-                },
-            ),
+        val securityCode = TextInputComponentState(
+            // TODO - Form fields cleanup: Layer 8 removes isFocused after every component uses focus requests.
+            isFocused = true,
+            requirementPolicy = when (componentParams.storedCVCVisibility) {
+                StoredCVCVisibility.SHOW -> RequirementPolicy.Required
+                StoredCVCVisibility.HIDE -> RequirementPolicy.Hidden
+            },
+        )
+
+        val state = StoredCardComponentState(
+            securityCode = securityCode,
             isLoading = false,
             detectedCardType = storedDetectedCardType,
         )
+
+        return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
     }
 }

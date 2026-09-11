@@ -39,6 +39,7 @@ internal class StoredCardViewStateProducer(
         cardNumberFormat: CardNumberFormat,
     ): SecurityCodeTrailingIcon {
         return when {
+            // TODO - Form fields Layer 7: Read this from the form when this producer adopts form elements.
             securityCode.isValid && securityCode.text.isNotEmpty() -> SecurityCodeTrailingIcon.Checkmark
             cardNumberFormat == CardNumberFormat.AMEX -> SecurityCodeTrailingIcon.PlaceholderAmex
             else -> SecurityCodeTrailingIcon.PlaceholderDefault

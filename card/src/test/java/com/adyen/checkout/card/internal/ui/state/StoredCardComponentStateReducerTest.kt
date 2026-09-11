@@ -9,12 +9,14 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 
 internal class StoredCardComponentStateReducerTest {
 
@@ -35,23 +37,48 @@ internal class StoredCardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateSecurityCodeFocus with true, then securityCode focus is set to true`() {
+    fun `when the security code loses focus, then an error it was holding back is shown`() {
+        val state = createInitialState().copy(
+            securityCode = TextInputComponentState(
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID),
+            ),
+        )
+
+        val actual = reducer.reduce(
+            state,
+            StoredCardIntent.UpdateFieldFocus(StoredCardFormElementId.SECURITY_CODE, hasFocus = false),
+        )
+
+        assertTrue(actual.securityCode.isErrorVisible)
+    }
+
+    @Test
+    fun `when the shopper focuses the security code, then a visible error is hidden`() {
+        val state = createInitialState().copy(
+            securityCode = TextInputComponentState(
+                error = TextInputComponentState.InputError(
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+                    isVisible = true,
+                ),
+            ),
+            focusRequest = null,
+        )
+
+        val actual = reducer.reduce(
+            state,
+            StoredCardIntent.UpdateFieldFocus(StoredCardFormElementId.SECURITY_CODE, hasFocus = true),
+        )
+
+        assertFalse(actual.securityCode.isErrorVisible)
+    }
+
+    @Test
+    fun `when legacy security code focus changes, then securityCode focus is updated`() {
         val state = createInitialState()
 
         val actual = reducer.reduce(state, StoredCardIntent.UpdateSecurityCodeFocus(true))
 
         assertTrue(actual.securityCode.isFocused)
-    }
-
-    @Test
-    fun `when intent is UpdateSecurityCodeFocus with false, then securityCode focus is set to false`() {
-        val state = createInitialState().copy(
-            securityCode = TextInputComponentState(isFocused = true),
-        )
-
-        val actual = reducer.reduce(state, StoredCardIntent.UpdateSecurityCodeFocus(false))
-
-        assertFalse(actual.securityCode.isFocused)
     }
 
     @Test
@@ -73,19 +100,21 @@ internal class StoredCardComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is HighlightValidationErrors and securityCode has error, then the securityCode error is shown and focus is set`() {
+    fun `when intent is HighlightValidationErrors and securityCode has error, then the error is shown and focus requested`() {
         val state = createInitialState().copy(
             securityCode = TextInputComponentState(
                 text = "",
-                isFocused = false,
-                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE),
             ),
         )
 
         val actual = reducer.reduce(state, StoredCardIntent.HighlightValidationErrors)
 
         assertTrue(actual.securityCode.isErrorVisible)
-        assertTrue(actual.securityCode.isFocused)
+        assertEquals(
+            FocusRequest(StoredCardFormElementId.SECURITY_CODE, showErrorIfPresent = true),
+            actual.focusRequest,
+        )
     }
 
     @Test
@@ -95,7 +124,19 @@ internal class StoredCardComponentStateReducerTest {
         val actual = reducer.reduce(state, StoredCardIntent.HighlightValidationErrors)
 
         assertFalse(actual.securityCode.isErrorVisible)
-        assertFalse(actual.securityCode.isFocused)
+        assertNull(actual.focusRequest)
+    }
+
+    @Test
+    fun `when a focus request could not be fulfilled, then reporting it back clears it`() {
+        val state = createInitialState().copy(focusRequest = FocusRequest(StoredCardFormElementId.SECURITY_CODE))
+
+        val actual = reducer.reduce(
+            state,
+            StoredCardIntent.FocusRequestConsumed(StoredCardFormElementId.SECURITY_CODE),
+        )
+
+        assertNull(actual.focusRequest)
     }
 
     private fun createInitialState() = StoredCardComponentState(
