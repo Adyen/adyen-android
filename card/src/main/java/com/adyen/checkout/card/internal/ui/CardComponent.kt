@@ -33,6 +33,7 @@ import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardComponentStatePostProcessor
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateValidator
+import com.adyen.checkout.card.internal.ui.state.CardFormElementId
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
@@ -381,7 +382,7 @@ constructor(
             .map { state ->
                 CardBinHelper.getBin(
                     cardNumber = state.cardNumber.text,
-                    isValid = state.cardNumber.isValid,
+                    isValid = state.form.isElementVisibleAndValid(CardFormElementId.CARD_NUMBER),
                 )
             }
             .distinctUntilChanged()
