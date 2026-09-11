@@ -3,7 +3,7 @@
 | Field         | Value        |
 |---------------|--------------|
 | Author(s)     | Oscar Spruit |
-| Status        | Accepted     |
+| Status        | Superseded by ADR-0003 |
 | Creation date | 2026-01-09   |
 
 ## Abstract
