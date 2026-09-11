@@ -9,14 +9,12 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.helper.isHiddenCardType
-import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
-import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
-import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class CardViewStateProducer(
@@ -24,10 +22,86 @@ internal class CardViewStateProducer(
     private val showSubmitButton: Boolean,
 ) : ViewStateProducer<CardComponentState, CardViewState> {
 
-    override fun produce(state: CardComponentState): CardViewState {
-        // we only show all supported card brands when the setting is enabled
-        // and we do not detect any brands for this specific card
-        val isSupportedCardBrandsShown = state.showSupportedCardBrandLogos && when (state.cardBrandState) {
+    override fun produce(state: CardComponentState) = CardViewState(
+        elements = state.form.elements.map { state.toElement(it.id) },
+        isLoading = state.isLoading,
+        payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
+        installmentPickerViewState = state.installmentState.toPickerViewState(),
+    )
+
+    // TODO - Form fields cleanup: Layer 7 removes this once hidden fields cannot be converted to view state.
+    private fun TextInputComponentState.toTextInputViewState(
+        customTrailingIcon: TrailingIcon? = null,
+    ) = requireNotNull(toViewState(customTrailingIcon)) {
+        "Text input must be visible to have a view state"
+    }
+
+    private fun CardComponentState.toElement(id: CardFormElementId): CardFormElement = when (id) {
+        CardFormElementId.CARD_NUMBER -> CardFormElement.CardNumber(
+            textInputViewState = cardNumber
+                .copy(description = getCardNumberInputDescription(cardBrandState))
+                .toTextInputViewState(
+                    customTrailingIcon = getCardNumberTrailingIcon(isCardScanButtonVisible()),
+                ),
+            cardBrandViewState = getCardBrandViewState(cardBrandState),
+            cardNumberFormat = getCardNumberFormat(cardBrandState),
+            supportedCardBrandsViewState = getSupportedCardBrandsViewState(),
+        )
+
+        CardFormElementId.EXPIRY_DATE -> CardFormElement.ExpiryDate(
+            textInputViewState = expiryDate.toTextInputViewState(
+                customTrailingIcon = getExpiryDateTrailingIcon(
+                    isValid = expiryDate.isValid,
+                    isEmpty = expiryDate.text.isEmpty(),
+                ),
+            ),
+        )
+
+        CardFormElementId.SECURITY_CODE -> {
+            val cardNumberFormat = getCardNumberFormat(cardBrandState)
+            CardFormElement.SecurityCode(
+                textInputViewState = securityCode.toTextInputViewState(
+                    customTrailingIcon = getSecurityCodeTrailingIcon(
+                        isValid = securityCode.isValid,
+                        isEmpty = securityCode.text.isEmpty(),
+                        cardNumberFormat = cardNumberFormat,
+                    ),
+                ),
+                cardNumberFormat = cardNumberFormat,
+            )
+        }
+
+        CardFormElementId.HOLDER_NAME -> CardFormElement.HolderName(holderName.toTextInputViewState())
+
+        CardFormElementId.SOCIAL_SECURITY_NUMBER ->
+            CardFormElement.SocialSecurityNumber(socialSecurityNumber.toTextInputViewState())
+
+        CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER ->
+            CardFormElement.KcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber.toTextInputViewState())
+
+        CardFormElementId.KCP_CARD_PASSWORD -> CardFormElement.KcpCardPassword(
+            kcpCardPassword.toTextInputViewState(),
+        )
+
+        CardFormElementId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toTextInputViewState())
+
+        CardFormElementId.STORE_PAYMENT_METHOD -> CardFormElement.StorePaymentMethod(isSelected = storePaymentMethod)
+
+        CardFormElementId.INSTALLMENTS -> CardFormElement.Installments(
+            selectedInstallment = installmentState.selectedInstallment,
+        )
+    }
+
+    /**
+     * The scan button is shown instead of the card brand logos when scanning is available and the field is empty.
+     */
+    private fun CardComponentState.isCardScanButtonVisible() = isCardScanningAvailable && cardNumber.text.isEmpty()
+
+    private fun CardComponentState.getSupportedCardBrandsViewState() = SupportedCardBrandsViewState(
+        supportedCardBrands = supportedCardBrands.filterNot { isHiddenCardType(it.txVariant) },
+        // Every supported brand is only worth showing while the setting is on and no brand has been detected for the
+        // number the shopper is typing.
+        isVisible = showSupportedCardBrandLogos && when (cardBrandState) {
             is CardBrandState.NoBrandsDetected,
             is CardBrandState.UnsupportedBrand,
             is CardBrandState.HiddenBrand -> true
@@ -37,51 +111,8 @@ internal class CardViewStateProducer(
             is CardBrandState.SingleReliableWithHiddenBrand,
             is CardBrandState.DualBrand,
             is CardBrandState.DualBrandWithShopperSelection -> false
-        }
-
-        val cardNumberInputDescription = getCardNumberInputDescription(state.cardBrandState)
-        val cardBrandViewState = getCardBrandViewState(state.cardBrandState)
-        val cardNumberFormat = getCardNumberFormat(state.cardBrandState)
-        val isCardScanButtonVisible = state.isCardScanningAvailable && state.cardNumber.text.isEmpty()
-
-        val storePaymentViewState = if (state.isStorePaymentFieldVisible) {
-            StorePaymentViewState(isSelected = state.storePaymentMethod)
-        } else {
-            null
-        }
-
-        val supportedCardBrandsViewState = SupportedCardBrandsViewState(
-            supportedCardBrands = state.supportedCardBrands.filterNot {
-                isHiddenCardType(it.txVariant)
-            },
-            isVisible = isSupportedCardBrandsShown,
-        )
-
-        return CardViewState(
-            cardNumber = state.cardNumber.copy(description = cardNumberInputDescription).toViewState(
-                customTrailingIcon = getCardNumberTrailingIcon(isCardScanButtonVisible),
-            ),
-            expiryDate = state.expiryDate.toViewState(
-                customTrailingIcon = getExpiryDateTrailingIcon(state.expiryDate),
-            ),
-            securityCode = state.securityCode.toViewState(
-                customTrailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
-            ),
-            holderName = state.holderName.toViewState(),
-            socialSecurityNumber = state.socialSecurityNumber.toViewState(),
-            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.toViewState(),
-            kcpCardPassword = state.kcpCardPassword.toViewState(),
-            postalCode = state.postalCode.toViewState(),
-            storePaymentViewState = storePaymentViewState,
-            supportedCardBrandsViewState = supportedCardBrandsViewState,
-            cardBrandViewState = cardBrandViewState,
-            cardNumberFormat = cardNumberFormat,
-            isLoading = state.isLoading,
-            isCardScanButtonVisible = isCardScanButtonVisible,
-            installmentViewState = state.installmentState.toViewState(),
-            payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
-        )
-    }
+        },
+    )
 
     private fun getCardNumberInputDescription(cardBrandState: CardBrandState): CheckoutLocalizationKey? {
         if (cardBrandState is CardBrandState.DualBrandWithShopperSelection) {
@@ -135,34 +166,5 @@ internal class CardViewStateProducer(
         }
 
         return cardBrandData?.cardBrand.toCardNumberFormat()
-    }
-
-    private fun getCardNumberTrailingIcon(isCardScanButtonVisible: Boolean): CardNumberTrailingIcon {
-        return if (isCardScanButtonVisible) {
-            CardNumberTrailingIcon.ScanButton
-        } else {
-            CardNumberTrailingIcon.BrandLogos
-        }
-    }
-
-    private fun getExpiryDateTrailingIcon(
-        expiryDate: TextInputComponentState,
-    ): ExpiryDateTrailingIcon {
-        return if (expiryDate.isValid && expiryDate.text.isNotEmpty()) {
-            ExpiryDateTrailingIcon.Checkmark
-        } else {
-            ExpiryDateTrailingIcon.Placeholder
-        }
-    }
-
-    private fun getSecurityCodeTrailingIcon(
-        securityCode: TextInputComponentState,
-        cardNumberFormat: CardNumberFormat,
-    ): SecurityCodeTrailingIcon {
-        return when {
-            securityCode.isValid && securityCode.text.isNotEmpty() -> SecurityCodeTrailingIcon.Checkmark
-            cardNumberFormat == CardNumberFormat.AMEX -> SecurityCodeTrailingIcon.PlaceholderAmex
-            else -> SecurityCodeTrailingIcon.PlaceholderDefault
-        }
     }
 }

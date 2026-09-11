@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardViewState
-import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
+import com.adyen.checkout.card.internal.ui.state.InstallmentPickerViewState
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -31,7 +31,7 @@ internal fun CardSecondaryContent(
         CardSecondaryContentEntry.INSTALLMENTS -> {
             Installments(
                 modifier = modifier,
-                installmentViewState = viewState.installmentViewState,
+                installmentPickerViewState = viewState.installmentPickerViewState,
                 onIntent = onIntent,
                 onDismissRequest = onDismissRequest,
             )
@@ -42,14 +42,15 @@ internal fun CardSecondaryContent(
 @Composable
 private fun Installments(
     modifier: Modifier,
-    installmentViewState: InstallmentViewState?,
+    installmentPickerViewState: InstallmentPickerViewState?,
     onIntent: (CardIntent) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    if (installmentViewState == null) return
+    // Unreachable: with no installments the row that opens this screen is not on the card form either.
+    if (installmentPickerViewState == null) return
     InstallmentPicker(
-        installmentOptions = installmentViewState.installmentOptions,
-        selectedInstallment = installmentViewState.selectedInstallment,
+        installmentOptions = installmentPickerViewState.installmentOptions,
+        selectedInstallment = installmentPickerViewState.selectedInstallment,
         onItemClick = { installment ->
             onIntent(CardIntent.UpdateInstallment(installment))
             onDismissRequest()

@@ -26,7 +26,6 @@ data class FormElementState<Id : FormElementId>(
 /**
  * Returns this text input as a form element, or null when it is hidden.
  */
-// TODO - Form fields phase 3: Card will use this helper when it starts building its form state.
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> TextInputComponentState.toFormElementIfVisible(id: Id): FormElementState<Id>? {
     val isVisible = requirementPolicy != RequirementPolicy.Hidden
