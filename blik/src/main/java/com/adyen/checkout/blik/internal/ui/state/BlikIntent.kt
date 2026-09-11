@@ -14,7 +14,12 @@ internal sealed interface BlikIntent : ComponentStateIntent {
 
     data class UpdateBlikCode(val code: String) : BlikIntent
 
+    // TODO - Form fields Layer 7: The second commit removes this legacy focus intent.
     data class UpdateBlikCodeFocus(val hasFocus: Boolean) : BlikIntent
+
+    data class UpdateFieldFocus(val id: BlikFormElementId, val hasFocus: Boolean) : BlikIntent
+
+    data class FocusRequestConsumed(val id: BlikFormElementId) : BlikIntent
 
     data class UpdateLoading(val isLoading: Boolean) : BlikIntent
 

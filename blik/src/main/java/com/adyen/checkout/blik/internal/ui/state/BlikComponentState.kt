@@ -9,9 +9,25 @@
 package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class BlikComponentState(
     val blikCode: TextInputComponentState,
     val isLoading: Boolean,
-) : ComponentState
+    val focusRequest: FocusRequest<BlikFormElementId>? = null,
+) : ComponentState {
+
+    val form: FormState<BlikFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        FormState(elements = listOfNotNull(blikCode.toFormElementIfVisible(BlikFormElementId.BLIK_CODE)))
+    }
+}
+
+internal fun BlikComponentState.updateTextInput(
+    id: BlikFormElementId,
+    transform: (TextInputComponentState) -> TextInputComponentState,
+): BlikComponentState = when (id) {
+    BlikFormElementId.BLIK_CODE -> copy(blikCode = transform(blikCode))
+}
