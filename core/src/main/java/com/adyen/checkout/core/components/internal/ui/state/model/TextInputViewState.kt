@@ -43,9 +43,9 @@ fun TextInputComponentState.toViewState(
     if (requirementPolicy == RequirementPolicy.Hidden) return null
     return TextInputViewState(
         text = text,
-        supportingText = if (showErrorMessage) errorMessage else description,
+        supportingText = if (isErrorVisible) error?.message else description,
         isFocused = isFocused,
-        isError = showErrorMessage,
+        isError = isErrorVisible,
         customTrailingIcon = customTrailingIcon,
         isOptional = requirementPolicy is RequirementPolicy.Optional,
     )

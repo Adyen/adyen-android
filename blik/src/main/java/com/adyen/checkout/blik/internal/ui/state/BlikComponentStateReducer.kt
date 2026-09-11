@@ -25,12 +25,10 @@ internal class BlikComponentStateReducer : ComponentStateReducer<BlikComponentSt
             is BlikIntent.UpdateLoading -> state.copy(isLoading = intent.isLoading)
 
             is BlikIntent.HighlightValidationErrors -> {
-                val hasBlikCodeError = state.blikCode.errorMessage != null
+                val hasBlikCodeError = !state.blikCode.isValid
                 state.copy(
-                    blikCode = state.blikCode.copy(
-                        showError = hasBlikCodeError,
-                        isFocused = hasBlikCodeError,
-                    ),
+                    blikCode = state.blikCode.showErrorIfPresent()
+                        .copy(isFocused = hasBlikCodeError),
                 )
             }
         }

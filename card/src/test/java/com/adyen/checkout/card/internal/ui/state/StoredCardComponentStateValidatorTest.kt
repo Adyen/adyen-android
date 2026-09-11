@@ -49,7 +49,7 @@ internal class StoredCardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.securityCode.errorMessage)
+        assertNotNull(validatedState.securityCode.error?.message)
     }
 
     @Test
@@ -62,7 +62,7 @@ internal class StoredCardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.securityCode.errorMessage)
+        assertNotNull(validatedState.securityCode.error?.message)
     }
 
     @Test
@@ -76,7 +76,7 @@ internal class StoredCardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertTrue(result)
-        assertNull(validatedState.securityCode.errorMessage)
+        assertNull(validatedState.securityCode.error?.message)
     }
 
     @Test
@@ -90,7 +90,7 @@ internal class StoredCardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertTrue(result)
-        assertNull(validatedState.securityCode.errorMessage)
+        assertNull(validatedState.securityCode.error?.message)
     }
 
     private fun createValidState() = StoredCardComponentState(

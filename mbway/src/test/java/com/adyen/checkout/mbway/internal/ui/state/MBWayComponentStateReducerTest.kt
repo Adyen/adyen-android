@@ -65,14 +65,13 @@ internal class MBWayComponentStateReducerTest {
             phoneNumber = TextInputComponentState(
                 text = "",
                 isFocused = false,
-                errorMessage = CheckoutLocalizationKey.GENERAL_CLOSE,
-                showError = false,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE)
             ),
         )
 
         val actual = reducer.reduce(state, MBWayIntent.HighlightValidationErrors)
 
-        assertTrue(actual.phoneNumber.showError)
+        assertTrue(actual.phoneNumber.isErrorVisible)
         assertTrue(actual.phoneNumber.isFocused)
     }
 
@@ -82,7 +81,7 @@ internal class MBWayComponentStateReducerTest {
 
         val actual = reducer.reduce(state, MBWayIntent.HighlightValidationErrors)
 
-        assertFalse(actual.phoneNumber.showError)
+        assertFalse(actual.phoneNumber.isErrorVisible)
         assertFalse(actual.phoneNumber.isFocused)
     }
 
@@ -92,8 +91,7 @@ internal class MBWayComponentStateReducerTest {
         phoneNumber = TextInputComponentState(
             text = "",
             isFocused = false,
-            errorMessage = null,
-            showError = false,
+            error = null
         ),
         isLoading = false,
     )

@@ -33,8 +33,7 @@ internal class BlikViewStateProducerTest {
             blikCode = TextInputComponentState(
                 text = "123456",
                 isFocused = true,
-                errorMessage = CheckoutLocalizationKey.BLIK_CODE_INVALID,
-                showError = true,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.BLIK_CODE_INVALID, isVisible = true)
             ),
             isLoading = true,
         )
