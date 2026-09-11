@@ -29,9 +29,7 @@ internal class StoredCardComponentStateValidator(
         )
     }
 
-    override fun isValid(state: StoredCardComponentState): Boolean {
-        return state.securityCode.isValid
-    }
+    override fun isValid(state: StoredCardComponentState): Boolean = state.form.isFormValid
 
     private fun validateSecurityCode(
         securityCode: TextInputComponentState,

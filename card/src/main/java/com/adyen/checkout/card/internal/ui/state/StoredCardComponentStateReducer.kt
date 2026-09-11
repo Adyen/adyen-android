@@ -9,6 +9,8 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstInvalid
+import com.adyen.checkout.core.components.internal.ui.state.model.applyFocusChange
 
 internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCardComponentState, StoredCardIntent> {
 
@@ -18,9 +20,19 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
                 securityCode = state.securityCode.updateText(intent.securityCode),
             )
 
-            is StoredCardIntent.UpdateSecurityCodeFocus -> state.copy(
-                securityCode = state.securityCode.updateFocus(intent.hasFocus),
+            // TODO - Form fields Layer 7: Remove when Stored Card UI emits UpdateFieldFocus.
+            is StoredCardIntent.UpdateSecurityCodeFocus -> state.updateFieldFocus(
+                StoredCardFormElementId.SECURITY_CODE,
+                intent.hasFocus,
             )
+
+            is StoredCardIntent.UpdateFieldFocus -> state.updateFieldFocus(intent.id, intent.hasFocus)
+
+            is StoredCardIntent.FocusRequestConsumed -> if (state.focusRequest?.id == intent.id) {
+                state.copy(focusRequest = null)
+            } else {
+                state
+            }
 
             is StoredCardIntent.UpdateLoading -> state.copy(
                 isLoading = intent.isLoading,
@@ -30,12 +42,16 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
         }
     }
 
-    private fun highlightValidationErrors(state: StoredCardComponentState): StoredCardComponentState {
-        val hasSecurityCodeError = !state.securityCode.isValid
+    private fun StoredCardComponentState.updateFieldFocus(
+        id: StoredCardFormElementId,
+        hasFocus: Boolean,
+    ): StoredCardComponentState = updateTextInput(id) { field -> field.applyFocusChange(focusRequest, id, hasFocus) }
 
-        return state.copy(
-            securityCode = state.securityCode.showErrorIfPresent()
-                .copy(isFocused = hasSecurityCodeError),
-        )
+    private fun highlightValidationErrors(state: StoredCardComponentState): StoredCardComponentState {
+        val highlighted = StoredCardFormElementId.entries.fold(state) { current, id ->
+            current.updateTextInput(id) { field -> field.showErrorIfPresent() }
+        }
+
+        return highlighted.copy(focusRequest = state.form.requestFocusOnFirstInvalid())
     }
 }
