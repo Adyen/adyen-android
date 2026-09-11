@@ -50,8 +50,8 @@ internal fun SecurityCodeField(
     cardNumberFormat: CardNumberFormat,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onFocusRequestConsumed: () -> Unit,
     modifier: Modifier = Modifier,
-    onFocusRequestConsumed: () -> Unit = {},
 ) {
     val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
         ?: resolveString(
@@ -160,6 +160,7 @@ private fun SecurityCodeFieldPreview(
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
 
         SecurityCodeField(
@@ -170,6 +171,7 @@ private fun SecurityCodeFieldPreview(
             cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
 
         val focusRequester = remember { FocusRequester() }
@@ -182,6 +184,7 @@ private fun SecurityCodeFieldPreview(
             modifier = Modifier.focusRequester(focusRequester),
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
@@ -195,6 +198,7 @@ private fun SecurityCodeFieldPreview(
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
     }
 }
