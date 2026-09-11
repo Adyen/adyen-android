@@ -48,7 +48,7 @@ internal class CardViewStateProducer(
                 focusRequest = focusRequest,
                 id = id,
                 customTrailingIcon = getExpiryDateTrailingIcon(
-                    isValid = expiryDate.isValid,
+                    isValid = form.isElementVisibleAndValid(CardFormElementId.EXPIRY_DATE),
                     isEmpty = expiryDate.text.isEmpty(),
                 ),
             ),
@@ -62,7 +62,7 @@ internal class CardViewStateProducer(
                     focusRequest = focusRequest,
                     id = id,
                     customTrailingIcon = getSecurityCodeTrailingIcon(
-                        isValid = securityCode.isValid,
+                        isValid = form.isElementVisibleAndValid(CardFormElementId.SECURITY_CODE),
                         isEmpty = securityCode.text.isEmpty(),
                         cardNumberFormat = cardNumberFormat,
                     ),
