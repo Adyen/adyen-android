@@ -32,16 +32,6 @@ internal sealed interface CardIntent : ComponentStateIntent {
 
     data class UpdatePostalCode(val postalCode: String) : CardIntent
 
-    // TODO - Form fields phase 5: Remove these once Card fields dispatch [UpdateFieldFocus].
-    data class UpdateCardNumberFocus(val hasFocus: Boolean) : CardIntent
-    data class UpdateExpiryDateFocus(val hasFocus: Boolean) : CardIntent
-    data class UpdateSecurityCodeFocus(val hasFocus: Boolean) : CardIntent
-    data class UpdateHolderNameFocus(val hasFocus: Boolean) : CardIntent
-    data class UpdateSocialSecurityNumberFocus(val hasFocus: Boolean) : CardIntent
-    data class UpdateKcpBirthDateOrTaxNumberFocus(val hasFocus: Boolean) : CardIntent
-    data class UpdateKcpCardPasswordFocus(val hasFocus: Boolean) : CardIntent
-    data class UpdatePostalCodeFocus(val hasFocus: Boolean) : CardIntent
-
     /**
      * A field has gained or lost focus. Unlike a value change, which carries the meaning of the field it belongs to,
      * focus is the same event whichever field reports it, so one intent covers all of them.

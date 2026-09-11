@@ -48,6 +48,7 @@ import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.C
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_SEPARATOR
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -70,6 +71,7 @@ internal fun CardNumberField(
     cardNumberFormat: CardNumberFormat,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onFocusRequestConsumed: () -> Unit,
     onScanButtonClick: () -> Unit,
     onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
@@ -83,6 +85,7 @@ internal fun CardNumberField(
             cardBrandViewState = cardBrandViewState,
             onValueChange = onValueChange,
             onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
             onScanButtonClick = onScanButtonClick,
             onBrandSelect = onBrandSelect,
         )
@@ -100,6 +103,7 @@ private fun CardNumberInputField(
     cardBrandViewState: CardBrandViewState,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onFocusRequestConsumed: () -> Unit,
     onScanButtonClick: () -> Unit,
     onBrandSelect: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
@@ -129,7 +133,9 @@ private fun CardNumberInputField(
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
-        shouldFocus = cardNumberState.isFocused,
+        focusRequest = cardNumberState.focusRequest,
+        onFocusRequestConsumed = onFocusRequestConsumed,
+        imeAction = cardNumberState.keyboardAction.toImeAction(),
         trailingIcon = {
             CardNumberTrailingIcon(
                 trailingIcon = cardNumberState.trailingIcon,
@@ -321,6 +327,7 @@ private fun CardNumberFieldPreview(
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
             onScanButtonClick = {},
             onBrandSelect = {},
         )
@@ -339,6 +346,7 @@ private fun CardNumberFieldPreview(
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
             onScanButtonClick = {},
             onBrandSelect = {},
         )
@@ -362,6 +370,7 @@ private fun CardNumberFieldPreview(
             cardNumberFormat = CardNumberFormat.AMEX,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
             onScanButtonClick = {},
             onBrandSelect = {},
         )
@@ -392,6 +401,7 @@ private fun CardNumberFieldPreview(
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
             onScanButtonClick = {},
             onBrandSelect = {},
         )
@@ -411,6 +421,7 @@ private fun CardNumberFieldPreview(
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
             onScanButtonClick = {},
             onBrandSelect = {},
         )

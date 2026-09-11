@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.card.internal.ui.properties.KCPCardPasswordProperties.KCP_CARD_PASSWORD_MAX_LENGTH
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -32,6 +33,7 @@ internal fun KCPCardPasswordField(
     kcpCardPasswordState: TextInputViewState,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onFocusRequestConsumed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingText = kcpCardPasswordState.supportingText?.let { resolveString(it) }
@@ -53,7 +55,9 @@ internal fun KCPCardPasswordField(
         isError = kcpCardPasswordState.isError,
         supportingText = supportingText,
         onValueChange = onValueChange,
-        shouldFocus = kcpCardPasswordState.isFocused,
+        focusRequest = kcpCardPasswordState.focusRequest,
+        onFocusRequestConsumed = onFocusRequestConsumed,
+        imeAction = kcpCardPasswordState.keyboardAction.toImeAction(),
         inputTransformation = inputTransformation,
         isSecureField = true,
         trailingIcon = {
@@ -74,6 +78,7 @@ private fun KCPCardPasswordFieldPreview(
             ),
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
     }
 }

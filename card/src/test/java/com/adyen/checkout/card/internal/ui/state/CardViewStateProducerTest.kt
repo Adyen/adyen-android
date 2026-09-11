@@ -16,6 +16,7 @@ import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 
 internal class CardViewStateProducerTest {
@@ -765,6 +767,22 @@ internal class CardViewStateProducerTest {
         // THEN
         assertNull(viewState.installmentPickerViewState)
         assertNull(viewState.element<CardFormElement.Installments>())
+    }
+
+    @Test
+    fun `when focus is requested, then only the requested field receives a focus token`() {
+        // GIVEN
+        val componentState = createComponentState().copy(
+            focusRequest = FocusRequest(CardFormElementId.SECURITY_CODE),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.cardNumber?.focusRequest)
+        assertNull(viewState.expiryDate?.focusRequest)
+        assertNotNull(viewState.securityCode?.focusRequest)
     }
 
     @Test
