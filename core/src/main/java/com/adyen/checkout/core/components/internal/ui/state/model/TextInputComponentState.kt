@@ -31,10 +31,6 @@ data class TextInputComponentState(
         val isVisible: Boolean = false,
     )
 
-    // TODO - Form fields cleanup: Layer 8 removes this once every component reads validity from its FormState.
-    val isValid: Boolean
-        get() = error == null
-
     val isErrorVisible: Boolean
         get() = error?.isVisible == true
 
