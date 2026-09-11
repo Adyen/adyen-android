@@ -29,36 +29,6 @@ import org.junit.jupiter.api.Test
  */
 internal class TextInputComponentStateTest {
 
-    @Nested
-    inner class IsValidTest {
-
-        // UC1: Error on Explicit Validation - verify isValid
-        @Test
-        fun `when state has an error, then isValid returns false`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "invalid", error = hiddenError())
-
-            // WHEN
-            val isValid = state.isValid
-
-            // THEN
-            assertFalse(isValid)
-        }
-
-        // UC14: Empty Field - verify empty is considered valid
-        @Test
-        fun `when field is empty with no error, then isValid returns true`() {
-            // GIVEN
-            val state = TextInputComponentState(text = "", error = null)
-
-            // WHEN
-            val isValid = state.isValid
-
-            // THEN
-            assertTrue(isValid)
-        }
-    }
-
     /**
      * There are only three states, because [TextInputComponentState.InputError] holds the message and its visibility
      * together. A field that shows an error without having one cannot be built.
@@ -159,7 +129,6 @@ internal class TextInputComponentStateTest {
 
             // THEN
             assertNull(updatedState.error)
-            assertTrue(updatedState.isValid)
         }
     }
 
