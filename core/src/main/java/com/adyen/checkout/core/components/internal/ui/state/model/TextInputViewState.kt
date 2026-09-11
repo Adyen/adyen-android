@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
@@ -38,8 +39,7 @@ data class TextInputViewState(
      * The trailing icon to render. The generic [TrailingIcon.Error] icon always takes precedence over
      * [customTrailingIcon], so that every field shows the error state consistently.
      */
-    val trailingIcon: TrailingIcon
-        get() = if (isError) TrailingIcon.Error else customTrailingIcon ?: TrailingIcon.Empty
+    val trailingIcon: TrailingIcon = if (isError) TrailingIcon.Error else customTrailingIcon ?: TrailingIcon.Empty
 }
 
 /**
@@ -56,13 +56,19 @@ fun <Id : FormElementId> TextInputComponentState.toViewState(
     id: Id,
     customTrailingIcon: TrailingIcon? = null,
 ): TextInputViewState {
+    val isError = isErrorVisible
     return TextInputViewState(
         text = text,
-        supportingText = if (isErrorVisible) error?.message else description,
-        isError = isErrorVisible,
+        supportingText = if (isError) error?.message else description,
+        isError = isError,
         customTrailingIcon = customTrailingIcon,
         isOptional = requirementPolicy is RequirementPolicy.Optional,
         keyboardAction = form.keyboardActionFor(id),
         focusRequest = focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
     )
 }
+
+@get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@VisibleForTesting
+val TextInputComponentState.isErrorVisible: Boolean
+    get() = error?.isVisible == true
