@@ -24,6 +24,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.core.common.internal.properties.ExpiryDateProperties
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -44,6 +45,7 @@ internal fun ExpiryDateField(
     expiryDateState: TextInputViewState,
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
+    onFocusRequestConsumed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val supportingTextExpiryDate = expiryDateState.supportingText?.let { resolveString(it) }
@@ -77,7 +79,9 @@ internal fun ExpiryDateField(
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
-        shouldFocus = expiryDateState.isFocused,
+        focusRequest = expiryDateState.focusRequest,
+        onFocusRequestConsumed = onFocusRequestConsumed,
+        imeAction = expiryDateState.keyboardAction.toImeAction(),
         trailingIcon = {
             ExpiryDateTrailingIcon(expiryDateState.trailingIcon)
         },
@@ -136,6 +140,7 @@ private fun ExpiryDateFieldPreview(
             ),
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
         ExpiryDateField(
             expiryDateState = TextInputViewState(
@@ -144,6 +149,7 @@ private fun ExpiryDateFieldPreview(
             ),
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
 
         ExpiryDateField(
@@ -153,6 +159,7 @@ private fun ExpiryDateFieldPreview(
             ),
             onValueChange = {},
             onFocusChange = {},
+            onFocusRequestConsumed = {},
         )
     }
 }

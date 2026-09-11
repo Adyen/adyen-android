@@ -13,8 +13,6 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
-import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class CardViewStateProducer(
@@ -29,18 +27,14 @@ internal class CardViewStateProducer(
         installmentPickerViewState = state.installmentState.toPickerViewState(),
     )
 
-    // TODO - Form fields cleanup: Layer 7 removes this once hidden fields cannot be converted to view state.
-    private fun TextInputComponentState.toTextInputViewState(
-        customTrailingIcon: TrailingIcon? = null,
-    ) = requireNotNull(toViewState(customTrailingIcon)) {
-        "Text input must be visible to have a view state"
-    }
-
     private fun CardComponentState.toElement(id: CardFormElementId): CardFormElement = when (id) {
         CardFormElementId.CARD_NUMBER -> CardFormElement.CardNumber(
             textInputViewState = cardNumber
                 .copy(description = getCardNumberInputDescription(cardBrandState))
-                .toTextInputViewState(
+                .toViewState(
+                    form = form,
+                    focusRequest = focusRequest,
+                    id = id,
                     customTrailingIcon = getCardNumberTrailingIcon(isCardScanButtonVisible()),
                 ),
             cardBrandViewState = getCardBrandViewState(cardBrandState),
@@ -49,7 +43,10 @@ internal class CardViewStateProducer(
         )
 
         CardFormElementId.EXPIRY_DATE -> CardFormElement.ExpiryDate(
-            textInputViewState = expiryDate.toTextInputViewState(
+            textInputViewState = expiryDate.toViewState(
+                form = form,
+                focusRequest = focusRequest,
+                id = id,
                 customTrailingIcon = getExpiryDateTrailingIcon(
                     isValid = expiryDate.isValid,
                     isEmpty = expiryDate.text.isEmpty(),
@@ -60,7 +57,10 @@ internal class CardViewStateProducer(
         CardFormElementId.SECURITY_CODE -> {
             val cardNumberFormat = getCardNumberFormat(cardBrandState)
             CardFormElement.SecurityCode(
-                textInputViewState = securityCode.toTextInputViewState(
+                textInputViewState = securityCode.toViewState(
+                    form = form,
+                    focusRequest = focusRequest,
+                    id = id,
                     customTrailingIcon = getSecurityCodeTrailingIcon(
                         isValid = securityCode.isValid,
                         isEmpty = securityCode.text.isEmpty(),
@@ -71,19 +71,19 @@ internal class CardViewStateProducer(
             )
         }
 
-        CardFormElementId.HOLDER_NAME -> CardFormElement.HolderName(holderName.toTextInputViewState())
+        CardFormElementId.HOLDER_NAME -> CardFormElement.HolderName(holderName.toViewState(form, focusRequest, id))
 
         CardFormElementId.SOCIAL_SECURITY_NUMBER ->
-            CardFormElement.SocialSecurityNumber(socialSecurityNumber.toTextInputViewState())
+            CardFormElement.SocialSecurityNumber(socialSecurityNumber.toViewState(form, focusRequest, id))
 
         CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER ->
-            CardFormElement.KcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber.toTextInputViewState())
+            CardFormElement.KcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber.toViewState(form, focusRequest, id))
 
         CardFormElementId.KCP_CARD_PASSWORD -> CardFormElement.KcpCardPassword(
-            kcpCardPassword.toTextInputViewState(),
+            kcpCardPassword.toViewState(form, focusRequest, id),
         )
 
-        CardFormElementId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toTextInputViewState())
+        CardFormElementId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toViewState(form, focusRequest, id))
 
         CardFormElementId.STORE_PAYMENT_METHOD -> CardFormElement.StorePaymentMethod(isSelected = storePaymentMethod)
 
@@ -93,7 +93,8 @@ internal class CardViewStateProducer(
     }
 
     /**
-     * The scan button is shown instead of the card brand logos when scanning is available and the field is empty.
+     * The scan button replaces the brand logos while there is nothing to show a brand for, so it is only ever a choice
+     * of trailing icon.
      */
     private fun CardComponentState.isCardScanButtonVisible() = isCardScanningAvailable && cardNumber.text.isEmpty()
 

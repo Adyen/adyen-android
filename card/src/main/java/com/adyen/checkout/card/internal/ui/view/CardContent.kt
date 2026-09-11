@@ -139,6 +139,9 @@ private fun CardForm(
     }
 }
 
+// Field composables take the element's data rather than the element itself, so that they stay usable from more than one
+// component. The security code field is shared with the stored card screen, and the billing address will be shared more
+// widely still.
 @Suppress("LongMethod")
 @Composable
 private fun CardFormElementContent(
@@ -147,6 +150,9 @@ private fun CardFormElementContent(
     onScanButtonClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
 ) {
+    val onFocusChange: (Boolean) -> Unit = { hasFocus -> onIntent(CardIntent.UpdateFieldFocus(element.id, hasFocus)) }
+    val onFocusRequestConsumed: () -> Unit = { onIntent(CardIntent.FocusRequestConsumed(element.id)) }
+
     when (element) {
         is CardFormElement.CardNumber -> CardNumberField(
             cardNumberState = element.textInputViewState,
@@ -154,7 +160,8 @@ private fun CardFormElementContent(
             cardBrandViewState = element.cardBrandViewState,
             cardNumberFormat = element.cardNumberFormat,
             onValueChange = { onIntent(CardIntent.UpdateCardNumber(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdateCardNumberFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
             onScanButtonClick = onScanButtonClick,
             onBrandSelect = { onIntent(CardIntent.SelectBrand(it)) },
         )
@@ -162,44 +169,51 @@ private fun CardFormElementContent(
         is CardFormElement.ExpiryDate -> ExpiryDateField(
             expiryDateState = element.textInputViewState,
             onValueChange = { onIntent(CardIntent.UpdateExpiryDate(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdateExpiryDateFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
         is CardFormElement.SecurityCode -> SecurityCodeField(
             securityCodeState = element.textInputViewState,
             cardNumberFormat = element.cardNumberFormat,
             onValueChange = { onIntent(CardIntent.UpdateSecurityCode(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdateSecurityCodeFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
         is CardFormElement.HolderName -> HolderNameField(
             holderNameState = element.textInputViewState,
             onValueChange = { onIntent(CardIntent.UpdateHolderName(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdateHolderNameFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
         is CardFormElement.SocialSecurityNumber -> SocialSecurityNumberField(
             socialSecurityNumberState = element.textInputViewState,
             onValueChange = { onIntent(CardIntent.UpdateSocialSecurityNumber(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdateSocialSecurityNumberFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
         is CardFormElement.KcpBirthDateOrTaxNumber -> KCPBirthDateOrTaxNumberField(
             kcpBirthDateOrTaxNumberState = element.textInputViewState,
             onValueChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumber(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdateKcpBirthDateOrTaxNumberFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
         is CardFormElement.KcpCardPassword -> KCPCardPasswordField(
             kcpCardPasswordState = element.textInputViewState,
             onValueChange = { onIntent(CardIntent.UpdateKcpCardPassword(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdateKcpCardPasswordFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
         is CardFormElement.PostalCode -> PostalCodeField(
             postalCodeState = element.textInputViewState,
             onValueChange = { onIntent(CardIntent.UpdatePostalCode(it)) },
-            onFocusChange = { onIntent(CardIntent.UpdatePostalCodeFocus(it)) },
+            onFocusChange = onFocusChange,
+            onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
         is CardFormElement.StorePaymentMethod -> SwitchContainer(

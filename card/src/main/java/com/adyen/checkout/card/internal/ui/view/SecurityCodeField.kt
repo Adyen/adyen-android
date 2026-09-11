@@ -29,6 +29,7 @@ import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_AMEX
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_DEFAULT
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -50,6 +51,7 @@ internal fun SecurityCodeField(
     onValueChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    onFocusRequestConsumed: () -> Unit = {},
 ) {
     val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
         ?: resolveString(
@@ -88,6 +90,9 @@ internal fun SecurityCodeField(
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         shouldFocus = securityCodeState.isFocused,
+        focusRequest = securityCodeState.focusRequest,
+        onFocusRequestConsumed = onFocusRequestConsumed,
+        imeAction = securityCodeState.keyboardAction.toImeAction(),
         trailingIcon = {
             SecurityCodeTrailingIcon(securityCodeState.trailingIcon)
         },

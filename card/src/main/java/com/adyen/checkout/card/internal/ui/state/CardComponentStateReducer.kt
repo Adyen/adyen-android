@@ -19,8 +19,7 @@ internal class CardComponentStateReducer(
     private val cardBrandIntentsHandler: CardBrandIntentsHandler,
 ) : ComponentStateReducer<CardComponentState, CardIntent> {
 
-    // TODO - Form fields phase 5: Remove LongMethod when the legacy focus intents are removed.
-    @Suppress("CyclomaticComplexMethod", "LongMethod")
+    @Suppress("CyclomaticComplexMethod")
     override fun reduce(state: CardComponentState, intent: CardIntent): CardComponentState {
         return when (intent) {
             is CardIntent.UpdateCardNumber -> state.copy(
@@ -54,30 +53,6 @@ internal class CardComponentStateReducer(
             is CardIntent.UpdatePostalCode -> state.copy(
                 postalCode = state.postalCode.updateText(intent.postalCode)
             )
-
-            is CardIntent.UpdateCardNumberFocus ->
-                state.updateFieldFocus(CardFormElementId.CARD_NUMBER, intent.hasFocus)
-
-            is CardIntent.UpdateExpiryDateFocus ->
-                state.updateFieldFocus(CardFormElementId.EXPIRY_DATE, intent.hasFocus)
-
-            is CardIntent.UpdateSecurityCodeFocus ->
-                state.updateFieldFocus(CardFormElementId.SECURITY_CODE, intent.hasFocus)
-
-            is CardIntent.UpdateHolderNameFocus ->
-                state.updateFieldFocus(CardFormElementId.HOLDER_NAME, intent.hasFocus)
-
-            is CardIntent.UpdateSocialSecurityNumberFocus ->
-                state.updateFieldFocus(CardFormElementId.SOCIAL_SECURITY_NUMBER, intent.hasFocus)
-
-            is CardIntent.UpdateKcpBirthDateOrTaxNumberFocus ->
-                state.updateFieldFocus(CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER, intent.hasFocus)
-
-            is CardIntent.UpdateKcpCardPasswordFocus ->
-                state.updateFieldFocus(CardFormElementId.KCP_CARD_PASSWORD, intent.hasFocus)
-
-            is CardIntent.UpdatePostalCodeFocus ->
-                state.updateFieldFocus(CardFormElementId.POSTAL_CODE, intent.hasFocus)
 
             is CardIntent.UpdateFieldFocus -> state.updateFieldFocus(intent.id, intent.hasFocus)
 

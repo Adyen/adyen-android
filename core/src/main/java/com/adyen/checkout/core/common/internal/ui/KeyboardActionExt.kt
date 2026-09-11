@@ -18,7 +18,6 @@ import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
  * The two are kept apart so that the state layer can be tested without Compose, which is why this translation lives
  * here rather than on [KeyboardAction] itself.
  */
-// TODO - Form fields phase 5: Card fields will use this mapping when they adopt form-driven IME actions.
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun KeyboardAction.toImeAction(): ImeAction = when (this) {
     KeyboardAction.NEXT -> ImeAction.Next
