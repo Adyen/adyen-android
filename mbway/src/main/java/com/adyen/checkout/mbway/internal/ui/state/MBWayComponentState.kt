@@ -10,6 +10,10 @@ package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementState
+import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class MBWayComponentState(
@@ -17,4 +21,23 @@ internal data class MBWayComponentState(
     val selectedCountryCode: CountryModel,
     val phoneNumber: TextInputComponentState,
     val isLoading: Boolean,
-) : ComponentState
+    val focusRequest: FocusRequest<MBWayFormElementId>? = null,
+) : ComponentState {
+
+    val form: FormState<MBWayFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        FormState(
+            elements = listOfNotNull(
+                FormElementState(MBWayFormElementId.COUNTRY_CODE, isValid = true),
+                phoneNumber.toFormElementIfVisible(MBWayFormElementId.PHONE_NUMBER),
+            ),
+        )
+    }
+}
+
+internal fun MBWayComponentState.updateTextInput(
+    id: MBWayFormElementId,
+    transform: (TextInputComponentState) -> TextInputComponentState,
+): MBWayComponentState = when (id) {
+    MBWayFormElementId.PHONE_NUMBER -> copy(phoneNumber = transform(phoneNumber))
+    MBWayFormElementId.COUNTRY_CODE -> this
+}

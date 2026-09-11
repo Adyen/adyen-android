@@ -79,6 +79,7 @@ internal class MBWayComponentStateValidatorTest {
             val actual = validator.isValid(viewState)
 
             assertTrue(actual)
+            assertTrue(viewState.form.isFormValid)
         }
 
         @Test
@@ -97,6 +98,7 @@ internal class MBWayComponentStateValidatorTest {
             val actual = validator.isValid(viewState)
 
             assertFalse(actual)
+            assertFalse(viewState.form.isFormValid)
         }
     }
 

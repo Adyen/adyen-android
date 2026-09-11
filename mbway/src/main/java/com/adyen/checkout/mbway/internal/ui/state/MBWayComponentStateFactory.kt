@@ -11,6 +11,7 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.form.requestFocusOnFirstTextInput
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import java.util.Locale
 
@@ -18,12 +19,17 @@ internal class MBWayComponentStateFactory(
     private val shopperLocale: Locale,
 ) : ComponentStateFactory<MBWayComponentState> {
 
-    override fun createInitialState() = MBWayComponentState(
-        countries = getSupportedCountries(shopperLocale),
-        selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
-        phoneNumber = TextInputComponentState(isFocused = true),
-        isLoading = false,
-    )
+    override fun createInitialState(): MBWayComponentState {
+        val state = MBWayComponentState(
+            countries = getSupportedCountries(shopperLocale),
+            selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
+            // TODO - Form fields cleanup: Layer 8 removes isFocused after every component uses focus requests.
+            phoneNumber = TextInputComponentState(isFocused = true),
+            isLoading = false,
+        )
+
+        return state.copy(focusRequest = state.form.requestFocusOnFirstTextInput())
+    }
 
     private fun getSupportedCountries(shopperLocale: Locale): List<CountryModel> =
         CountryUtils.getLocalizedCountries(shopperLocale, SUPPORTED_COUNTRIES)

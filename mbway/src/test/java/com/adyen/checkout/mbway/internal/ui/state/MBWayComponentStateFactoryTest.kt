@@ -1,6 +1,7 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -37,6 +38,7 @@ internal class MBWayComponentStateFactoryTest {
                 isFocused = true
             ),
             isLoading = false,
+            focusRequest = FocusRequest(MBWayFormElementId.PHONE_NUMBER),
         )
         assertEquals(expected, actual)
     }
