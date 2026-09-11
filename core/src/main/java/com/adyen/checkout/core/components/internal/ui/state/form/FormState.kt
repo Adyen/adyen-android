@@ -21,4 +21,19 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class FormState<Id : FormElementId>(
     val elements: List<FormElementState<Id>>,
-)
+) {
+
+    /**
+     * Whether all visible elements are valid.
+     */
+    val isFormValid: Boolean = elements.all { it.isValid }
+
+    /**
+     * Whether an element is visible and valid.
+     *
+     * A hidden element does not exist in the list and therefore returns false here.
+     */
+    fun isElementVisibleAndValid(id: Id): Boolean {
+        return elements.any { it.id == id && it.isValid }
+    }
+}
