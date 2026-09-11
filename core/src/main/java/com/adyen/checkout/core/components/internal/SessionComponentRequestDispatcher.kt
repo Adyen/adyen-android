@@ -101,9 +101,12 @@ internal class SessionComponentRequestDispatcher(
     }
 
     override fun complete(resultCode: CheckoutResultCode) {
-        val isExpectedToBeMissing = resultCode == CheckoutResultCode.CANCELLED || resultCode == CheckoutResultCode.ERROR
-        if (sessionId.isBlank() || (sessionResult.isBlank() && !isExpectedToBeMissing)) {
-            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without sessionId or sessionResult." }
+        val isSessionResultExpectedToBeMissing = resultCode == CheckoutResultCode.CANCELLED ||
+            resultCode == CheckoutResultCode.ERROR
+        if (sessionId.isBlank()) {
+            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionId." }
+        } else if (sessionResult.isBlank() && !isSessionResultExpectedToBeMissing) {
+            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionResult." }
         }
 
         val result = SessionCheckoutResult(
