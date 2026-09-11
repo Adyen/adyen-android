@@ -49,7 +49,6 @@ internal class StoredCardComponentStateFactoryTest {
             val state = createFactory().createInitialState()
 
             assertEquals(FocusRequest(StoredCardFormElementId.SECURITY_CODE), state.focusRequest)
-            assertTrue(state.securityCode.isFocused)
         }
 
         @Test

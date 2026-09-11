@@ -23,8 +23,7 @@ internal class MBWayComponentStateFactory(
         val state = MBWayComponentState(
             countries = getSupportedCountries(shopperLocale),
             selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
-            // TODO - Form fields cleanup: Layer 8 removes isFocused after every component uses focus requests.
-            phoneNumber = TextInputComponentState(isFocused = true),
+            phoneNumber = TextInputComponentState(),
             isLoading = false,
         )
 

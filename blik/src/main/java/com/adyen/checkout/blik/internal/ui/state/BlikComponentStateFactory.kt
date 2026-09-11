@@ -17,9 +17,7 @@ internal class BlikComponentStateFactory : ComponentStateFactory<BlikComponentSt
 
     override fun createInitialState(): BlikComponentState {
         val state = BlikComponentState(
-            // TODO - Form fields cleanup: Layer 8 removes isFocused after every component uses focus requests.
             blikCode = TextInputComponentState(
-                isFocused = true,
                 description = CheckoutLocalizationKey.BLIK_CODE_HINT,
             ),
             isLoading = false,

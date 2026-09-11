@@ -30,8 +30,6 @@ internal class StoredCardComponentStateFactory(
         )
 
         val securityCode = TextInputComponentState(
-            // TODO - Form fields cleanup: Layer 8 removes isFocused after every component uses focus requests.
-            isFocused = true,
             requirementPolicy = when (componentParams.storedCVCVisibility) {
                 StoredCVCVisibility.SHOW -> RequirementPolicy.Required
                 StoredCVCVisibility.HIDE -> RequirementPolicy.Hidden

@@ -64,8 +64,6 @@ internal fun BlikCodeField(
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
-        // TODO - Form fields cleanup: Layer 8 removes shouldFocus after every component uses focus requests.
-        shouldFocus = blikCodeState.isFocused,
         focusRequest = blikCodeState.focusRequest,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = blikCodeState.keyboardAction.toImeAction(),

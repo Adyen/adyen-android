@@ -51,7 +51,6 @@ internal fun MBWayPhoneNumberField(
         prefix = countryCode,
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
-        shouldFocus = mbWayPhoneNumberFieldState.isFocused,
         focusRequest = mbWayPhoneNumberFieldState.focusRequest,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = mbWayPhoneNumberFieldState.keyboardAction.toImeAction(),

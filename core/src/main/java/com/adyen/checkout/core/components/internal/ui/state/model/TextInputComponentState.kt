@@ -18,7 +18,6 @@ data class TextInputComponentState(
     val text: String = "",
     val description: CheckoutLocalizationKey? = null,
     val error: InputError? = null,
-    val isFocused: Boolean = false,
     val requirementPolicy: RequirementPolicy = RequirementPolicy.Required,
 ) {
 
@@ -57,11 +56,6 @@ data class TextInputComponentState(
     fun showErrorIfPresent() = copy(error = error?.copy(isVisible = true))
 
     fun hideErrorIfPresent() = copy(error = error?.copy(isVisible = false))
-
-    fun updateFocus(hasFocus: Boolean): TextInputComponentState {
-        val focused = copy(isFocused = hasFocus)
-        return if (hasFocus) focused.hideErrorIfPresent() else focused.showErrorIfPresent()
-    }
 }
 
 /**
@@ -74,11 +68,8 @@ fun <Id : FormElementId> TextInputComponentState.applyFocusChange(
     focusRequest: FocusRequest<Id>?,
     id: Id,
     hasFocus: Boolean,
-): TextInputComponentState {
-    val focused = updateFocus(hasFocus)
-    return if (hasFocus && focusRequest?.takeIf { it.id == id }?.showErrorIfPresent == true) {
-        focused.showErrorIfPresent()
-    } else {
-        focused
-    }
+): TextInputComponentState = when {
+    !hasFocus -> showErrorIfPresent()
+    focusRequest?.takeIf { it.id == id }?.showErrorIfPresent == true -> showErrorIfPresent()
+    else -> hideErrorIfPresent()
 }

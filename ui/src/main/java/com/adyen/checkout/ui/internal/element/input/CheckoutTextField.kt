@@ -77,7 +77,6 @@ import kotlinx.coroutines.flow.collectLatest
  * interactions for this text field.
  * @param innerIndication Optional [Indication] that will be used for the internal
  * [CheckoutTextFieldDecorationBox].
- * @param shouldFocus Whether the field should be focused on first composition.
  * @param focusRequest A pending request to give this field focus, or null if there is none. Each new request moves
  * focus once, and is reported back through [onFocusRequestConsumed].
  * @param onFocusRequestConsumed Called after a [focusRequest] has been acted on, so that the state layer can clear it.
@@ -105,8 +104,6 @@ fun CheckoutTextField(
     imeAction: ImeAction = ImeAction.Unspecified,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
-    // TODO - Form fields cleanup: Layer 8 removes this once every component uses [focusRequest].
-    shouldFocus: Boolean = false,
     focusRequest: FocusRequestToken? = null,
     onFocusRequestConsumed: (() -> Unit)? = null,
     prefix: String? = null,
@@ -193,14 +190,6 @@ fun CheckoutTextField(
 
             // Should be called last because it clears the request, which ends this effect
             onFocusRequestConsumed?.invoke()
-        }
-    }
-
-    LaunchedEffect(shouldFocus) {
-        if (shouldFocus) {
-            // Throws if the requester is not attached to a focusable node, which can happen when the field leaves
-            // composition between composition and this effect running. Losing the focus is preferable to crashing.
-            runCatching { focusRequester.requestFocus() }
         }
     }
 }

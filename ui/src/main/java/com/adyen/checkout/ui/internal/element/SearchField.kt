@@ -43,7 +43,6 @@ fun SearchField(
     enabled: Boolean = true,
     supportingText: String? = null,
     isError: Boolean = false,
-    shouldFocus: Boolean = false,
 ) {
     val state = rememberTextFieldState()
     val style = CheckoutThemeProvider.elements.textField
@@ -56,7 +55,6 @@ fun SearchField(
         isError = isError,
         enabled = enabled,
         innerIndication = null,
-        shouldFocus = shouldFocus,
         trailingIcon = {
             TrailingSearchIcon(
                 isQueryEmpty = state.text.isEmpty(),
