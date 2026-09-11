@@ -77,7 +77,7 @@ Each component defines its element IDs and derives a `FormState` containing only
 
 ## Final decision
 
-Use MVI with component-specific intents, reducers, validators, component state, and view-state producers. For form-based components, derive an ordered `FormState` from the component state.
+Use MVI with component-specific intents, reducers, validators, post processors, component state, and view-state producers. For form-based components, derive an ordered `FormState` from the component state.
 
 The model follows these rules:
 
@@ -91,6 +91,8 @@ The model follows these rules:
 8. Keyboard `Next` or `Done` is derived from the next visible text input in the form.
 9. Whole-form and single-element validity are read from `FormState`, not directly from text-input state.
 10. Shared core element types are introduced only when multiple components have the same concrete need without weakening exhaustive component mappings.
+11. A `ComponentStatePostProcessor` runs after the validator and is the only writer of `focusRequest`. The reducer may read it but never writes it.
+12. Anything the reducer could have computed belongs in the reducer. The post processor is for decisions that need the errors the validator just set.
 
 ## Concerns and follow-up actions
 
@@ -106,9 +108,12 @@ The state flow remains:
 1. UI dispatches a component intent.
 2. The reducer creates the next component state.
 3. The validator updates field errors.
-4. The component state derives its ordered form.
-5. The view-state producer maps form elements to component-specific renderable elements.
-6. The UI renders those elements and reports value, focus, and request-consumption intents.
-7. Submission reads form validity; invalid submission highlights errors and requests the first invalid visible element.
+4. The post processor decides where focus goes, reading the errors from step 3.
+5. The component state derives its ordered form.
+6. The view-state producer maps form elements to component-specific renderable elements.
+7. The UI renders those elements and reports value, focus, and request-consumption intents.
+8. Submission reads form validity; invalid submission highlights errors and requests the first invalid visible element.
+
+Steps 2 to 4 run inside one state update, which can be re-invoked under contention, so all three must be pure. The opening focus request comes from the same post processor, through `processInitialState`, so it is decided by the same code as every later one rather than by a state factory.
 
 The form abstraction deliberately does not own field values, labels, transformations, or component-specific rendering data. Those remain on component state and component-specific view elements.
