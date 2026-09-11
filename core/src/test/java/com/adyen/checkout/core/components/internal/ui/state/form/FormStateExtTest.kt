@@ -7,10 +7,10 @@
 package com.adyen.checkout.core.components.internal.ui.state.form
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.HOLDER_NAME
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.NUMBER
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.STORE_DETAILS
-import com.adyen.checkout.core.components.internal.ui.state.form.FormStateExtTest.TestFormElementId.VERIFICATION_CODE
+import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElementId.HOLDER_NAME
+import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElementId.NUMBER
+import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElementId.STORE_DETAILS
+import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElementId.VERIFICATION_CODE
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -140,18 +140,5 @@ internal class FormStateExtTest {
             // THEN
             assertNull(request)
         }
-    }
-
-    private fun formOf(vararg ids: TestFormElementId) = FormState(elements = ids.map { valid(it) })
-
-    private fun valid(id: TestFormElementId) = FormElementState(id, isValid = true)
-
-    private fun invalid(id: TestFormElementId) = FormElementState(id, isValid = false)
-
-    private enum class TestFormElementId(override val isTextInput: Boolean) : FormElementId {
-        NUMBER(true),
-        VERIFICATION_CODE(true),
-        HOLDER_NAME(true),
-        STORE_DETAILS(false),
     }
 }
