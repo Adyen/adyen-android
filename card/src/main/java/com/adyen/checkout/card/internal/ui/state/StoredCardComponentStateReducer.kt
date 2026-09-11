@@ -20,12 +20,6 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
                 securityCode = state.securityCode.updateText(intent.securityCode),
             )
 
-            // TODO - Form fields Layer 7: Remove when Stored Card UI emits UpdateFieldFocus.
-            is StoredCardIntent.UpdateSecurityCodeFocus -> state.updateFieldFocus(
-                StoredCardFormElementId.SECURITY_CODE,
-                intent.hasFocus,
-            )
-
             is StoredCardIntent.UpdateFieldFocus -> state.updateFieldFocus(intent.id, intent.hasFocus)
 
             is StoredCardIntent.FocusRequestConsumed -> if (state.focusRequest?.id == intent.id) {

@@ -73,15 +73,6 @@ internal class StoredCardComponentStateReducerTest {
     }
 
     @Test
-    fun `when legacy security code focus changes, then securityCode focus is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, StoredCardIntent.UpdateSecurityCodeFocus(true))
-
-        assertTrue(actual.securityCode.isFocused)
-    }
-
-    @Test
     fun `when intent is UpdateLoading with true, then isLoading is set to true`() {
         val state = createInitialState()
 

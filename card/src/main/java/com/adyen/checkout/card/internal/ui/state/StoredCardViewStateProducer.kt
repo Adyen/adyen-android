@@ -8,11 +8,9 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class StoredCardViewStateProducer(
@@ -20,29 +18,28 @@ internal class StoredCardViewStateProducer(
     private val showSubmitButton: Boolean,
 ) : ViewStateProducer<StoredCardComponentState, StoredCardViewState> {
 
-    override fun produce(state: StoredCardComponentState): StoredCardViewState {
-        val cardNumberFormat = state.detectedCardType?.cardBrand.toCardNumberFormat()
+    override fun produce(state: StoredCardComponentState) = StoredCardViewState(
+        elements = state.form.elements.map { state.toElement(it.id) },
+        isLoading = state.isLoading,
+        payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
+    )
 
-        return StoredCardViewState(
-            securityCode = state.securityCode.toViewState(
-                customTrailingIcon = getSecurityCodeTrailingIcon(state.securityCode, cardNumberFormat),
-            ),
-            brand = state.detectedCardType?.cardBrand,
-            cardNumberFormat = cardNumberFormat,
-            isLoading = state.isLoading,
-            payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
-        )
-    }
-
-    private fun getSecurityCodeTrailingIcon(
-        securityCode: TextInputComponentState,
-        cardNumberFormat: CardNumberFormat,
-    ): SecurityCodeTrailingIcon {
-        return when {
-            // TODO - Form fields Layer 7: Read this from the form when this producer adopts form elements.
-            securityCode.isValid && securityCode.text.isNotEmpty() -> SecurityCodeTrailingIcon.Checkmark
-            cardNumberFormat == CardNumberFormat.AMEX -> SecurityCodeTrailingIcon.PlaceholderAmex
-            else -> SecurityCodeTrailingIcon.PlaceholderDefault
+    private fun StoredCardComponentState.toElement(id: StoredCardFormElementId): StoredCardFormElement = when (id) {
+        StoredCardFormElementId.SECURITY_CODE -> {
+            val cardNumberFormat = detectedCardType?.cardBrand.toCardNumberFormat()
+            StoredCardFormElement.SecurityCode(
+                textInputViewState = securityCode.toViewState(
+                    form = form,
+                    focusRequest = focusRequest,
+                    id = id,
+                    customTrailingIcon = getSecurityCodeTrailingIcon(
+                        isValid = form.isElementVisibleAndValid(id),
+                        isEmpty = securityCode.text.isEmpty(),
+                        cardNumberFormat = cardNumberFormat,
+                    ),
+                ),
+                cardNumberFormat = cardNumberFormat,
+            )
         }
     }
 }
