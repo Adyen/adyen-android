@@ -9,8 +9,9 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class TextInputComponentState(
@@ -22,7 +23,8 @@ data class TextInputComponentState(
 ) {
 
     /**
-     * An error on the field, together with whether the shopper should see it yet.
+     * An error and whether the shopper should see it yet. The two are held together so a field cannot show an error it
+     * does not have.
      */
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class InputError(
@@ -36,11 +38,12 @@ data class TextInputComponentState(
     val isErrorVisible: Boolean
         get() = error?.isVisible == true
 
+    /** Typing hides the error, so the shopper is not corrected while fixing the thing they were corrected about. */
     fun updateText(text: String) = copy(text = text).hideErrorIfPresent()
 
     /**
-     * Replaces the error, keeping whether it is currently visible. Validators call this on every pass, so replacing a
-     * message must not hide an error the shopper is already looking at.
+     * Replaces the error, keeping whether it is currently visible. Use this from a validator: it runs on every pass,
+     * and replacing a message must not hide an error the shopper is already reading.
      */
     fun updateError(message: CheckoutLocalizationKey?): TextInputComponentState {
         return when {
@@ -50,19 +53,32 @@ data class TextInputComponentState(
         }
     }
 
-    /**
-     * Shows the error, if there is one.
-     */
     fun showErrorIfPresent() = copy(error = error?.copy(isVisible = true))
 
-    /**
-     * Hides the error, if there is one.
-     */
-    @VisibleForTesting
     fun hideErrorIfPresent() = copy(error = error?.copy(isVisible = false))
 
     fun updateFocus(hasFocus: Boolean): TextInputComponentState {
         val focused = copy(isFocused = hasFocus)
         return if (hasFocus) focused.hideErrorIfPresent() else focused.showErrorIfPresent()
+    }
+}
+
+/**
+ * Call this on every focus change, gain or loss, whatever caused it. Gaining focus hides the error, because the
+ * shopper is working on the field, unless [focusRequest] asked for this field and set showErrorIfPresent. Losing
+ * focus shows the error.
+ */
+// TODO - Form fields phase 5: Card reducers will use this function when they adopt form-driven focus.
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <Id : FormElementId> TextInputComponentState.applyFocusChange(
+    focusRequest: FocusRequest<Id>?,
+    id: Id,
+    hasFocus: Boolean,
+): TextInputComponentState {
+    val focused = updateFocus(hasFocus)
+    return if (hasFocus && focusRequest?.takeIf { it.id == id }?.showErrorIfPresent == true) {
+        focused.showErrorIfPresent()
+    } else {
+        focused
     }
 }
