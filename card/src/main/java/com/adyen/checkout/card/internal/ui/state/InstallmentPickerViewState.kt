@@ -11,15 +11,21 @@ package com.adyen.checkout.card.internal.ui.state
 import androidx.compose.runtime.Immutable
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 
+/**
+ * What the installments screen shows.
+ *
+ * @param installmentOptions The installments the shopper can choose from, in the order they are shown.
+ * @param selectedInstallment The current choice, or null if the shopper has not made one.
+ */
 @Immutable
-internal data class InstallmentViewState(
+internal data class InstallmentPickerViewState(
     val installmentOptions: List<InstallmentModel>,
     val selectedInstallment: InstallmentModel?,
 )
 
-internal fun InstallmentState.toViewState(): InstallmentViewState? {
+internal fun InstallmentState.toPickerViewState(): InstallmentPickerViewState? {
     if (installmentOptions.isEmpty()) return null
-    return InstallmentViewState(
+    return InstallmentPickerViewState(
         installmentOptions = installmentOptions,
         selectedInstallment = selectedInstallment,
     )
