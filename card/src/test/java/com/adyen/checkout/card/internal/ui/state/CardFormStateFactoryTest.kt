@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
 import com.adyen.checkout.core.components.internal.ui.state.form.keyboardActionFor
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.isErrorVisible
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

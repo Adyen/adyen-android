@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
@@ -66,3 +67,8 @@ fun <Id : FormElementId> TextInputComponentState.toViewState(
         focusRequest = focusRequest?.takeIf { it.id == id }?.let { FocusRequestToken(it) },
     )
 }
+
+@get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@VisibleForTesting
+val TextInputComponentState.isErrorVisible: Boolean
+    get() = error?.isVisible == true

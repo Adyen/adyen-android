@@ -31,9 +31,6 @@ data class TextInputComponentState(
         val isVisible: Boolean = false,
     )
 
-    val isErrorVisible: Boolean
-        get() = error?.isVisible == true
-
     /** Typing hides the error, so the shopper is not corrected while fixing the thing they were corrected about. */
     fun updateText(text: String) = copy(text = text).hideErrorIfPresent()
 
