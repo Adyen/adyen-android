@@ -210,7 +210,10 @@ internal class PaymentMethodViewModelTest {
         createViewModel(REGULAR_TYPE)
 
         // Replacing the back stack is what makes going back from the action cancel Drop-in.
-        assertEquals(listOf(EmptyNavKey, ActionNavKey(REGULAR_TYPE)), navigator.backStack)
+        assertEquals(
+            listOf(EmptyNavKey, ActionNavKey(REGULAR_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
+            navigator.backStack,
+        )
     }
 
     @Test
@@ -219,7 +222,10 @@ internal class PaymentMethodViewModelTest {
 
         createViewModel(STORED_TYPE)
 
-        assertEquals(listOf(EmptyNavKey, ActionNavKey(STORED_TYPE)), navigator.backStack)
+        assertEquals(
+            listOf(EmptyNavKey, ActionNavKey(STORED_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
+            navigator.backStack,
+        )
     }
 
     @Test
