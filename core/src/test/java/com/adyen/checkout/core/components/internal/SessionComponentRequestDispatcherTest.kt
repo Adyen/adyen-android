@@ -205,7 +205,7 @@ internal class SessionComponentRequestDispatcherTest(
     inner class CompleteTest {
 
         @Test
-        fun `when complete is called, then onComplete callback is invoked with AdvancedCheckoutResult`() {
+        fun `when complete is called, then onComplete callback is invoked with SessionCheckoutResult`() {
             val capturedResults = mutableListOf<SessionCheckoutResult>()
             val dispatcher = createDispatcher(onComplete = { capturedResults += it })
 
@@ -214,7 +214,7 @@ internal class SessionComponentRequestDispatcherTest(
             val expected = SessionCheckoutResult(
                 CheckoutResultCode.AUTHORISED,
                 sessionId = "session-id",
-                sessionData = "session-data",
+                sessionResult = "",
             )
             assertEquals(listOf(expected), capturedResults)
         }
@@ -228,6 +228,78 @@ internal class SessionComponentRequestDispatcherTest(
 
             assertEquals(CheckoutResultCode("CustomResultCode"), capturedResults.single().resultCode)
         }
+
+        @Test
+        fun `when submit succeeds with sessionResult, then complete uses the latest sessionResult`() = runTest {
+            val response = createPaymentsResponse(
+                resultCode = "Authorised",
+                sessionData = "updated-session-data",
+                sessionResult = "payments-session-result",
+            )
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
+
+            val capturedResults = mutableListOf<SessionCheckoutResult>()
+            val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+            dispatcher.submit(emptyPaymentComponentData())
+            dispatcher.complete(CheckoutResultCode.AUTHORISED)
+
+            val expected = SessionCheckoutResult(
+                CheckoutResultCode.AUTHORISED,
+                sessionId = "session-id",
+                sessionResult = "payments-session-result",
+            )
+            assertEquals(listOf(expected), capturedResults)
+        }
+
+        @Test
+        fun `when additionalDetails succeeds with sessionResult, then complete uses the latest sessionResult`() =
+            runTest {
+                val response = createDetailsResponse(
+                    resultCode = "Authorised",
+                    sessionData = "updated-session-data",
+                    sessionResult = "details-session-result",
+                )
+                whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(response)
+
+                val capturedResults = mutableListOf<SessionCheckoutResult>()
+                val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+                dispatcher.additionalDetails(ActionComponentData())
+                dispatcher.complete(CheckoutResultCode.AUTHORISED)
+
+                val expected = SessionCheckoutResult(
+                    CheckoutResultCode.AUTHORISED,
+                    sessionId = "session-id",
+                    sessionResult = "details-session-result",
+                )
+                assertEquals(listOf(expected), capturedResults)
+            }
+
+        @Test
+        fun `when a later response has a null sessionResult, then it overwrites the previous sessionResult`() =
+            runTest {
+                val paymentsResponse = createPaymentsResponse(
+                    action = mock(),
+                    sessionResult = "payments-session-result",
+                )
+                whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(paymentsResponse)
+
+                val detailsResponse = createDetailsResponse(
+                    resultCode = "Authorised",
+                    sessionResult = null,
+                )
+                whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn Result.success(detailsResponse)
+
+                val capturedResults = mutableListOf<SessionCheckoutResult>()
+                val dispatcher = createDispatcher(onComplete = { capturedResults += it })
+
+                dispatcher.submit(emptyPaymentComponentData())
+                dispatcher.additionalDetails(ActionComponentData())
+                dispatcher.complete(CheckoutResultCode.AUTHORISED)
+
+                assertEquals("", capturedResults.single().sessionResult)
+            }
     }
 
     @Nested
@@ -421,23 +493,27 @@ internal class SessionComponentRequestDispatcherTest(
     private fun createPaymentsResponse(
         resultCode: String? = "",
         action: Action? = null,
+        sessionData: String = "session-data",
+        sessionResult: String? = null,
     ) = SessionPaymentsResponse(
-        sessionData = "session-data",
+        sessionData = sessionData,
         status = null,
         resultCode = resultCode,
         action = action,
         order = null,
-        sessionResult = null,
+        sessionResult = sessionResult,
     )
 
     private fun createDetailsResponse(
         resultCode: String?,
+        sessionData: String = "session-data",
+        sessionResult: String? = null,
     ) = SessionDetailsResponse(
-        sessionData = "session-data",
+        sessionData = sessionData,
         status = null,
         resultCode = resultCode,
         action = null,
-        sessionResult = null,
+        sessionResult = sessionResult,
         order = null,
     )
 

@@ -9,7 +9,9 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
@@ -29,7 +31,8 @@ internal class SessionComponentRequestDispatcher(
     private val sessionRepository: SessionRepository,
 ) : SubmittableComponentRequestDispatcher {
 
-    private var sessionData: String = initialSessionData
+    private var currentSessionData: String = initialSessionData
+    private var sessionResult: String = ""
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
         val beforeSubmitResult = handleBeforeSubmit(data)
@@ -37,15 +40,16 @@ internal class SessionComponentRequestDispatcher(
         return when (beforeSubmitResult) {
             is BeforeSubmitResult.Abort -> SubmitResult.Retry()
             is BeforeSubmitResult.Proceed -> {
-                beforeSubmitResult.sessionData?.let { sessionData = it }
+                beforeSubmitResult.sessionData?.let { currentSessionData = it }
                 val finalData = data.applyBeforeSubmitData(beforeSubmitResult.data)
                 sessionRepository.submitPayment(
                     sessionId = sessionId,
-                    sessionData = sessionData,
+                    sessionData = currentSessionData,
                     paymentComponentData = finalData,
                 ).fold(
                     onSuccess = { response ->
-                        sessionData = response.sessionData
+                        currentSessionData = response.sessionData
+                        sessionResult = response.sessionResult.orEmpty()
                         // TODO - Check if we need to support partial payment flow
                         when {
                             response.action != null -> SubmitResult.Action(response.action)
@@ -81,11 +85,12 @@ internal class SessionComponentRequestDispatcher(
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         sessionRepository.submitDetails(
             sessionId = sessionId,
-            sessionData = sessionData,
+            sessionData = currentSessionData,
             actionComponentData = data,
         ).fold(
             onSuccess = { response ->
-                sessionData = response.sessionData
+                currentSessionData = response.sessionData
+                sessionResult = response.sessionResult.orEmpty()
                 return AdditionalDetailsResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
             },
             onFailure = { error ->
@@ -96,10 +101,18 @@ internal class SessionComponentRequestDispatcher(
     }
 
     override fun complete(resultCode: CheckoutResultCode) {
+        val isSessionResultExpectedToBeMissing = resultCode == CheckoutResultCode.CANCELLED ||
+            resultCode == CheckoutResultCode.ERROR
+        if (sessionId.isBlank()) {
+            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionId." }
+        } else if (sessionResult.isBlank() && !isSessionResultExpectedToBeMissing) {
+            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionResult." }
+        }
+
         val result = SessionCheckoutResult(
             resultCode = resultCode,
             sessionId = sessionId,
-            sessionData = sessionData,
+            sessionResult = sessionResult,
         )
         callbacks.onComplete(result)
     }
