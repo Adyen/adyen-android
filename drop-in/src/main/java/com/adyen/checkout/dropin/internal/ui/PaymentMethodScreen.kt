@@ -17,23 +17,19 @@ import androidx.compose.runtime.Composable
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.CheckoutPaymentMethod
-import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
 internal fun PaymentMethodScreen(
     navigator: DropInNavigator,
     viewModel: PaymentMethodViewModel,
-    theme: CheckoutTheme,
 ) {
     when (val viewState = viewModel.paymentMethodViewState) {
         is PaymentMethodViewState.Regular -> RegularPaymentMethodContent(navigator, viewState) {
-            // TODO - Pass localization provider
-            CheckoutPaymentMethod(controller = viewModel.controller, theme = theme)
+            CheckoutPaymentMethod(controller = viewModel.controller)
         }
 
         is PaymentMethodViewState.Stored -> StoredPaymentMethodContent(navigator, viewState) {
-            // TODO - Pass localization provider
-            CheckoutPaymentMethod(controller = viewModel.controller, theme = theme)
+            CheckoutPaymentMethod(controller = viewModel.controller)
         }
 
         is PaymentMethodViewState.Progress -> PaymentMethodProgressContent(navigator, viewState)

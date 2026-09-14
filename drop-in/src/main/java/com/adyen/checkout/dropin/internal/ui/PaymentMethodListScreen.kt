@@ -138,8 +138,6 @@ private fun PaymentMethodListContent(
     }
 }
 
-// TODO - Renders against the default theme, because CheckoutPaymentMethod re-provides the composition
-//  locals from its own parameters and so discards the one Drop-in established. Provide Drop-in theme.
 @Composable
 private fun InstantPaymentMethod(
     controller: CheckoutController,
