@@ -51,13 +51,13 @@ internal fun PaymentMethodProgressContent(
             PaymentMethodHeader(
                 logoTxVariant = viewState.logoTxVariant,
                 paymentMethodName = viewState.paymentMethodName,
-                description = resolveString(CheckoutLocalizationKey.DROP_IN_GENERIC_PAYMENT_METHOD_DESCRIPTION),
+                description = resolveString(CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION),
             )
 
             Spacer(Modifier.size(Dimensions.Spacing.QuadrupleExtraLarge))
 
             PaymentProgressStatus(
-                title = resolveString(CheckoutLocalizationKey.DROP_IN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE),
+                title = resolveString(CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE),
             )
         }
     }
