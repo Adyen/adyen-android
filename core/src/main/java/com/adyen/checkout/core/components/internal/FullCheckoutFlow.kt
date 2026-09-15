@@ -62,14 +62,6 @@ internal class FullCheckoutFlow(
                     is PaymentComponentEvent.Error -> {
                         componentRequestDispatcher.failure(event.error.toCheckoutError())
                     }
-
-                    is PaymentComponentEvent.SecondaryScreen -> {
-                        navigationFlow.tryEmit(CheckoutRoute.Secondary(event.identifier))
-                    }
-
-                    PaymentComponentEvent.CloseSecondaryScreen -> {
-                        navigationFlow.tryEmit(CheckoutRoute.PaymentMethod())
-                    }
                 }
             }
             .launchIn(coroutineScope)
