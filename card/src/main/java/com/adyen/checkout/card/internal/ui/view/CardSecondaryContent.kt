@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.adyen.checkout.card.internal.ui.state.CardIntent
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
 import kotlinx.coroutines.flow.StateFlow
@@ -22,8 +22,7 @@ internal fun CardSecondaryContent(
     modifier: Modifier,
     identifier: String,
     viewState: StateFlow<CardViewState>,
-    onIntent: (CardIntent) -> Unit,
-    onDismissRequest: () -> Unit,
+    onInstallmentClick: (InstallmentModel) -> Unit,
 ) {
     val viewState by viewState.collectAsStateWithLifecycle()
 
@@ -32,8 +31,7 @@ internal fun CardSecondaryContent(
             Installments(
                 modifier = modifier,
                 installmentViewState = viewState.installmentViewState,
-                onIntent = onIntent,
-                onDismissRequest = onDismissRequest,
+                onItemClick = onInstallmentClick,
             )
         }
     }
@@ -43,17 +41,13 @@ internal fun CardSecondaryContent(
 private fun Installments(
     modifier: Modifier,
     installmentViewState: InstallmentViewState?,
-    onIntent: (CardIntent) -> Unit,
-    onDismissRequest: () -> Unit,
+    onItemClick: (InstallmentModel) -> Unit,
 ) {
     if (installmentViewState == null) return
     InstallmentPicker(
         installmentOptions = installmentViewState.installmentOptions,
         selectedInstallment = installmentViewState.selectedInstallment,
-        onItemClick = { installment ->
-            onIntent(CardIntent.UpdateInstallment(installment))
-            onDismissRequest()
-        },
+        onItemClick = onItemClick,
         modifier = modifier,
     )
 }

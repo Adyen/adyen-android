@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -32,6 +33,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @Composable
 internal fun CheckoutFullScreenDialog(
     onDismissRequest: () -> Unit,
+    navigationIcon: ImageVector = Icons.Default.Close,
     content: @Composable () -> Unit,
 ) {
     // TODO investigate switching to a full height ModalBottomSheet later - currently the animation looks janky
@@ -53,7 +55,7 @@ internal fun CheckoutFullScreenDialog(
         ) {
             IconButton(onClick = onDismissRequest) {
                 Icon(
-                    imageVector = Icons.Default.Close,
+                    imageVector = navigationIcon,
                     contentDescription = resolveString(CheckoutLocalizationKey.GENERAL_CLOSE),
                     tint = CheckoutThemeProvider.colors.primary,
                 )

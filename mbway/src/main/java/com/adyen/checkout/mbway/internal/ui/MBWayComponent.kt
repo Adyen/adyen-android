@@ -16,6 +16,7 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
@@ -48,6 +49,9 @@ constructor(
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
+
+    private val navigationChannel = bufferedChannel<SecondaryNavigationEvent>()
+    override val navigation: Flow<SecondaryNavigationEvent> = navigationChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -83,8 +87,10 @@ constructor(
             modifier = modifier,
             identifier = identifier,
             viewState = viewState,
-            onIntent = ::onIntent,
-            onDismissRequest = { eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen) },
+            onItemClick = {
+                onIntent(MBWayIntent.UpdateCountry(it))
+                navigationChannel.trySend(SecondaryNavigationEvent.Close)
+            },
         )
     }
 
@@ -93,11 +99,7 @@ constructor(
     }
 
     private fun onCountryCodePickerClick() {
-        eventChannel.trySend(
-            PaymentComponentEvent.SecondaryScreen(
-                identifier = MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER,
-            ),
-        )
+        navigationChannel.trySend(SecondaryNavigationEvent.Open(MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER))
     }
 
     override fun submit() {
