@@ -8,10 +8,21 @@
 
 package com.adyen.checkout.core.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.components.internal.CheckoutFullScreenDialog
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
+import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
@@ -43,9 +54,47 @@ fun CheckoutPaymentMethod(
 }
 
 @Composable
-internal fun CheckoutPaymentMethodInternal(
-    controller: CheckoutController,
+internal fun CheckoutPaymentMethodInternal(controller: CheckoutController, modifier: Modifier) {
+    val paymentComponent = controller.paymentComponent ?: return
+    if (paymentComponent !is SecondaryScreenComponent) {
+        paymentComponent.Content(modifier)
+        return
+    }
+    SecondaryScreenHost(paymentComponent, modifier)
+}
+
+@Composable
+private fun <T> SecondaryScreenHost(
+    component: T,
     modifier: Modifier,
-) {
-    controller.paymentComponent?.Content(modifier)
+) where T : PaymentComponent, T : SecondaryScreenComponent {
+    val backStack = rememberSaveable(component) { mutableStateListOf<String>() }
+
+    component.Content(modifier)
+
+    backStack.lastOrNull()?.let { key ->
+        key(key) {
+            val navigationIcon = if (backStack.size > 1) Icons.AutoMirrored.Filled.ArrowBack else Icons.Default.Close
+            CheckoutFullScreenDialog(
+                onDismissRequest = { backStack.removeLastOrNull() },
+                navigationIcon = navigationIcon,
+            ) {
+                component.SecondaryContent(key, Modifier)
+            }
+        }
+    }
+
+    LaunchedEffect(component) {
+        component.navigation.collect { event ->
+            when (event) {
+                is SecondaryNavigationEvent.Open -> {
+                    backStack.add(event.key)
+                }
+
+                SecondaryNavigationEvent.Close -> {
+                    backStack.removeLastOrNull()
+                }
+            }
+        }
+    }
 }

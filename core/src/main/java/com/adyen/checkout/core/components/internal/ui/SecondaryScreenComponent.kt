@@ -11,9 +11,12 @@ package com.adyen.checkout.core.components.internal.ui
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SecondaryScreenComponent {
+
+    val navigation: Flow<SecondaryNavigationEvent>
 
     @Composable
     fun SecondaryContent(

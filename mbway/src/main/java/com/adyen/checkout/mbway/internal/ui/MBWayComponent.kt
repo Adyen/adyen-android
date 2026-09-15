@@ -16,6 +16,7 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
@@ -31,7 +32,9 @@ import com.adyen.checkout.mbway.internal.ui.view.MBWaySecondaryContent
 import com.adyen.checkout.mbway.internal.ui.view.MBWaySecondaryContentEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 internal class MBWayComponent
 @Suppress("LongParameterList")
@@ -42,12 +45,15 @@ constructor(
     componentStateFactory: MBWayComponentStateFactory,
     componentStateReducer: MBWayComponentStateReducer,
     viewStateProducer: MBWayViewStateProducer,
-    coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) : PaymentComponent,
     SecondaryScreenComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
+
+    override val navigation: Flow<SecondaryNavigationEvent>
+        field = MutableSharedFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -83,8 +89,10 @@ constructor(
             modifier = modifier,
             identifier = identifier,
             viewState = viewState,
-            onIntent = ::onIntent,
-            onDismissRequest = { eventChannel.trySend(PaymentComponentEvent.CloseSecondaryScreen) },
+            onItemClick = {
+                onIntent(MBWayIntent.UpdateCountry(it))
+                coroutineScope.launch { navigation.emit(SecondaryNavigationEvent.Close) }
+            },
         )
     }
 
@@ -93,11 +101,9 @@ constructor(
     }
 
     private fun onCountryCodePickerClick() {
-        eventChannel.trySend(
-            PaymentComponentEvent.SecondaryScreen(
-                identifier = MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER,
-            ),
-        )
+        coroutineScope.launch {
+            navigation.emit(SecondaryNavigationEvent.Open(MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER))
+        }
     }
 
     override fun submit() {
