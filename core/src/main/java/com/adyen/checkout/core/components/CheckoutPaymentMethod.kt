@@ -13,9 +13,11 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
@@ -68,7 +70,7 @@ private fun <T> SecondaryScreenHost(
     component: T,
     modifier: Modifier,
 ) where T : PaymentComponent, T : SecondaryScreenComponent {
-    val backStack = rememberSaveable(component) { mutableStateListOf<String>() }
+    var backStack by rememberSaveable(component) { mutableStateOf(emptyList<String>()) }
 
     component.Content(modifier)
 
@@ -76,7 +78,7 @@ private fun <T> SecondaryScreenHost(
         key(key) {
             val navigationIcon = if (backStack.size > 1) Icons.AutoMirrored.Filled.ArrowBack else Icons.Default.Close
             CheckoutFullScreenDialog(
-                onDismissRequest = { backStack.removeLastOrNull() },
+                onDismissRequest = { backStack = backStack.dropLast(1) },
                 navigationIcon = navigationIcon,
             ) {
                 component.SecondaryContent(key, Modifier)
@@ -88,11 +90,11 @@ private fun <T> SecondaryScreenHost(
         component.navigation.collect { event ->
             when (event) {
                 is SecondaryNavigationEvent.Open -> {
-                    backStack.add(event.key)
+                    backStack = backStack + event.key
                 }
 
                 SecondaryNavigationEvent.Close -> {
-                    backStack.removeLastOrNull()
+                    backStack = backStack.dropLast(1)
                 }
             }
         }
