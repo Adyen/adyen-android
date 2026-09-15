@@ -32,9 +32,7 @@ import com.adyen.checkout.mbway.internal.ui.view.MBWaySecondaryContent
 import com.adyen.checkout.mbway.internal.ui.view.MBWaySecondaryContentEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 internal class MBWayComponent
 @Suppress("LongParameterList")
@@ -45,15 +43,15 @@ constructor(
     componentStateFactory: MBWayComponentStateFactory,
     componentStateReducer: MBWayComponentStateReducer,
     viewStateProducer: MBWayViewStateProducer,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
 ) : PaymentComponent,
     SecondaryScreenComponent {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
-    override val navigation: Flow<SecondaryNavigationEvent>
-        field = MutableSharedFlow()
+    private val navigationChannel = bufferedChannel<SecondaryNavigationEvent>()
+    override val navigation: Flow<SecondaryNavigationEvent> = navigationChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -91,7 +89,7 @@ constructor(
             viewState = viewState,
             onItemClick = {
                 onIntent(MBWayIntent.UpdateCountry(it))
-                coroutineScope.launch { navigation.emit(SecondaryNavigationEvent.Close) }
+                navigationChannel.trySend(SecondaryNavigationEvent.Close)
             },
         )
     }
@@ -101,9 +99,7 @@ constructor(
     }
 
     private fun onCountryCodePickerClick() {
-        coroutineScope.launch {
-            navigation.emit(SecondaryNavigationEvent.Open(MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER))
-        }
+        navigationChannel.trySend(SecondaryNavigationEvent.Open(MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER))
     }
 
     override fun submit() {

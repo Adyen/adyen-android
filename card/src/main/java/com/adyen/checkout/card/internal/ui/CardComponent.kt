@@ -60,7 +60,6 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -98,8 +97,8 @@ constructor(
     private val eventChannel = bufferedChannel<PaymentComponentEvent>()
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
-    override val navigation: Flow<SecondaryNavigationEvent>
-        field = MutableSharedFlow()
+    private val navigationChannel = bufferedChannel<SecondaryNavigationEvent>()
+    override val navigation: Flow<SecondaryNavigationEvent> = navigationChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -146,7 +145,7 @@ constructor(
             viewState = viewState,
             onInstallmentClick = { installment ->
                 onIntent(CardIntent.UpdateInstallment(installment))
-                coroutineScope.launch { navigation.emit(SecondaryNavigationEvent.Close) }
+                navigationChannel.trySend(SecondaryNavigationEvent.Close)
             },
         )
     }
@@ -399,9 +398,7 @@ constructor(
     }
 
     private fun onInstallmentPickerClick() {
-        coroutineScope.launch {
-            navigation.emit(SecondaryNavigationEvent.Open(CardSecondaryContentEntry.INSTALLMENTS))
-        }
+        navigationChannel.trySend(SecondaryNavigationEvent.Open(CardSecondaryContentEntry.INSTALLMENTS))
     }
 
     private fun onEncryptionError(e: EncryptionException) {
