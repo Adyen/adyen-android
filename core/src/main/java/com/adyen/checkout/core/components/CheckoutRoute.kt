@@ -22,11 +22,4 @@ abstract class CheckoutRoute internal constructor() {
      * Route to display an action component. Use [CheckoutAction] to display the action.
      */
     class Action : CheckoutRoute()
-
-    /**
-     * Route to display secondary content. Use [CheckoutSecondary] to display the secondary content.
-     *
-     * @param identifier The unique identifier for the secondary screen.
-     */
-    data class Secondary(val identifier: String) : CheckoutRoute()
 }
