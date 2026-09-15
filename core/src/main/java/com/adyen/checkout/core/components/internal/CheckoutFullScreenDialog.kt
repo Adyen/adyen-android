@@ -10,33 +10,22 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import androidx.compose.ui.window.DialogWindowProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun CheckoutFullScreenDialog(
     onDismissRequest: () -> Unit,
-    navigationIcon: ImageVector = Icons.Default.Close,
     content: @Composable () -> Unit,
 ) {
-    // TODO investigate switching to a full height ModalBottomSheet later - currently the animation looks janky
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -46,28 +35,20 @@ internal fun CheckoutFullScreenDialog(
             decorFitsSystemWindows = false,
         ),
     ) {
-        Column(
+        val window = (LocalView.current.parent as? DialogWindowProvider)?.window
+        SideEffect(window) {
+            // Remove the dim to make the transition look better
+            window?.setDimAmount(0f)
+        }
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = CheckoutThemeProvider.colors.background)
                 // keep content out from under the bars, while the surface stays edge-to-edge
                 .safeDrawingPadding(),
         ) {
-            IconButton(onClick = onDismissRequest) {
-                Icon(
-                    imageVector = navigationIcon,
-                    contentDescription = resolveString(CheckoutLocalizationKey.GENERAL_CLOSE),
-                    tint = CheckoutThemeProvider.colors.primary,
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = Dimensions.Spacing.Large, vertical = Dimensions.Spacing.Small)
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                content()
-            }
+            content()
         }
     }
 }
