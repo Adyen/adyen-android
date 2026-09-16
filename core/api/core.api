@@ -224,7 +224,6 @@ public final class com/adyen/checkout/core/common/CardBrand : android/os/Parcela
 }
 
 public final class com/adyen/checkout/core/common/CardBrand$Companion {
-	public final fun estimate (Ljava/lang/String;)Ljava/util/List;
 	public final fun getAMERICAN_EXPRESS ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getARGENCARD ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getBCMC ()Lcom/adyen/checkout/core/common/CardBrand;

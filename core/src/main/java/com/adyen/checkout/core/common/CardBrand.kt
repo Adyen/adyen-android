@@ -8,6 +8,7 @@
 package com.adyen.checkout.core.common
 
 import android.os.Parcelable
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.helper.CardBrandRegexes
 import kotlinx.parcelize.Parcelize
 
@@ -61,6 +62,7 @@ data class CardBrand(val txVariant: String) : Parcelable {
          * @param cardNumber The potential card number.
          * @return All matching [CardBrands][CardBrand] if the number was valid, otherwise an empty [List].
          */
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         fun estimate(cardNumber: String): List<CardBrand> = CardBrandRegexes.estimate(cardNumber)
     }
 }
