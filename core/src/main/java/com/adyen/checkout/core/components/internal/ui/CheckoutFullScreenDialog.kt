@@ -6,7 +6,7 @@
  * Created by josephj on 22/7/2026.
  */
 
-package com.adyen.checkout.core.components.internal
+package com.adyen.checkout.core.components.internal.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
