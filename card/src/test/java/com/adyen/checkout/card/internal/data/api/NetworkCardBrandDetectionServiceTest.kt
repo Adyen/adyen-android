@@ -14,7 +14,6 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -78,7 +77,7 @@ internal class NetworkCardBrandDetectionServiceTest(
             .doReturn(BinLookupResponse(brands = listOf(mockBrand())))
 
         val publicKey = "SOME_PUBLIC_KEY"
-        val supportedCardBrands = listOf(CardBrand(CardType.VISA.txVariant), CardBrand("amex"))
+        val supportedCardBrands = listOf(CardBrand.VISA, CardBrand("amex"))
         val paymentMethodType = "SOME_PAYMENT_METHOD_TYPE"
         initializeTest(publicKey, paymentMethodType, supportedCardBrands)
 
@@ -141,7 +140,7 @@ internal class NetworkCardBrandDetectionServiceTest(
             ),
             arguments(
                 listOf(mockBrand(brand = "visa")),
-                listOf(mockDetectedCardType(cardBrand = CardBrand(CardType.VISA.txVariant))),
+                listOf(mockDetectedCardType(cardBrand = CardBrand.VISA)),
             ),
             arguments(
                 listOf(mockBrand(brand = "unknown")),
@@ -203,7 +202,7 @@ internal class NetworkCardBrandDetectionServiceTest(
                 ),
                 listOf(
                     mockDetectedCardType(),
-                    mockDetectedCardType(cardBrand = CardBrand(CardType.VISA.txVariant)),
+                    mockDetectedCardType(cardBrand = CardBrand.VISA),
                     mockDetectedCardType(
                         cvcPolicy = Brand.FieldPolicy.HIDDEN,
                         expiryDatePolicy = Brand.FieldPolicy.OPTIONAL,
@@ -218,15 +217,15 @@ internal class NetworkCardBrandDetectionServiceTest(
                 ),
                 listOf(
                     mockDetectedCardType(
-                        cardBrand = CardBrand(CardType.CARTEBANCAIRE.txVariant),
+                        cardBrand = CardBrand.CARTEBANCAIRE,
                         isShopperSelectionAllowedInDualBranded = true,
                     ),
                     mockDetectedCardType(
-                        cardBrand = CardBrand(CardType.BCMC.txVariant),
+                        cardBrand = CardBrand.BCMC,
                         isShopperSelectionAllowedInDualBranded = true,
                     ),
                     mockDetectedCardType(
-                        cardBrand = CardBrand(CardType.DANKORT.txVariant),
+                        cardBrand = CardBrand.DANKORT,
                         isShopperSelectionAllowedInDualBranded = true,
                     ),
                 ),
@@ -242,7 +241,7 @@ internal class NetworkCardBrandDetectionServiceTest(
                         isHidden = true,
                     ),
                     mockDetectedCardType(
-                        cardBrand = CardBrand(CardType.VISA.txVariant),
+                        cardBrand = CardBrand.VISA,
                     ),
                 ),
             ),
@@ -277,7 +276,7 @@ internal class NetworkCardBrandDetectionServiceTest(
 
         @Suppress("LongParameterList")
         private fun mockDetectedCardType(
-            cardBrand: CardBrand = CardBrand(CardType.MASTERCARD.txVariant),
+            cardBrand: CardBrand = CardBrand.MASTERCARD,
             enableLuhnCheck: Boolean = true,
             cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
             expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,

@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.data.api
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
@@ -31,7 +30,7 @@ internal class LocalCardBrandDetectionServiceTest {
     @Test
     fun `when getting card brands then card brands are mapped correctly`() {
         val cardNumber = "5454"
-        val cardBrand = CardBrand(CardType.MASTERCARD.txVariant)
+        val cardBrand = CardBrand.MASTERCARD
         val supportedCardBrands = listOf(cardBrand)
         val localCardBrandDetectionService = LocalCardBrandDetectionService(supportedCardBrands)
 
@@ -57,7 +56,7 @@ internal class LocalCardBrandDetectionServiceTest {
     @Test
     fun `when getting card brands and the brand is not in supportedCardBrands, then returned detected card type should not be supported`() {
         val cardNumber = "5454"
-        val cardBrand = CardBrand(CardType.MASTERCARD.txVariant)
+        val cardBrand = CardBrand.MASTERCARD
         val localCardBrandDetectionService = LocalCardBrandDetectionService(emptyList())
 
         val detectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber)
@@ -69,7 +68,7 @@ internal class LocalCardBrandDetectionServiceTest {
     @Test
     fun `when getting card brands and the brand is a no cvc brand, then returned detected card type should have cvc as hidden`() {
         val cardNumber = "6703"
-        val cardBrand = CardBrand(CardType.BCMC.txVariant)
+        val cardBrand = CardBrand.BCMC
         val localCardBrandDetectionService = LocalCardBrandDetectionService(emptyList())
 
         val detectedCardTypes = localCardBrandDetectionService.getCardBrands(cardNumber)

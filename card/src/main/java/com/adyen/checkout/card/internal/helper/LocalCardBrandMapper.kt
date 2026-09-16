@@ -11,11 +11,10 @@ package com.adyen.checkout.card.internal.helper
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 
 internal object LocalCardBrandMapper {
 
-    private val NO_CVC_BRANDS: Set<CardBrand> = setOf(CardBrand(txVariant = CardType.BCMC.txVariant))
+    private val NO_CVC_BRANDS: Set<CardBrand> = setOf(CardBrand.BCMC)
 
     fun map(
         cardBrand: CardBrand,

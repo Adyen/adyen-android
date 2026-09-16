@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.common.helper
 
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -33,42 +32,42 @@ internal class CardSecurityCodeValidatorTest {
         fun securityCodeValidationSource() = listOf(
             arguments(
                 "",
-                CardBrand(CardType.VISA.txVariant),
+                CardBrand.VISA,
                 CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "7",
-                CardBrand(CardType.VISA.txVariant),
+                CardBrand.VISA,
                 CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "12",
-                CardBrand(CardType.VISA.txVariant),
+                CardBrand.VISA,
                 CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "737",
-                CardBrand(CardType.VISA.txVariant),
+                CardBrand.VISA,
                 CardSecurityCodeValidationResult.Valid(),
             ),
             arguments(
                 "8689",
-                CardBrand(CardType.VISA.txVariant),
+                CardBrand.VISA,
                 CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "123456",
-                CardBrand(CardType.VISA.txVariant),
+                CardBrand.VISA,
                 CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "737",
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+                CardBrand.AMERICAN_EXPRESS,
                 CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "8689",
-                CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+                CardBrand.AMERICAN_EXPRESS,
                 CardSecurityCodeValidationResult.Valid(),
             ),
             arguments(

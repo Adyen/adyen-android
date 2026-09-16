@@ -14,7 +14,6 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -112,9 +111,9 @@ internal class CardComponentParamsMapper {
     companion object {
         @VisibleForTesting
         internal val DEFAULT_SUPPORTED_CARDS_LIST: List<CardBrand> = listOf(
-            CardBrand(CardType.VISA.txVariant),
-            CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
-            CardBrand(CardType.MASTERCARD.txVariant),
+            CardBrand.VISA,
+            CardBrand.AMERICAN_EXPRESS,
+            CardBrand.MASTERCARD,
         )
 
         private const val DEBIT_FUNDING_SOURCE = "debit"

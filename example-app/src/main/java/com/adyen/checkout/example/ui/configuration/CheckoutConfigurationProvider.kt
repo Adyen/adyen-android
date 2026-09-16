@@ -13,7 +13,6 @@ import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AnalyticsConfiguration
 import com.adyen.checkout.core.components.AnalyticsLevel
@@ -244,11 +243,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     )
 
     private fun getCardBasedInstallmentConfiguration(
-        cardType: CardType = CardType.VISA
+        cardBrand: CardBrand = CardBrand.VISA
     ) = InstallmentConfiguration(
         defaultOptions = null,
         cardBasedOptions = mapOf(
-            CardBrand(cardType.txVariant) to InstallmentOptions(
+            cardBrand to InstallmentOptions(
                 maxInstallments = 3,
                 plans = emptyList(),
                 preselectedValue = null,

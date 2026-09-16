@@ -17,7 +17,6 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -151,7 +150,7 @@ internal class CardComponentStateFactoryTest {
     // region supportedCardBrands
     @Test
     fun `when supportedCardBrands is set, then state contains those brands`() {
-        val brands = listOf(CardBrand(CardType.VISA.txVariant), CardBrand(CardType.MASTERCARD.txVariant))
+        val brands = listOf(CardBrand.VISA, CardBrand.MASTERCARD)
         val state = createFactory(supportedCardBrands = brands).createInitialState()
 
         assertEquals(brands, state.supportedCardBrands)
