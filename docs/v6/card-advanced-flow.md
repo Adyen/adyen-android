@@ -39,11 +39,11 @@ lifecycleScope.launch {
                     onSubmit = { data ->
                         callPayments(data)
                     },
-                    onAdditionalDetails = { data ->
-                        callDetails(data)
-                    },
                     onAction = { actionData ->
                         displayAction(actionData.type)
+                    },
+                    onAdditionalDetails = { data ->
+                        callDetails(data)
                     },
                     onFailure = { error ->
                         showError(error.message.orEmpty())

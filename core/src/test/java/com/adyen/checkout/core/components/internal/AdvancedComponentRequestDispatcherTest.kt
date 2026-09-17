@@ -129,17 +129,17 @@ internal class AdvancedComponentRequestDispatcherTest {
 
     private fun createDispatcher(
         onSubmit: suspend (PaymentComponentData<*>) -> SubmitResult = { SubmitResult.Completion("") },
+        onAction: (ActionData) -> Unit = {},
         onAdditionalDetails: suspend (ActionComponentData) -> AdditionalDetailsResult = {
             AdditionalDetailsResult.Completion("")
         },
-        onAction: (ActionData) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
         onComplete: (AdvancedCheckoutResult) -> Unit = {},
     ): AdvancedComponentRequestDispatcher = AdvancedComponentRequestDispatcher(
         callbacks = AdvancedCheckoutCallbacks(
             onSubmit = onSubmit,
-            onAdditionalDetails = onAdditionalDetails,
             onAction = onAction,
+            onAdditionalDetails = onAdditionalDetails,
             onFailure = onFailure,
             onComplete = onComplete,
         ),

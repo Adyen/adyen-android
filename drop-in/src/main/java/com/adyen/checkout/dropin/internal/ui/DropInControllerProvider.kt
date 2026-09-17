@@ -63,8 +63,8 @@ internal class DefaultDropInControllerProvider(
                     context = checkoutContext,
                     callbacks = AdvancedCheckoutCallbacks(
                         onSubmit = ::onSubmit,
-                        onAdditionalDetails = ::onAdditionalDetails,
                         onAction = ::onAction,
+                        onAdditionalDetails = ::onAdditionalDetails,
                         onFailure = { error -> onFailure(coroutineScope, error) },
                     ),
                     coroutineScope = coroutineScope,
@@ -76,10 +76,10 @@ internal class DefaultDropInControllerProvider(
                     target = target,
                     context = checkoutContext,
                     callbacks = SessionCheckoutCallbacks(
-                        onBeforeSubmit = ::onBeforeSubmit,
-                        onFailure = { error -> onFailure(coroutineScope, error) },
                         onAction = ::onAction,
                         onComplete = { result -> onComplete(coroutineScope, result) },
+                        onFailure = { error -> onFailure(coroutineScope, error) },
+                        onBeforeSubmit = ::onBeforeSubmit,
                     ),
                     coroutineScope = coroutineScope,
                 )
@@ -110,13 +110,13 @@ internal class DefaultDropInControllerProvider(
         return dropInServiceManager.requestOnSubmit(paymentComponentData)
     }
 
-    private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
-        return dropInServiceManager.requestOnAdditionalDetails(data)
-    }
-
     @Suppress("UnusedParameter")
     private fun onAction(actionData: ActionData) {
         // TODO - Forward to DropInService once an action callback is added to it
+    }
+
+    private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
+        return dropInServiceManager.requestOnAdditionalDetails(data)
     }
 
     private fun onFailure(coroutineScope: CoroutineScope, error: CheckoutError) {

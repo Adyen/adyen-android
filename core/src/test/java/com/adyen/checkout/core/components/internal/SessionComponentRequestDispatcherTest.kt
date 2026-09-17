@@ -419,17 +419,17 @@ internal class SessionComponentRequestDispatcherTest(
     }
 
     private fun createDispatcher(
+        onAction: (ActionData) -> Unit = {},
         onComplete: (SessionCheckoutResult) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
-        onAction: (ActionData) -> Unit = {},
         onBeforeSubmit: (suspend (BeforeSubmitData) -> BeforeSubmitResult)? = null,
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
         initialSessionData = "session-data",
         sessionId = "session-id",
         callbacks = SessionCheckoutCallbacks(
+            onAction = onAction,
             onComplete = onComplete,
             onFailure = onFailure,
-            onAction = onAction,
             onBeforeSubmit = onBeforeSubmit,
         ),
         sessionRepository = sessionRepository,

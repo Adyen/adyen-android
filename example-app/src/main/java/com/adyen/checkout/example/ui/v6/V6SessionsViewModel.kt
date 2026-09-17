@@ -126,14 +126,14 @@ internal class V6SessionsViewModel @Inject constructor(
         Log.d(TAG, "onAction - Action type: ${actionData.type}")
     }
 
-    private fun onFailure(error: CheckoutError) {
-        Log.d(TAG, "onFailure: ${error.message}")
-        uiState = V6UiState.Final(ResultState.FAILURE)
-    }
-
     private fun onComplete(result: SessionCheckoutResult) {
         Log.d(TAG, "onComplete - Result code: ${result.resultCode}")
         uiState = V6UiState.Final(ResultState.get(result.resultCode.value))
+    }
+
+    private fun onFailure(error: CheckoutError) {
+        Log.d(TAG, "onFailure: ${error.message}")
+        uiState = V6UiState.Final(ResultState.FAILURE)
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethodResponse) {
@@ -166,9 +166,9 @@ internal class V6SessionsViewModel @Inject constructor(
             target = target,
             context = checkoutContext,
             callbacks = SessionCheckoutCallbacks(
-                onFailure = ::onFailure,
-                onComplete = ::onComplete,
                 onAction = ::onAction,
+                onComplete = ::onComplete,
+                onFailure = ::onFailure,
                 onBeforeSubmit = ::onBeforeSubmit,
             ) {
                 card(

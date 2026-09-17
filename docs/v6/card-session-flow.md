@@ -33,14 +33,14 @@ lifecycleScope.launch {
                 target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
                 context = result.checkoutContext,
                 callbacks = SessionCheckoutCallbacks(
+                    onAction = { actionData ->
+                        displayAction(actionData.type)
+                    },
                     onComplete = { checkoutResult ->
                         showSuccess(checkoutResult.resultCode.value)
                     },
                     onFailure = { error ->
                         showError(error.message.orEmpty())
-                    },
-                    onAction = { actionData ->
-                        displayAction(actionData.type)
                     },
                 ) {
                     card(
