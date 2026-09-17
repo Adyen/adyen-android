@@ -45,6 +45,18 @@ public final class com/adyen/checkout/core/action/data/ActionComponentData : com
 public final class com/adyen/checkout/core/action/data/ActionComponentData$Companion {
 }
 
+public final class com/adyen/checkout/core/action/data/ActionData {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/ActionData;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/action/data/ActionData;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/action/data/ActionData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/core/action/data/ActionTypes {
 	public static final field $stable I
 	public static final field AWAIT Ljava/lang/String;
