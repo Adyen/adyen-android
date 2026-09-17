@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -18,7 +17,7 @@ internal class CardNumberFormatTest {
     @Test
     fun `when card brand is amex, then format is AMEX`() {
         // GIVEN
-        val brand = CardBrand(CardType.AMERICAN_EXPRESS.txVariant)
+        val brand = CardBrand.AMERICAN_EXPRESS
 
         // WHEN
         val result = brand.toCardNumberFormat()

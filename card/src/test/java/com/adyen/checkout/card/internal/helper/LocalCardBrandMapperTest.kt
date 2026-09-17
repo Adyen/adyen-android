@@ -10,7 +10,6 @@ package com.adyen.checkout.card.internal.helper
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -50,7 +49,7 @@ internal class LocalCardBrandMapperTest {
 
     @Test
     fun `when brand is BCMC then cvcPolicy is HIDDEN regardless of hideCvc`() {
-        val cardBrand = CardBrand(txVariant = CardType.BCMC.txVariant)
+        val cardBrand = CardBrand.BCMC
 
         val result = LocalCardBrandMapper.map(cardBrand = cardBrand, isSupported = true, hideCvc = false)
 
@@ -59,7 +58,7 @@ internal class LocalCardBrandMapperTest {
 
     @Test
     fun `when brand is BCMC and hideCvc is true then cvcPolicy is HIDDEN`() {
-        val cardBrand = CardBrand(txVariant = CardType.BCMC.txVariant)
+        val cardBrand = CardBrand.BCMC
 
         val result = LocalCardBrandMapper.map(cardBrand = cardBrand, isSupported = true, hideCvc = true)
 

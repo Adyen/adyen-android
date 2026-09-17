@@ -14,7 +14,6 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -67,7 +66,7 @@ internal class StoredCardComponentStateFactoryTest {
 
         @Test
         fun `when initial state is created, then detectedCardType cardBrand matches stored brand`() {
-            val brand = CardType.VISA.txVariant
+            val brand = CardBrand.VISA.txVariant
             val state = createFactory(brand = brand).createInitialState()
 
             assertEquals(CardBrand(txVariant = brand), state.detectedCardType?.cardBrand)
@@ -150,7 +149,7 @@ internal class StoredCardComponentStateFactoryTest {
         @Test
         fun `when brand is BCMC and storedCVCVisibility is SHOW, then cvcPolicy is HIDDEN`() {
             val state = createFactory(
-                brand = CardType.BCMC.txVariant,
+                brand = CardBrand.BCMC.txVariant,
                 storedCVCVisibility = StoredCVCVisibility.SHOW,
             ).createInitialState()
 
@@ -160,7 +159,7 @@ internal class StoredCardComponentStateFactoryTest {
         @Test
         fun `when brand is BCMC and storedCVCVisibility is HIDE, then cvcPolicy is HIDDEN`() {
             val state = createFactory(
-                brand = CardType.BCMC.txVariant,
+                brand = CardBrand.BCMC.txVariant,
                 storedCVCVisibility = StoredCVCVisibility.HIDE,
             ).createInitialState()
 
@@ -170,7 +169,7 @@ internal class StoredCardComponentStateFactoryTest {
         @Test
         fun `when brand is not BCMC and storedCVCVisibility is SHOW, then cvcPolicy is REQUIRED`() {
             val state = createFactory(
-                brand = CardType.MASTERCARD.txVariant,
+                brand = CardBrand.MASTERCARD.txVariant,
                 storedCVCVisibility = StoredCVCVisibility.SHOW,
             ).createInitialState()
 
@@ -179,7 +178,7 @@ internal class StoredCardComponentStateFactoryTest {
     }
 
     private fun createFactory(
-        brand: String = CardType.VISA.txVariant,
+        brand: String = CardBrand.VISA.txVariant,
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW,
     ) = StoredCardComponentStateFactory(
         storedPaymentMethod = StoredCardPaymentMethod(

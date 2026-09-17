@@ -224,52 +224,39 @@ public final class com/adyen/checkout/core/common/CardBrand : android/os/Parcela
 }
 
 public final class com/adyen/checkout/core/common/CardBrand$Companion {
-	public final fun estimate (Ljava/lang/String;)Ljava/util/List;
-}
-
-public final class com/adyen/checkout/core/common/CardType : java/lang/Enum {
-	public static final field AMERICAN_EXPRESS Lcom/adyen/checkout/core/common/CardType;
-	public static final field ARGENCARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field BCMC Lcom/adyen/checkout/core/common/CardType;
-	public static final field BIJENKORF_CARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field CABAL Lcom/adyen/checkout/core/common/CardType;
-	public static final field CARTEBANCAIRE Lcom/adyen/checkout/core/common/CardType;
-	public static final field CODENSA Lcom/adyen/checkout/core/common/CardType;
-	public static final field CUP Lcom/adyen/checkout/core/common/CardType;
-	public static final field Companion Lcom/adyen/checkout/core/common/CardType$Companion;
-	public static final field DANKORT Lcom/adyen/checkout/core/common/CardType;
-	public static final field DINERS Lcom/adyen/checkout/core/common/CardType;
-	public static final field DISCOVER Lcom/adyen/checkout/core/common/CardType;
-	public static final field ELO Lcom/adyen/checkout/core/common/CardType;
-	public static final field FORBRUGSFORENINGEN Lcom/adyen/checkout/core/common/CardType;
-	public static final field HIPER Lcom/adyen/checkout/core/common/CardType;
-	public static final field HIPERCARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field JCB Lcom/adyen/checkout/core/common/CardType;
-	public static final field KARENMILLER Lcom/adyen/checkout/core/common/CardType;
-	public static final field LASER Lcom/adyen/checkout/core/common/CardType;
-	public static final field MAESTRO Lcom/adyen/checkout/core/common/CardType;
-	public static final field MAESTRO_UK Lcom/adyen/checkout/core/common/CardType;
-	public static final field MASTERCARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field MCALPHABANKBONUS Lcom/adyen/checkout/core/common/CardType;
-	public static final field MIR Lcom/adyen/checkout/core/common/CardType;
-	public static final field NARANJA Lcom/adyen/checkout/core/common/CardType;
-	public static final field OASIS Lcom/adyen/checkout/core/common/CardType;
-	public static final field SHOPPING Lcom/adyen/checkout/core/common/CardType;
-	public static final field SOLO Lcom/adyen/checkout/core/common/CardType;
-	public static final field TROY Lcom/adyen/checkout/core/common/CardType;
-	public static final field UATP Lcom/adyen/checkout/core/common/CardType;
-	public static final field VISA Lcom/adyen/checkout/core/common/CardType;
-	public static final field VISAALPHABANKBONUS Lcom/adyen/checkout/core/common/CardType;
-	public static final field VISADANKORT Lcom/adyen/checkout/core/common/CardType;
-	public static final field WAREHOUSE Lcom/adyen/checkout/core/common/CardType;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getTxVariant ()Ljava/lang/String;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CardType;
-	public static fun values ()[Lcom/adyen/checkout/core/common/CardType;
-}
-
-public final class com/adyen/checkout/core/common/CardType$Companion {
-	public final fun getByBrandName (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CardType;
+	public final fun getAMERICAN_EXPRESS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getARGENCARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getBCMC ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getBIJENKORF_CARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCABAL ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCARTEBANCAIRE ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCODENSA ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCUP ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getDANKORT ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getDINERS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getDISCOVER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getELO ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getFORBRUGSFORENINGEN ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getHIPER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getHIPERCARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getJCB ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getKARENMILLER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getLASER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMAESTRO ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMAESTRO_UK ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMASTERCARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMCALPHABANKBONUS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMIR ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getNARANJA ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getOASIS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getSHOPPING ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getSOLO ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getTROY ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getUATP ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISA ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISAALPHABANKBONUS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISADANKORT ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getWAREHOUSE ()Lcom/adyen/checkout/core/common/CardBrand;
 }
 
 public abstract interface class com/adyen/checkout/core/common/CheckoutContext : android/os/Parcelable {

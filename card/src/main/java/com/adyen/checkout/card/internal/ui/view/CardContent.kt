@@ -37,7 +37,6 @@ import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
 import com.adyen.checkout.card.internal.ui.state.StorePaymentViewState
 import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.payButtonAsComponentScaffoldFooter
@@ -243,7 +242,7 @@ private fun CardContentPreview(
                 ),
                 isLoading = false,
                 isCardScanButtonVisible = false,
-                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand.MASTERCARD),
                 cardNumberFormat = CardNumberFormat.DEFAULT,
                 installmentViewState = null,
                 payButtonViewState = PayButtonViewState(null, false),
@@ -296,7 +295,7 @@ private fun CardContentPreviewAllFields(
                 ),
                 isLoading = false,
                 isCardScanButtonVisible = false,
-                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand.MASTERCARD),
                 cardNumberFormat = CardNumberFormat.DEFAULT,
                 installmentViewState = InstallmentViewState(
                     installmentOptions = listOf(InstallmentModel.OneTime),
