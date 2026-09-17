@@ -85,6 +85,7 @@ Register card-specific callbacks through the checkout callbacks block:
 val callbacks = AdvancedCheckoutCallbacks(
     onSubmit = { data -> callPayments(data) },
     onAdditionalDetails = { data -> callDetails(data) },
+    onAction = { actionData -> displayAction(actionData.type) },
     onFailure = { error -> showError(error.message.orEmpty()) },
 ) {
     card(

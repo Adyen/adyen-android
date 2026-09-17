@@ -39,6 +39,9 @@ lifecycleScope.launch {
                     onFailure = { error ->
                         showError(error.message.orEmpty())
                     },
+                    onAction = { actionData ->
+                        displayAction(actionData.type)
+                    },
                 ) {
                     card(
                         onBinChange = OnBinChangeCallback { bin ->

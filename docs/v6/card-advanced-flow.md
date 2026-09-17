@@ -42,6 +42,9 @@ lifecycleScope.launch {
                     onAdditionalDetails = { data ->
                         callDetails(data)
                     },
+                    onAction = { actionData ->
+                        displayAction(actionData.type)
+                    },
                     onFailure = { error ->
                         showError(error.message.orEmpty())
                     },

@@ -138,6 +138,9 @@ class CardActivity : AppCompatActivity() {
                             onAdditionalDetails = { data ->
                                 callDetails(data)
                             },
+                            onAction = { actionData ->
+                                displayAction(actionData.type)
+                            },
                             onFailure = { error ->
                                 showError(error.message.orEmpty())
                             },
@@ -207,6 +210,7 @@ val configuration = CheckoutConfiguration(
 
 - `ComponentCallback<CardComponentState>.onSubmit(...)` moves to `AdvancedCheckoutCallbacks(onSubmit = { ... })`.
 - `ComponentCallback<CardComponentState>.onAdditionalDetails(...)` moves to `AdvancedCheckoutCallbacks(onAdditionalDetails = { ... })`.
+- `AdvancedCheckoutCallbacks` and `SessionCheckoutCallbacks` require an `onAction` callback, which is invoked with the `ActionData` of the action the SDK is about to handle.
 - Card-specific callbacks such as BIN events are registered inside the `card(...)` block on your checkout callbacks.
 - For end-to-end callback examples, see [docs/v6/card-session-flow.md](docs/v6/card-session-flow.md) and [docs/v6/card-advanced-flow.md](docs/v6/card-advanced-flow.md).
 
@@ -296,6 +300,9 @@ lifecycleScope.launch {
                     },
                     onAdditionalDetails = { data ->
                         callDetails(data)
+                    },
+                    onAction = { actionData ->
+                        displayAction(actionData.type)
                     },
                     onFailure = { error ->
                         showError(error.message.orEmpty())
