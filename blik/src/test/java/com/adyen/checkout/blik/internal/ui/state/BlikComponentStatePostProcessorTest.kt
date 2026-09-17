@@ -39,7 +39,7 @@ internal class BlikComponentStatePostProcessorTest {
     fun `when the field loses focus, then an error it was holding back is shown`() {
         val state = createInitialState().copy(blikCode = invalidField())
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             BlikIntent.UpdateFieldFocus(BlikFormElementId.BLIK_CODE, hasFocus = false),
         )
@@ -51,7 +51,7 @@ internal class BlikComponentStatePostProcessorTest {
     fun `when the shopper focuses the field, then a visible error is hidden`() {
         val state = createInitialState().copy(blikCode = invalidField(isErrorVisible = true))
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             BlikIntent.UpdateFieldFocus(BlikFormElementId.BLIK_CODE, hasFocus = true),
         )
@@ -66,7 +66,7 @@ internal class BlikComponentStatePostProcessorTest {
             focusRequest = FocusRequest(BlikFormElementId.BLIK_CODE, showErrorIfPresent = true),
         )
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             BlikIntent.UpdateFieldFocus(BlikFormElementId.BLIK_CODE, hasFocus = true),
         )
@@ -78,7 +78,7 @@ internal class BlikComponentStatePostProcessorTest {
     fun `when a focus request could not be fulfilled, then reporting it back clears it`() {
         val state = createInitialState().copy(focusRequest = FocusRequest(BlikFormElementId.BLIK_CODE))
 
-        val actual = postProcessor.process(state, BlikIntent.FocusRequestConsumed(BlikFormElementId.BLIK_CODE))
+        val actual = process(state, BlikIntent.FocusRequestConsumed(BlikFormElementId.BLIK_CODE))
 
         assertNull(actual.focusRequest)
     }
@@ -87,7 +87,7 @@ internal class BlikComponentStatePostProcessorTest {
     fun `when pay is pressed and the blik code is invalid, then its error shows and it is asked for focus`() {
         val state = createInitialState().copy(blikCode = invalidField())
 
-        val actual = postProcessor.process(state, BlikIntent.HighlightValidationErrors)
+        val actual = process(state, BlikIntent.HighlightValidationErrors)
 
         assertTrue(actual.blikCode.isErrorVisible)
         assertEquals(FocusRequest(BlikFormElementId.BLIK_CODE, showErrorIfPresent = true), actual.focusRequest)
@@ -97,7 +97,7 @@ internal class BlikComponentStatePostProcessorTest {
     fun `when pay is pressed and the blik code is valid, then nothing is shown and no focus is asked for`() {
         val state = createInitialState()
 
-        val actual = postProcessor.process(state, BlikIntent.HighlightValidationErrors)
+        val actual = process(state, BlikIntent.HighlightValidationErrors)
 
         assertFalse(actual.blikCode.isErrorVisible)
         assertNull(actual.focusRequest)
@@ -107,10 +107,13 @@ internal class BlikComponentStatePostProcessorTest {
     fun `when the intent decides no focus, then the state is untouched`() {
         val state = createInitialState().copy(blikCode = invalidField())
 
-        val actual = postProcessor.process(state, BlikIntent.UpdateLoading(true))
+        val actual = process(state, BlikIntent.UpdateLoading(true))
 
         assertEquals(state, actual)
     }
+
+    private fun process(state: BlikComponentState, intent: BlikIntent) =
+        postProcessor.process(state, state, intent)
 
     private fun invalidField(isErrorVisible: Boolean = false) = TextInputComponentState(
         error = TextInputComponentState.InputError(CheckoutLocalizationKey.BLIK_CODE_INVALID, isErrorVisible),

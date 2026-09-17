@@ -43,7 +43,7 @@ internal class MBWayComponentStatePostProcessorTest {
     fun `when the phone number loses focus, then an error it was holding back is shown`() {
         val state = createInitialState().copy(phoneNumber = invalidField())
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = false),
         )
@@ -55,7 +55,7 @@ internal class MBWayComponentStatePostProcessorTest {
     fun `when the shopper focuses the phone number, then a visible error is hidden`() {
         val state = createInitialState().copy(phoneNumber = invalidField(isErrorVisible = true))
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             MBWayIntent.UpdateFieldFocus(MBWayFormElementId.PHONE_NUMBER, hasFocus = true),
         )
@@ -67,7 +67,7 @@ internal class MBWayComponentStatePostProcessorTest {
     fun `when pay is pressed and the phone number is invalid, then its error shows and it is asked for focus`() {
         val state = createInitialState().copy(phoneNumber = invalidField())
 
-        val actual = postProcessor.process(state, MBWayIntent.HighlightValidationErrors)
+        val actual = process(state, MBWayIntent.HighlightValidationErrors)
 
         assertTrue(actual.phoneNumber.isErrorVisible)
         assertEquals(FocusRequest(MBWayFormElementId.PHONE_NUMBER, showErrorIfPresent = true), actual.focusRequest)
@@ -77,7 +77,7 @@ internal class MBWayComponentStatePostProcessorTest {
     fun `when pay is pressed and the phone number is valid, then nothing shows and no focus is asked for`() {
         val state = createInitialState()
 
-        val actual = postProcessor.process(state, MBWayIntent.HighlightValidationErrors)
+        val actual = process(state, MBWayIntent.HighlightValidationErrors)
 
         assertFalse(actual.phoneNumber.isErrorVisible)
         assertNull(actual.focusRequest)
@@ -87,7 +87,7 @@ internal class MBWayComponentStatePostProcessorTest {
     fun `when the country picker cannot be focused, then asking to focus it changes nothing`() {
         val state = createInitialState()
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             MBWayIntent.UpdateFieldFocus(MBWayFormElementId.COUNTRY_CODE, hasFocus = true),
         )
@@ -99,7 +99,7 @@ internal class MBWayComponentStatePostProcessorTest {
     fun `when a focus request could not be fulfilled, then reporting it back clears it`() {
         val state = createInitialState().copy(focusRequest = FocusRequest(MBWayFormElementId.PHONE_NUMBER))
 
-        val actual = postProcessor.process(state, MBWayIntent.FocusRequestConsumed(MBWayFormElementId.PHONE_NUMBER))
+        val actual = process(state, MBWayIntent.FocusRequestConsumed(MBWayFormElementId.PHONE_NUMBER))
 
         assertNull(actual.focusRequest)
     }
@@ -108,10 +108,13 @@ internal class MBWayComponentStatePostProcessorTest {
     fun `when the intent decides no focus, then the state is untouched`() {
         val state = createInitialState().copy(phoneNumber = invalidField())
 
-        val actual = postProcessor.process(state, MBWayIntent.UpdateLoading(true))
+        val actual = process(state, MBWayIntent.UpdateLoading(true))
 
         assertEquals(state, actual)
     }
+
+    private fun process(state: MBWayComponentState, intent: MBWayIntent) =
+        postProcessor.process(state, state, intent)
 
     private fun invalidField(isErrorVisible: Boolean = false) = TextInputComponentState(
         error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE, isErrorVisible),

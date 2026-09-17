@@ -20,7 +20,7 @@ interface ComponentStatePostProcessor<C : ComponentState, I : ComponentStateInte
 
     fun processInitialState(state: C): C
 
-    fun process(state: C, intent: I): C
+    fun process(previousState: C, currentState: C, intent: I): C
 }
 
 internal class NoPostProcessing<C : ComponentState, I : ComponentStateIntent> :
@@ -28,5 +28,5 @@ internal class NoPostProcessing<C : ComponentState, I : ComponentStateIntent> :
 
     override fun processInitialState(state: C) = state
 
-    override fun process(state: C, intent: I) = state
+    override fun process(previousState: C, currentState: C, intent: I) = currentState
 }

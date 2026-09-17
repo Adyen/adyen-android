@@ -40,7 +40,7 @@ internal class CardComponentStatePostProcessorTest {
     fun `when pay is pressed and the card number is invalid, then its error shows and it is asked for focus`() {
         val state = createInitialState().copy(cardNumber = invalidField())
 
-        val actual = postProcessor.process(state, CardIntent.HighlightValidationErrors)
+        val actual = process(state, CardIntent.HighlightValidationErrors)
 
         assertTrue(actual.cardNumber.isErrorVisible)
         assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER, showErrorIfPresent = true), actual.focusRequest)
@@ -50,7 +50,7 @@ internal class CardComponentStatePostProcessorTest {
     fun `when pay is pressed and nothing is invalid, then no error shows and no focus is requested`() {
         val state = createInitialState()
 
-        val actual = postProcessor.process(state, CardIntent.HighlightValidationErrors)
+        val actual = process(state, CardIntent.HighlightValidationErrors)
 
         assertFalse(actual.cardNumber.isErrorVisible)
         assertFalse(actual.expiryDate.isErrorVisible)
@@ -65,7 +65,7 @@ internal class CardComponentStatePostProcessorTest {
             securityCode = invalidField(),
         )
 
-        val actual = postProcessor.process(state, CardIntent.HighlightValidationErrors)
+        val actual = process(state, CardIntent.HighlightValidationErrors)
 
         assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, showErrorIfPresent = true), actual.focusRequest)
     }
@@ -77,9 +77,9 @@ internal class CardComponentStatePostProcessorTest {
     @Test
     fun `when the field pay focused reports the focus gain, then it keeps showing its error`() {
         val state = createInitialState().copy(expiryDate = invalidField())
-        val highlighted = postProcessor.process(state, CardIntent.HighlightValidationErrors)
+        val highlighted = process(state, CardIntent.HighlightValidationErrors)
 
-        val actual = postProcessor.process(
+        val actual = process(
             highlighted,
             CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, hasFocus = true),
         )
@@ -91,7 +91,7 @@ internal class CardComponentStatePostProcessorTest {
     fun `when the shopper taps a field showing an error, then the error is hidden`() {
         val state = createInitialState().copy(expiryDate = invalidField(isErrorVisible = true))
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, hasFocus = true),
         )
@@ -103,7 +103,7 @@ internal class CardComponentStatePostProcessorTest {
     fun `when an invalid field loses focus, then its error is shown`() {
         val state = createInitialState().copy(expiryDate = invalidField())
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, hasFocus = false),
         )
@@ -118,9 +118,9 @@ internal class CardComponentStatePostProcessorTest {
     @Test
     fun `when the requested field gains focus, then the request is left for the UI to report back`() {
         val state = createInitialState().copy(expiryDate = invalidField())
-        val highlighted = postProcessor.process(state, CardIntent.HighlightValidationErrors)
+        val highlighted = process(state, CardIntent.HighlightValidationErrors)
 
-        val actual = postProcessor.process(
+        val actual = process(
             highlighted,
             CardIntent.UpdateFieldFocus(CardFormElementId.EXPIRY_DATE, hasFocus = true),
         )
@@ -131,9 +131,9 @@ internal class CardComponentStatePostProcessorTest {
     @Test
     fun `when the UI reports the request back, then it is cleared`() {
         val state = createInitialState().copy(expiryDate = invalidField())
-        val highlighted = postProcessor.process(state, CardIntent.HighlightValidationErrors)
+        val highlighted = process(state, CardIntent.HighlightValidationErrors)
 
-        val actual = postProcessor.process(
+        val actual = process(
             highlighted,
             CardIntent.FocusRequestConsumed(CardFormElementId.EXPIRY_DATE),
         )
@@ -144,9 +144,9 @@ internal class CardComponentStatePostProcessorTest {
     @Test
     fun `when the UI reports back a request for another field, then the pending one is left alone`() {
         val state = createInitialState().copy(expiryDate = invalidField())
-        val highlighted = postProcessor.process(state, CardIntent.HighlightValidationErrors)
+        val highlighted = process(state, CardIntent.HighlightValidationErrors)
 
-        val actual = postProcessor.process(
+        val actual = process(
             highlighted,
             CardIntent.FocusRequestConsumed(CardFormElementId.CARD_NUMBER),
         )
@@ -158,7 +158,7 @@ internal class CardComponentStatePostProcessorTest {
     fun `when a scan filled the card number and expiry date, then focus is requested on the security code`() {
         val state = createInitialState().copy(securityCode = invalidField())
 
-        val actual = postProcessor.process(state, scanResult())
+        val actual = process(state, scanResult())
 
         assertEquals(FocusRequest(CardFormElementId.SECURITY_CODE), actual.focusRequest)
     }
@@ -167,7 +167,7 @@ internal class CardComponentStatePostProcessorTest {
     fun `when a scan filled everything the form shows, then no focus is requested`() {
         val state = createInitialState()
 
-        val actual = postProcessor.process(state, scanResult())
+        val actual = process(state, scanResult())
 
         assertNull(actual.focusRequest)
     }
@@ -179,7 +179,7 @@ internal class CardComponentStatePostProcessorTest {
             holderName = invalidField(),
         )
 
-        val actual = postProcessor.process(state, scanResult())
+        val actual = process(state, scanResult())
 
         assertEquals(FocusRequest(CardFormElementId.HOLDER_NAME), actual.focusRequest)
     }
@@ -195,7 +195,7 @@ internal class CardComponentStatePostProcessorTest {
             securityCode = invalidField(),
         )
 
-        val actual = postProcessor.process(state, scanResult(expiryMonth = null, expiryYear = null))
+        val actual = process(state, scanResult(expiryMonth = null, expiryYear = null))
 
         assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE), actual.focusRequest)
     }
@@ -211,7 +211,7 @@ internal class CardComponentStatePostProcessorTest {
             securityCode = invalidField(),
         )
 
-        val actual = postProcessor.process(state, scanResult(pan = null))
+        val actual = process(state, scanResult(pan = null))
 
         assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER), actual.focusRequest)
     }
@@ -223,9 +223,9 @@ internal class CardComponentStatePostProcessorTest {
     @Test
     fun `when the field a scan focused was already showing an error, then the error is hidden on arrival`() {
         val state = createInitialState().copy(securityCode = invalidField(isErrorVisible = true))
-        val scanned = postProcessor.process(state, scanResult())
+        val scanned = process(state, scanResult())
 
-        val actual = postProcessor.process(
+        val actual = process(
             scanned,
             CardIntent.UpdateFieldFocus(CardFormElementId.SECURITY_CODE, hasFocus = true),
         )
@@ -237,10 +237,13 @@ internal class CardComponentStatePostProcessorTest {
     fun `when the intent decides no focus, then the state is untouched`() {
         val state = createInitialState().copy(cardNumber = invalidField())
 
-        val actual = postProcessor.process(state, CardIntent.UpdateLoading(true))
+        val actual = process(state, CardIntent.UpdateLoading(true))
 
         assertEquals(state, actual)
     }
+
+    private fun process(state: CardComponentState, intent: CardIntent) =
+        postProcessor.process(state, state, intent)
 
     private fun scanResult(
         pan: String? = "4111111111111111",
