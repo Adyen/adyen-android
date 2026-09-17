@@ -23,12 +23,4 @@ sealed class PaymentComponentEvent {
     data class Error(
         val error: InternalCheckoutError
     ) : PaymentComponentEvent()
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    data class SecondaryScreen(
-        val identifier: String,
-    ) : PaymentComponentEvent()
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    data object CloseSecondaryScreen : PaymentComponentEvent()
 }

@@ -30,8 +30,10 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 /**
  * A [Composable] that displays the payment method input UI for the given [controller].
  *
+ * Secondary screens of the payment method, such as pickers, are displayed on top of this UI.
+ *
  * Use this when you want to render the payment method screen yourself. To render the whole flow
- * (payment method, action and secondary screens) automatically, use [CheckoutPaymentFlow] instead.
+ * (payment method and action screens) automatically, use [CheckoutPaymentFlow] instead.
  *
  * @param controller The [CheckoutController] driving this flow.
  * @param modifier The [Modifier] to be applied to the payment method UI.
