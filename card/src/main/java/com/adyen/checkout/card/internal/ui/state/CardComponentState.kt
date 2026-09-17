@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -38,6 +39,8 @@ internal data class CardComponentState(
     val cardBrandState: CardBrandState,
     val networkBinLookupState: NetworkBinLookupState?,
     val installmentState: InstallmentState,
+
+    val focusRequest: FocusRequest<CardFormElementId>? = null,
 ) : ComponentState {
 
     /**
