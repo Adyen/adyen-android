@@ -24,9 +24,7 @@ internal class BlikComponentStateValidator : ComponentStateValidator<BlikCompone
         )
     }
 
-    override fun isValid(state: BlikComponentState): Boolean {
-        return state.blikCode.isValid
-    }
+    override fun isValid(state: BlikComponentState): Boolean = state.form.isFormValid
 
     private fun isBlikCodeValid(blikCode: String): Boolean {
         return blikCode.length == BLIK_CODE_LENGTH && blikCode.all { it.isDigit() }

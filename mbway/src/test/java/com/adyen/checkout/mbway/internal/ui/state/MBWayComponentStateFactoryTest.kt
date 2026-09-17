@@ -34,7 +34,6 @@ internal class MBWayComponentStateFactoryTest {
                 text = "",
                 description = null,
                 error = null,
-                isFocused = true
             ),
             isLoading = false,
         )

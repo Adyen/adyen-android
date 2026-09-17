@@ -27,6 +27,7 @@ import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactor
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
+import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStatePostProcessor
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
@@ -159,6 +160,7 @@ internal class CardFactory :
             componentStateValidator = componentStateValidator,
             componentStateFactory = componentStateFactory,
             componentStateReducer = componentStateReducer,
+            componentStatePostProcessor = StoredCardComponentStatePostProcessor(),
             viewStateProducer = viewStateProducer,
             coroutineScope = coroutineScope,
             sdkDataProvider = sdkDataProvider,

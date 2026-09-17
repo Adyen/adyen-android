@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStatePostProcessor
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
@@ -117,6 +118,7 @@ internal class MBWayComponentTest(
             componentStateValidator = componentStateValidator,
             componentStateFactory = MBWayComponentStateFactory(Locale("pt", "PT")),
             componentStateReducer = MBWayComponentStateReducer(),
+            componentStatePostProcessor = MBWayComponentStatePostProcessor(),
             viewStateProducer = MBWayViewStateProducer(amount = null, showSubmitButton = true),
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         )
