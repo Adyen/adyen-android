@@ -37,7 +37,7 @@ object CardBrandDetector {
         CardBrand.CARTEBANCAIRE to Pattern.compile("^[4-6][0-9]{0,15}$"),
         CardBrand.CODENSA to Pattern.compile("^(590712)[0-9]{0,10}$"),
         CardBrand.CUP to Pattern.compile("^(62|81)[0-9]{0,17}$"),
-        CardBrand.DANKORT to Pattern.compile("^(5019)[0-9]{0,12}$"),
+        CardBrand.DANKORT to Pattern.compile("^(5019|4571|3571)[0-9]{0,12}$"),
         CardBrand.DINERS to Pattern.compile("^(36)[0-9]{0,12}$"),
         CardBrand.DISCOVER to Pattern.compile(
             "^(6011[0-9]{0,12}|(644|645|646|647|648|649)[0-9]{0,13}|65[0-9]{0,14})$",

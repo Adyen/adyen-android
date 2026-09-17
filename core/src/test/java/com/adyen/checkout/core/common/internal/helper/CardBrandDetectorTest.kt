@@ -29,6 +29,7 @@ internal class CardBrandDetectorTest {
         assertEquals(
             listOf(
                 CardBrand(txVariant = "cartebancaire"),
+                CardBrand(txVariant = "dankort"),
                 CardBrand(txVariant = "visa"),
                 CardBrand(txVariant = "visadankort"),
             ),
