@@ -22,6 +22,7 @@ import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStatePostProcessor
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
@@ -42,6 +43,7 @@ constructor(
     private val componentStateValidator: MBWayComponentStateValidator,
     componentStateFactory: MBWayComponentStateFactory,
     componentStateReducer: MBWayComponentStateReducer,
+    componentStatePostProcessor: MBWayComponentStatePostProcessor,
     viewStateProducer: MBWayViewStateProducer,
     coroutineScope: CoroutineScope,
 ) : PaymentComponent,
@@ -57,6 +59,7 @@ constructor(
         initialState = componentStateFactory.createInitialState(),
         reducer = componentStateReducer,
         validator = componentStateValidator,
+        postProcessor = componentStatePostProcessor,
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)

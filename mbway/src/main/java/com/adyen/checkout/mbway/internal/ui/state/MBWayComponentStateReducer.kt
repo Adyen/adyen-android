@@ -15,22 +15,16 @@ internal class MBWayComponentStateReducer : ComponentStateReducer<MBWayComponent
     override fun reduce(state: MBWayComponentState, intent: MBWayIntent): MBWayComponentState {
         return when (intent) {
             is MBWayIntent.UpdateCountry -> state.copy(selectedCountryCode = intent.country)
+
             is MBWayIntent.UpdateLoading -> state.copy(isLoading = intent.isLoading)
+
             is MBWayIntent.UpdatePhoneNumber -> state.copy(
                 phoneNumber = state.phoneNumber.updateText(intent.number),
             )
 
-            is MBWayIntent.UpdatePhoneNumberFocus -> state.copy(
-                phoneNumber = state.phoneNumber.updateFocus(intent.hasFocus),
-            )
-
-            is MBWayIntent.HighlightValidationErrors -> {
-                val hasPhoneNumberError = !state.phoneNumber.isValid
-                state.copy(
-                    phoneNumber = state.phoneNumber.showErrorIfPresent()
-                        .copy(isFocused = hasPhoneNumberError),
-                )
-            }
+            is MBWayIntent.UpdateFieldFocus,
+            is MBWayIntent.FocusRequestConsumed,
+            is MBWayIntent.HighlightValidationErrors -> state
         }
     }
 }

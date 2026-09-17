@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
+import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStatePostProcessor
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
@@ -56,6 +57,7 @@ constructor(
     private val componentStateValidator: StoredCardComponentStateValidator,
     componentStateFactory: StoredCardComponentStateFactory,
     componentStateReducer: StoredCardComponentStateReducer,
+    componentStatePostProcessor: StoredCardComponentStatePostProcessor,
     viewStateProducer: StoredCardViewStateProducer,
     coroutineScope: CoroutineScope,
     private val sdkDataProvider: SdkDataProvider,
@@ -72,6 +74,7 @@ constructor(
         initialState = componentStateFactory.createInitialState(),
         reducer = componentStateReducer,
         validator = componentStateValidator,
+        postProcessor = componentStatePostProcessor,
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)

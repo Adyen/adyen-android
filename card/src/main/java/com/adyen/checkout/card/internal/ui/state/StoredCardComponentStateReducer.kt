@@ -18,24 +18,13 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
                 securityCode = state.securityCode.updateText(intent.securityCode),
             )
 
-            is StoredCardIntent.UpdateSecurityCodeFocus -> state.copy(
-                securityCode = state.securityCode.updateFocus(intent.hasFocus),
-            )
-
             is StoredCardIntent.UpdateLoading -> state.copy(
                 isLoading = intent.isLoading,
             )
 
-            is StoredCardIntent.HighlightValidationErrors -> highlightValidationErrors(state)
+            is StoredCardIntent.UpdateFieldFocus,
+            is StoredCardIntent.FocusRequestConsumed,
+            is StoredCardIntent.HighlightValidationErrors -> state
         }
-    }
-
-    private fun highlightValidationErrors(state: StoredCardComponentState): StoredCardComponentState {
-        val hasSecurityCodeError = !state.securityCode.isValid
-
-        return state.copy(
-            securityCode = state.securityCode.showErrorIfPresent()
-                .copy(isFocused = hasSecurityCodeError),
-        )
     }
 }

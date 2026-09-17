@@ -18,13 +18,22 @@ internal class MBWayViewStateProducer(
     private val showSubmitButton: Boolean,
 ) : ViewStateProducer<MBWayComponentState, MBWayViewState> {
 
-    override fun produce(state: MBWayComponentState): MBWayViewState {
-        return MBWayViewState(
+    override fun produce(state: MBWayComponentState) = MBWayViewState(
+        elements = state.form.elements.map { state.toElement(it.id) },
+        isLoading = state.isLoading,
+        payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
+        countryPickerViewState = CountryPickerViewState(
             countries = state.countries,
-            selectedCountryCode = state.selectedCountryCode,
-            phoneNumber = state.phoneNumber.toViewState(),
-            isLoading = state.isLoading,
-            payButtonViewState = if (showSubmitButton) PayButtonViewState(amount, state.isLoading) else null,
+            selectedCountry = state.selectedCountryCode,
+        ),
+    )
+
+    private fun MBWayComponentState.toElement(id: MBWayFormElementId): MBWayFormElement = when (id) {
+        MBWayFormElementId.COUNTRY_CODE -> MBWayFormElement.CountryCode(selectedCountry = selectedCountryCode)
+
+        MBWayFormElementId.PHONE_NUMBER -> MBWayFormElement.PhoneNumber(
+            textInputViewState = phoneNumber.toViewState(form, focusRequest, id),
+            callingCode = selectedCountryCode.callingCode,
         )
     }
 }
