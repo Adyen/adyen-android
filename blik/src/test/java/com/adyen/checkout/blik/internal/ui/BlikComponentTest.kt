@@ -9,6 +9,7 @@
 package com.adyen.checkout.blik.internal.ui
 
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateFactory
+import com.adyen.checkout.blik.internal.ui.state.BlikComponentStatePostProcessor
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateReducer
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
 import com.adyen.checkout.blik.internal.ui.state.BlikViewStateProducer
@@ -116,6 +117,7 @@ internal class BlikComponentTest(
             componentStateValidator = componentStateValidator,
             componentStateFactory = BlikComponentStateFactory(),
             componentStateReducer = BlikComponentStateReducer(),
+            componentStatePostProcessor = BlikComponentStatePostProcessor(),
             viewStateProducer = BlikViewStateProducer(amount = null, showSubmitButton = true),
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         )

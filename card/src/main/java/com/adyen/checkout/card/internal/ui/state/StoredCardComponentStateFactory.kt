@@ -28,14 +28,15 @@ internal class StoredCardComponentStateFactory(
             hideCvc = componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE,
         )
 
+        val securityCode = TextInputComponentState(
+            requirementPolicy = when (componentParams.storedCVCVisibility) {
+                StoredCVCVisibility.SHOW -> RequirementPolicy.Required
+                StoredCVCVisibility.HIDE -> RequirementPolicy.Hidden
+            },
+        )
+
         return StoredCardComponentState(
-            securityCode = TextInputComponentState(
-                isFocused = true,
-                requirementPolicy = when (componentParams.storedCVCVisibility) {
-                    StoredCVCVisibility.SHOW -> RequirementPolicy.Required
-                    StoredCVCVisibility.HIDE -> RequirementPolicy.Hidden
-                },
-            ),
+            securityCode = securityCode,
             isLoading = false,
             detectedCardType = storedDetectedCardType,
         )

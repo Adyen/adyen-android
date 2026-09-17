@@ -18,12 +18,14 @@ internal class MBWayComponentStateFactory(
     private val shopperLocale: Locale,
 ) : ComponentStateFactory<MBWayComponentState> {
 
-    override fun createInitialState() = MBWayComponentState(
-        countries = getSupportedCountries(shopperLocale),
-        selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
-        phoneNumber = TextInputComponentState(isFocused = true),
-        isLoading = false,
-    )
+    override fun createInitialState(): MBWayComponentState {
+        return MBWayComponentState(
+            countries = getSupportedCountries(shopperLocale),
+            selectedCountryCode = getInitiallySelectedCountry(shopperLocale),
+            phoneNumber = TextInputComponentState(),
+            isLoading = false,
+        )
+    }
 
     private fun getSupportedCountries(shopperLocale: Locale): List<CountryModel> =
         CountryUtils.getLocalizedCountries(shopperLocale, SUPPORTED_COUNTRIES)

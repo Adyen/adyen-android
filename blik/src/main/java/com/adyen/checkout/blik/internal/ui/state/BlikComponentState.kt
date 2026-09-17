@@ -9,9 +9,30 @@
 package com.adyen.checkout.blik.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class BlikComponentState(
     val blikCode: TextInputComponentState,
     val isLoading: Boolean,
-) : ComponentState
+    // A focus move the state layer is asking the UI to make. Unlike the field order this is not derivable, since it
+    // records something that happened rather than something that is.
+    val focusRequest: FocusRequest<BlikFormElementId>? = null,
+) : ComponentState {
+
+    /**
+     * Which elements are on screen, in the order the shopper sees them.
+     */
+    val form: FormState<BlikFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        FormState(elements = listOfNotNull(blikCode.toFormElementIfVisible(BlikFormElementId.BLIK_CODE)))
+    }
+}
+
+internal fun BlikComponentState.updateTextInput(
+    id: BlikFormElementId,
+    transform: (TextInputComponentState) -> TextInputComponentState,
+): BlikComponentState = when (id) {
+    BlikFormElementId.BLIK_CODE -> copy(blikCode = transform(blikCode))
+}

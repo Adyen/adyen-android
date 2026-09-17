@@ -14,8 +14,12 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputCompo
 
 internal class BlikComponentStateFactory : ComponentStateFactory<BlikComponentState> {
 
-    override fun createInitialState() = BlikComponentState(
-        blikCode = TextInputComponentState(isFocused = true, description = CheckoutLocalizationKey.BLIK_CODE_HINT),
-        isLoading = false,
-    )
+    override fun createInitialState(): BlikComponentState {
+        return BlikComponentState(
+            blikCode = TextInputComponentState(
+                description = CheckoutLocalizationKey.BLIK_CODE_HINT,
+            ),
+            isLoading = false,
+        )
+    }
 }
