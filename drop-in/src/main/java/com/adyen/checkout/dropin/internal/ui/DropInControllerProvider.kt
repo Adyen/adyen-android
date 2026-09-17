@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.withCheckoutConfiguration
 import com.adyen.checkout.core.components.AdditionalDetailsResult
@@ -63,6 +64,7 @@ internal class DefaultDropInControllerProvider(
                     callbacks = AdvancedCheckoutCallbacks(
                         onSubmit = ::onSubmit,
                         onAdditionalDetails = ::onAdditionalDetails,
+                        onAction = ::onAction,
                         onFailure = { error -> onFailure(coroutineScope, error) },
                     ),
                     coroutineScope = coroutineScope,
@@ -76,6 +78,7 @@ internal class DefaultDropInControllerProvider(
                     callbacks = SessionCheckoutCallbacks(
                         onBeforeSubmit = ::onBeforeSubmit,
                         onFailure = { error -> onFailure(coroutineScope, error) },
+                        onAction = ::onAction,
                         onComplete = { result -> onComplete(coroutineScope, result) },
                     ),
                     coroutineScope = coroutineScope,
@@ -109,6 +112,11 @@ internal class DefaultDropInControllerProvider(
 
     private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         return dropInServiceManager.requestOnAdditionalDetails(data)
+    }
+
+    @Suppress("UnusedParameter")
+    private fun onAction(actionData: ActionData) {
+        // TODO - Forward to DropInService once an action callback is added to it
     }
 
     private fun onFailure(coroutineScope: CoroutineScope, error: CheckoutError) {

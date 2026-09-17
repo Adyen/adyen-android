@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 
@@ -20,6 +21,7 @@ import com.adyen.checkout.core.error.CheckoutError
  * @param onAdditionalDetails Called when additional details are required to complete the payment (for example after
  * an action). Make a network call to the `/payments/details` endpoint of the Checkout API through your server, and
  * return the result as an [AdditionalDetailsResult].
+ * @param onAction Called when the SDK is about to handle an action.
  * @param onFailure Called when an error occurs.
  * @param onComplete Called when the payment is completed.
  * @param additionalCallbacksBlock An optional block to register payment-method-specific [CheckoutAdditionalCallback]s.
@@ -27,6 +29,7 @@ import com.adyen.checkout.core.error.CheckoutError
 class AdvancedCheckoutCallbacks(
     internal val onSubmit: suspend (data: PaymentComponentData<*>) -> SubmitResult,
     internal val onAdditionalDetails: suspend (data: ActionComponentData) -> AdditionalDetailsResult,
+    internal val onAction: (actionData: ActionData) -> Unit,
     internal val onFailure: (CheckoutError) -> Unit,
     internal val onComplete: (result: AdvancedCheckoutResult) -> Unit = {},
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},

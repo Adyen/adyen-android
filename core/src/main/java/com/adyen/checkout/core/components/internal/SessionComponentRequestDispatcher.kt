@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.BeforeSubmitResult
@@ -93,6 +94,10 @@ internal class SessionComponentRequestDispatcher(
                 return AdditionalDetailsResult.Completion(CheckoutResultCode.ERROR.value)
             },
         )
+    }
+
+    override fun action(actionData: ActionData) {
+        callbacks.onAction(actionData)
     }
 
     override fun complete(resultCode: CheckoutResultCode) {

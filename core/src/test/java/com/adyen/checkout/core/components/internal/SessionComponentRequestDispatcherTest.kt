@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.BeforeSubmitResult
@@ -231,6 +232,20 @@ internal class SessionComponentRequestDispatcherTest(
     }
 
     @Nested
+    inner class ActionTest {
+
+        @Test
+        fun `when action is called, then onAction callback is invoked with ActionData`() {
+            val capturedActions = mutableListOf<ActionData>()
+            val dispatcher = createDispatcher(onAction = { capturedActions += it })
+
+            dispatcher.action(ActionData(type = "redirect"))
+
+            assertEquals(listOf(ActionData(type = "redirect")), capturedActions)
+        }
+    }
+
+    @Nested
     inner class OnBeforeSubmitTest {
 
         @Test
@@ -406,6 +421,7 @@ internal class SessionComponentRequestDispatcherTest(
     private fun createDispatcher(
         onComplete: (SessionCheckoutResult) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
+        onAction: (ActionData) -> Unit = {},
         onBeforeSubmit: (suspend (BeforeSubmitData) -> BeforeSubmitResult)? = null,
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
         initialSessionData = "session-data",
@@ -413,6 +429,7 @@ internal class SessionComponentRequestDispatcherTest(
         callbacks = SessionCheckoutCallbacks(
             onComplete = onComplete,
             onFailure = onFailure,
+            onAction = onAction,
             onBeforeSubmit = onBeforeSubmit,
         ),
         sessionRepository = sessionRepository,

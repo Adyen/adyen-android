@@ -137,6 +137,7 @@ internal class PaymentComponentResolverTest {
     private fun advancedCallbacks() = AdvancedCheckoutCallbacks(
         onSubmit = { SubmitResult.Completion("") },
         onAdditionalDetails = { AdditionalDetailsResult.Completion("") },
+        onAction = {},
         onFailure = {},
     )
 
