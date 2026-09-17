@@ -8,19 +8,25 @@
 
 package com.adyen.checkout.core.common.internal.helper
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.CardBrand
 import java.util.regex.Pattern
 
 /**
- * The regexes of the predefined [CardBrands][CardBrand], used to estimate the brand of a card number.
+ * Detects the [CardBrands][CardBrand] of a card number, based on the regexes of the predefined brands.
  *
  * [Pattern] is used instead of Kotlin's [Regex] because estimation relies on [java.util.regex.Matcher.hitEnd] to also
  * match a card number that is still being typed.
  */
-internal object CardBrandRegexes {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object CardBrandDetector {
 
     private val WHITESPACE_REGEX = "\\s".toRegex()
 
+    /**
+     * The declaration order is significant: [estimate] returns brands in this order, which acts as a priority when
+     * multiple brands match. Reordering this map changes which brand is preselected for dual branded cards.
+     */
     private val REGEXES: Map<CardBrand, Pattern> = mapOf(
         CardBrand.AMERICAN_EXPRESS to Pattern.compile("^3[47][0-9]{0,13}$"),
         CardBrand.ARGENCARD to Pattern.compile("^(50)(1)\\d*$"),
@@ -69,6 +75,7 @@ internal object CardBrandRegexes {
      * @param cardNumber The potential card number.
      * @return All matching [CardBrands][CardBrand] if the number was valid, otherwise an empty [List].
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun estimate(cardNumber: String): List<CardBrand> {
         val normalizedCardNumber = cardNumber.replace(WHITESPACE_REGEX, "")
         return REGEXES.filterValues { it.isEstimateFor(normalizedCardNumber) }.keys.toList()

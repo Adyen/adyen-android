@@ -44,7 +44,7 @@ val configuration = CheckoutConfiguration(
         showStorePaymentMethod = true,
         showSupportedCardBrandLogos = true,
         socialSecurityNumberVisibility = FieldVisibility.HIDE,
-        supportedCardBrands = listOf(CardBrand("visa"), CardBrand("mc")),
+        supportedCardBrands = listOf(CardBrand.VISA, CardBrand.MASTERCARD),
         showCardScanner = true,
     )
 }

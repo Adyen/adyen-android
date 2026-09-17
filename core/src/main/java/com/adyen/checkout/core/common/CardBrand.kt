@@ -8,8 +8,6 @@
 package com.adyen.checkout.core.common
 
 import android.os.Parcelable
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.internal.helper.CardBrandRegexes
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -35,34 +33,25 @@ data class CardBrand(val txVariant: String) : Parcelable {
         val DISCOVER = CardBrand("discover")
         val ELO = CardBrand("elo")
         val FORBRUGSFORENINGEN = CardBrand("forbrugsforeningen")
-        val VISAALPHABANKBONUS = CardBrand("visaalphabankbonus")
-        val MCALPHABANKBONUS = CardBrand("mcalphabankbonus")
         val HIPER = CardBrand("hiper")
         val HIPERCARD = CardBrand("hipercard")
         val JCB = CardBrand("jcb")
-        val OASIS = CardBrand("oasis")
         val KARENMILLER = CardBrand("karenmillen")
-        val WAREHOUSE = CardBrand("warehouse")
         val LASER = CardBrand("laser")
         val MAESTRO = CardBrand("maestro")
         val MAESTRO_UK = CardBrand("maestrouk")
         val MASTERCARD = CardBrand("mc")
+        val MCALPHABANKBONUS = CardBrand("mcalphabankbonus")
         val MIR = CardBrand("mir")
         val NARANJA = CardBrand("naranja")
+        val OASIS = CardBrand("oasis")
         val SHOPPING = CardBrand("shopping")
         val SOLO = CardBrand("solo")
         val TROY = CardBrand("troy")
         val UATP = CardBrand("uatp")
         val VISA = CardBrand("visa")
+        val VISAALPHABANKBONUS = CardBrand("visaalphabankbonus")
         val VISADANKORT = CardBrand("visadankort")
-
-        /**
-         * Estimate all potential [CardBrands][CardBrand] for a given card number.
-         *
-         * @param cardNumber The potential card number.
-         * @return All matching [CardBrands][CardBrand] if the number was valid, otherwise an empty [List].
-         */
-        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-        fun estimate(cardNumber: String): List<CardBrand> = CardBrandRegexes.estimate(cardNumber)
+        val WAREHOUSE = CardBrand("warehouse")
     }
 }
