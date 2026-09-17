@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.common.internal
 
+import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
@@ -22,11 +24,16 @@ import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfigu
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentOptionsParams
 import java.util.Locale
 
-internal class CheckoutParamsFactory(
-    private val deviceLocaleProvider: () -> Locale = {
-        AppCompatDelegate.getApplicationLocales().takeUnless { it.isEmpty }?.get(0) ?: Locale.getDefault()
-    },
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class CheckoutParamsFactory @VisibleForTesting internal constructor(
+    private val deviceLocaleProvider: () -> Locale,
 ) {
+
+    constructor() : this(
+        deviceLocaleProvider = {
+            AppCompatDelegate.getApplicationLocales().takeUnless { it.isEmpty }?.get(0) ?: Locale.getDefault()
+        },
+    )
 
     fun create(
         configuration: CheckoutConfiguration,
