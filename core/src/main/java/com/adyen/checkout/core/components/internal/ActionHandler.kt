@@ -12,6 +12,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
@@ -75,6 +76,8 @@ internal class ActionHandler(
                 }
             }
             .launchIn(coroutineScope)
+
+        (componentRequestDispatcher as? SubmittableComponentRequestDispatcher)?.action(ActionData(action.type))
 
         actionComponent.handleAction()
     }

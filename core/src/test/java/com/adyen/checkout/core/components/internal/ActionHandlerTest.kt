@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
@@ -43,13 +44,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
@@ -164,6 +171,65 @@ internal class ActionHandlerTest(
     }
 
     @Nested
+    inner class OnActionTest {
+
+        private val submittableComponentRequestDispatcher = mock<SubmittableComponentRequestDispatcher>()
+
+        @ParameterizedTest
+        @ValueSource(strings = ["redirect", "nativeRedirect", "threeDS2", "sdk", "qrCode", "await", "voucher"])
+        fun `when handleAction is called, then the action is dispatched with the action type`(actionType: String) {
+            registerTestFactory(actionType)
+            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
+
+            actionHandler.handleAction(TestAction(type = actionType))
+
+            verify(submittableComponentRequestDispatcher).action(ActionData(actionType))
+        }
+
+        @Test
+        fun `when handleAction is called, then the action is dispatched before the component handles it`() {
+            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
+            var handleActionCallCountOnDispatch: Int? = null
+            whenever(submittableComponentRequestDispatcher.action(any())) doAnswer {
+                handleActionCallCountOnDispatch =
+                    (actionHandler.actionComponent as ControllableActionComponent).handleActionCallCount
+            }
+
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            assertEquals(0, handleActionCallCountOnDispatch)
+        }
+
+        @Test
+        fun `when handleAction is called twice, then the action is dispatched twice`() {
+            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
+
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            verify(submittableComponentRequestDispatcher, times(2)).action(ActionData(TEST_ACTION_TYPE))
+        }
+
+        @Test
+        fun `when the action type is not registered, then the action is not dispatched`() {
+            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
+
+            actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
+
+            verify(submittableComponentRequestDispatcher, never()).action(any())
+        }
+
+        @Test
+        fun `when the dispatcher cannot dispatch actions, then no request is dispatched`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            verifyNoInteractions(componentRequestDispatcher)
+        }
+    }
+
+    @Nested
     inner class ActionDetailsEventTest {
 
         @Test
@@ -255,9 +321,9 @@ internal class ActionHandlerTest(
         )
     }
 
-    private fun registerTestFactory() {
+    private fun registerTestFactory(actionType: String = TEST_ACTION_TYPE) {
         ActionComponentProvider.register(
-            TEST_ACTION_TYPE,
+            actionType,
             object : ActionFactory<Action, ActionComponent> {
                 override fun create(
                     action: Action,
@@ -270,7 +336,9 @@ internal class ActionHandlerTest(
         )
     }
 
-    private fun createActionHandler() = ActionHandler(
+    private fun createActionHandler(
+        componentRequestDispatcher: ComponentRequestDispatcher = this.componentRequestDispatcher,
+    ) = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
         coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         analyticsManager = TestAnalyticsManager(),
