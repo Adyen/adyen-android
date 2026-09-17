@@ -21,6 +21,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.DropInService
+import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.helper.BackStackPersister
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
@@ -79,12 +80,36 @@ internal class DropInViewModelTest {
     }
 
     @Test
-    fun `when created, then the drop in params are mapped from the checkout configuration`() {
+    fun `when created, then the checkout params are mapped from the checkout configuration`() {
         val viewModel = createViewModel()
 
-        assertEquals(Locale.US, viewModel.dropInParams.shopperLocale)
-        assertEquals(Environment.TEST, viewModel.dropInParams.environment)
-        assertEquals(AMOUNT, viewModel.dropInParams.amount)
+        assertEquals(Locale.US, viewModel.checkoutParams.shopperLocale)
+        assertEquals(Environment.TEST, viewModel.checkoutParams.environment)
+        assertEquals(AMOUNT, viewModel.checkoutParams.amount)
+    }
+
+    @Test
+    fun `when created without a drop-in configuration, then the drop in params have default values`() {
+        val viewModel = createViewModel()
+
+        assertEquals(
+            DropInParams(hideStoredPaymentMethods = false, startWithLastStoredPaymentMethod = true),
+            viewModel.dropInParams,
+        )
+    }
+
+    @Test
+    fun `when created with a drop-in configuration, then the drop in params are mapped from it`() {
+        val viewModel = createViewModel(
+            configureCheckoutConfiguration = {
+                dropIn(hideStoredPaymentMethods = true, startWithLastStoredPaymentMethod = false)
+            },
+        )
+
+        assertEquals(
+            DropInParams(hideStoredPaymentMethods = true, startWithLastStoredPaymentMethod = false),
+            viewModel.dropInParams,
+        )
     }
 
     private fun createViewModel(
@@ -93,6 +118,7 @@ internal class DropInViewModelTest {
             GenericPaymentMethod(type = PaymentMethodTypes.SCHEME, name = "Cards"),
         ),
         persister: BackStackPersister = InMemoryBackStackPersister(),
+        configureCheckoutConfiguration: CheckoutConfiguration.() -> Unit = {},
     ): DropInViewModel {
         val checkoutContext = TestCheckoutContext.advanced(
             paymentMethods = PaymentMethods(
@@ -104,7 +130,7 @@ internal class DropInViewModelTest {
                 clientKey = CLIENT_KEY,
                 shopperLocale = Locale.US,
                 amount = AMOUNT,
-            ),
+            ).apply(configureCheckoutConfiguration),
         )
 
         return DropInViewModel(
