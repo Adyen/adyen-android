@@ -88,7 +88,7 @@ internal class NetworkCardBrandDetectionService(
 
     companion object {
         private val SUPPORTED_CARD_BRANDS_FOR_DUAL_BRANDED_SELECTION = listOf(
-            CardBrand.CARTEBANCAIRE,
+            CardBrand.CARTE_BANCAIRE,
             CardBrand.BCMC,
             CardBrand.DANKORT,
         ).map { it.txVariant }

@@ -229,9 +229,9 @@ public final class com/adyen/checkout/core/common/CardBrand$Companion {
 	public final fun getBCMC ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getBIJENKORF_CARD ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getCABAL ()Lcom/adyen/checkout/core/common/CardBrand;
-	public final fun getCARTEBANCAIRE ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCARTE_BANCAIRE ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCHINA_UNION_PAY ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getCODENSA ()Lcom/adyen/checkout/core/common/CardBrand;
-	public final fun getCUP ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getDANKORT ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getDINERS ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getDISCOVER ()Lcom/adyen/checkout/core/common/CardBrand;
@@ -240,12 +240,12 @@ public final class com/adyen/checkout/core/common/CardBrand$Companion {
 	public final fun getHIPER ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getHIPERCARD ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getJCB ()Lcom/adyen/checkout/core/common/CardBrand;
-	public final fun getKARENMILLER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getKAREN_MILLEN ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getLASER ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getMAESTRO ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getMAESTRO_UK ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getMASTERCARD ()Lcom/adyen/checkout/core/common/CardBrand;
-	public final fun getMCALPHABANKBONUS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMC_ALPHA_BANK_BONUS ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getMIR ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getNARANJA ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getOASIS ()Lcom/adyen/checkout/core/common/CardBrand;
@@ -254,8 +254,8 @@ public final class com/adyen/checkout/core/common/CardBrand$Companion {
 	public final fun getTROY ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getUATP ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getVISA ()Lcom/adyen/checkout/core/common/CardBrand;
-	public final fun getVISAALPHABANKBONUS ()Lcom/adyen/checkout/core/common/CardBrand;
-	public final fun getVISADANKORT ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISA_ALPHA_BANK_BONUS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISA_DANKORT ()Lcom/adyen/checkout/core/common/CardBrand;
 	public final fun getWAREHOUSE ()Lcom/adyen/checkout/core/common/CardBrand;
 }
 

@@ -217,7 +217,7 @@ internal class NetworkCardBrandDetectionServiceTest(
                 ),
                 listOf(
                     mockDetectedCardType(
-                        cardBrand = CardBrand.CARTEBANCAIRE,
+                        cardBrand = CardBrand.CARTE_BANCAIRE,
                         isShopperSelectionAllowedInDualBranded = true,
                     ),
                     mockDetectedCardType(
