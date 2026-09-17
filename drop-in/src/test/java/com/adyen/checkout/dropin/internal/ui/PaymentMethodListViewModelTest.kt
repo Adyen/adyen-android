@@ -9,14 +9,18 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
+import app.cash.turbine.test
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -30,6 +34,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
@@ -178,15 +183,69 @@ internal class PaymentMethodListViewModelTest {
         assertEquals(listOf(EmptyNavKey), navigator.backStack)
     }
 
+    @Test
+    fun `when stored payment methods are not hidden, then they have a section of their own`() = runTest {
+        val viewModel = createViewModel(listOf(CARD), storedPaymentMethods = listOf(STORED_CARD))
+
+        // The stored payment methods only reach the state once the repository's flow is collected, so the initial
+        // value of the state does not carry them yet.
+        viewModel.viewState.test {
+            val section = expectMostRecentItem().storedPaymentMethodSection
+            assertEquals(listOf(STORED_ID), section?.options.orEmpty().map { it.id })
+        }
+    }
+
+    @Test
+    fun `when stored payment methods are hidden, then the list has no section for them`() = runTest {
+        val viewModel = createViewModel(
+            listOf(CARD),
+            storedPaymentMethods = listOf(STORED_CARD),
+            dropInParams = createDropInParams(hideStoredPaymentMethods = true),
+        )
+
+        viewModel.viewState.test {
+            assertNull(expectMostRecentItem().storedPaymentMethodSection)
+        }
+    }
+
+    @Test
+    fun `when stored payment methods are hidden, then the payment options are titled as if there are none`() = runTest {
+        val viewModel = createViewModel(
+            listOf(CARD),
+            storedPaymentMethods = listOf(STORED_CARD),
+            dropInParams = createDropInParams(hideStoredPaymentMethods = true),
+        )
+
+        viewModel.viewState.test {
+            assertEquals(
+                CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE,
+                expectMostRecentItem().paymentOptionsSection?.title,
+            )
+        }
+    }
+
     private fun PaymentMethodListViewModel.listedPaymentMethodIds(): List<String> =
         viewState.value.paymentOptionsSection?.options.orEmpty().map { it.id }
 
-    private fun createViewModel(paymentMethods: List<PaymentMethod>) = PaymentMethodListViewModel(
+    private fun createViewModel(
+        paymentMethods: List<PaymentMethod>,
+        storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),
+        dropInParams: DropInParams = createDropInParams(),
+    ) = PaymentMethodListViewModel(
         checkoutParams = checkoutParams,
-        paymentMethodRepository = TestPaymentMethodRepository(paymentMethods = paymentMethods),
+        dropInParams = dropInParams,
+        paymentMethodRepository = TestPaymentMethodRepository(
+            storedMethods = storedPaymentMethods,
+            paymentMethods = paymentMethods,
+        ),
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
         navigator = navigator,
         controllerProvider = controllerProvider,
+    )
+
+    private fun createDropInParams(hideStoredPaymentMethods: Boolean = false) = DropInParams(
+        hideStoredPaymentMethods = hideStoredPaymentMethods,
+        startWithLastStoredPaymentMethod = true,
     )
 
     /**
@@ -200,6 +259,20 @@ internal class PaymentMethodListViewModelTest {
 
     private companion object {
         private const val CLIENT_KEY = "test_client_key"
+        private const val STORED_ID = "stored-id-1"
+
+        private val STORED_CARD = StoredCardPaymentMethod(
+            type = PaymentMethodTypes.SCHEME,
+            name = "Visa",
+            id = STORED_ID,
+            supportedShopperInteractions = listOf("Ecommerce"),
+            brand = "visa",
+            lastFour = "1234",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
+        )
 
         private val CARD = CardPaymentMethod(
             type = PaymentMethodTypes.SCHEME,

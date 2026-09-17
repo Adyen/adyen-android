@@ -201,6 +201,7 @@ private fun paymentMethodListViewModel(
     viewModelStoreOwner = viewModelStoreOwner,
     factory = PaymentMethodListViewModel.Factory(
         checkoutParams = viewModel.checkoutParams,
+        dropInParams = viewModel.dropInParams,
         paymentMethodRepository = viewModel.paymentMethodRepository,
         navigator = viewModel.navigator,
         controllerProvider = viewModel.controllerProvider,
