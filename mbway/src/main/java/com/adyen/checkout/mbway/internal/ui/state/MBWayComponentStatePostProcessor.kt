@@ -16,14 +16,18 @@ internal class MBWayComponentStatePostProcessor : ComponentStatePostProcessor<MB
 
     override fun processInitialState(state: MBWayComponentState) = state.focusFirstInvalid(showErrorIfPresent = false)
 
-    override fun process(state: MBWayComponentState, intent: MBWayIntent) = when (intent) {
-        is MBWayIntent.UpdateFieldFocus -> state.updateErrorVisibility(intent.id, intent.hasFocus)
-        is MBWayIntent.FocusRequestConsumed -> state.clearFocusRequest(intent.id)
+    override fun process(
+        previousState: MBWayComponentState,
+        currentState: MBWayComponentState,
+        intent: MBWayIntent,
+    ) = when (intent) {
+        is MBWayIntent.UpdateFieldFocus -> currentState.updateErrorVisibility(intent.id, intent.hasFocus)
+        is MBWayIntent.FocusRequestConsumed -> currentState.clearFocusRequest(intent.id)
 
         is MBWayIntent.HighlightValidationErrors ->
-            state.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
+            currentState.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
 
-        else -> state
+        else -> currentState
     }
 
     private fun MBWayComponentState.focusFirstInvalid(showErrorIfPresent: Boolean) = copy(

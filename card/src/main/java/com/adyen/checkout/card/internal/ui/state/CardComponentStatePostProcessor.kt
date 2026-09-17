@@ -16,15 +16,19 @@ internal class CardComponentStatePostProcessor : ComponentStatePostProcessor<Car
 
     override fun processInitialState(state: CardComponentState) = state.focusFirstInvalid(showErrorIfPresent = false)
 
-    override fun process(state: CardComponentState, intent: CardIntent) = when (intent) {
-        is CardIntent.UpdateFieldFocus -> state.updateErrorVisibility(intent.id, intent.hasFocus)
-        is CardIntent.FocusRequestConsumed -> state.clearFocusRequest(intent.id)
-        is CardIntent.UpdateCardScanResult -> state.focusFirstInvalid(showErrorIfPresent = false)
+    override fun process(
+        previousState: CardComponentState,
+        currentState: CardComponentState,
+        intent: CardIntent,
+    ) = when (intent) {
+        is CardIntent.UpdateFieldFocus -> currentState.updateErrorVisibility(intent.id, intent.hasFocus)
+        is CardIntent.FocusRequestConsumed -> currentState.clearFocusRequest(intent.id)
+        is CardIntent.UpdateCardScanResult -> currentState.focusFirstInvalid(showErrorIfPresent = false)
 
         is CardIntent.HighlightValidationErrors ->
-            state.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
+            currentState.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
 
-        else -> state
+        else -> currentState
     }
 
     private fun CardComponentState.focusFirstInvalid(showErrorIfPresent: Boolean) = copy(
