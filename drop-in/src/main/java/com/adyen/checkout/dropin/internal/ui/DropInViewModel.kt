@@ -17,7 +17,10 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.common.internal.publicKey
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
@@ -37,6 +40,8 @@ internal class DropInViewModel(
     val controllerProvider: DropInControllerProvider,
     private val dropInServiceManager: DropInServiceManager,
 ) : ViewModel() {
+
+    val checkoutParams: CheckoutParams = createCheckoutParams()
 
     lateinit var dropInParams: DropInParams
 
@@ -58,6 +63,14 @@ internal class DropInViewModel(
         paymentMethodRepository = DefaultPaymentMethodRepository(
             paymentMethods = input.checkoutContext.getPaymentMethods(),
             storedPaymentMethods = input.checkoutContext.getStoredPaymentMethods(),
+        )
+    }
+
+    private fun createCheckoutParams(): CheckoutParams {
+        return CheckoutParamsFactory().create(
+            configuration = input.checkoutContext.checkoutConfiguration,
+            session = (input.checkoutContext as? CheckoutContext.Sessions)?.checkoutSession,
+            publicKey = input.checkoutContext.publicKey,
         )
     }
 
