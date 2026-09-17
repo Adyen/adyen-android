@@ -141,4 +141,75 @@ internal class FormStateExtTest {
             assertNull(request)
         }
     }
+
+    @Nested
+    inner class RequestFocusOnFirstInvalidTextInputAfterElementTest {
+
+        @Test
+        fun `when valid and non text elements follow, then the first invalid text input is requested`() {
+            // GIVEN
+            val form = FormState(
+                elements = listOf(
+                    valid(NUMBER),
+                    valid(VERIFICATION_CODE),
+                    invalid(STORE_DETAILS),
+                    invalid(HOLDER_NAME),
+                ),
+            )
+
+            // WHEN
+            val request = form.requestFocusOnFirstInvalidTextInput(
+                showErrorIfPresent = false,
+                afterElementId = NUMBER,
+            )
+
+            // THEN
+            assertEquals(FocusRequest(HOLDER_NAME), request)
+        }
+
+        @Test
+        fun `when an invalid text input comes before the current element, then it is not requested`() {
+            // GIVEN
+            val form = FormState(elements = listOf(invalid(NUMBER), valid(VERIFICATION_CODE), valid(HOLDER_NAME)))
+
+            // WHEN
+            val request = form.requestFocusOnFirstInvalidTextInput(
+                showErrorIfPresent = false,
+                afterElementId = VERIFICATION_CODE,
+            )
+
+            // THEN
+            assertNull(request)
+        }
+
+        @Test
+        fun `when no invalid text input follows, then no focus is requested`() {
+            // GIVEN
+            val form = FormState(elements = listOf(valid(NUMBER), invalid(VERIFICATION_CODE)))
+
+            // WHEN
+            val request = form.requestFocusOnFirstInvalidTextInput(
+                showErrorIfPresent = false,
+                afterElementId = VERIFICATION_CODE,
+            )
+
+            // THEN
+            assertNull(request)
+        }
+
+        @Test
+        fun `when the after element is absent, then the first invalid input is requested`() {
+            // GIVEN
+            val form = FormState(elements = listOf(invalid(HOLDER_NAME)))
+
+            // WHEN
+            val request = form.requestFocusOnFirstInvalidTextInput(
+                showErrorIfPresent = false,
+                afterElementId = NUMBER,
+            )
+
+            // THEN
+            assertEquals(FocusRequest(HOLDER_NAME), request)
+        }
+    }
 }
