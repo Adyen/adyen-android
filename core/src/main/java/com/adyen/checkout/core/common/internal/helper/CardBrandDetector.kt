@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.common.CardBrand
 import java.util.regex.Pattern
 
@@ -68,6 +69,10 @@ object CardBrandDetector {
         CardBrand.VISA to Pattern.compile("^4[0-9]{0,18}$"),
         CardBrand.VISADANKORT to Pattern.compile("^(4571)[0-9]{0,12}$"),
     )
+
+    @VisibleForTesting
+    internal val brands: Set<CardBrand>
+        get() = REGEXES.keys
 
     /**
      * Estimate all potential [CardBrands][CardBrand] for a given card number.
