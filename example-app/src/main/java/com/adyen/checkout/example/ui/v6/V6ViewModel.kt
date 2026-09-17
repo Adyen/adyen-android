@@ -20,6 +20,7 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.card
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -175,6 +176,10 @@ internal class V6ViewModel @Inject constructor(
         return AdditionalDetailsResult.Completion(resultCode)
     }
 
+    private fun onAction(actionData: ActionData) {
+        Log.d(TAG, "onAction - Action type: ${actionData.type}")
+    }
+
     private fun onFailure(error: CheckoutError) {
         uiState = V6UiState.Error(UIText.String(error.message.orEmpty()))
     }
@@ -215,6 +220,7 @@ internal class V6ViewModel @Inject constructor(
             callbacks = AdvancedCheckoutCallbacks(
                 onSubmit = ::onSubmit,
                 onAdditionalDetails = ::onAdditionalDetails,
+                onAction = ::onAction,
                 onFailure = ::onFailure,
                 onComplete = ::onComplete,
             ) {

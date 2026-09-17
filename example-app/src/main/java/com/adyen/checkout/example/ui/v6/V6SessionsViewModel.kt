@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.card
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -121,6 +122,10 @@ internal class V6SessionsViewModel @Inject constructor(
         Log.d(TAG, "Bin Lookup Data received: $binLookupData")
     }
 
+    private fun onAction(actionData: ActionData) {
+        Log.d(TAG, "onAction - Action type: ${actionData.type}")
+    }
+
     private fun onFailure(error: CheckoutError) {
         Log.d(TAG, "onFailure: ${error.message}")
         uiState = V6UiState.Final(ResultState.FAILURE)
@@ -163,6 +168,7 @@ internal class V6SessionsViewModel @Inject constructor(
             callbacks = SessionCheckoutCallbacks(
                 onFailure = ::onFailure,
                 onComplete = ::onComplete,
+                onAction = ::onAction,
                 onBeforeSubmit = ::onBeforeSubmit,
             ) {
                 card(
