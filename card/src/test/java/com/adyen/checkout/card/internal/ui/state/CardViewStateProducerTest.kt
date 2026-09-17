@@ -16,6 +16,7 @@ import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -765,6 +766,22 @@ internal class CardViewStateProducerTest {
         // THEN
         assertNull(viewState.installmentPickerViewState)
         assertNull(viewState.element<CardFormElement.Installments>())
+    }
+
+    @Test
+    fun `when focus is requested, then only the requested field receives a focus token`() {
+        // GIVEN
+        val componentState = createComponentState().copy(
+            focusRequest = FocusRequest(CardFormElementId.SECURITY_CODE),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertFalse(viewState.cardNumber?.isFocusRequested == true)
+        assertFalse(viewState.expiryDate?.isFocusRequested == true)
+        assertTrue(viewState.securityCode?.isFocusRequested == true)
     }
 
     @Test

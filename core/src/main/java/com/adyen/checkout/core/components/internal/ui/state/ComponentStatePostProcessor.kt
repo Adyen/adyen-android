@@ -15,8 +15,6 @@ import androidx.annotation.RestrictTo
  *
  * Must not have side effects. The state update it runs in can be executed more than once.
  */
-// TODO - Form fields phase 5: card is the first component to implement this, for its focus requests. Until then
-// every component gets NoPostProcessing and the stage changes nothing.
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ComponentStatePostProcessor<C : ComponentState, I : ComponentStateIntent> {
 
