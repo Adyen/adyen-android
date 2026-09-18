@@ -10,7 +10,7 @@ package com.adyen.checkout.core.components.data.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.CheckoutCurrency
+import com.adyen.checkout.core.common.internal.helper.AmountFormat
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import kotlinx.parcelize.Parcelize
@@ -53,11 +53,10 @@ data class Amount(
 fun Amount.format(locale: Locale): String {
     return runCatching {
         val currencyCode = currency
-        val checkoutCurrency = CheckoutCurrency.find(currencyCode)
         val currency = Currency.getInstance(currencyCode)
         val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
         currencyFormat.currency = currency
-        val fractionDigits = checkoutCurrency?.fractionDigits ?: 0
+        val fractionDigits = AmountFormat.getFractionDigits(currencyCode)
         currencyFormat.minimumFractionDigits = fractionDigits
         currencyFormat.maximumFractionDigits = fractionDigits
         val value = BigDecimal.valueOf(value, fractionDigits)

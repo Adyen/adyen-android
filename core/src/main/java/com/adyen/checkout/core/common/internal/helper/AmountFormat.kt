@@ -9,7 +9,6 @@ package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.CheckoutCurrency
 import com.adyen.checkout.core.components.data.model.Amount
 import java.math.BigDecimal
 import java.util.Currency
@@ -26,7 +25,7 @@ object AmountFormat {
      */
     @JvmStatic
     fun toBigDecimal(amount: Amount): BigDecimal {
-        return toBigDecimal(amount.value, amount.currency!!)
+        return toBigDecimal(amount.value, amount.currency)
     }
 
     /**
@@ -41,7 +40,7 @@ object AmountFormat {
         return BigDecimal.valueOf(value, fractionDigits)
     }
 
-    private fun getFractionDigits(currencyCode: String): Int {
+    internal fun getFractionDigits(currencyCode: String): Int {
         val normalizedCurrencyCode = currencyCode.replace("[^A-Z]".toRegex(), "").uppercase(Locale.ROOT)
         val checkoutCurrency = CheckoutCurrency.find(normalizedCurrencyCode)
         checkoutCurrency?.fractionDigits?.let { return it }
