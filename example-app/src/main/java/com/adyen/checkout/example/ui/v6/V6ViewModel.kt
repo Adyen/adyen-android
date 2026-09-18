@@ -20,6 +20,7 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.card
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -139,6 +140,10 @@ internal class V6ViewModel @Inject constructor(
         return handleSubmitResponse(response)
     }
 
+    private fun onAction(actionData: ActionData) {
+        Log.d(TAG, "onAction - Action type: ${actionData.type}")
+    }
+
     private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         val request = ActionComponentData.SERIALIZER.serialize(data)
         val response = paymentsRepository.makeDetailsRequest(request)
@@ -214,6 +219,7 @@ internal class V6ViewModel @Inject constructor(
             context = checkoutContext,
             callbacks = AdvancedCheckoutCallbacks(
                 onSubmit = ::onSubmit,
+                onAction = ::onAction,
                 onAdditionalDetails = ::onAdditionalDetails,
                 onFailure = ::onFailure,
                 onComplete = ::onComplete,

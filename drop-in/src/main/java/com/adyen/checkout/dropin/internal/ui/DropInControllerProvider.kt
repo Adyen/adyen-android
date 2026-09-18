@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.withCheckoutConfiguration
 import com.adyen.checkout.core.components.AdditionalDetailsResult
@@ -62,6 +63,7 @@ internal class DefaultDropInControllerProvider(
                     context = checkoutContext,
                     callbacks = AdvancedCheckoutCallbacks(
                         onSubmit = ::onSubmit,
+                        onAction = ::onAction,
                         onAdditionalDetails = ::onAdditionalDetails,
                         onFailure = { error -> onFailure(coroutineScope, error) },
                     ),
@@ -74,9 +76,10 @@ internal class DefaultDropInControllerProvider(
                     target = target,
                     context = checkoutContext,
                     callbacks = SessionCheckoutCallbacks(
-                        onBeforeSubmit = ::onBeforeSubmit,
-                        onFailure = { error -> onFailure(coroutineScope, error) },
+                        onAction = ::onAction,
                         onComplete = { result -> onComplete(coroutineScope, result) },
+                        onFailure = { error -> onFailure(coroutineScope, error) },
+                        onBeforeSubmit = ::onBeforeSubmit,
                     ),
                     coroutineScope = coroutineScope,
                 )
@@ -105,6 +108,11 @@ internal class DefaultDropInControllerProvider(
 
     private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): SubmitResult {
         return dropInServiceManager.requestOnSubmit(paymentComponentData)
+    }
+
+    @Suppress("UnusedParameter")
+    private fun onAction(actionData: ActionData) {
+        // TODO - Forward to DropInService once an action callback is added to it
     }
 
     private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {

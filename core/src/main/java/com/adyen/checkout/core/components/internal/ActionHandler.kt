@@ -12,6 +12,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
@@ -34,6 +35,7 @@ internal class ActionHandler(
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
     private val params: CheckoutParams,
+    private val onAction: (ActionData) -> Unit,
 ) {
 
     var actionComponent: ActionComponent? = null
@@ -75,6 +77,8 @@ internal class ActionHandler(
                 }
             }
             .launchIn(coroutineScope)
+
+        onAction(ActionData(action.type))
 
         actionComponent.handleAction()
     }

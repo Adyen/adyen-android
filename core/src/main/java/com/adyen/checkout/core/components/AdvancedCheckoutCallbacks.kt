@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.error.CheckoutError
 
@@ -17,6 +18,8 @@ import com.adyen.checkout.core.error.CheckoutError
  *
  * @param onSubmit Called after component validation, when the shopper submits the payment. Make a network call to the
  * `/payments` endpoint of the Checkout API through your server, and return the result as a [SubmitResult].
+ * @param onAction Called when the SDK is about to handle an action. Display the [CheckoutAction] Composable to let the
+ * shopper proceed with the flow.
  * @param onAdditionalDetails Called when additional details are required to complete the payment (for example after
  * an action). Make a network call to the `/payments/details` endpoint of the Checkout API through your server, and
  * return the result as an [AdditionalDetailsResult].
@@ -26,6 +29,7 @@ import com.adyen.checkout.core.error.CheckoutError
  */
 class AdvancedCheckoutCallbacks(
     internal val onSubmit: suspend (data: PaymentComponentData<*>) -> SubmitResult,
+    internal val onAction: (actionData: ActionData) -> Unit,
     internal val onAdditionalDetails: suspend (data: ActionComponentData) -> AdditionalDetailsResult,
     internal val onFailure: (CheckoutError) -> Unit,
     internal val onComplete: (result: AdvancedCheckoutResult) -> Unit = {},

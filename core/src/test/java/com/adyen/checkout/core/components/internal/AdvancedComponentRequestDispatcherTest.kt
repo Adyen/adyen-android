@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
@@ -98,6 +99,20 @@ internal class AdvancedComponentRequestDispatcherTest {
     }
 
     @Nested
+    inner class ActionTest {
+
+        @Test
+        fun `when action is called, then onAction callback is invoked with ActionData`() {
+            val capturedActions = mutableListOf<ActionData>()
+            val dispatcher = createDispatcher(onAction = { capturedActions += it })
+
+            dispatcher.action(ActionData(type = "redirect"))
+
+            assertEquals(listOf(ActionData(type = "redirect")), capturedActions)
+        }
+    }
+
+    @Nested
     inner class ErrorTest {
 
         @Test
@@ -114,6 +129,7 @@ internal class AdvancedComponentRequestDispatcherTest {
 
     private fun createDispatcher(
         onSubmit: suspend (PaymentComponentData<*>) -> SubmitResult = { SubmitResult.Completion("") },
+        onAction: (ActionData) -> Unit = {},
         onAdditionalDetails: suspend (ActionComponentData) -> AdditionalDetailsResult = {
             AdditionalDetailsResult.Completion("")
         },
@@ -122,6 +138,7 @@ internal class AdvancedComponentRequestDispatcherTest {
     ): AdvancedComponentRequestDispatcher = AdvancedComponentRequestDispatcher(
         callbacks = AdvancedCheckoutCallbacks(
             onSubmit = onSubmit,
+            onAction = onAction,
             onAdditionalDetails = onAdditionalDetails,
             onFailure = onFailure,
             onComplete = onComplete,

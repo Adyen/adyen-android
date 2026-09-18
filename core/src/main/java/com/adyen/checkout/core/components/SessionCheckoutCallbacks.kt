@@ -8,12 +8,15 @@
 
 package com.adyen.checkout.core.components
 
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.error.CheckoutError
 
 /**
  * Callbacks used during a payment using the sessions flow.
  *
+ * @param onAction Called when the SDK is about to handle an action. Display the [CheckoutAction] Composable to let the
+ * shopper proceed with the flow.
  * @param onComplete Called when the payment is completed.
  * @param onFailure Called when an error occurs.
  * @param onBeforeSubmit Called after component validation and before the SDK submits the sessions `/payments` request.
@@ -21,6 +24,7 @@ import com.adyen.checkout.core.error.CheckoutError
  * Return [BeforeSubmitResult.Abort] to stop submission without triggering [onFailure].
  */
 class SessionCheckoutCallbacks(
+    internal val onAction: (actionData: ActionData) -> Unit,
     internal val onComplete: (result: SessionCheckoutResult) -> Unit,
     internal val onFailure: (CheckoutError) -> Unit,
     internal val onBeforeSubmit: (suspend (data: BeforeSubmitData) -> BeforeSubmitResult)? = null,

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
@@ -43,6 +44,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
@@ -164,6 +167,58 @@ internal class ActionHandlerTest(
     }
 
     @Nested
+    inner class OnActionTest {
+
+        private val capturedActions = mutableListOf<ActionData>()
+
+        @ParameterizedTest
+        @ValueSource(strings = ["redirect", "nativeRedirect", "threeDS2", "sdk", "qrCode", "await", "voucher"])
+        fun `when handleAction is called, then onAction is called with the action type`(actionType: String) {
+            registerTestFactory(actionType)
+            val actionHandler = createActionHandler(onAction = { capturedActions += it })
+
+            actionHandler.handleAction(TestAction(type = actionType))
+
+            assertEquals(listOf(ActionData(actionType)), capturedActions)
+        }
+
+        @Test
+        fun `when handleAction is called, then onAction is called before the component handles the action`() {
+            var handleActionCallCountOnAction: Int? = null
+            lateinit var actionHandler: ActionHandler
+            actionHandler = createActionHandler(
+                onAction = {
+                    handleActionCallCountOnAction =
+                        (actionHandler.actionComponent as ControllableActionComponent).handleActionCallCount
+                },
+            )
+
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            assertEquals(0, handleActionCallCountOnAction)
+        }
+
+        @Test
+        fun `when handleAction is called twice, then onAction is called twice`() {
+            val actionHandler = createActionHandler(onAction = { capturedActions += it })
+
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            assertEquals(List(2) { ActionData(TEST_ACTION_TYPE) }, capturedActions)
+        }
+
+        @Test
+        fun `when the action type is not registered, then onAction is not called`() {
+            val actionHandler = createActionHandler(onAction = { capturedActions += it })
+
+            actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
+
+            assertEquals(emptyList<ActionData>(), capturedActions)
+        }
+    }
+
+    @Nested
     inner class ActionDetailsEventTest {
 
         @Test
@@ -255,9 +310,9 @@ internal class ActionHandlerTest(
         )
     }
 
-    private fun registerTestFactory() {
+    private fun registerTestFactory(actionType: String = TEST_ACTION_TYPE) {
         ActionComponentProvider.register(
-            TEST_ACTION_TYPE,
+            actionType,
             object : ActionFactory<Action, ActionComponent> {
                 override fun create(
                     action: Action,
@@ -270,11 +325,14 @@ internal class ActionHandlerTest(
         )
     }
 
-    private fun createActionHandler() = ActionHandler(
+    private fun createActionHandler(
+        onAction: (ActionData) -> Unit = {},
+    ) = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
         coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         analyticsManager = TestAnalyticsManager(),
         params = generateCheckoutParams(),
+        onAction = onAction,
     )
 
     private fun generateCheckoutParams() = CheckoutParams(

@@ -84,6 +84,7 @@ Register card-specific callbacks through the checkout callbacks block:
 ```kotlin
 val callbacks = AdvancedCheckoutCallbacks(
     onSubmit = { data -> callPayments(data) },
+    onAction = { actionData -> displayAction(actionData.type) },
     onAdditionalDetails = { data -> callDetails(data) },
     onFailure = { error -> showError(error.message.orEmpty()) },
 ) {

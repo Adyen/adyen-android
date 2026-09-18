@@ -39,6 +39,9 @@ lifecycleScope.launch {
                     onSubmit = { data ->
                         callPayments(data)
                     },
+                    onAction = { actionData ->
+                        displayAction(actionData.type)
+                    },
                     onAdditionalDetails = { data ->
                         callDetails(data)
                     },

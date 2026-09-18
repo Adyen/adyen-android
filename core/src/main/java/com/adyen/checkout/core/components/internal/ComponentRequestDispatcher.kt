@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SubmitResult
@@ -26,4 +27,6 @@ internal interface ComponentRequestDispatcher {
 
 internal interface SubmittableComponentRequestDispatcher : ComponentRequestDispatcher {
     suspend fun submit(data: PaymentComponentData<*>): SubmitResult
+
+    fun action(actionData: ActionData)
 }
