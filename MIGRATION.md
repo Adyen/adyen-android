@@ -110,17 +110,26 @@ class ExampleViewModel : ViewModel(), ComponentCallback<CardComponentState> {
 ```kotlin
 class CardActivity : AppCompatActivity() {
     private var checkoutController by mutableStateOf<CheckoutController?>(null)
+    private var isHandlingAction by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             checkoutController?.let { controller ->
-                CheckoutPaymentFlow(
-                    controller = controller,
-                    theme = theme,
-                    localizationProvider = localizationProvider,
-                )
+                if (isHandlingAction) {
+                    CheckoutAction(
+                        controller = controller,
+                        theme = theme,
+                        localizationProvider = localizationProvider,
+                    )
+                } else {
+                    CheckoutPaymentMethod(
+                        controller = controller,
+                        theme = theme,
+                        localizationProvider = localizationProvider,
+                    )
+                }
             }
         }
 
@@ -135,8 +144,8 @@ class CardActivity : AppCompatActivity() {
                             onSubmit = { data ->
                                 callPayments(data)
                             },
-                            onAction = { actionData ->
-                                displayAction(actionData.type)
+                            onAction = {
+                                isHandlingAction = true
                             },
                             onAdditionalDetails = { data ->
                                 callDetails(data)
@@ -156,7 +165,7 @@ class CardActivity : AppCompatActivity() {
 }
 ```
 
-This is one minimal host pattern. Keep the `CheckoutController` in state, then render `CheckoutPaymentFlow(...)` from your `@Composable` UI once setup succeeds.
+This is one minimal host pattern. Keep the `CheckoutController` in state, then render `CheckoutPaymentMethod(...)` from your `@Composable` UI once setup succeeds, and switch to `CheckoutAction(...)` when `onAction` reports that an action is being handled.
 
 For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-advanced-flow.md).
 
@@ -167,7 +176,7 @@ For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-ad
 - `CheckoutContext.Sessions` and `CheckoutContext.Advanced` represent the initialized flow state.
 - `CheckoutContext.getPaymentMethods()` and `getStoredPaymentMethods()` expose non-null method lists across checkout flows.
 - `CheckoutController(...)` binds a checkout target and callbacks for rendering.
-- `CheckoutPaymentFlow(...)` becomes the main Compose rendering entry point.
+- `CheckoutPaymentMethod(...)` and `CheckoutAction(...)` become the Compose rendering entry points, switched by the required `onAction` callback.
 
 ### Card component
 
@@ -231,21 +240,29 @@ binding.cardView.attach(cardComponent, activity)
 
 ##### After (v6)
 
-Rendering now happens from your Compose UI layer once your state holder has a `CheckoutController`:
+Rendering now happens from your Compose UI layer once your state holder has a `CheckoutController`. Render the payment method until `onAction` reports an action, and the action from that point on:
 
 ```kotlin
-CheckoutPaymentFlow(
-    controller = controller,
-    theme = theme,
-    localizationProvider = localizationProvider,
-)
+if (isHandlingAction) {
+    CheckoutAction(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+} else {
+    CheckoutPaymentMethod(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+}
 ```
 
 #### Theme and localization migration
 
-- Theme customization moves from legacy XML-oriented guidance to `CheckoutTheme` passed to `CheckoutPaymentFlow(...)`.
+- Theme customization moves from legacy XML-oriented guidance to `CheckoutTheme` passed to the composable you render.
 - Locale selection still starts from `shopperLocale` on `CheckoutConfiguration`.
-- Targeted string overrides move to `CheckoutLocalizationProvider` or `StringResourceLocalizationProvider` passed to `CheckoutPaymentFlow(...)`.
+- Targeted string overrides move to `CheckoutLocalizationProvider` or `StringResourceLocalizationProvider` passed to the composable you render.
 
 ### Google Pay
 
@@ -284,7 +301,7 @@ val configuration = CheckoutConfiguration(
 
 #### Flow migration
 
-Google Pay now follows the same `Checkout.setup(...)` + `CheckoutController(...)` + `CheckoutPaymentFlow(...)` host pattern as the other public v6 payment methods.
+Google Pay now follows the same `Checkout.setup(...)` + `CheckoutController(...)` + `CheckoutPaymentMethod(...)` host pattern as the other public v6 payment methods.
 
 ```kotlin
 lifecycleScope.launch {
@@ -298,8 +315,8 @@ lifecycleScope.launch {
                     onSubmit = { data ->
                         callPayments(data)
                     },
-                    onAction = { actionData ->
-                        displayAction(actionData.type)
+                    onAction = {
+                        isHandlingAction = true
                     },
                     onAdditionalDetails = { data ->
                         callDetails(data)

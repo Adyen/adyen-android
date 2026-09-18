@@ -20,7 +20,7 @@ The public integration surface is centered around four concepts:
 - `Checkout.setup(...)` initializes the checkout flow.
 - `CheckoutConfiguration` is the shared configuration container.
 - `CheckoutController(...)` binds a checkout target to callbacks for either sessions or advanced flow.
-- `CheckoutPaymentFlow(...)` renders the Compose UI for the active checkout controller.
+- `CheckoutPaymentMethod(...)` and `CheckoutAction(...)` render the Compose UI for the active checkout controller.
 
 Depending on the flow, `Checkout.setup(...)` returns either `CheckoutContext.Sessions` or `CheckoutContext.Advanced`.
 
@@ -43,9 +43,10 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.AnalyticsConfiguration
 import com.adyen.checkout.core.components.AnalyticsLevel
 import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.CheckoutAction
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutPaymentFlow
+import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import java.util.Locale
@@ -107,7 +108,7 @@ lifecycleScope.launch {
 }
 ```
 
-For a complete card example that creates `CheckoutController(...)` and renders `CheckoutPaymentFlow(...)`, see [card-session-flow.md](card-session-flow.md).
+For a complete card example that creates `CheckoutController(...)` and renders the checkout UI, see [card-session-flow.md](card-session-flow.md).
 
 ## Advanced flow
 
@@ -127,7 +128,7 @@ lifecycleScope.launch {
 }
 ```
 
-For a complete card example that wires `AdvancedCheckoutCallbacks(...)` and renders `CheckoutPaymentFlow(...)`, see [card-advanced-flow.md](card-advanced-flow.md).
+For a complete card example that wires `AdvancedCheckoutCallbacks(...)` and renders the checkout UI, see [card-advanced-flow.md](card-advanced-flow.md).
 
 ## Available payment methods
 
@@ -142,15 +143,35 @@ Both accessors return non-null lists and preserve the response order. They retur
 
 ## Rendering the Compose flow
 
-Render the public Compose UI with `CheckoutPaymentFlow(...)` from your `@Composable` UI:
+Rendering is split into two composables, and the required `onAction` callback tells you when to switch between them. Render `CheckoutPaymentMethod(...)` while the shopper provides input, and `CheckoutAction(...)` once `onAction` reports that an action is being handled:
 
 ```kotlin
-CheckoutPaymentFlow(
-    controller = controller,
-    theme = theme,
-    localizationProvider = localizationProvider,
-)
+var isHandlingAction by remember { mutableStateOf(false) }
+
+if (isHandlingAction) {
+    CheckoutAction(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+} else {
+    CheckoutPaymentMethod(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+}
 ```
+
+Set the flag from the `onAction` callback you pass to `AdvancedCheckoutCallbacks(...)` or `SessionCheckoutCallbacks(...)`:
+
+```kotlin
+onAction = {
+    isHandlingAction = true
+},
+```
+
+The action does not progress until you render `CheckoutAction(...)`, because that composable hosts the launcher an action needs. Secondary screens of a payment method, such as pickers, are drawn on top of `CheckoutPaymentMethod(...)` without any extra handling.
 
 ## Theme
 
@@ -173,7 +194,7 @@ val localizationProvider = StringResourceLocalizationProvider(
     ),
 )
 
-CheckoutPaymentFlow(
+CheckoutPaymentMethod(
     controller = controller,
     theme = theme,
     localizationProvider = localizationProvider,
