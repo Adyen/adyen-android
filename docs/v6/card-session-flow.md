@@ -33,8 +33,8 @@ lifecycleScope.launch {
                 target = CheckoutTarget.PaymentMethod(PaymentMethodTypes.SCHEME),
                 context = result.checkoutContext,
                 callbacks = SessionCheckoutCallbacks(
-                    onAction = { actionData ->
-                        displayAction(actionData.type)
+                    onAction = {
+                        isHandlingAction = true
                     },
                     onComplete = { checkoutResult ->
                         showSuccess(checkoutResult.resultCode.value)
@@ -68,15 +68,25 @@ When you use `/sessions`, some card settings are determined by the session inste
 
 Configure these values in your `/sessions` request and do not rely on component-level values to override them.
 
-Once you have the controller, render it from your `@Composable` UI with `CheckoutPaymentFlow(...)`. Pass a `CheckoutTheme` and optional `CheckoutLocalizationProvider` when you render the flow. See [theme.md](theme.md) and [README.md](README.md#localization).
+Once you have the controller, render it from your `@Composable` UI, switching to the action once `onAction` has set `isHandlingAction`. Pass a `CheckoutTheme` and optional `CheckoutLocalizationProvider` when you render. See [theme.md](theme.md) and [README.md](README.md#localization).
 
 ```kotlin
-CheckoutPaymentFlow(
-    controller = controller,
-    theme = theme,
-    localizationProvider = localizationProvider,
-)
+if (isHandlingAction) {
+    CheckoutAction(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+} else {
+    CheckoutPaymentMethod(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+}
 ```
+
+See [README.md](README.md#rendering-the-compose-flow) for the full rendering contract.
 
 ## Complete working example
 
