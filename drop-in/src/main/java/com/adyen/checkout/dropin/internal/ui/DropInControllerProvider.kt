@@ -36,10 +36,12 @@ internal fun interface DropInControllerProvider {
     /**
      * @param paymentFlowType The payment method the flow is started for.
      * @param coroutineScope The scope tied to the lifetime of the flow. Cancelling it tears the flow down.
+     * @param onAction Called when the flow is about to handle an action, before the action component starts.
      */
     fun provide(
         paymentFlowType: DropInPaymentFlowType,
         coroutineScope: CoroutineScope,
+        onAction: (ActionData) -> Unit,
     ): CheckoutController
 }
 
@@ -53,6 +55,7 @@ internal class DefaultDropInControllerProvider(
     override fun provide(
         paymentFlowType: DropInPaymentFlowType,
         coroutineScope: CoroutineScope,
+        onAction: (ActionData) -> Unit,
     ): CheckoutController {
         val target = createTarget(paymentFlowType)
 
@@ -63,7 +66,7 @@ internal class DefaultDropInControllerProvider(
                     context = checkoutContext,
                     callbacks = AdvancedCheckoutCallbacks(
                         onSubmit = ::onSubmit,
-                        onAction = ::onAction,
+                        onAction = onAction,
                         onAdditionalDetails = ::onAdditionalDetails,
                         onFailure = { error -> onFailure(coroutineScope, error) },
                     ),
@@ -76,7 +79,7 @@ internal class DefaultDropInControllerProvider(
                     target = target,
                     context = checkoutContext,
                     callbacks = SessionCheckoutCallbacks(
-                        onAction = ::onAction,
+                        onAction = onAction,
                         onComplete = { result -> onComplete(coroutineScope, result) },
                         onFailure = { error -> onFailure(coroutineScope, error) },
                         onBeforeSubmit = ::onBeforeSubmit,
@@ -108,11 +111,6 @@ internal class DefaultDropInControllerProvider(
 
     private suspend fun onSubmit(paymentComponentData: PaymentComponentData<*>): SubmitResult {
         return dropInServiceManager.requestOnSubmit(paymentComponentData)
-    }
-
-    @Suppress("UnusedParameter")
-    private fun onAction(actionData: ActionData) {
-        // TODO - Forward to DropInService once an action callback is added to it
     }
 
     private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {

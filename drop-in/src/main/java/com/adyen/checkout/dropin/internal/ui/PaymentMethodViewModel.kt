@@ -14,7 +14,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
@@ -23,8 +22,6 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.launch
 
 /**
  * Owns the [CheckoutController] that drives the payment flow of a single payment method, on top of the state its
@@ -48,7 +45,11 @@ internal class PaymentMethodViewModel(
     controllerProvider: DropInControllerProvider,
 ) : ViewModel() {
 
-    val controller: CheckoutController = controllerProvider.provide(paymentFlowType, viewModelScope)
+    val controller: CheckoutController = controllerProvider.provide(
+        paymentFlowType = paymentFlowType,
+        coroutineScope = viewModelScope,
+        onAction = { navigateToAction() },
+    )
 
     private val paymentMethod = resolvePaymentMethod()
 
@@ -57,7 +58,6 @@ internal class PaymentMethodViewModel(
     val actionViewState: ActionViewState = createActionViewState()
 
     init {
-        observeNavigation()
         startPaymentIfNothingToConfirm()
     }
 
@@ -69,22 +69,8 @@ internal class PaymentMethodViewModel(
         controller.submit()
     }
 
-    /**
-     * [CheckoutController.navigation] has no replay, so the subscription has to be active before anything can be
-     * submitted on the controller. [CoroutineStart.UNDISPATCHED] guarantees that by running the collection before the
-     * constructor returns.
-     */
-    private fun observeNavigation() {
-        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
-            controller.navigation.collect { route ->
-                when (route) {
-                    is CheckoutRoute.Action -> navigator.clearAndNavigateTo(
-                        ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD),
-                    )
-                    else -> Unit
-                }
-            }
-        }
+    private fun navigateToAction() {
+        navigator.clearAndNavigateTo(ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD))
     }
 
     private fun resolvePaymentMethod(): PaymentMethodResponse {

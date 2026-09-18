@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PayByBankUSPaymentMethod
@@ -27,12 +26,10 @@ import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodListSection
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 internal class PaymentMethodListViewModel(
     private val dropInParams: DropInParams,
@@ -53,10 +50,6 @@ internal class PaymentMethodListViewModel(
     //  there is a structure for checking payment method availability.
     val instantPaymentMethod: InstantPaymentMethod? = createInstantPaymentMethod(controllerProvider)
 
-    init {
-        observeInstantPaymentMethodNavigation()
-    }
-
     fun findInstantPaymentMethod(paymentFlowType: DropInPaymentFlowType): InstantPaymentMethod? =
         instantPaymentMethod?.takeIf { it.paymentFlowType == paymentFlowType }
 
@@ -68,7 +61,11 @@ internal class PaymentMethodListViewModel(
 
         return InstantPaymentMethod(
             paymentFlowType = paymentFlowType,
-            controller = controllerProvider.provide(paymentFlowType, viewModelScope),
+            controller = controllerProvider.provide(
+                paymentFlowType = paymentFlowType,
+                coroutineScope = viewModelScope,
+                onAction = { navigateToAction(paymentFlowType) },
+            ),
             actionViewState = ActionViewState(
                 logoTxVariant = PaymentMethodFormatter.getIcon(paymentMethod),
                 paymentMethodName = paymentMethod.name,
@@ -76,20 +73,8 @@ internal class PaymentMethodListViewModel(
         )
     }
 
-    private fun observeInstantPaymentMethodNavigation() {
-        val instant = instantPaymentMethod ?: return
-
-        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
-            instant.controller.navigation.collect { route ->
-                when (route) {
-                    is CheckoutRoute.Action -> navigator.clearAndNavigateTo(
-                        ActionNavKey(instant.paymentFlowType, ActionFlowOwner.PAYMENT_METHOD_LIST),
-                    )
-
-                    else -> Unit
-                }
-            }
-        }
+    private fun navigateToAction(paymentFlowType: DropInPaymentFlowType) {
+        navigator.clearAndNavigateTo(ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD_LIST))
     }
 
     private fun createInitialViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
