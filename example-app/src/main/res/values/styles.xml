@@ -36,5 +36,6 @@
 
     </style>
 
+    <style name="AppTheme" parent="MyAppTheme" tools:ignore="UnusedResources" />
 
 </resources>
