@@ -134,14 +134,14 @@ internal class CardFormStateFactoryTest {
                 installmentOptions = listOf(InstallmentModel.OneTime),
             )
 
-            assertTrue(state.form.elements.all { it.isValid })
+            assertTrue(state.form.isFormValid)
         }
 
         @Test
         fun `when the shopper has not reached a field that holds an error, then it is still invalid`() {
             val state = createStateWithErrorOn(CardFormElementId.CARD_NUMBER)
 
-            assertFalse(state.cardNumber.isValid)
+            assertFalse(state.form.isElementVisibleAndValid(CardFormElementId.CARD_NUMBER))
             assertFalse(state.cardNumber.isErrorVisible)
         }
 
