@@ -61,6 +61,7 @@ internal fun KCPBirthDateOrTaxNumberField(
             },
         label = label,
         state = rememberTextFieldStateWithCurrentValue(kcpBirthDateOrTaxNumberState.text),
+        contentType = null,
         isError = kcpBirthDateOrTaxNumberState.isError,
         supportingText = supportingText,
         onValueChange = onValueChange,

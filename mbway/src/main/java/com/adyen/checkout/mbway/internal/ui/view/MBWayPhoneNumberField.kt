@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -46,6 +47,7 @@ internal fun MBWayPhoneNumberField(
             },
         label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
         state = rememberTextFieldStateWithCurrentValue(mbWayPhoneNumberFieldState.text),
+        contentType = ContentType.PhoneNumberNational,
         isError = mbWayPhoneNumberFieldState.isError,
         supportingText = supportingTextPhoneNumber,
         prefix = countryCode,

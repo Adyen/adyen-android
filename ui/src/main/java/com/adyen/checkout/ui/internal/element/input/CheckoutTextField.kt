@@ -35,6 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.autofill.contentType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
@@ -63,6 +65,7 @@ import kotlinx.coroutines.flow.collectLatest
  * @param modifier Optional [Modifier] to be applied to this composable.
  * @param state The [TextFieldState] to be used for the text field. Use [rememberTextFieldStateWithCurrentValue]
  * to create a state that syncs with external value changes.
+ * @param contentType The Autofill content type, or null when none applies to this field.
  * @param onValueChange A callback that is triggered when the text in the field changes.
  * @param enabled Controls the enabled state of the text field. When `false`, the text field
  * is not interactable.
@@ -93,6 +96,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun CheckoutTextField(
     label: String?,
     state: TextFieldState,
+    contentType: ContentType?,
     modifier: Modifier = Modifier,
     onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
@@ -115,7 +119,8 @@ fun CheckoutTextField(
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val focusModifier = modifier
+    val autofillModifier = contentType?.let { modifier.contentType(it) } ?: modifier
+    val focusModifier = autofillModifier
         .focusRequester(focusRequester)
         .bringIntoViewRequester(bringIntoViewRequester)
     val textStyle = TextStyle(
@@ -216,6 +221,7 @@ private fun CheckoutTextFieldPreview(
             onValueChange = {},
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue(""),
+            contentType = null,
             supportingText = "Description",
             trailingIcon = null,
         )
@@ -224,6 +230,7 @@ private fun CheckoutTextFieldPreview(
             onValueChange = {},
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue(""),
+            contentType = null,
             prefix = "Prefix",
             trailingIcon = null,
         )
@@ -233,6 +240,7 @@ private fun CheckoutTextFieldPreview(
             onValueChange = {},
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue("Value"),
+            contentType = null,
             trailingIcon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
@@ -249,6 +257,7 @@ private fun CheckoutTextFieldPreview(
         CheckoutTextField(
             onValueChange = {},
             state = rememberTextFieldStateWithCurrentValue("Value"),
+            contentType = null,
             label = "Label",
             supportingText = "Invalid input",
             isError = true,
@@ -260,6 +269,7 @@ private fun CheckoutTextFieldPreview(
         CheckoutTextField(
             onValueChange = {},
             state = rememberTextFieldStateWithCurrentValue("Value"),
+            contentType = null,
             label = "Password",
             isSecureField = true,
             modifier = Modifier.focusRequester(focusRequester),
