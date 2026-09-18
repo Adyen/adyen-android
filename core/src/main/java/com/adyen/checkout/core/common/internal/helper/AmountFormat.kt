@@ -9,7 +9,6 @@ package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.CheckoutCurrency
 import com.adyen.checkout.core.components.data.model.Amount
 import java.math.BigDecimal
 import java.util.Currency
@@ -26,7 +25,7 @@ object AmountFormat {
      */
     @JvmStatic
     fun toBigDecimal(amount: Amount): BigDecimal {
-        return toBigDecimal(amount.value, amount.currency!!)
+        return toBigDecimal(amount.value, amount.currency)
     }
 
     /**

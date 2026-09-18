@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 29/3/2023.
+ * Created by oscars on 18/9/2026.
  */
-package com.adyen.checkout.core.common
+
+package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.Keep
+import androidx.annotation.RestrictTo
 
 /**
  * Utility class holding currency information.
@@ -15,6 +17,7 @@ import androidx.annotation.Keep
  */
 @Suppress("MagicNumber")
 @Keep
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CheckoutCurrency(val fractionDigits: Int) {
     AED(2),
     ALL(2),
@@ -155,6 +158,7 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     ZAR(2),
     ZMW(2);
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     companion object {
         private val CURRENCIES_HASHMAP: Map<String, CheckoutCurrency> = entries.associateBy { it.name }
 
