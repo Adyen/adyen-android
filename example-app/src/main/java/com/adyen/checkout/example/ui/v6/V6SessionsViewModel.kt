@@ -124,6 +124,8 @@ internal class V6SessionsViewModel @Inject constructor(
 
     private fun onAction(actionData: ActionData) {
         Log.d(TAG, "onAction - Action type: ${actionData.type}")
+        val componentState = uiState as? V6UiState.Component ?: return
+        uiState = componentState.copy(isHandlingAction = true)
     }
 
     private fun onComplete(result: SessionCheckoutResult) {
@@ -145,6 +147,7 @@ internal class V6SessionsViewModel @Inject constructor(
             selectedPaymentMethod = paymentMethod,
             checkoutController = checkoutController,
             showCustomButton = showCustomButton(),
+            isHandlingAction = false,
         )
 
         if (newState != null) {

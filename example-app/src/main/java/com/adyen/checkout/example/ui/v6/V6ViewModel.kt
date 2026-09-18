@@ -142,6 +142,8 @@ internal class V6ViewModel @Inject constructor(
 
     private fun onAction(actionData: ActionData) {
         Log.d(TAG, "onAction - Action type: ${actionData.type}")
+        val componentState = uiState as? V6UiState.Component ?: return
+        uiState = componentState.copy(isHandlingAction = true)
     }
 
     private suspend fun onAdditionalDetails(data: ActionComponentData): AdditionalDetailsResult {
@@ -197,6 +199,7 @@ internal class V6ViewModel @Inject constructor(
             selectedPaymentMethod = paymentMethod,
             checkoutController = checkoutController,
             showCustomButton = showCustomButton(),
+            isHandlingAction = false,
         )
 
         if (newState != null) {

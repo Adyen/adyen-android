@@ -39,8 +39,8 @@ lifecycleScope.launch {
                     onSubmit = { data ->
                         callPayments(data)
                     },
-                    onAction = { actionData ->
-                        displayAction(actionData.type)
+                    onAction = {
+                        isHandlingAction = true
                     },
                     onAdditionalDetails = { data ->
                         callDetails(data)
@@ -65,15 +65,25 @@ lifecycleScope.launch {
 }
 ```
 
-`callPayments(...)` should return `SubmitResult`, and `callDetails(...)` should return `AdditionalDetailsResult`. Once you have the controller, render it from your `@Composable` UI with `CheckoutPaymentFlow(...)`:
+`callPayments(...)` should return `SubmitResult`, and `callDetails(...)` should return `AdditionalDetailsResult`. Once you have the controller, render it from your `@Composable` UI, switching to the action once `onAction` has set `isHandlingAction`:
 
 ```kotlin
-CheckoutPaymentFlow(
-    controller = controller,
-    theme = theme,
-    localizationProvider = localizationProvider,
-)
+if (isHandlingAction) {
+    CheckoutAction(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+} else {
+    CheckoutPaymentMethod(
+        controller = controller,
+        theme = theme,
+        localizationProvider = localizationProvider,
+    )
+}
 ```
+
+See [README.md](README.md#rendering-the-compose-flow) for the full rendering contract.
 
 ## Complete working example
 

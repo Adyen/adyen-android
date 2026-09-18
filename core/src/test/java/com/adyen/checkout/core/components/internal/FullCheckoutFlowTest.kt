@@ -13,9 +13,7 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
-import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -34,7 +32,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertInstanceOf
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -59,24 +56,6 @@ internal class FullCheckoutFlowTest(
     @BeforeEach
     fun setUp() {
         PaymentMethodProvider.clear()
-    }
-
-    @Nested
-    inner class NavigationTest {
-
-        @Test
-        fun `when submit results in Action, then navigation emits Action route`() = runTest {
-            val action = TestAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
-            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
-
-            val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
-
-            val navigation = flow.navigation.test(testScheduler)
-            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
-
-            val expected = navigation.latestValue
-            assertInstanceOf<CheckoutRoute.Action>(expected)
-        }
     }
 
     @Nested
