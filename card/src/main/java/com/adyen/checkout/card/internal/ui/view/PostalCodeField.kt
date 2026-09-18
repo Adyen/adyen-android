@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,6 +42,7 @@ internal fun PostalCodeField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_POSTAL_CODE),
         state = rememberTextFieldStateWithCurrentValue(postalCodeState.text),
+        contentType = ContentType.PostalCode,
         inputTransformation = InputTransformation.maxLength(PostalCodeProperties.POSTAL_CODE_MAX_LENGTH),
         isError = postalCodeState.isError,
         supportingText = supportingTextPostalCode,
