@@ -691,6 +691,18 @@ internal class CardBrandIntentsHandlerTest(
     }
 
     @Test
+    fun `when a card brand hides the security code, then it is removed from the field order`() {
+        whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
+        val cardBrandState = CardBrandState.SingleReliableBrand(
+            createCardBrandData().copy(cvcPolicy = Brand.FieldPolicy.HIDDEN),
+        )
+
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
+
+        assert(actual.form.elements.none { it.id == CardFormElementId.SECURITY_CODE })
+    }
+
+    @Test
     fun `when cvcVisibility is HIDE_FIRST and detected card type has cvcPolicy REQUIRED, then securityCode requirementPolicy is Required`() {
         whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.HIDE_FIRST)
         val cardBrandState = CardBrandState.SingleReliableBrand(
@@ -811,14 +823,14 @@ internal class CardBrandIntentsHandlerTest(
         val installmentParams = InstallmentParams(
             defaultOptions = InstallmentOptionsParams(
                 values = listOf(2),
-                plans = listOf(InstallmentPlan.REGULAR)
+                plans = listOf(InstallmentPlan.REGULAR),
             ),
             cardBasedOptions = mapOf(
                 visaBrand to InstallmentOptionsParams(
                     values = listOf(3, 4),
-                    plans = listOf(InstallmentPlan.REGULAR)
-                )
-            )
+                    plans = listOf(InstallmentPlan.REGULAR),
+                ),
+            ),
         )
         whenever(cardComponentParams.installmentParams).thenReturn(installmentParams)
 
