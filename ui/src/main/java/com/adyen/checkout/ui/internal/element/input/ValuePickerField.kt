@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.error
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
@@ -51,6 +53,11 @@ fun ValuePickerField(
 ) {
     val style = CheckoutThemeProvider.elements.textField
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val semanticsModifier = if (isError && supportingText != null) {
+        modifier.semantics { error(supportingText) }
+    } else {
+        modifier
+    }
 
     CheckoutTextFieldDecorationBox(
         label = label,
@@ -70,7 +77,7 @@ fun ValuePickerField(
                 tint = style.textColor,
             )
         },
-        modifier = modifier.clickable(
+        modifier = semanticsModifier.clickable(
             interactionSource = interactionSource,
             // Remove the default indication to not show a ripple over the whole composable
             indication = null,
