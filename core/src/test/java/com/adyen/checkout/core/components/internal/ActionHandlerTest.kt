@@ -50,13 +50,9 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
@@ -173,59 +169,52 @@ internal class ActionHandlerTest(
     @Nested
     inner class OnActionTest {
 
-        private val submittableComponentRequestDispatcher = mock<SubmittableComponentRequestDispatcher>()
+        private val capturedActions = mutableListOf<ActionData>()
 
         @ParameterizedTest
         @ValueSource(strings = ["redirect", "nativeRedirect", "threeDS2", "sdk", "qrCode", "await", "voucher"])
-        fun `when handleAction is called, then the action is dispatched with the action type`(actionType: String) {
+        fun `when handleAction is called, then onAction is called with the action type`(actionType: String) {
             registerTestFactory(actionType)
-            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
+            val actionHandler = createActionHandler(onAction = { capturedActions += it })
 
             actionHandler.handleAction(TestAction(type = actionType))
 
-            verify(submittableComponentRequestDispatcher).action(ActionData(actionType))
+            assertEquals(listOf(ActionData(actionType)), capturedActions)
         }
 
         @Test
-        fun `when handleAction is called, then the action is dispatched before the component handles it`() {
-            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
-            var handleActionCallCountOnDispatch: Int? = null
-            whenever(submittableComponentRequestDispatcher.action(any())) doAnswer {
-                handleActionCallCountOnDispatch =
-                    (actionHandler.actionComponent as ControllableActionComponent).handleActionCallCount
-            }
+        fun `when handleAction is called, then onAction is called before the component handles the action`() {
+            var handleActionCallCountOnAction: Int? = null
+            lateinit var actionHandler: ActionHandler
+            actionHandler = createActionHandler(
+                onAction = {
+                    handleActionCallCountOnAction =
+                        (actionHandler.actionComponent as ControllableActionComponent).handleActionCallCount
+                },
+            )
 
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
 
-            assertEquals(0, handleActionCallCountOnDispatch)
+            assertEquals(0, handleActionCallCountOnAction)
         }
 
         @Test
-        fun `when handleAction is called twice, then the action is dispatched twice`() {
-            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
+        fun `when handleAction is called twice, then onAction is called twice`() {
+            val actionHandler = createActionHandler(onAction = { capturedActions += it })
 
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
             actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
 
-            verify(submittableComponentRequestDispatcher, times(2)).action(ActionData(TEST_ACTION_TYPE))
+            assertEquals(List(2) { ActionData(TEST_ACTION_TYPE) }, capturedActions)
         }
 
         @Test
-        fun `when the action type is not registered, then the action is not dispatched`() {
-            val actionHandler = createActionHandler(submittableComponentRequestDispatcher)
+        fun `when the action type is not registered, then onAction is not called`() {
+            val actionHandler = createActionHandler(onAction = { capturedActions += it })
 
             actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
 
-            verify(submittableComponentRequestDispatcher, never()).action(any())
-        }
-
-        @Test
-        fun `when the dispatcher cannot dispatch actions, then no request is dispatched`() {
-            val actionHandler = createActionHandler()
-
-            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
-
-            verifyNoInteractions(componentRequestDispatcher)
+            assertEquals(emptyList<ActionData>(), capturedActions)
         }
     }
 
@@ -337,12 +326,13 @@ internal class ActionHandlerTest(
     }
 
     private fun createActionHandler(
-        componentRequestDispatcher: ComponentRequestDispatcher = this.componentRequestDispatcher,
+        onAction: (ActionData) -> Unit = {},
     ) = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
         coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         analyticsManager = TestAnalyticsManager(),
         params = generateCheckoutParams(),
+        onAction = onAction,
     )
 
     private fun generateCheckoutParams() = CheckoutParams(

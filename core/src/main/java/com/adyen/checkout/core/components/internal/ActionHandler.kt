@@ -35,6 +35,7 @@ internal class ActionHandler(
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
     private val params: CheckoutParams,
+    private val onAction: (ActionData) -> Unit,
 ) {
 
     var actionComponent: ActionComponent? = null
@@ -77,7 +78,7 @@ internal class ActionHandler(
             }
             .launchIn(coroutineScope)
 
-        (componentRequestDispatcher as? SubmittableComponentRequestDispatcher)?.action(ActionData(action.type))
+        onAction(ActionData(action.type))
 
         actionComponent.handleAction()
     }
