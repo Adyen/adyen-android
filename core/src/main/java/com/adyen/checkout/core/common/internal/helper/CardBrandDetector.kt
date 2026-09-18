@@ -34,9 +34,9 @@ object CardBrandDetector {
         CardBrand.BCMC to Pattern.compile("^((6703)[0-9]{0,15}|(479658|606005)[0-9]{0,13})$"),
         CardBrand.BIJENKORF_CARD to Pattern.compile("^(5100081)[0-9]{0,9}$"),
         CardBrand.CABAL to Pattern.compile("^(58|6[03])([03469])\\d*$"),
-        CardBrand.CARTEBANCAIRE to Pattern.compile("^[4-6][0-9]{0,15}$"),
+        CardBrand.CARTE_BANCAIRE to Pattern.compile("^[4-6][0-9]{0,15}$"),
         CardBrand.CODENSA to Pattern.compile("^(590712)[0-9]{0,10}$"),
-        CardBrand.CUP to Pattern.compile("^(62|81)[0-9]{0,17}$"),
+        CardBrand.CHINA_UNION_PAY to Pattern.compile("^(62|81)[0-9]{0,17}$"),
         CardBrand.DANKORT to Pattern.compile("^(5019|4571|3571)[0-9]{0,12}$"),
         CardBrand.DINERS to Pattern.compile("^(36)[0-9]{0,12}$"),
         CardBrand.DISCOVER to Pattern.compile(
@@ -48,13 +48,13 @@ object CardBrandDetector {
                 "((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|(50670))[0-9]{0," + "11})$",
         ),
         CardBrand.FORBRUGSFORENINGEN to Pattern.compile("^(60)(0)\\d*$"),
-        CardBrand.VISAALPHABANKBONUS to Pattern.compile("^(450903)[0-9]{0,10}$"),
-        CardBrand.MCALPHABANKBONUS to Pattern.compile("^(510099)[0-9]{0,10}$"),
+        CardBrand.VISA_ALPHA_BANK_BONUS to Pattern.compile("^(450903)[0-9]{0,10}$"),
+        CardBrand.MC_ALPHA_BANK_BONUS to Pattern.compile("^(510099)[0-9]{0,10}$"),
         CardBrand.HIPER to Pattern.compile("^(637095|637599|637609|637612)[0-9]{0,10}$"),
         CardBrand.HIPERCARD to Pattern.compile("^(606282)[0-9]{0,10}$"),
         CardBrand.JCB to Pattern.compile("^(352[8,9]{1}[0-9]{0,15}|35[4-8]{1}[0-9]{0,16})$"),
         CardBrand.OASIS to Pattern.compile("^(982616)[0-9]{0,10}$"),
-        CardBrand.KARENMILLER to Pattern.compile("^(98261465)[0-9]{0,8}$"),
+        CardBrand.KAREN_MILLEN to Pattern.compile("^(98261465)[0-9]{0,8}$"),
         CardBrand.WAREHOUSE to Pattern.compile("^(982633)[0-9]{0,10}$"),
         CardBrand.LASER to Pattern.compile("^(6304|6706|6709|6771)[0-9]{0,15}$"),
         CardBrand.MAESTRO to Pattern.compile("^(5[0|6-8][0-9]{0,17}|6[0-9]{0,18})$"),
@@ -67,7 +67,7 @@ object CardBrandDetector {
         CardBrand.TROY to Pattern.compile("^(97)(9)\\d*$"),
         CardBrand.UATP to Pattern.compile("^1[0-9]{0,14}$"),
         CardBrand.VISA to Pattern.compile("^4[0-9]{0,18}$"),
-        CardBrand.VISADANKORT to Pattern.compile("^(4571)[0-9]{0,12}$"),
+        CardBrand.VISA_DANKORT to Pattern.compile("^(4571)[0-9]{0,12}$"),
     )
 
     @VisibleForTesting
