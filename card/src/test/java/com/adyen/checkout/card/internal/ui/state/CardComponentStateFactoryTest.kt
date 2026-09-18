@@ -26,12 +26,19 @@ import org.junit.jupiter.api.assertInstanceOf
 
 internal class CardComponentStateFactoryTest {
 
-    // region cardNumber
+    // region form
     @Test
-    fun `when initial state is created, then card number is focused`() {
-        val state = createFactory().createInitialState()
+    fun `when a field is hidden by configuration, then it is left out of the field order`() {
+        val state = createFactory(showCardholderName = false).createInitialState()
 
-        assertTrue(state.cardNumber.isFocused)
+        assertFalse(state.form.elements.map { it.id }.contains(CardFormElementId.HOLDER_NAME))
+    }
+
+    @Test
+    fun `when a field is shown by configuration, then it is part of the field order`() {
+        val state = createFactory(showCardholderName = true).createInitialState()
+
+        assertTrue(state.form.elements.map { it.id }.contains(CardFormElementId.HOLDER_NAME))
     }
     // endregion
 

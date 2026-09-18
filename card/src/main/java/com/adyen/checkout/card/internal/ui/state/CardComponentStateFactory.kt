@@ -27,7 +27,7 @@ internal class CardComponentStateFactory(
             ?: emptyList()
 
         return CardComponentState(
-            cardNumber = TextInputComponentState(isFocused = true),
+            cardNumber = TextInputComponentState(),
             expiryDate = TextInputComponentState(),
             securityCode = TextInputComponentState(
                 requirementPolicy = getSecurityCodeRequirementPolicy(),
