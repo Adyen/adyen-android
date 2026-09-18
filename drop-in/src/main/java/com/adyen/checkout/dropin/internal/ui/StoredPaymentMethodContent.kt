@@ -67,7 +67,7 @@ internal fun StoredPaymentMethodContent(
                     logoTxVariant = viewState.logoTxVariant,
                     paymentMethodName = viewState.title,
                     description = resolveString(
-                        CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_STORED_DESCRIPTION,
+                        CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION,
                         viewState.paymentMethodName,
                         viewState.formattedAmount,
                     ),

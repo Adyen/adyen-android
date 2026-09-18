@@ -138,8 +138,8 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION ->
                 R.string.checkout_drop_in_payment_method_screen_card_description
 
-            CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_STORED_DESCRIPTION ->
-                R.string.checkout_drop_in_payment_method_screen_stored_description
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION ->
+                R.string.checkout_dropin_stored_payment_method_description
 
             // General
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
