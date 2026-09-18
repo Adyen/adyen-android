@@ -205,6 +205,17 @@ internal class AmountTest {
 
             assertEquals("", result)
         }
+
+        @Test
+        fun `when currency is not an Adyen currency but is recognized by the platform then platform fraction digits are used`() {
+            // CLF is not an Adyen-supported currency, but the JVM recognizes it with 4 fraction digits.
+            // Falling back to 0 fraction digits here would be off by two orders of magnitude.
+            val amount = Amount(currency = "CLF", value = 1337L)
+
+            val result = amount.format(Locale.US)
+
+            assertTrue(result.contains("0.1337"), "Expected '0.1337' in '$result'")
+        }
     }
 
     companion object {

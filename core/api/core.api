@@ -310,7 +310,6 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/E
 	public static final field AED Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field ALL Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field AMD Lcom/adyen/checkout/core/common/CheckoutCurrency;
-	public static final field ANG Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field AOA Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field ARS Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field AUD Lcom/adyen/checkout/core/common/CheckoutCurrency;
@@ -319,7 +318,6 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/E
 	public static final field BAM Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field BBD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field BDT Lcom/adyen/checkout/core/common/CheckoutCurrency;
-	public static final field BGN Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field BHD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field BMD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field BND Lcom/adyen/checkout/core/common/CheckoutCurrency;
@@ -332,6 +330,7 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/E
 	public static final field CAD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field CHF Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field CLP Lcom/adyen/checkout/core/common/CheckoutCurrency;
+	public static final field CNH Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field CNY Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field COP Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field CRC Lcom/adyen/checkout/core/common/CheckoutCurrency;
@@ -358,7 +357,6 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/E
 	public static final field GYD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field HKD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field HNL Lcom/adyen/checkout/core/common/CheckoutCurrency;
-	public static final field HRK Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field HTG Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field HUF Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field IDR Lcom/adyen/checkout/core/common/CheckoutCurrency;
@@ -378,7 +376,6 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/E
 	public static final field KYD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field KZT Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field LAK Lcom/adyen/checkout/core/common/CheckoutCurrency;
-	public static final field LBP Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field LKR Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field LYD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field MAD Lcom/adyen/checkout/core/common/CheckoutCurrency;
@@ -420,7 +417,6 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/E
 	public static final field SGD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field SHP Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field SLE Lcom/adyen/checkout/core/common/CheckoutCurrency;
-	public static final field SLL Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field SOS Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field SRD Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field STN Lcom/adyen/checkout/core/common/CheckoutCurrency;
@@ -444,6 +440,7 @@ public final class com/adyen/checkout/core/common/CheckoutCurrency : java/lang/E
 	public static final field WST Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field XAF Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field XCD Lcom/adyen/checkout/core/common/CheckoutCurrency;
+	public static final field XCG Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field XOF Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field XPF Lcom/adyen/checkout/core/common/CheckoutCurrency;
 	public static final field YER Lcom/adyen/checkout/core/common/CheckoutCurrency;

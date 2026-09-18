@@ -41,7 +41,7 @@ object AmountFormat {
         return BigDecimal.valueOf(value, fractionDigits)
     }
 
-    private fun getFractionDigits(currencyCode: String): Int {
+    internal fun getFractionDigits(currencyCode: String): Int {
         val normalizedCurrencyCode = currencyCode.replace("[^A-Z]".toRegex(), "").uppercase(Locale.ROOT)
         val checkoutCurrency = CheckoutCurrency.find(normalizedCurrencyCode)
         checkoutCurrency?.fractionDigits?.let { return it }
