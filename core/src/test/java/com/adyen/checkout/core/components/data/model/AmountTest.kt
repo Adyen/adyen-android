@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
@@ -206,15 +207,22 @@ internal class AmountTest {
             assertEquals("", result)
         }
 
-        @Test
-        fun `when currency is not an Adyen currency but is recognized by the platform then platform fraction digits are used`() {
+        @ParameterizedTest
+        @CsvSource(
+            "en-US, 0.1337",
+            "fr-FR, 0,1337",
+        )
+        fun `when currency is not Adyen-supported but is recognized by the platform then its fraction digits are used`(
+            languageTag: String,
+            expectedDecimalPart: String,
+        ) {
             // CLF is not an Adyen-supported currency, but the JVM recognizes it with 4 fraction digits.
             // Falling back to 0 fraction digits here would be off by two orders of magnitude.
             val amount = Amount(currency = "CLF", value = 1337L)
 
-            val result = amount.format(Locale.US)
+            val result = amount.format(Locale.forLanguageTag(languageTag))
 
-            assertTrue(result.contains("0.1337"), "Expected '0.1337' in '$result'")
+            assertTrue(result.contains(expectedDecimalPart), "Expected '$expectedDecimalPart' in '$result'")
         }
     }
 
