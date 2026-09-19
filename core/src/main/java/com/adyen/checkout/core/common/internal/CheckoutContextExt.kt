@@ -28,7 +28,8 @@ internal val CheckoutContext.checkoutAttemptId: String
         is CheckoutContext.ActionOnly -> checkoutAttemptId
     }
 
-internal val CheckoutContext.publicKey: String?
+@get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+val CheckoutContext.publicKey: String?
     get() = when (this) {
         is CheckoutContext.Sessions -> publicKey
         is CheckoutContext.Advanced -> publicKey

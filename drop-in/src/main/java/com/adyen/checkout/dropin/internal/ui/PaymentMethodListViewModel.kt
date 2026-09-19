@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.format
@@ -35,7 +36,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class PaymentMethodListViewModel(
-    private val dropInParams: DropInParams,
+    private val checkoutParams: CheckoutParams,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
     private val navigator: DropInNavigator,
@@ -126,7 +127,7 @@ internal class PaymentMethodListViewModel(
             }
 
         return PaymentMethodListViewState(
-            amount = dropInParams.amount.format(dropInParams.shopperLocale),
+            amount = checkoutParams.amount?.format(checkoutParams.shopperLocale).orEmpty(),
             storedPaymentMethodSection = storedPaymentMethodSection,
             paymentOptionsSection = paymentOptionsSection,
         )
@@ -168,7 +169,7 @@ internal class PaymentMethodListViewModel(
     }
 
     class Factory(
-        private val dropInParams: DropInParams,
+        private val checkoutParams: CheckoutParams,
         private val paymentMethodRepository: PaymentMethodRepository,
         private val navigator: DropInNavigator,
         private val controllerProvider: DropInControllerProvider,
@@ -177,7 +178,7 @@ internal class PaymentMethodListViewModel(
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             return PaymentMethodListViewModel(
-                dropInParams = dropInParams,
+                checkoutParams = checkoutParams,
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
                 navigator = navigator,

@@ -8,13 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.data.model.Amount
-import java.util.Locale
-
 internal data class DropInParams(
-    // TODO - add more parameters when needed
-    val shopperLocale: Locale,
-    val environment: Environment,
-    val amount: Amount,
+    val hideStoredPaymentMethods: Boolean,
+    val startWithLastStoredPaymentMethod: Boolean,
 )

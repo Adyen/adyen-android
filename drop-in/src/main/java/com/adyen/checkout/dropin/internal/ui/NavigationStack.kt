@@ -66,7 +66,7 @@ private fun preselectedPaymentMethodNavEntry(
     PreselectedPaymentMethodScreen(
         viewModel(
             factory = PreselectedPaymentMethodViewModel.Factory(
-                dropInParams = viewModel.dropInParams,
+                checkoutParams = viewModel.checkoutParams,
                 storedPaymentMethodId = key.storedPaymentMethodId,
                 paymentMethodRepository = viewModel.paymentMethodRepository,
                 navigator = viewModel.navigator,
@@ -186,7 +186,7 @@ private fun paymentMethodViewModel(
     viewModelStoreOwner = viewModelStoreOwner,
     factory = PaymentMethodViewModel.Factory(
         paymentFlowType = paymentFlowType,
-        dropInParams = viewModel.dropInParams,
+        checkoutParams = viewModel.checkoutParams,
         paymentMethodRepository = viewModel.paymentMethodRepository,
         navigator = viewModel.navigator,
         controllerProvider = viewModel.controllerProvider,
@@ -200,7 +200,7 @@ private fun paymentMethodListViewModel(
 ): PaymentMethodListViewModel = viewModel(
     viewModelStoreOwner = viewModelStoreOwner,
     factory = PaymentMethodListViewModel.Factory(
-        dropInParams = viewModel.dropInParams,
+        checkoutParams = viewModel.checkoutParams,
         paymentMethodRepository = viewModel.paymentMethodRepository,
         navigator = viewModel.navigator,
         controllerProvider = viewModel.controllerProvider,

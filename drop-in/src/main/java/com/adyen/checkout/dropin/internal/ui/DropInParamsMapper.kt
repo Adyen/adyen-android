@@ -8,26 +8,16 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.appcompat.app.AppCompatDelegate
-import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.sessions.internal.model.SessionParams
-import java.util.Locale
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.dropin.DropInConfiguration
 
 internal class DropInParamsMapper {
 
-    fun map(
-        checkoutConfiguration: CheckoutConfiguration,
-        sessionParams: SessionParams?,
-    ): DropInParams {
+    fun mapToParams(params: CheckoutParams): DropInParams {
+        val dropInConfiguration = params.getConfiguration<DropInConfiguration>()
         return DropInParams(
-            shopperLocale = checkoutConfiguration.shopperLocale
-                ?: sessionParams?.shopperLocale
-                ?: AppCompatDelegate.getApplicationLocales()[0]
-                ?: Locale.getDefault(),
-            environment = sessionParams?.environment ?: checkoutConfiguration.environment,
-            amount = sessionParams?.amount
-                ?: checkoutConfiguration.amount
-                ?: error("Amount cannot not be null"),
+            hideStoredPaymentMethods = dropInConfiguration?.hideStoredPaymentMethods ?: false,
+            startWithLastStoredPaymentMethod = dropInConfiguration?.startWithLastStoredPaymentMethod ?: true,
         )
     }
 }

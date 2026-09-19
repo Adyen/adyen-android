@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlin.reflect.KClass
 
 internal class PreselectedPaymentMethodViewModel(
-    private val dropInParams: DropInParams,
+    private val checkoutParams: CheckoutParams,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val storedPaymentMethodId: String,
     private val navigator: DropInNavigator,
@@ -42,7 +43,7 @@ internal class PreselectedPaymentMethodViewModel(
     }
 
     private fun createInitialViewState(storedPaymentMethod: StoredPaymentMethod): PreselectedPaymentMethodViewState {
-        val formattedAmount = dropInParams.amount.format(dropInParams.shopperLocale)
+        val formattedAmount = checkoutParams.amount?.format(checkoutParams.shopperLocale).orEmpty()
 
         return PreselectedPaymentMethodViewState(
             logoTxVariant = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod),
@@ -71,7 +72,7 @@ internal class PreselectedPaymentMethodViewModel(
     }
 
     class Factory(
-        private val dropInParams: DropInParams,
+        private val checkoutParams: CheckoutParams,
         private val storedPaymentMethodId: String,
         private val paymentMethodRepository: PaymentMethodRepository,
         private val navigator: DropInNavigator,
@@ -80,7 +81,7 @@ internal class PreselectedPaymentMethodViewModel(
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return PreselectedPaymentMethodViewModel(
-                dropInParams = dropInParams,
+                checkoutParams = checkoutParams,
                 paymentMethodRepository = paymentMethodRepository,
                 storedPaymentMethodId = storedPaymentMethodId,
                 navigator = navigator,
