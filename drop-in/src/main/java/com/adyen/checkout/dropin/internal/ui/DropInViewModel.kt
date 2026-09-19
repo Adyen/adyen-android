@@ -74,10 +74,12 @@ internal class DropInViewModel(
         if (navigator.didRestoreState) return
 
         val storedPaymentMethods = paymentMethodRepository.storedPaymentMethods.value
-        val startingPoint = if (storedPaymentMethods.isEmpty()) {
-            PaymentMethodListNavKey
-        } else {
+        // Only startWithLastStoredPaymentMethod is read here. hideStoredPaymentMethods takes stored payment methods
+        // off the list, which is a separate decision from what Drop-in opens on.
+        val startingPoint = if (dropInParams.startWithLastStoredPaymentMethod && storedPaymentMethods.isNotEmpty()) {
             PreselectedPaymentMethodNavKey(storedPaymentMethods.first().id)
+        } else {
+            PaymentMethodListNavKey
         }
         navigator.navigateTo(startingPoint)
     }

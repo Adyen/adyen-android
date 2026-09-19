@@ -61,6 +61,31 @@ internal class DropInViewModelTest {
     }
 
     @Test
+    fun `when startWithLastStoredPaymentMethod is false, then the payment method list is the starting point`() {
+        val viewModel = createViewModel(
+            storedPaymentMethods = listOf(storedPaymentMethod(STORED_ID)),
+            configureCheckoutConfiguration = { dropIn(startWithLastStoredPaymentMethod = false) },
+        )
+
+        assertEquals(listOf(EmptyNavKey, PaymentMethodListNavKey), viewModel.navigator.backStack)
+    }
+
+    @Test
+    fun `when stored payment methods are hidden, then the first one is still preselected`() {
+        val viewModel = createViewModel(
+            storedPaymentMethods = listOf(storedPaymentMethod(STORED_ID)),
+            configureCheckoutConfiguration = { dropIn(hideStoredPaymentMethods = true) },
+        )
+
+        // Hiding stored payment methods only takes them off the list. What Drop-in opens on is the other flag's
+        // business, so the two do not interfere.
+        assertEquals(
+            listOf(EmptyNavKey, PreselectedPaymentMethodNavKey(STORED_ID)),
+            viewModel.navigator.backStack,
+        )
+    }
+
+    @Test
     fun `when the back stack was restored, then no starting point is added`() {
         // A persister that already holds a back stack stands in for a recreated Drop-in.
         val persister = InMemoryBackStackPersister()
