@@ -43,7 +43,6 @@ import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.SelectableCardBrandItem
 import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_SEPARATOR
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
@@ -311,9 +310,9 @@ private fun CardNumberFieldPreview(
             ),
             supportedCardBrandsViewState = SupportedCardBrandsViewState(
                 supportedCardBrands = listOf(
-                    CardBrand(CardType.MASTERCARD.txVariant),
-                    CardBrand(CardType.VISA.txVariant),
-                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
+                    CardBrand.MASTERCARD,
+                    CardBrand.VISA,
+                    CardBrand.AMERICAN_EXPRESS,
                 ),
                 isVisible = true,
             ),
@@ -335,7 +334,7 @@ private fun CardNumberFieldPreview(
                 supportedCardBrands = emptyList(),
                 isVisible = false,
             ),
-            cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+            cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand.MASTERCARD),
             cardNumberFormat = CardNumberFormat.DEFAULT,
             onValueChange = {},
             onFocusChange = {},
@@ -355,8 +354,8 @@ private fun CardNumberFieldPreview(
             ),
             cardBrandViewState = CardBrandViewState.DualBrand(
                 brands = listOf(
-                    CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
-                    CardBrand(CardType.MASTERCARD.txVariant),
+                    CardBrand.AMERICAN_EXPRESS,
+                    CardBrand.MASTERCARD,
                 ),
             ),
             cardNumberFormat = CardNumberFormat.AMEX,
@@ -380,11 +379,11 @@ private fun CardNumberFieldPreview(
             cardBrandViewState = CardBrandViewState.SelectableDualBrand(
                 brands = listOf(
                     SelectableCardBrandItem(
-                        brand = CardBrand(CardType.VISA.txVariant),
+                        brand = CardBrand.VISA,
                         isSelected = true,
                     ),
                     SelectableCardBrandItem(
-                        brand = CardBrand(CardType.MASTERCARD.txVariant),
+                        brand = CardBrand.MASTERCARD,
                         isSelected = false,
                     ),
                 ),

@@ -314,8 +314,10 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
-                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
-                showError = true,
+                error = TextInputComponentState.InputError(
+                    message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                    isVisible = true
+                )
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -338,9 +340,8 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
-                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
-                isFocused = true,
-                showError = false, // Focus gain clears showError
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
+                isFocused = true, // Focus gain hides the error
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -360,9 +361,8 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "123",
-                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
-                isFocused = true,
-                showError = false, // Focus gain clears showError
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
+                isFocused = true, // Focus gain hides the error
             ),
             cardBrandState = CardBrandState.NoBrandsDetected,
         )
@@ -382,8 +382,7 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111111111111111",
-                errorMessage = null,
-                showError = false,
+                error = null
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -407,17 +406,15 @@ internal class CardViewStateProducerTest {
         val componentStateWithHiddenError = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
-                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
-                isFocused = true,
-                showError = false, // Text change sets showError to false
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_NUMBER_INVALID),
+                isFocused = true, // Text change hides the error
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
         val componentStateWithoutError = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "4111",
-                isFocused = true,
-                showError = false,
+                isFocused = true
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData()),
         )
@@ -527,8 +524,10 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             cardNumber = TextInputComponentState(
                 text = "",
-                errorMessage = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
-                showError = true,
+                error = TextInputComponentState.InputError(
+                    message = CheckoutLocalizationKey.CARD_NUMBER_INVALID,
+                    isVisible = true
+                )
             ),
             isCardScanningAvailable = true,
         )
@@ -575,7 +574,7 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             expiryDate = TextInputComponentState(
                 text = "12",
-                errorMessage = CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID)
             ),
         )
 
@@ -609,8 +608,10 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             expiryDate = TextInputComponentState(
                 text = "6415",
-                errorMessage = CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID,
-                showError = true,
+                error = TextInputComponentState.InputError(
+                    CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID,
+                    isVisible = true
+                )
             ),
         )
 
@@ -671,7 +672,7 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "12",
-                errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID)
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("visa"))),
         )
@@ -707,8 +708,10 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "12",
-                errorMessage = CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
-                showError = true,
+                error = TextInputComponentState.InputError(
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+                    isVisible = true
+                )
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("visa"))),
         )

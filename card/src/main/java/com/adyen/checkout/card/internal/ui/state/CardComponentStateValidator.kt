@@ -45,26 +45,26 @@ internal class CardComponentStateValidator(
         val postalCodeError = validatePostalCode(state.postalCode)
 
         return state.copy(
-            cardNumber = state.cardNumber.copy(errorMessage = cardNumberError),
-            expiryDate = state.expiryDate.copy(errorMessage = expiryDateError),
-            securityCode = state.securityCode.copy(errorMessage = securityCodeError),
-            holderName = state.holderName.copy(errorMessage = holderNameError),
-            socialSecurityNumber = state.socialSecurityNumber.copy(errorMessage = socialSecurityNumberError),
-            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.copy(errorMessage = kcpBirthDateOrTaxNumberError),
-            kcpCardPassword = state.kcpCardPassword.copy(errorMessage = kcpCardPasswordError),
-            postalCode = state.postalCode.copy(errorMessage = postalCodeError),
+            cardNumber = state.cardNumber.updateError(cardNumberError),
+            expiryDate = state.expiryDate.updateError(expiryDateError),
+            securityCode = state.securityCode.updateError(securityCodeError),
+            holderName = state.holderName.updateError(holderNameError),
+            socialSecurityNumber = state.socialSecurityNumber.updateError(socialSecurityNumberError),
+            kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.updateError(kcpBirthDateOrTaxNumberError),
+            kcpCardPassword = state.kcpCardPassword.updateError(kcpCardPasswordError),
+            postalCode = state.postalCode.updateError(postalCodeError),
         )
     }
 
     override fun isValid(state: CardComponentState): Boolean {
-        return state.cardNumber.errorMessage == null &&
-            state.expiryDate.errorMessage == null &&
-            state.securityCode.errorMessage == null &&
-            state.holderName.errorMessage == null &&
-            state.socialSecurityNumber.errorMessage == null &&
-            state.kcpBirthDateOrTaxNumber.errorMessage == null &&
-            state.kcpCardPassword.errorMessage == null &&
-            state.postalCode.errorMessage == null
+        return state.cardNumber.isValid &&
+            state.expiryDate.isValid &&
+            state.securityCode.isValid &&
+            state.holderName.isValid &&
+            state.socialSecurityNumber.isValid &&
+            state.kcpBirthDateOrTaxNumber.isValid &&
+            state.kcpCardPassword.isValid &&
+            state.postalCode.isValid
     }
 
     private fun validateCardNumber(

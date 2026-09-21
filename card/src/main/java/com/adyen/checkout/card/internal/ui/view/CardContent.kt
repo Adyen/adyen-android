@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
+import com.adyen.checkout.card.internal.ui.model.toSubtitleText
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
@@ -36,7 +37,6 @@ import com.adyen.checkout.card.internal.ui.state.InstallmentViewState
 import com.adyen.checkout.card.internal.ui.state.StorePaymentViewState
 import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.payButtonAsComponentScaffoldFooter
@@ -198,12 +198,13 @@ private fun CardDetailsSection(
         }
         if (viewState.installmentViewState != null) {
             Subtitle(
-                text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS),
+                text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
                 modifier = Modifier.padding(top = Dimensions.Spacing.Small),
             )
             ValuePickerField(
                 value = viewState.installmentViewState.selectedInstallment?.toDisplayText() ?: "",
-                label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
+                label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_PICKER_TITLE),
+                supportingText = viewState.installmentViewState.selectedInstallment?.toSubtitleText(),
                 onClick = onInstallmentPickerClick,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -241,7 +242,7 @@ private fun CardContentPreview(
                 ),
                 isLoading = false,
                 isCardScanButtonVisible = false,
-                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand.MASTERCARD),
                 cardNumberFormat = CardNumberFormat.DEFAULT,
                 installmentViewState = null,
                 payButtonViewState = PayButtonViewState(null, false),
@@ -294,7 +295,7 @@ private fun CardContentPreviewAllFields(
                 ),
                 isLoading = false,
                 isCardScanButtonVisible = false,
-                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand(CardType.MASTERCARD.txVariant)),
+                cardBrandViewState = CardBrandViewState.SingleBrand(CardBrand.MASTERCARD),
                 cardNumberFormat = CardNumberFormat.DEFAULT,
                 installmentViewState = InstallmentViewState(
                     installmentOptions = listOf(InstallmentModel.OneTime),

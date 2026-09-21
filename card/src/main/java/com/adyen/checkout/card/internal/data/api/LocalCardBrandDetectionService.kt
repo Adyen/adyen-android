@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.LocalCardBrandMapper
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.internal.helper.CardBrandDetector
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 
 internal class LocalCardBrandDetectionService(
@@ -23,7 +24,7 @@ internal class LocalCardBrandDetectionService(
         if (cardNumber.isEmpty()) {
             return emptyList()
         }
-        val matchingCardBrands = CardBrand.estimate(cardNumber)
+        val matchingCardBrands = CardBrandDetector.estimate(cardNumber)
         return matchingCardBrands.map {
             LocalCardBrandMapper.map(
                 cardBrand = it,

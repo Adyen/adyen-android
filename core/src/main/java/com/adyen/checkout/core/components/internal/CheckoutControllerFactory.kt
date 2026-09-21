@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
@@ -87,6 +88,7 @@ internal class CheckoutControllerFactory {
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
+            onAction = {},
         )
         val flow = ActionOnlyCheckoutFlow(
             action = context.action,
@@ -141,6 +143,7 @@ internal class CheckoutControllerFactory {
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
+            onAction = componentRequestDispatcher::action,
         )
         val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
         val paymentComponentResult = PaymentComponentResolver.resolve(
@@ -225,11 +228,13 @@ internal class CheckoutControllerFactory {
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,
+        onAction: (ActionData) -> Unit,
     ) = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
         coroutineScope = coroutineScope,
         analyticsManager = analyticsManager,
         params = params,
+        onAction = onAction,
     )
 
     private fun createFailedCheckoutController(

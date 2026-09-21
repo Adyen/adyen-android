@@ -105,7 +105,7 @@ class CheckoutController internal constructor(
      * A [Flow] of [CheckoutRoute] events that indicate which screen should be displayed.
      *
      * Collect this flow to observe navigation changes and update the UI accordingly (e.g. showing
-     * the payment method input, an action screen, or secondary content).
+     * the payment method input or an action screen).
      */
     val navigation: Flow<CheckoutRoute> get() = flow.navigation
 

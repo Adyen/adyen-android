@@ -42,8 +42,6 @@ internal class DropInViewModel(
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
 
-    val theme = input.theme
-
     val resultFlow: Flow<DropInResult> = merge(
         dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
         dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },

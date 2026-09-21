@@ -47,7 +47,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.cardNumber.errorMessage)
+        assertNotNull(validatedState.cardNumber.error?.message)
     }
 
     @Test
@@ -60,7 +60,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.expiryDate.errorMessage)
+        assertNotNull(validatedState.expiryDate.error?.message)
     }
 
     @Test
@@ -73,7 +73,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.securityCode.errorMessage)
+        assertNotNull(validatedState.securityCode.error?.message)
     }
 
     @Test
@@ -86,7 +86,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.holderName.errorMessage)
+        assertNotNull(validatedState.holderName.error?.message)
     }
 
     @Test
@@ -99,7 +99,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertTrue(result)
-        assertNull(validatedState.holderName.errorMessage)
+        assertNull(validatedState.holderName.error?.message)
     }
 
     @Test
@@ -112,7 +112,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.socialSecurityNumber.errorMessage)
+        assertNotNull(validatedState.socialSecurityNumber.error?.message)
     }
 
     @Test
@@ -128,7 +128,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.socialSecurityNumber.errorMessage)
+        assertNotNull(validatedState.socialSecurityNumber.error?.message)
     }
 
     @Test
@@ -141,7 +141,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertTrue(result)
-        assertNull(validatedState.socialSecurityNumber.errorMessage)
+        assertNull(validatedState.socialSecurityNumber.error?.message)
     }
 
     @Test
@@ -157,7 +157,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.kcpBirthDateOrTaxNumber.errorMessage)
+        assertNotNull(validatedState.kcpBirthDateOrTaxNumber.error?.message)
     }
 
     @Test
@@ -173,7 +173,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.kcpBirthDateOrTaxNumber.errorMessage)
+        assertNotNull(validatedState.kcpBirthDateOrTaxNumber.error?.message)
     }
 
     @Test
@@ -186,7 +186,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertTrue(result)
-        assertNull(validatedState.kcpBirthDateOrTaxNumber.errorMessage)
+        assertNull(validatedState.kcpBirthDateOrTaxNumber.error?.message)
     }
 
     @Test
@@ -199,7 +199,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.kcpCardPassword.errorMessage)
+        assertNotNull(validatedState.kcpCardPassword.error?.message)
     }
 
     @Test
@@ -215,7 +215,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.kcpCardPassword.errorMessage)
+        assertNotNull(validatedState.kcpCardPassword.error?.message)
     }
 
     @Test
@@ -228,7 +228,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertTrue(result)
-        assertNull(validatedState.kcpCardPassword.errorMessage)
+        assertNull(validatedState.kcpCardPassword.error?.message)
     }
 
     @Test
@@ -241,7 +241,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.postalCode.errorMessage)
+        assertNotNull(validatedState.postalCode.error?.message)
     }
 
     @Test
@@ -257,7 +257,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertFalse(result)
-        assertNotNull(validatedState.postalCode.errorMessage)
+        assertNotNull(validatedState.postalCode.error?.message)
     }
 
     @Test
@@ -270,7 +270,7 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(validatedState)
 
         assertTrue(result)
-        assertNull(validatedState.postalCode.errorMessage)
+        assertNull(validatedState.postalCode.error?.message)
     }
 
     @Test
@@ -281,7 +281,7 @@ internal class CardComponentStateValidatorTest {
 
         val validatedState = validator.validate(state)
 
-        assertNotNull(validatedState.cardNumber.errorMessage)
+        assertNotNull(validatedState.cardNumber.error?.message)
     }
 
     private fun createValidState() = CardComponentState(

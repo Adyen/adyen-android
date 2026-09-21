@@ -36,7 +36,7 @@ internal class BlikComponentStateValidatorTest {
 
             val actual = validator.validate(state)
 
-            assertNull(actual.blikCode.errorMessage)
+            assertNull(actual.blikCode.error?.message)
         }
 
         @Test
@@ -45,7 +45,7 @@ internal class BlikComponentStateValidatorTest {
 
             val actual = validator.validate(state)
 
-            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.errorMessage)
+            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.error?.message)
         }
 
         @Test
@@ -54,7 +54,7 @@ internal class BlikComponentStateValidatorTest {
 
             val actual = validator.validate(state)
 
-            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.errorMessage)
+            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.error?.message)
         }
 
         @Test
@@ -63,7 +63,7 @@ internal class BlikComponentStateValidatorTest {
 
             val actual = validator.validate(state)
 
-            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.errorMessage)
+            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.error?.message)
         }
 
         @Test
@@ -72,7 +72,7 @@ internal class BlikComponentStateValidatorTest {
 
             val actual = validator.validate(state)
 
-            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.errorMessage)
+            assertEquals(CheckoutLocalizationKey.BLIK_CODE_INVALID, actual.blikCode.error?.message)
         }
     }
 
@@ -81,7 +81,7 @@ internal class BlikComponentStateValidatorTest {
 
         @Test
         fun `when blik code has no error, then isValid should return true`() {
-            val state = createState(blikCode = VALID_BLIK_CODE, errorMessage = null)
+            val state = createState(blikCode = VALID_BLIK_CODE, errorKey = null)
 
             val actual = validator.isValid(state)
 
@@ -92,7 +92,7 @@ internal class BlikComponentStateValidatorTest {
         fun `when blik code has an error, then isValid should return false`() {
             val state = createState(
                 blikCode = "123",
-                errorMessage = CheckoutLocalizationKey.BLIK_CODE_INVALID,
+                errorKey = CheckoutLocalizationKey.BLIK_CODE_INVALID,
             )
 
             val actual = validator.isValid(state)
@@ -103,13 +103,12 @@ internal class BlikComponentStateValidatorTest {
 
     private fun createState(
         blikCode: String,
-        errorMessage: CheckoutLocalizationKey? = null,
+        errorKey: CheckoutLocalizationKey? = null,
     ) = BlikComponentState(
         blikCode = TextInputComponentState(
             text = blikCode,
-            errorMessage = errorMessage,
+            error = errorKey?.let { TextInputComponentState.InputError(it) },
             isFocused = false,
-            showError = false,
         ),
         isLoading = false,
     )

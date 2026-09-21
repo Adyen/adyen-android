@@ -31,13 +31,11 @@ internal class StoredCardComponentStateReducer : ComponentStateReducer<StoredCar
     }
 
     private fun highlightValidationErrors(state: StoredCardComponentState): StoredCardComponentState {
-        val hasSecurityCodeError = state.securityCode.errorMessage != null
+        val hasSecurityCodeError = !state.securityCode.isValid
 
         return state.copy(
-            securityCode = state.securityCode.copy(
-                showError = hasSecurityCodeError,
-                isFocused = hasSecurityCodeError,
-            ),
+            securityCode = state.securityCode.showErrorIfPresent()
+                .copy(isFocused = hasSecurityCodeError),
         )
     }
 }

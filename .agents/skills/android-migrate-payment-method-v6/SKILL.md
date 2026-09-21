@@ -30,7 +30,7 @@ Each v6 payment method is a small set of collaborators wired by a factory. No si
 | Registration | `XInitializer : Initializer<Unit>` + module `AndroidManifest.xml` | Registers the factory via `PaymentMethodProvider.register(txVariant, factory)` for each supported type. |
 | Public API | `XConfiguration` + `CheckoutConfiguration.x { }` DSL | The only public surface; everything else is `internal`. |
 | Stored variant *(if supported)* | `StoredXComponent` + parallel stored state/view-state/reducer/validator/intent + `StoredXContent` | Separate stack for stored payments, built by the same factory (see Card). |
-| Secondary screen *(optional)* | `SecondaryScreenComponent` → `SecondaryContent(identifier, modifier)` + `PaymentComponentEvent.SecondaryScreen`/`CloseSecondaryScreen` | For pickers/bottom sheets, e.g. MBWay's country-code picker. |
+| Secondary screen *(optional)* | `SecondaryScreenComponent` → `navigation` + `SecondaryContent(identifier, modifier)` | For pickers/bottom sheets, e.g. MBWay's country-code picker. |
 
 ## Before you start
 
@@ -100,7 +100,7 @@ Use the `android-branch-create` skill to create a `chore/` branch (base `main` d
 ### 8. Component + factory + registration
 
 - Add `XComponent : PaymentComponent` wiring `ComponentStateFlow(initialState, reducer, validator)`, `viewState(producer)`, `eventFlow`, `Content()`, `submit()`, `setLoading()`, `requiresUserInteraction()`. For input methods, `submit()` validates first and dispatches `HighlightValidationErrors` when invalid instead of emitting `Submit` (see MBWay).
-- **If the method needs a secondary screen**, also implement `SecondaryScreenComponent` (`SecondaryContent()`) and emit `PaymentComponentEvent.SecondaryScreen`/`CloseSecondaryScreen` to open/close it.
+- **If the method needs a secondary screen**, also implement `SecondaryScreenComponent` (`navigation`, `SecondaryContent()`) and emit `SecondaryNavigationEvent.Open`/`SecondaryNavigationEvent.Close` on `navigation` to open/close it.
 - **Wire analytics** via `AnalyticsManager`/`GenericEvents` (submit and error events, render where applicable and other analytics events which were already firing on v5).
 - Add `XFactory : PaymentComponentFactory<XComponent>`.
 - Add `XInitializer : Initializer<Unit>` (`@Keep`) that registers the factory via `PaymentMethodProvider.register(txVariant, factory)` for each supported type, and wire it into the module `AndroidManifest.xml` under the androidx-startup `InitializationProvider`.

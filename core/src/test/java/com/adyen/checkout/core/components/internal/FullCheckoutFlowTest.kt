@@ -65,30 +65,6 @@ internal class FullCheckoutFlowTest(
     inner class NavigationTest {
 
         @Test
-        fun `when SecondaryScreen event is emitted, then navigation emits Secondary route`() = runTest {
-            val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
-
-            val navigation = flow.navigation.test(testScheduler)
-            eventFlow.emit(PaymentComponentEvent.SecondaryScreen("test_id"))
-
-            val expected = navigation.latestValue
-            assertInstanceOf<CheckoutRoute.Secondary>(expected)
-            assertEquals("test_id", expected.identifier)
-        }
-
-        @Test
-        fun `when CloseSecondaryScreen event is emitted, then navigation emits PaymentMethod route`() =
-            runTest {
-                val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
-
-                val navigation = flow.navigation.test(testScheduler)
-                eventFlow.emit(PaymentComponentEvent.CloseSecondaryScreen)
-
-                val expected = navigation.latestValue
-                assertInstanceOf<CheckoutRoute.PaymentMethod>(expected)
-            }
-
-        @Test
         fun `when submit results in Action, then navigation emits Action route`() = runTest {
             val action = TestAction(type = "redirect", paymentData = "test_data", paymentMethodType = "scheme")
             whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Action(action)
@@ -101,22 +77,6 @@ internal class FullCheckoutFlowTest(
             val expected = navigation.latestValue
             assertInstanceOf<CheckoutRoute.Action>(expected)
         }
-
-        @Test
-        fun `when multiple SecondaryScreen events are emitted, then navigation emits corresponding routes`() =
-            runTest {
-                val flow = createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
-
-                val navigation = flow.navigation.test(testScheduler)
-                eventFlow.emit(PaymentComponentEvent.SecondaryScreen("first"))
-                eventFlow.emit(PaymentComponentEvent.SecondaryScreen("second"))
-
-                val expected = listOf(
-                    CheckoutRoute.Secondary("first"),
-                    CheckoutRoute.Secondary("second"),
-                )
-                assertEquals(expected, navigation.values)
-            }
     }
 
     @Nested

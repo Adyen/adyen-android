@@ -45,6 +45,18 @@ public final class com/adyen/checkout/core/action/data/ActionComponentData : com
 public final class com/adyen/checkout/core/action/data/ActionComponentData$Companion {
 }
 
+public final class com/adyen/checkout/core/action/data/ActionData {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/ActionData;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/action/data/ActionData;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/action/data/ActionData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/core/action/data/ActionTypes {
 	public static final field $stable I
 	public static final field AWAIT Ljava/lang/String;
@@ -224,52 +236,39 @@ public final class com/adyen/checkout/core/common/CardBrand : android/os/Parcela
 }
 
 public final class com/adyen/checkout/core/common/CardBrand$Companion {
-	public final fun estimate (Ljava/lang/String;)Ljava/util/List;
-}
-
-public final class com/adyen/checkout/core/common/CardType : java/lang/Enum {
-	public static final field AMERICAN_EXPRESS Lcom/adyen/checkout/core/common/CardType;
-	public static final field ARGENCARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field BCMC Lcom/adyen/checkout/core/common/CardType;
-	public static final field BIJENKORF_CARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field CABAL Lcom/adyen/checkout/core/common/CardType;
-	public static final field CARTEBANCAIRE Lcom/adyen/checkout/core/common/CardType;
-	public static final field CODENSA Lcom/adyen/checkout/core/common/CardType;
-	public static final field CUP Lcom/adyen/checkout/core/common/CardType;
-	public static final field Companion Lcom/adyen/checkout/core/common/CardType$Companion;
-	public static final field DANKORT Lcom/adyen/checkout/core/common/CardType;
-	public static final field DINERS Lcom/adyen/checkout/core/common/CardType;
-	public static final field DISCOVER Lcom/adyen/checkout/core/common/CardType;
-	public static final field ELO Lcom/adyen/checkout/core/common/CardType;
-	public static final field FORBRUGSFORENINGEN Lcom/adyen/checkout/core/common/CardType;
-	public static final field HIPER Lcom/adyen/checkout/core/common/CardType;
-	public static final field HIPERCARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field JCB Lcom/adyen/checkout/core/common/CardType;
-	public static final field KARENMILLER Lcom/adyen/checkout/core/common/CardType;
-	public static final field LASER Lcom/adyen/checkout/core/common/CardType;
-	public static final field MAESTRO Lcom/adyen/checkout/core/common/CardType;
-	public static final field MAESTRO_UK Lcom/adyen/checkout/core/common/CardType;
-	public static final field MASTERCARD Lcom/adyen/checkout/core/common/CardType;
-	public static final field MCALPHABANKBONUS Lcom/adyen/checkout/core/common/CardType;
-	public static final field MIR Lcom/adyen/checkout/core/common/CardType;
-	public static final field NARANJA Lcom/adyen/checkout/core/common/CardType;
-	public static final field OASIS Lcom/adyen/checkout/core/common/CardType;
-	public static final field SHOPPING Lcom/adyen/checkout/core/common/CardType;
-	public static final field SOLO Lcom/adyen/checkout/core/common/CardType;
-	public static final field TROY Lcom/adyen/checkout/core/common/CardType;
-	public static final field UATP Lcom/adyen/checkout/core/common/CardType;
-	public static final field VISA Lcom/adyen/checkout/core/common/CardType;
-	public static final field VISAALPHABANKBONUS Lcom/adyen/checkout/core/common/CardType;
-	public static final field VISADANKORT Lcom/adyen/checkout/core/common/CardType;
-	public static final field WAREHOUSE Lcom/adyen/checkout/core/common/CardType;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getTxVariant ()Ljava/lang/String;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CardType;
-	public static fun values ()[Lcom/adyen/checkout/core/common/CardType;
-}
-
-public final class com/adyen/checkout/core/common/CardType$Companion {
-	public final fun getByBrandName (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CardType;
+	public final fun getAMERICAN_EXPRESS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getARGENCARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getBCMC ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getBIJENKORF_CARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCABAL ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCARTE_BANCAIRE ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCHINA_UNION_PAY ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getCODENSA ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getDANKORT ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getDINERS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getDISCOVER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getELO ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getFORBRUGSFORENINGEN ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getHIPER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getHIPERCARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getJCB ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getKAREN_MILLEN ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getLASER ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMAESTRO ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMAESTRO_UK ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMASTERCARD ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMC_ALPHA_BANK_BONUS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getMIR ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getNARANJA ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getOASIS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getSHOPPING ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getSOLO ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getTROY ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getUATP ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISA ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISA_ALPHA_BANK_BONUS ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getVISA_DANKORT ()Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun getWAREHOUSE ()Lcom/adyen/checkout/core/common/CardBrand;
 }
 
 public abstract interface class com/adyen/checkout/core/common/CheckoutContext : android/os/Parcelable {
@@ -654,12 +653,15 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_EXPIRY_DATE_INVALID_TOO_OLD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_HOLDER_NAME Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_HOLDER_NAME_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field CARD_INSTALLMENTS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_INSTALLMENTS_ONE_TIME Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_INSTALLMENTS_ONE_TIME_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_INSTALLMENTS_PICKER_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_INSTALLMENTS_PICKER_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_INSTALLMENTS_REGULAR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field CARD_INSTALLMENTS_REGULAR_WITH_PRICE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_INSTALLMENTS_REGULAR_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_INSTALLMENTS_REGULAR_DESCRIPTION_WITH_PRICE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_INSTALLMENTS_REVOLVING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field CARD_INSTALLMENTS_SUBTITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_INSTALLMENTS_REVOLVING_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_INSTALLMENTS_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_KCP_BIRTH_DATE_OR_TAX_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -678,10 +680,11 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_SOCIAL_SECURITY_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SOCIAL_SECURITY_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_STORE_PAYMENT_METHOD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_ACTION_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_ACTION_PROCESSING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field DROP_IN_GENERIC_PAYMENT_METHOD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field DROP_IN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_MANAGE_FAVORITES_REMOVE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -694,7 +697,6 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field DROP_IN_PAYMENT_METHOD_STORED_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_BACK Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CANCEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CLOSE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -744,8 +746,8 @@ public final class com/adyen/checkout/core/components/AdditionalDetailsResult$Co
 
 public final class com/adyen/checkout/core/components/AdvancedCheckoutCallbacks : com/adyen/checkout/core/components/CheckoutCallbacks {
 	public static final field $stable I
-	public fun <init> (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adyen/checkout/core/components/AdvancedCheckoutResult {
@@ -907,22 +909,6 @@ public final class com/adyen/checkout/core/components/CheckoutRoute$PaymentMetho
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/core/components/CheckoutRoute$Secondary : com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutRoute$Secondary;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/CheckoutRoute$Secondary;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutRoute$Secondary;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getIdentifier ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/core/components/CheckoutSecondaryKt {
-	public static final fun CheckoutSecondary (Ljava/lang/String;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
-}
-
 public abstract interface class com/adyen/checkout/core/components/CheckoutTarget {
 }
 
@@ -952,8 +938,8 @@ public final class com/adyen/checkout/core/components/CheckoutTarget$StoredPayme
 
 public final class com/adyen/checkout/core/components/SessionCheckoutCallbacks : com/adyen/checkout/core/components/CheckoutCallbacks {
 	public static final field $stable I
-	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adyen/checkout/core/components/SessionCheckoutResult {

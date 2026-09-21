@@ -107,6 +107,7 @@ internal class CheckoutControllerFactoryTest {
         ),
         callbacks = AdvancedCheckoutCallbacks(
             onSubmit = { SubmitResult.Completion("Authorised") },
+            onAction = {},
             onAdditionalDetails = { AdditionalDetailsResult.Completion("Authorised") },
             onFailure = {},
         ),

@@ -14,7 +14,6 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -271,9 +270,9 @@ internal class CardComponentParamsMapperTest {
 
     @Test
     fun `when supportedCardBrands is set in configuration then it takes priority over payment method brands`() {
-        val configBrands = listOf(CardBrand(CardType.MAESTRO.txVariant))
+        val configBrands = listOf(CardBrand.MAESTRO)
         val paymentMethod = createCardPaymentMethod(
-            brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant),
+            brands = listOf(CardBrand.VISA.txVariant, CardBrand.MASTERCARD.txVariant),
         )
 
         val params = mapper.mapToParams(
@@ -289,7 +288,7 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when supportedCardBrands is null and payment method brands exist then payment method brands are used`() {
         val paymentMethod = createCardPaymentMethod(
-            brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant),
+            brands = listOf(CardBrand.VISA.txVariant, CardBrand.MASTERCARD.txVariant),
         )
 
         val params = mapper.mapToParams(
@@ -300,8 +299,8 @@ internal class CardComponentParamsMapperTest {
         )
 
         val expected = listOf(
-            CardBrand(CardType.VISA.txVariant),
-            CardBrand(CardType.MASTERCARD.txVariant),
+            CardBrand.VISA,
+            CardBrand.MASTERCARD,
         )
         assertEquals(expected, params.supportedCardBrands)
     }
@@ -368,7 +367,7 @@ internal class CardComponentParamsMapperTest {
 
     @Test
     fun `when installmentConfiguration has cardBasedOptions then installmentParams has cardBasedOptions`() {
-        val mcBrand = CardBrand(CardType.MASTERCARD.txVariant)
+        val mcBrand = CardBrand.MASTERCARD
         val installmentConfiguration = createInstallmentConfiguration(
             cardBasedOptions = mapOf(
                 mcBrand to createInstallmentOptions(
@@ -488,7 +487,7 @@ internal class CardComponentParamsMapperTest {
 
     @Test
     fun `when all custom configuration fields are set then all fields should match`() {
-        val customBrands = listOf(CardBrand(CardType.DINERS.txVariant), CardBrand(CardType.MAESTRO.txVariant))
+        val customBrands = listOf(CardBrand.DINERS, CardBrand.MAESTRO)
 
         val params = mapper.mapToParams(
             params = generateCheckoutParams(

@@ -12,24 +12,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
+import com.adyen.checkout.core.components.internal.ui.SecondaryScreenHost
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * A [Composable] that displays the payment method input UI for the given [controller].
  *
+ * Secondary screens of the payment method, such as pickers, are displayed on top of this UI.
+ *
  * Use this when you want to render the payment method screen yourself. To render the whole flow
- * (payment method, action and secondary screens) automatically, use [CheckoutPaymentFlow] instead.
+ * (payment method and action screens) automatically, use [CheckoutPaymentFlow] instead.
  *
  * @param controller The [CheckoutController] driving this flow.
  * @param modifier The [Modifier] to be applied to the payment method UI.
- * @param theme The [CheckoutTheme] used to style the UI.
+ * @param theme An optional [CheckoutTheme] to override the UI styling.
  * @param localizationProvider An optional [CheckoutLocalizationProvider] to override the displayed strings.
  */
 @Composable
 fun CheckoutPaymentMethod(
     controller: CheckoutController,
     modifier: Modifier = Modifier,
-    theme: CheckoutTheme = CheckoutTheme(),
+    theme: CheckoutTheme? = null,
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
     CheckoutCompositionLocalProvider(
@@ -43,9 +47,11 @@ fun CheckoutPaymentMethod(
 }
 
 @Composable
-internal fun CheckoutPaymentMethodInternal(
-    controller: CheckoutController,
-    modifier: Modifier,
-) {
-    controller.paymentComponent?.Content(modifier)
+internal fun CheckoutPaymentMethodInternal(controller: CheckoutController, modifier: Modifier) {
+    val paymentComponent = controller.paymentComponent ?: return
+    if (paymentComponent !is SecondaryScreenComponent) {
+        paymentComponent.Content(modifier)
+        return
+    }
+    SecondaryScreenHost(paymentComponent, modifier)
 }
