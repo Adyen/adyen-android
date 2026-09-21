@@ -23,6 +23,7 @@ data class InternalTextStyles(
     val subHeadlineEmphasized: InternalTextStyle,
     val footnote: InternalTextStyle,
     val footnoteEmphasized: InternalTextStyle,
+    val label: InternalTextStyle,
 ) {
 
     internal companion object {
@@ -38,6 +39,7 @@ data class InternalTextStyles(
                 subHeadlineEmphasized = TextStyleDefaults.subHeadlineEmphasized(font),
                 footnote = TextStyleDefaults.footnote(font),
                 footnoteEmphasized = TextStyleDefaults.footnoteEmphasized(font),
+                label = TextStyleDefaults.label(font),
             )
         }
     }

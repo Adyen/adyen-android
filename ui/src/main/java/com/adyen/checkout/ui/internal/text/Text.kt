@@ -6,6 +6,8 @@
  * Created by oscars on 26/11/2025.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.ui.internal.text
 
 import androidx.annotation.RestrictTo
@@ -120,6 +122,18 @@ fun FootnoteEmphasized(
     CheckoutText(text, CheckoutThemeProvider.textStyles.footnoteEmphasized, color, modifier, maxLines, textAlign)
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Composable
+fun Label(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = CheckoutThemeProvider.colors.text,
+    maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign? = null,
+) {
+    CheckoutText(text, CheckoutThemeProvider.textStyles.label, color, modifier, maxLines, textAlign)
+}
+
 @Composable
 private fun CheckoutText(
     text: String,
@@ -156,5 +170,6 @@ private fun TextPreview(
         SubHeadlineEmphasized("SubHeadline Emphasized")
         Footnote("Footnote")
         FootnoteEmphasized("Footnote Emphasized")
+        Label("Label")
     }
 }

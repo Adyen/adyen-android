@@ -36,7 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.text.Footnote
+import com.adyen.checkout.ui.internal.text.Label
 import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -86,7 +86,7 @@ internal fun CheckoutTextFieldDecorationBox(
         modifier = modifier,
     ) {
         label?.let {
-            SubHeadline(text = label)
+            Label(text = label)
         }
 
         Row(
@@ -129,7 +129,7 @@ internal fun CheckoutTextFieldDecorationBox(
         ) {
             val supportingTextColor = if (isError) style.errorColor else CheckoutThemeProvider.colors.textSecondary
             supportingText?.let {
-                Footnote(
+                SubHeadline(
                     text = it,
                     color = supportingTextColor,
                 )
