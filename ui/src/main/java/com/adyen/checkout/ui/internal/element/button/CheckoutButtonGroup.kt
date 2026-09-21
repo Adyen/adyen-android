@@ -11,8 +11,11 @@ package com.adyen.checkout.ui.internal.element.button
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonColors
@@ -23,16 +26,20 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -73,6 +80,7 @@ fun CheckoutButtonGroup(
                     items.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                 },
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -96,9 +104,15 @@ private fun CheckoutToggleButton(
         modifier = modifier.semantics { role = Role.RadioButton },
     ) {
         if (checked) {
-            BodyEmphasized(text, color = LocalContentColor.current)
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
+                contentDescription = null,
+                tint = LocalContentColor.current,
+            )
+            Spacer(Modifier.size(Dimensions.Spacing.Small))
+            BodyEmphasized(text, color = LocalContentColor.current, maxLines = 1)
         } else {
-            Body(text, color = LocalContentColor.current)
+            Body(text, color = LocalContentColor.current, maxLines = 1)
         }
     }
 }
