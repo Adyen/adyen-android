@@ -8,22 +8,18 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.common.internal.ui.IconHeaderContent
+import com.adyen.checkout.core.common.internal.ui.PaymentProgressStatus
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
-import com.adyen.checkout.dropin.internal.ui.element.PaymentMethodHeader
-import com.adyen.checkout.dropin.internal.ui.element.PaymentProgressStatus
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -41,21 +37,15 @@ internal fun PaymentMethodProgressContent(
     DropInScaffold(
         navigationIcon = { PaymentMethodNavigationIcon(navigator) },
     ) { innerPadding ->
-        Column(
-            verticalArrangement = Arrangement.Center,
+        IconHeaderContent(
+            logoTxVariant = viewState.logoTxVariant,
+            title = viewState.paymentMethodName,
+            description = resolveString(CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(Dimensions.Spacing.Large),
         ) {
-            PaymentMethodHeader(
-                logoTxVariant = viewState.logoTxVariant,
-                paymentMethodName = viewState.paymentMethodName,
-                description = resolveString(CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION),
-            )
-
-            Spacer(Modifier.size(Dimensions.Spacing.QuadrupleExtraLarge))
-
             PaymentProgressStatus(
                 title = resolveString(CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE),
             )
