@@ -149,11 +149,15 @@ private fun Modifier.styledBackground(
         isFocused -> style.activeColor
         else -> style.borderColor
     }
-    val borderWidth = if (isFocused || isError) style.borderWidth + 1 else style.borderWidth
+    val borderWidth = when {
+        isError -> style.errorBorderWidth
+        isFocused -> style.focusedBorderWidth
+        else -> style.defaultBorderWidth
+    }
     return this
         .background(style.backgroundColor, RoundedCornerShape(style.cornerRadius.dp))
         .border(
-            width = borderWidth.dp,
+            width = borderWidth,
             color = borderColor,
             shape = RoundedCornerShape(style.cornerRadius.dp),
         )
