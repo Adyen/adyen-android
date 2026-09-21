@@ -12,6 +12,8 @@
     <string name="checkout_mbway_phone_number" translatable="false">Phone number</string>
     <string name="checkout_mbway_invalid_phone_number" translatable="false">Invalid phone number</string>
     <string name="checkout_mbway_country_code" translatable="false">Country code</string>
+    <string name="checkout_mbway_country_code_picker_title" translatable="false">Country code</string>
+    <string name="checkout_mbway_country_code_picker_description" translatable="false">Placeholder description for the country code picker.</string>
     <string name="checkout_card_number" translatable="false">Card Number</string>
     <string name="checkout_card_number_invalid" translatable="false">Invalid card number</string>
     <string name="checkout_card_number_invalid_unsupported_brand" translatable="false">The entered card brand isn\'t supported</string>

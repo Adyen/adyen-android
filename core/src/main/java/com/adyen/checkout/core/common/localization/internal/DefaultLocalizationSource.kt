@@ -152,6 +152,11 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> R.string.checkout_mbway_phone_number
             CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER -> R.string.checkout_mbway_invalid_phone_number
             CheckoutLocalizationKey.MBWAY_COUNTRY_CODE -> R.string.checkout_mbway_country_code
+            CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_TITLE ->
+                R.string.checkout_mbway_country_code_picker_title
+
+            CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_DESCRIPTION ->
+                R.string.checkout_mbway_country_code_picker_description
 
             // Blik
             CheckoutLocalizationKey.BLIK_CODE -> R.string.checkout_blik_code
