@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.mbway.internal.ui.view
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -21,6 +23,9 @@ import com.adyen.checkout.ui.internal.element.SearchableValuePicker
 import com.adyen.checkout.ui.internal.element.ValuePickerItem
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.Title
+import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -39,15 +44,24 @@ internal fun CountryCodePicker(
             )
         }
     }
-    SearchableValuePicker(
-        searchHint = resolveString(CheckoutLocalizationKey.GENERAL_SEARCH_HINT),
-        items = countries,
-        onItemClick = { item ->
-            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountry
-            onItemClick(country)
-        },
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         modifier = modifier,
-    )
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Medium)) {
+            Title(resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_TITLE))
+            Body(resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_DESCRIPTION))
+        }
+        SearchableValuePicker(
+            searchHint = resolveString(CheckoutLocalizationKey.GENERAL_SEARCH_HINT),
+            items = countries,
+            onItemClick = { item ->
+                val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountry
+                onItemClick(country)
+            },
+            modifier = modifier,
+        )
+    }
 }
 
 @Preview(showBackground = true)
