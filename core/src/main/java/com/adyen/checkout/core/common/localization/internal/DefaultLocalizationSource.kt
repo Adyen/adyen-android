@@ -98,8 +98,6 @@ internal class DefaultLocalizationSource {
                 R.string.checkout_card_installments_option_regular_description_with_price
 
             // Drop-in
-            CheckoutLocalizationKey.DROP_IN_ACTION_DESCRIPTION -> R.string.checkout_drop_in_action_description
-            CheckoutLocalizationKey.DROP_IN_ACTION_PROCESSING -> R.string.checkout_drop_in_action_processing
             CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION ->
                 R.string.checkout_dropin_generic_payment_method_description
 

@@ -17,5 +17,4 @@ import com.adyen.checkout.core.components.CheckoutController
 internal class InstantPaymentMethod(
     val paymentFlowType: DropInPaymentFlowType,
     val controller: CheckoutController,
-    val actionViewState: ActionViewState,
 )
