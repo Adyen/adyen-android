@@ -77,6 +77,7 @@ internal fun CheckoutTextFieldDecorationBox(
     label: String? = null,
     prefix: String? = null,
     hint: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val isFocused = interactionSource.collectIsFocusedAsState().value
@@ -100,6 +101,8 @@ internal fun CheckoutTextFieldDecorationBox(
                 .heightIn(Dimensions.MinTouchTarget)
                 .padding(horizontal = Dimensions.Spacing.Large),
         ) {
+            leadingIcon?.invoke()
+
             prefix?.let {
                 Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
             }

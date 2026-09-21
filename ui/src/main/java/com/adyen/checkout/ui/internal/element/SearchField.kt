@@ -10,6 +10,7 @@ package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.delete
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -38,6 +40,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 fun SearchField(
     modifier: Modifier = Modifier,
+    state: TextFieldState = rememberTextFieldState(),
     hint: String,
     onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
@@ -45,8 +48,7 @@ fun SearchField(
     isError: Boolean = false,
     shouldFocus: Boolean = false,
 ) {
-    val state = rememberTextFieldState()
-    val style = CheckoutThemeProvider.elements.textField
+    val style = CheckoutThemeProvider.elements.searchField
     CheckoutTextField(
         state = state,
         onValueChange = onValueChange,
@@ -57,44 +59,46 @@ fun SearchField(
         enabled = enabled,
         innerIndication = null,
         shouldFocus = shouldFocus,
-        trailingIcon = {
-            TrailingSearchIcon(
-                isQueryEmpty = state.text.isEmpty(),
-                onDeleteClick = { state.edit { delete(0, state.text.length) } },
-                rippleColor = style.textColor,
+        style = style,
+        leadingIcon = {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_search),
+                contentDescription = null,
+                tint = style.textColor,
             )
         },
+        trailingIcon = trailingSearchIcon(
+            shouldShowIcon = state.text.isNotEmpty(),
+            onDeleteClick = { state.edit { delete(0, state.text.length) } },
+            rippleColor = style.textColor,
+        ),
         modifier = modifier,
     )
 }
 
 @Composable
-private fun TrailingSearchIcon(
-    isQueryEmpty: Boolean,
+private fun trailingSearchIcon(
+    shouldShowIcon: Boolean,
     onDeleteClick: () -> Unit,
     rippleColor: Color,
-) {
-    val trailingIconResource = if (isQueryEmpty) {
-        R.drawable.ic_search
-    } else {
-        R.drawable.ic_cross
-    }
-
-    Icon(
-        imageVector = ImageVector.vectorResource(trailingIconResource),
-        contentDescription = null,
-        tint = CheckoutThemeProvider.colors.text,
-        modifier = if (!isQueryEmpty) {
-            Modifier.clickable(
-                interactionSource = null,
-                indication = ripple(color = rippleColor, radius = Dimensions.Spacing.Medium),
-                role = Role.Button,
-                onClick = onDeleteClick,
+): (@Composable () -> Unit)? {
+    return if (shouldShowIcon) {
+        @Composable {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
+                contentDescription = null,
+                tint = CheckoutThemeProvider.colors.text,
+                modifier = Modifier.clickable(
+                    interactionSource = null,
+                    indication = ripple(color = rippleColor, radius = Dimensions.Spacing.Medium),
+                    role = Role.Button,
+                    onClick = onDeleteClick,
+                ),
             )
-        } else {
-            Modifier
-        },
-    )
+        }
+    } else {
+        null
+    }
 }
 
 @Preview
@@ -110,6 +114,7 @@ private fun SearchFieldPreview(
         val focusRequester = remember { FocusRequester() }
         SearchField(
             hint = "Search..",
+            state = rememberTextFieldStateWithCurrentValue("Value"),
             modifier = Modifier.focusRequester(focusRequester),
         )
         LaunchedEffect(Unit) {
