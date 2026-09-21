@@ -15,11 +15,11 @@ import com.adyen.checkout.core.common.CheckoutResultCode
  *
  * @property resultCode The result code of the payment.
  * @property sessionId A unique identifier of the session.
- * @property sessionData The payment session data. You can forward this alongside [sessionId] to your server to fetch
- * the result of the payment.
+ * @property sessionResult You can forward this alongside [sessionId] to your server to fetch the result of the
+ * payment.
  */
 data class SessionCheckoutResult(
     val resultCode: CheckoutResultCode,
     val sessionId: String,
-    val sessionData: String,
+    val sessionResult: String,
 )
