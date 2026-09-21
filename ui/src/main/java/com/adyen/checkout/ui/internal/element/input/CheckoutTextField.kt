@@ -113,9 +113,10 @@ fun CheckoutTextField(
     prefix: String? = null,
     hint: String? = null,
     isSecureField: Boolean = false,
+    style: InternalTextFieldStyle = CheckoutThemeProvider.elements.textField,
+    leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)?,
 ) {
-    val style = CheckoutThemeProvider.elements.textField
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
@@ -141,6 +142,7 @@ fun CheckoutTextField(
             innerIndication = innerIndication,
             prefix = prefix,
             hint = if (state.text.isEmpty()) hint else null,
+            leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             style = style,
         )
@@ -241,6 +243,13 @@ private fun CheckoutTextFieldPreview(
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue("Value"),
             contentType = null,
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_search),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            },
             trailingIcon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
