@@ -69,12 +69,12 @@ internal class UiCustomizationMapperTest {
     }
 
     @Test
-    fun `when mapping then secondary buttons use primary text color and corner radius`() {
+    fun `when mapping then secondary buttons use text color and corner radius`() {
         val uiCustomization = mapToUiCustomization(COLORS, ATTRIBUTES)
 
         listOf(ButtonType.CANCEL, ButtonType.RESEND, ButtonType.OPEN_OOB_APP).forEach { buttonType ->
             with(uiCustomization.getButtonCustomization(buttonType)) {
-                assertEquals(PRIMARY, textColor)
+                assertEquals(TEXT, textColor)
                 assertEquals(CORNER_RADIUS, cornerRadius)
             }
         }

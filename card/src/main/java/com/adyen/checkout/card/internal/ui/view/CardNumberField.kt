@@ -166,7 +166,7 @@ private fun CardNumberTrailingIcon(
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
                         contentDescription = null,
-                        tint = CheckoutThemeProvider.colors.primary,
+                        tint = CheckoutThemeProvider.colors.text,
                     )
                 }
             }

@@ -110,7 +110,7 @@ private fun SecurityCodeTrailingIcon(
         when (state) {
             SecurityCodeTrailingIcon.Checkmark -> SecurityCodeTrailingIcon(
                 resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark,
-                tint = CheckoutThemeProvider.colors.primary,
+                tint = CheckoutThemeProvider.colors.text,
             )
 
             SecurityCodeTrailingIcon.PlaceholderAmex -> SecurityCodeTrailingIcon(

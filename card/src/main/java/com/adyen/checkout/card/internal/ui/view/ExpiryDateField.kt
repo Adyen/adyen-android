@@ -99,7 +99,7 @@ private fun ExpiryDateTrailingIcon(
         when (state) {
             ExpiryDateTrailingIcon.Checkmark -> ExpiryDateTrailingIcon(
                 resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark,
-                tint = CheckoutThemeProvider.colors.primary,
+                tint = CheckoutThemeProvider.colors.text,
             )
 
             ExpiryDateTrailingIcon.Placeholder -> ExpiryDateTrailingIcon(
