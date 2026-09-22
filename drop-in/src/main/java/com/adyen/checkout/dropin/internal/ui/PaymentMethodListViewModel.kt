@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 
 internal class PaymentMethodListViewModel(
     private val checkoutParams: CheckoutParams,
+    private val dropInParams: DropInParams,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
     private val navigator: DropInNavigator,
@@ -94,7 +95,13 @@ internal class PaymentMethodListViewModel(
     }
 
     private fun createInitialViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
-        val storedPaymentMethodSection = storedPaymentMethods
+        val visibleStoredPaymentMethods = if (dropInParams.hideStoredPaymentMethods) {
+            emptyList()
+        } else {
+            storedPaymentMethods
+        }
+
+        val storedPaymentMethodSection = visibleStoredPaymentMethods
             .filter { paymentMethodSupportCheck.isSupported(it) }
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
@@ -170,6 +177,7 @@ internal class PaymentMethodListViewModel(
 
     class Factory(
         private val checkoutParams: CheckoutParams,
+        private val dropInParams: DropInParams,
         private val paymentMethodRepository: PaymentMethodRepository,
         private val navigator: DropInNavigator,
         private val controllerProvider: DropInControllerProvider,
@@ -179,6 +187,7 @@ internal class PaymentMethodListViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             return PaymentMethodListViewModel(
                 checkoutParams = checkoutParams,
+                dropInParams = dropInParams,
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
                 navigator = navigator,
