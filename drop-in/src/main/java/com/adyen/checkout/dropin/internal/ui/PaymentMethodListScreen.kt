@@ -47,7 +47,6 @@ import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -206,7 +205,7 @@ private fun TextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    BodyEmphasized(
+    Body(
         text = text,
         color = CheckoutThemeProvider.colors.highlight,
         modifier = modifier
