@@ -483,6 +483,9 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 }
 
 public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
+	public static final field AUTHENTICATION_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field AUTHENTICATION_STATUS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field AUTHENTICATION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AWAIT_LOADING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field BLIK_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field BLIK_CODE_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
