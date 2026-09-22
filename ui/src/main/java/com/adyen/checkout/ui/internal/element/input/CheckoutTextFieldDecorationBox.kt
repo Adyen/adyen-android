@@ -21,9 +21,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
@@ -65,6 +67,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
  * @param trailingIcon An optional composable function that provides a trailing icon to be
  * displayed at the end of the text field.
  */
+@Suppress("LongMethod")
 @Composable
 internal fun CheckoutTextFieldDecorationBox(
     innerTextField: @Composable () -> Unit,
@@ -91,20 +94,24 @@ internal fun CheckoutTextFieldDecorationBox(
         }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .clip(RoundedCornerShape(style.cornerRadius.dp))
                 .indication(interactionSource, innerIndication)
                 .styledBackground(style, isFocused, isError)
                 .fillMaxWidth()
-                .heightIn(Dimensions.MinTouchTarget)
-                .padding(horizontal = Dimensions.Spacing.Large),
+                .heightIn(Dimensions.MinTouchTarget),
         ) {
-            leadingIcon?.invoke()
+            Spacer(Modifier.size(Dimensions.Spacing.Large))
+
+            if (leadingIcon != null) {
+                leadingIcon()
+                Spacer(Modifier.size(Dimensions.Spacing.Small))
+            }
 
             prefix?.let {
                 Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
+                Spacer(Modifier.size(Dimensions.Spacing.Small))
             }
 
             val selectionColor = style.activeColor
@@ -122,7 +129,19 @@ internal fun CheckoutTextFieldDecorationBox(
                 }
             }
 
-            trailingIcon?.invoke()
+            if (trailingIcon == null) {
+                Spacer(Modifier.size(Dimensions.Spacing.Large))
+            } else {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.sizeIn(
+                        minWidth = Dimensions.MinTouchTarget,
+                        minHeight = Dimensions.MinTouchTarget,
+                    ),
+                ) {
+                    trailingIcon()
+                }
+            }
         }
 
         AnimatedVisibility(

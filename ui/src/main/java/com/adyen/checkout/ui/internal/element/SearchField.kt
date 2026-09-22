@@ -9,22 +9,19 @@
 package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.delete
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ripple
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
@@ -33,7 +30,6 @@ import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCu
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -70,7 +66,6 @@ fun SearchField(
         trailingIcon = trailingSearchIcon(
             shouldShowIcon = state.text.isNotEmpty(),
             onDeleteClick = { state.edit { delete(0, state.text.length) } },
-            rippleColor = style.textColor,
         ),
         modifier = modifier,
     )
@@ -80,21 +75,16 @@ fun SearchField(
 private fun trailingSearchIcon(
     shouldShowIcon: Boolean,
     onDeleteClick: () -> Unit,
-    rippleColor: Color,
 ): (@Composable () -> Unit)? {
     return if (shouldShowIcon) {
         @Composable {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-                modifier = Modifier.clickable(
-                    interactionSource = null,
-                    indication = ripple(color = rippleColor, radius = Dimensions.Spacing.Medium),
-                    role = Role.Button,
-                    onClick = onDeleteClick,
-                ),
-            )
+            IconButton(onClick = onDeleteClick) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_cross),
+                    contentDescription = null,
+                    tint = CheckoutThemeProvider.colors.text,
+                )
+            }
         }
     } else {
         null
