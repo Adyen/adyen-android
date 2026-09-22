@@ -71,10 +71,6 @@ internal class PaymentMethodListViewModel(
         return InstantPaymentMethod(
             paymentFlowType = paymentFlowType,
             controller = controllerProvider.provide(paymentFlowType, viewModelScope),
-            actionViewState = ActionViewState(
-                logoTxVariant = PaymentMethodFormatter.getIcon(paymentMethod),
-                paymentMethodName = paymentMethod.name,
-            ),
         )
     }
 

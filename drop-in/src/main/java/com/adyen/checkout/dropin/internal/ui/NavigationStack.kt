@@ -152,7 +152,6 @@ private fun actionNavEntry(
                 val paymentMethodViewModel = paymentMethodViewModel(key.paymentFlowType, viewModel, parentOwner)
                 ActionScreen(
                     navigator = viewModel.navigator,
-                    viewState = paymentMethodViewModel.actionViewState,
                     controller = paymentMethodViewModel.controller,
                 )
             }
@@ -168,7 +167,6 @@ private fun actionNavEntry(
                 } else {
                     ActionScreen(
                         navigator = viewModel.navigator,
-                        viewState = instantPaymentMethod.actionViewState,
                         controller = instantPaymentMethod.controller,
                     )
                 }

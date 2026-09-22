@@ -106,16 +106,6 @@ internal class PaymentMethodListViewModelTest {
     }
 
     @Test
-    fun `when an instant payment method is offered, then its action state carries its logo and name`() {
-        val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
-
-        assertEquals(
-            ActionViewState(logoTxVariant = PaymentMethodTypes.GOOGLE_PAY, paymentMethodName = "Google Pay"),
-            viewModel.instantPaymentMethod?.actionViewState,
-        )
-    }
-
-    @Test
     fun `when an instant payment method is offered, then it is not submitted`() {
         createViewModel(listOf(CARD, GOOGLE_PAY))
 

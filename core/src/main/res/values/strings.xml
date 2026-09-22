@@ -48,8 +48,6 @@
     <string name="checkout_card_installments_option_revolving_description" translatable="false">Predetermined amount each month</string>
     <string name="checkout_card_installments_option_regular_description" translatable="false">%s monthly payments</string>
     <string name="checkout_card_installments_option_regular_description_with_price" translatable="false">%s monthly payments of %s</string>
-    <string name="checkout_drop_in_action_description" translatable="false">You are being redirected to complete the next step of the process.</string>
-    <string name="checkout_drop_in_action_processing" translatable="false">Processing..</string>
     <string name="checkout_dropin_generic_payment_method_description" translatable="false">You will be guided to the next step of the process.</string>
     <string name="checkout_dropin_generic_payment_method_progress_title" translatable="false">Processing..</string>
     <string name="checkout_drop_in_manage_favorites_title" translatable="false">Manage your favorite payment options</string>

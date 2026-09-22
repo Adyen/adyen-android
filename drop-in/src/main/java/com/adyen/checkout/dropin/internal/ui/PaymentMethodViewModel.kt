@@ -37,9 +37,6 @@ import kotlinx.coroutines.launch
  * The [ActionNavKey] that follows an action declares that same entry as its parent, so it reads this instance back out
  * of its store rather than being handed the controller. That is what lets the flow survive the navigation from this
  * screen to the action screen, even though the action replaces this screen on the back stack.
- *
- * Serving those two screens is also why there are two states here: they render the same payment method, but not the
- * same parts of it.
  */
 internal class PaymentMethodViewModel(
     private val paymentFlowType: DropInPaymentFlowType,
@@ -54,8 +51,6 @@ internal class PaymentMethodViewModel(
     private val paymentMethod = resolvePaymentMethod()
 
     val paymentMethodViewState: PaymentMethodViewState = createPaymentMethodViewState()
-
-    val actionViewState: ActionViewState = createActionViewState()
 
     init {
         observeNavigation()
@@ -128,13 +123,6 @@ internal class PaymentMethodViewModel(
             )
         }
     }
-
-    // TODO - A card resolves to the generic card logo rather than the brand the shopper selected, which is what this
-    //  screen should be showing. Either show the brand here, or resolve the logo another way.
-    private fun createActionViewState() = ActionViewState(
-        logoTxVariant = paymentMethod.getLogoTxVariant(),
-        paymentMethodName = paymentMethod.name,
-    )
 
     private fun PaymentMethodResponse.getStoredTitle(): String = when (this) {
         is StoredPaymentMethod -> StoredPaymentMethodFormatter.getTitle(this)

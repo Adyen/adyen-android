@@ -175,20 +175,6 @@ internal class PaymentMethodViewModelTest {
     }
 
     @Test
-    fun `when created, then the action state carries the logo of the payment method`() {
-        val viewModel = createViewModel(REGULAR_TYPE)
-
-        assertEquals("card", viewModel.actionViewState.logoTxVariant)
-    }
-
-    @Test
-    fun `when created for a stored payment method, then the action state carries the logo of its brand`() {
-        val viewModel = createViewModel(STORED_TYPE)
-
-        assertEquals("visa", viewModel.actionViewState.logoTxVariant)
-    }
-
-    @Test
     fun `when created, then a single controller is created for the payment flow type`() {
         val viewModel = createViewModel(REGULAR_TYPE)
 
