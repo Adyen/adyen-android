@@ -34,6 +34,7 @@ import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.redirect.internal.ui.view.RedirectContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -65,6 +66,11 @@ constructor(
             redirectHandler = redirectHandler,
             viewEventFlow = redirectEventFlow,
             onError = ::emitError,
+        )
+
+        RedirectContent(
+            logoTxVariant = action.paymentMethodType.orEmpty(),
+            modifier = modifier,
         )
     }
 
