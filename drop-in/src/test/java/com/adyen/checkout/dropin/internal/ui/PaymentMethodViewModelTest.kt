@@ -10,12 +10,15 @@ package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
@@ -47,10 +50,16 @@ internal class PaymentMethodViewModelTest {
     private val createdControllers = mutableListOf<CheckoutController>()
     private val navigator = DropInNavigator(InMemoryBackStackPersister())
 
-    private val dropInParams = DropInParams(
+    private val checkoutParams = CheckoutParams(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
+        clientKey = CLIENT_KEY,
+        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = Amount(currency = "USD", value = 999L),
+        showSubmitButton = true,
+        publicKey = null,
+        additionalConfigurations = emptyMap(),
+        additionalSessionParams = null,
     )
 
     private var navigationFlow: Flow<CheckoutRoute> = emptyFlow()
@@ -282,7 +291,7 @@ internal class PaymentMethodViewModelTest {
 
     private fun createViewModel(paymentFlowType: DropInPaymentFlowType) = PaymentMethodViewModel(
         paymentFlowType = paymentFlowType,
-        dropInParams = dropInParams,
+        checkoutParams = checkoutParams,
         paymentMethodRepository = paymentMethodRepository,
         navigator = navigator,
         controllerProvider = controllerProvider,
@@ -300,6 +309,7 @@ internal class PaymentMethodViewModelTest {
 
     private companion object {
         private const val STORED_ID = "stored-id-1"
+        private const val CLIENT_KEY = "test_client_key"
         private val REGULAR_TYPE = DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.SCHEME)
         private val STORED_TYPE = DropInPaymentFlowType.StoredPaymentMethod(STORED_ID)
     }

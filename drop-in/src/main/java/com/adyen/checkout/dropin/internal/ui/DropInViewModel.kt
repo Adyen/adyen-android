@@ -13,12 +13,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
-import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
+import com.adyen.checkout.core.common.internal.publicKey
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
@@ -38,7 +38,9 @@ internal class DropInViewModel(
     private val dropInServiceManager: DropInServiceManager,
 ) : ViewModel() {
 
-    lateinit var dropInParams: DropInParams
+    val checkoutParams: CheckoutParams = createCheckoutParams()
+
+    val dropInParams: DropInParams = DropInParamsMapper().mapToParams(checkoutParams)
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
 
@@ -50,7 +52,6 @@ internal class DropInViewModel(
 
     init {
         initializePaymentMethods()
-        initializeDropInParams()
         initializeBackStack()
     }
 
@@ -61,19 +62,12 @@ internal class DropInViewModel(
         )
     }
 
-    private fun initializeDropInParams() {
-        try {
-            val sessionParams = (input.checkoutContext as? CheckoutContext.Sessions?)?.checkoutSession?.let {
-                SessionParamsFactory.create(it)
-            }
-            dropInParams = DropInParamsMapper().map(
-                checkoutConfiguration = input.checkoutContext.checkoutConfiguration,
-                sessionParams = sessionParams,
-            )
-        } catch (e: IllegalStateException) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to create DropInParams" }
-            // TODO - Return DropInResult.Failed and close drop-in
-        }
+    private fun createCheckoutParams(): CheckoutParams {
+        return CheckoutParamsFactory().create(
+            configuration = input.checkoutContext.checkoutConfiguration,
+            session = (input.checkoutContext as? CheckoutContext.Sessions)?.checkoutSession,
+            publicKey = input.checkoutContext.publicKey,
+        )
     }
 
     private fun initializeBackStack() {

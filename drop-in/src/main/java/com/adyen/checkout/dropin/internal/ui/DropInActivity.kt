@@ -55,10 +55,10 @@ class DropInActivity : ComponentActivity() {
         setContent {
             CheckoutCompositionLocalProvider(
                 theme = input.theme,
-                locale = viewModel.dropInParams.shopperLocale,
+                locale = viewModel.checkoutParams.shopperLocale,
                 // TODO - support custom localization for drop-in
                 localizationProvider = null,
-                environment = viewModel.dropInParams.environment,
+                environment = viewModel.checkoutParams.environment,
             ) {
                 NavigationStack(viewModel)
             }

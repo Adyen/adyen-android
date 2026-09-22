@@ -10,12 +10,15 @@ package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
@@ -47,10 +50,16 @@ internal class PaymentMethodListViewModelTest {
     private val createdControllers = mutableListOf<CheckoutController>()
     private val navigator = DropInNavigator(InMemoryBackStackPersister())
 
-    private val dropInParams = DropInParams(
+    private val checkoutParams = CheckoutParams(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
+        clientKey = CLIENT_KEY,
+        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = Amount(currency = "USD", value = 999L),
+        showSubmitButton = true,
+        publicKey = null,
+        additionalConfigurations = emptyMap(),
+        additionalSessionParams = null,
     )
 
     private var navigationFlow: Flow<CheckoutRoute> = emptyFlow()
@@ -173,7 +182,7 @@ internal class PaymentMethodListViewModelTest {
         viewState.value.paymentOptionsSection?.options.orEmpty().map { it.id }
 
     private fun createViewModel(paymentMethods: List<PaymentMethod>) = PaymentMethodListViewModel(
-        dropInParams = dropInParams,
+        checkoutParams = checkoutParams,
         paymentMethodRepository = TestPaymentMethodRepository(paymentMethods = paymentMethods),
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
         navigator = navigator,
@@ -190,6 +199,8 @@ internal class PaymentMethodListViewModelTest {
     }
 
     private companion object {
+        private const val CLIENT_KEY = "test_client_key"
+
         private val CARD = CardPaymentMethod(
             type = PaymentMethodTypes.SCHEME,
             name = "Cards",

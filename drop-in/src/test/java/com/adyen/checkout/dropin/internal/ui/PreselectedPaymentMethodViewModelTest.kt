@@ -9,8 +9,11 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
@@ -28,10 +31,16 @@ internal class PreselectedPaymentMethodViewModelTest {
 
     private lateinit var navigator: DropInNavigator
 
-    private val dropInParams = DropInParams(
+    private val checkoutParams = CheckoutParams(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
+        clientKey = CLIENT_KEY,
+        analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = Amount(currency = "USD", value = 999L),
+        showSubmitButton = true,
+        publicKey = null,
+        additionalConfigurations = emptyMap(),
+        additionalSessionParams = null,
     )
 
     private val storedPaymentMethod = StoredCardPaymentMethod(
@@ -133,9 +142,13 @@ internal class PreselectedPaymentMethodViewModelTest {
         repository: TestPaymentMethodRepository,
         storedPaymentMethodId: String,
     ) = PreselectedPaymentMethodViewModel(
-        dropInParams = dropInParams,
+        checkoutParams = checkoutParams,
         paymentMethodRepository = repository,
         storedPaymentMethodId = storedPaymentMethodId,
         navigator = navigator,
     )
+
+    private companion object {
+        private const val CLIENT_KEY = "test_client_key"
+    }
 }
