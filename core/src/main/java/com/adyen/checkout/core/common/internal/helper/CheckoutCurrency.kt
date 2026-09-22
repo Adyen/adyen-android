@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 29/3/2023.
+ * Created by oscars on 18/9/2026.
  */
-package com.adyen.checkout.core.common
+
+package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.Keep
+import androidx.annotation.RestrictTo
 
 /**
  * Utility class holding currency information.
@@ -15,11 +17,11 @@ import androidx.annotation.Keep
  */
 @Suppress("MagicNumber")
 @Keep
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CheckoutCurrency(val fractionDigits: Int) {
     AED(2),
     ALL(2),
     AMD(2),
-    ANG(2),
     AOA(2),
     ARS(2),
     AUD(2),
@@ -28,7 +30,6 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     BAM(2),
     BBD(2),
     BDT(2),
-    BGN(2),
     BHD(3),
     BMD(2),
     BND(2),
@@ -41,6 +42,7 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     CAD(2),
     CHF(2),
     CLP(2),
+    CNH(2),
     CNY(2),
     COP(2),
     CRC(2),
@@ -66,7 +68,6 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     GYD(2),
     HKD(2),
     HNL(2),
-    HRK(2),
     HTG(2),
     HUF(2),
     IDR(0),
@@ -86,7 +87,6 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     KYD(2),
     KZT(2),
     LAK(2),
-    LBP(2),
     LKR(2),
     LYD(3),
     MAD(2),
@@ -127,7 +127,6 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     SEK(2),
     SGD(2),
     SHP(2),
-    SLL(2),
     SLE(2),
     SOS(2),
     SRD(2),
@@ -152,12 +151,14 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     WST(2),
     XAF(0),
     XCD(2),
+    XCG(2),
     XOF(0),
     XPF(0),
     YER(2),
     ZAR(2),
     ZMW(2);
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     companion object {
         private val CURRENCIES_HASHMAP: Map<String, CheckoutCurrency> = entries.associateBy { it.name }
 

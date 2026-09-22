@@ -9,9 +9,9 @@
 package com.adyen.checkout.googlepay.internal.ui.model
 
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.CheckoutCurrency
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.helper.CheckoutCurrency
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod

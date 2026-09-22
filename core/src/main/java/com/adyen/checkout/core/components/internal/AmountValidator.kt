@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.common.CheckoutCurrency
+import com.adyen.checkout.core.common.internal.helper.CheckoutCurrency
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.error.CheckoutError
 
