@@ -69,7 +69,10 @@ internal class AwaitComponent(
             onError = ::emitError,
         )
 
-        AwaitContent(modifier)
+        AwaitContent(
+            logoTxVariant = action.paymentMethodType.orEmpty(),
+            modifier = modifier,
+        )
     }
 
     override fun handleAction() {

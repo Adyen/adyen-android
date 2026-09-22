@@ -486,7 +486,9 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field AUTHENTICATION_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AUTHENTICATION_STATUS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AUTHENTICATION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field AWAIT_LOADING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field AWAIT_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field AWAIT_STATUS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field AWAIT_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field BLIK_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field BLIK_CODE_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field BLIK_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
