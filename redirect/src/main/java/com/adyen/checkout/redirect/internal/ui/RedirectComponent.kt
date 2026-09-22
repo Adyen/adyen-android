@@ -17,6 +17,7 @@ import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
+import com.adyen.checkout.core.action.internal.ui.ActionFormatter
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -69,7 +70,7 @@ constructor(
         )
 
         RedirectContent(
-            logoTxVariant = action.paymentMethodType.orEmpty(),
+            logoTxVariant = ActionFormatter.getIcon(action),
             modifier = modifier,
         )
     }
