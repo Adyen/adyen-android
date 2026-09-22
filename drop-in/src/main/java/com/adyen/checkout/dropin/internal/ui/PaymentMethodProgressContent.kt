@@ -47,7 +47,7 @@ internal fun PaymentMethodProgressContent(
                 .padding(Dimensions.Spacing.Large),
         ) {
             PaymentProgressStatus(
-                title = resolveString(CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE),
+                title = resolveString(CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_STATUS),
             )
         }
     }

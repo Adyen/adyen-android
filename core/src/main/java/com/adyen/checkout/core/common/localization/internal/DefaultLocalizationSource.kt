@@ -108,8 +108,8 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION ->
                 R.string.checkout_dropin_generic_payment_method_description
 
-            CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE ->
-                R.string.checkout_dropin_generic_payment_method_progress_title
+            CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_STATUS ->
+                R.string.checkout_dropin_generic_payment_method_status
 
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
             CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->
