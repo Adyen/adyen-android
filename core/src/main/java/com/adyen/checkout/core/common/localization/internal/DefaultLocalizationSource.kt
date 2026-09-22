@@ -166,6 +166,11 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.PAY_BUTTON_NO_AMOUNT -> R.string.checkout_pay_button_no_amount
             CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT -> R.string.checkout_pay_button_zero_amount
             CheckoutLocalizationKey.PAY_BUTTON_WITH_AMOUNT -> R.string.checkout_pay_button_with_amount
+
+            // Redirect
+            CheckoutLocalizationKey.REDIRECT_TITLE -> R.string.checkout_redirect_title
+            CheckoutLocalizationKey.REDIRECT_DESCRIPTION -> R.string.checkout_redirect_description
+            CheckoutLocalizationKey.REDIRECT_STATUS -> R.string.checkout_redirect_status
         }
 
         return context.getString(resId)
