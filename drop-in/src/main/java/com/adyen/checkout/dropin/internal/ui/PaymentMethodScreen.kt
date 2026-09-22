@@ -8,14 +8,9 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.common.internal.ui.NavigationBackButton
+import com.adyen.checkout.core.common.internal.ui.NavigationCloseButton
 import com.adyen.checkout.core.components.CheckoutPaymentMethod
 
 @Composable
@@ -38,13 +33,9 @@ internal fun PaymentMethodScreen(
 
 @Composable
 internal fun PaymentMethodNavigationIcon(navigator: DropInNavigator) {
-    IconButton(
-        onClick = { navigator.back() },
-    ) {
-        if (navigator.isEmptyAfterCurrent()) {
-            Icon(Icons.Filled.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
-        } else {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, resolveString(CheckoutLocalizationKey.GENERAL_BACK))
-        }
+    if (navigator.isEmptyAfterCurrent()) {
+        NavigationCloseButton(onClick = { navigator.back() })
+    } else {
+        NavigationBackButton(onClick = { navigator.back() })
     }
 }
