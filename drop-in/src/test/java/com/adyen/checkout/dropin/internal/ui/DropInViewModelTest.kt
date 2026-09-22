@@ -41,7 +41,7 @@ import java.util.Locale
 @ExtendWith(LoggingExtension::class, TestDispatcherExtension::class)
 internal class DropInViewModelTest {
 
-    private val controllerProvider = DropInControllerProvider { _, _ -> mock<CheckoutController>() }
+    private val controllerProvider = DropInControllerProvider { _, _, _ -> mock<CheckoutController>() }
 
     @Test
     fun `when there are no stored payment methods, then the payment method list is the starting point`() {

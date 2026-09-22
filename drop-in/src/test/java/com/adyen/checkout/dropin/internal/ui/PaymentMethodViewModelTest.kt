@@ -9,11 +9,11 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
@@ -26,9 +26,6 @@ import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flowOf
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
@@ -48,6 +45,7 @@ internal class PaymentMethodViewModelTest {
     private val requestedPaymentFlowTypes = mutableListOf<DropInPaymentFlowType>()
     private val createdFlowScopes = mutableListOf<CoroutineScope>()
     private val createdControllers = mutableListOf<CheckoutController>()
+    private val capturedOnActions = mutableListOf<(ActionData) -> Unit>()
     private val navigator = DropInNavigator(InMemoryBackStackPersister())
 
     private val checkoutParams = CheckoutParams(
@@ -62,12 +60,12 @@ internal class PaymentMethodViewModelTest {
         additionalSessionParams = null,
     )
 
-    private var navigationFlow: Flow<CheckoutRoute> = emptyFlow()
     private var requiresUserInteraction: Boolean = true
 
-    private val controllerProvider = DropInControllerProvider { paymentFlowType, coroutineScope ->
+    private val controllerProvider = DropInControllerProvider { paymentFlowType, coroutineScope, onAction ->
         requestedPaymentFlowTypes += paymentFlowType
         createdFlowScopes += coroutineScope
+        capturedOnActions += onAction
         mockCheckoutController().also { createdControllers += it }
     }
 
@@ -199,10 +197,10 @@ internal class PaymentMethodViewModelTest {
     }
 
     @Test
-    fun `when the controller routes to an action, then the action replaces the back stack`() {
-        navigationFlow = flowOf(CheckoutRoute.Action())
-
+    fun `when the controller reports an action, then the action replaces the back stack`() {
         createViewModel(REGULAR_TYPE)
+
+        capturedOnActions.single().invoke(ActionData(ACTION_TYPE))
 
         // Replacing the back stack is what makes going back from the action cancel Drop-in.
         assertEquals(
@@ -212,10 +210,10 @@ internal class PaymentMethodViewModelTest {
     }
 
     @Test
-    fun `when the controller of a stored payment method routes to an action, then the action replaces the back stack`() {
-        navigationFlow = flowOf(CheckoutRoute.Action())
-
+    fun `when the controller of a stored payment method reports an action, then the action replaces the back stack`() {
         createViewModel(STORED_TYPE)
+
+        capturedOnActions.single().invoke(ActionData(ACTION_TYPE))
 
         assertEquals(
             listOf(EmptyNavKey, ActionNavKey(STORED_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
@@ -224,7 +222,7 @@ internal class PaymentMethodViewModelTest {
     }
 
     @Test
-    fun `when the controller routes nowhere, then the back stack is untouched`() {
+    fun `when the controller reports no action, then the back stack is untouched`() {
         createViewModel(REGULAR_TYPE)
 
         assertEquals(listOf(EmptyNavKey), navigator.backStack)
@@ -283,19 +281,15 @@ internal class PaymentMethodViewModelTest {
         controllerProvider = controllerProvider,
     )
 
-    /**
-     * [CheckoutController] is final with an internal constructor, so it can only be mocked rather than faked.
-     * [CheckoutController.navigation] has to be stubbed: left alone the mock returns `null`, which throws as soon as
-     * the view model collects it.
-     */
+    /** [CheckoutController] is final with an internal constructor, so it can only be mocked rather than faked. */
     private fun mockCheckoutController(): CheckoutController = mock {
-        on { navigation } doReturn navigationFlow
         on { requiresUserInteraction() } doReturn requiresUserInteraction
     }
 
     private companion object {
         private const val STORED_ID = "stored-id-1"
         private const val CLIENT_KEY = "test_client_key"
+        private const val ACTION_TYPE = "redirect"
         private val REGULAR_TYPE = DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.SCHEME)
         private val STORED_TYPE = DropInPaymentFlowType.StoredPaymentMethod(STORED_ID)
     }
