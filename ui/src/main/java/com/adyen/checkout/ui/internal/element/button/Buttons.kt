@@ -22,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -73,7 +74,11 @@ private fun PrimaryButtonPreview(
             text = "Primary",
             buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -128,7 +133,11 @@ private fun SecondaryButtonPreview(
             text = "Secondary",
             buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -183,7 +192,11 @@ private fun TertiaryButtonPreview(
             text = "Tertiary",
             buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -238,7 +251,11 @@ private fun DestructiveButtonPreview(
             text = "Destructive",
             buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )

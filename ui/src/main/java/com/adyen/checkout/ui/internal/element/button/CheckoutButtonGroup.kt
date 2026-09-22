@@ -108,6 +108,7 @@ private fun CheckoutToggleButton(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
                 contentDescription = null,
                 tint = LocalContentColor.current,
+                modifier = Modifier.size(Dimensions.IconSize.small),
             )
             Spacer(Modifier.size(Dimensions.Spacing.Small))
             BodyEmphasized(text, color = LocalContentColor.current, maxLines = 1)

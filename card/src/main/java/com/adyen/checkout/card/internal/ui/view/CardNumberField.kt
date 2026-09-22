@@ -159,14 +159,11 @@ private fun CardNumberTrailingIcon(
 
         when (state) {
             CardNumberTrailingIcon.ScanButton -> {
-                IconButton(
-                    onClick = onScanButtonClick,
-                    modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
-                ) {
+                IconButton(onClick = onScanButtonClick) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
                         contentDescription = null,
-                        tint = CheckoutThemeProvider.colors.text,
+                        tint = CheckoutThemeProvider.colors.highlight,
                     )
                 }
             }
