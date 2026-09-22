@@ -11,6 +11,7 @@ package com.adyen.checkout.ui.internal.element.input
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
@@ -68,6 +70,7 @@ fun ValuePickerField(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_chevron_right),
                 contentDescription = null,
                 tint = style.textColor,
+                modifier = Modifier.size(Dimensions.IconSize.small),
             )
         },
         modifier = modifier.clickable(

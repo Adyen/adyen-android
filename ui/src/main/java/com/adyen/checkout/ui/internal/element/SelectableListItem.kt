@@ -15,6 +15,7 @@ package com.adyen.checkout.ui.internal.element
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -62,6 +64,7 @@ fun SelectableListItem(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
                     contentDescription = null,
                     tint = CheckoutThemeProvider.colors.text,
+                    modifier = Modifier.size(Dimensions.IconSize.small),
                 )
             }
         },
