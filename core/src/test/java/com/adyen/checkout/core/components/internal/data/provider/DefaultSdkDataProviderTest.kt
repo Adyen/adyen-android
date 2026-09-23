@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.core.components.internal.data.provider
 
+import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
 import com.adyen.checkout.core.common.internal.model.getLongOrNull
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
+import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -48,6 +50,10 @@ internal class DefaultSdkDataProviderTest {
         )
         assertNotNull(jsonObject.getLongOrNull("createdAt"))
         assertEquals(true, jsonObject.getBooleanOrNull("supportNativeRedirect"))
+        assertEquals(AnalyticsPlatformParams.version, jsonObject.getStringOrNull("sdkVersion"))
+        assertEquals(AnalyticsPlatformParams.platform, jsonObject.getStringOrNull("platform"))
+        assertEquals(AnalyticsPlatformParams.channel, jsonObject.getStringOrNull("channel"))
+        assertEquals("nativeComponent", jsonObject.getStringOrNull("paymentMethodBehavior"))
     }
 
     @Test
@@ -57,6 +63,17 @@ internal class DefaultSdkDataProviderTest {
         assertNotNull(encodedSdkData)
         val jsonObject = decodeJsonObject(encodedSdkData!!)
         assertNull(jsonObject.optJSONObject("authentication")?.getStringOrNull("threeDS2SdkVersion"))
+    }
+
+    @Test
+    fun `when createEncodedSdkData is called with generic payment method behavior, then it is correctly set`() {
+        val encodedSdkData = sdkDataProvider.createEncodedSdkData(
+            paymentMethodBehavior = PaymentMethodBehavior.GENERIC,
+        )
+
+        assertNotNull(encodedSdkData)
+        val jsonObject = decodeJsonObject(encodedSdkData!!)
+        assertEquals("genericComponent", jsonObject.getStringOrNull("paymentMethodBehavior"))
     }
 
     private fun decodeJsonObject(encodedString: String): JSONObject {

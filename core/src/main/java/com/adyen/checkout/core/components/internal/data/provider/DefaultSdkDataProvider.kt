@@ -9,11 +9,13 @@
 package com.adyen.checkout.core.components.internal.data.provider
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.internal.data.model.sdkData.Analytics
 import com.adyen.checkout.core.components.internal.data.model.sdkData.Authentication
 import com.adyen.checkout.core.components.internal.data.model.sdkData.DirectSdkDataCreation
+import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.core.components.internal.data.model.sdkData.SdkData
 import org.json.JSONException
 import java.util.Date
@@ -30,8 +32,11 @@ class DefaultSdkDataProvider(
 ) : SdkDataProvider {
 
     @OptIn(ExperimentalEncodingApi::class)
-    override fun createEncodedSdkData(threeDS2SdkVersion: String?): String? {
-        val sdkData = createSdkData(threeDS2SdkVersion)
+    override fun createEncodedSdkData(
+        threeDS2SdkVersion: String?,
+        paymentMethodBehavior: PaymentMethodBehavior,
+    ): String? {
+        val sdkData = createSdkData(threeDS2SdkVersion, paymentMethodBehavior)
 
         try {
             val jsonObject = sdkData.serialize()
@@ -42,7 +47,10 @@ class DefaultSdkDataProvider(
         }
     }
 
-    private fun createSdkData(threeDS2SdkVersion: String? = null): SdkData {
+    private fun createSdkData(
+        threeDS2SdkVersion: String?,
+        paymentMethodBehavior: PaymentMethodBehavior,
+    ): SdkData {
         val authentication = threeDS2SdkVersion?.let {
             Authentication(
                 threeDS2SdkVersion = it,
@@ -57,6 +65,10 @@ class DefaultSdkDataProvider(
             authentication = authentication,
             createdAt = Date().time,
             supportNativeRedirect = true,
+            sdkVersion = AnalyticsPlatformParams.version,
+            platform = AnalyticsPlatformParams.platform,
+            channel = AnalyticsPlatformParams.channel,
+            paymentMethodBehavior = paymentMethodBehavior,
         )
     }
 

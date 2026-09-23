@@ -15,6 +15,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
@@ -85,7 +86,9 @@ internal class GenericPaymentComponent(
             data = PaymentComponentData(
                 paymentMethod = GenericDetails(
                     type = paymentMethodType,
-                    sdkData = sdkDataProvider.createEncodedSdkData(),
+                    sdkData = sdkDataProvider.createEncodedSdkData(
+                        paymentMethodBehavior = PaymentMethodBehavior.GENERIC,
+                    ),
                     // TODO - Check if we should remove subtype from GenericDetails
                     subtype = null,
                 ),

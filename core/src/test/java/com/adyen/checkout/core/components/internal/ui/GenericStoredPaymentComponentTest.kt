@@ -14,6 +14,7 @@ import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateReducer
@@ -37,6 +38,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -105,6 +107,20 @@ internal class GenericStoredPaymentComponentTest(
             storedPaymentMethodId = STORED_PAYMENT_METHOD_ID,
         )
         assertEquals(expectedDetails, (state as GenericStoredPaymentComponentState).data.paymentMethod)
+    }
+
+    @Test
+    fun `when submit is called then sdk data provider is called with native payment method behavior`() = runTest {
+        // GIVEN
+        stubStoredPaymentMethod()
+        val component = createComponent()
+        component.eventFlow.test(testScheduler)
+
+        // WHEN
+        component.submit()
+
+        // THEN
+        verify(sdkDataProvider).createEncodedSdkData(paymentMethodBehavior = PaymentMethodBehavior.NATIVE)
     }
 
     @Test
