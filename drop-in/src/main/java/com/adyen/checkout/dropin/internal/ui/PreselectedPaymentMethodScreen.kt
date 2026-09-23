@@ -13,16 +13,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
+import com.adyen.checkout.core.common.internal.ui.IconHeaderContent
 import com.adyen.checkout.core.common.internal.ui.NavigationCloseButton
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -30,9 +27,6 @@ import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.element.button.SecondaryButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
-import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.text.Title
-import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -65,55 +59,26 @@ private fun PreselectedPaymentMethodContent(
 
         Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
 
-        CheckoutNetworkLogo(
-            txVariant = viewState.logoTxVariant,
-            contentDescription = null,
-            modifier = Modifier
-                .size(Dimensions.LogoSize.large)
-                .align(Alignment.CenterHorizontally),
-        )
+        IconHeaderContent(
+            logoTxVariant = viewState.logoTxVariant,
+            title = viewState.title,
+            description = viewState.subtitle,
+            modifier = Modifier.padding(horizontal = Dimensions.Spacing.Large),
+        ) {
+            PrimaryButton(
+                onClick = onPayClicked,
+                text = viewState.payButtonText,
+                modifier = Modifier.fillMaxWidth(),
+            )
 
-        Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
+            Spacer(Modifier.size(Dimensions.Spacing.Large))
 
-        Title(
-            text = viewState.title,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Dimensions.Spacing.Large)
-                .align(Alignment.CenterHorizontally),
-        )
-
-        Spacer(Modifier.size(Dimensions.Spacing.Small))
-
-        Body(
-            text = viewState.subtitle,
-            color = CheckoutThemeProvider.colors.textSecondary,
-            modifier = Modifier
-                .padding(horizontal = Dimensions.Spacing.Large)
-                .align(Alignment.CenterHorizontally),
-        )
-
-        Spacer(Modifier.size(Dimensions.Spacing.Large))
-        Spacer(Modifier.size(Dimensions.Spacing.ExtraLarge))
-
-        PrimaryButton(
-            onClick = onPayClicked,
-            text = viewState.payButtonText,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Dimensions.Spacing.Large),
-        )
-
-        Spacer(Modifier.size(Dimensions.Spacing.Large))
-
-        SecondaryButton(
-            onClick = onOtherPaymentMethodClicked,
-            text = resolveString(CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Dimensions.Spacing.Large),
-        )
+            SecondaryButton(
+                onClick = onOtherPaymentMethodClicked,
+                text = resolveString(CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
