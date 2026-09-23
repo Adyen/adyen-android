@@ -28,7 +28,7 @@ internal fun MBWaySecondaryContent(
     when (identifier) {
         MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER -> {
             CountryCodePicker(
-                viewState = viewState,
+                viewState = viewState.countryPickerViewState,
                 onItemClick = onItemClick,
                 modifier = modifier,
             )

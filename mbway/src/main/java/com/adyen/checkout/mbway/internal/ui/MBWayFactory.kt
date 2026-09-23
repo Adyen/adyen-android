@@ -15,6 +15,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStatePostProcessor
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
@@ -35,6 +36,7 @@ internal class MBWayFactory : PaymentComponentFactory<MBWayComponent> {
             sdkDataProvider = sdkDataProvider,
             componentStateFactory = MBWayComponentStateFactory(params.shopperLocale),
             componentStateReducer = MBWayComponentStateReducer(),
+            componentStatePostProcessor = MBWayComponentStatePostProcessor(),
             componentStateValidator = MBWayComponentStateValidator(),
             viewStateProducer = MBWayViewStateProducer(params.amount, params.showSubmitButton),
             coroutineScope = coroutineScope,

@@ -27,7 +27,5 @@ internal class MBWayComponentStateValidator : ComponentStateValidator<MBWayCompo
         )
     }
 
-    override fun isValid(state: MBWayComponentState): Boolean {
-        return state.phoneNumber.isValid
-    }
+    override fun isValid(state: MBWayComponentState): Boolean = state.form.isFormValid
 }
