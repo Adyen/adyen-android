@@ -15,7 +15,9 @@ internal sealed interface StoredCardIntent : ComponentStateIntent {
     // User input intents
     data class UpdateSecurityCode(val securityCode: String) : StoredCardIntent
 
-    data class UpdateSecurityCodeFocus(val hasFocus: Boolean) : StoredCardIntent
+    data class UpdateFieldFocus(val id: StoredCardFormElementId, val hasFocus: Boolean) : StoredCardIntent
+
+    data class FocusRequestConsumed(val id: StoredCardFormElementId) : StoredCardIntent
 
     // System intents
     data class UpdateLoading(val isLoading: Boolean) : StoredCardIntent

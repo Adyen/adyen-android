@@ -15,6 +15,7 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
+import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStatePostProcessor
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
 import com.adyen.checkout.card.internal.ui.state.StoredCardPaymentComponentState
@@ -273,6 +274,7 @@ internal class StoredCardComponentTest(
             componentStateValidator = StoredCardComponentStateValidator(CardValidationMapper()),
             componentStateFactory = StoredCardComponentStateFactory(storedPaymentMethod, componentParams),
             componentStateReducer = StoredCardComponentStateReducer(),
+            componentStatePostProcessor = StoredCardComponentStatePostProcessor(),
             viewStateProducer = StoredCardViewStateProducer(amount = null, showSubmitButton = true),
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
             sdkDataProvider = sdkDataProvider,
