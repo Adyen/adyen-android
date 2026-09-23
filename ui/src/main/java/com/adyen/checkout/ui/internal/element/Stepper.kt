@@ -31,7 +31,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
-import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.Footnote
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -79,7 +79,6 @@ private fun Step(
             modifier = Modifier.constrainAs(icon) {
                 start.linkTo(parent.start)
                 top.linkTo(body.top)
-                bottom.linkTo(body.bottom)
             },
         )
 
@@ -87,7 +86,7 @@ private fun Step(
         val margin = Dimensions.Spacing.Medium.div(2)
         val topMargin = if (isFirstStep) 0.dp else margin
         val bottomMargin = if (isLastStep) 0.dp else margin
-        Body(
+        Footnote(
             text = label,
             modifier = Modifier
                 .constrainAs(body) {
