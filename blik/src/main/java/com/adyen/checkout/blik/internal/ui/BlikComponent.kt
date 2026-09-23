@@ -11,6 +11,7 @@ package com.adyen.checkout.blik.internal.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateFactory
+import com.adyen.checkout.blik.internal.ui.state.BlikComponentStatePostProcessor
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateReducer
 import com.adyen.checkout.blik.internal.ui.state.BlikComponentStateValidator
 import com.adyen.checkout.blik.internal.ui.state.BlikIntent
@@ -38,6 +39,7 @@ constructor(
     private val componentStateValidator: BlikComponentStateValidator,
     componentStateFactory: BlikComponentStateFactory,
     componentStateReducer: BlikComponentStateReducer,
+    componentStatePostProcessor: BlikComponentStatePostProcessor,
     viewStateProducer: BlikViewStateProducer,
     coroutineScope: CoroutineScope,
 ) : PaymentComponent {
@@ -49,6 +51,7 @@ constructor(
         initialState = componentStateFactory.createInitialState(),
         reducer = componentStateReducer,
         validator = componentStateValidator,
+        postProcessor = componentStatePostProcessor,
     )
 
     private val viewState = componentState.viewState(viewStateProducer, coroutineScope)

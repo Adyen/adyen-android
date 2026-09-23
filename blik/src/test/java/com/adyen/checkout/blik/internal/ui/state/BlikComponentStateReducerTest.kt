@@ -8,11 +8,8 @@
 
 package com.adyen.checkout.blik.internal.ui.state
 
-import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -36,16 +33,6 @@ internal class BlikComponentStateReducerTest {
     }
 
     @Test
-    fun `when intent is UpdateBlikCodeFocus, then state is updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, BlikIntent.UpdateBlikCodeFocus(true))
-
-        val expected = state.copy(blikCode = state.blikCode.updateFocus(true))
-        assertEquals(expected, actual)
-    }
-
-    @Test
     fun `when intent is UpdateLoading, then state is updated`() {
         val state = createInitialState()
 
@@ -55,37 +42,10 @@ internal class BlikComponentStateReducerTest {
         assertEquals(expected, actual)
     }
 
-    @Test
-    fun `when intent is HighlightValidationErrors and blik code has error, then state is updated`() {
-        val state = createInitialState().copy(
-            blikCode = TextInputComponentState(
-                text = "",
-                isFocused = false,
-                error = TextInputComponentState.InputError(CheckoutLocalizationKey.BLIK_CODE_INVALID)
-            ),
-        )
-
-        val actual = reducer.reduce(state, BlikIntent.HighlightValidationErrors)
-
-        assertTrue(actual.blikCode.isErrorVisible)
-        assertTrue(actual.blikCode.isFocused)
-    }
-
-    @Test
-    fun `when intent is HighlightValidationErrors and blik code has no error, then state is not updated`() {
-        val state = createInitialState()
-
-        val actual = reducer.reduce(state, BlikIntent.HighlightValidationErrors)
-
-        assertFalse(actual.blikCode.isErrorVisible)
-        assertFalse(actual.blikCode.isFocused)
-    }
-
     private fun createInitialState() = BlikComponentState(
         blikCode = TextInputComponentState(
             text = "",
-            isFocused = false,
-            error = null
+            error = null,
         ),
         isLoading = false,
     )
