@@ -6,8 +6,9 @@
  * Created by ararat on 3/9/2026.
  */
 
-package com.adyen.checkout.dropin.internal.ui.element
+package com.adyen.checkout.core.common.internal.ui
 
+import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,8 +32,9 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * @param title The line naming what is being waited on.
  * @param modifier The [Modifier] to be applied to the layout.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-internal fun PaymentProgressStatus(
+fun PaymentProgressStatus(
     title: String,
     modifier: Modifier = Modifier,
 ) {
