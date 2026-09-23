@@ -15,6 +15,9 @@ package com.adyen.checkout.core.common.localization
  * [CheckoutLocalizationProvider], allowing you to customize the copy shown to the shopper.
  */
 enum class CheckoutLocalizationKey {
+    AUTHENTICATION_TITLE,
+    AUTHENTICATION_DESCRIPTION,
+    AUTHENTICATION_STATUS,
     AWAIT_LOADING,
     CARD_NUMBER,
     CARD_NUMBER_INVALID,

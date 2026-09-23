@@ -17,6 +17,11 @@ internal class DefaultLocalizationSource {
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun getString(context: Context, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
+            // Authentication
+            CheckoutLocalizationKey.AUTHENTICATION_TITLE -> R.string.checkout_authentication_title
+            CheckoutLocalizationKey.AUTHENTICATION_DESCRIPTION -> R.string.checkout_authentication_description
+            CheckoutLocalizationKey.AUTHENTICATION_STATUS -> R.string.checkout_authentication_status
+
             // Await
             CheckoutLocalizationKey.AWAIT_LOADING -> R.string.checkout_await_loading
             // Card
