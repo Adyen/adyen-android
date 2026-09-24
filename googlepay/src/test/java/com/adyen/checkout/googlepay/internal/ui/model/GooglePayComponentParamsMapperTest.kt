@@ -291,6 +291,50 @@ internal class GooglePayComponentParamsMapperTest {
     }
 
     @Test
+    fun `when allowPrepaidCards is not set then prepaid cards are allowed`() {
+        val checkoutParams = createCheckoutParams(
+            configuration = createGooglePayConfiguration(
+                allowedPaymentMethods = GooglePayAllowedPaymentMethods(
+                    card = GooglePayAllowedPaymentMethods.Card(allowPrepaidCards = null),
+                ),
+            ),
+        )
+
+        val params = googlePayComponentParamsMapper.mapToParams(
+            params = checkoutParams,
+            paymentMethod = createPaymentMethod(),
+        )
+
+        val expected = getGooglePayComponentParams(
+            allowedPaymentMethods = listOf(resolvedCard(isAllowPrepaidCards = true)),
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when allowPrepaidCards is false then prepaid cards are not allowed`() {
+        val checkoutParams = createCheckoutParams(
+            configuration = createGooglePayConfiguration(
+                allowedPaymentMethods = GooglePayAllowedPaymentMethods(
+                    card = GooglePayAllowedPaymentMethods.Card(allowPrepaidCards = false),
+                ),
+            ),
+        )
+
+        val params = googlePayComponentParamsMapper.mapToParams(
+            params = checkoutParams,
+            paymentMethod = createPaymentMethod(),
+        )
+
+        val expected = getGooglePayComponentParams(
+            allowedPaymentMethods = listOf(resolvedCard(isAllowPrepaidCards = false)),
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
     fun `when google pay environment is explicitly set then its value should not change`() {
         val checkoutParams = createCheckoutParams(
             configuration = createGooglePayConfiguration(
@@ -478,7 +522,7 @@ internal class GooglePayComponentParamsMapperTest {
     private fun resolvedCard(
         allowedAuthMethods: List<String> = AllowedAuthMethods.allAllowedAuthMethods,
         allowedCardNetworks: List<String> = AllowedCardNetworks.allAllowedCardNetworks,
-        isAllowPrepaidCards: Boolean = false,
+        isAllowPrepaidCards: Boolean = true,
         isAllowCreditCards: Boolean? = null,
         issuerCountryCodes: IssuerCountryCodes? = null,
         isAssuranceDetailsRequired: Boolean? = null,

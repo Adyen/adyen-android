@@ -62,8 +62,8 @@ internal class GooglePayComponentParamsMapper {
         return this?.merchantAccount
             ?: paymentMethod.configuration?.gatewayMerchantId
             ?: throw InvalidConfigurationError(
-                message = "GooglePay merchantAccount not found. Update your API version or pass it " +
-                    "manually inside your GooglePayConfiguration",
+                message = "Google Pay merchant account not found. Make sure Google Pay is correctly configured " +
+                    "in your Customer Area, or pass merchantAccount in your Google Pay configuration.",
             )
     }
 
@@ -90,7 +90,7 @@ internal class GooglePayComponentParamsMapper {
             allowedAuthMethods = allowedAuthMethods ?: AllowedAuthMethods.allAllowedAuthMethods,
             allowedCardNetworks = allowedCardNetworks ?: getAvailableCardNetworksFromApi(paymentMethod)
                 .ifEmpty { AllowedCardNetworks.allAllowedCardNetworks },
-            isAllowPrepaidCards = allowPrepaidCards ?: false,
+            isAllowPrepaidCards = allowPrepaidCards ?: true,
             isAllowCreditCards = allowCreditCards,
             issuerCountryCodes = issuerCountryCodes,
             isAssuranceDetailsRequired = assuranceDetailsRequired,
