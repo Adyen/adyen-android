@@ -55,6 +55,7 @@ internal fun SocialSecurityNumberField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_SOCIAL_SECURITY_NUMBER),
         state = rememberTextFieldStateWithCurrentValue(socialSecurityNumberState.text),
+        contentType = null,
         isError = socialSecurityNumberState.isError,
         supportingText = supportingTextSocialSecurityNumber,
         onValueChange = onValueChange,
