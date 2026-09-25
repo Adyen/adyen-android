@@ -14,7 +14,9 @@ internal sealed interface BlikIntent : ComponentStateIntent {
 
     data class UpdateBlikCode(val code: String) : BlikIntent
 
-    data class UpdateBlikCodeFocus(val hasFocus: Boolean) : BlikIntent
+    data class UpdateFieldFocus(val id: BlikFormElementId, val hasFocus: Boolean) : BlikIntent
+
+    data class FocusRequestConsumed(val id: BlikFormElementId) : BlikIntent
 
     data class UpdateLoading(val isLoading: Boolean) : BlikIntent
 
