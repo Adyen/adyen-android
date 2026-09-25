@@ -9,11 +9,14 @@
 package com.adyen.checkout.ui.internal.theme
 
 import androidx.annotation.RestrictTo
+import androidx.compose.foundation.text.LocalAutofillHighlightBrush
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import com.adyen.checkout.ui.internal.element.InternalElements
 import com.adyen.checkout.ui.internal.text.InternalTextStyles
 import com.adyen.checkout.ui.theme.CheckoutColors
@@ -34,6 +37,7 @@ fun InternalCheckoutTheme(
         LocalTextStyles provides textStyles,
         LocalAttributes provides attributes,
         LocalElements provides elements,
+        LocalAutofillHighlightBrush provides SolidColor(Color.Transparent),
     ) {
         content()
     }
