@@ -18,14 +18,18 @@ internal class StoredCardComponentStatePostProcessor :
     override fun processInitialState(state: StoredCardComponentState) =
         state.focusFirstInvalid(showErrorIfPresent = false)
 
-    override fun process(state: StoredCardComponentState, intent: StoredCardIntent) = when (intent) {
-        is StoredCardIntent.UpdateFieldFocus -> state.updateErrorVisibility(intent.id, intent.hasFocus)
-        is StoredCardIntent.FocusRequestConsumed -> state.clearFocusRequest(intent.id)
+    override fun process(
+        previousState: StoredCardComponentState,
+        currentState: StoredCardComponentState,
+        intent: StoredCardIntent,
+    ) = when (intent) {
+        is StoredCardIntent.UpdateFieldFocus -> currentState.updateErrorVisibility(intent.id, intent.hasFocus)
+        is StoredCardIntent.FocusRequestConsumed -> currentState.clearFocusRequest(intent.id)
 
         is StoredCardIntent.HighlightValidationErrors ->
-            state.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
+            currentState.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
 
-        else -> state
+        else -> currentState
     }
 
     private fun StoredCardComponentState.focusFirstInvalid(showErrorIfPresent: Boolean) = copy(

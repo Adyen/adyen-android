@@ -65,6 +65,20 @@ internal class ComponentStateFlowTest {
     }
 
     @Test
+    fun `when an intent is handled, then post processing receives the previous and current validated states`() = runTest {
+        // GIVEN
+        val postProcessor = TestPostProcessor()
+        val stateFlow = createStateFlow(postProcessor)
+
+        // WHEN
+        stateFlow.handleIntent(TestIntent("a"))
+
+        // THEN
+        assertEquals(VALIDATED_INITIAL_STATE, postProcessor.previousState)
+        assertEquals(TestState(value = "a", validationCount = 2), postProcessor.currentState)
+    }
+
+    @Test
     fun `when several intents are handled, then each reduction continues from the previously validated state`() =
         runTest {
             // GIVEN
@@ -155,10 +169,13 @@ internal class ComponentStateFlowTest {
         assertEquals(TestViewState(value = "a"), viewStates.latestValue)
     }
 
-    private fun createStateFlow() = ComponentStateFlow(
+    private fun createStateFlow(
+        postProcessor: ComponentStatePostProcessor<TestState, TestIntent> = NoPostProcessing(),
+    ) = ComponentStateFlow(
         initialState = INITIAL_STATE,
         reducer = reducer,
         validator = TestValidator,
+        postProcessor = postProcessor,
     )
 
     private data class TestState(
@@ -175,6 +192,20 @@ internal class ComponentStateFlowTest {
         override fun reduce(state: TestState, intent: TestIntent): TestState {
             reducedStates += state
             return state.copy(value = state.value + intent.append)
+        }
+    }
+
+    private class TestPostProcessor : ComponentStatePostProcessor<TestState, TestIntent> {
+
+        lateinit var previousState: TestState
+        lateinit var currentState: TestState
+
+        override fun processInitialState(state: TestState) = state
+
+        override fun process(previousState: TestState, currentState: TestState, intent: TestIntent): TestState {
+            this.previousState = previousState
+            this.currentState = currentState
+            return currentState
         }
     }
 
