@@ -12,8 +12,6 @@
     <string name="checkout_mbway_phone_number" translatable="false">Phone number</string>
     <string name="checkout_mbway_invalid_phone_number" translatable="false">Invalid phone number</string>
     <string name="checkout_mbway_country_code" translatable="false">Country code</string>
-    <string name="checkout_mbway_country_code_picker_title" translatable="false">Country code</string>
-    <string name="checkout_mbway_country_code_picker_description" translatable="false">Placeholder description for the country code picker.</string>
     <string name="checkout_card_number" translatable="false">Card Number</string>
     <string name="checkout_card_number_invalid" translatable="false">Invalid card number</string>
     <string name="checkout_card_number_invalid_unsupported_brand" translatable="false">The entered card brand isn\'t supported</string>
@@ -72,6 +70,8 @@
     <string name="checkout_general_close" translatable="false">Close</string>
     <string name="checkout_general_optional" translatable="false">(Optional)</string>
     <string name="checkout_general_search_hint" translatable="false">Search..</string>
+    <string name="checkout_country_picker_title" translatable="false">Country/Region</string>
+    <string name="checkout_country_picker_description" translatable="false">Search and select your country/region.</string>
     <string name="checkout_blik_code" translatable="false">Code</string>
     <string name="checkout_blik_code_hint" translatable="false">6-digit code</string>
     <string name="checkout_blik_code_not_valid" translatable="false">Enter 6 numbers</string>
