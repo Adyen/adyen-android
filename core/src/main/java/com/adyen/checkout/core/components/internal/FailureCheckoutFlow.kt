@@ -12,12 +12,9 @@ import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.CheckoutError.ErrorCode.PAYMENT_METHOD_FAILURE
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 
 internal class FailureCheckoutFlow(
     errorMessage: String,
@@ -26,7 +23,6 @@ internal class FailureCheckoutFlow(
 
     override val paymentComponent: PaymentComponent? = null
     override val actionComponent: ActionComponent? = null
-    override val navigation: Flow<CheckoutRoute> = emptyFlow()
 
     init {
         val error = CheckoutError(

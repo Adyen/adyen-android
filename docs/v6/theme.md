@@ -15,7 +15,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 
 ## Apply a theme
 
-Create the theme in your UI layer and pass it to `CheckoutPaymentFlow(...)`:
+Create the theme in your UI layer and pass it to the checkout composable you render:
 
 ```kotlin
 val theme = CheckoutTheme(
@@ -31,13 +31,13 @@ val theme = CheckoutTheme(
     ),
 )
 
-CheckoutPaymentFlow(
+CheckoutPaymentMethod(
     controller = controller,
     theme = theme,
 )
 ```
 
-The same theme is used for the payment component, action handling, and any secondary screens rendered by `CheckoutPaymentFlow(...)`.
+Pass the same theme to `CheckoutAction(...)` when you switch to the action screen, so the payment component, action handling and any secondary screens are themed consistently.
 
 ## Drop-in
 
@@ -94,7 +94,7 @@ Start from `CheckoutColors.light()` or `CheckoutColors.dark()` and override only
 ## Scope
 
 - Configure the theme in the Compose UI layer for components, or pass it to `DropIn.start(...)` for drop-in. It is not part of `CheckoutConfiguration`.
-- Theme changes apply across the `CheckoutPaymentFlow(...)` tree and across all drop-in screens.
+- Theme changes apply across the `CheckoutPaymentMethod(...)` and `CheckoutAction(...)` trees and across all drop-in screens.
 - Localization is configured separately with `CheckoutLocalizationProvider`. See [README.md](README.md#localization).
 
 ## Related docs

@@ -720,7 +720,6 @@ public final class com/adyen/checkout/core/components/CheckoutConfiguration$CREA
 
 public final class com/adyen/checkout/core/components/CheckoutController {
 	public static final field $stable I
-	public final fun getNavigation ()Lkotlinx/coroutines/flow/Flow;
 	public final fun handleReturn (Landroid/content/Intent;)V
 	public final fun requiresUserInteraction ()Z
 	public final fun submit ()V
@@ -732,26 +731,8 @@ public final class com/adyen/checkout/core/components/CheckoutControllerKt {
 	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Sessions;Lcom/adyen/checkout/core/components/SessionCheckoutCallbacks;Lkotlinx/coroutines/CoroutineScope;)Lcom/adyen/checkout/core/components/CheckoutController;
 }
 
-public final class com/adyen/checkout/core/components/CheckoutPaymentFlowKt {
-	public static final fun CheckoutPaymentFlow (Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
-}
-
 public final class com/adyen/checkout/core/components/CheckoutPaymentMethodKt {
 	public static final fun CheckoutPaymentMethod (Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
-}
-
-public abstract class com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-}
-
-public final class com/adyen/checkout/core/components/CheckoutRoute$Action : com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-	public fun <init> ()V
-}
-
-public final class com/adyen/checkout/core/components/CheckoutRoute$PaymentMethod : com/adyen/checkout/core/components/CheckoutRoute {
-	public static final field $stable I
-	public fun <init> ()V
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutTarget {
