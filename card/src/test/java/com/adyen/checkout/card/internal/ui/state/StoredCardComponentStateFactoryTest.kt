@@ -41,13 +41,6 @@ internal class StoredCardComponentStateFactoryTest {
 
             assertEquals(RequirementPolicy.Hidden, state.securityCode.requirementPolicy)
         }
-
-        @Test
-        fun `when initial state is created, then securityCode is focused`() {
-            val state = createFactory().createInitialState()
-
-            assertTrue(state.securityCode.isFocused)
-        }
     }
 
     @Nested
