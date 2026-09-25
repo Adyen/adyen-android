@@ -18,7 +18,6 @@ data class TextInputComponentState(
     val text: String = "",
     val description: CheckoutLocalizationKey? = null,
     val error: InputError? = null,
-    val isFocused: Boolean = false,
     val requirementPolicy: RequirementPolicy = RequirementPolicy.Required,
 ) {
 
@@ -31,13 +30,6 @@ data class TextInputComponentState(
         val message: CheckoutLocalizationKey,
         val isVisible: Boolean = false,
     )
-
-    // TODO - Form fields cleanup: Layer 8 removes this once every component reads validity from its FormState.
-    val isValid: Boolean
-        get() = error == null
-
-    val isErrorVisible: Boolean
-        get() = error?.isVisible == true
 
     /** Typing hides the error, so the shopper is not corrected while fixing the thing they were corrected about. */
     fun updateText(text: String) = copy(text = text).hideErrorIfPresent()
@@ -57,11 +49,6 @@ data class TextInputComponentState(
     fun showErrorIfPresent() = copy(error = error?.copy(isVisible = true))
 
     fun hideErrorIfPresent() = copy(error = error?.copy(isVisible = false))
-
-    fun updateFocus(hasFocus: Boolean): TextInputComponentState {
-        val focused = copy(isFocused = hasFocus)
-        return if (hasFocus) focused.hideErrorIfPresent() else focused.showErrorIfPresent()
-    }
 }
 
 /**
@@ -74,11 +61,8 @@ fun <Id : FormElementId> TextInputComponentState.updateErrorVisibility(
     focusRequest: FocusRequest<Id>?,
     id: Id,
     hasFocus: Boolean,
-): TextInputComponentState {
-    val focused = updateFocus(hasFocus)
-    return if (hasFocus && focusRequest?.takeIf { it.id == id }?.showErrorIfPresent == true) {
-        focused.showErrorIfPresent()
-    } else {
-        focused
-    }
+): TextInputComponentState = when {
+    !hasFocus -> showErrorIfPresent()
+    focusRequest?.takeIf { it.id == id }?.showErrorIfPresent == true -> showErrorIfPresent()
+    else -> hideErrorIfPresent()
 }

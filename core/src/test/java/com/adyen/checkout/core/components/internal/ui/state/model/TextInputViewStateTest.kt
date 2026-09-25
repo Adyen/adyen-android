@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
-import org.junit.jupiter.api.assertNull
 
 /**
  * Tests `TextInputViewState.kt`: the icon [TextInputViewState.trailingIcon] resolves to, and the `toViewState` mapping.
@@ -87,10 +86,10 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState(customTrailingIcon = TestTrailingIcon)
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST, TestTrailingIcon)
 
         // THEN
-        assertEquals(TrailingIcon.Error, viewState?.trailingIcon)
+        assertEquals(TrailingIcon.Error, viewState.trailingIcon)
     }
 
     @Test
@@ -102,10 +101,10 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState(customTrailingIcon = TestTrailingIcon)
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST, TestTrailingIcon)
 
         // THEN
-        assertEquals(TestTrailingIcon, viewState?.trailingIcon)
+        assertEquals(TestTrailingIcon, viewState.trailingIcon)
     }
 
     @Test
@@ -114,10 +113,10 @@ internal class TextInputViewStateTest {
         val componentState = TextInputComponentState(text = "1234")
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(TrailingIcon.Empty, viewState?.trailingIcon)
+        assertEquals(TrailingIcon.Empty, viewState.trailingIcon)
     }
 
     @Test
@@ -126,11 +125,11 @@ internal class TextInputViewStateTest {
         val componentState = TextInputComponentState(text = "invalid", error = visibleError())
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(true, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
+        assertEquals(true, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState.supportingText)
     }
 
     @Test
@@ -143,11 +142,11 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(false, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
+        assertEquals(false, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState.supportingText)
     }
 
     @Test
@@ -160,11 +159,11 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(false, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState?.supportingText)
+        assertEquals(false, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER, viewState.supportingText)
     }
 
     @Test
@@ -177,26 +176,15 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = componentState.toViewState()
+        val viewState = componentState.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
-        assertEquals(true, viewState?.isError)
-        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState?.supportingText)
+        assertEquals(true, viewState.isError)
+        assertEquals(CheckoutLocalizationKey.CARD_NUMBER_INVALID, viewState.supportingText)
     }
 
-    @Test
-    fun `when field is hidden, then view state should be null so it doesn't get displayed`() {
-        // GIVEN
-        val state = TextInputComponentState(
-            requirementPolicy = RequirementPolicy.Hidden,
-        )
-
-        // WHEN
-        val viewState = state.toViewState()
-
-        // THEN
-        assertNull(viewState)
-    }
+    // A hidden field never reaches this mapping at all: it is not one of its form's elements, so nothing is built.
+    // Each component's view state producer test covers that.
 
     @Test
     fun `when another text input follows, then the keyboard action is next`() {
@@ -254,7 +242,7 @@ internal class TextInputViewStateTest {
         )
 
         // WHEN
-        val viewState = state.toViewState()
+        val viewState = state.toViewState(formOf(FIRST), null, FIRST)
 
         // THEN
         assertNotNull(viewState)
