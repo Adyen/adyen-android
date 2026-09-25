@@ -8,34 +8,18 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.selected
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardBrandViewState
@@ -45,7 +29,6 @@ import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_MAXIMUM_LENGTH
 import com.adyen.checkout.core.common.internal.properties.CardNumberProperties.CARD_NUMBER_SEPARATOR
-import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
 import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -57,9 +40,7 @@ import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
-import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -159,14 +140,11 @@ private fun CardNumberTrailingIcon(
 
         when (state) {
             CardNumberTrailingIcon.ScanButton -> {
-                IconButton(
-                    onClick = onScanButtonClick,
-                    modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
-                ) {
+                IconButton(onClick = onScanButtonClick) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_camera),
                         contentDescription = null,
-                        tint = CheckoutThemeProvider.colors.primary,
+                        tint = CheckoutThemeProvider.colors.highlight,
                     )
                 }
             }
@@ -174,131 +152,6 @@ private fun CardNumberTrailingIcon(
             CardNumberTrailingIcon.BrandLogos -> DetectedBrandsList(cardBrandViewState, onBrandSelect)
         }
     }
-}
-
-@Composable
-private fun DetectedBrandsList(
-    cardBrandViewState: CardBrandViewState,
-    onBrandSelect: (CardBrand) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-    ) {
-        when (cardBrandViewState) {
-            is CardBrandViewState.Placeholder -> BrandLogo(txVariant = null)
-            is CardBrandViewState.SingleBrand -> BrandLogo(cardBrandViewState.brand.txVariant)
-            is CardBrandViewState.DualBrand -> DualBrandLogos(cardBrandViewState.brands)
-
-            is CardBrandViewState.SelectableDualBrand -> SelectableDualBrandLogos(
-                brands = cardBrandViewState.brands,
-                onBrandSelect = onBrandSelect,
-            )
-        }
-    }
-}
-
-@Composable
-private fun DualBrandLogos(
-    brands: List<CardBrand>,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .padding(Dimensions.Spacing.ExtraSmall),
-    ) {
-        brands.forEach { brand ->
-            BrandLogo(
-                txVariant = brand.txVariant,
-                modifier = Modifier.padding(Dimensions.Spacing.ExtraSmall),
-            )
-        }
-    }
-}
-
-@Composable
-private fun SelectableDualBrandLogos(
-    brands: List<SelectableCardBrandItem>,
-    onBrandSelect: (CardBrand) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .background(
-                color = CheckoutThemeProvider.colors.container,
-                shape = RoundedCornerShape(Dimensions.CornerRadius),
-            )
-            .padding(Dimensions.Spacing.ExtraSmall),
-    ) {
-        brands.forEach { brandItem ->
-            BrandLogo(
-                txVariant = brandItem.brand.txVariant,
-                modifier = Modifier
-                    .semantics {
-                        role = Role.RadioButton
-                        selected = brandItem.isSelected
-                    }
-                    .clip(RoundedCornerShape(Dimensions.CornerRadius))
-                    .then(
-                        if (brandItem.isSelected) {
-                            Modifier
-                                .border(
-                                    width = 1.dp,
-                                    color = CheckoutThemeProvider.colors.outline,
-                                    shape = RoundedCornerShape(Dimensions.CornerRadius),
-                                )
-                                .background(color = CheckoutThemeProvider.colors.background)
-                        } else {
-                            Modifier
-                        },
-                    )
-                    .clickable { onBrandSelect(brandItem.brand) }
-                    .padding(Dimensions.Spacing.ExtraSmall)
-                    .clip(RoundedCornerShape(Dimensions.CornerRadius)),
-            )
-        }
-    }
-}
-
-@Composable
-private fun CardBrandsList(
-    supportedCardBrandsViewState: SupportedCardBrandsViewState,
-    modifier: Modifier = Modifier,
-) {
-    AnimatedVisibility(
-        modifier = modifier.fillMaxWidth(),
-        visible = supportedCardBrandsViewState.isVisible,
-    ) {
-        FlowRow(
-            modifier = Modifier.padding(top = Dimensions.Spacing.ExtraSmall),
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-        ) {
-            for (cardBrand in supportedCardBrandsViewState.supportedCardBrands) {
-                BrandLogo(cardBrand.txVariant)
-            }
-        }
-    }
-}
-
-@Composable
-private fun BrandLogo(
-    txVariant: String?,
-    modifier: Modifier = Modifier,
-) {
-    val placeholderResId = getThemedIcon(
-        backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
-        lightDrawableId = R.drawable.ic_card_placeholder_light,
-        darkDrawableId = R.drawable.ic_card_placeholder_dark,
-    )
-
-    CheckoutNetworkLogo(
-        modifier = modifier.size(Dimensions.LogoSize.small),
-        txVariant = txVariant.orEmpty(),
-        placeholder = placeholderResId,
-        errorFallback = placeholderResId,
-    )
 }
 
 @Suppress("LongMethod")

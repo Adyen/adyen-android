@@ -63,7 +63,7 @@ internal fun mapToUiCustomization(
     setButtonCustomization(primaryButtonCustomization, ButtonType.NEXT)
 
     val secondaryButtonCustomization = ButtonCustomization().apply {
-        textColor = colors.primary.toHex()
+        textColor = colors.text.toHex()
         cornerRadius = attributes.cornerRadius
     }
     setButtonCustomization(secondaryButtonCustomization, ButtonType.CANCEL)

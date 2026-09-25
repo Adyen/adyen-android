@@ -11,6 +11,7 @@ package com.adyen.checkout.core.common.internal.ui
 import androidx.annotation.RestrictTo
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import com.adyen.checkout.core.components.internal.ui.state.model.TrailingIcon
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextFieldErrorIcon
 
@@ -32,7 +33,11 @@ fun CheckoutTextFieldTrailingIcon(
     trailingIcon: TrailingIcon,
     content: @Composable (TrailingIcon) -> Unit = {},
 ) {
-    AnimatedContent(targetState = trailingIcon, label = "TrailingIcon") { state ->
+    AnimatedContent(
+        targetState = trailingIcon,
+        contentAlignment = Alignment.Center,
+        label = "TrailingIcon",
+    ) { state ->
         when (state) {
             TrailingIcon.Empty -> Unit
             TrailingIcon.Error -> CheckoutTextFieldErrorIcon()

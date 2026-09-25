@@ -26,6 +26,7 @@ import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Title
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -117,11 +118,12 @@ private fun IconHeaderContentLayout(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Spacer(Modifier.size(Dimensions.Spacing.Small))
+        Spacer(Modifier.size(Dimensions.Spacing.ExtraSmall))
 
         Body(
             text = description,
             textAlign = TextAlign.Center,
+            color = CheckoutThemeProvider.colors.textSecondary,
             modifier = Modifier.fillMaxWidth(),
         )
 

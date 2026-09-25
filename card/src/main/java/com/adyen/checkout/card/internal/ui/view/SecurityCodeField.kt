@@ -107,10 +107,13 @@ private fun SecurityCodeTrailingIcon(
         // unexpected state - the view state producer should set the correct type
         if (state !is SecurityCodeTrailingIcon) return@CheckoutTextFieldTrailingIcon
 
+        val placeholderModifier = Modifier.size(Dimensions.LogoSize.small)
+
         when (state) {
             SecurityCodeTrailingIcon.Checkmark -> SecurityCodeTrailingIcon(
                 resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark,
-                tint = CheckoutThemeProvider.colors.primary,
+                tint = CheckoutThemeProvider.colors.text,
+                modifier = Modifier.size(Dimensions.IconSize.small),
             )
 
             SecurityCodeTrailingIcon.PlaceholderAmex -> SecurityCodeTrailingIcon(
@@ -120,6 +123,7 @@ private fun SecurityCodeTrailingIcon(
                     darkDrawableId = R.drawable.ic_card_cvc_front_dark,
                 ),
                 tint = Color.Unspecified,
+                modifier = placeholderModifier,
             )
 
             SecurityCodeTrailingIcon.PlaceholderDefault -> SecurityCodeTrailingIcon(
@@ -129,6 +133,7 @@ private fun SecurityCodeTrailingIcon(
                     darkDrawableId = R.drawable.ic_card_cvc_back_dark,
                 ),
                 tint = Color.Unspecified,
+                modifier = placeholderModifier,
             )
         }
     }
@@ -138,9 +143,10 @@ private fun SecurityCodeTrailingIcon(
 private fun SecurityCodeTrailingIcon(
     resourceId: Int,
     tint: Color,
+    modifier: Modifier = Modifier,
 ) {
     Icon(
-        modifier = Modifier.size(Dimensions.LogoSize.small),
+        modifier = modifier,
         imageVector = ImageVector.vectorResource(resourceId),
         contentDescription = null,
         tint = tint,

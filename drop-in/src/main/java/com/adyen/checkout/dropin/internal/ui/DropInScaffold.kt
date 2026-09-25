@@ -9,11 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -22,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.core.common.internal.ui.NavigationBackButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -87,11 +84,7 @@ private fun DropInScaffoldPreview(
     CheckoutThemePreviewWrapper(theme) {
         DropInScaffold(
             navigationIcon = {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                }
+                NavigationBackButton(onClick = {})
             },
             title = "Title",
             content = {},
@@ -107,11 +100,7 @@ private fun DropInScaffoldWithoutTitlePreview(
     CheckoutThemePreviewWrapper(theme) {
         DropInScaffold(
             navigationIcon = {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                }
+                NavigationBackButton(onClick = {})
             },
             content = {},
         )
