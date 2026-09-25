@@ -19,7 +19,9 @@ internal sealed interface MBWayIntent : ComponentStateIntent {
 
     data class UpdatePhoneNumber(val number: String) : MBWayIntent
 
-    data class UpdatePhoneNumberFocus(val hasFocus: Boolean) : MBWayIntent
+    data class UpdateFieldFocus(val id: MBWayFormElementId, val hasFocus: Boolean) : MBWayIntent
+
+    data class FocusRequestConsumed(val id: MBWayFormElementId) : MBWayIntent
 
     data object HighlightValidationErrors : MBWayIntent
 }
