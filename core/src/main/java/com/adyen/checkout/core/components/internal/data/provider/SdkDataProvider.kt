@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal.data.provider
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 
 /**
  * A provider that creates SDK data with the necessary information.
@@ -20,7 +21,11 @@ interface SdkDataProvider {
      * Creates the encoded SDK data.
      *
      * @param threeDS2SdkVersion The version of the 3DS2 SDK.
+     * @param paymentMethodBehavior Indicates the behavior in which the SDK handles the given payment method.
      * @return The created encoded [String] from SDK data object.
      */
-    fun createEncodedSdkData(threeDS2SdkVersion: String? = null): String?
+    fun createEncodedSdkData(
+        threeDS2SdkVersion: String? = null,
+        paymentMethodBehavior: PaymentMethodBehavior = PaymentMethodBehavior.NATIVE,
+    ): String?
 }

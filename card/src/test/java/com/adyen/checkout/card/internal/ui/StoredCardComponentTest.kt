@@ -97,7 +97,7 @@ internal class StoredCardComponentTest(
                 encryptedSecurityCode = "encrypted_cvc",
             )
             whenever(cardEncryptor.encryptFields(any(), any())).thenReturn(encryptedCard)
-            whenever(sdkDataProvider.createEncodedSdkData(any())).thenReturn("sdk_data")
+            whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
             val component = createComponent(
                 storedCVCVisibility = StoredCVCVisibility.HIDE,
                 publicKey = "test_public_key",
@@ -124,7 +124,7 @@ internal class StoredCardComponentTest(
                 encryptedSecurityCode = "encrypted_cvc",
             )
             whenever(cardEncryptor.encryptFields(any(), any())).thenReturn(encryptedCard)
-            whenever(sdkDataProvider.createEncodedSdkData(any())).thenReturn("sdk_data")
+            whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
             val component = createComponent(
                 storedCVCVisibility = StoredCVCVisibility.HIDE,
                 publicKey = "test_public_key",

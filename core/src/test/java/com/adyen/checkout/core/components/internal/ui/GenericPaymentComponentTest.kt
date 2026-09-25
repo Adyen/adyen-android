@@ -13,6 +13,7 @@ import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.GenericComponentStateReducer
@@ -65,7 +66,7 @@ internal class GenericPaymentComponentTest(
     @Test
     fun `when submit is called, then eventFlow emits Submit event`() = runTest {
         // GIVEN
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+        stubSdkDataProvider()
         val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
@@ -80,7 +81,7 @@ internal class GenericPaymentComponentTest(
     @Test
     fun `when submit is called, then state contains correct payment method type`() = runTest {
         // GIVEN
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+        stubSdkDataProvider()
         val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
@@ -98,7 +99,7 @@ internal class GenericPaymentComponentTest(
     @Test
     fun `when submit is called, then state contains sdk data from provider`() = runTest {
         // GIVEN
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+        stubSdkDataProvider()
         val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
@@ -113,7 +114,7 @@ internal class GenericPaymentComponentTest(
     @Test
     fun `when submit is called, then state subtype is null`() = runTest {
         // GIVEN
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+        stubSdkDataProvider()
         val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
@@ -128,7 +129,7 @@ internal class GenericPaymentComponentTest(
     @Test
     fun `when submit is called, then state order is null`() = runTest {
         // GIVEN
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+        stubSdkDataProvider()
         val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
@@ -143,7 +144,7 @@ internal class GenericPaymentComponentTest(
     @Test
     fun `when submit is called, then state is valid`() = runTest {
         // GIVEN
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+        stubSdkDataProvider()
         val component = createComponent()
         val events = component.eventFlow.test(testScheduler)
 
@@ -156,9 +157,9 @@ internal class GenericPaymentComponentTest(
     }
 
     @Test
-    fun `when submit is called, then sdk data provider is called`() = runTest {
+    fun `when submit is called, then sdk data provider is called with generic payment method behavior`() = runTest {
         // GIVEN
-        whenever(sdkDataProvider.createEncodedSdkData()) doReturn TEST_SDK_DATA
+        stubSdkDataProvider()
         val component = createComponent()
         component.eventFlow.test(testScheduler)
 
@@ -166,7 +167,7 @@ internal class GenericPaymentComponentTest(
         component.submit()
 
         // THEN
-        verify(sdkDataProvider).createEncodedSdkData()
+        verify(sdkDataProvider).createEncodedSdkData(paymentMethodBehavior = PaymentMethodBehavior.GENERIC)
     }
 
     @Test
@@ -235,6 +236,12 @@ internal class GenericPaymentComponentTest(
         // THEN
         assertFalse(viewState.latestValue.isLoading)
         assertFalse(requireNotNull(viewState.latestValue.payButtonViewState).isLoading)
+    }
+
+    private fun stubSdkDataProvider() {
+        whenever(
+            sdkDataProvider.createEncodedSdkData(paymentMethodBehavior = PaymentMethodBehavior.GENERIC),
+        ) doReturn TEST_SDK_DATA
     }
 
     private fun createComponent(

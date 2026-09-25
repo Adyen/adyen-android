@@ -45,7 +45,7 @@ internal class CardPaymentComponentStateFactoryTest(
 
     @BeforeEach
     fun beforeEach() {
-        whenever(sdkDataProvider.createEncodedSdkData(any())).thenReturn("sdk_data")
+        whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
     }
 
     @Test

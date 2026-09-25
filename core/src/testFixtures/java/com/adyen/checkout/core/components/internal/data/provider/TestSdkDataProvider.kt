@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal.data.provider
 
+import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 import org.junit.jupiter.api.Assertions
 
 /**
@@ -18,9 +19,14 @@ class TestSdkDataProvider : SdkDataProvider {
 
     private var sdkData: String? = TEST_SDK_DATA
     private var lastThreeDS2SdkVersion: String? = null
+    private var lastPaymentMethodBehavior: PaymentMethodBehavior? = null
 
-    override fun createEncodedSdkData(threeDS2SdkVersion: String?): String? {
+    override fun createEncodedSdkData(
+        threeDS2SdkVersion: String?,
+        paymentMethodBehavior: PaymentMethodBehavior,
+    ): String? {
         lastThreeDS2SdkVersion = threeDS2SdkVersion
+        lastPaymentMethodBehavior = paymentMethodBehavior
         return sdkData
     }
 
@@ -29,6 +35,13 @@ class TestSdkDataProvider : SdkDataProvider {
      */
     fun assertThreeDS2SdkVersionEquals(expected: String?) {
         Assertions.assertEquals(expected, lastThreeDS2SdkVersion)
+    }
+
+    /**
+     * Asserts that the last call to [createEncodedSdkData] was made with the expected paymentMethodBehavior.
+     */
+    fun assertPaymentMethodBehaviorEquals(expected: PaymentMethodBehavior?) {
+        Assertions.assertEquals(expected, lastPaymentMethodBehavior)
     }
 
     companion object {
