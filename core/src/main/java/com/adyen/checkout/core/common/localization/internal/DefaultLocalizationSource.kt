@@ -23,7 +23,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.AUTHENTICATION_STATUS -> R.string.checkout_authentication_status
 
             // Await
-            CheckoutLocalizationKey.AWAIT_LOADING -> R.string.checkout_await_loading
+            CheckoutLocalizationKey.AWAIT_TITLE -> R.string.checkout_await_title
+            CheckoutLocalizationKey.AWAIT_DESCRIPTION -> R.string.checkout_await_description
+            CheckoutLocalizationKey.AWAIT_STATUS -> R.string.checkout_await_status
             // Card
             CheckoutLocalizationKey.CARD_NUMBER -> R.string.checkout_card_number
             CheckoutLocalizationKey.CARD_NUMBER_INVALID -> R.string.checkout_card_number_invalid

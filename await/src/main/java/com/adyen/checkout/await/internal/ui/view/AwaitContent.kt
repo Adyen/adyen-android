@@ -8,35 +8,37 @@
 
 package com.adyen.checkout.await.internal.ui.view
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.core.common.internal.ui.IconHeaderContent
+import com.adyen.checkout.core.common.internal.ui.PaymentProgressStatus
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.ui.internal.element.ProgressBar
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
-import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
+/**
+ * What the shopper sees while the payment is completed elsewhere — in the payment method's own app, or on its website —
+ * and the status is polled from here until it resolves.
+ *
+ * @param logoTxVariant The transaction variant the payment method logo is loaded for.
+ * @param modifier The [Modifier] to be applied to the layout.
+ */
 @Composable
 internal fun AwaitContent(
+    logoTxVariant: String,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxWidth(),
+    IconHeaderContent(
+        logoTxVariant = logoTxVariant,
+        title = resolveString(CheckoutLocalizationKey.AWAIT_TITLE),
+        description = resolveString(CheckoutLocalizationKey.AWAIT_DESCRIPTION),
+        modifier = modifier,
     ) {
-        ProgressBar()
-        Spacer(Modifier.size(Dimensions.Spacing.Large))
-        Body(resolveString(CheckoutLocalizationKey.AWAIT_LOADING))
+        PaymentProgressStatus(title = resolveString(CheckoutLocalizationKey.AWAIT_STATUS))
     }
 }
 
@@ -46,6 +48,6 @@ private fun AwaitContentPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        AwaitContent()
+        AwaitContent(logoTxVariant = "blik")
     }
 }
