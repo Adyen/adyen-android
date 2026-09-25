@@ -173,6 +173,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 
 # Util libraries
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
+compose-compiler-gradle-plugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
 dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

@@ -17,6 +17,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.plugin.extraProperties
 
 class CheckoutAndroidLibraryPlugin : Plugin<Project> {
@@ -62,6 +63,27 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
             }
 
             configureBcvWorkaround()
+            configureComposeCompilerReports()
+        }
+    }
+
+    /**
+     * Writes the Compose compiler's stability reports and metrics to `build/compose_compiler` when the build runs with
+     * `-PcomposeCompilerReports=true`. They are off by default because generating them slows down compilation.
+     *
+     * The compiler only reports on the files it compiles, so an incremental or cached compilation gives a partial
+     * report. Force a full one: `./gradlew :card:compileReleaseKotlin --rerun -PcomposeCompilerReports=true`.
+     */
+    private fun Project.configureComposeCompilerReports() {
+        val isEnabled = providers.gradleProperty("composeCompilerReports").map { it.toBoolean() }.getOrElse(false)
+        if (!isEnabled) return
+
+        pluginManager.withPlugin("org.jetbrains.kotlin.plugin.compose") {
+            extensions.configure<ComposeCompilerGradlePluginExtension> {
+                val outputDir = layout.buildDirectory.dir("compose_compiler")
+                reportsDestination.set(outputDir)
+                metricsDestination.set(outputDir)
+            }
         }
     }
 
