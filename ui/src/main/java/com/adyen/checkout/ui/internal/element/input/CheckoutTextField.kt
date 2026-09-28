@@ -51,70 +51,67 @@ import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.collectLatest
 
 /**
- * A composable that provides a styled text field with Adyen's theming.
+ * An Adyen-themed single-line text field backed by [TextFieldState].
  *
- * This function wraps [androidx.compose.foundation.text.BasicTextField] and applies
- * styling defined by [InternalTextFieldStyle].
+ * Regular fields use [BasicTextField], while secure fields use [BasicSecureTextField]. Their shared decoration and
+ * appearance are defined by [CheckoutTextFieldDecorationBox] and [InternalTextFieldStyle].
  *
- * @param label The label text to be displayed for the text field.
- * @param modifier Optional [Modifier] to be applied to this composable.
- * @param state The [TextFieldState] to be used for the text field. Use [rememberTextFieldStateWithCurrentValue]
- * to create a state that syncs with external value changes.
- * @param contentType The Autofill content type, or null when none applies to this field.
- * @param onValueChange A callback that is triggered when the text in the field changes.
- * @param enabled Controls the enabled state of the text field. When `false`, the text field
- * is not interactable.
- * @param supportingText Optional supporting text to be displayed below the text field.
- * @param isError Indicates whether the text field is in an error state. When `true`,
- * the text field's appearance may change to reflect an error.
- * @param keyboardOptions Optional keyboard options that can be used to configure the keyboard.
- * @param imeAction The action key the keyboard shows. It takes precedence over the one in [keyboardOptions] and over
- * the one an [inputTransformation] asks for, so that the field the form considers last is the one that closes the
- * keyboard. Leave it unspecified to keep whatever those two ask for.
- * @param interactionSource Optional [MutableInteractionSource] representing the stream of
- * interactions for this text field.
- * @param innerIndication Optional [Indication] that will be used for the internal
- * [CheckoutTextFieldDecorationBox].
- * @param isFocusRequested Whether the form is asking this field to take focus. Each request moves focus once, and is
- * reported back through [onFocusRequestConsumed], which is the only thing that clears it.
- * @param onFocusRequestConsumed Called once focus has been requested, so that the state layer can clear the request.
- * @param prefix An optional string to be displayed at the beginning of the input area,
- * before the user's input.
- * @param leadingContent A composable function that provides content to be displayed at the start
- *  * of the text field, or null for no content at all.
- * @param trailingContent A composable function that provides content to be displayed at the end
- * of the text field, or null for no content at all. Payment method fields should render this through
- * `CheckoutTextFieldTrailingIcon`, which handles the generic empty and error icons for every field.
- * This parameter is required so that every new field has to make a deliberate choice about it.
+ * @param state State that owns the text and selection. Use [rememberTextFieldStateWithCurrentValue] when external value
+ * changes must be reflected in the field.
+ * @param label Optional label displayed above the input.
+ * @param contentType Autofill content type, or `null` when none applies to the field.
+ * @param modifier [Modifier] applied to the text field.
+ * @param onValueChange Optional callback invoked after the text in [state] changes.
+ * @param enabled Whether the field accepts user input.
+ * @param supportingText Optional text displayed below the field.
+ * @param hint Optional hint displayed when [state] is empty.
+ * @param isError Whether to use the error appearance for the field and its supporting text.
+ * @param isSecureField Whether to obscure the input by rendering a [BasicSecureTextField].
+ * @param inputTransformation Transformation applied to user input before it is committed to [state].
+ * @param outputTransformation Transformation applied when displaying a regular field. Secure fields do not use it.
+ * @param keyboardOptions Options used to configure the software keyboard.
+ * @param imeAction Action displayed by the software keyboard. This overrides the action from [keyboardOptions] and
+ * [inputTransformation]. Leave it unspecified to use the action requested by either of them.
+ * @param isFocusRequested Whether the form is requesting focus for this field. Each request is handled once and then
+ * reported through [onFocusRequestConsumed].
+ * @param onFocusRequestConsumed Optional callback invoked after a focus request has been handled so the state layer can
+ * clear it.
+ * @param interactionSource Source through which field interactions are emitted.
+ * @param innerIndication Optional indication drawn by [CheckoutTextFieldDecorationBox].
+ * @param style Visual style applied to the field.
+ * @param leadingContent Optional content displayed at the start of the field.
+ * @param trailingContent Optional content displayed at the end of the field. Payment method fields should render this
+ * through `CheckoutTextFieldTrailingIcon`, which handles generic empty and error states. This parameter is required so
+ * every field makes a deliberate trailing-content choice.
  */
 @Suppress("LongMethod")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutTextField(
-    label: String?,
     state: TextFieldState,
+    label: String?,
     contentType: ContentType?,
     modifier: Modifier = Modifier,
     onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
     supportingText: String? = null,
+    hint: String? = null,
     isError: Boolean = false,
+    isSecureField: Boolean = false,
     inputTransformation: InputTransformation? = null,
     outputTransformation: OutputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     imeAction: ImeAction = ImeAction.Unspecified,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    innerIndication: Indication? = null,
     isFocusRequested: Boolean = false,
     onFocusRequestConsumed: (() -> Unit)? = null,
-    prefix: String? = null,
-    hint: String? = null,
-    isSecureField: Boolean = false,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    innerIndication: Indication? = null,
     style: InternalTextFieldStyle = CheckoutThemeProvider.elements.textField,
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)?,
@@ -142,7 +139,6 @@ fun CheckoutTextField(
             isError = isError,
             interactionSource = interactionSource,
             innerIndication = innerIndication,
-            prefix = prefix,
             hint = if (state.text.isEmpty()) hint else null,
             leadingContent = leadingContent,
             trailingContent = trailingContent,
@@ -222,7 +218,6 @@ private fun CheckoutTextFieldPreview(
 ) {
     CheckoutThemePreviewWrapper(theme) {
         CheckoutTextField(
-            onValueChange = {},
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue(""),
             contentType = null,
@@ -231,17 +226,15 @@ private fun CheckoutTextFieldPreview(
         )
 
         CheckoutTextField(
-            onValueChange = {},
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue(""),
             contentType = null,
-            prefix = "Prefix",
+            leadingContent = { Body("Prefix", color = CheckoutThemeProvider.colors.textSecondary) },
             trailingContent = null,
         )
 
         val focusRequester = remember { FocusRequester() }
         CheckoutTextField(
-            onValueChange = {},
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue("Value"),
             contentType = null,
@@ -266,7 +259,6 @@ private fun CheckoutTextFieldPreview(
         }
 
         CheckoutTextField(
-            onValueChange = {},
             state = rememberTextFieldStateWithCurrentValue("Value"),
             contentType = null,
             label = "Label",
@@ -278,7 +270,6 @@ private fun CheckoutTextFieldPreview(
         )
 
         CheckoutTextField(
-            onValueChange = {},
             state = rememberTextFieldStateWithCurrentValue("Value"),
             contentType = null,
             label = "Password",

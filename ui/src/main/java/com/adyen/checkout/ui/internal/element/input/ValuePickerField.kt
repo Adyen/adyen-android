@@ -64,7 +64,6 @@ fun ValuePickerField(
         interactionSource = interactionSource,
         innerIndication = ripple(color = style.textColor),
         style = style,
-        prefix = null,
         trailingContent = {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_chevron_right),

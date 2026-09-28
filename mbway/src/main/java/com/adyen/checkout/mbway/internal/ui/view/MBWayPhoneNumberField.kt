@@ -26,6 +26,8 @@ import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.element.input.rememberTextFieldStateWithCurrentValue
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
@@ -50,7 +52,9 @@ internal fun MBWayPhoneNumberField(
         contentType = ContentType.PhoneNumberNational,
         isError = mbWayPhoneNumberFieldState.isError,
         supportingText = supportingTextPhoneNumber,
-        prefix = countryCode,
+        leadingContent = {
+            Body(countryCode, color = CheckoutThemeProvider.colors.textSecondary)
+        },
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         isFocusRequested = mbWayPhoneNumberFieldState.isFocusRequested,
