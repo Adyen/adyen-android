@@ -12,12 +12,18 @@ import androidx.annotation.RestrictTo
 
 /**
  * Returns a request for the first invalid text input, or null if there is none. Pickers and switches are skipped.
+ * If [afterElementId] is null or absent from the form, the search starts at the first element.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <Id : FormElementId> FormState<Id>.requestFocusOnFirstInvalidTextInput(
     showErrorIfPresent: Boolean,
+    afterElementId: Id? = null,
 ): FocusRequest<Id>? {
-    val firstInvalidTextInput = elements.firstOrNull { it.id.isTextInput && !it.isValid }
+    val afterElementIndex = elements.indexOfFirst { it.id == afterElementId }
+
+    val firstInvalidTextInput = elements
+        .drop(afterElementIndex + 1)
+        .firstOrNull { it.id.isTextInput && !it.isValid }
     return firstInvalidTextInput?.let {
         FocusRequest(id = it.id, showErrorIfPresent = showErrorIfPresent)
     }

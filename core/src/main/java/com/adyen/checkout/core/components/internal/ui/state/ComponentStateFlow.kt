@@ -67,10 +67,15 @@ private class ComponentStateFlowImplementation<C : ComponentState, I : Component
     }
 
     override fun handleIntent(intent: I) {
-        state.update { currentState ->
-            val reducedState = reducer.reduce(currentState, intent)
+        state.update { previousState ->
+            val reducedState = reducer.reduce(previousState, intent)
             val validatedState = validator.validate(reducedState)
-            postProcessor.process(validatedState, intent)
+            val newState = postProcessor.process(
+                previousState = previousState,
+                currentState = validatedState,
+                intent = intent,
+            )
+            return@update newState
         }
     }
 

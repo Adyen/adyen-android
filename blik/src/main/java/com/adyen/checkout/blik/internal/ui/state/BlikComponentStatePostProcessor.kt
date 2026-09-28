@@ -16,14 +16,18 @@ internal class BlikComponentStatePostProcessor : ComponentStatePostProcessor<Bli
 
     override fun processInitialState(state: BlikComponentState) = state.focusFirstInvalid(showErrorIfPresent = false)
 
-    override fun process(state: BlikComponentState, intent: BlikIntent) = when (intent) {
-        is BlikIntent.UpdateFieldFocus -> state.updateErrorVisibility(intent.id, intent.hasFocus)
-        is BlikIntent.FocusRequestConsumed -> state.clearFocusRequest(intent.id)
+    override fun process(
+        previousState: BlikComponentState,
+        currentState: BlikComponentState,
+        intent: BlikIntent,
+    ) = when (intent) {
+        is BlikIntent.UpdateFieldFocus -> currentState.updateErrorVisibility(intent.id, intent.hasFocus)
+        is BlikIntent.FocusRequestConsumed -> currentState.clearFocusRequest(intent.id)
 
         is BlikIntent.HighlightValidationErrors ->
-            state.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
+            currentState.showAllErrors().focusFirstInvalid(showErrorIfPresent = true)
 
-        else -> state
+        else -> currentState
     }
 
     private fun BlikComponentState.focusFirstInvalid(showErrorIfPresent: Boolean) = copy(

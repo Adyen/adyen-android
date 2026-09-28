@@ -51,7 +51,7 @@ internal class StoredCardComponentStatePostProcessorTest {
     fun `when the security code loses focus, then an error it was holding back is shown`() {
         val state = createInitialState().copy(securityCode = invalidField())
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             StoredCardIntent.UpdateFieldFocus(StoredCardFormElementId.SECURITY_CODE, hasFocus = false),
         )
@@ -63,7 +63,7 @@ internal class StoredCardComponentStatePostProcessorTest {
     fun `when the shopper focuses the security code, then a visible error is hidden`() {
         val state = createInitialState().copy(securityCode = invalidField(isErrorVisible = true))
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             StoredCardIntent.UpdateFieldFocus(StoredCardFormElementId.SECURITY_CODE, hasFocus = true),
         )
@@ -75,7 +75,7 @@ internal class StoredCardComponentStatePostProcessorTest {
     fun `when pay is pressed and the security code is invalid, then the error is shown and focus requested`() {
         val state = createInitialState().copy(securityCode = invalidField())
 
-        val actual = postProcessor.process(state, StoredCardIntent.HighlightValidationErrors)
+        val actual = process(state, StoredCardIntent.HighlightValidationErrors)
 
         assertTrue(actual.securityCode.isErrorVisible)
         assertEquals(
@@ -88,7 +88,7 @@ internal class StoredCardComponentStatePostProcessorTest {
     fun `when pay is pressed and nothing is invalid, then the security code is not highlighted`() {
         val state = createInitialState()
 
-        val actual = postProcessor.process(state, StoredCardIntent.HighlightValidationErrors)
+        val actual = process(state, StoredCardIntent.HighlightValidationErrors)
 
         assertFalse(actual.securityCode.isErrorVisible)
         assertNull(actual.focusRequest)
@@ -100,7 +100,7 @@ internal class StoredCardComponentStatePostProcessorTest {
             focusRequest = FocusRequest(StoredCardFormElementId.SECURITY_CODE),
         )
 
-        val actual = postProcessor.process(
+        val actual = process(
             state,
             StoredCardIntent.FocusRequestConsumed(StoredCardFormElementId.SECURITY_CODE),
         )
@@ -112,10 +112,13 @@ internal class StoredCardComponentStatePostProcessorTest {
     fun `when the intent decides no focus, then the state is untouched`() {
         val state = createInitialState().copy(securityCode = invalidField())
 
-        val actual = postProcessor.process(state, StoredCardIntent.UpdateLoading(true))
+        val actual = process(state, StoredCardIntent.UpdateLoading(true))
 
         assertEquals(state, actual)
     }
+
+    private fun process(state: StoredCardComponentState, intent: StoredCardIntent) =
+        postProcessor.process(state, state, intent)
 
     private fun invalidField(isErrorVisible: Boolean = false) = TextInputComponentState(
         error = TextInputComponentState.InputError(
