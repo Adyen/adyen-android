@@ -118,7 +118,7 @@ private fun CardNumberInputField(
         isFocusRequested = cardNumberState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = cardNumberState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             CardNumberTrailingIcon(
                 trailingIcon = cardNumberState.trailingIcon,
                 cardBrandViewState = cardBrandViewState,

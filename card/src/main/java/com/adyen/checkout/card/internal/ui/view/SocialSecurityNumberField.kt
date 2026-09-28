@@ -64,7 +64,7 @@ internal fun SocialSecurityNumberField(
         imeAction = socialSecurityNumberState.keyboardAction.toImeAction(),
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
-        trailingIcon = {
+        trailingContent = {
             CheckoutTextFieldTrailingIcon(socialSecurityNumberState.trailingIcon)
         },
     )

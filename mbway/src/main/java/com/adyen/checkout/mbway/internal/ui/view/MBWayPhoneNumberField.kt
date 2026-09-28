@@ -56,7 +56,7 @@ internal fun MBWayPhoneNumberField(
         isFocusRequested = mbWayPhoneNumberFieldState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = mbWayPhoneNumberFieldState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             CheckoutTextFieldTrailingIcon(mbWayPhoneNumberFieldState.trailingIcon)
         },
     )

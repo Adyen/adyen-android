@@ -64,7 +64,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
  * text field, including colors, corner radius, and text styles.
  * @param prefix An optional string to be displayed at the beginning of the input area,
  * before the user's input.
- * @param trailingIcon An optional composable function that provides a trailing icon to be
+ * @param trailingContent An optional composable function that provides a trailing icon to be
  * displayed at the end of the text field.
  */
 @Suppress("LongMethod")
@@ -80,8 +80,8 @@ internal fun CheckoutTextFieldDecorationBox(
     label: String? = null,
     prefix: String? = null,
     hint: String? = null,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
 ) {
     val isFocused = interactionSource.collectIsFocusedAsState().value
 
@@ -104,8 +104,8 @@ internal fun CheckoutTextFieldDecorationBox(
         ) {
             Spacer(Modifier.size(Dimensions.Spacing.Large))
 
-            if (leadingIcon != null) {
-                leadingIcon()
+            if (leadingContent != null) {
+                leadingContent()
                 Spacer(Modifier.size(Dimensions.Spacing.Small))
             }
 
@@ -129,7 +129,7 @@ internal fun CheckoutTextFieldDecorationBox(
                 }
             }
 
-            if (trailingIcon == null) {
+            if (trailingContent == null) {
                 Spacer(Modifier.size(Dimensions.Spacing.Large))
             } else {
                 Box(
@@ -139,7 +139,7 @@ internal fun CheckoutTextFieldDecorationBox(
                         minHeight = Dimensions.MinTouchTarget,
                     ),
                 ) {
-                    trailingIcon()
+                    trailingContent()
                 }
             }
         }

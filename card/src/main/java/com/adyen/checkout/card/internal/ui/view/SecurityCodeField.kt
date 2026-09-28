@@ -94,7 +94,7 @@ internal fun SecurityCodeField(
         isFocusRequested = securityCodeState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = securityCodeState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             SecurityCodeTrailingIcon(securityCodeState.trailingIcon)
         },
     )

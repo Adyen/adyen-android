@@ -55,14 +55,14 @@ fun SearchField(
         enabled = enabled,
         innerIndication = null,
         style = style,
-        leadingIcon = {
+        leadingContent = {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_search),
                 contentDescription = null,
                 tint = style.textColor,
             )
         },
-        trailingIcon = trailingSearchIcon(
+        trailingContent = trailingSearchIcon(
             shouldShowIcon = state.text.isNotEmpty(),
             onDeleteClick = { state.edit { delete(0, state.text.length) } },
         ),

@@ -84,7 +84,7 @@ internal fun ExpiryDateField(
         isFocusRequested = expiryDateState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = expiryDateState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             ExpiryDateTrailingIcon(expiryDateState.trailingIcon)
         },
     )
