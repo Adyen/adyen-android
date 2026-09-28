@@ -63,26 +63,35 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
             }
 
             configureBcvWorkaround()
-            configureComposeCompilerReports()
+            configureComposeCompiler()
         }
     }
 
     /**
-     * Writes the Compose compiler's stability reports and metrics to `build/compose_compiler` when the build runs with
-     * `-PcomposeCompilerReports=true`. They are off by default because generating them slows down compilation.
+     * Configures the Compose compiler in every module that applies it.
      *
-     * The compiler only reports on the files it compiles, so an incremental or cached compilation gives a partial
-     * report. Force a full one: `./gradlew :card:compileReleaseKotlin --rerun -PcomposeCompilerReports=true`.
+     * `config/compose/stability.conf` always applies. It lists types the compiler cannot prove stable but that we
+     * promise never change, so composables taking them can skip recomposition.
+     *
+     * The stability reports and metrics are written to `build/compose_compiler` only when the build runs with
+     * `-PcomposeCompilerReports=true`, because generating them slows down compilation. The compiler only reports on the
+     * files it compiles, so an incremental or cached compilation gives a partial report. Force a full one:
+     * `./gradlew :card:compileReleaseKotlin --rerun -PcomposeCompilerReports=true`.
      */
-    private fun Project.configureComposeCompilerReports() {
-        val isEnabled = providers.gradleProperty("composeCompilerReports").map { it.toBoolean() }.getOrElse(false)
-        if (!isEnabled) return
+    private fun Project.configureComposeCompiler() {
+        val stabilityConfig = rootProject.layout.projectDirectory.file("config/compose/stability.conf")
+        val isReportsEnabled =
+            providers.gradleProperty("composeCompilerReports").map { it.toBoolean() }.getOrElse(false)
 
         pluginManager.withPlugin("org.jetbrains.kotlin.plugin.compose") {
             extensions.configure<ComposeCompilerGradlePluginExtension> {
-                val outputDir = layout.buildDirectory.dir("compose_compiler")
-                reportsDestination.set(outputDir)
-                metricsDestination.set(outputDir)
+                stabilityConfigurationFiles.add(stabilityConfig)
+
+                if (isReportsEnabled) {
+                    val outputDir = layout.buildDirectory.dir("compose_compiler")
+                    reportsDestination.set(outputDir)
+                    metricsDestination.set(outputDir)
+                }
             }
         }
     }
