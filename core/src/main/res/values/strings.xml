@@ -11,7 +11,9 @@
     <string name="checkout_authentication_title" translatable="false">Security check</string>
     <string name="checkout_authentication_description" translatable="false">You will be guided to a secure environment to perform a security challenge</string>
     <string name="checkout_authentication_status" translatable="false">Launching challenge..</string>
-    <string name="checkout_await_loading" translatable="false">Awaiting confirmation…</string>
+    <string name="checkout_await_title" translatable="false">Awaiting</string>
+    <string name="checkout_await_description" translatable="false">Complete the payment in the provider\'s application or website.</string>
+    <string name="checkout_await_status" translatable="false">Awaiting completion..</string>
     <string name="checkout_mbway_phone_number" translatable="false">Phone number</string>
     <string name="checkout_mbway_invalid_phone_number" translatable="false">Invalid phone number</string>
     <string name="checkout_mbway_country_code" translatable="false">Country code</string>

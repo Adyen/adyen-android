@@ -16,6 +16,7 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.AwaitAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.action.internal.ui.ActionFormatter
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
@@ -69,7 +70,10 @@ internal class AwaitComponent(
             onError = ::emitError,
         )
 
-        AwaitContent(modifier)
+        AwaitContent(
+            logoTxVariant = ActionFormatter.getIcon(action),
+            modifier = modifier,
+        )
     }
 
     override fun handleAction() {
