@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldDecorator
 import androidx.compose.foundation.text.input.TextFieldLineLimits
@@ -106,6 +107,7 @@ fun CheckoutTextField(
     outputTransformation: OutputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     imeAction: ImeAction = ImeAction.Unspecified,
+    onKeyboardAction: KeyboardActionHandler? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
     isFocusRequested: Boolean = false,
@@ -156,6 +158,7 @@ fun CheckoutTextField(
             lineLimits = TextFieldLineLimits.SingleLine,
             cursorBrush = cursorBrush,
             keyboardOptions = resolvedKeyboardOptions,
+            onKeyboardAction = onKeyboardAction,
             interactionSource = interactionSource,
             decorator = decorator,
         )
@@ -168,6 +171,7 @@ fun CheckoutTextField(
             textStyle = textStyle,
             cursorBrush = cursorBrush,
             keyboardOptions = resolvedKeyboardOptions,
+            onKeyboardAction = onKeyboardAction,
             interactionSource = interactionSource,
             decorator = decorator,
         )
