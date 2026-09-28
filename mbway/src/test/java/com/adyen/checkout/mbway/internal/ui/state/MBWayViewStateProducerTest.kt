@@ -31,7 +31,6 @@ internal class MBWayViewStateProducerTest {
             selectedCountryCode = CountryModel("PT", "351", "Portugal"),
             phoneNumber = TextInputComponentState(
                 text = "123456789",
-                isFocused = true,
                 error = TextInputComponentState.InputError(CheckoutLocalizationKey.GENERAL_CLOSE, isVisible = true)
             ),
             isLoading = true,
@@ -45,7 +44,6 @@ internal class MBWayViewStateProducerTest {
                 MBWayFormElement.PhoneNumber(
                     textInputViewState = TextInputViewState(
                         text = "123456789",
-                        isFocused = true,
                         supportingText = CheckoutLocalizationKey.GENERAL_CLOSE,
                         isError = true,
                         // The only text input of the form, so it closes the keyboard rather than moving on.

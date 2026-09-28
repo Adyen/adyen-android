@@ -89,7 +89,6 @@ internal fun SecurityCodeField(
         supportingText = supportingTextSecurityCode,
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
-        shouldFocus = securityCodeState.isFocused,
         isFocusRequested = securityCodeState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = securityCodeState.keyboardAction.toImeAction(),
