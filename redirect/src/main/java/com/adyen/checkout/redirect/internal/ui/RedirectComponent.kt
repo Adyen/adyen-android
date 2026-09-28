@@ -17,6 +17,7 @@ import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
+import com.adyen.checkout.core.action.internal.ui.ActionFormatter
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -34,6 +35,7 @@ import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.redirect.internal.ui.view.RedirectContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -65,6 +67,11 @@ constructor(
             redirectHandler = redirectHandler,
             viewEventFlow = redirectEventFlow,
             onError = ::emitError,
+        )
+
+        RedirectContent(
+            logoTxVariant = ActionFormatter.getIcon(action),
+            modifier = modifier,
         )
     }
 

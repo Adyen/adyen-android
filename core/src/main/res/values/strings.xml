@@ -78,4 +78,7 @@
     <string name="checkout_pay_button_no_amount" translatable="false">Pay</string>
     <string name="checkout_pay_button_zero_amount" translatable="false">Save details</string>
     <string name="checkout_pay_button_with_amount" translatable="false">Pay %s</string>
+    <string name="checkout_redirect_title" translatable="false">Redirection</string>
+    <string name="checkout_redirect_description" translatable="false">You are guided to the next step of the process.</string>
+    <string name="checkout_redirect_status" translatable="false">Processing..</string>
 </resources>

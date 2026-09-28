@@ -31,6 +31,13 @@ import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 /**
+ * The generic card logo. Cards are shown with it wherever the brand being paid with is not known, which is everywhere
+ * except a stored card. There is no logo to load for the `scheme` payment method type itself.
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+const val CARD_LOGO_TX_VARIANT = "card"
+
+/**
  * Composable that loads a logo using the Adyen environment and txVariant.
  *
  * @param txVariant The txVariant to be handled.
