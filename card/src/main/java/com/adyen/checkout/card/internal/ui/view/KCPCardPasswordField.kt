@@ -52,6 +52,7 @@ internal fun KCPCardPasswordField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_KCP_CARD_PASSWORD),
         state = rememberTextFieldStateWithCurrentValue(kcpCardPasswordState.text),
+        contentType = null,
         isError = kcpCardPasswordState.isError,
         supportingText = supportingText,
         onValueChange = onValueChange,

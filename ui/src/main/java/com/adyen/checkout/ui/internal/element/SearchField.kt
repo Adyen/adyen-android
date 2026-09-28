@@ -48,6 +48,7 @@ fun SearchField(
     val style = CheckoutThemeProvider.elements.textField
     CheckoutTextField(
         state = state,
+        contentType = null,
         onValueChange = onValueChange,
         label = null,
         hint = if (state.text.isEmpty()) hint else null,

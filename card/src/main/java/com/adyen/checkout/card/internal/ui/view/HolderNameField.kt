@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,6 +47,7 @@ internal fun HolderNameField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_HOLDER_NAME),
         state = rememberTextFieldStateWithCurrentValue(holderNameState.text),
+        contentType = ContentType.PersonFullName,
         isError = holderNameState.isError,
         supportingText = supportingTextHolderName,
         onValueChange = onValueChange,

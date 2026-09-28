@@ -59,6 +59,7 @@ internal fun BlikCodeField(
             },
         label = resolveString(CheckoutLocalizationKey.BLIK_CODE),
         state = rememberTextFieldStateWithCurrentValue(blikCodeState.text),
+        contentType = null,
         isError = blikCodeState.isError,
         supportingText = supportingText,
         onValueChange = onValueChange,
