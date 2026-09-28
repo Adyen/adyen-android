@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 /**
  * One row of the stored card form, carrying everything needed to render it.
  */
+@Immutable
 internal sealed interface StoredCardFormElement {
 
     val id: StoredCardFormElementId
