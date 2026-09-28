@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.Composable
@@ -43,30 +42,6 @@ import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
-/**
- * A composable function that provides the decoration box for [CheckoutTextField].
- *
- * This internal composable handles the layout and styling of elements surrounding the
- * actual input field, including the label, supporting text, prefix, and trailing icon.
- * It applies Adyen's theming for colors, shapes, and text styles based on the
- * provided [InternalTextFieldStyle] and interaction states (focused, error).
- *
- * @param label The label text to be displayed above the text field.
- * @param innerTextField The composable representing the actual input field (e.g., [BasicTextField]).
- * @param supportingText Optional supporting text to be displayed below the text field.
- * @param isError Indicates whether the text field is in an error state. When `true`,
- * the supporting text and border might change color to reflect an error.
- * @param interactionSource The [MutableInteractionSource] representing the stream of
- * interactions for this text field, used to determine focus state and apply indications.
- * @param innerIndication An optional [Indication] that will be used for the background of the
- * text field. If `null`, no indication will be applied.
- * @param style The [InternalTextFieldStyle] that defines the visual appearance of the
- * text field, including colors, corner radius, and text styles.
- * @param prefix An optional string to be displayed at the beginning of the input area,
- * before the user's input.
- * @param trailingContent An optional composable function that provides a trailing icon to be
- * displayed at the end of the text field.
- */
 @Suppress("LongMethod")
 @Composable
 internal fun CheckoutTextFieldDecorationBox(
@@ -78,7 +53,6 @@ internal fun CheckoutTextFieldDecorationBox(
     style: InternalTextFieldStyle,
     modifier: Modifier = Modifier,
     label: String? = null,
-    prefix: String? = null,
     hint: String? = null,
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
@@ -104,13 +78,8 @@ internal fun CheckoutTextFieldDecorationBox(
         ) {
             Spacer(Modifier.size(Dimensions.Spacing.Large))
 
-            if (leadingContent != null) {
+            leadingContent?.let {
                 leadingContent()
-                Spacer(Modifier.size(Dimensions.Spacing.Small))
-            }
-
-            prefix?.let {
-                Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
                 Spacer(Modifier.size(Dimensions.Spacing.Small))
             }
 
