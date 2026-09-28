@@ -86,8 +86,10 @@ import kotlinx.coroutines.flow.collectLatest
  * @param onFocusRequestConsumed Called once focus has been requested, so that the state layer can clear the request.
  * @param prefix An optional string to be displayed at the beginning of the input area,
  * before the user's input.
- * @param trailingIcon A composable function that provides a trailing icon to be displayed at the end
- * of the text field, or null for no icon at all. Payment method fields should render this through
+ * @param leadingContent A composable function that provides content to be displayed at the start
+ *  * of the text field, or null for no content at all.
+ * @param trailingContent A composable function that provides content to be displayed at the end
+ * of the text field, or null for no content at all. Payment method fields should render this through
  * `CheckoutTextFieldTrailingIcon`, which handles the generic empty and error icons for every field.
  * This parameter is required so that every new field has to make a deliberate choice about it.
  */
@@ -116,8 +118,8 @@ fun CheckoutTextField(
     hint: String? = null,
     isSecureField: Boolean = false,
     style: InternalTextFieldStyle = CheckoutThemeProvider.elements.textField,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)?,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)?,
 ) {
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
@@ -144,8 +146,8 @@ fun CheckoutTextField(
             innerIndication = innerIndication,
             prefix = prefix,
             hint = if (state.text.isEmpty()) hint else null,
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
+            leadingContent = leadingContent,
+            trailingContent = trailingContent,
             style = style,
         )
     }
@@ -229,7 +231,7 @@ private fun CheckoutTextFieldPreview(
             state = rememberTextFieldStateWithCurrentValue(""),
             contentType = null,
             supportingText = "Description",
-            trailingIcon = null,
+            trailingContent = null,
         )
 
         CheckoutTextField(
@@ -238,7 +240,7 @@ private fun CheckoutTextFieldPreview(
             state = rememberTextFieldStateWithCurrentValue(""),
             contentType = null,
             prefix = "Prefix",
-            trailingIcon = null,
+            trailingContent = null,
         )
 
         val focusRequester = remember { FocusRequester() }
@@ -247,14 +249,14 @@ private fun CheckoutTextFieldPreview(
             label = "Label",
             state = rememberTextFieldStateWithCurrentValue("Value"),
             contentType = null,
-            leadingIcon = {
+            leadingContent = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_search),
                     contentDescription = null,
                     tint = CheckoutThemeProvider.colors.text,
                 )
             },
-            trailingIcon = {
+            trailingContent = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
                     contentDescription = null,
@@ -276,7 +278,7 @@ private fun CheckoutTextFieldPreview(
             isError = true,
             // Components get this icon from CheckoutTextFieldTrailingIcon, it is passed manually here so that the
             // preview matches what an errored field actually looks like.
-            trailingIcon = { CheckoutTextFieldErrorIcon() },
+            trailingContent = { CheckoutTextFieldErrorIcon() },
         )
 
         CheckoutTextField(
@@ -286,7 +288,7 @@ private fun CheckoutTextFieldPreview(
             label = "Password",
             isSecureField = true,
             modifier = Modifier.focusRequester(focusRequester),
-            trailingIcon = null,
+            trailingContent = null,
         )
     }
 }

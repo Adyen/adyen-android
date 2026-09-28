@@ -58,7 +58,7 @@ internal fun HolderNameField(
         isFocusRequested = holderNameState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = holderNameState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             CheckoutTextFieldTrailingIcon(holderNameState.trailingIcon)
         },
     )

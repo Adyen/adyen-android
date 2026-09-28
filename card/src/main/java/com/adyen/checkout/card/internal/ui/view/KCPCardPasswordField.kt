@@ -61,7 +61,7 @@ internal fun KCPCardPasswordField(
         imeAction = kcpCardPasswordState.keyboardAction.toImeAction(),
         inputTransformation = inputTransformation,
         isSecureField = true,
-        trailingIcon = {
+        trailingContent = {
             CheckoutTextFieldTrailingIcon(kcpCardPasswordState.trailingIcon)
         },
     )

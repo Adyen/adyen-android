@@ -60,14 +60,14 @@ fun SearchField(
         // Clicking Done on the keyboard does not clear focus, so it has to be cleared manually
         onKeyboardAction = { focusManager.clearFocus() },
         style = style,
-        leadingIcon = {
+        leadingContent = {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_search),
                 contentDescription = null,
                 tint = style.textColor,
             )
         },
-        trailingIcon = trailingSearchIcon(
+        trailingContent = trailingSearchIcon(
             shouldShowIcon = state.text.isNotEmpty(),
             onDeleteClick = { state.edit { delete(0, state.text.length) } },
         ),

@@ -54,7 +54,7 @@ internal fun PostalCodeField(
         isFocusRequested = postalCodeState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = postalCodeState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             CheckoutTextFieldTrailingIcon(postalCodeState.trailingIcon)
         },
     )
