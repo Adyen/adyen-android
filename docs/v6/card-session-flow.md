@@ -34,7 +34,7 @@ lifecycleScope.launch {
                 context = result.checkoutContext,
                 callbacks = SessionCheckoutCallbacks(
                     onAction = {
-                        isHandlingAction = true
+                        showActionScreen()
                     },
                     onComplete = { checkoutResult ->
                         showSuccess(checkoutResult.resultCode.value)
@@ -68,10 +68,12 @@ When you use `/sessions`, some card settings are determined by the session inste
 
 Configure these values in your `/sessions` request and do not rely on component-level values to override them.
 
-Once you have the controller, render it from your `@Composable` UI, switching to the action once `onAction` has set `isHandlingAction`. Pass a `CheckoutTheme` and optional `CheckoutLocalizationProvider` when you render. See [theme.md](theme.md) and [README.md](README.md#localization).
+Once you have the controller, render it from your `@Composable` UI. Start with `CheckoutPaymentMethod(...)` so the shopper can enter their card details. When the SDK calls `onAction`, the payment needs an additional step, such as 3D Secure authentication, and you must switch to `CheckoutAction(...)`.
+
+How you track this switch is up to you. In the example above, `showActionScreen()` stands for your own code. For example, it can set a `showAction` flag in your UI state that your composable reads:
 
 ```kotlin
-if (isHandlingAction) {
+if (showAction) {
     CheckoutAction(
         controller = controller,
         theme = theme,
@@ -86,7 +88,7 @@ if (isHandlingAction) {
 }
 ```
 
-See [README.md](README.md#rendering-the-compose-flow) for the full rendering contract.
+Pass the same `CheckoutTheme` and optional `CheckoutLocalizationProvider` to both composables. See [theme.md](theme.md) and [README.md](README.md#localization). For the full rendering contract, see [README.md](README.md#rendering-the-compose-flow).
 
 ## Complete working example
 

@@ -40,7 +40,7 @@ lifecycleScope.launch {
                         callPayments(data)
                     },
                     onAction = {
-                        isHandlingAction = true
+                        showActionScreen()
                     },
                     onAdditionalDetails = { data ->
                         callDetails(data)
@@ -65,10 +65,14 @@ lifecycleScope.launch {
 }
 ```
 
-`callPayments(...)` should return `SubmitResult`, and `callDetails(...)` should return `AdditionalDetailsResult`. Once you have the controller, render it from your `@Composable` UI, switching to the action once `onAction` has set `isHandlingAction`:
+`callPayments(...)` should return `SubmitResult`, and `callDetails(...)` should return `AdditionalDetailsResult`.
+
+Once you have the controller, render it from your `@Composable` UI. Start with `CheckoutPaymentMethod(...)` so the shopper can enter their card details. When the SDK calls `onAction`, the payment needs an additional step, such as 3D Secure authentication, and you must switch to `CheckoutAction(...)`.
+
+How you track this switch is up to you. In the example above, `showActionScreen()` stands for your own code. For example, it can set a `showAction` flag in your UI state that your composable reads:
 
 ```kotlin
-if (isHandlingAction) {
+if (showAction) {
     CheckoutAction(
         controller = controller,
         theme = theme,
@@ -83,7 +87,7 @@ if (isHandlingAction) {
 }
 ```
 
-See [README.md](README.md#rendering-the-compose-flow) for the full rendering contract.
+Pass the same `CheckoutTheme` and optional `CheckoutLocalizationProvider` to both composables. See [theme.md](theme.md) and [README.md](README.md#localization). For the full rendering contract, see [README.md](README.md#rendering-the-compose-flow).
 
 ## Complete working example
 
