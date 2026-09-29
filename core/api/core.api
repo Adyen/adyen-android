@@ -483,6 +483,10 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 }
 
 public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
+	public static final field ADDRESS_COUNTRY_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_COUNTRY_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_POSTAL_CODE_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_POSTAL_CODE_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AUTHENTICATION_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AUTHENTICATION_STATUS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AUTHENTICATION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -547,6 +551,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field GENERAL_BACK Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CANCEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CLOSE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field GENERAL_CONFIRM_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_OPTIONAL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_SEARCH_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

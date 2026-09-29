@@ -8,6 +8,10 @@
 
 <!-- TODO - Add translations -->
 <resources>
+    <string name="adyen_checkout_address_country_error" translatable="false">Select a country/region</string>
+    <string name="adyen_checkout_address_country_label" translatable="false">Country/Region</string>
+    <string name="adyen_checkout_address_postal_code_error" translatable="false">Enter a valid postal code</string>
+    <string name="adyen_checkout_address_postal_code_label" translatable="false">Postal code</string>
     <string name="checkout_authentication_title" translatable="false">Security check</string>
     <string name="checkout_authentication_description" translatable="false">You will be guided to a secure environment to perform a security challenge</string>
     <string name="checkout_authentication_status" translatable="false">Launching challenge..</string>
@@ -71,6 +75,7 @@
     <string name="checkout_general_back" translatable="false">Back</string>
     <string name="checkout_general_cancel" translatable="false">Cancel</string>
     <string name="checkout_general_close" translatable="false">Close</string>
+    <string name="adyen_checkout_general_confirm_label" translatable="false">Confirm</string>
     <string name="checkout_general_optional" translatable="false">(Optional)</string>
     <string name="checkout_general_search_hint" translatable="false">Search..</string>
     <string name="checkout_blik_code" translatable="false">Code</string>
