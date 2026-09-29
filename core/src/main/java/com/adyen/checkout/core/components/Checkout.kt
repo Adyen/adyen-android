@@ -15,14 +15,15 @@ import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.common.internal.publicKey
+import com.adyen.checkout.core.components.Checkout.setup
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.internal.validate
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.SessionResponse
-import kotlinx.coroutines.CancellationException
 
 /**
  * Entry point to set up a checkout.
@@ -154,20 +155,16 @@ object Checkout {
      * @param context The [CheckoutContext] created by one of the [setup] methods.
      * @return `true` when the payment method can be used, `false` otherwise.
      */
-    // The API is required to never throw, so any unexpected error is caught and logged.
-    @Suppress("TooGenericExceptionCaught")
     suspend fun isPaymentMethodAvailable(
         type: String,
         context: CheckoutContext,
     ): Boolean {
         val paymentMethod = context.getPaymentMethods().find { it.type == type } ?: return false
 
-        return try {
+        return runSuspendCatching {
             val params = createCheckoutParams(context)
             PaymentMethodProvider.isAvailable(paymentMethod, params)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
+        }.getOrElse { e ->
             adyenLog(AdyenLogLevel.ERROR, e) { "Failed to check availability for payment method $type." }
             false
         }
