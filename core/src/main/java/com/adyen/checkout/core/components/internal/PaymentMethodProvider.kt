@@ -11,7 +11,9 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -19,6 +21,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
 
@@ -50,15 +53,7 @@ object PaymentMethodProvider {
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): PaymentComponent? {
-        val txVariant = paymentMethod.type
-
-        val registeredFactory = factories[txVariant] ?: if (paymentMethod is GenericPaymentMethod) {
-            GenericPaymentComponentFactory
-        } else {
-            null
-        }
-
-        return registeredFactory?.create(
+        return resolveFactory(paymentMethod)?.create(
             paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
@@ -66,6 +61,49 @@ object PaymentMethodProvider {
             params = params,
             additionalCallbacks = additionalCallbacks,
         )
+    }
+
+    /**
+     * Returns whether the given payment method can be used in the current environment.
+     *
+     * Payment methods without a registered factory cannot be used and return `false`. Payment
+     * methods whose factory does not implement [PaymentMethodAvailabilityCheck] are always
+     * available.
+     */
+    suspend fun isAvailable(
+        paymentMethod: PaymentMethod,
+        params: CheckoutParams,
+    ): Boolean {
+        return when (val factory = resolveFactory(paymentMethod)) {
+            null -> false
+            is PaymentMethodAvailabilityCheck -> runAvailabilityCheck(factory, paymentMethod, params)
+            else -> true
+        }
+    }
+
+    // The check is required to never throw, so any unexpected error is caught and logged.
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun runAvailabilityCheck(
+        availabilityCheck: PaymentMethodAvailabilityCheck,
+        paymentMethod: PaymentMethod,
+        params: CheckoutParams,
+    ): Boolean {
+        return try {
+            availabilityCheck.isAvailable(paymentMethod, params)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            adyenLog(AdyenLogLevel.ERROR, e) { "Availability check failed for payment method ${paymentMethod.type}." }
+            false
+        }
+    }
+
+    private fun resolveFactory(paymentMethod: PaymentMethod): PaymentComponentFactory<*>? {
+        return factories[paymentMethod.type] ?: if (paymentMethod is GenericPaymentMethod) {
+            GenericPaymentComponentFactory
+        } else {
+            null
+        }
     }
 
     fun getStoredPaymentComponent(
