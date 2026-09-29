@@ -99,7 +99,9 @@ internal class V6ViewModel @Inject constructor(
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.error.message.orEmpty()))
             is Checkout.Result.Success -> {
                 checkoutContext = result.checkoutContext
-                val paymentMethods = checkoutContext.getPaymentMethods().filterSupportedPaymentMethods()
+                val paymentMethods = checkoutContext.getPaymentMethods()
+                    .filterSupportedPaymentMethods()
+                    .filterAvailablePaymentMethods(checkoutContext)
                 val checkoutController = createAndSetCheckoutController(
                     paymentMethod = paymentMethods.first(),
                     checkoutContext = result.checkoutContext,
