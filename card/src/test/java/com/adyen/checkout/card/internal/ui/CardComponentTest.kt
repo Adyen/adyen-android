@@ -16,6 +16,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
@@ -599,7 +600,7 @@ internal class CardComponentTest(
         showSupportedCardBrandLogos = false,
         socialSecurityNumberVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility = FieldVisibility.HIDE,
-        showPostalCode = false,
+        billingAddressParams = BillingAddressParams.None,
         cvcVisibility = CVCVisibility.ALWAYS_HIDE,
         storedCVCVisibility = StoredCVCVisibility.HIDE,
         showCardScanner = false,

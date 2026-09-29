@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
@@ -506,7 +507,7 @@ internal class CardPaymentComponentStateFactoryTest(
         showSupportedCardBrandLogos = false,
         socialSecurityNumberVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility = FieldVisibility.HIDE,
-        showPostalCode = false,
+        billingAddressParams = BillingAddressParams.None,
         cvcVisibility = CVCVisibility.ALWAYS_HIDE,
         storedCVCVisibility = StoredCVCVisibility.HIDE,
         showCardScanner = false,

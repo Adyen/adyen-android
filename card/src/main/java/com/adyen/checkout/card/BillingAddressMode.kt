@@ -20,20 +20,19 @@ sealed class BillingAddressMode : Parcelable {
     @Parcelize
     class PostalCode : BillingAddressMode()
 
-    /* The Full and Lookup below are for the types completeness.
-    Uncomment and refine them once implementing that flows.
-
     /**
-     * Full Address Form will be shown as part of the card component.
+     * The full billing address will be requested on a separate screen, opened from the card component.
      *
-     * @param supportedCountryCodes Supported country codes to be filtered from the available country options.
-     * @param hideForCardTypes The [CardType]s for which the address form will be hidden.
+     * @param supportedCountryCodes The ISO 3166-1 alpha-2 codes of the countries the shopper can pick. When empty, all
+     * countries are available.
      */
     @Parcelize
-    data class Full(
+    class Full(
         val supportedCountryCodes: Set<String> = emptySet(),
-        val hideForCardTypes: Set<CardType> = emptySet()
     ) : BillingAddressMode()
+
+    /* The Lookup below is for the types completeness.
+    Uncomment and refine it once implementing that flow.
 
     /**
      * Address Lookup option will be shown as part of card component.
