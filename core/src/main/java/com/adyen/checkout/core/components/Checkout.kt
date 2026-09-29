@@ -9,13 +9,10 @@
 package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.action.data.Action
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
-import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.common.internal.publicKey
 import com.adyen.checkout.core.components.Checkout.setup
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
@@ -160,14 +157,8 @@ object Checkout {
         context: CheckoutContext,
     ): Boolean {
         val paymentMethod = context.getPaymentMethods().find { it.type == type } ?: return false
-
-        return runSuspendCatching {
-            val params = createCheckoutParams(context)
-            PaymentMethodProvider.isAvailable(paymentMethod, params)
-        }.getOrElse { e ->
-            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to check availability for payment method $type." }
-            false
-        }
+        val params = createCheckoutParams(context)
+        return PaymentMethodProvider.isAvailable(paymentMethod, params)
     }
 
     private fun createCheckoutParams(context: CheckoutContext): CheckoutParams {
