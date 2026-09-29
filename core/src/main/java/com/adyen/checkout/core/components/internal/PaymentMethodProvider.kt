@@ -14,6 +14,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -21,7 +22,6 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
 
@@ -63,13 +63,6 @@ object PaymentMethodProvider {
         )
     }
 
-    /**
-     * Returns whether the given payment method can be used in the current environment.
-     *
-     * Payment methods without a registered factory cannot be used and return `false`. Payment
-     * methods whose factory does not implement [PaymentMethodAvailabilityCheck] are always
-     * available.
-     */
     suspend fun isAvailable(
         paymentMethod: PaymentMethod,
         params: CheckoutParams,
@@ -81,18 +74,14 @@ object PaymentMethodProvider {
         }
     }
 
-    // The check is required to never throw, so any unexpected error is caught and logged.
-    @Suppress("TooGenericExceptionCaught")
     private suspend fun runAvailabilityCheck(
         availabilityCheck: PaymentMethodAvailabilityCheck,
         paymentMethod: PaymentMethod,
         params: CheckoutParams,
     ): Boolean {
-        return try {
+        return runSuspendCatching {
             availabilityCheck.isAvailable(paymentMethod, params)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
+        }.getOrElse { e ->
             adyenLog(AdyenLogLevel.ERROR, e) { "Availability check failed for payment method ${paymentMethod.type}." }
             false
         }
