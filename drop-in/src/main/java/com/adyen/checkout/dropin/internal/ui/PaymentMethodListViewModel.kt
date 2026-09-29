@@ -19,6 +19,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMe
 import com.adyen.checkout.core.components.data.model.paymentmethod.PayByBankUSPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodFormatter
@@ -27,10 +28,16 @@ import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodListSection
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 internal class PaymentMethodListViewModel(
     private val checkoutParams: CheckoutParams,
@@ -41,25 +48,68 @@ internal class PaymentMethodListViewModel(
     controllerProvider: DropInControllerProvider,
 ) : ViewModel() {
 
-    val viewState: StateFlow<PaymentMethodListViewState> = paymentMethodRepository.storedPaymentMethods
-        .map { createInitialViewState(it) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createInitialViewState(emptyList()))
+    private val unavailableTypes = MutableStateFlow<Set<String>>(emptySet())
 
-    // Created eagerly rather than when the shopper taps it, because the button is drawn by the controller itself.
-    // TODO - Check availability before creating this. Creating the controller creates the component, whose init
-    //  reports an unavailable payment method as an error, and Drop-in turns any controller error into
-    //  DropInResult.Failed. So an unavailable Google Pay closes Drop-in as soon as the list opens. To be solved once
-    //  there is a structure for checking payment method availability.
-    val instantPaymentMethod: InstantPaymentMethod? = createInstantPaymentMethod(controllerProvider)
+    private val _instantPaymentMethod = MutableStateFlow<InstantPaymentMethod?>(null)
+    val instantPaymentMethod: StateFlow<InstantPaymentMethod?> = _instantPaymentMethod.asStateFlow()
+
+    val viewState: StateFlow<PaymentMethodListViewState> = combine(
+        paymentMethodRepository.storedPaymentMethods,
+        unavailableTypes,
+    ) { storedPaymentMethods, unavailable -> createInitialViewState(storedPaymentMethods, unavailable) }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            createInitialViewState(emptyList(), emptySet()),
+        )
+
+    init {
+        checkAvailability(controllerProvider)
+    }
 
     fun findInstantPaymentMethod(paymentFlowType: DropInPaymentFlowType): InstantPaymentMethod? =
-        instantPaymentMethod?.takeIf { it.paymentFlowType == paymentFlowType }
+        instantPaymentMethod.value?.takeIf { it.paymentFlowType == paymentFlowType }
 
-    private fun createInstantPaymentMethod(controllerProvider: DropInControllerProvider): InstantPaymentMethod? {
-        val paymentMethod = paymentMethodRepository.paymentMethods
+    /**
+     * Runs the registered availability check for every candidate in parallel. The instant payment method's
+     * controller is only created when its check passes: creating it reports an unavailable method as an error,
+     * which Drop-in turns into a failure as soon as the list opens. Unavailable listed methods are removed once
+     * the checks resolve.
+     */
+    private fun checkAvailability(controllerProvider: DropInControllerProvider) {
+        val instantPaymentMethod = paymentMethodRepository.paymentMethods
             .firstOrNull { it.type in INSTANT_PAYMENT_METHOD_TYPES }
-            ?: return null
-        val paymentFlowType = DropInPaymentFlowType.RegularPaymentMethod(paymentMethod.type)
+        val candidates = paymentMethodRepository.paymentMethods
+            .filterNot { it.type in INSTANT_PAYMENT_METHOD_TYPES }
+            .filter { paymentMethodSupportCheck.isSupported(it) }
+
+        viewModelScope.launch {
+            coroutineScope {
+                if (instantPaymentMethod != null) {
+                    launch {
+                        if (PaymentMethodProvider.isAvailable(instantPaymentMethod, checkoutParams)) {
+                            _instantPaymentMethod.value = createInstantPaymentMethod(
+                                controllerProvider,
+                                instantPaymentMethod.type,
+                            )
+                        }
+                    }
+                }
+
+                unavailableTypes.value = candidates
+                    .map { async { it.type to PaymentMethodProvider.isAvailable(it, checkoutParams) } }
+                    .awaitAll()
+                    .filterNot { it.second }
+                    .mapTo(mutableSetOf()) { it.first }
+            }
+        }
+    }
+
+    private fun createInstantPaymentMethod(
+        controllerProvider: DropInControllerProvider,
+        type: String,
+    ): InstantPaymentMethod {
+        val paymentFlowType = DropInPaymentFlowType.RegularPaymentMethod(type)
 
         return InstantPaymentMethod(
             paymentFlowType = paymentFlowType,
@@ -75,7 +125,10 @@ internal class PaymentMethodListViewModel(
         navigator.clearAndNavigateTo(ActionNavKey(paymentFlowType, ActionFlowOwner.PAYMENT_METHOD_LIST))
     }
 
-    private fun createInitialViewState(storedPaymentMethods: List<StoredPaymentMethod>): PaymentMethodListViewState {
+    private fun createInitialViewState(
+        storedPaymentMethods: List<StoredPaymentMethod>,
+        unavailableTypes: Set<String>,
+    ): PaymentMethodListViewState {
         val visibleStoredPaymentMethods = if (dropInParams.hideStoredPaymentMethods) {
             emptyList()
         } else {
@@ -98,8 +151,8 @@ internal class PaymentMethodListViewModel(
             // Every instant type is filtered, otherwise both Google Pay types would render one as a button and the
             // other as a list item. After personalize integration, we will get a different flag to use for filtering.
             .filterNot { it.type in INSTANT_PAYMENT_METHOD_TYPES }
-            // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
             .filter { paymentMethodSupportCheck.isSupported(it) }
+            .filterNot { it.type in unavailableTypes }
             .takeIf { it.isNotEmpty() }
             ?.map { it.toPaymentMethodItem() }
             ?.let { paymentMethods ->
