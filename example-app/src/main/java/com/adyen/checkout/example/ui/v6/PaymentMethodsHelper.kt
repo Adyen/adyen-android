@@ -8,9 +8,14 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 private val SUPPORTED_PAYMENT_METHODS = setOf(
     PaymentMethodTypes.BLIK,
@@ -22,3 +27,14 @@ private val SUPPORTED_PAYMENT_METHODS = setOf(
 
 internal fun List<PaymentMethod>.filterSupportedPaymentMethods(): List<PaymentMethod> =
     filter { it.type in SUPPORTED_PAYMENT_METHODS || it is GenericPaymentMethod }
+
+internal suspend fun List<PaymentMethod>.filterAvailablePaymentMethods(
+    context: CheckoutContext,
+): List<PaymentMethod> = coroutineScope {
+    map { paymentMethod ->
+        async { paymentMethod to Checkout.isPaymentMethodAvailable(paymentMethod.type, context) }
+    }
+        .awaitAll()
+        .filter { it.second }
+        .map { it.first }
+}
