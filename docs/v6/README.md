@@ -141,6 +141,16 @@ val storedPaymentMethods = checkoutContext.getStoredPaymentMethods()
 
 Both accessors return non-null lists and preserve the response order. They return an empty list when no methods are available, including for an action-only checkout context.
 
+Some payment methods additionally depend on device capabilities, installed apps, or SDK configuration to work. For example, Google Pay requires a passing `isReadyToPay` check. Use `Checkout.isPaymentMethodAvailable(...)` to check whether a payment method can actually be used before offering it in your own UI:
+
+```kotlin
+lifecycleScope.launch {
+    val isGooglePayAvailable = Checkout.isPaymentMethodAvailable("googlepay", checkoutContext)
+}
+```
+
+The method never throws. It returns `false` when the payment method is not part of the checkout context, when its module is not included in the integration, or when its availability check fails. Payment methods without environment requirements are always available. Drop-in applies the same checks automatically and removes unavailable methods from the list.
+
 ## Rendering the Compose flow
 
 Rendering is split into two composables, and the required `onAction` callback tells you when to switch between them. Render `CheckoutPaymentMethod(...)` while the shopper provides input, and `CheckoutAction(...)` once `onAction` reports that an action is being handled:
