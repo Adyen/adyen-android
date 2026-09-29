@@ -18,6 +18,7 @@ import com.adyen.checkout.address.internal.ui.state.AddressComponentStatePostPro
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStateReducer
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStateValidator
 import com.adyen.checkout.address.internal.ui.state.AddressIntent
+import com.adyen.checkout.address.internal.ui.state.AddressViewState
 import com.adyen.checkout.address.internal.ui.state.AddressViewStateProducer
 import com.adyen.checkout.address.internal.ui.state.toAddressModel
 import com.adyen.checkout.address.internal.ui.view.AddressContent
@@ -29,10 +30,13 @@ import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
-import com.adyen.checkout.core.components.internal.ui.state.viewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 
 /**
  * A form that collects an address for another component, its host. It is not a payment component: it never submits,
@@ -69,7 +73,13 @@ class AddressComponent internal constructor(
         postProcessor = componentStatePostProcessor,
     )
 
-    private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
+    // Unlike other components, the form leaves composition whenever its screen closes, and the host prefills it before
+    // opening it again. The view state is therefore shared eagerly: the form's text fields report their first value
+    // back as input, so starting them from an outdated view state would undo the prefill.
+    @VisibleForTesting
+    internal val viewState: StateFlow<AddressViewState> = componentState
+        .map(viewStateProducer::produce)
+        .stateIn(coroutineScope, SharingStarted.Eagerly, viewStateProducer.produce(componentState.value))
 
     @Composable
     fun Content(modifier: Modifier) {

@@ -11,12 +11,15 @@ package com.adyen.checkout.address.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
+import com.adyen.checkout.address.internal.ui.state.AddressFormElement
 import com.adyen.checkout.address.internal.ui.view.AddressSecondaryContentEntry
 import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -119,15 +122,46 @@ internal class AddressComponentTest {
         }
     }
 
-    private fun createComponent() = AddressComponentFactory().create(
+    /**
+     * The form leaves composition whenever its screen closes, and the host prefills it right before showing it again.
+     * Its text fields report their first value back as input, so a view state that lags behind would undo the prefill.
+     */
+    @Test
+    fun `when the form is prefilled while it is not shown, then it shows the prefilled address once shown again`() =
+        runTest {
+            // GIVEN
+            val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+            component.prefill(AddressModel(country = "NL", postalCode = "unconfirmed edit"))
+            val subscription = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                component.viewState.collect {}
+            }
+            subscription.cancel()
+            advanceTimeBy(NO_SUBSCRIBER_TIME_MS)
+
+            // WHEN
+            component.prefill(AddressModel(country = "NL", postalCode = "1234 AB"))
+
+            // THEN
+            val postalCode = component.viewState.value.elements
+                .filterIsInstance<AddressFormElement.PostalCode>()
+                .single()
+            assertEquals("1234 AB", postalCode.textInputViewState.text)
+        }
+
+    private fun createComponent(
+        coroutineScope: CoroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+    ) = AddressComponentFactory().create(
         componentParams = AddressComponentParams(
             shopperLocale = Locale.forLanguageTag("en-US"),
             supportedCountryCodes = setOf("NL", "US"),
         ),
-        coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
+        coroutineScope = coroutineScope,
     )
 
     companion object {
         private val NETHERLANDS = CountryModel(isoCode = "NL", countryName = "Netherlands", callingCode = "+31")
+
+        // Longer than any view state keeps its upstream alive without subscribers.
+        private const val NO_SUBSCRIBER_TIME_MS = 60_000L
     }
 }
