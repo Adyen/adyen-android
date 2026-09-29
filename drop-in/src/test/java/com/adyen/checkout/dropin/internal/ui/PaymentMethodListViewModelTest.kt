@@ -11,9 +11,11 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.core.action.data.ActionData
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
@@ -23,6 +25,11 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
+import com.adyen.checkout.core.components.internal.PaymentComponentFactory
+import com.adyen.checkout.core.components.internal.PaymentMethodAvailabilityCheck
+import com.adyen.checkout.core.components.internal.PaymentMethodProvider
+import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
@@ -32,9 +39,11 @@ import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.mock
@@ -71,6 +80,20 @@ internal class PaymentMethodListViewModelTest {
         mockCheckoutController().also { createdControllers += it }
     }
 
+    @BeforeEach
+    fun setUp() {
+        PaymentMethodProvider.clear()
+        // Registered factories without a check are considered available.
+        PaymentMethodProvider.register(PaymentMethodTypes.SCHEME, factory())
+        PaymentMethodProvider.register(PaymentMethodTypes.GOOGLE_PAY, checkingFactory())
+        PaymentMethodProvider.register(PaymentMethodTypes.GOOGLE_PAY_LEGACY, checkingFactory())
+    }
+
+    @AfterEach
+    fun tearDown() {
+        PaymentMethodProvider.clear()
+    }
+
     @Test
     fun `when an instant payment method is offered, then it is not a list item too`() {
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
@@ -91,14 +114,14 @@ internal class PaymentMethodListViewModelTest {
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY, GOOGLE_PAY_LEGACY))
 
         assertEquals(listOf(GOOGLE_PAY_FLOW), requestedPaymentFlowTypes)
-        assertSame(createdControllers.single(), viewModel.instantPaymentMethod?.controller)
+        assertSame(createdControllers.single(), viewModel.instantPaymentMethod.value?.controller)
     }
 
     @Test
     fun `when only the legacy Google Pay type is offered, then that type drives the instant payment method`() {
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY_LEGACY))
 
-        assertEquals(GOOGLE_PAY_LEGACY_FLOW, viewModel.instantPaymentMethod?.paymentFlowType)
+        assertEquals(GOOGLE_PAY_LEGACY_FLOW, viewModel.instantPaymentMethod.value?.paymentFlowType)
     }
 
     @Test
@@ -123,7 +146,7 @@ internal class PaymentMethodListViewModelTest {
     fun `when no instant payment method is offered, then no controller is created`() {
         val viewModel = createViewModel(listOf(CARD))
 
-        assertNull(viewModel.instantPaymentMethod)
+        assertNull(viewModel.instantPaymentMethod.value)
         assertEquals(emptyList<DropInPaymentFlowType>(), requestedPaymentFlowTypes)
     }
 
@@ -135,10 +158,52 @@ internal class PaymentMethodListViewModelTest {
     }
 
     @Test
+    fun `when the instant payment method is unavailable, then no controller is created`() {
+        PaymentMethodProvider.register(PaymentMethodTypes.GOOGLE_PAY, checkingFactory(isAvailable = false))
+        val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
+
+        assertNull(viewModel.instantPaymentMethod.value)
+        assertEquals(emptyList<DropInPaymentFlowType>(), requestedPaymentFlowTypes)
+    }
+
+    @Test
+    fun `when the instant payment method availability check throws, then no controller is created`() {
+        PaymentMethodProvider.register(
+            PaymentMethodTypes.GOOGLE_PAY,
+            checkingFactory(error = RuntimeException("check failed")),
+        )
+        val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
+
+        assertNull(viewModel.instantPaymentMethod.value)
+        assertEquals(emptyList<DropInPaymentFlowType>(), requestedPaymentFlowTypes)
+    }
+
+    @Test
+    fun `when a listed payment method is unavailable, then it is filtered out`() = runTest {
+        PaymentMethodProvider.register(PaymentMethodTypes.SCHEME, checkingFactory(isAvailable = false))
+        val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
+
+        viewModel.viewState.test {
+            assertEquals(emptyList<String>(), expectMostRecentItem().listedPaymentMethodIds())
+        }
+    }
+
+    @Test
+    fun `when a listed payment method has no registered factory, then it is filtered out`() = runTest {
+        PaymentMethodProvider.clear()
+        PaymentMethodProvider.register(PaymentMethodTypes.GOOGLE_PAY, checkingFactory())
+        val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
+
+        viewModel.viewState.test {
+            assertEquals(emptyList<String>(), expectMostRecentItem().listedPaymentMethodIds())
+        }
+    }
+
+    @Test
     fun `when the instant payment method is looked up by its own flow, then it is found`() {
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
 
-        assertSame(viewModel.instantPaymentMethod, viewModel.findInstantPaymentMethod(GOOGLE_PAY_FLOW))
+        assertSame(viewModel.instantPaymentMethod.value, viewModel.findInstantPaymentMethod(GOOGLE_PAY_FLOW))
     }
 
     @Test
@@ -211,7 +276,10 @@ internal class PaymentMethodListViewModelTest {
     }
 
     private fun PaymentMethodListViewModel.listedPaymentMethodIds(): List<String> =
-        viewState.value.paymentOptionsSection?.options.orEmpty().map { it.id }
+        viewState.value.listedPaymentMethodIds()
+
+    private fun PaymentMethodListViewState.listedPaymentMethodIds(): List<String> =
+        paymentOptionsSection?.options.orEmpty().map { it.id }
 
     private fun createViewModel(
         paymentMethods: List<PaymentMethod>,
@@ -236,6 +304,38 @@ internal class PaymentMethodListViewModelTest {
 
     /** [CheckoutController] is final with an internal constructor, so it can only be mocked rather than faked. */
     private fun mockCheckoutController(): CheckoutController = mock()
+
+    private fun factory() = object : PaymentComponentFactory<PaymentComponent> {
+        override fun create(
+            paymentMethod: PaymentMethod,
+            coroutineScope: CoroutineScope,
+            analyticsManager: AnalyticsManager,
+            sdkDataProvider: SdkDataProvider,
+            params: CheckoutParams,
+            additionalCallbacks: Set<CheckoutAdditionalCallback>,
+        ) = mock<PaymentComponent>()
+    }
+
+    private fun checkingFactory(
+        isAvailable: Boolean = true,
+        error: Throwable? = null,
+    ) = object :
+        PaymentComponentFactory<PaymentComponent>,
+        PaymentMethodAvailabilityCheck {
+        override fun create(
+            paymentMethod: PaymentMethod,
+            coroutineScope: CoroutineScope,
+            analyticsManager: AnalyticsManager,
+            sdkDataProvider: SdkDataProvider,
+            params: CheckoutParams,
+            additionalCallbacks: Set<CheckoutAdditionalCallback>,
+        ) = mock<PaymentComponent>()
+
+        override suspend fun isAvailable(paymentMethod: PaymentMethod, params: CheckoutParams): Boolean {
+            error?.let { throw it }
+            return isAvailable
+        }
+    }
 
     private companion object {
         private const val ACTION_TYPE = "redirect"

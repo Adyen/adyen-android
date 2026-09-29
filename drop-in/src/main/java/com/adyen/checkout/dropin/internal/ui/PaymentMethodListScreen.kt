@@ -61,10 +61,11 @@ internal fun PaymentMethodListScreen(
     viewModel: PaymentMethodListViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val instantPaymentMethod by viewModel.instantPaymentMethod.collectAsStateWithLifecycle()
     PaymentMethodListContent(
         navigator = navigator,
         viewState = viewState,
-        instantPaymentMethodController = viewModel.instantPaymentMethod?.controller,
+        instantPaymentMethodController = instantPaymentMethod?.controller,
         onPaymentMethodClick = navigator::navigateTo,
     )
 }
