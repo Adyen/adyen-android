@@ -48,6 +48,9 @@ internal class CardComponentStateFactory(
             postalCode = TextInputComponentState(
                 requirementPolicy = getPostalCodeRequirementPolicy(),
             ),
+            billingAddress = BillingAddressState(
+                isVisible = componentParams.billingAddressParams is BillingAddressParams.Full,
+            ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = componentParams.showStorePaymentMethod,
             supportedCardBrands = componentParams.supportedCardBrands,

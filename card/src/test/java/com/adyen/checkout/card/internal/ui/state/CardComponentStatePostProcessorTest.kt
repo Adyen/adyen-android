@@ -50,6 +50,24 @@ internal class CardComponentStatePostProcessorTest {
         assertEquals(FocusRequest(CardFormElementId.CARD_NUMBER, showErrorIfPresent = true), actual.focusRequest)
     }
 
+    /**
+     * The billing address row cannot take focus, so pay only shows its error; the address is entered on its own screen.
+     */
+    @Test
+    fun `when pay is pressed and no billing address is confirmed, then its error shows and no focus is requested`() {
+        val state = createInitialState().copy(
+            billingAddress = BillingAddressState(
+                isVisible = true,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR),
+            ),
+        )
+
+        val actual = process(state, CardIntent.HighlightValidationErrors)
+
+        assertEquals(true, actual.billingAddress.error?.isVisible)
+        assertNull(actual.focusRequest)
+    }
+
     @Test
     fun `when pay is pressed and nothing is invalid, then no error shows and no focus is requested`() {
         val state = createInitialState()

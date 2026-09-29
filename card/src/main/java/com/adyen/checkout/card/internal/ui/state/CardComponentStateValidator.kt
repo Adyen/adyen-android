@@ -43,6 +43,9 @@ internal class CardComponentStateValidator(
         val kcpBirthDateOrTaxNumberError = validateKcpBirthDateOrTaxNumber(state.kcpBirthDateOrTaxNumber)
         val kcpCardPasswordError = validateKcpCardPassword(state.kcpCardPassword)
         val postalCodeError = validatePostalCode(state.postalCode)
+        // The address itself is validated by the address form, which only lets the shopper confirm a valid one.
+        val billingAddressError = CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR
+            .takeIf { state.billingAddress.isVisible && state.billingAddress.address == null }
 
         return state.copy(
             cardNumber = state.cardNumber.updateError(cardNumberError),
@@ -53,6 +56,7 @@ internal class CardComponentStateValidator(
             kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.updateError(kcpBirthDateOrTaxNumberError),
             kcpCardPassword = state.kcpCardPassword.updateError(kcpCardPasswordError),
             postalCode = state.postalCode.updateError(postalCodeError),
+            billingAddress = state.billingAddress.updateError(billingAddressError),
         )
     }
 

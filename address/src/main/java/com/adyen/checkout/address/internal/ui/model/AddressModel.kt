@@ -9,7 +9,9 @@
 package com.adyen.checkout.address.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.data.Address
+import java.util.Locale
 
 /**
  * An address as the address component collects it, exchanged with the component that hosts the address form.
@@ -36,3 +38,12 @@ fun AddressModel.toPaymentAddress(): Address = Address(
     stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
     street = Address.ADDRESS_NULL_PLACEHOLDER,
 )
+
+/**
+ * A one-line summary of the address, with the country named in [shopperLocale], for the host to show.
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun AddressModel.format(shopperLocale: Locale): String = listOfNotNull(
+    postalCode,
+    country?.let { CountryUtils.getCountryName(it, shopperLocale) },
+).joinToString(separator = ", ")

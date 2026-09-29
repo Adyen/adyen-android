@@ -11,6 +11,7 @@ package com.adyen.checkout.address.internal.ui.model
 import com.adyen.checkout.core.components.data.Address
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 internal class AddressModelTest {
 
@@ -46,5 +47,21 @@ internal class AddressModelTest {
             street = Address.ADDRESS_NULL_PLACEHOLDER,
         )
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `when an address is formatted, then it reads as the postal code and the country in the shopper locale`() {
+        val address = AddressModel(country = "NL", postalCode = "1234 AB")
+
+        val actual = address.format(Locale.forLanguageTag("nl-NL"))
+
+        assertEquals("1234 AB, Nederland", actual)
+    }
+
+    @Test
+    fun `when an address without values is formatted, then the summary is empty`() {
+        val actual = AddressModel().format(Locale.US)
+
+        assertEquals("", actual)
     }
 }

@@ -50,6 +50,10 @@ internal class CardComponentStateReducer(
                 postalCode = state.postalCode.updateText(intent.postalCode),
             )
 
+            is CardIntent.UpdateBillingAddress -> state.copy(
+                billingAddress = state.billingAddress.copy(address = intent.address),
+            )
+
             is CardIntent.UpdateStorePaymentMethod -> state.copy(
                 storePaymentMethod = intent.isChecked,
             )

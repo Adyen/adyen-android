@@ -26,6 +26,7 @@ internal data class CardComponentState(
     val kcpBirthDateOrTaxNumber: TextInputComponentState,
     val kcpCardPassword: TextInputComponentState,
     val postalCode: TextInputComponentState,
+    val billingAddress: BillingAddressState = BillingAddressState(),
 
     // UI configuration
     val storePaymentMethod: Boolean,
@@ -70,6 +71,7 @@ internal fun CardComponentState.updateTextInput(
     CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> copy(kcpBirthDateOrTaxNumber = transform(kcpBirthDateOrTaxNumber))
     CardFormElementId.KCP_CARD_PASSWORD -> copy(kcpCardPassword = transform(kcpCardPassword))
     CardFormElementId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
+    CardFormElementId.BILLING_ADDRESS,
     CardFormElementId.STORE_PAYMENT_METHOD,
     CardFormElementId.INSTALLMENTS -> this
 }

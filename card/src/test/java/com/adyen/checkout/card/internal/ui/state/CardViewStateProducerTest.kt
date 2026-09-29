@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
@@ -35,6 +36,47 @@ internal class CardViewStateProducerTest {
     @BeforeEach
     fun beforeEach() {
         producer = CardViewStateProducer(amount = TEST_AMOUNT, showSubmitButton = true)
+    }
+
+    @Test
+    fun `when the billing address is asked for, then its row carries the confirmed address and the shown error`() {
+        // GIVEN
+        val address = AddressModel(country = "NL", postalCode = "1234 AB")
+        val componentState = createComponentState().copy(
+            billingAddress = BillingAddressState(
+                isVisible = true,
+                address = address,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR, true),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        val expected = CardFormElement.BillingAddress(
+            address = address,
+            errorMessage = CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR,
+        )
+        assertEquals(expected, viewState.elements.single { it.id == CardFormElementId.BILLING_ADDRESS })
+    }
+
+    @Test
+    fun `when the billing address error is held back, then its row shows no error`() {
+        // GIVEN
+        val componentState = createComponentState().copy(
+            billingAddress = BillingAddressState(
+                isVisible = true,
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR, false),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        val expected = CardFormElement.BillingAddress(address = null, errorMessage = null)
+        assertEquals(expected, viewState.elements.single { it.id == CardFormElementId.BILLING_ADDRESS })
     }
 
     @Test

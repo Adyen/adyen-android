@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,6 +18,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.InstallmentPickerViewState
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.ui.internal.text.Title
+import com.adyen.checkout.ui.internal.theme.Dimensions
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -37,6 +44,22 @@ internal fun CardSecondaryContent(
     }
 }
 
+/**
+ * The screen of the address form. The form belongs to the address component; the card only titles it, because the
+ * card is what makes it a billing address.
+ */
+@Composable
+internal fun BillingAddress(
+    modifier: Modifier,
+    content: @Composable () -> Unit,
+) {
+    Column(modifier = modifier) {
+        Title(resolveString(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_TITLE))
+        Spacer(Modifier.height(Dimensions.Spacing.Large))
+        content()
+    }
+}
+
 @Composable
 private fun Installments(
     modifier: Modifier,
@@ -55,4 +78,5 @@ private fun Installments(
 
 internal object CardSecondaryContentEntry {
     const val INSTALLMENTS: String = "INSTALLMENTS"
+    const val BILLING_ADDRESS: String = "BILLING_ADDRESS"
 }

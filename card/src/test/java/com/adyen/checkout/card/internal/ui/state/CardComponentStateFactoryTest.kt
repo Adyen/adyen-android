@@ -137,6 +137,20 @@ internal class CardComponentStateFactoryTest {
 
         assertEquals(RequirementPolicy.Hidden, state.postalCode.requirementPolicy)
     }
+
+    @Test
+    fun `when the billing address mode is Full, then the billing address is asked for and nothing is confirmed yet`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.Full(emptySet())).createInitialState()
+
+        assertEquals(BillingAddressState(isVisible = true, address = null), state.billingAddress)
+    }
+
+    @Test
+    fun `when the billing address mode is PostalCode, then the billing address is not asked for`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.PostalCode).createInitialState()
+
+        assertFalse(state.billingAddress.isVisible)
+    }
     // endregion
 
     // region storePayment

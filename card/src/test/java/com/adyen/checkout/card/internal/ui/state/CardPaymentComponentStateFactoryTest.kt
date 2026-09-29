@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
@@ -306,6 +307,36 @@ internal class CardPaymentComponentStateFactoryTest(
 
             // THEN
             assertNull(state.data.billingAddress)
+        }
+
+        @Test
+        fun `and a billing address is confirmed then it is sent with placeholders for the fields not asked for`() {
+            // GIVEN
+            val factory = createFactory()
+            val cardComponentState = createCardComponentState().copy(
+                billingAddress = BillingAddressState(
+                    isVisible = true,
+                    address = AddressModel(country = "NL", postalCode = "1234 AB"),
+                ),
+            )
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            val expected = Address(
+                city = Address.ADDRESS_NULL_PLACEHOLDER,
+                country = "NL",
+                houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER,
+                postalCode = "1234 AB",
+                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
+                street = Address.ADDRESS_NULL_PLACEHOLDER,
+            )
+            assertEquals(expected, state.data.billingAddress)
         }
 
         @Test

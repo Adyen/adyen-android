@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -35,6 +38,37 @@ internal class CardComponentStateValidatorTest {
         val result = validator.isValid(state)
 
         assertTrue(result)
+    }
+
+    @Test
+    fun `when the billing address is asked for and none is confirmed, then it has an error and the state is invalid`() {
+        val state = createValidState().copy(billingAddress = BillingAddressState(isVisible = true))
+
+        val validatedState = validator.validate(state)
+
+        assertEquals(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR, validatedState.billingAddress.error?.message)
+        assertFalse(validator.isValid(validatedState))
+    }
+
+    @Test
+    fun `when the billing address is asked for and one is confirmed, then it has no error`() {
+        val state = createValidState().copy(
+            billingAddress = BillingAddressState(isVisible = true, address = AddressModel("NL", "1234 AB")),
+        )
+
+        val validatedState = validator.validate(state)
+
+        assertNull(validatedState.billingAddress.error)
+        assertTrue(validator.isValid(validatedState))
+    }
+
+    @Test
+    fun `when the billing address is not asked for, then it has no error`() {
+        val state = createValidState().copy(billingAddress = BillingAddressState(isVisible = false))
+
+        val validatedState = validator.validate(state)
+
+        assertNull(validatedState.billingAddress.error)
     }
 
     @Test

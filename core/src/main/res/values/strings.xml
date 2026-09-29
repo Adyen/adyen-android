@@ -47,6 +47,9 @@
     <string name="checkout_card_kcp_password_invalid" translatable="false">Invalid password</string>
     <string name="checkout_card_postal_code" translatable="false">Postal code</string>
     <string name="checkout_card_postal_code_invalid" translatable="false">Invalid postal code</string>
+    <string name="adyen_checkout_card_billing_address_error" translatable="false">Enter your billing address</string>
+    <string name="adyen_checkout_card_billing_address_label" translatable="false">Billing address</string>
+    <string name="adyen_checkout_card_billing_address_title" translatable="false">Billing address</string>
     <string name="checkout_card_installments_title" translatable="false">Payment plan</string>
     <string name="checkout_card_installments_option_one_time" translatable="false">One time payment</string>
     <string name="checkout_card_installments_option_revolving" translatable="false">Revolving payment</string>

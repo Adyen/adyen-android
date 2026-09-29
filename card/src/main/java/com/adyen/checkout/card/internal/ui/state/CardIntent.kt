@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
@@ -31,6 +32,9 @@ internal sealed interface CardIntent : ComponentStateIntent {
     data class UpdateKcpCardPassword(val kcpCardPassword: String) : CardIntent
 
     data class UpdatePostalCode(val postalCode: String) : CardIntent
+
+    /** The shopper confirmed a billing address on the address form. */
+    data class UpdateBillingAddress(val address: AddressModel) : CardIntent
 
     /**
      * A field has gained or lost focus. Unlike a value change, which carries the meaning of the field it belongs to,

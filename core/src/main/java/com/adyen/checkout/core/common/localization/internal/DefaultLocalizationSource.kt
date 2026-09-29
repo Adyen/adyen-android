@@ -81,6 +81,9 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_POSTAL_CODE -> R.string.checkout_card_postal_code
             CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID -> R.string.checkout_card_postal_code_invalid
+            CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR -> R.string.adyen_checkout_card_billing_address_error
+            CheckoutLocalizationKey.CARD_BILLING_ADDRESS_LABEL -> R.string.adyen_checkout_card_billing_address_label
+            CheckoutLocalizationKey.CARD_BILLING_ADDRESS_TITLE -> R.string.adyen_checkout_card_billing_address_title
 
             CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE -> R.string.checkout_card_installments_title
             CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME ->
