@@ -73,9 +73,10 @@ class AddressComponent internal constructor(
         postProcessor = componentStatePostProcessor,
     )
 
-    // Unlike other components, the form leaves composition whenever its screen closes, and the host prefills it before
-    // opening it again. The view state is therefore shared eagerly: the form's text fields report their first value
-    // back as input, so starting them from an outdated view state would undo the prefill.
+    // The form is only on screen while its host shows it, so this view state often has no collectors. The core
+    // viewState() helper stops updating 5 s after the last collector leaves, so the form would reopen with values
+    // from before the last prefill(). The form's text fields report their first value back as input, which would
+    // overwrite the prefill. Sharing eagerly keeps the view state current.
     @VisibleForTesting
     internal val viewState: StateFlow<AddressViewState> = componentState
         .map(viewStateProducer::produce)
