@@ -104,7 +104,6 @@ internal class GooglePayComponent(
         )
     }
 
-    // TODO - Expose a merchant-facing Google Pay availability pre-check API (COSDK-1310).
     private fun checkAvailability() {
         coroutineScope.launch {
             val isAvailable = googlePayAvailabilityCheck.isAvailable()

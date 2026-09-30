@@ -26,6 +26,7 @@ import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotSame
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -253,6 +254,78 @@ internal class PaymentMethodProviderTest {
     }
 
     @Test
+    fun `when isAvailable is called for a check returning true, then true is returned`() = runTest {
+        PaymentMethodProvider.register("txVariant", generateFactoryWithAvailabilityCheck(isAvailable = true))
+
+        val result = PaymentMethodProvider.isAvailable(
+            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            params = generateCheckoutParams(),
+        )
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `when isAvailable is called for a check returning false, then false is returned`() = runTest {
+        PaymentMethodProvider.register("txVariant", generateFactoryWithAvailabilityCheck(isAvailable = false))
+
+        val result = PaymentMethodProvider.isAvailable(
+            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            params = generateCheckoutParams(),
+        )
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `when isAvailable is called for a check throwing an exception, then false is returned`() = runTest {
+        PaymentMethodProvider.register(
+            "txVariant",
+            generateFactoryWithAvailabilityCheck(error = RuntimeException("check failed")),
+        )
+
+        val result = PaymentMethodProvider.isAvailable(
+            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            params = generateCheckoutParams(),
+        )
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `when isAvailable is called for a factory without a check, then true is returned`() = runTest {
+        PaymentMethodProvider.register("txVariant", factory)
+
+        val result = PaymentMethodProvider.isAvailable(
+            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            params = generateCheckoutParams(),
+        )
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `when isAvailable is called for an unregistered generic payment method, then true is returned`() = runTest {
+        val result = PaymentMethodProvider.isAvailable(
+            paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
+            params = generateCheckoutParams(),
+        )
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `when isAvailable is called for an unregistered unsupported payment method, then false is returned`() =
+        runTest {
+            val result = PaymentMethodProvider.isAvailable(
+                paymentMethod = UnsupportedPaymentMethod(type = "unregistered_txVariant", name = "name"),
+                params = generateCheckoutParams(),
+            )
+
+            assertFalse(result)
+        }
+
+    @Test
     fun `when clear is called, then all factories are removed`() {
         PaymentMethodProvider.register("txVariant_one", factory)
         PaymentMethodProvider.register("txVariant_two", factory)
@@ -278,6 +351,27 @@ internal class PaymentMethodProviderTest {
                 additionalCallbacks: Set<CheckoutAdditionalCallback>,
             ) = paymentComponent
         }
+
+    private fun generateFactoryWithAvailabilityCheck(
+        isAvailable: Boolean = true,
+        error: Throwable? = null,
+    ) = object :
+        PaymentComponentFactory<PaymentComponent>,
+        PaymentMethodAvailabilityCheck {
+        override fun create(
+            paymentMethod: PaymentMethod,
+            coroutineScope: CoroutineScope,
+            analyticsManager: AnalyticsManager,
+            sdkDataProvider: SdkDataProvider,
+            params: CheckoutParams,
+            additionalCallbacks: Set<CheckoutAdditionalCallback>,
+        ) = component
+
+        override suspend fun isAvailable(paymentMethod: PaymentMethod, params: CheckoutParams): Boolean {
+            error?.let { throw it }
+            return isAvailable
+        }
+    }
 
     private fun generateStoredFactory(paymentComponent: PaymentComponent) =
         object :
