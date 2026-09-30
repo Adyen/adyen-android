@@ -59,7 +59,6 @@ internal fun CountryCodePicker(
                 val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountry
                 onItemClick(country)
             },
-            modifier = modifier,
         )
     }
 }
