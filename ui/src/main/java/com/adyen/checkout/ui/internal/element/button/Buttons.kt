@@ -22,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -43,14 +44,14 @@ fun PrimaryButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
+    buttonState: CheckoutButtonState = CheckoutButtonState.ENABLED,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        isLoading = isLoading,
+        buttonState = buttonState,
         leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.primary,
     )
@@ -65,22 +66,32 @@ private fun PrimaryButtonPreview(
         PrimaryButton(
             onClick = {},
             text = "Primary",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             modifier = Modifier.fillMaxWidth(),
         )
         PrimaryButton(
             onClick = {},
             text = "Primary",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )
         PrimaryButton(
             onClick = {},
             text = "Loading",
-            isLoading = true,
+            buttonState = CheckoutButtonState.LOADING,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        PrimaryButton(
+            onClick = {},
+            text = "Primary",
+            buttonState = CheckoutButtonState.DISABLED,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -92,14 +103,14 @@ fun SecondaryButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
+    buttonState: CheckoutButtonState = CheckoutButtonState.ENABLED,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        isLoading = isLoading,
+        buttonState = buttonState,
         leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.secondary,
     )
@@ -114,22 +125,32 @@ private fun SecondaryButtonPreview(
         SecondaryButton(
             onClick = {},
             text = "Secondary",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             modifier = Modifier.fillMaxWidth(),
         )
         SecondaryButton(
             onClick = {},
             text = "Secondary",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )
         SecondaryButton(
             onClick = {},
             text = "Loading",
-            isLoading = true,
+            buttonState = CheckoutButtonState.LOADING,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        SecondaryButton(
+            onClick = {},
+            text = "Secondary",
+            buttonState = CheckoutButtonState.DISABLED,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -141,14 +162,14 @@ fun TertiaryButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
+    buttonState: CheckoutButtonState = CheckoutButtonState.ENABLED,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        isLoading = isLoading,
+        buttonState = buttonState,
         leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.tertiary,
     )
@@ -163,22 +184,32 @@ private fun TertiaryButtonPreview(
         TertiaryButton(
             onClick = {},
             text = "Tertiary",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             modifier = Modifier.fillMaxWidth(),
         )
         TertiaryButton(
             onClick = {},
             text = "Tertiary",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )
         TertiaryButton(
             onClick = {},
             text = "Loading",
-            isLoading = true,
+            buttonState = CheckoutButtonState.LOADING,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        TertiaryButton(
+            onClick = {},
+            text = "Tertiary",
+            buttonState = CheckoutButtonState.DISABLED,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -190,14 +221,14 @@ fun DestructiveButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
+    buttonState: CheckoutButtonState = CheckoutButtonState.ENABLED,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        isLoading = isLoading,
+        buttonState = buttonState,
         leadingIcon = leadingIcon,
         style = CheckoutThemeProvider.elements.buttons.destructive,
     )
@@ -212,22 +243,32 @@ private fun DestructiveButtonPreview(
         DestructiveButton(
             onClick = {},
             text = "Destructive",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             modifier = Modifier.fillMaxWidth(),
         )
         DestructiveButton(
             onClick = {},
             text = "Destructive",
-            isLoading = false,
+            buttonState = CheckoutButtonState.ENABLED,
             leadingIcon = {
-                Icon(painter = painterResource(id = R.drawable.ic_checkmark), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark),
+                    contentDescription = null,
+                    tint = LocalContentColor.current,
+                )
             },
             modifier = Modifier.fillMaxWidth(),
         )
         DestructiveButton(
             onClick = {},
             text = "Loading",
-            isLoading = true,
+            buttonState = CheckoutButtonState.LOADING,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        DestructiveButton(
+            onClick = {},
+            text = "Destructive",
+            buttonState = CheckoutButtonState.DISABLED,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -238,23 +279,37 @@ private fun CheckoutButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier,
-    isLoading: Boolean,
+    buttonState: CheckoutButtonState,
     leadingIcon: @Composable (() -> Unit)?,
     style: InternalButtonStyle,
 ) {
+    val enabled = when (buttonState) {
+        CheckoutButtonState.ENABLED -> true
+        CheckoutButtonState.LOADING,
+        CheckoutButtonState.DISABLED -> false
+    }
+    val containerColor = when (buttonState) {
+        CheckoutButtonState.ENABLED -> style.backgroundColor
+        CheckoutButtonState.LOADING -> style.loadingBackgroundColor
+        CheckoutButtonState.DISABLED -> style.disabledBackgroundColor
+    }
+    val contentColor = when (buttonState) {
+        CheckoutButtonState.ENABLED -> style.textColor
+        CheckoutButtonState.LOADING -> style.loadingTextColor
+        CheckoutButtonState.DISABLED -> style.disabledTextColor
+    }
     Button(
         onClick = onClick,
         shape = RoundedCornerShape(style.cornerRadius.dp),
-        enabled = !isLoading,
+        enabled = enabled,
         colors = buttonColors(
-            containerColor = style.backgroundColor,
-            contentColor = style.textColor,
-            disabledContainerColor = style.disabledBackgroundColor,
-            disabledContentColor = style.disabledTextColor,
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = containerColor,
+            disabledContentColor = contentColor,
         ),
         content = {
-            val contentColor = if (isLoading) style.disabledTextColor else style.textColor
-            if (isLoading) {
+            if (buttonState == CheckoutButtonState.LOADING) {
                 val size = 16 * LocalDensity.current.fontScale
                 CircularProgressIndicator(
                     color = contentColor,
@@ -277,4 +332,11 @@ private fun CheckoutButton(
         ),
         modifier = modifier,
     )
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class CheckoutButtonState {
+    ENABLED,
+    LOADING,
+    DISABLED,
 }

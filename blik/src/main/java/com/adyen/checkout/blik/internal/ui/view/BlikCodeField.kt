@@ -68,7 +68,7 @@ internal fun BlikCodeField(
         isFocusRequested = blikCodeState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = blikCodeState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             CheckoutTextFieldTrailingIcon(blikCodeState.trailingIcon)
         },
     )

@@ -11,6 +11,7 @@ package com.adyen.checkout.ui.internal.element.input
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Immutable
@@ -21,5 +22,7 @@ data class InternalTextFieldStyle(
     val errorColor: Color,
     val cornerRadius: Int,
     val borderColor: Color,
-    val borderWidth: Int,
+    val defaultBorderWidth: Dp,
+    val errorBorderWidth: Dp,
+    val focusedBorderWidth: Dp,
 )
