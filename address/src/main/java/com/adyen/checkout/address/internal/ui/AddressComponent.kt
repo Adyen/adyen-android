@@ -43,9 +43,9 @@ import kotlinx.coroutines.flow.stateIn
  * and it is only reachable through its host.
  *
  * - The host decides where [Content] is shown, for example on one of its own secondary screens.
- * - The address component's own screens, such as the country picker, are opened through [navigation]. The host passes
- *   these events on and routes their keys back to [SecondaryContent], because only the host is attached to the
- *   secondary screen back stack.
+ * - The address component's own screens, such as the country picker, are opened through [navigation]. The host lists
+ *   the address component in its [SecondaryScreenComponent.childScreenComponents], so these screens open on the
+ *   host's back stack and are rendered by [SecondaryContent].
  * - A confirmed address is reported through [eventFlow]. The host keeps it and passes it back through [prefill] when
  *   the shopper returns to edit it.
  */

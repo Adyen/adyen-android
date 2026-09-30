@@ -67,11 +67,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -107,12 +105,9 @@ constructor(
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val navigationChannel = bufferedChannel<SecondaryNavigationEvent>()
+    override val navigation: Flow<SecondaryNavigationEvent> = navigationChannel.receiveAsFlow()
 
-    // The secondary screen host only listens to this component, so the address form's own screens go through it too.
-    override val navigation: Flow<SecondaryNavigationEvent> = merge(
-        navigationChannel.receiveAsFlow(),
-        addressComponent?.navigation ?: emptyFlow(),
-    )
+    override val childScreenComponents: List<SecondaryScreenComponent> = listOfNotNull(addressComponent)
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -170,9 +165,6 @@ constructor(
             CardSecondaryContentEntry.BILLING_ADDRESS -> BillingAddress(modifier = modifier) {
                 addressComponent?.Content(Modifier)
             }
-
-            // Every other screen was opened by the address form, which shares this component's back stack.
-            else -> addressComponent?.SecondaryContent(identifier, modifier)
         }
     }
 

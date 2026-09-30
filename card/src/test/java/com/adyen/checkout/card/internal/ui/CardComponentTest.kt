@@ -113,6 +113,12 @@ internal class CardComponentTest(
         analyticsManager.assertHasEventEquals(expected)
     }
 
+    @Test
+    fun `when the full billing address is not asked for then the card has no child screen components`() {
+        // THEN
+        assertTrue(component.childScreenComponents.isEmpty())
+    }
+
     @Nested
     @DisplayName("when brand state transitions to DualBrandWithShopperSelection")
     inner class SubscribeToDualBrandSelectionAppearAnalyticsEventsTest {
@@ -527,13 +533,11 @@ internal class CardComponentTest(
     inner class BillingAddressTest {
 
         private val addressEvents = MutableSharedFlow<AddressComponentEvent>(extraBufferCapacity = 1)
-        private val addressNavigation = MutableSharedFlow<SecondaryNavigationEvent>(extraBufferCapacity = 1)
         private val addressComponent = mock<AddressComponent>()
 
         @BeforeEach
         fun beforeEach() {
             whenever(addressComponent.eventFlow).thenReturn(addressEvents)
-            whenever(addressComponent.navigation).thenReturn(addressNavigation)
         }
 
         @Test
@@ -581,17 +585,12 @@ internal class CardComponentTest(
             }
 
         @Test
-        fun `and the address form opens one of its own screens then the card passes it on`() = runTest {
-            // GIVEN
-            val component = createBillingAddressComponent()
-            val navigation = component.navigation.test(testScheduler)
-            val event = SecondaryNavigationEvent.Open("ADDRESS_COUNTRY_PICKER")
-
+        fun `then the address form opens its own screens on the card's back stack`() {
             // WHEN
-            addressNavigation.emit(event)
+            val component = createBillingAddressComponent()
 
             // THEN
-            assertEquals(event, navigation.latestValue)
+            assertEquals(listOf(addressComponent), component.childScreenComponents)
         }
 
         @Test

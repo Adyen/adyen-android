@@ -35,8 +35,8 @@ internal fun AddressSecondaryContent(
 }
 
 /**
- * The keys of the address component's secondary screens. They share the back stack of the component hosting the
- * address form, so they are prefixed to stay clear of the host's own keys.
+ * The keys of the address component's secondary screens. They open on the back stack of the component hosting the
+ * address form, which has the address component render them.
  */
 internal object AddressSecondaryContentEntry {
     const val COUNTRY_PICKER = "ADDRESS_COUNTRY_PICKER"
