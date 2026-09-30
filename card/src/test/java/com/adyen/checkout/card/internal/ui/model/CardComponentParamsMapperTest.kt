@@ -71,6 +71,44 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
+    fun `when billing address mode is PostalCode then the postal code is asked for`() {
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(billingAddressMode = BillingAddressMode.PostalCode()),
+            ),
+            paymentMethod = null,
+        )
+
+        assertEquals(BillingAddressParams.PostalCode, params.billingAddressParams)
+    }
+
+    @Test
+    fun `when billing address mode is Full then the full address is asked for in the supported countries`() {
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(
+                    billingAddressMode = BillingAddressMode.Full(supportedCountryCodes = setOf("NL", "US")),
+                ),
+            ),
+            paymentMethod = null,
+        )
+
+        assertEquals(BillingAddressParams.Full(supportedCountryCodes = setOf("NL", "US")), params.billingAddressParams)
+    }
+
+    @Test
+    fun `when billing address mode is None then no billing address is asked for`() {
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(billingAddressMode = BillingAddressMode.None()),
+            ),
+            paymentMethod = null,
+        )
+
+        assertEquals(BillingAddressParams.None, params.billingAddressParams)
+    }
+
+    @Test
     fun `when showCardholderName is true then it is passed through`() {
         val params = mapper.mapToParams(
             params = generateCheckoutParams(
@@ -518,7 +556,7 @@ internal class CardComponentParamsMapperTest {
             showSupportedCardBrandLogos = false,
             socialSecurityNumberVisibility = FieldVisibility.SHOW,
             koreanAuthenticationVisibility = FieldVisibility.SHOW,
-            showPostalCode = true,
+            billingAddressParams = BillingAddressParams.PostalCode,
             cvcVisibility = CVCVisibility.ALWAYS_HIDE,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
             showCardScanner = false,
@@ -620,7 +658,7 @@ internal class CardComponentParamsMapperTest {
         showSupportedCardBrandLogos: Boolean = true,
         socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
-        showPostalCode: Boolean = false,
+        billingAddressParams: BillingAddressParams = BillingAddressParams.None,
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW,
         showCardScanner: Boolean = true,
@@ -632,7 +670,7 @@ internal class CardComponentParamsMapperTest {
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         koreanAuthenticationVisibility = koreanAuthenticationVisibility,
-        showPostalCode = showPostalCode,
+        billingAddressParams = billingAddressParams,
         cvcVisibility = cvcVisibility,
         storedCVCVisibility = storedCVCVisibility,
         showCardScanner = showCardScanner,

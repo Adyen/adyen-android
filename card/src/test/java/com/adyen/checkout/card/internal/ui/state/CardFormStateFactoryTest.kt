@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
@@ -58,6 +59,7 @@ internal class CardFormStateFactoryTest {
                 kcpBirthDateOrTaxNumber = required(),
                 kcpCardPassword = required(),
                 postalCode = required(),
+                billingAddress = BillingAddressState(isVisible = true),
                 isStorePaymentFieldVisible = true,
                 installmentOptions = listOf(InstallmentModel.OneTime),
             )
@@ -107,6 +109,11 @@ internal class CardFormStateFactoryTest {
         fun `when no installment options are available, then the installment picker is left out`() {
             assertFalse(createState().form.elements.any { it.id == CardFormElementId.INSTALLMENTS })
         }
+
+        @Test
+        fun `when the billing address is not asked for, then its row is left out`() {
+            assertFalse(createState().form.elements.any { it.id == CardFormElementId.BILLING_ADDRESS })
+        }
     }
 
     @Nested
@@ -136,6 +143,27 @@ internal class CardFormStateFactoryTest {
             )
 
             assertTrue(state.form.isFormValid)
+        }
+
+        @Test
+        fun `when no billing address is confirmed, then the billing address row is invalid`() {
+            val state = createState(
+                billingAddress = BillingAddressState(
+                    isVisible = true,
+                    error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR),
+                ),
+            )
+
+            assertFalse(state.form.isElementVisibleAndValid(CardFormElementId.BILLING_ADDRESS))
+        }
+
+        @Test
+        fun `when a billing address is confirmed, then the billing address row is valid`() {
+            val state = createState(
+                billingAddress = BillingAddressState(isVisible = true, address = AddressModel("NL", "1234 AB")),
+            )
+
+            assertTrue(state.form.isElementVisibleAndValid(CardFormElementId.BILLING_ADDRESS))
         }
 
         @Test
@@ -191,6 +219,7 @@ internal class CardFormStateFactoryTest {
         kcpBirthDateOrTaxNumber: TextInputComponentState = hidden(),
         kcpCardPassword: TextInputComponentState = hidden(),
         postalCode: TextInputComponentState = hidden(),
+        billingAddress: BillingAddressState = BillingAddressState(),
         isStorePaymentFieldVisible: Boolean = false,
         installmentOptions: List<InstallmentModel> = emptyList(),
     ) = CardComponentState(
@@ -202,6 +231,7 @@ internal class CardFormStateFactoryTest {
         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber,
         kcpCardPassword = kcpCardPassword,
         postalCode = postalCode,
+        billingAddress = billingAddress,
         storePaymentMethod = false,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
         supportedCardBrands = emptyList(),

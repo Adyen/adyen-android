@@ -18,7 +18,7 @@ internal data class CardComponentParams(
     val showSupportedCardBrandLogos: Boolean,
     val socialSecurityNumberVisibility: FieldVisibility,
     val koreanAuthenticationVisibility: FieldVisibility,
-    val showPostalCode: Boolean,
+    val billingAddressParams: BillingAddressParams,
     val cvcVisibility: CVCVisibility,
     val storedCVCVisibility: StoredCVCVisibility,
     val showCardScanner: Boolean,

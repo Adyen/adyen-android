@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
@@ -308,6 +310,36 @@ internal class CardPaymentComponentStateFactoryTest(
         }
 
         @Test
+        fun `and a billing address is confirmed then it is sent with placeholders for the fields not asked for`() {
+            // GIVEN
+            val factory = createFactory()
+            val cardComponentState = createCardComponentState().copy(
+                billingAddress = BillingAddressState(
+                    isVisible = true,
+                    address = AddressModel(country = "NL", postalCode = "1234 AB"),
+                ),
+            )
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            val expected = Address(
+                city = Address.ADDRESS_NULL_PLACEHOLDER,
+                country = "NL",
+                houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER,
+                postalCode = "1234 AB",
+                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
+                street = Address.ADDRESS_NULL_PLACEHOLDER,
+            )
+            assertEquals(expected, state.data.billingAddress)
+        }
+
+        @Test
         fun `and social security number is required then it is part of the payment data`() {
             // GIVEN
             val factory = createFactory()
@@ -506,7 +538,7 @@ internal class CardPaymentComponentStateFactoryTest(
         showSupportedCardBrandLogos = false,
         socialSecurityNumberVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility = FieldVisibility.HIDE,
-        showPostalCode = false,
+        billingAddressParams = BillingAddressParams.None,
         cvcVisibility = CVCVisibility.ALWAYS_HIDE,
         storedCVCVisibility = StoredCVCVisibility.HIDE,
         showCardScanner = false,

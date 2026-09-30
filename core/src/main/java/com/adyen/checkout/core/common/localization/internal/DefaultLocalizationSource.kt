@@ -17,6 +17,14 @@ internal class DefaultLocalizationSource {
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun getString(context: Context, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
+            // Address
+            CheckoutLocalizationKey.ADDRESS_COUNTRY_ERROR -> R.string.adyen_checkout_address_country_error
+            CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL -> R.string.adyen_checkout_address_country_label
+            CheckoutLocalizationKey.ADDRESS_LABEL -> R.string.adyen_checkout_address_label
+            CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR -> R.string.adyen_checkout_address_postal_code_error
+            CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL -> R.string.adyen_checkout_address_postal_code_label
+            CheckoutLocalizationKey.ADDRESS_TITLE -> R.string.adyen_checkout_address_title
+
             // Authentication
             CheckoutLocalizationKey.AUTHENTICATION_TITLE -> R.string.checkout_authentication_title
             CheckoutLocalizationKey.AUTHENTICATION_DESCRIPTION -> R.string.checkout_authentication_description
@@ -75,6 +83,7 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_POSTAL_CODE -> R.string.checkout_card_postal_code
             CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID -> R.string.checkout_card_postal_code_invalid
+            CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR -> R.string.adyen_checkout_card_billing_address_error
 
             CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE -> R.string.checkout_card_installments_title
             CheckoutLocalizationKey.CARD_INSTALLMENTS_ONE_TIME ->
@@ -150,6 +159,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CANCEL -> R.string.checkout_general_cancel
             CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close
+            CheckoutLocalizationKey.GENERAL_CONFIRM_LABEL -> R.string.adyen_checkout_general_confirm_label
             CheckoutLocalizationKey.GENERAL_OPTIONAL -> R.string.checkout_general_optional
             CheckoutLocalizationKey.GENERAL_SEARCH_HINT -> R.string.checkout_general_search_hint
 

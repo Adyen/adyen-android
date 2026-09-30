@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2026 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 29/9/2026.
+ */
+
+plugins {
+    alias libs.plugins.checkout.android.library
+    alias libs.plugins.kotlin.compose
+}
+
+checkoutPublishing {
+    id = "address"
+    name = "Adyen Checkout Address"
+    description = "Adyen Checkout address module for Adyen's Checkout API."
+}
+
+android {
+    namespace 'com.adyen.checkout.address'
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(':core')
+
+    //Tests
+    testImplementation testFixtures(project(':core'))
+    testImplementation libs.bundles.junit
+    testImplementation libs.bundles.kotlin.coroutines.test
+    testImplementation libs.bundles.mockito
+}

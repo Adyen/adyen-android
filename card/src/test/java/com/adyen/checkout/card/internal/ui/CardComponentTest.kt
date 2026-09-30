@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.address.internal.ui.AddressComponent
+import com.adyen.checkout.address.internal.ui.AddressComponentEvent
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.analytics.DualBrandCardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
@@ -16,6 +19,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
@@ -44,6 +48,7 @@ import com.adyen.checkout.cse.internal.TestGenericEncryptor
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -59,7 +64,9 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -102,6 +109,12 @@ internal class CardComponentTest(
             configData = configData,
         )
         analyticsManager.assertHasEventEquals(expected)
+    }
+
+    @Test
+    fun `when the full billing address is not asked for then the card has no child screen components`() {
+        // THEN
+        assertTrue(component.childScreenComponents.isEmpty())
     }
 
     @Nested
@@ -513,6 +526,111 @@ internal class CardComponentTest(
         }
     }
 
+    @Nested
+    @DisplayName("when the billing address is asked for")
+    inner class BillingAddressTest {
+
+        private val addressEvents = MutableSharedFlow<AddressComponentEvent>(extraBufferCapacity = 1)
+        private val addressComponent = mock<AddressComponent>()
+
+        @BeforeEach
+        fun beforeEach() {
+            whenever(addressComponent.eventFlow).thenReturn(addressEvents)
+        }
+
+        @Test
+        fun `and the billing address row is clicked then the address form is shown without an address`() {
+            // GIVEN
+            val component = createBillingAddressComponent()
+
+            // WHEN
+            component.onBillingAddressClick()
+
+            // THEN
+            verify(addressComponent).show(null)
+        }
+
+        @Test
+        fun `and the shopper returns to edit a confirmed address then the address form is shown with it`() =
+            runTest {
+                // GIVEN
+                val component = createBillingAddressComponent()
+                addressEvents.emit(AddressComponentEvent.Confirmed(TEST_ADDRESS))
+
+                // WHEN
+                component.onBillingAddressClick()
+
+                // THEN
+                verify(addressComponent).show(TEST_ADDRESS)
+            }
+
+        @Test
+        fun `then the address form opens its own screens on the card's back stack`() {
+            // WHEN
+            val component = createBillingAddressComponent()
+
+            // THEN
+            assertEquals(listOf(addressComponent), component.childScreenComponents)
+        }
+
+        @Test
+        fun `and no address is confirmed then submit does not submit`() = runTest {
+            // GIVEN
+            val component = createValidBillingAddressComponent()
+            val eventFlow = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            assertTrue(eventFlow.values.isEmpty())
+        }
+
+        @Test
+        fun `and an address is confirmed then it is part of the submitted state`() = runTest {
+            // GIVEN
+            whenever(cardPaymentComponentStateFactory.createPaymentComponentState(any(), any(), anyOrNull()))
+                .thenReturn(
+                    CardPaymentComponentState(
+                        data = PaymentComponentData(paymentMethod = null, order = null),
+                        isValid = true,
+                    ),
+                )
+            val component = createValidBillingAddressComponent()
+            addressEvents.emit(AddressComponentEvent.Confirmed(TEST_ADDRESS))
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            verify(cardPaymentComponentStateFactory).createPaymentComponentState(
+                cardComponentState = argThat { billingAddress.address == TEST_ADDRESS },
+                encryptedCard = any(),
+                encryptedKcpCardPassword = anyOrNull(),
+            )
+        }
+
+        private fun createBillingAddressComponent() = createComponent(
+            cardComponentParams = createCardComponentParams().copy(
+                billingAddressParams = BillingAddressParams.Full(supportedCountryCodes = emptySet()),
+            ),
+            publicKey = TEST_PUBLIC_KEY,
+            addressComponent = addressComponent,
+        )
+
+        /**
+         * Creates a component with a valid card number and expiry date filled in, so only the billing address decides
+         * whether it can be submitted.
+         */
+        private fun createValidBillingAddressComponent(): CardComponent {
+            val component = createBillingAddressComponent()
+            whenever(detectCardTypeRepository.detectCardTypes(any())).thenReturn(emptyFlow())
+            component.handleIntent(CardIntent.UpdateCardNumber(TEST_CARD_NUMBER))
+            component.handleIntent(CardIntent.UpdateExpiryDate("1230"))
+            return component
+        }
+    }
+
     private fun createEmptyDetectedCardTypeList() = DetectedCardTypeList(
         detectedCardTypes = emptyList(),
         source = DetectedCardTypeList.Source.NETWORK,
@@ -568,6 +686,7 @@ internal class CardComponentTest(
         cardComponentParams: CardComponentParams = createCardComponentParams(),
         publicKey: String? = null,
         componentStateReducer: CardComponentStateReducer = createComponentStateReducer(cardComponentParams),
+        addressComponent: AddressComponent? = null,
     ): CardComponent {
         return CardComponent(
             analyticsManager = analyticsManager,
@@ -589,6 +708,7 @@ internal class CardComponentTest(
             publicKey = publicKey,
             environment = Environment.TEST,
             cardConfigDataGenerator = cardConfigDataGenerator,
+            addressComponent = addressComponent,
         )
     }
 
@@ -599,7 +719,7 @@ internal class CardComponentTest(
         showSupportedCardBrandLogos = false,
         socialSecurityNumberVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility = FieldVisibility.HIDE,
-        showPostalCode = false,
+        billingAddressParams = BillingAddressParams.None,
         cvcVisibility = CVCVisibility.ALWAYS_HIDE,
         storedCVCVisibility = StoredCVCVisibility.HIDE,
         showCardScanner = false,
@@ -610,5 +730,6 @@ internal class CardComponentTest(
         private const val PAYMENT_METHOD_TYPE = "scheme"
         private const val TEST_PUBLIC_KEY = "test_public_key"
         private const val TEST_CARD_NUMBER = "4111111111111111"
+        private val TEST_ADDRESS = AddressModel(country = "NL", postalCode = "1234 AB")
     }
 }

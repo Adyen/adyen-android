@@ -2,6 +2,17 @@ public abstract class com/adyen/checkout/card/BillingAddressMode : android/os/Pa
 	public static final field $stable I
 }
 
+public final class com/adyen/checkout/card/BillingAddressMode$Full : com/adyen/checkout/card/BillingAddressMode {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Set;)V
+	public synthetic fun <init> (Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun describeContents ()I
+	public final fun getSupportedCountryCodes ()Ljava/util/Set;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
 public final class com/adyen/checkout/card/BillingAddressMode$None : com/adyen/checkout/card/BillingAddressMode {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;

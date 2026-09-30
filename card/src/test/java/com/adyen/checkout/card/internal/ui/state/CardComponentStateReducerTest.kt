@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
@@ -104,6 +105,16 @@ internal class CardComponentStateReducerTest {
         val actual = reducer.reduce(state, CardIntent.UpdatePostalCode("1234 AB"))
 
         assertEquals("1234 AB", actual.postalCode.text)
+    }
+
+    @Test
+    fun `when intent is UpdateBillingAddress, then the confirmed billing address is kept`() {
+        val state = createInitialState()
+        val address = AddressModel(country = "NL", postalCode = "1234 AB")
+
+        val actual = reducer.reduce(state, CardIntent.UpdateBillingAddress(address))
+
+        assertEquals(address, actual.billingAddress.address)
     }
 
     @Test

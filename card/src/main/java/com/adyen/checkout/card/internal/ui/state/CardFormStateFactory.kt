@@ -26,6 +26,7 @@ internal class CardFormStateFactory(
         elements = CANONICAL_ORDER.mapNotNull { id -> getFormElement(id) },
     )
 
+    @Suppress("CyclomaticComplexMethod")
     private fun getFormElement(id: CardFormElementId): FormElementState<CardFormElementId>? = with(state) {
         when (id) {
             CardFormElementId.CARD_NUMBER -> cardNumber.toFormElementIfVisible(id)
@@ -36,6 +37,7 @@ internal class CardFormStateFactory(
             CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> kcpBirthDateOrTaxNumber.toFormElementIfVisible(id)
             CardFormElementId.KCP_CARD_PASSWORD -> kcpCardPassword.toFormElementIfVisible(id)
             CardFormElementId.POSTAL_CODE -> postalCode.toFormElementIfVisible(id)
+            CardFormElementId.BILLING_ADDRESS -> billingAddress.toFormElementIfVisible(id)
 
             // Neither of these can hold up a payment: the switch always holds a value, and an installment is only
             // offered when there is something to choose from.
@@ -63,6 +65,7 @@ internal class CardFormStateFactory(
             CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER,
             CardFormElementId.KCP_CARD_PASSWORD,
             CardFormElementId.POSTAL_CODE,
+            CardFormElementId.BILLING_ADDRESS,
             CardFormElementId.STORE_PAYMENT_METHOD,
             CardFormElementId.INSTALLMENTS,
         )

@@ -17,6 +17,8 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.address.internal.ui.AddressComponent
+import com.adyen.checkout.address.internal.ui.AddressComponentEvent
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.analytics.CardScannerEvents
@@ -94,6 +96,7 @@ constructor(
     private val publicKey: String?,
     private val environment: Environment,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
+    private val addressComponent: AddressComponent?,
 ) : PaymentComponent,
     SecondaryScreenComponent {
 
@@ -102,6 +105,8 @@ constructor(
 
     private val navigationChannel = bufferedChannel<SecondaryNavigationEvent>()
     override val navigation: Flow<SecondaryNavigationEvent> = navigationChannel.receiveAsFlow()
+
+    override val childScreenComponents: List<SecondaryScreenComponent> = listOfNotNull(addressComponent)
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -117,6 +122,7 @@ constructor(
         subscribeToDualBrandSelectionAppearAnalyticsEvents()
         onCardBrandDataChanged()
         onBinChanged()
+        subscribeToAddressEvents()
     }
 
     private fun trackRenderEvent() {
@@ -135,6 +141,7 @@ constructor(
             onIntent = ::handleIntent,
             onSubmitClick = ::submit,
             onInstallmentPickerClick = ::onInstallmentPickerClick,
+            onBillingAddressClick = ::onBillingAddressClick,
             initializeCardScanner = ::initializeCardScanner,
             onCardScannerResult = ::onCardScannerResult,
             onScanButtonClick = ::onScanButtonClick,
@@ -403,6 +410,25 @@ constructor(
 
     private fun onInstallmentPickerClick() {
         navigationChannel.trySend(SecondaryNavigationEvent.Open(CardSecondaryContentEntry.INSTALLMENTS))
+    }
+
+    /**
+     * Opens the address form on the address confirmed last, so edits the shopper dismissed without confirming are gone.
+     */
+    @VisibleForTesting
+    internal fun onBillingAddressClick() {
+        addressComponent?.show(componentState.value.billingAddress.address)
+    }
+
+    private fun subscribeToAddressEvents() {
+        val addressComponent = addressComponent ?: return
+        addressComponent.eventFlow
+            .onEach { event ->
+                when (event) {
+                    is AddressComponentEvent.Confirmed -> onIntent(CardIntent.UpdateBillingAddress(event.address))
+                }
+            }
+            .launchIn(coroutineScope)
     }
 
     private fun onEncryptionError(e: EncryptionException) {

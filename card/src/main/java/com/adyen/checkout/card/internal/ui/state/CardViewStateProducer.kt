@@ -85,6 +85,11 @@ internal class CardViewStateProducer(
 
         CardFormElementId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toViewState(form, focusRequest, id))
 
+        CardFormElementId.BILLING_ADDRESS -> CardFormElement.BillingAddress(
+            address = billingAddress.address,
+            errorMessage = billingAddress.error?.takeIf { it.isVisible }?.message,
+        )
+
         CardFormElementId.STORE_PAYMENT_METHOD -> CardFormElement.StorePaymentMethod(isSelected = storePaymentMethod)
 
         CardFormElementId.INSTALLMENTS -> CardFormElement.Installments(

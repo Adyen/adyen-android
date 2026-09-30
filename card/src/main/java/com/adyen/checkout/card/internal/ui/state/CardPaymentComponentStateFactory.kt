@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.toPaymentAddress
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
@@ -79,15 +80,9 @@ internal class CardPaymentComponentStateFactory(
         )
     }
 
-    private fun CardComponentState.getBillingAddress(): Address? {
-        postalCode.getPaymentDataValue()?.let {
-            return Address(
-                postalCode = it,
-            )
-        }
-
-        return null
-    }
+    private fun CardComponentState.getBillingAddress(): Address? =
+        billingAddress.address?.takeIf { billingAddress.isVisible }?.toPaymentAddress()
+            ?: postalCode.getPaymentDataValue()?.let { Address(postalCode = it) }
 
     private fun createPaymentComponentData(
         cardDetails: CardDetails,

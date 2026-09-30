@@ -37,7 +37,7 @@ internal class CardComponentParamsMapper {
                 ?: FieldVisibility.HIDE,
             koreanAuthenticationVisibility = cardConfiguration?.koreanAuthenticationVisibility
                 ?: FieldVisibility.HIDE,
-            showPostalCode = cardConfiguration?.billingAddressMode is BillingAddressMode.PostalCode,
+            billingAddressParams = cardConfiguration?.billingAddressMode.toBillingAddressParams(),
             cvcVisibility = if (cardConfiguration?.showSecurityCode == false) {
                 CVCVisibility.ALWAYS_HIDE
             } else {
@@ -85,6 +85,12 @@ internal class CardComponentParamsMapper {
                 DEFAULT_SUPPORTED_CARDS_LIST
             }
         }
+    }
+
+    private fun BillingAddressMode?.toBillingAddressParams(): BillingAddressParams = when (this) {
+        is BillingAddressMode.Full -> BillingAddressParams.Full(supportedCountryCodes)
+        is BillingAddressMode.PostalCode -> BillingAddressParams.PostalCode
+        is BillingAddressMode.None, null -> BillingAddressParams.None
     }
 
     private fun getStorePaymentFieldVisible(

@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.address.internal.ui.AddressComponent
+import com.adyen.checkout.address.internal.ui.AddressComponentFactory
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.data.api.BinLookupCache
@@ -17,6 +19,8 @@ import com.adyen.checkout.card.internal.data.api.LocalCardBrandDetectionService
 import com.adyen.checkout.card.internal.data.api.NetworkCardBrandDetectionService
 import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.state.CardBrandIntentsHandler
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
@@ -124,6 +128,20 @@ internal class CardFactory :
             publicKey = params.publicKey,
             environment = params.environment,
             cardConfigDataGenerator = CardConfigDataGenerator(params),
+            addressComponent = createAddressComponent(cardComponentParams, params, coroutineScope),
+        )
+    }
+
+    private fun createAddressComponent(
+        cardComponentParams: CardComponentParams,
+        params: CheckoutParams,
+        coroutineScope: CoroutineScope,
+    ): AddressComponent? {
+        val billingAddressParams = cardComponentParams.billingAddressParams as? BillingAddressParams.Full ?: return null
+        return AddressComponentFactory().create(
+            params = params,
+            supportedCountryCodes = billingAddressParams.supportedCountryCodes,
+            coroutineScope = coroutineScope,
         )
     }
 

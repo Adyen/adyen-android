@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.FieldVisibility
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
@@ -46,6 +47,9 @@ internal class CardComponentStateFactory(
             ),
             postalCode = TextInputComponentState(
                 requirementPolicy = getPostalCodeRequirementPolicy(),
+            ),
+            billingAddress = BillingAddressState(
+                isVisible = componentParams.billingAddressParams is BillingAddressParams.Full,
             ),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = componentParams.showStorePaymentMethod,
@@ -94,9 +98,10 @@ internal class CardComponentStateFactory(
         }
 
     private fun getPostalCodeRequirementPolicy(): RequirementPolicy =
-        when (componentParams.showPostalCode) {
-            true -> RequirementPolicy.Required
-            false -> RequirementPolicy.Hidden
+        when (componentParams.billingAddressParams) {
+            BillingAddressParams.PostalCode -> RequirementPolicy.Required
+            BillingAddressParams.None,
+            is BillingAddressParams.Full -> RequirementPolicy.Hidden
         }
 
     private fun getPreselectedInstallment(installmentOptions: List<InstallmentModel>): InstallmentModel? {

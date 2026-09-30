@@ -74,6 +74,15 @@ Android v6 currently exposes these public billing-address modes:
 
 - `BillingAddressMode.None()`
 - `BillingAddressMode.PostalCode()`
+- `BillingAddressMode.Full()`
+
+`BillingAddressMode.Full()` asks for the billing address on a separate screen that the shopper opens from the card form. To limit the countries the shopper can pick, pass their ISO 3166-1 alpha-2 codes:
+
+```kotlin
+card(
+    billingAddressMode = BillingAddressMode.Full(supportedCountryCodes = setOf("NL", "US")),
+)
+```
 
 This guide intentionally documents only the currently public API surface.
 

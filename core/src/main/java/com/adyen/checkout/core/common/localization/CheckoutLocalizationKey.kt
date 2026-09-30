@@ -15,6 +15,12 @@ package com.adyen.checkout.core.common.localization
  * [CheckoutLocalizationProvider], allowing you to customize the copy shown to the shopper.
  */
 enum class CheckoutLocalizationKey {
+    ADDRESS_COUNTRY_ERROR,
+    ADDRESS_COUNTRY_LABEL,
+    ADDRESS_LABEL,
+    ADDRESS_POSTAL_CODE_ERROR,
+    ADDRESS_POSTAL_CODE_LABEL,
+    ADDRESS_TITLE,
     AUTHENTICATION_TITLE,
     AUTHENTICATION_DESCRIPTION,
     AUTHENTICATION_STATUS,
@@ -47,6 +53,7 @@ enum class CheckoutLocalizationKey {
     CARD_KCP_CARD_PASSWORD_INVALID,
     CARD_POSTAL_CODE,
     CARD_POSTAL_CODE_INVALID,
+    CARD_BILLING_ADDRESS_ERROR,
     CARD_INSTALLMENTS_TITLE,
     CARD_INSTALLMENTS_ONE_TIME,
     CARD_INSTALLMENTS_REVOLVING,
@@ -75,6 +82,7 @@ enum class CheckoutLocalizationKey {
     GENERAL_BACK,
     GENERAL_CANCEL,
     GENERAL_CLOSE,
+    GENERAL_CONFIRM_LABEL,
     GENERAL_OPTIONAL,
     GENERAL_SEARCH_HINT,
     MBWAY_COUNTRY_CODE,

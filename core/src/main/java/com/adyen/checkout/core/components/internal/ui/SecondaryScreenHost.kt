@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -27,7 +28,8 @@ internal fun <T> SecondaryScreenHost(
     component: T,
     modifier: Modifier,
 ) where T : PaymentComponent, T : SecondaryScreenComponent {
-    var backStack by rememberSaveable(component) { mutableStateOf(emptyList<String>()) }
+    val owners = remember(component) { SecondaryScreenOwners(component) }
+    var backStack by rememberSaveable(component) { mutableStateOf(emptyList<SecondaryScreenEntry>()) }
 
     component.Content(modifier)
 
@@ -44,28 +46,21 @@ internal fun <T> SecondaryScreenHost(
                     isNested = stack.size > 1,
                     onNavigationClick = { backStack = backStack.dropLast(1) },
                 ) {
-                    component.SecondaryContent(stack.last(), Modifier)
+                    val entry = stack.last()
+                    owners[entry].SecondaryContent(entry.key, Modifier)
                 }
             }
         }
     }
 
-    LaunchedEffect(component) {
-        component.navigation.collect { event ->
-            backStack = when (event) {
-                is SecondaryNavigationEvent.Open -> {
-                    backStack + event.key
-                }
-
-                SecondaryNavigationEvent.Close -> {
-                    backStack.dropLast(1)
-                }
-            }
+    LaunchedEffect(owners) {
+        owners.navigation.collect { event ->
+            backStack = backStack.navigate(event)
         }
     }
 }
 
-private fun AnimatedContentTransitionScope<List<String>>.slideHorizontally(): ContentTransform {
+private fun AnimatedContentTransitionScope<List<SecondaryScreenEntry>>.slideHorizontally(): ContentTransform {
     return if (targetState.size >= initialState.size) {
         slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
     } else {

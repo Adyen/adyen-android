@@ -18,6 +18,14 @@ interface SecondaryScreenComponent {
 
     val navigation: Flow<SecondaryNavigationEvent>
 
+    /**
+     * Components that open their own secondary screens on this component's back stack, such as a form shown on one of
+     * this component's screens. The host follows their [navigation] too, and each screen is rendered by the component
+     * that opened it. Keep the list fixed: the back stack survives recreation and refers to it by position.
+     */
+    val childScreenComponents: List<SecondaryScreenComponent>
+        get() = emptyList()
+
     @Composable
     fun SecondaryContent(
         identifier: String,

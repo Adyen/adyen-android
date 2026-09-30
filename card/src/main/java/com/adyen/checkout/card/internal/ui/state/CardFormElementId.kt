@@ -24,6 +24,7 @@ internal enum class CardFormElementId(override val isTextInput: Boolean) : FormE
     KCP_BIRTH_DATE_OR_TAX_NUMBER(isTextInput = true),
     KCP_CARD_PASSWORD(isTextInput = true),
     POSTAL_CODE(isTextInput = true),
+    BILLING_ADDRESS(isTextInput = false),
     STORE_PAYMENT_METHOD(isTextInput = false),
     INSTALLMENTS(isTextInput = false),
 }

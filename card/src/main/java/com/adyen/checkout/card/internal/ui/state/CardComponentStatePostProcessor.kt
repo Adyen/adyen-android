@@ -82,7 +82,7 @@ internal class CardComponentStatePostProcessor : ComponentStatePostProcessor<Car
     private fun CardComponentState.showAllErrors() =
         CardFormElementId.entries.fold(this) { state, id ->
             state.updateTextInput(id) { field -> field.showErrorIfPresent() }
-        }
+        }.let { state -> state.copy(billingAddress = state.billingAddress.showErrorIfPresent()) }
 }
 
 private fun CardComponentState.isCardNumberComplete(): Boolean {
