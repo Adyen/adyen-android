@@ -9,10 +9,13 @@
 package com.adyen.checkout.address.internal.ui
 
 import app.cash.turbine.test
-import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.state.AddressFormElement
 import com.adyen.checkout.address.internal.ui.view.AddressSecondaryContentEntry
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +30,54 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class AddressComponentTest {
+
+    @Test
+    fun `when the form is shown, then the form is opened`() = runTest {
+        // GIVEN
+        val component = createComponent()
+
+        component.navigation.test {
+            // WHEN
+            component.show(address = null)
+
+            // THEN
+            assertEquals(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM), awaitItem())
+        }
+    }
+
+    @Test
+    fun `when a valid address is confirmed, then the form is closed`() = runTest {
+        // GIVEN
+        val component = createComponent()
+        component.show(AddressModel(country = "NL", postalCode = "1234 AB"))
+
+        component.navigation.test {
+            skipItems(1)
+
+            // WHEN
+            component.confirm()
+
+            // THEN
+            assertEquals(SecondaryNavigationEvent.Close, awaitItem())
+        }
+    }
+
+    @Test
+    fun `when an incomplete address is confirmed, then the form stays open`() = runTest {
+        // GIVEN
+        val component = createComponent()
+        component.show(address = null)
+
+        component.navigation.test {
+            skipItems(1)
+
+            // WHEN
+            component.confirm()
+
+            // THEN
+            expectNoEvents()
+        }
+    }
 
     @Test
     fun `when the country field is clicked, then the country picker is opened`() = runTest {
@@ -61,7 +112,7 @@ internal class AddressComponentTest {
         runTest {
             // GIVEN
             val component = createComponent()
-            component.prefill(AddressModel(country = "US", postalCode = "12345"))
+            component.show(AddressModel(country = "US", postalCode = "12345"))
             component.onCountrySelected(NETHERLANDS)
 
             component.eventFlow.test {
@@ -77,11 +128,11 @@ internal class AddressComponentTest {
         }
 
     @Test
-    fun `when a prefilled address is confirmed, then the prefilled address is confirmed`() = runTest {
+    fun `when the form is shown with an address and confirmed, then that address is confirmed`() = runTest {
         // GIVEN
         val component = createComponent()
         val address = AddressModel(country = "NL", postalCode = "1234 AB")
-        component.prefill(address)
+        component.show(address)
 
         component.eventFlow.test {
             // WHEN
@@ -107,13 +158,13 @@ internal class AddressComponentTest {
     }
 
     @Test
-    fun `when the form is prefilled without an address, then earlier values are dropped`() = runTest {
+    fun `when the form is shown without an address, then earlier values are dropped`() = runTest {
         // GIVEN
         val component = createComponent()
-        component.prefill(AddressModel(country = "NL", postalCode = "1234 AB"))
+        component.show(AddressModel(country = "NL", postalCode = "1234 AB"))
 
         // WHEN
-        component.prefill(address = null)
+        component.show(address = null)
 
         // THEN
         component.eventFlow.test {
@@ -123,15 +174,15 @@ internal class AddressComponentTest {
     }
 
     /**
-     * The form leaves composition whenever its screen closes, and the host prefills it right before showing it again.
-     * Its text fields report their first value back as input, so a view state that lags behind would undo the prefill.
+     * The form leaves composition whenever its screen closes, and is prefilled right before it opens again. Its text
+     * fields report their first value back as input, so a view state that lags behind would undo the prefill.
      */
     @Test
-    fun `when the form is prefilled while it is not shown, then it shows the prefilled address once shown again`() =
+    fun `when the form is shown again long after it closed, then it shows the address it is shown with`() =
         runTest {
             // GIVEN
             val component = createComponent(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
-            component.prefill(AddressModel(country = "NL", postalCode = "unconfirmed edit"))
+            component.show(AddressModel(country = "NL", postalCode = "unconfirmed edit"))
             val subscription = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
                 component.viewState.collect {}
             }
@@ -139,7 +190,7 @@ internal class AddressComponentTest {
             advanceTimeBy(NO_SUBSCRIBER_TIME_MS)
 
             // WHEN
-            component.prefill(AddressModel(country = "NL", postalCode = "1234 AB"))
+            component.show(AddressModel(country = "NL", postalCode = "1234 AB"))
 
             // THEN
             val postalCode = component.viewState.value.elements
@@ -148,13 +199,43 @@ internal class AddressComponentTest {
             assertEquals("1234 AB", postalCode.textInputViewState.text)
         }
 
+    @Test
+    fun `when the component is created, then the country of the shopper locale is selected`() {
+        // WHEN
+        val component = createComponent()
+
+        // THEN
+        val country = component.viewState.value.elements
+            .filterIsInstance<AddressFormElement.Country>()
+            .single()
+        assertEquals("US", country.selectedCountry?.isoCode)
+    }
+
+    @Test
+    fun `when the component is created, then only the supported countries can be picked`() {
+        // WHEN
+        val component = createComponent()
+
+        // THEN
+        val countryCodes = component.viewState.value.countryPickerViewState.countries.map { it.isoCode }
+        assertEquals(setOf("NL", "US"), countryCodes.toSet())
+    }
+
     private fun createComponent(
         coroutineScope: CoroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
     ) = AddressComponentFactory().create(
-        componentParams = AddressComponentParams(
+        params = CheckoutParams(
             shopperLocale = Locale.forLanguageTag("en-US"),
-            supportedCountryCodes = setOf("NL", "US"),
+            environment = Environment.TEST,
+            clientKey = "test_client_key",
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+            amount = null,
+            showSubmitButton = true,
+            publicKey = null,
+            additionalConfigurations = emptyMap(),
+            additionalSessionParams = null,
         ),
+        supportedCountryCodes = setOf("NL", "US"),
         coroutineScope = coroutineScope,
     )
 

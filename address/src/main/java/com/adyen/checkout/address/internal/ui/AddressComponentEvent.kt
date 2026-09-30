@@ -18,8 +18,8 @@ import com.adyen.checkout.address.internal.ui.model.AddressModel
 sealed interface AddressComponentEvent {
 
     /**
-     * The shopper confirmed a valid address. The host keeps it: the address component does not remember confirmed
-     * addresses, and forgets unconfirmed edits on the next [AddressComponent.prefill].
+     * The shopper confirmed a valid address, and the form closed. The host keeps it: the address component does not
+     * remember confirmed addresses, and forgets unconfirmed edits on the next [AddressComponent.show].
      */
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class Confirmed(val address: AddressModel) : AddressComponentEvent

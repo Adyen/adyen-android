@@ -34,7 +34,6 @@ import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
-import com.adyen.checkout.card.internal.ui.view.CardSecondaryContentEntry
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -43,7 +42,6 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.cse.internal.TestGenericEncryptor
@@ -541,37 +539,19 @@ internal class CardComponentTest(
         }
 
         @Test
-        fun `and the billing address row is clicked then the address form is reset and opened`() = runTest {
+        fun `and the billing address row is clicked then the address form is shown without an address`() {
             // GIVEN
             val component = createBillingAddressComponent()
-            val navigation = component.navigation.test(testScheduler)
 
             // WHEN
             component.onBillingAddressClick()
 
             // THEN
-            verify(addressComponent).prefill(null)
-            assertEquals(
-                SecondaryNavigationEvent.Open(CardSecondaryContentEntry.BILLING_ADDRESS),
-                navigation.latestValue,
-            )
+            verify(addressComponent).show(null)
         }
 
         @Test
-        fun `and an address is confirmed then the address form is closed`() = runTest {
-            // GIVEN
-            val component = createBillingAddressComponent()
-            val navigation = component.navigation.test(testScheduler)
-
-            // WHEN
-            addressEvents.emit(AddressComponentEvent.Confirmed(TEST_ADDRESS))
-
-            // THEN
-            assertEquals(SecondaryNavigationEvent.Close, navigation.latestValue)
-        }
-
-        @Test
-        fun `and the shopper returns to edit a confirmed address then the address form is prefilled with it`() =
+        fun `and the shopper returns to edit a confirmed address then the address form is shown with it`() =
             runTest {
                 // GIVEN
                 val component = createBillingAddressComponent()
@@ -581,7 +561,7 @@ internal class CardComponentTest(
                 component.onBillingAddressClick()
 
                 // THEN
-                verify(addressComponent).prefill(TEST_ADDRESS)
+                verify(addressComponent).show(TEST_ADDRESS)
             }
 
         @Test

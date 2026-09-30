@@ -40,10 +40,9 @@ fun AddressModel.toPaymentAddress(): Address = Address(
 )
 
 /**
- * A one-line summary of the address, with the country named in [shopperLocale], for the host to show.
+ * A one-line summary of the address, with the country named in [shopperLocale].
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun AddressModel.format(shopperLocale: Locale): String = listOfNotNull(
+internal fun AddressModel.format(shopperLocale: Locale): String = listOfNotNull(
     postalCode,
     country?.let { CountryUtils.getCountryName(it, shopperLocale) },
 ).joinToString(separator = ", ")

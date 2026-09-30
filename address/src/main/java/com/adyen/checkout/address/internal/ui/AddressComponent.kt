@@ -21,7 +21,6 @@ import com.adyen.checkout.address.internal.ui.state.AddressIntent
 import com.adyen.checkout.address.internal.ui.state.AddressViewState
 import com.adyen.checkout.address.internal.ui.state.AddressViewStateProducer
 import com.adyen.checkout.address.internal.ui.state.toAddressModel
-import com.adyen.checkout.address.internal.ui.view.AddressContent
 import com.adyen.checkout.address.internal.ui.view.AddressSecondaryContent
 import com.adyen.checkout.address.internal.ui.view.AddressSecondaryContentEntry
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -42,12 +41,10 @@ import kotlinx.coroutines.flow.stateIn
  * A form that collects an address for another component, its host. It is not a payment component: it never submits,
  * and it is only reachable through its host.
  *
- * - The host decides where [Content] is shown, for example on one of its own secondary screens.
- * - The address component's own screens, such as the country picker, are opened through [navigation]. The host lists
- *   the address component in its [SecondaryScreenComponent.childScreenComponents], so these screens open on the
- *   host's back stack and are rendered by [SecondaryContent].
- * - A confirmed address is reported through [eventFlow]. The host keeps it and passes it back through [prefill] when
- *   the shopper returns to edit it.
+ * - The host lists the address component in its [SecondaryScreenComponent.childScreenComponents], so the address
+ *   component's screens, the form and its country picker, open on the host's back stack.
+ * - [show] opens the form. The host passes the address confirmed last, so the shopper can change it.
+ * - A valid confirmation closes the form and is reported through [eventFlow]. The host keeps the address.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AddressComponent internal constructor(
@@ -73,42 +70,35 @@ class AddressComponent internal constructor(
         postProcessor = componentStatePostProcessor,
     )
 
-    // The form is only on screen while its host shows it, so this view state often has no collectors. The core
-    // viewState() helper stops updating 5 s after the last collector leaves, so the form would reopen with values
-    // from before the last prefill(). The form's text fields report their first value back as input, which would
-    // overwrite the prefill. Sharing eagerly keeps the view state current.
+    // The form is only on screen while it is shown, so this view state often has no collectors. The core viewState()
+    // helper stops updating 5 s after the last collector leaves, so the form would reopen with values from before the
+    // last show(). The form's text fields report their first value back as input, which would overwrite the address
+    // it is shown with. Sharing eagerly keeps the view state current.
     @VisibleForTesting
     internal val viewState: StateFlow<AddressViewState> = componentState
         .map(viewStateProducer::produce)
         .stateIn(coroutineScope, SharingStarted.Eagerly, viewStateProducer.produce(componentState.value))
 
     @Composable
-    fun Content(modifier: Modifier) {
-        AddressContent(
+    override fun SecondaryContent(identifier: String, modifier: Modifier) {
+        AddressSecondaryContent(
+            identifier = identifier,
             viewStateFlow = viewState,
             onIntent = ::onIntent,
             onCountryPickerClick = ::onCountryPickerClick,
+            onCountryClick = ::onCountrySelected,
             onConfirmClick = ::confirm,
             modifier = modifier,
         )
     }
 
-    @Composable
-    override fun SecondaryContent(identifier: String, modifier: Modifier) {
-        AddressSecondaryContent(
-            identifier = identifier,
-            viewStateFlow = viewState,
-            onCountryClick = ::onCountrySelected,
-            modifier = modifier,
-        )
-    }
-
     /**
-     * Replaces the form with [address], or resets it when null. Call it before showing [Content] so that edits the
-     * shopper dismissed without confirming are not shown again.
+     * Opens the form on [address], or on an empty form when null. Edits the shopper dismissed without confirming are
+     * dropped.
      */
-    fun prefill(address: AddressModel?) {
+    fun show(address: AddressModel?) {
         onIntent(AddressIntent.Prefill(address))
+        navigationChannel.trySend(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM))
     }
 
     @VisibleForTesting
@@ -116,6 +106,7 @@ class AddressComponent internal constructor(
         val currentState = componentState.value
         if (componentStateValidator.isValid(currentState)) {
             eventChannel.trySend(AddressComponentEvent.Confirmed(currentState.toAddressModel()))
+            navigationChannel.trySend(SecondaryNavigationEvent.Close)
         } else {
             onIntent(AddressIntent.HighlightValidationErrors)
         }

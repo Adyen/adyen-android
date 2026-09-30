@@ -8,18 +8,17 @@
 
 package com.adyen.checkout.address.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import java.util.Locale
 
 /**
- * Configures the address component. Built by the component that hosts the address form.
+ * Configures the address component. Built by [com.adyen.checkout.address.internal.ui.AddressComponentFactory] from
+ * what the host passes.
  *
  * @param shopperLocale The locale used to name the countries.
  * @param supportedCountryCodes The ISO codes of the countries the shopper can pick. When empty, every country can be
  * picked.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class AddressComponentParams(
+internal data class AddressComponentParams(
     val shopperLocale: Locale,
     val supportedCountryCodes: Set<String>,
 )

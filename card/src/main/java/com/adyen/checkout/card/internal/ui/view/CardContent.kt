@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.address.internal.ui.model.AddressModel
-import com.adyen.checkout.address.internal.ui.model.format
+import com.adyen.checkout.address.internal.ui.view.AddressPickerField
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.model.toSubtitleText
@@ -39,7 +39,6 @@ import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.SupportedCardBrandsViewState
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.internal.helper.LocalLocale
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.payButtonAsComponentScaffoldFooter
@@ -226,12 +225,10 @@ private fun CardFormElementContent(
             onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
-        is CardFormElement.BillingAddress -> ValuePickerField(
-            value = element.address?.format(LocalLocale.current).orEmpty(),
-            label = resolveString(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_LABEL),
+        is CardFormElement.BillingAddress -> AddressPickerField(
+            address = element.address,
+            errorMessage = element.errorMessage,
             onClick = onBillingAddressClick,
-            supportingText = element.errorMessage?.let { resolveString(it) },
-            isError = element.errorMessage != null,
             modifier = Modifier.fillMaxWidth(),
         )
 

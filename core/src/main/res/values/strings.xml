@@ -10,8 +10,10 @@
 <resources>
     <string name="adyen_checkout_address_country_error" translatable="false">Select a country/region</string>
     <string name="adyen_checkout_address_country_label" translatable="false">Country/Region</string>
+    <string name="adyen_checkout_address_label" translatable="false">Address</string>
     <string name="adyen_checkout_address_postal_code_error" translatable="false">Enter a valid postal code</string>
     <string name="adyen_checkout_address_postal_code_label" translatable="false">Postal code</string>
+    <string name="adyen_checkout_address_title" translatable="false">Address</string>
     <string name="checkout_authentication_title" translatable="false">Security check</string>
     <string name="checkout_authentication_description" translatable="false">You will be guided to a secure environment to perform a security challenge</string>
     <string name="checkout_authentication_status" translatable="false">Launching challenge..</string>
@@ -48,8 +50,6 @@
     <string name="checkout_card_postal_code" translatable="false">Postal code</string>
     <string name="checkout_card_postal_code_invalid" translatable="false">Invalid postal code</string>
     <string name="adyen_checkout_card_billing_address_error" translatable="false">Enter your billing address</string>
-    <string name="adyen_checkout_card_billing_address_label" translatable="false">Billing address</string>
-    <string name="adyen_checkout_card_billing_address_title" translatable="false">Billing address</string>
     <string name="checkout_card_installments_title" translatable="false">Payment plan</string>
     <string name="checkout_card_installments_option_one_time" translatable="false">One time payment</string>
     <string name="checkout_card_installments_option_revolving" translatable="false">Revolving payment</string>

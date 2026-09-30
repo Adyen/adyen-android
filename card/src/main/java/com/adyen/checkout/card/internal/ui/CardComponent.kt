@@ -39,7 +39,6 @@ import com.adyen.checkout.card.internal.ui.state.CardFormElementId
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
-import com.adyen.checkout.card.internal.ui.view.BillingAddress
 import com.adyen.checkout.card.internal.ui.view.CardContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContent
 import com.adyen.checkout.card.internal.ui.view.CardSecondaryContentEntry
@@ -151,21 +150,15 @@ constructor(
 
     @Composable
     override fun SecondaryContent(identifier: String, modifier: Modifier) {
-        when (identifier) {
-            CardSecondaryContentEntry.INSTALLMENTS -> CardSecondaryContent(
-                modifier = modifier,
-                identifier = identifier,
-                viewState = viewState,
-                onInstallmentClick = { installment ->
-                    onIntent(CardIntent.UpdateInstallment(installment))
-                    navigationChannel.trySend(SecondaryNavigationEvent.Close)
-                },
-            )
-
-            CardSecondaryContentEntry.BILLING_ADDRESS -> BillingAddress(modifier = modifier) {
-                addressComponent?.Content(Modifier)
-            }
-        }
+        CardSecondaryContent(
+            modifier = modifier,
+            identifier = identifier,
+            viewState = viewState,
+            onInstallmentClick = { installment ->
+                onIntent(CardIntent.UpdateInstallment(installment))
+                navigationChannel.trySend(SecondaryNavigationEvent.Close)
+            },
+        )
     }
 
     @Suppress("ReturnCount")
@@ -424,8 +417,7 @@ constructor(
      */
     @VisibleForTesting
     internal fun onBillingAddressClick() {
-        addressComponent?.prefill(componentState.value.billingAddress.address)
-        navigationChannel.trySend(SecondaryNavigationEvent.Open(CardSecondaryContentEntry.BILLING_ADDRESS))
+        addressComponent?.show(componentState.value.billingAddress.address)
     }
 
     private fun subscribeToAddressEvents() {
@@ -433,10 +425,7 @@ constructor(
         addressComponent.eventFlow
             .onEach { event ->
                 when (event) {
-                    is AddressComponentEvent.Confirmed -> {
-                        onIntent(CardIntent.UpdateBillingAddress(event.address))
-                        navigationChannel.trySend(SecondaryNavigationEvent.Close)
-                    }
+                    is AddressComponentEvent.Confirmed -> onIntent(CardIntent.UpdateBillingAddress(event.address))
                 }
             }
             .launchIn(coroutineScope)

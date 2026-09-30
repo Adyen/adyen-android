@@ -10,7 +10,6 @@ package com.adyen.checkout.card.internal.ui
 
 import com.adyen.checkout.address.internal.ui.AddressComponent
 import com.adyen.checkout.address.internal.ui.AddressComponentFactory
-import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.data.api.BinLookupCache
@@ -140,10 +139,8 @@ internal class CardFactory :
     ): AddressComponent? {
         val billingAddressParams = cardComponentParams.billingAddressParams as? BillingAddressParams.Full ?: return null
         return AddressComponentFactory().create(
-            componentParams = AddressComponentParams(
-                shopperLocale = params.shopperLocale,
-                supportedCountryCodes = billingAddressParams.supportedCountryCodes,
-            ),
+            params = params,
+            supportedCountryCodes = billingAddressParams.supportedCountryCodes,
             coroutineScope = coroutineScope,
         )
     }

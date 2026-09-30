@@ -15,6 +15,7 @@ import com.adyen.checkout.address.internal.ui.state.AddressComponentStatePostPro
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStateReducer
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStateValidator
 import com.adyen.checkout.address.internal.ui.state.AddressViewStateProducer
+import com.adyen.checkout.core.common.internal.CheckoutParams
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -23,10 +24,20 @@ import kotlinx.coroutines.CoroutineScope
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AddressComponentFactory {
 
+    /**
+     * @param params The params of the host. The address component takes what it needs from them.
+     * @param supportedCountryCodes The ISO codes of the countries the shopper can pick. When empty, every country can
+     * be picked.
+     */
     fun create(
-        componentParams: AddressComponentParams,
+        params: CheckoutParams,
+        supportedCountryCodes: Set<String>,
         coroutineScope: CoroutineScope,
     ): AddressComponent {
+        val componentParams = AddressComponentParams(
+            shopperLocale = params.shopperLocale,
+            supportedCountryCodes = supportedCountryCodes,
+        )
         val componentStateFactory = AddressComponentStateFactory(componentParams)
         return AddressComponent(
             componentStateValidator = AddressComponentStateValidator(),

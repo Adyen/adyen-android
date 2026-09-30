@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.address.internal.ui.state.AddressFormElement
 import com.adyen.checkout.address.internal.ui.state.AddressIntent
 import com.adyen.checkout.address.internal.ui.state.AddressViewState
@@ -30,31 +28,12 @@ import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-internal fun AddressContent(
-    viewStateFlow: StateFlow<AddressViewState>,
-    onIntent: (AddressIntent) -> Unit,
-    onCountryPickerClick: () -> Unit,
-    onConfirmClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val viewState by viewStateFlow.collectAsStateWithLifecycle()
-
-    AddressContent(
-        viewState = viewState,
-        onIntent = onIntent,
-        onCountryPickerClick = onCountryPickerClick,
-        onConfirmClick = onConfirmClick,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun AddressContent(
+internal fun AddressFormContent(
     viewState: AddressViewState,
     onIntent: (AddressIntent) -> Unit,
     onCountryPickerClick: () -> Unit,
@@ -65,6 +44,8 @@ private fun AddressContent(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         modifier = modifier,
     ) {
+        Title(resolveString(CheckoutLocalizationKey.ADDRESS_TITLE))
+
         // Keyed on the id rather than the position, so a field's text and focus follow it when the order changes.
         viewState.elements.forEach { element ->
             key(element.id) {
@@ -111,11 +92,11 @@ private fun AddressFormElementContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun AddressContentPreview(
+private fun AddressFormContentPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        AddressContent(
+        AddressFormContent(
             viewState = AddressViewState(
                 elements = listOf(
                     AddressFormElement.Country(selectedCountry = NETHERLANDS, errorMessage = null),
@@ -132,11 +113,11 @@ private fun AddressContentPreview(
 
 @Preview(showBackground = true)
 @Composable
-private fun AddressContentErrorPreview(
+private fun AddressFormContentErrorPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        AddressContent(
+        AddressFormContent(
             viewState = AddressViewState(
                 elements = listOf(
                     AddressFormElement.Country(
