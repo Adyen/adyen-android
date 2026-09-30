@@ -10,7 +10,6 @@ package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.delete
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
@@ -26,7 +25,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
@@ -60,7 +58,6 @@ fun SearchField(
         isError = isError,
         enabled = enabled,
         innerIndication = null,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         onKeyboardAction = { focusManager.clearFocus() },
         trailingIcon = {
             TrailingSearchIcon(
