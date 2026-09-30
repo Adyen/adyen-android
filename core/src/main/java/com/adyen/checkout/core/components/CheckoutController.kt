@@ -16,7 +16,6 @@ import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.internal.CheckoutFlow
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import java.util.Locale
 
 /**
@@ -89,7 +88,7 @@ fun CheckoutController(
  * Controls a checkout flow.
  *
  * Create an instance using one of the [CheckoutController] factory functions, then drive the flow through
- * [submit] and [handleReturn], and observe navigation changes if necessary through [navigation].
+ * [submit] and [handleReturn].
  */
 class CheckoutController internal constructor(
     private val flow: CheckoutFlow,
@@ -100,14 +99,6 @@ class CheckoutController internal constructor(
     internal val paymentComponent: PaymentComponent? get() = flow.paymentComponent
 
     internal val actionComponent: ActionComponent? get() = flow.actionComponent
-
-    /**
-     * A [Flow] of [CheckoutRoute] events that indicate which screen should be displayed.
-     *
-     * Collect this flow to observe navigation changes and update the UI accordingly (e.g. showing
-     * the payment method input or an action screen).
-     */
-    val navigation: Flow<CheckoutRoute> get() = flow.navigation
 
     /**
      * Submits the current payment data.

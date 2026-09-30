@@ -9,8 +9,6 @@
 package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.error.CheckoutError
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -56,15 +54,6 @@ internal class FailureCheckoutFlowTest {
             val flow = createFailedCheckoutFlow()
 
             assertNull(flow.actionComponent)
-        }
-
-        @Test
-        fun `when created, then navigation emits nothing`() = runTest {
-            val flow = createFailedCheckoutFlow()
-
-            val result = runCatching { flow.navigation.first() }
-
-            assertFalse(result.isSuccess)
         }
     }
 

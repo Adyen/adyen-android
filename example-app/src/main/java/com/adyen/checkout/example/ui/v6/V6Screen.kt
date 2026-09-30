@@ -52,7 +52,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.adyen.checkout.core.components.CheckoutPaymentFlow
+import com.adyen.checkout.core.components.CheckoutAction
+import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -137,11 +138,19 @@ private fun Component(
             )
         }
 
-        CheckoutPaymentFlow(
-            controller = uiState.checkoutController,
-            theme = theme,
-            modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
-        )
+        if (uiState.isHandlingAction) {
+            CheckoutAction(
+                controller = uiState.checkoutController,
+                theme = theme,
+                modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
+            )
+        } else {
+            CheckoutPaymentMethod(
+                controller = uiState.checkoutController,
+                theme = theme,
+                modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
+            )
+        }
 
         var showButton by remember(uiState.checkoutController) { mutableStateOf(true) }
         if (uiState.showCustomButton && showButton) {

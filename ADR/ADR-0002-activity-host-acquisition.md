@@ -36,8 +36,8 @@ does the same with `GooglePayViewEvent` and `GooglePayContent`, which owns the
 
 This works, but it has consequences worth recording:
 
-- **The contract is implicit.** An action only progresses if the merchant renders our composable in response to
-  `CheckoutRoute.Action`. Because the channels are buffered the event is not lost, but if the merchant never renders it,
+- **The contract is implicit.** An action only progresses if the merchant renders `CheckoutAction` in response to the
+  `onAction` callback. Because the channels are buffered the event is not lost, but if the merchant never renders it,
   the action never runs and the SDK reports no error. The shopper sees a screen where nothing happens.
 - **Components cannot be tested without Compose.** The launch path only exists in a composable, so covering it needs a
   Compose or Robolectric test rather than a plain JUnit 5 test.

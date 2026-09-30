@@ -10,12 +10,8 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.common.test
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -24,7 +20,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class ActionOnlyCheckoutFlowTest(
     @param:Mock private val actionHandler: ActionHandler,
@@ -54,15 +49,6 @@ internal class ActionOnlyCheckoutFlowTest(
         val flow = ActionOnlyCheckoutFlow(createAction(), actionHandler)
 
         assertEquals(mockActionComponent, flow.actionComponent)
-    }
-
-    @Test
-    fun `when navigation is collected, then no values are emitted`() = runTest {
-        val flow = ActionOnlyCheckoutFlow(createAction(), actionHandler)
-
-        val paymentMethodNavigation = flow.navigation.test(testScheduler)
-
-        assertTrue(paymentMethodNavigation.values.isEmpty())
     }
 
     @Test

@@ -17,8 +17,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 /**
  * A [Composable] that displays the UI of an action being handled by the given [controller].
  *
- * Use this when you want to render the action screen yourself. To render the whole flow
- * (payment method, action and secondary screens) automatically, use [CheckoutPaymentFlow] instead.
+ * Render this instead of [CheckoutPaymentMethod] once the `onAction` callback reports that an action is
+ * being handled.
  *
  * @param controller The [CheckoutController] driving this flow.
  * @param modifier The [Modifier] to be applied to the action UI.

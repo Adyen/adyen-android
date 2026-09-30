@@ -21,8 +21,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  *
  * Secondary screens of the payment method, such as pickers, are displayed on top of this UI.
  *
- * Use this when you want to render the payment method screen yourself. To render the whole flow
- * (payment method and action screens) automatically, use [CheckoutPaymentFlow] instead.
+ * Render this until the `onAction` callback reports that an action is being handled, and [CheckoutAction]
+ * from that point on.
  *
  * @param controller The [CheckoutController] driving this flow.
  * @param modifier The [Modifier] to be applied to the payment method UI.

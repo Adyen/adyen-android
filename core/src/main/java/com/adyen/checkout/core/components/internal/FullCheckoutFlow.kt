@@ -13,15 +13,10 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.components.CheckoutRoute
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.atomic.AtomicBoolean
@@ -34,12 +29,6 @@ internal class FullCheckoutFlow(
 ) : CheckoutFlow {
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
-
-    private val navigationFlow = MutableSharedFlow<CheckoutRoute>(
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
-    )
-    override val navigation: Flow<CheckoutRoute> = navigationFlow.asSharedFlow()
 
     private val canSubmit = AtomicBoolean(true)
 
@@ -78,7 +67,6 @@ internal class FullCheckoutFlow(
         when (submitResult) {
             is SubmitResult.Action -> {
                 actionHandler.handleAction(submitResult.action)
-                navigationFlow.tryEmit(CheckoutRoute.Action())
             }
 
             is SubmitResult.Completion -> {
