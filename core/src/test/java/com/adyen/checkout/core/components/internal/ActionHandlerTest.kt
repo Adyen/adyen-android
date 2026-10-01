@@ -67,6 +67,8 @@ internal class ActionHandlerTest(
 
     private val savedStateHandle = SavedStateHandle()
 
+    private val stateStore = CheckoutFlowStateStore(savedStateHandle, target = null)
+
     private var receivedSavedStateHandle: SavedStateHandle? = null
 
     @BeforeEach
@@ -247,6 +249,65 @@ internal class ActionHandlerTest(
 
             verify(componentRequestDispatcher).complete(CheckoutResultCode("Authorised"))
         }
+
+        @Test
+        fun `when ActionDetails event is emitted and result is Completion, then the saved state is cleared`() =
+            runTest {
+                whenever(componentRequestDispatcher.additionalDetails(any())) doReturn
+                    AdditionalDetailsResult.Completion("Authorised")
+                val actionHandler = createActionHandler()
+                actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+                eventFlow.emit(ActionComponentEvent.ActionDetails(ActionComponentData()))
+
+                assertNull(stateStore.restore())
+            }
+    }
+
+    @Nested
+    inner class SavedStateTest {
+
+        @Test
+        fun `when handleAction is called, then the handling action phase is saved`() {
+            val action = TestAction(type = TEST_ACTION_TYPE, paymentData = "test_payment_data")
+            val actionHandler = createActionHandler()
+
+            actionHandler.handleAction(action)
+
+            assertEquals(CheckoutFlowPhase.HandlingAction(action), stateStore.restore())
+        }
+
+        @Test
+        fun `when handleAction is called, then the phase is saved before the component handles the action`() {
+            var phaseOnHandleAction: CheckoutFlowPhase? = null
+            ActionComponentProvider.register(
+                TEST_ACTION_TYPE,
+                object : ActionFactory<Action, ActionComponent> {
+                    override fun create(
+                        action: Action,
+                        coroutineScope: CoroutineScope,
+                        analyticsManager: AnalyticsManager,
+                        params: CheckoutParams,
+                        savedStateHandle: SavedStateHandle,
+                    ) = ControllableActionComponent(eventFlow) { phaseOnHandleAction = stateStore.restore() }
+                },
+            )
+            val action = TestAction(type = TEST_ACTION_TYPE)
+            val actionHandler = createActionHandler()
+
+            actionHandler.handleAction(action)
+
+            assertEquals(CheckoutFlowPhase.HandlingAction(action), phaseOnHandleAction)
+        }
+
+        @Test
+        fun `when the action type is not registered, then the phase is not saved`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
+
+            assertNull(stateStore.restore())
+        }
     }
 
     @Nested
@@ -350,6 +411,7 @@ internal class ActionHandlerTest(
         analyticsManager = TestAnalyticsManager(),
         params = generateCheckoutParams(),
         savedStateHandle = savedStateHandle,
+        stateStore = stateStore,
         onAction = onAction,
     )
 
@@ -367,6 +429,7 @@ internal class ActionHandlerTest(
 
     private class ControllableActionComponent(
         override val eventFlow: Flow<ActionComponentEvent>,
+        private val onHandleAction: () -> Unit = {},
     ) : ActionComponent {
 
         var handleActionCallCount = 0
@@ -377,6 +440,7 @@ internal class ActionHandlerTest(
 
         override fun handleAction() {
             handleActionCallCount++
+            onHandleAction()
         }
     }
 
