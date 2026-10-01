@@ -66,12 +66,39 @@ internal class CheckoutFlowStateStoreTest {
     }
 
     @Test
-    fun `when the saved state belongs to another target, then it is cleared`() {
-        createStore(target = CheckoutTarget.PaymentMethod("ideal")).save(CheckoutFlowPhase.Submitted)
+    fun `when another target restores first, then the saved state is kept`() {
+        val action = TestAction(type = "redirect")
+        createStore(target = CheckoutTarget.PaymentMethod("scheme")).save(CheckoutFlowPhase.HandlingAction(action))
 
-        createStore(target = CheckoutTarget.PaymentMethod("scheme")).restore()
+        createStore(target = CheckoutTarget.PaymentMethod("googlepay")).restore()
 
-        assertNull(createStore(target = CheckoutTarget.PaymentMethod("ideal")).restore())
+        assertEquals(
+            CheckoutFlowPhase.HandlingAction(action),
+            createStore(target = CheckoutTarget.PaymentMethod("scheme")).restore(),
+        )
+    }
+
+    @Test
+    fun `when two targets save a phase, then each restores its own`() {
+        val cardTarget = CheckoutTarget.PaymentMethod("scheme")
+        val googlePayTarget = CheckoutTarget.PaymentMethod("googlepay")
+        createStore(target = cardTarget).save(CheckoutFlowPhase.Submitted)
+        createStore(target = googlePayTarget).save(CheckoutFlowPhase.Input)
+
+        assertEquals(CheckoutFlowPhase.Submitted, createStore(target = cardTarget).restore())
+        assertEquals(CheckoutFlowPhase.Input, createStore(target = googlePayTarget).restore())
+    }
+
+    @Test
+    fun `when another target clears its saved state, then the saved state is kept`() {
+        val cardTarget = CheckoutTarget.PaymentMethod("scheme")
+        val googlePayTarget = CheckoutTarget.PaymentMethod("googlepay")
+        createStore(target = cardTarget).save(CheckoutFlowPhase.Submitted)
+        createStore(target = googlePayTarget).save(CheckoutFlowPhase.Submitted)
+
+        createStore(target = googlePayTarget).clear()
+
+        assertEquals(CheckoutFlowPhase.Submitted, createStore(target = cardTarget).restore())
     }
 
     @Test
