@@ -9,11 +9,11 @@
 package com.adyen.checkout.googlepay.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
-import com.adyen.checkout.googlepay.GooglePayButtonStyling
+import com.adyen.checkout.googlepay.GooglePayButtonAppearance
 
 internal data class GooglePayComponentState(
     val allowedPaymentMethods: String,
-    val buttonStyling: GooglePayButtonStyling?,
+    val buttonAppearance: GooglePayButtonAppearance?,
     val isButtonVisible: Boolean,
     val isLoading: Boolean,
     val isAvailable: Boolean,

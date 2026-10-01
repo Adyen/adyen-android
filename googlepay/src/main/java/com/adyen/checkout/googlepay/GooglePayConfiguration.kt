@@ -29,7 +29,7 @@ class GooglePayConfiguration internal constructor(
     val isShippingAddressRequired: Boolean?,
     val shippingAddressParameters: ShippingAddressParameters?,
     val checkoutOption: String?,
-    val googlePayButtonStyling: GooglePayButtonStyling?,
+    val appearance: GooglePayButtonAppearance?,
 ) : Configuration
 
 /**
@@ -53,7 +53,7 @@ class GooglePayConfiguration internal constructor(
  * @param isShippingAddressRequired Whether a shipping address is required.
  * @param shippingAddressParameters The required shipping address details.
  * @param checkoutOption The checkout option, which affects the submit button text shown in the Google Pay sheet.
- * @param googlePayButtonStyling The customization of the Google Pay button.
+ * @param appearance The appearance of the Google Pay button.
  */
 @Suppress("LongParameterList")
 fun CheckoutConfiguration.googlePay(
@@ -68,7 +68,7 @@ fun CheckoutConfiguration.googlePay(
     isShippingAddressRequired: Boolean? = null,
     shippingAddressParameters: ShippingAddressParameters? = null,
     checkoutOption: String? = null,
-    googlePayButtonStyling: GooglePayButtonStyling? = null,
+    appearance: GooglePayButtonAppearance? = null,
 ): CheckoutConfiguration {
     val config = GooglePayConfiguration(
         merchantAccount = merchantAccount,
@@ -82,7 +82,7 @@ fun CheckoutConfiguration.googlePay(
         isShippingAddressRequired = isShippingAddressRequired,
         shippingAddressParameters = shippingAddressParameters,
         checkoutOption = checkoutOption,
-        googlePayButtonStyling = googlePayButtonStyling,
+        appearance = appearance,
     )
     addConfiguration(config)
     return this

@@ -27,7 +27,7 @@ internal class GooglePayViewStateProducerTest {
 
         val expected = GooglePayButtonViewState(
             allowedPaymentMethods = ALLOWED_PAYMENT_METHODS,
-            buttonStyling = null,
+            buttonAppearance = null,
             isLoading = true,
         )
         assertEquals(expected, actual.payButtonViewState)
@@ -78,7 +78,7 @@ internal class GooglePayViewStateProducerTest {
         isLoading: Boolean = false,
     ) = GooglePayComponentState(
         allowedPaymentMethods = ALLOWED_PAYMENT_METHODS,
-        buttonStyling = null,
+        buttonAppearance = null,
         isButtonVisible = isButtonVisible,
         isLoading = isLoading,
         isAvailable = isAvailable,

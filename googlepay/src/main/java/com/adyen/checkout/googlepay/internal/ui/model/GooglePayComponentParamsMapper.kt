@@ -48,7 +48,7 @@ internal class GooglePayComponentParamsMapper {
             isShippingAddressRequired = googlePayConfiguration?.isShippingAddressRequired ?: false,
             shippingAddressParameters = googlePayConfiguration?.shippingAddressParameters,
             checkoutOption = googlePayConfiguration?.checkoutOption,
-            googlePayButtonStyling = googlePayConfiguration?.googlePayButtonStyling,
+            googlePayButtonAppearance = googlePayConfiguration?.appearance,
         )
     }
 
