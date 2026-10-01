@@ -23,6 +23,7 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.error.CheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -43,6 +44,7 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -329,6 +331,61 @@ internal class FullCheckoutFlowTest(
             eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
 
             assertNull(createStateStore().restore())
+        }
+    }
+
+    @Nested
+    inner class RestoreTest {
+
+        @Test
+        fun `when restored in the submitted phase, then a generic failure is reported`() = runTest {
+            createStateStore().save(CheckoutFlowPhase.Submitted)
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            with(argumentCaptor<CheckoutError>()) {
+                verify(componentRequestDispatcher).failure(capture())
+                assertEquals(CheckoutError.ErrorCode.GENERIC, lastValue.code)
+            }
+        }
+
+        @Test
+        fun `when restored in the submitted phase, then submit requests are not dispatched`() = runTest {
+            createStateStore().save(CheckoutFlowPhase.Submitted)
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            verify(componentRequestDispatcher, never()).submit(any())
+        }
+
+        @Test
+        fun `when restored in the submitted phase, then the saved state is cleared`() = runTest {
+            createStateStore().save(CheckoutFlowPhase.Submitted)
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertNull(createStateStore().restore())
+        }
+
+        @Test
+        fun `when restored in the input phase, then no failure is reported`() = runTest {
+            createStateStore().save(CheckoutFlowPhase.Input)
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            verify(componentRequestDispatcher, never()).failure(any())
+        }
+
+        @Test
+        fun `when restored in the input phase, then submit requests are dispatched`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+            createStateStore().save(CheckoutFlowPhase.Input)
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            verify(componentRequestDispatcher).submit(any())
         }
     }
 
