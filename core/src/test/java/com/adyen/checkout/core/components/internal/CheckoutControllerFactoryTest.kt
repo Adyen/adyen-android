@@ -8,10 +8,18 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.data.TestAction
+import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.action.internal.ActionComponentProvider
+import com.adyen.checkout.core.action.internal.ActionFactory
+import com.adyen.checkout.core.action.internal.TestActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.components.ActionOnlyCheckoutCallbacks
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
@@ -31,6 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
@@ -44,16 +53,44 @@ internal class CheckoutControllerFactoryTest {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Unconfined)
 
+    private val savedStateHandle = SavedStateHandle()
+
     @Before
     fun setUp() {
         ApplicationContextHolder.set(RuntimeEnvironment.getApplication())
         PaymentMethodProvider.clear()
+        ActionComponentProvider.clear()
     }
 
     @After
     fun tearDown() {
         PaymentMethodProvider.clear()
+        ActionComponentProvider.clear()
         ApplicationContextHolder.reset()
+    }
+
+    @Test
+    fun `when an action only controller is created, then its action component receives the saved state handle`() {
+        var receivedSavedStateHandle: SavedStateHandle? = null
+        ActionComponentProvider.register(
+            TEST_ACTION_TYPE,
+            object : ActionFactory<Action, ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ): ActionComponent {
+                    receivedSavedStateHandle = savedStateHandle
+                    return TestActionComponent()
+                }
+            },
+        )
+
+        createActionOnlyController()
+
+        assertSame(savedStateHandle, receivedSavedStateHandle)
     }
 
     @Test
@@ -112,6 +149,26 @@ internal class CheckoutControllerFactoryTest {
             onFailure = {},
         ),
         coroutineScope = coroutineScope,
+        savedStateHandle = savedStateHandle,
+    )
+
+    private fun createActionOnlyController() = CheckoutControllerFactory().create(
+        context = CheckoutContext.ActionOnly(
+            action = TestAction(type = TEST_ACTION_TYPE),
+            checkoutConfiguration = CheckoutConfiguration(
+                environment = Environment.TEST,
+                clientKey = TEST_CLIENT_KEY,
+                shopperLocale = Locale.US,
+            ),
+            checkoutAttemptId = "",
+            publicKey = null,
+        ),
+        callbacks = ActionOnlyCheckoutCallbacks(
+            onAdditionalDetails = { AdditionalDetailsResult.Completion("Authorised") },
+            onFailure = {},
+        ),
+        coroutineScope = coroutineScope,
+        savedStateHandle = savedStateHandle,
     )
 
     private fun registerThrowingFactory(throwable: Throwable) {
@@ -132,6 +189,7 @@ internal class CheckoutControllerFactoryTest {
 
     companion object {
         private const val TEST_PAYMENT_METHOD_TYPE = "test_payment_method"
+        private const val TEST_ACTION_TYPE = "test_action"
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }
