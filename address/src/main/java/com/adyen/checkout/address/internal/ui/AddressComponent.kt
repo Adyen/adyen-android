@@ -41,8 +41,9 @@ import kotlinx.coroutines.flow.stateIn
  * A form that collects an address for another component, its host. It is not a payment component: it never submits,
  * and it is only reachable through its host.
  *
- * - The host lists the address component in its [SecondaryScreenComponent.childScreenComponents], so the address
- *   component's screens, the form and its country picker, open on the host's back stack.
+ * - The address component's screens, the form and its country picker, are opened through [navigation]. Only the host
+ *   is attached to the secondary screen back stack, so it merges [navigation] into its own, and has [SecondaryContent]
+ *   render every screen for which [hasScreen] is true.
  * - [show] opens the form. The host passes the address confirmed last, so the shopper can change it.
  * - A valid confirmation closes the form and is reported through [eventFlow]. The host keeps the address.
  */
@@ -93,12 +94,17 @@ class AddressComponent internal constructor(
     }
 
     /**
+     * Whether [identifier] is one of the address component's own screens, which the host passes to [SecondaryContent].
+     */
+    fun hasScreen(identifier: String): Boolean = AddressSecondaryContentEntry.fromKey(identifier) != null
+
+    /**
      * Opens the form on [address], or on an empty form when null. Edits the shopper dismissed without confirming are
      * dropped.
      */
     fun show(address: AddressModel?) {
         onIntent(AddressIntent.Prefill(address))
-        navigationChannel.trySend(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM))
+        navigationChannel.trySend(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM.key))
     }
 
     @VisibleForTesting
@@ -114,7 +120,7 @@ class AddressComponent internal constructor(
 
     @VisibleForTesting
     internal fun onCountryPickerClick() {
-        navigationChannel.trySend(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.COUNTRY_PICKER))
+        navigationChannel.trySend(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.COUNTRY_PICKER.key))
     }
 
     @VisibleForTesting

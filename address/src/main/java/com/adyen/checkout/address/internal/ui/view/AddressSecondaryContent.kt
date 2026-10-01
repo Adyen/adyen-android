@@ -29,7 +29,7 @@ internal fun AddressSecondaryContent(
 ) {
     val viewState by viewStateFlow.collectAsStateWithLifecycle()
 
-    when (identifier) {
+    when (AddressSecondaryContentEntry.fromKey(identifier)) {
         AddressSecondaryContentEntry.FORM -> AddressFormContent(
             viewState = viewState,
             onIntent = onIntent,
@@ -43,14 +43,22 @@ internal fun AddressSecondaryContent(
             onItemClick = onCountryClick,
             modifier = modifier,
         )
+
+        null -> Unit
     }
 }
 
 /**
- * The keys of the address component's secondary screens. They open on the back stack of the component hosting the
- * address form, which has the address component render them.
+ * The address component's secondary screens. Their keys share the back stack of the component hosting the address
+ * form, so they are prefixed to stay clear of the host's own keys.
+ *
+ * @param key The key the screen is opened with, and saved under in the back stack.
  */
-internal object AddressSecondaryContentEntry {
-    const val FORM = "ADDRESS_FORM"
-    const val COUNTRY_PICKER = "ADDRESS_COUNTRY_PICKER"
+internal enum class AddressSecondaryContentEntry(val key: String) {
+    FORM("ADDRESS_FORM"),
+    COUNTRY_PICKER("ADDRESS_COUNTRY_PICKER");
+
+    companion object {
+        fun fromKey(key: String): AddressSecondaryContentEntry? = entries.find { it.key == key }
+    }
 }

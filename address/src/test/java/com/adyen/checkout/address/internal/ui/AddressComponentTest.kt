@@ -25,6 +25,8 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.Locale
 
@@ -41,7 +43,7 @@ internal class AddressComponentTest {
             component.show(address = null)
 
             // THEN
-            assertEquals(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM), awaitItem())
+            assertEquals(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM.key), awaitItem())
         }
     }
 
@@ -80,6 +82,26 @@ internal class AddressComponentTest {
     }
 
     @Test
+    fun `when asked about one of its own screens, then the component has it`() {
+        // GIVEN
+        val component = createComponent()
+
+        // THEN
+        AddressSecondaryContentEntry.entries.forEach { entry ->
+            assertTrue(component.hasScreen(entry.key))
+        }
+    }
+
+    @Test
+    fun `when asked about a screen of its host, then the component does not have it`() {
+        // GIVEN
+        val component = createComponent()
+
+        // THEN
+        assertFalse(component.hasScreen("INSTALLMENTS"))
+    }
+
+    @Test
     fun `when the country field is clicked, then the country picker is opened`() = runTest {
         // GIVEN
         val component = createComponent()
@@ -89,7 +111,7 @@ internal class AddressComponentTest {
             component.onCountryPickerClick()
 
             // THEN
-            assertEquals(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.COUNTRY_PICKER), awaitItem())
+            assertEquals(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.COUNTRY_PICKER.key), awaitItem())
         }
     }
 
