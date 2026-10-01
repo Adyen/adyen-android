@@ -95,7 +95,7 @@ public final class com/adyen/checkout/googlepay/GooglePayAllowedPaymentMethods$C
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/googlepay/GooglePayButtonStyling : android/os/Parcelable {
+public final class com/adyen/checkout/googlepay/GooglePayButtonAppearance : android/os/Parcelable {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun <init> ()V
@@ -104,40 +104,62 @@ public final class com/adyen/checkout/googlepay/GooglePayButtonStyling : android
 	public final fun component1 ()Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
 	public final fun component2 ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
 	public final fun component3 ()Ljava/lang/Integer;
-	public final fun copy (Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;Lcom/adyen/checkout/googlepay/GooglePayButtonType;Ljava/lang/Integer;)Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;Lcom/adyen/checkout/googlepay/GooglePayButtonType;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;
+	public final fun copy (Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;Lcom/adyen/checkout/googlepay/GooglePayButtonType;Ljava/lang/Integer;)Lcom/adyen/checkout/googlepay/GooglePayButtonAppearance;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/googlepay/GooglePayButtonAppearance;Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;Lcom/adyen/checkout/googlepay/GooglePayButtonType;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/googlepay/GooglePayButtonAppearance;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getButtonTheme ()Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
-	public final fun getButtonType ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
 	public final fun getCornerRadius ()Ljava/lang/Integer;
+	public final fun getTheme ()Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
+	public final fun getType ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/googlepay/GooglePayButtonTheme : java/lang/Enum {
-	public static final field DARK Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
-	public static final field LIGHT Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+public final class com/adyen/checkout/googlepay/GooglePayButtonTheme : android/os/Parcelable {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/googlepay/GooglePayButtonTheme$Companion;
+	public synthetic fun <init> (ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getValue ()I
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
-	public static fun values ()[Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/googlepay/GooglePayButtonType : java/lang/Enum {
-	public static final field BOOK Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static final field BUY Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static final field CHECKOUT Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static final field DONATE Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static final field ORDER Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static final field PAY Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static final field PLAIN Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static final field SUBSCRIBE Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+public final class com/adyen/checkout/googlepay/GooglePayButtonTheme$Companion {
+	public final fun getDARK ()Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
+	public final fun getLIGHT ()Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
+}
+
+public final class com/adyen/checkout/googlepay/GooglePayButtonType : android/os/Parcelable {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/googlepay/GooglePayButtonType$Companion;
+	public synthetic fun <init> (ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getValue ()I
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/googlepay/GooglePayButtonType;
-	public static fun values ()[Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/googlepay/GooglePayButtonType$Companion {
+	public final fun getBOOK ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getBUY ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getCHECKOUT ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getDONATE ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getEWALLET ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getORDER ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getPAY ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getPIX ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getPLAIN ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
+	public final fun getSUBSCRIBE ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
 }
 
 public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/adyen/checkout/core/components/internal/Configuration {
@@ -145,9 +167,9 @@ public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/ady
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public final fun describeContents ()I
 	public final fun getAllowedPaymentMethods ()Lcom/adyen/checkout/googlepay/GooglePayAllowedPaymentMethods;
+	public final fun getAppearance ()Lcom/adyen/checkout/googlepay/GooglePayButtonAppearance;
 	public final fun getCheckoutOption ()Ljava/lang/String;
 	public final fun getCountryCode ()Ljava/lang/String;
-	public final fun getGooglePayButtonStyling ()Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;
 	public final fun getGooglePayEnvironment ()Ljava/lang/Integer;
 	public final fun getMerchantAccount ()Ljava/lang/String;
 	public final fun getMerchantInfo ()Lcom/adyen/checkout/googlepay/MerchantInfo;
@@ -160,8 +182,8 @@ public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/ady
 }
 
 public final class com/adyen/checkout/googlepay/GooglePayConfigurationKt {
-	public static final fun googlePay (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/googlepay/MerchantInfo;Lcom/adyen/checkout/googlepay/GooglePayAllowedPaymentMethods;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/ShippingAddressParameters;Ljava/lang/String;Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static synthetic fun googlePay$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/googlepay/MerchantInfo;Lcom/adyen/checkout/googlepay/GooglePayAllowedPaymentMethods;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/ShippingAddressParameters;Ljava/lang/String;Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun googlePay (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/googlepay/MerchantInfo;Lcom/adyen/checkout/googlepay/GooglePayAllowedPaymentMethods;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/ShippingAddressParameters;Ljava/lang/String;Lcom/adyen/checkout/googlepay/GooglePayButtonAppearance;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun googlePay$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/googlepay/MerchantInfo;Lcom/adyen/checkout/googlepay/GooglePayAllowedPaymentMethods;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/ShippingAddressParameters;Ljava/lang/String;Lcom/adyen/checkout/googlepay/GooglePayButtonAppearance;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
 public abstract class com/adyen/checkout/googlepay/IssuerCountryCodes : android/os/Parcelable {
