@@ -48,7 +48,7 @@ internal class CheckoutFlowStateStore(
     }
 
     @Parcelize
-    private data class CheckoutFlowSavedState(
+    internal data class CheckoutFlowSavedState(
         val targetId: String?,
         val phase: CheckoutFlowPhase,
     ) : Parcelable
