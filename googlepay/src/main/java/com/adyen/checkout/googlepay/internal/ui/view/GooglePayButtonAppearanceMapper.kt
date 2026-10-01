@@ -28,5 +28,7 @@ internal fun GooglePayButtonType.toButtonType(): ButtonType = when (this) {
     GooglePayButtonType.PAY -> ButtonType.Pay
     GooglePayButtonType.PLAIN -> ButtonType.Plain
     GooglePayButtonType.SUBSCRIBE -> ButtonType.Subscribe
+    GooglePayButtonType.PIX -> ButtonType.PIX
+    GooglePayButtonType.EWALLET -> ButtonType.EWALLET
     else -> ButtonType.Plain
 }

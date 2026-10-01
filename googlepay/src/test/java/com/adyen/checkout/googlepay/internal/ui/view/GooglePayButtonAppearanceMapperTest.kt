@@ -30,12 +30,14 @@ internal class GooglePayButtonAppearanceMapperTest {
     @Test
     fun `when toButtonType is called with each type, then it maps to the matching ButtonType`() {
         assertEquals(ButtonType.Book, GooglePayButtonType.BOOK.toButtonType())
+        assertEquals(ButtonType.Buy, GooglePayButtonType.BUY.toButtonType())
         assertEquals(ButtonType.Checkout, GooglePayButtonType.CHECKOUT.toButtonType())
         assertEquals(ButtonType.Donate, GooglePayButtonType.DONATE.toButtonType())
         assertEquals(ButtonType.Order, GooglePayButtonType.ORDER.toButtonType())
         assertEquals(ButtonType.Pay, GooglePayButtonType.PAY.toButtonType())
-        assertEquals(ButtonType.Subscribe, GooglePayButtonType.SUBSCRIBE.toButtonType())
         assertEquals(ButtonType.Plain, GooglePayButtonType.PLAIN.toButtonType())
-        assertEquals(ButtonType.Buy, GooglePayButtonType.BUY.toButtonType())
+        assertEquals(ButtonType.Subscribe, GooglePayButtonType.SUBSCRIBE.toButtonType())
+        assertEquals(ButtonType.PIX, GooglePayButtonType.PIX.toButtonType())
+        assertEquals(ButtonType.EWALLET, GooglePayButtonType.EWALLET.toButtonType())
     }
 }

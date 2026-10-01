@@ -45,13 +45,15 @@ data class GooglePayButtonType private constructor(
     val value: Int,
 ) : Parcelable {
     companion object {
-        val BUY = GooglePayButtonType(ButtonConstants.ButtonType.BUY)
         val BOOK = GooglePayButtonType(ButtonConstants.ButtonType.BOOK)
+        val BUY = GooglePayButtonType(ButtonConstants.ButtonType.BUY)
         val CHECKOUT = GooglePayButtonType(ButtonConstants.ButtonType.CHECKOUT)
         val DONATE = GooglePayButtonType(ButtonConstants.ButtonType.DONATE)
         val ORDER = GooglePayButtonType(ButtonConstants.ButtonType.ORDER)
         val PAY = GooglePayButtonType(ButtonConstants.ButtonType.PAY)
-        val SUBSCRIBE = GooglePayButtonType(ButtonConstants.ButtonType.SUBSCRIBE)
         val PLAIN = GooglePayButtonType(ButtonConstants.ButtonType.PLAIN)
+        val SUBSCRIBE = GooglePayButtonType(ButtonConstants.ButtonType.SUBSCRIBE)
+        val PIX = GooglePayButtonType(ButtonConstants.ButtonType.PIX)
+        val EWALLET = GooglePayButtonType(ButtonConstants.ButtonType.EWALLET)
     }
 }
