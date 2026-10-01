@@ -15,7 +15,7 @@ import com.google.pay.button.ButtonType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class GooglePayButtonStylingMapperTest {
+internal class GooglePayButtonAppearanceMapperTest {
 
     @Test
     fun `when toButtonTheme is called with LIGHT, then it maps to ButtonTheme Light`() {

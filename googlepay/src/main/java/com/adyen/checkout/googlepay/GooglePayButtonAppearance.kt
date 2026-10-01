@@ -16,15 +16,15 @@ import kotlinx.parcelize.Parcelize
 /**
  * Object to style the Google Pay button. Check [the Google docs](https://developers.google.com/pay/api/android/guides/resources/pay-button-api) for more details.
  *
- * @param buttonTheme Affects the color scheme of the button.
- * @param buttonType Changes the text displayed inside of the button.
+ * @param theme Affects the color scheme of the button.
+ * @param type Changes the text displayed inside the button.
  * @param cornerRadius Sets the corner radius of the button. For example, passing 16 means the radius will be 16 dp.
  */
 @Suppress("MaxLineLength")
 @Parcelize
-data class GooglePayButtonStyling(
-    val buttonTheme: GooglePayButtonTheme? = null,
-    val buttonType: GooglePayButtonType? = null,
+data class GooglePayButtonAppearance(
+    val theme: GooglePayButtonTheme? = null,
+    val type: GooglePayButtonType? = null,
     @Dimension(Dimension.DP) val cornerRadius: Int? = null,
 ) : Parcelable
 

@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.adyen.checkout.googlepay.GooglePayButtonStyling
+import com.adyen.checkout.googlepay.GooglePayButtonAppearance
 import com.adyen.checkout.googlepay.GooglePayButtonTheme
 import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayButtonViewState
@@ -34,7 +34,7 @@ internal fun GooglePayButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val buttonStyling = buttonViewState.buttonStyling
+    val buttonAppearance = buttonViewState.buttonAppearance
     val backgroundColor = CheckoutThemeProvider.colors.background
     val defaultButtonTheme = remember(backgroundColor) {
         if (backgroundColor.isDark()) ButtonTheme.Light else ButtonTheme.Dark
@@ -44,9 +44,9 @@ internal fun GooglePayButton(
         onClick = onClick,
         allowedPaymentMethods = buttonViewState.allowedPaymentMethods,
         modifier = modifier.fillMaxWidth(),
-        theme = buttonStyling?.buttonTheme?.toButtonTheme() ?: defaultButtonTheme,
-        type = buttonStyling?.buttonType?.toButtonType() ?: ButtonType.Buy,
-        radius = buttonStyling?.cornerRadius?.dp ?: DEFAULT_CORNER_RADIUS,
+        theme = buttonAppearance?.theme?.toButtonTheme() ?: defaultButtonTheme,
+        type = buttonAppearance?.type?.toButtonType() ?: ButtonType.Buy,
+        radius = buttonAppearance?.cornerRadius?.dp ?: DEFAULT_CORNER_RADIUS,
         enabled = !buttonViewState.isLoading,
     )
 }
@@ -62,7 +62,7 @@ private fun GooglePayButtonPreview(
         GooglePayButton(
             buttonViewState = GooglePayButtonViewState(
                 allowedPaymentMethods = "[]",
-                buttonStyling = null,
+                buttonAppearance = null,
                 isLoading = false,
             ),
             onClick = {},
@@ -70,8 +70,8 @@ private fun GooglePayButtonPreview(
         GooglePayButton(
             buttonViewState = GooglePayButtonViewState(
                 allowedPaymentMethods = "[]",
-                buttonStyling = GooglePayButtonStyling(
-                    buttonType = GooglePayButtonType.PAY,
+                buttonAppearance = GooglePayButtonAppearance(
+                    type = GooglePayButtonType.PAY,
                     cornerRadius = 8,
                 ),
                 isLoading = false,
@@ -81,8 +81,8 @@ private fun GooglePayButtonPreview(
         GooglePayButton(
             buttonViewState = GooglePayButtonViewState(
                 allowedPaymentMethods = "[]",
-                buttonStyling = GooglePayButtonStyling(
-                    buttonType = GooglePayButtonType.CHECKOUT,
+                buttonAppearance = GooglePayButtonAppearance(
+                    type = GooglePayButtonType.CHECKOUT,
                     cornerRadius = 0,
                 ),
                 isLoading = true,
@@ -92,8 +92,8 @@ private fun GooglePayButtonPreview(
         GooglePayButton(
             buttonViewState = GooglePayButtonViewState(
                 allowedPaymentMethods = "[]",
-                buttonStyling = GooglePayButtonStyling(
-                    buttonTheme = GooglePayButtonTheme.LIGHT,
+                buttonAppearance = GooglePayButtonAppearance(
+                    theme = GooglePayButtonTheme.LIGHT,
                 ),
                 isLoading = false,
             ),
@@ -102,8 +102,8 @@ private fun GooglePayButtonPreview(
         GooglePayButton(
             buttonViewState = GooglePayButtonViewState(
                 allowedPaymentMethods = "[]",
-                buttonStyling = GooglePayButtonStyling(
-                    buttonTheme = GooglePayButtonTheme.DARK,
+                buttonAppearance = GooglePayButtonAppearance(
+                    theme = GooglePayButtonTheme.DARK,
                 ),
                 isLoading = false,
             ),

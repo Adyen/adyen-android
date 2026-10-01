@@ -18,7 +18,7 @@ internal class GooglePayComponentStateFactory(
 
     override fun createInitialState() = GooglePayComponentState(
         allowedPaymentMethods = GooglePayUtils.getAllowedPaymentMethodsJson(componentParams),
-        buttonStyling = componentParams.googlePayButtonStyling,
+        buttonAppearance = componentParams.googlePayButtonAppearance,
         isButtonVisible = true,
         isLoading = false,
         isAvailable = false,

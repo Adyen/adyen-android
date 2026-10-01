@@ -23,7 +23,7 @@ internal class GooglePayViewStateProducer(
         if (!showSubmitButton || !state.isAvailable || !state.isButtonVisible) return null
         return GooglePayButtonViewState(
             allowedPaymentMethods = state.allowedPaymentMethods,
-            buttonStyling = state.buttonStyling,
+            buttonAppearance = state.buttonAppearance,
             isLoading = state.isLoading,
         )
     }

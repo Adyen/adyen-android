@@ -55,7 +55,7 @@ internal class GooglePayComponentStateValidatorTest {
 
     private fun createState() = GooglePayComponentState(
         allowedPaymentMethods = "[]",
-        buttonStyling = null,
+        buttonAppearance = null,
         isButtonVisible = false,
         isLoading = false,
         isAvailable = true,
