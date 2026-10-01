@@ -16,15 +16,17 @@ import com.google.pay.button.ButtonType
 internal fun GooglePayButtonTheme.toButtonTheme(): ButtonTheme = when (this) {
     GooglePayButtonTheme.LIGHT -> ButtonTheme.Light
     GooglePayButtonTheme.DARK -> ButtonTheme.Dark
+    else -> ButtonTheme.Light
 }
 
 internal fun GooglePayButtonType.toButtonType(): ButtonType = when (this) {
     GooglePayButtonType.BOOK -> ButtonType.Book
+    GooglePayButtonType.BUY -> ButtonType.Buy
     GooglePayButtonType.CHECKOUT -> ButtonType.Checkout
     GooglePayButtonType.DONATE -> ButtonType.Donate
     GooglePayButtonType.ORDER -> ButtonType.Order
     GooglePayButtonType.PAY -> ButtonType.Pay
-    GooglePayButtonType.SUBSCRIBE -> ButtonType.Subscribe
     GooglePayButtonType.PLAIN -> ButtonType.Plain
-    GooglePayButtonType.BUY -> ButtonType.Buy
+    GooglePayButtonType.SUBSCRIBE -> ButtonType.Subscribe
+    else -> ButtonType.Plain
 }

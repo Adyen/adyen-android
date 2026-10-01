@@ -28,22 +28,30 @@ data class GooglePayButtonAppearance(
     @Dimension(Dimension.DP) val cornerRadius: Int? = null,
 ) : Parcelable
 
-enum class GooglePayButtonTheme(
+@Parcelize
+@ConsistentCopyVisibility
+data class GooglePayButtonTheme private constructor(
     val value: Int,
-) {
-    LIGHT(ButtonConstants.ButtonTheme.LIGHT),
-    DARK(ButtonConstants.ButtonTheme.DARK),
+) : Parcelable {
+    companion object {
+        val LIGHT = GooglePayButtonTheme(ButtonConstants.ButtonTheme.LIGHT)
+        val DARK = GooglePayButtonTheme(ButtonConstants.ButtonTheme.DARK)
+    }
 }
 
-enum class GooglePayButtonType(
+@Parcelize
+@ConsistentCopyVisibility
+data class GooglePayButtonType private constructor(
     val value: Int,
-) {
-    BUY(ButtonConstants.ButtonType.BUY),
-    BOOK(ButtonConstants.ButtonType.BOOK),
-    CHECKOUT(ButtonConstants.ButtonType.CHECKOUT),
-    DONATE(ButtonConstants.ButtonType.DONATE),
-    ORDER(ButtonConstants.ButtonType.ORDER),
-    PAY(ButtonConstants.ButtonType.PAY),
-    SUBSCRIBE(ButtonConstants.ButtonType.SUBSCRIBE),
-    PLAIN(ButtonConstants.ButtonType.PLAIN),
+) : Parcelable {
+    companion object {
+        val BUY = GooglePayButtonType(ButtonConstants.ButtonType.BUY)
+        val BOOK = GooglePayButtonType(ButtonConstants.ButtonType.BOOK)
+        val CHECKOUT = GooglePayButtonType(ButtonConstants.ButtonType.CHECKOUT)
+        val DONATE = GooglePayButtonType(ButtonConstants.ButtonType.DONATE)
+        val ORDER = GooglePayButtonType(ButtonConstants.ButtonType.ORDER)
+        val PAY = GooglePayButtonType(ButtonConstants.ButtonType.PAY)
+        val SUBSCRIBE = GooglePayButtonType(ButtonConstants.ButtonType.SUBSCRIBE)
+        val PLAIN = GooglePayButtonType(ButtonConstants.ButtonType.PLAIN)
+    }
 }
