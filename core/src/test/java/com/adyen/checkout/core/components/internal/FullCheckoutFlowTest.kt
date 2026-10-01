@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
+import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -28,6 +30,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -38,6 +41,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -52,6 +56,8 @@ internal class FullCheckoutFlowTest(
 ) {
 
     private val eventFlow = MutableSharedFlow<PaymentComponentEvent>()
+
+    private val savedStateHandle = SavedStateHandle()
 
     @BeforeEach
     fun setUp() {
@@ -287,6 +293,50 @@ internal class FullCheckoutFlowTest(
         }
     }
 
+    @Nested
+    inner class SavedStateTest {
+
+        @Test
+        fun `when submit event is received, then the submitted phase is saved before the request is dispatched`() =
+            runTest {
+                var phaseDuringSubmit: CheckoutFlowPhase? = null
+                whenever(componentRequestDispatcher.submit(any())) doSuspendableAnswer {
+                    phaseDuringSubmit = createStateStore().restore()
+                    SubmitResult.Retry()
+                }
+                createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+                eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+                assertEquals(CheckoutFlowPhase.Submitted, phaseDuringSubmit)
+            }
+
+        @Test
+        fun `when submit results in Retry, then the input phase is saved`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            assertEquals(CheckoutFlowPhase.Input, createStateStore().restore())
+        }
+
+        @Test
+        fun `when submit results in Completion, then the saved state is cleared`() = runTest {
+            whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Completion("Authorised")
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            assertNull(createStateStore().restore())
+        }
+    }
+
+    private fun createStateStore() = CheckoutFlowStateStore(
+        savedStateHandle = savedStateHandle,
+        target = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
+    )
+
     private fun createFullCheckoutFlow(
         coroutineScope: CoroutineScope,
         requiresUserInteraction: Boolean = true,
@@ -299,6 +349,7 @@ internal class FullCheckoutFlowTest(
             coroutineScope = coroutineScope,
             paymentComponent = component,
             actionHandler = actionHandler,
+            stateStore = createStateStore(),
         )
     }
 

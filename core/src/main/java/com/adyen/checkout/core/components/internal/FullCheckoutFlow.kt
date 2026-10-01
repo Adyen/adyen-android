@@ -26,6 +26,7 @@ internal class FullCheckoutFlow(
     coroutineScope: CoroutineScope,
     override val paymentComponent: PaymentComponent,
     private val actionHandler: ActionHandler,
+    private val stateStore: CheckoutFlowStateStore,
 ) : CheckoutFlow {
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
@@ -44,6 +45,7 @@ internal class FullCheckoutFlow(
                             return@onEach
                         }
                         paymentComponent.setLoading(true)
+                        stateStore.save(CheckoutFlowPhase.Submitted)
                         val result = componentRequestDispatcher.submit(event.state.data)
                         handleResult(result)
                     }
@@ -70,10 +72,12 @@ internal class FullCheckoutFlow(
             }
 
             is SubmitResult.Completion -> {
+                stateStore.clear()
                 componentRequestDispatcher.complete(CheckoutResultCode(submitResult.resultCode))
             }
 
             is SubmitResult.Retry -> {
+                stateStore.save(CheckoutFlowPhase.Input)
                 canSubmit.set(true)
                 paymentComponent.setLoading(false)
             }
