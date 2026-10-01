@@ -233,6 +233,7 @@ internal class V6ViewModel @Inject constructor(
                 )
             },
             coroutineScope = viewModelScope,
+            savedStateHandle = savedStateHandle,
         ).also {
             checkoutController = it
         }

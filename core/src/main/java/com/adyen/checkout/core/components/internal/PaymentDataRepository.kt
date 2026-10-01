@@ -28,7 +28,7 @@ class PaymentDataRepository(
         }
 
     companion object {
-        private const val PAYMENT_DATA_KEY = "payment_data"
-        private const val NATIVE_REDIRECT_DATA = "native_redirect_data"
+        private const val PAYMENT_DATA_KEY = "adyen_checkout_payment_data"
+        private const val NATIVE_REDIRECT_DATA = "adyen_checkout_native_redirect_data"
     }
 }
