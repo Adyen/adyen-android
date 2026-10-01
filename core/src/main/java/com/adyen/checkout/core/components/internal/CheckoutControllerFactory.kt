@@ -95,6 +95,7 @@ internal class CheckoutControllerFactory {
             analyticsManager = analyticsManager,
             params = checkoutParams,
             savedStateHandle = savedStateHandle,
+            stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = null),
             onAction = {},
         )
         val flow = ActionOnlyCheckoutFlow(
@@ -147,12 +148,14 @@ internal class CheckoutControllerFactory {
             context = context,
             coroutineScope = coroutineScope,
         )
+        val stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = target)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
             savedStateHandle = savedStateHandle,
+            stateStore = stateStore,
             onAction = componentRequestDispatcher::action,
         )
         val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
@@ -172,6 +175,7 @@ internal class CheckoutControllerFactory {
                     coroutineScope = coroutineScope,
                     paymentComponent = paymentComponentResult.component,
                     actionHandler = actionHandler,
+                    stateStore = stateStore,
                 )
 
                 CheckoutController(
@@ -240,6 +244,7 @@ internal class CheckoutControllerFactory {
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,
         savedStateHandle: SavedStateHandle,
+        stateStore: CheckoutFlowStateStore,
         onAction: (ActionData) -> Unit,
     ) = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
@@ -247,6 +252,7 @@ internal class CheckoutControllerFactory {
         analyticsManager = analyticsManager,
         params = params,
         savedStateHandle = savedStateHandle,
+        stateStore = stateStore,
         onAction = onAction,
     )
 

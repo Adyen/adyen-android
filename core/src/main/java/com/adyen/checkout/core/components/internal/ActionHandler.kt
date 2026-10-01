@@ -29,12 +29,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-internal class ActionHandler(
+internal class ActionHandler
+@Suppress("LongParameterList")
+constructor(
     private val componentRequestDispatcher: ComponentRequestDispatcher,
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
     private val params: CheckoutParams,
     private val savedStateHandle: SavedStateHandle,
+    private val stateStore: CheckoutFlowStateStore,
     private val onAction: (ActionData) -> Unit,
 ) {
 
@@ -61,6 +64,7 @@ internal class ActionHandler(
             return
         }
         this.actionComponent = actionComponent
+        stateStore.save(CheckoutFlowPhase.HandlingAction(action))
 
         job = actionComponent.eventFlow
             .onEach { event ->
@@ -85,6 +89,7 @@ internal class ActionHandler(
     private fun handleResult(result: AdditionalDetailsResult) {
         when (result) {
             is AdditionalDetailsResult.Completion -> {
+                stateStore.clear()
                 componentRequestDispatcher.complete(CheckoutResultCode(result.resultCode))
             }
         }
