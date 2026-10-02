@@ -50,8 +50,8 @@ internal fun CountryCodePicker(
         modifier = modifier,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Medium)) {
-            Title(resolveString(CheckoutLocalizationKey.COUNTRY_PICKER_TITLE))
-            Body(resolveString(CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION))
+            Title(resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_TITLE))
+            Body(resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_DESCRIPTION))
         }
         ValuePicker(
             items = countries,
