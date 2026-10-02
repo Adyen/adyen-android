@@ -24,7 +24,8 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
-internal fun ValuePicker(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun ValuePicker(
     items: List<ValuePickerItem>,
     onItemClick: (ValuePickerItem) -> Unit,
     modifier: Modifier = Modifier,

@@ -10,6 +10,7 @@ package com.adyen.checkout.mbway.internal.ui.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,7 +20,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.mbway.internal.ui.state.CountryPickerViewState
-import com.adyen.checkout.ui.internal.element.SearchableValuePicker
+import com.adyen.checkout.ui.internal.element.ValuePicker
 import com.adyen.checkout.ui.internal.element.ValuePickerItem
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
@@ -52,13 +53,13 @@ internal fun CountryCodePicker(
             Title(resolveString(CheckoutLocalizationKey.COUNTRY_PICKER_TITLE))
             Body(resolveString(CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION))
         }
-        SearchableValuePicker(
-            searchHint = resolveString(CheckoutLocalizationKey.GENERAL_SEARCH_HINT),
+        ValuePicker(
             items = countries,
             onItemClick = { item ->
                 val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountry
                 onItemClick(country)
             },
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
