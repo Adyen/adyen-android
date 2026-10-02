@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +47,7 @@ fun SearchField(
 ) {
     val state = rememberTextFieldState()
     val style = CheckoutThemeProvider.elements.textField
+    val focusManager = LocalFocusManager.current
     CheckoutTextField(
         state = state,
         contentType = null,
@@ -56,6 +58,8 @@ fun SearchField(
         isError = isError,
         enabled = enabled,
         innerIndication = null,
+        // Clicking Done on the keyboard does not clear focus, so it has to be cleared manually
+        onKeyboardAction = { focusManager.clearFocus() },
         trailingIcon = {
             TrailingSearchIcon(
                 isQueryEmpty = state.text.isEmpty(),
