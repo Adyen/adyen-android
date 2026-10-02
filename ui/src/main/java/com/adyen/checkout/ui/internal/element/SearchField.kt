@@ -58,6 +58,7 @@ fun SearchField(
         isError = isError,
         enabled = enabled,
         innerIndication = null,
+        // Clicking Done on the keyboard does not clear focus, so it has to be cleared manually
         onKeyboardAction = { focusManager.clearFocus() },
         trailingIcon = {
             TrailingSearchIcon(
