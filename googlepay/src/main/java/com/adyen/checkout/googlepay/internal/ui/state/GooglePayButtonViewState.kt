@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.googlepay.internal.ui.state
 
-import com.adyen.checkout.googlepay.GooglePayButtonStyling
+import com.adyen.checkout.googlepay.GooglePayButtonAppearance
 
 internal data class GooglePayButtonViewState(
     val allowedPaymentMethods: String,
-    val buttonStyling: GooglePayButtonStyling?,
+    val buttonAppearance: GooglePayButtonAppearance?,
     val isLoading: Boolean,
 )

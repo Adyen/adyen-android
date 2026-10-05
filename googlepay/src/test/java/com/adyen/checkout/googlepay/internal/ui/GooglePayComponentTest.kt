@@ -17,7 +17,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.error.internal.PaymentMethodUnavailableError
-import com.adyen.checkout.googlepay.GooglePayButtonStyling
+import com.adyen.checkout.googlepay.GooglePayButtonAppearance
 import com.adyen.checkout.googlepay.internal.helper.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.helper.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
@@ -258,16 +258,16 @@ internal class GooglePayComponentTest {
     @Test
     fun `when component is created, then the button view state exposes allowed payment methods and styling`() =
         runTest {
-            val buttonStyling = GooglePayButtonStyling()
+            val buttonAppearance = GooglePayButtonAppearance()
             val component = createComponent(
                 coroutineScope = CoroutineScope(UnconfinedTestDispatcher(testScheduler)),
-                googlePayButtonStyling = buttonStyling,
+                googlePayButtonAppearance = buttonAppearance,
             )
             val viewState = component.viewState.test(testScheduler)
 
             val buttonViewState = requireNotNull(viewState.latestValue.payButtonViewState)
             assertTrue(buttonViewState.allowedPaymentMethods.isNotEmpty())
-            assertEquals(buttonStyling, buttonViewState.buttonStyling)
+            assertEquals(buttonAppearance, buttonViewState.buttonAppearance)
         }
 
     @Test
@@ -299,11 +299,11 @@ internal class GooglePayComponentTest {
     private fun createComponent(
         coroutineScope: CoroutineScope,
         googlePayAvailabilityCheck: GooglePayAvailabilityCheck = mockGooglePayAvailabilityCheck(isAvailable = true),
-        googlePayButtonStyling: GooglePayButtonStyling? = null,
+        googlePayButtonAppearance: GooglePayButtonAppearance? = null,
         paymentMethodType: String = TEST_PAYMENT_METHOD_TYPE,
         sdkDataProvider: SdkDataProvider = mock(),
     ): GooglePayComponent {
-        val componentParams = createComponentParams(googlePayButtonStyling)
+        val componentParams = createComponentParams(googlePayButtonAppearance)
         return GooglePayComponent(
             analyticsManager = analyticsManager,
             componentParams = componentParams,
@@ -319,7 +319,7 @@ internal class GooglePayComponentTest {
     }
 
     private fun createComponentParams(
-        googlePayButtonStyling: GooglePayButtonStyling? = null,
+        googlePayButtonAppearance: GooglePayButtonAppearance? = null,
     ) = GooglePayComponentParams(
         amount = Amount("USD", 0),
         gatewayMerchantId = "TEST_GATEWAY_MERCHANT_ID",
@@ -344,7 +344,7 @@ internal class GooglePayComponentTest {
         isShippingAddressRequired = false,
         shippingAddressParameters = null,
         checkoutOption = null,
-        googlePayButtonStyling = googlePayButtonStyling,
+        googlePayButtonAppearance = googlePayButtonAppearance,
     )
 
     private fun createResult(
