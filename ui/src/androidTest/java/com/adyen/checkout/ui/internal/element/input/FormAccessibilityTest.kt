@@ -4,7 +4,7 @@
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.ui.internal.element.input
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.ui.Modifier
@@ -15,8 +15,6 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
-import com.adyen.checkout.ui.internal.element.input.ValuePickerField
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import org.junit.Rule
