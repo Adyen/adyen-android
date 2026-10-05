@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.core.common.internal.ui.ScreenHeader
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
@@ -24,8 +25,6 @@ import com.adyen.checkout.ui.internal.element.ValuePicker
 import com.adyen.checkout.ui.internal.element.ValuePickerItem
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
-import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -49,10 +48,11 @@ internal fun CountryCodePicker(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         modifier = modifier,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Medium)) {
-            Title(resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_TITLE))
-            Body(resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_DESCRIPTION))
-        }
+        ScreenHeader(
+            title = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_TITLE),
+            subtitle = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE_PICKER_DESCRIPTION),
+        )
+
         ValuePicker(
             items = countries,
             onItemClick = { item ->
