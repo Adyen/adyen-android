@@ -43,6 +43,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.error
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -122,7 +124,12 @@ fun CheckoutTextField(
     val focusRequester = remember { FocusRequester() }
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val autofillModifier = contentType?.let { modifier.contentType(it) } ?: modifier
-    val focusModifier = autofillModifier
+    val semanticsModifier = if (isError && supportingText != null) {
+        autofillModifier.semantics { error(supportingText) }
+    } else {
+        autofillModifier
+    }
+    val focusModifier = semanticsModifier
         .focusRequester(focusRequester)
         .bringIntoViewRequester(bringIntoViewRequester)
     val textStyle = TextStyle(
