@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
@@ -39,6 +40,7 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext.Advanced,
         callbacks: AdvancedCheckoutCallbacks,
         coroutineScope: CoroutineScope,
+        savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
         val componentRequestDispatcher = AdvancedComponentRequestDispatcher(callbacks)
         createFullCheckoutController(
@@ -47,6 +49,7 @@ internal class CheckoutControllerFactory {
             callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
+            savedStateHandle = savedStateHandle,
         )
     }
 
@@ -55,6 +58,7 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext.Sessions,
         callbacks: SessionCheckoutCallbacks,
         coroutineScope: CoroutineScope,
+        savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
         val componentRequestDispatcher = createSessionComponentRequestDispatcher(
             context = context,
@@ -66,6 +70,7 @@ internal class CheckoutControllerFactory {
             callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
+            savedStateHandle = savedStateHandle,
         )
     }
 
@@ -73,6 +78,7 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext.ActionOnly,
         callbacks: ActionOnlyCheckoutCallbacks,
         coroutineScope: CoroutineScope,
+        savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
         val checkoutParams = createCheckoutParams(context)
         // TODO - what should be the payment method type for action only?
@@ -88,6 +94,7 @@ internal class CheckoutControllerFactory {
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
+            savedStateHandle = savedStateHandle,
             onAction = {},
         )
         val flow = ActionOnlyCheckoutFlow(
@@ -117,12 +124,14 @@ internal class CheckoutControllerFactory {
         throw CheckoutException(e.toCheckoutError())
     }
 
+    @Suppress("LongParameterList")
     private fun createFullCheckoutController(
         target: CheckoutTarget,
         context: CheckoutContext,
         callbacks: CheckoutCallbacks,
         componentRequestDispatcher: SubmittableComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
+        savedStateHandle: SavedStateHandle,
     ): CheckoutController {
         val checkoutParams = createCheckoutParams(context)
 
@@ -143,6 +152,7 @@ internal class CheckoutControllerFactory {
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
+            savedStateHandle = savedStateHandle,
             onAction = componentRequestDispatcher::action,
         )
         val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
@@ -223,17 +233,20 @@ internal class CheckoutControllerFactory {
         )
     }
 
+    @Suppress("LongParameterList")
     private fun createActionHandler(
         componentRequestDispatcher: ComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,
+        savedStateHandle: SavedStateHandle,
         onAction: (ActionData) -> Unit,
     ) = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
         coroutineScope = coroutineScope,
         analyticsManager = analyticsManager,
         params = params,
+        savedStateHandle = savedStateHandle,
         onAction = onAction,
     )
 

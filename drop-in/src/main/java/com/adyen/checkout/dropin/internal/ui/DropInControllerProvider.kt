@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.annotation.SuppressLint
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutContext
@@ -71,6 +73,7 @@ internal class DefaultDropInControllerProvider(
                         onFailure = { error -> onFailure(coroutineScope, error) },
                     ),
                     coroutineScope = coroutineScope,
+                    savedStateHandle = createSavedStateHandle(),
                 )
             }
 
@@ -85,12 +88,18 @@ internal class DefaultDropInControllerProvider(
                         onBeforeSubmit = ::onBeforeSubmit,
                     ),
                     coroutineScope = coroutineScope,
+                    savedStateHandle = createSavedStateHandle(),
                 )
             }
 
             is CheckoutContext.ActionOnly -> error("Unsupported context: $checkoutContext")
         }
     }
+
+    // TODO - Pass Drop-in's own saved state handle, so its flows can be restored after process death. Until then,
+    //  every controller gets a throwaway handle and Drop-in keeps its current process death behavior.
+    @SuppressLint("VisibleForTests")
+    private fun createSavedStateHandle() = SavedStateHandle()
 
     private fun createTarget(paymentFlowType: DropInPaymentFlowType): CheckoutTarget {
         return when (paymentFlowType) {

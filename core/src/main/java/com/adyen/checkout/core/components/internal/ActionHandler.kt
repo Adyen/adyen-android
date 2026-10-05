@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.components.internal
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
@@ -35,6 +34,7 @@ internal class ActionHandler(
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
     private val params: CheckoutParams,
+    private val savedStateHandle: SavedStateHandle,
     private val onAction: (ActionData) -> Unit,
 ) {
 
@@ -53,8 +53,7 @@ internal class ActionHandler(
                 coroutineScope = coroutineScope,
                 analyticsManager = analyticsManager,
                 params = params,
-                // TODO - Check if we really need saved state handle
-                savedStateHandle = @SuppressLint("VisibleForTests") SavedStateHandle(),
+                savedStateHandle = savedStateHandle,
             )
         } catch (e: InternalCheckoutError) {
             adyenLog(AdyenLogLevel.ERROR, e) { "Could not create an action component for action '${action.type}'" }

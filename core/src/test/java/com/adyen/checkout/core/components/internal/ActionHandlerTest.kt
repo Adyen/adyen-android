@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNotSame
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -63,6 +64,10 @@ internal class ActionHandlerTest(
 ) {
 
     private val eventFlow = MutableSharedFlow<ActionComponentEvent>()
+
+    private val savedStateHandle = SavedStateHandle()
+
+    private var receivedSavedStateHandle: SavedStateHandle? = null
 
     @BeforeEach
     fun beforeEach() {
@@ -102,6 +107,15 @@ internal class ActionHandlerTest(
 
             val component = actionHandler.actionComponent as? ControllableActionComponent
             assertEquals(1, component?.handleActionCallCount)
+        }
+
+        @Test
+        fun `when handleAction is called, then the action component receives the saved state handle`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.handleAction(TestAction(type = TEST_ACTION_TYPE))
+
+            assertSame(savedStateHandle, receivedSavedStateHandle)
         }
 
         @Test
@@ -320,7 +334,10 @@ internal class ActionHandlerTest(
                     analyticsManager: AnalyticsManager,
                     params: CheckoutParams,
                     savedStateHandle: SavedStateHandle,
-                ) = ControllableActionComponent(eventFlow)
+                ): ActionComponent {
+                    receivedSavedStateHandle = savedStateHandle
+                    return ControllableActionComponent(eventFlow)
+                }
             },
         )
     }
@@ -332,6 +349,7 @@ internal class ActionHandlerTest(
         coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         analyticsManager = TestAnalyticsManager(),
         params = generateCheckoutParams(),
+        savedStateHandle = savedStateHandle,
         onAction = onAction,
     )
 

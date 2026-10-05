@@ -9,6 +9,8 @@
 package com.adyen.checkout.core.components
 
 import android.content.Intent
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
@@ -25,6 +27,8 @@ import java.util.Locale
  * @param context The [CheckoutContext.Advanced] obtained from [Checkout.setup].
  * @param callbacks The [AdvancedCheckoutCallbacks] used to handle the payment flow.
  * @param coroutineScope The [CoroutineScope] tied to the lifecycle that owns this controller.
+ * @param savedStateHandle The [SavedStateHandle] of the [ViewModel] that owns [coroutineScope]. It is used to
+ * restore the checkout flow after process death.
  * @return A [CheckoutController] instance.
  */
 fun CheckoutController(
@@ -32,12 +36,14 @@ fun CheckoutController(
     context: CheckoutContext.Advanced,
     callbacks: AdvancedCheckoutCallbacks,
     coroutineScope: CoroutineScope,
+    savedStateHandle: SavedStateHandle,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         target = target,
         context = context,
         callbacks = callbacks,
         coroutineScope = coroutineScope,
+        savedStateHandle = savedStateHandle,
     )
 }
 
@@ -48,6 +54,8 @@ fun CheckoutController(
  * @param context The [CheckoutContext.Sessions] obtained from [Checkout.setup].
  * @param callbacks The [SessionCheckoutCallbacks] used to observe the payment flow.
  * @param coroutineScope The [CoroutineScope] tied to the lifecycle that owns this controller.
+ * @param savedStateHandle The [SavedStateHandle] of the [ViewModel] that owns [coroutineScope]. It is used to
+ * restore the checkout flow after process death.
  * @return A [CheckoutController] instance.
  */
 fun CheckoutController(
@@ -55,12 +63,14 @@ fun CheckoutController(
     context: CheckoutContext.Sessions,
     callbacks: SessionCheckoutCallbacks,
     coroutineScope: CoroutineScope,
+    savedStateHandle: SavedStateHandle,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         target = target,
         context = context,
         callbacks = callbacks,
         coroutineScope = coroutineScope,
+        savedStateHandle = savedStateHandle,
     )
 }
 
@@ -70,17 +80,21 @@ fun CheckoutController(
  * @param context The [CheckoutContext.ActionOnly] obtained from [Checkout.setup].
  * @param callbacks The [ActionOnlyCheckoutCallbacks] used to handle the action flow.
  * @param coroutineScope The [CoroutineScope] tied to the lifecycle that owns this controller.
+ * @param savedStateHandle The [SavedStateHandle] of the [ViewModel] that owns [coroutineScope]. It is used to
+ * restore the checkout flow after process death.
  * @return A [CheckoutController] instance.
  */
 fun CheckoutController(
     context: CheckoutContext.ActionOnly,
     callbacks: ActionOnlyCheckoutCallbacks,
     coroutineScope: CoroutineScope,
+    savedStateHandle: SavedStateHandle,
 ): CheckoutController {
     return CheckoutControllerFactory().create(
         context = context,
         callbacks = callbacks,
         coroutineScope = coroutineScope,
+        savedStateHandle = savedStateHandle,
     )
 }
 
