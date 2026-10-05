@@ -258,7 +258,7 @@ private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
             }
 
             if (item.brands.size > AMOUNT_VISIBLE_BRANDS) {
-                SubHeadline(text = "+", color = CheckoutThemeProvider.colors.textSecondary)
+                SubHeadline(text = "+", color = CheckoutThemeProvider.colors.textOnDisabled)
             }
 
             Spacer(Modifier.size(Dimensions.Spacing.ExtraSmall))
