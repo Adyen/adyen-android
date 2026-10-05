@@ -73,4 +73,11 @@ internal object TextStyleDefaults {
         lineHeight = 16,
         fontResId = font,
     )
+
+    fun label(font: Int?): InternalTextStyle = InternalTextStyle(
+        size = 16,
+        weight = 500,
+        lineHeight = 19,
+        fontResId = font,
+    )
 }

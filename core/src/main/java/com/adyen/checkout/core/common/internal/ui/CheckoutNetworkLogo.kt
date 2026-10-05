@@ -76,7 +76,7 @@ fun CheckoutNetworkLogo(
                     radius = 1.dp,
                     offset = DpOffset(x = 0.dp, 2.dp),
                     // TODO - Colors: Move this color to the Internal colors file, but not expose to the public layer
-                    color = Color(0xFF121212),
+                    color = Color(0xFF001222),
                     alpha = 0.04f,
                 ),
             )

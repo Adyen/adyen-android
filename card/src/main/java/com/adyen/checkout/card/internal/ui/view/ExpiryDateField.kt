@@ -84,7 +84,7 @@ internal fun ExpiryDateField(
         isFocusRequested = expiryDateState.isFocusRequested,
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = expiryDateState.keyboardAction.toImeAction(),
-        trailingIcon = {
+        trailingContent = {
             ExpiryDateTrailingIcon(expiryDateState.trailingIcon)
         },
     )
@@ -101,7 +101,8 @@ private fun ExpiryDateTrailingIcon(
         when (state) {
             ExpiryDateTrailingIcon.Checkmark -> ExpiryDateTrailingIcon(
                 resourceId = com.adyen.checkout.test.R.drawable.ic_checkmark,
-                tint = CheckoutThemeProvider.colors.primary,
+                tint = CheckoutThemeProvider.colors.text,
+                modifier = Modifier.size(Dimensions.IconSize.small),
             )
 
             ExpiryDateTrailingIcon.Placeholder -> ExpiryDateTrailingIcon(
@@ -111,6 +112,7 @@ private fun ExpiryDateTrailingIcon(
                     darkDrawableId = R.drawable.ic_card_expiry_date_dark,
                 ),
                 tint = Color.Unspecified,
+                modifier = Modifier.size(Dimensions.LogoSize.small),
             )
         }
     }
@@ -120,9 +122,10 @@ private fun ExpiryDateTrailingIcon(
 private fun ExpiryDateTrailingIcon(
     resourceId: Int,
     tint: Color,
+    modifier: Modifier = Modifier,
 ) {
     Icon(
-        modifier = Modifier.size(Dimensions.LogoSize.small),
+        modifier = modifier,
         imageVector = ImageVector.vectorResource(resourceId),
         contentDescription = null,
         tint = tint,

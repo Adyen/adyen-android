@@ -12,12 +12,8 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -25,6 +21,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.adyen.checkout.core.common.internal.ui.NavigationCloseButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Title
@@ -84,11 +81,7 @@ private fun DropInTopAppBarPreview(
         DropInTopAppBar(
             title = "Title",
             navigationIcon = {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(Icons.Default.Close, null)
-                }
+                NavigationCloseButton(onClick = {})
             },
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
         )
@@ -103,11 +96,7 @@ private fun DropInTopAppBarWithoutTitlePreview(
     CheckoutThemePreviewWrapper(theme) {
         DropInTopAppBar(
             navigationIcon = {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(Icons.Default.Close, null)
-                }
+                NavigationCloseButton(onClick = {})
             },
         )
     }

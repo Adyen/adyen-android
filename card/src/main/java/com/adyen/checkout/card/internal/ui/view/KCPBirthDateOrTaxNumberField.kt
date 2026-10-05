@@ -69,7 +69,7 @@ internal fun KCPBirthDateOrTaxNumberField(
         onFocusRequestConsumed = onFocusRequestConsumed,
         imeAction = kcpBirthDateOrTaxNumberState.keyboardAction.toImeAction(),
         inputTransformation = inputTransformation,
-        trailingIcon = {
+        trailingContent = {
             CheckoutTextFieldTrailingIcon(kcpBirthDateOrTaxNumberState.trailingIcon)
         },
     )

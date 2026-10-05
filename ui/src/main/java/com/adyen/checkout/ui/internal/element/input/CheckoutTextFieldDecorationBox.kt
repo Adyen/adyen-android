@@ -21,11 +21,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.Composable
@@ -36,35 +37,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.ui.internal.text.Body
-import com.adyen.checkout.ui.internal.text.Footnote
+import com.adyen.checkout.ui.internal.text.Label
 import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
-/**
- * A composable function that provides the decoration box for [CheckoutTextField].
- *
- * This internal composable handles the layout and styling of elements surrounding the
- * actual input field, including the label, supporting text, prefix, and trailing icon.
- * It applies Adyen's theming for colors, shapes, and text styles based on the
- * provided [InternalTextFieldStyle] and interaction states (focused, error).
- *
- * @param label The label text to be displayed above the text field.
- * @param innerTextField The composable representing the actual input field (e.g., [BasicTextField]).
- * @param supportingText Optional supporting text to be displayed below the text field.
- * @param isError Indicates whether the text field is in an error state. When `true`,
- * the supporting text and border might change color to reflect an error.
- * @param interactionSource The [MutableInteractionSource] representing the stream of
- * interactions for this text field, used to determine focus state and apply indications.
- * @param innerIndication An optional [Indication] that will be used for the background of the
- * text field. If `null`, no indication will be applied.
- * @param style The [InternalTextFieldStyle] that defines the visual appearance of the
- * text field, including colors, corner radius, and text styles.
- * @param prefix An optional string to be displayed at the beginning of the input area,
- * before the user's input.
- * @param trailingIcon An optional composable function that provides a trailing icon to be
- * displayed at the end of the text field.
- */
+@Suppress("LongMethod")
 @Composable
 internal fun CheckoutTextFieldDecorationBox(
     innerTextField: @Composable () -> Unit,
@@ -75,9 +53,9 @@ internal fun CheckoutTextFieldDecorationBox(
     style: InternalTextFieldStyle,
     modifier: Modifier = Modifier,
     label: String? = null,
-    prefix: String? = null,
     hint: String? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
 ) {
     val isFocused = interactionSource.collectIsFocusedAsState().value
 
@@ -86,22 +64,23 @@ internal fun CheckoutTextFieldDecorationBox(
         modifier = modifier,
     ) {
         label?.let {
-            SubHeadline(text = label)
+            Label(text = label)
         }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .clip(RoundedCornerShape(style.cornerRadius.dp))
                 .indication(interactionSource, innerIndication)
                 .styledBackground(style, isFocused, isError)
                 .fillMaxWidth()
-                .heightIn(Dimensions.MinTouchTarget)
-                .padding(horizontal = Dimensions.Spacing.Large),
+                .heightIn(Dimensions.MinTouchTarget),
         ) {
-            prefix?.let {
-                Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
+            Spacer(Modifier.size(Dimensions.Spacing.Large))
+
+            leadingContent?.let {
+                leadingContent()
+                Spacer(Modifier.size(Dimensions.Spacing.Small))
             }
 
             val selectionColor = style.activeColor
@@ -119,7 +98,19 @@ internal fun CheckoutTextFieldDecorationBox(
                 }
             }
 
-            trailingIcon?.invoke()
+            if (trailingContent == null) {
+                Spacer(Modifier.size(Dimensions.Spacing.Large))
+            } else {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.sizeIn(
+                        minWidth = Dimensions.MinTouchTarget,
+                        minHeight = Dimensions.MinTouchTarget,
+                    ),
+                ) {
+                    trailingContent()
+                }
+            }
         }
 
         AnimatedVisibility(
@@ -129,7 +120,7 @@ internal fun CheckoutTextFieldDecorationBox(
         ) {
             val supportingTextColor = if (isError) style.errorColor else CheckoutThemeProvider.colors.textSecondary
             supportingText?.let {
-                Footnote(
+                SubHeadline(
                     text = it,
                     color = supportingTextColor,
                 )
@@ -149,11 +140,15 @@ private fun Modifier.styledBackground(
         isFocused -> style.activeColor
         else -> style.borderColor
     }
-    val borderWidth = if (isFocused || isError) style.borderWidth + 1 else style.borderWidth
+    val borderWidth = when {
+        isError -> style.errorBorderWidth
+        isFocused -> style.focusedBorderWidth
+        else -> style.defaultBorderWidth
+    }
     return this
         .background(style.backgroundColor, RoundedCornerShape(style.cornerRadius.dp))
         .border(
-            width = borderWidth.dp,
+            width = borderWidth,
             color = borderColor,
             shape = RoundedCornerShape(style.cornerRadius.dp),
         )

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.ui.internal.element.input
 
+import androidx.compose.ui.unit.dp
 import com.adyen.checkout.ui.internal.theme.InternalAttributes
 import com.adyen.checkout.ui.internal.theme.InternalColors
 
@@ -24,7 +25,26 @@ internal object CheckoutTextFieldDefaults {
             errorColor = colors.destructive,
             cornerRadius = attributes.cornerRadius,
             borderColor = colors.containerOutline,
-            borderWidth = 1,
+            defaultBorderWidth = 1.dp,
+            errorBorderWidth = 1.5.dp,
+            focusedBorderWidth = 2.dp,
+        )
+    }
+
+    fun searchFieldStyle(
+        colors: InternalColors,
+        attributes: InternalAttributes,
+    ): InternalTextFieldStyle {
+        return InternalTextFieldStyle(
+            backgroundColor = colors.container,
+            textColor = colors.text,
+            activeColor = colors.primary,
+            errorColor = colors.destructive,
+            cornerRadius = attributes.cornerRadius,
+            borderColor = colors.container,
+            defaultBorderWidth = 0.dp,
+            errorBorderWidth = 1.5.dp,
+            focusedBorderWidth = 2.dp,
         )
     }
 }
