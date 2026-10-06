@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
@@ -157,8 +158,14 @@ private fun actionNavEntry(
             }
 
             ActionFlowOwner.PAYMENT_METHOD_LIST -> {
-                val instantPaymentMethod = paymentMethodListViewModel(viewModel, parentOwner)
-                    .findInstantPaymentMethod(key.paymentFlowType)
+                val paymentMethodListViewModel = paymentMethodListViewModel(viewModel, parentOwner)
+                // Observed rather than read once, because the instant payment method is only created after its
+                // availability check passes. When the list view model is recreated, it is null until then.
+                // TODO - Test this case as part of state restoration, the recreated controller does not continue the
+                //  action yet.
+                val instantPaymentMethod = remember(paymentMethodListViewModel, key.paymentFlowType) {
+                    paymentMethodListViewModel.instantPaymentMethodFor(key.paymentFlowType)
+                }.collectAsStateWithLifecycle(initialValue = null).value
 
                 if (instantPaymentMethod == null) {
                     adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
