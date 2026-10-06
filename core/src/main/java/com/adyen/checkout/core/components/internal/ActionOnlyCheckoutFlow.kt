@@ -18,6 +18,7 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 internal class ActionOnlyCheckoutFlow(
     action: Action,
     private val actionHandler: ActionHandler,
+    stateStore: CheckoutFlowStateStore,
 ) : CheckoutFlow {
 
     override val paymentComponent: PaymentComponent? = null
@@ -25,7 +26,13 @@ internal class ActionOnlyCheckoutFlow(
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
 
     init {
-        actionHandler.handleAction(action)
+        // Only restore when the merchant passes the same action again. A different action is a new payment.
+        val savedPhase = stateStore.restore()
+        if (savedPhase is CheckoutFlowPhase.HandlingAction && savedPhase.action == action) {
+            actionHandler.restoreAction(action)
+        } else {
+            actionHandler.handleAction(action)
+        }
     }
 
     override fun submit() {

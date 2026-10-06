@@ -369,6 +369,44 @@ internal class FullCheckoutFlowTest(
         }
 
         @Test
+        fun `when restored in the handling action phase, then the action is restored`() = runTest {
+            val action = TestAction(type = "redirect", paymentData = "test_data")
+            createStateStore().save(CheckoutFlowPhase.HandlingAction(action))
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            verify(actionHandler).restoreAction(action)
+        }
+
+        @Test
+        fun `when restored in the handling action phase, then submit requests are not dispatched`() = runTest {
+            createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+            verify(componentRequestDispatcher, never()).submit(any())
+        }
+
+        @Test
+        fun `when restored in the handling action phase, then the flow reports no failure`() = runTest {
+            createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            verify(componentRequestDispatcher, never()).failure(any())
+        }
+
+        @Test
+        fun `when restored in the input phase, then no action is restored`() = runTest {
+            createStateStore().save(CheckoutFlowPhase.Input)
+
+            createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+            verify(actionHandler, never()).restoreAction(any())
+        }
+
+        @Test
         fun `when restored in the input phase, then no failure is reported`() = runTest {
             createStateStore().save(CheckoutFlowPhase.Input)
 
