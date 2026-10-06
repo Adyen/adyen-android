@@ -13,6 +13,7 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.toStringPretty
 import com.adyen.checkout.core.error.internal.HttpError
 import org.json.JSONArray
@@ -31,6 +32,21 @@ suspend fun <T : ModelObject> HttpClient.get(
     logResponse(response)
 
     return responseSerializer.deserialize(response.body.toJSONObject())
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+suspend fun <T : ModelObject> HttpClient.getList(
+    path: String,
+    responseSerializer: ModelObject.Serializer<T>,
+    queryParameters: Map<String, String> = emptyMap(),
+): List<T> {
+    adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
+
+    val response = runAndLogHttpException { get(path, queryParameters) }
+
+    logResponse(response)
+
+    return ModelUtils.deserializeOptList(JSONArray(response.body), responseSerializer).orEmpty()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
