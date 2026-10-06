@@ -10,7 +10,6 @@ package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.publicKey
@@ -18,6 +17,7 @@ import com.adyen.checkout.core.components.Checkout.setup
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
+import com.adyen.checkout.core.components.internal.PaymentMethodResolver
 import com.adyen.checkout.core.components.internal.validate
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.SessionResponse
@@ -156,7 +156,7 @@ object Checkout {
         type: String,
         context: CheckoutContext,
     ): Boolean {
-        val paymentMethod = context.getPaymentMethods().find { it.type == type } ?: return false
+        val paymentMethod = PaymentMethodResolver.resolve(CheckoutTarget.PaymentMethod(type), context) ?: return false
         val params = createCheckoutParams(context)
         return PaymentMethodProvider.isAvailable(paymentMethod, params)
     }
