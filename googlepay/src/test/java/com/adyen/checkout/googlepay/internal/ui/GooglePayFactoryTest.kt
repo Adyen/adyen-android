@@ -103,7 +103,7 @@ internal class GooglePayFactoryTest {
                     isShippingAddressRequired = null,
                     shippingAddressParameters = null,
                     checkoutOption = null,
-                    googlePayButtonStyling = null,
+                    appearance = null,
                 ),
         ),
         additionalSessionParams = null,
