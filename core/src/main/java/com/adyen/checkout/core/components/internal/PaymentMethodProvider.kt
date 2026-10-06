@@ -117,7 +117,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
      * Clears all registered factories. Should only be used in tests.
      */
     @VisibleForTesting
-    fun clear() {
+    internal fun clear() {
         factories.clear()
         storedFactories.clear()
     }
@@ -126,7 +126,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
      * Returns the number of registered factories. Should only be used in tests.
      */
     @VisibleForTesting
-    fun getFactoriesCount(): Int {
+    internal fun getFactoriesCount(): Int {
         return factories.size
     }
 
@@ -134,7 +134,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
      * Returns the number of registered factories. Should only be used in tests.
      */
     @VisibleForTesting
-    fun getStoredFactoriesCount(): Int {
+    internal fun getStoredFactoriesCount(): Int {
         return storedFactories.size
     }
 }
