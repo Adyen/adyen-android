@@ -19,6 +19,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMe
 import com.adyen.checkout.core.components.data.model.paymentmethod.PayByBankUSPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
@@ -40,11 +41,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+@Suppress("LongParameterList")
 internal class PaymentMethodListViewModel(
     private val checkoutParams: CheckoutParams,
     private val dropInParams: DropInParams,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
+    private val availabilityCheck: PaymentMethodAvailabilityCheck,
     private val navigator: DropInNavigator,
     controllerProvider: DropInControllerProvider,
 ) : ViewModel() {
@@ -87,7 +90,7 @@ internal class PaymentMethodListViewModel(
         viewModelScope.launch {
             if (instantPaymentMethod != null) {
                 launch {
-                    if (PaymentMethodProvider.isAvailable(instantPaymentMethod, checkoutParams)) {
+                    if (availabilityCheck.isAvailable(instantPaymentMethod, checkoutParams)) {
                         _instantPaymentMethod.value = createInstantPaymentMethod(
                             controllerProvider,
                             instantPaymentMethod.type,
@@ -97,7 +100,7 @@ internal class PaymentMethodListViewModel(
             }
 
             unavailableTypes.value = candidates
-                .map { async { it.type to PaymentMethodProvider.isAvailable(it, checkoutParams) } }
+                .map { async { it.type to availabilityCheck.isAvailable(it, checkoutParams) } }
                 .awaitAll()
                 .filterNot { it.second }
                 .mapTo(mutableSetOf()) { it.first }
@@ -223,6 +226,7 @@ internal class PaymentMethodListViewModel(
                 dropInParams = dropInParams,
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+                availabilityCheck = PaymentMethodProvider,
                 navigator = navigator,
                 controllerProvider = controllerProvider,
             ) as T

@@ -26,7 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object PaymentMethodProvider {
+object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
 
     private val factories = ConcurrentHashMap<String, PaymentComponentFactory<*>>()
     private val storedFactories = ConcurrentHashMap<String, StoredPaymentComponentFactory<*>>()
@@ -63,7 +63,7 @@ object PaymentMethodProvider {
         )
     }
 
-    suspend fun isAvailable(
+    override suspend fun isAvailable(
         paymentMethod: PaymentMethod,
         params: CheckoutParams,
     ): Boolean {
