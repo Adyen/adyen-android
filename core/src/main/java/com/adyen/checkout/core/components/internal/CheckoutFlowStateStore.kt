@@ -36,6 +36,8 @@ internal class CheckoutFlowStateStore(
 
     // This is the only place that identifies a target in saved state.
     private fun CheckoutTarget.toTargetId(): String = when (this) {
+        // TODO - replace type with the id of the payment method once it's implemented. This would allow multiple
+        //  controllers of the same type.
         is CheckoutTarget.PaymentMethod -> "payment_method:$type"
         is CheckoutTarget.StoredPaymentMethod -> "stored_payment_method:$id"
         else -> toString()
