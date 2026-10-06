@@ -13,12 +13,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
-import com.adyen.checkout.core.common.internal.publicKey
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
@@ -38,7 +36,7 @@ internal class DropInViewModel(
     private val dropInServiceManager: DropInServiceManager,
 ) : ViewModel() {
 
-    val checkoutParams: CheckoutParams = createCheckoutParams()
+    val checkoutParams: CheckoutParams = CheckoutParamsFactory().create(input.checkoutContext)
 
     val dropInParams: DropInParams = DropInParamsMapper().mapToParams(checkoutParams)
 
@@ -59,14 +57,6 @@ internal class DropInViewModel(
         paymentMethodRepository = DefaultPaymentMethodRepository(
             paymentMethods = input.checkoutContext.getPaymentMethods(),
             storedPaymentMethods = input.checkoutContext.getStoredPaymentMethods(),
-        )
-    }
-
-    private fun createCheckoutParams(): CheckoutParams {
-        return CheckoutParamsFactory().create(
-            configuration = input.checkoutContext.checkoutConfiguration,
-            session = (input.checkoutContext as? CheckoutContext.Sessions)?.checkoutSession,
-            publicKey = input.checkoutContext.publicKey,
         )
     }
 

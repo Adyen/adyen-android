@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.core.common.internal
 
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AnalyticsConfiguration
 import com.adyen.checkout.core.components.AnalyticsLevel
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.sessions.CheckoutSession
@@ -345,6 +347,41 @@ internal class CheckoutParamsFactoryTest {
         }
     }
 
+    @Nested
+    inner class CheckoutContextTest {
+
+        @Test
+        fun `when context is sessions, then the session and public key of the context are used`() {
+            val configuration = createConfiguration(environment = Environment.TEST)
+            val session = createSession(environment = Environment.LIVE_EUROPE)
+            val context = CheckoutContext.Sessions(
+                checkoutSession = session,
+                checkoutConfiguration = configuration,
+                checkoutAttemptId = "",
+                publicKey = TEST_PUBLIC_KEY,
+            )
+
+            val result = factory.create(context)
+
+            assertEquals(factory.create(configuration, session, TEST_PUBLIC_KEY), result)
+        }
+
+        @Test
+        fun `when context is advanced, then no session and the public key of the context are used`() {
+            val configuration = createConfiguration()
+            val context = CheckoutContext.Advanced(
+                paymentMethods = PaymentMethods(),
+                checkoutConfiguration = configuration,
+                checkoutAttemptId = "",
+                publicKey = TEST_PUBLIC_KEY,
+            )
+
+            val result = factory.create(context)
+
+            assertEquals(factory.create(configuration, null, TEST_PUBLIC_KEY), result)
+        }
+    }
+
     @Suppress("LongParameterList")
     private fun createConfiguration(
         environment: Environment = Environment.TEST,
@@ -385,4 +422,8 @@ internal class CheckoutParamsFactoryTest {
         environment = environment,
         clientKey = clientKey,
     )
+
+    private companion object {
+        const val TEST_PUBLIC_KEY = "test_public_key"
+    }
 }

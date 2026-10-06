@@ -10,9 +10,7 @@ package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
-import com.adyen.checkout.core.common.internal.publicKey
 import com.adyen.checkout.core.components.Checkout.setup
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
@@ -157,17 +155,8 @@ object Checkout {
         context: CheckoutContext,
     ): Boolean {
         val paymentMethod = PaymentMethodResolver.resolve(CheckoutTarget.PaymentMethod(type), context) ?: return false
-        val params = createCheckoutParams(context)
+        val params = CheckoutParamsFactory().create(context)
         return PaymentMethodProvider.isAvailable(paymentMethod, params)
-    }
-
-    private fun createCheckoutParams(context: CheckoutContext): CheckoutParams {
-        val session = (context as? CheckoutContext.Sessions)?.checkoutSession
-        return CheckoutParamsFactory().create(
-            configuration = context.checkoutConfiguration,
-            session = session,
-            publicKey = context.publicKey,
-        )
     }
 
     /**

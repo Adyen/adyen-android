@@ -18,7 +18,6 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.common.internal.checkoutAttemptId
-import com.adyen.checkout.core.common.internal.publicKey
 import com.adyen.checkout.core.components.ActionOnlyCheckoutCallbacks
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -80,7 +79,7 @@ internal class CheckoutControllerFactory {
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
-        val checkoutParams = createCheckoutParams(context)
+        val checkoutParams = CheckoutParamsFactory().create(context)
         // TODO - what should be the payment method type for action only?
         val analyticsManager = createAnalyticsManager(
             checkoutParams = checkoutParams,
@@ -133,7 +132,7 @@ internal class CheckoutControllerFactory {
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
     ): CheckoutController {
-        val checkoutParams = createCheckoutParams(context)
+        val checkoutParams = CheckoutParamsFactory().create(context)
 
         val paymentMethod = PaymentMethodResolver.resolve(target, context) ?: return createFailedCheckoutController(
             errorMessage = "Payment method for target '$target' was not found in the payment methods response.",
@@ -189,15 +188,6 @@ internal class CheckoutControllerFactory {
                 )
             }
         }
-    }
-
-    private fun createCheckoutParams(context: CheckoutContext): CheckoutParams {
-        val session = (context as? CheckoutContext.Sessions)?.checkoutSession
-        return CheckoutParamsFactory().create(
-            configuration = context.checkoutConfiguration,
-            session = session,
-            publicKey = context.publicKey,
-        )
     }
 
     private fun createAnalyticsManager(
