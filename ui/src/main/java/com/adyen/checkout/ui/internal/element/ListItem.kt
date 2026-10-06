@@ -11,19 +11,17 @@
 package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ripple
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.ListItemShapes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,41 +59,50 @@ fun ListItem(
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Medium),
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
-            .clickable(
-                interactionSource = null,
-                indication = ripple(),
-                onClick = onClick,
-            )
-            .padding(Dimensions.Spacing.Medium),
-    ) {
-        leadingIcon?.let { icon ->
-            icon()
-        }
+    val cornerRadius = CheckoutThemeProvider.attributes.cornerRadius.dp
+    val shapes = remember(cornerRadius) {
+        val shape = RoundedCornerShape(cornerRadius)
+        ListItemShapes(
+            shape = shape,
+            selectedShape = shape,
+            pressedShape = shape,
+            focusedShape = shape,
+            hoveredShape = shape,
+            draggedShape = shape,
+        )
+    }
 
-        Column(
-            modifier = Modifier.weight(1f),
-        ) {
+    val colors = ListItemDefaults.colors(
+        containerColor = CheckoutThemeProvider.colors.background,
+        contentColor = CheckoutThemeProvider.colors.text,
+        leadingContentColor = CheckoutThemeProvider.colors.text,
+        trailingContentColor = CheckoutThemeProvider.colors.text,
+    )
+
+    ListItem(
+        onClick = onClick,
+        content = {
             BodyEmphasized(title)
-
-            subtitle?.let {
+        },
+        supportingContent = subtitle?.let {
+            {
                 SubHeadline(
                     text = it,
                     color = CheckoutThemeProvider.colors.textSecondary,
                 )
             }
-        }
-
-        trailingContent?.let { content ->
-            content()
-        }
-    }
+        },
+        leadingContent = leadingIcon,
+        trailingContent = trailingContent,
+        shapes = shapes,
+        contentPadding = DefaultPaddingValues,
+        colors = colors,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+    )
 }
+
+private val DefaultPaddingValues = PaddingValues(Dimensions.Spacing.Medium)
 
 @Preview(showBackground = true)
 @Composable
