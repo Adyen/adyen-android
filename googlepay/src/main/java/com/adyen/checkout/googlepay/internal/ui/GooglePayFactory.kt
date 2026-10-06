@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
@@ -26,15 +27,20 @@ import com.adyen.checkout.googlepay.internal.ui.state.GooglePayComponentStateVal
 import com.adyen.checkout.googlepay.internal.ui.state.GooglePayViewStateProducer
 import kotlinx.coroutines.CoroutineScope
 
-internal class GooglePayFactory(
-    private val availabilityCheckFor: (GooglePayComponentParams) -> GooglePayAvailabilityCheck = { componentParams ->
-        GooglePayAvailabilityCheck(
-            componentParams = componentParams,
-            applicationContext = ApplicationContextHolder.require(),
-        )
-    },
+internal class GooglePayFactory @VisibleForTesting constructor(
+    private val availabilityCheckFor: (GooglePayComponentParams) -> GooglePayAvailabilityCheck,
 ) : PaymentComponentFactory<GooglePayComponent>,
     PaymentMethodAvailabilityCheck {
+
+    constructor() : this(
+        availabilityCheckFor = { componentParams ->
+            GooglePayAvailabilityCheck(
+                componentParams = componentParams,
+                applicationContext = ApplicationContextHolder.require(),
+            )
+        },
+    )
+
     override fun create(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
