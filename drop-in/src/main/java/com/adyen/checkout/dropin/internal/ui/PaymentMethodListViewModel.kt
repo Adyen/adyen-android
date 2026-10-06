@@ -30,7 +30,6 @@ import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentM
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -84,24 +83,22 @@ internal class PaymentMethodListViewModel(
             .filter { paymentMethodSupportCheck.isSupported(it) }
 
         viewModelScope.launch {
-            coroutineScope {
-                if (instantPaymentMethod != null) {
-                    launch {
-                        if (PaymentMethodProvider.isAvailable(instantPaymentMethod, checkoutParams)) {
-                            _instantPaymentMethod.value = createInstantPaymentMethod(
-                                controllerProvider,
-                                instantPaymentMethod.type,
-                            )
-                        }
+            if (instantPaymentMethod != null) {
+                launch {
+                    if (PaymentMethodProvider.isAvailable(instantPaymentMethod, checkoutParams)) {
+                        _instantPaymentMethod.value = createInstantPaymentMethod(
+                            controllerProvider,
+                            instantPaymentMethod.type,
+                        )
                     }
                 }
-
-                unavailableTypes.value = candidates
-                    .map { async { it.type to PaymentMethodProvider.isAvailable(it, checkoutParams) } }
-                    .awaitAll()
-                    .filterNot { it.second }
-                    .mapTo(mutableSetOf()) { it.first }
             }
+
+            unavailableTypes.value = candidates
+                .map { async { it.type to PaymentMethodProvider.isAvailable(it, checkoutParams) } }
+                .awaitAll()
+                .filterNot { it.second }
+                .mapTo(mutableSetOf()) { it.first }
         }
     }
 
