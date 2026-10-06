@@ -15,6 +15,7 @@ import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
@@ -26,6 +27,7 @@ internal class FullCheckoutFlow(
     coroutineScope: CoroutineScope,
     override val paymentComponent: PaymentComponent,
     private val actionHandler: ActionHandler,
+    private val stateStore: CheckoutFlowStateStore,
 ) : CheckoutFlow {
 
     override val actionComponent: ActionComponent? get() = actionHandler.actionComponent
@@ -33,6 +35,8 @@ internal class FullCheckoutFlow(
     private val canSubmit = AtomicBoolean(true)
 
     init {
+        restoreSavedState()
+
         paymentComponent.eventFlow
             .onEach { event ->
                 when (event) {
@@ -44,6 +48,7 @@ internal class FullCheckoutFlow(
                             return@onEach
                         }
                         paymentComponent.setLoading(true)
+                        stateStore.save(CheckoutFlowPhase.Submitted)
                         val result = componentRequestDispatcher.submit(event.state.data)
                         handleResult(result)
                     }
@@ -54,6 +59,24 @@ internal class FullCheckoutFlow(
                 }
             }
             .launchIn(coroutineScope)
+    }
+
+    /**
+     * The process died after the payment was submitted and before a response was received, so the payment outcome is
+     * unknown. Submitting again could result in a double payment, so the flow fails instead. The saved state is
+     * cleared, so that the failure is only reported once.
+     */
+    private fun restoreSavedState() {
+        if (stateStore.restore() != CheckoutFlowPhase.Submitted) return
+
+        canSubmit.set(false)
+        stateStore.clear()
+        val error = CheckoutError(
+            code = CheckoutError.ErrorCode.GENERIC,
+            message = "The payment outcome is unknown, because the app was stopped while the payment was being " +
+                "submitted. Check the payment status on your server.",
+        )
+        componentRequestDispatcher.failure(error)
     }
 
     override fun submit() {
@@ -70,10 +93,12 @@ internal class FullCheckoutFlow(
             }
 
             is SubmitResult.Completion -> {
+                stateStore.clear()
                 componentRequestDispatcher.complete(CheckoutResultCode(submitResult.resultCode))
             }
 
             is SubmitResult.Retry -> {
+                stateStore.save(CheckoutFlowPhase.Input)
                 canSubmit.set(true)
                 paymentComponent.setLoading(false)
             }
