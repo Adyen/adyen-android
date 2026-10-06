@@ -426,7 +426,14 @@ internal class SessionComponentRequestDispatcherTest(
             val response = createPaymentsResponse(resultCode = "Authorised")
             whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.success(response)
 
-            val newAddress = Address()
+            val newAddress = Address(
+                city = "Amsterdam",
+                country = "NL",
+                houseNumberOrName = "6-50",
+                postalCode = "1011 DJ",
+                stateOrProvince = null,
+                street = "Simon Carmiggeltstraat",
+            )
             val dispatcher = createDispatcher(
                 onBeforeSubmit = { data ->
                     BeforeSubmitResult.Proceed(

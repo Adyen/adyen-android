@@ -270,7 +270,7 @@ internal class CardPaymentComponentStateFactoryTest(
         }
 
         @Test
-        fun `and postal code is required then it is part of the billing address`() {
+        fun `and postal code is required then it is part of the billing address with placeholders`() {
             // GIVEN
             val factory = createFactory()
             val cardComponentState = createCardComponentState().copy(
@@ -285,7 +285,34 @@ internal class CardPaymentComponentStateFactoryTest(
             )
 
             // THEN
-            assertEquals(Address(postalCode = "1234 AB"), state.data.billingAddress)
+            val expected = Address(
+                city = Address.ADDRESS_NULL_PLACEHOLDER,
+                country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER,
+                houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER,
+                postalCode = "1234 AB",
+                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
+                street = Address.ADDRESS_NULL_PLACEHOLDER,
+            )
+            assertEquals(expected, state.data.billingAddress)
+        }
+
+        @Test
+        fun `and postal code is optional and empty then there is no billing address`() {
+            // GIVEN
+            val factory = createFactory()
+            val cardComponentState = createCardComponentState().copy(
+                postalCode = TextInputComponentState(text = "", requirementPolicy = RequirementPolicy.Optional),
+            )
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            assertNull(state.data.billingAddress)
         }
 
         @Test
