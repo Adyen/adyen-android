@@ -15,6 +15,7 @@ import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
+import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.AdyenLogLevel
@@ -22,6 +23,7 @@ import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +49,38 @@ constructor(
     private var job: Job? = null
 
     fun handleAction(action: Action) {
+        val actionComponent = createActionComponent(action) ?: return
+        stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+        observe(actionComponent)
+
+        onAction(ActionData(action.type))
+
+        actionComponent.handleAction()
+    }
+
+    /**
+     * Resumes [action] after process death. The merchant was already notified about the action before, so `onAction`
+     * is not called again.
+     */
+    fun restoreAction(action: Action) {
+        val actionComponent = createActionComponent(action) ?: return
+        if (actionComponent !is RestorableActionComponent) {
+            this.actionComponent = null
+            stateStore.clear()
+            val error = CheckoutError(
+                code = CheckoutError.ErrorCode.GENERIC,
+                message = "The '${action.type}' action cannot be resumed, because the app was stopped while it was " +
+                    "being handled. Check the payment status on your server.",
+            )
+            componentRequestDispatcher.failure(error)
+            return
+        }
+        observe(actionComponent)
+
+        actionComponent.restoreAction()
+    }
+
+    private fun createActionComponent(action: Action): ActionComponent? {
         job?.cancel()
         this.actionComponent = null
 
@@ -61,11 +95,13 @@ constructor(
         } catch (e: InternalCheckoutError) {
             adyenLog(AdyenLogLevel.ERROR, e) { "Could not create an action component for action '${action.type}'" }
             componentRequestDispatcher.failure(e.toCheckoutError())
-            return
+            return null
         }
         this.actionComponent = actionComponent
-        stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+        return actionComponent
+    }
 
+    private fun observe(actionComponent: ActionComponent) {
         job = actionComponent.eventFlow
             .onEach { event ->
                 when (event) {
@@ -80,10 +116,6 @@ constructor(
                 }
             }
             .launchIn(coroutineScope)
-
-        onAction(ActionData(action.type))
-
-        actionComponent.handleAction()
     }
 
     private fun handleResult(result: AdditionalDetailsResult) {
