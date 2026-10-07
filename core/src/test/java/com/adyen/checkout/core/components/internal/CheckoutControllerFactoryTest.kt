@@ -100,7 +100,32 @@ internal class CheckoutControllerFactoryTest {
     }
 
     @Test
-    fun `when a controller is created again on the same saved state handle, then the action is restored`() {
+    fun `when a controller is created after process death, then the action is restored`() {
+        val createdComponents = mutableListOf<RestorableTestActionComponent>()
+        ActionComponentProvider.register(
+            TEST_ACTION_TYPE,
+            object : ActionFactory<Action, ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ) = RestorableTestActionComponent().also { createdComponents += it }
+            },
+        )
+        createActionOnlyController()
+
+        createActionOnlyController(handle = savedStateHandle.rebuildFromSavedState())
+
+        val (initialComponent, restoredComponent) = createdComponents
+        assertEquals(1, initialComponent.handleActionCallCount)
+        assertEquals(0, restoredComponent.handleActionCallCount)
+        assertEquals(1, restoredComponent.restoreActionCallCount)
+    }
+
+    @Test
+    fun `when a controller is created again in the same process, then the action is handled again instead of restored`() {
         val createdComponents = mutableListOf<RestorableTestActionComponent>()
         ActionComponentProvider.register(
             TEST_ACTION_TYPE,
@@ -118,10 +143,9 @@ internal class CheckoutControllerFactoryTest {
 
         createActionOnlyController()
 
-        val (initialComponent, restoredComponent) = createdComponents
-        assertEquals(1, initialComponent.handleActionCallCount)
-        assertEquals(0, restoredComponent.handleActionCallCount)
-        assertEquals(1, restoredComponent.restoreActionCallCount)
+        val (_, secondComponent) = createdComponents
+        assertEquals(1, secondComponent.handleActionCallCount)
+        assertEquals(0, secondComponent.restoreActionCallCount)
     }
 
     @Test
@@ -183,7 +207,9 @@ internal class CheckoutControllerFactoryTest {
         savedStateHandle = savedStateHandle,
     )
 
-    private fun createActionOnlyController() = CheckoutControllerFactory().create(
+    private fun createActionOnlyController(
+        handle: SavedStateHandle = savedStateHandle,
+    ) = CheckoutControllerFactory().create(
         context = CheckoutContext.ActionOnly(
             action = TestAction(type = TEST_ACTION_TYPE),
             checkoutConfiguration = CheckoutConfiguration(
@@ -199,7 +225,7 @@ internal class CheckoutControllerFactoryTest {
             onFailure = {},
         ),
         coroutineScope = coroutineScope,
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = handle,
     )
 
     private fun registerThrowingFactory(throwable: Throwable) {

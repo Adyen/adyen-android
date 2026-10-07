@@ -261,7 +261,7 @@ internal class ActionHandlerTest(
 
                 eventFlow.emit(ActionComponentEvent.ActionDetails(ActionComponentData()))
 
-                assertNull(stateStore.restore())
+                assertNull(savedPhase())
             }
     }
 
@@ -320,7 +320,7 @@ internal class ActionHandlerTest(
 
             actionHandler.restoreAction(action)
 
-            assertEquals(CheckoutFlowPhase.HandlingAction(action), stateStore.restore())
+            assertEquals(CheckoutFlowPhase.HandlingAction(action), savedPhase())
         }
 
         @Test
@@ -378,7 +378,7 @@ internal class ActionHandlerTest(
 
             actionHandler.restoreAction(action)
 
-            assertNull(stateStore.restore())
+            assertNull(savedPhase())
         }
 
         @Test
@@ -421,7 +421,7 @@ internal class ActionHandlerTest(
 
             actionHandler.restoreAction(action)
 
-            assertNull(stateStore.restore())
+            assertNull(savedPhase())
         }
     }
 
@@ -435,7 +435,7 @@ internal class ActionHandlerTest(
 
             actionHandler.handleAction(action)
 
-            assertEquals(CheckoutFlowPhase.HandlingAction(action), stateStore.restore())
+            assertEquals(CheckoutFlowPhase.HandlingAction(action), savedPhase())
         }
 
         @Test
@@ -450,7 +450,7 @@ internal class ActionHandlerTest(
                         analyticsManager: AnalyticsManager,
                         params: CheckoutParams,
                         savedStateHandle: SavedStateHandle,
-                    ) = ControllableActionComponent(eventFlow) { phaseOnHandleAction = stateStore.restore() }
+                    ) = ControllableActionComponent(eventFlow) { phaseOnHandleAction = savedPhase() }
                 },
             )
             val action = TestAction(type = TEST_ACTION_TYPE)
@@ -467,7 +467,7 @@ internal class ActionHandlerTest(
 
             actionHandler.handleAction(TestAction(type = "unregistered_actionType"))
 
-            assertNull(stateStore.restore())
+            assertNull(savedPhase())
         }
     }
 
@@ -578,6 +578,11 @@ internal class ActionHandlerTest(
             },
         )
     }
+
+    /**
+     * The phase that a flow created after process death would restore.
+     */
+    private fun savedPhase() = CheckoutFlowStateStore(savedStateHandle.rebuildFromSavedState(), target = null).restore()
 
     private fun createActionHandler(
         onAction: (ActionData) -> Unit = {},
