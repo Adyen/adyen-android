@@ -158,6 +158,20 @@ internal class CheckoutFlowStateStoreTest {
         assertNull(secondPhase)
     }
 
+    @Test
+    fun `when the process dies again after a restore, then the phase is restored again`() {
+        val action = TestAction(type = "await", paymentData = "test_payment_data")
+        createStore().save(CheckoutFlowPhase.HandlingAction(action))
+        val firstRestoredHandle = savedStateHandle.rebuildFromSavedState()
+        val firstRestoredPhase = createStore(handle = firstRestoredHandle).restore()
+        val secondRestoredHandle = firstRestoredHandle.rebuildFromSavedState()
+
+        val secondRestoredPhase = createStore(handle = secondRestoredHandle).restore()
+
+        assertEquals(CheckoutFlowPhase.HandlingAction(action), firstRestoredPhase)
+        assertEquals(CheckoutFlowPhase.HandlingAction(action), secondRestoredPhase)
+    }
+
     private fun createStore(
         target: CheckoutTarget? = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
         handle: SavedStateHandle = savedStateHandle,
