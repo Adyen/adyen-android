@@ -91,8 +91,10 @@ constructor(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
+    @Volatile
     private var currentTransaction: Transaction? = null
 
+    @Volatile
     private var paymentData: String? = null
 
     private val authenticationEventChannel = bufferedChannel<AuthenticationEvent>()
