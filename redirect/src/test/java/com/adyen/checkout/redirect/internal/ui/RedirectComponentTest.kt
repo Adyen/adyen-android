@@ -21,6 +21,7 @@ import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
+import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
@@ -43,6 +44,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -253,6 +255,35 @@ internal class RedirectComponentTest(
                 val expectedDetails = NativeRedirectResponse.SERIALIZER.serialize(response)
                 assertEquals(expectedDetails.toString(), details.details.toString())
                 assertNull(details.paymentData)
+            }
+
+        @Test
+        fun `when handleReturn is called with native redirect, then the action's nativeRedirectData is sent`() =
+            runTest {
+                // GIVEN
+                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doReturn
+                    NativeRedirectResponse("someRedirectResult")
+                val redirectResult = JSONObject().apply {
+                    put("returnUrlQueryString", "gpid=ajfbasljbfaljfe")
+                }
+                whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn redirectResult
+                val component = createComponent(
+                    action = redirectAction(
+                        type = ActionTypes.NATIVE_REDIRECT,
+                        nativeRedirectData = "testNativeData",
+                    ),
+                )
+                component.handleAction()
+
+                // WHEN
+                component.handleReturn(Intent())
+
+                // THEN
+                val expectedRequest = NativeRedirectRequest(
+                    redirectData = "testNativeData",
+                    returnQueryString = "gpid=ajfbasljbfaljfe",
+                )
+                verify(nativeRedirectService).makeNativeRedirect(expectedRequest, TEST_CLIENT_KEY)
             }
 
         @Test
