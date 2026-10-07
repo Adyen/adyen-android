@@ -125,6 +125,30 @@ internal class CheckoutControllerFactoryTest {
     }
 
     @Test
+    fun `when a controller is created again in the same process, then the action is handled again instead of restored`() {
+        val createdComponents = mutableListOf<RestorableTestActionComponent>()
+        ActionComponentProvider.register(
+            TEST_ACTION_TYPE,
+            object : ActionFactory<Action, ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ) = RestorableTestActionComponent().also { createdComponents += it }
+            },
+        )
+        createActionOnlyController()
+
+        createActionOnlyController()
+
+        val (_, secondComponent) = createdComponents
+        assertEquals(1, secondComponent.handleActionCallCount)
+        assertEquals(0, secondComponent.restoreActionCallCount)
+    }
+
+    @Test
     fun `when creation throws InvalidConfigurationError, then CheckoutException with INVALID_CONFIGURATION is thrown`() {
         registerThrowingFactory(InvalidConfigurationError("missing merchant account"))
 

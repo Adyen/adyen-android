@@ -126,6 +126,38 @@ internal class CheckoutFlowStateStoreTest {
         assertNull(createRestoredStore().restore())
     }
 
+    @Test
+    fun `when a flow for the same target restores again on the same handle, then nothing is restored`() {
+        createStore().restore()
+        createStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+
+        val restoredPhase = createStore().restore()
+
+        assertNull(restoredPhase)
+    }
+
+    @Test
+    fun `when a flow for the same target restores again on the same handle, then the abandoned phase is cleared`() {
+        createStore().restore()
+        createStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+
+        createStore().restore()
+
+        assertNull(createRestoredStore().restore())
+    }
+
+    @Test
+    fun `when a flow restores again on a rebuilt handle, then only the first restore returns the phase`() {
+        createStore().save(CheckoutFlowPhase.Submitted)
+        val restoredHandle = savedStateHandle.rebuildFromSavedState()
+
+        val firstPhase = createStore(handle = restoredHandle).restore()
+        val secondPhase = createStore(handle = restoredHandle).restore()
+
+        assertEquals(CheckoutFlowPhase.Submitted, firstPhase)
+        assertNull(secondPhase)
+    }
+
     private fun createStore(
         target: CheckoutTarget? = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
         handle: SavedStateHandle = savedStateHandle,

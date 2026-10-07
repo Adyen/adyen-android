@@ -26,6 +26,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.error.CheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -396,6 +397,32 @@ internal class FullCheckoutFlowTest(
 
             verify(componentRequestDispatcher, never()).failure(any())
         }
+
+        @Test
+        fun `when a flow for the same target is created again on the same handle, then the action is not restored`() =
+            runTest {
+                createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+                createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+
+                createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+                verify(actionHandler, never()).restoreAction(any())
+            }
+
+        @Test
+        fun `when a flow for the same target is created again on the same handle, then submit requests are dispatched`() =
+            runTest {
+                whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+                val firstFlowScope = CoroutineScope(UnconfinedTestDispatcher())
+                createFullCheckoutFlow(firstFlowScope)
+                createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+                firstFlowScope.cancel()
+                createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+                eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+                verify(componentRequestDispatcher).submit(any())
+            }
 
         @Test
         fun `when restored in the input phase, then no action is restored`() = runTest {
