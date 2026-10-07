@@ -87,6 +87,7 @@ dependencies {
     dokka(project(':ach'))
     dokka(project(':action'))
     dokka(project(':action-core'))
+    dokka(project(':address'))
     dokka(project(':authentication'))
     dokka(project(':await'))
     dokka(project(':bacs'))
