@@ -100,7 +100,7 @@ internal class CheckoutControllerFactoryTest {
     }
 
     @Test
-    fun `when a controller is created again on the same saved state handle, then the action is restored`() {
+    fun `when a controller is created after process death, then the action is restored`() {
         val createdComponents = mutableListOf<RestorableTestActionComponent>()
         ActionComponentProvider.register(
             TEST_ACTION_TYPE,
@@ -116,7 +116,7 @@ internal class CheckoutControllerFactoryTest {
         )
         createActionOnlyController()
 
-        createActionOnlyController()
+        createActionOnlyController(handle = savedStateHandle.rebuildFromSavedState())
 
         val (initialComponent, restoredComponent) = createdComponents
         assertEquals(1, initialComponent.handleActionCallCount)
@@ -183,7 +183,9 @@ internal class CheckoutControllerFactoryTest {
         savedStateHandle = savedStateHandle,
     )
 
-    private fun createActionOnlyController() = CheckoutControllerFactory().create(
+    private fun createActionOnlyController(
+        handle: SavedStateHandle = savedStateHandle,
+    ) = CheckoutControllerFactory().create(
         context = CheckoutContext.ActionOnly(
             action = TestAction(type = TEST_ACTION_TYPE),
             checkoutConfiguration = CheckoutConfiguration(
@@ -199,7 +201,7 @@ internal class CheckoutControllerFactoryTest {
             onFailure = {},
         ),
         coroutineScope = coroutineScope,
-        savedStateHandle = savedStateHandle,
+        savedStateHandle = handle,
     )
 
     private fun registerThrowingFactory(throwable: Throwable) {
