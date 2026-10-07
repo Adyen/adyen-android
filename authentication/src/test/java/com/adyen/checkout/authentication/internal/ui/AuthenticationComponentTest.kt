@@ -54,6 +54,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -70,6 +71,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -199,6 +201,69 @@ internal class AuthenticationComponentTest(
             // THEN
             assertEquals("test_payment_data", paymentDataRepository.paymentData)
         }
+
+        @Test
+        fun `action has paymentData and the fingerprint is submitted, then paymentData is sent with it`() = runTest {
+            // GIVEN
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
+            whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
+                Result.success(SubmitFingerprintResult.Completed(JSONObject()))
+            component = createComponent(action = fingerprintAction(paymentData = "test_payment_data"))
+            component.initialize(this)
+
+            // WHEN
+            component.handleAction(Activity(), mock())
+
+            // THEN
+            verify(submitFingerprintRepository).submitFingerprint(any(), any(), eq("test_payment_data"))
+        }
+
+        @Test
+        fun `action has paymentData and the fingerprint is submitted, then details do not contain it`() = runTest {
+            // GIVEN
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
+            whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
+                Result.success(SubmitFingerprintResult.Completed(JSONObject()))
+            component = createComponent(action = fingerprintAction(paymentData = "test_payment_data"))
+            val eventFlow = component.eventFlow.test(testScheduler)
+            component.initialize(this)
+
+            // WHEN
+            component.handleAction(Activity(), mock())
+
+            // THEN
+            val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(eventFlow.latestValue)
+            assertNull(event.data.paymentData)
+        }
+
+        @Test
+        fun `action has paymentData and the challenge completes, then details contain it`() = runTest {
+            // GIVEN
+            val action = threeds2Action(
+                subtype = Threeds2Action.SubType.CHALLENGE.value,
+                token = "token",
+                paymentData = "test_payment_data",
+            )
+            component = createComponent(action = action)
+            component.initialize(this)
+            val eventFlow = component.eventFlow.test(testScheduler)
+            component.handleAction(Activity(), mock())
+
+            // WHEN
+            component.onCompletion(ChallengeResult.Completed(transactionStatus = "Y"))
+
+            // THEN
+            val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(eventFlow.latestValue)
+            assertEquals("test_payment_data", event.data.paymentData)
+        }
+
+        private fun fingerprintAction(paymentData: String) = threeds2Action(
+            subtype = Threeds2Action.SubType.FINGERPRINT.value,
+            token = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray()),
+            paymentData = paymentData,
+        )
     }
 
     @Nested
@@ -530,6 +595,25 @@ internal class AuthenticationComponentTest(
 
             // THEN
             transaction.assertDoChallengeCalled()
+        }
+
+        @Test
+        fun `challenge is executed and the 3ds2 sdk reports the result, then details are emitted`() = runTest {
+            // GIVEN
+            val transaction = initializeChallengeTransaction(this)
+            val eventFlow = component.eventFlow.test(testScheduler)
+            component.challengeShopper(
+                Activity(),
+                Base64.encode("""{"messageVersion":"2.1.0"}""".toByteArray()),
+            )
+
+            // WHEN
+            requireNotNull(transaction.challengeStatusHandler)
+                .onCompletion(ChallengeResult.Completed(transactionStatus = "Y"))
+
+            // THEN
+            val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(eventFlow.latestValue)
+            assertTrue(event.data.details!!.has("threeds2.challengeResult"))
         }
 
         @Test
@@ -1194,6 +1278,9 @@ private class TestTransaction(
     var shouldThrowError: Boolean = false
     private var timesDoChallengeCalled = 0
 
+    var challengeStatusHandler: ChallengeStatusHandler? = null
+        private set
+
     override fun getAuthenticationRequestParameters(): AuthenticationRequestParameters? = authReqParameters
 
     @Suppress("OVERRIDE_DEPRECATION", "deprecation")
@@ -1206,6 +1293,7 @@ private class TestTransaction(
         timeOut: Int,
     ) {
         timesDoChallengeCalled++
+        this.challengeStatusHandler = challengeStatusHandler
         if (shouldThrowError) {
             throw InvalidInputException("test", null)
         }
