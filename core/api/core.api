@@ -840,9 +840,7 @@ public final class com/adyen/checkout/core/components/data/Address : com/adyen/c
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/core/components/data/Address$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
-	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
@@ -859,12 +857,6 @@ public final class com/adyen/checkout/core/components/data/Address : com/adyen/c
 	public final fun getStateOrProvince ()Ljava/lang/String;
 	public final fun getStreet ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun setCity (Ljava/lang/String;)V
-	public final fun setCountry (Ljava/lang/String;)V
-	public final fun setHouseNumberOrName (Ljava/lang/String;)V
-	public final fun setPostalCode (Ljava/lang/String;)V
-	public final fun setStateOrProvince (Ljava/lang/String;)V
-	public final fun setStreet (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }

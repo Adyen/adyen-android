@@ -15,12 +15,12 @@ import org.json.JSONObject
 
 @Parcelize
 data class Address(
-    var city: String? = null,
-    var country: String? = null,
-    var houseNumberOrName: String? = null,
-    var postalCode: String? = null,
-    var stateOrProvince: String? = null,
-    var street: String? = null,
+    val city: String?,
+    val country: String?,
+    val houseNumberOrName: String?,
+    val postalCode: String?,
+    val stateOrProvince: String?,
+    val street: String?,
 ) : ModelObject() {
 
     companion object {
