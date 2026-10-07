@@ -12,7 +12,6 @@ package com.adyen.checkout.authentication.internal.ui
 
 import android.app.Activity
 import android.app.Application
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.authentication.internal.analytics.AuthenticationEvents
 import com.adyen.checkout.authentication.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.authentication.internal.data.model.AuthenticationSerializer
@@ -27,7 +26,6 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.LoggingExtension
 import com.adyen.checkout.core.common.test
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
@@ -54,6 +52,8 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -70,6 +70,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -85,16 +86,12 @@ internal class AuthenticationComponentTest(
 
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var component: AuthenticationComponent
-    private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var threeDS2Service: TestThreeDS2Service
 
     @BeforeEach
     fun setup() {
-        // Needs to reset before the component is created
-        SharedChallengeStatusHandler.reset()
         analyticsManager = TestAnalyticsManager()
         threeDS2Service = TestThreeDS2Service()
-        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         component = createComponent()
     }
 
@@ -111,13 +108,11 @@ internal class AuthenticationComponentTest(
                 threeDSRequestorAppURL = null,
                 deviceParameterBlockList = null,
             ),
-            savedStateHandle = SavedStateHandle(),
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
             authenticationSerializer = authenticationSerializer,
             threeDS2Service = threeDS2Service,
             submitFingerprintRepository = submitFingerprintRepository,
-            paymentDataRepository = paymentDataRepository,
             coroutineDispatcher = UnconfinedTestDispatcher(),
             application = Application(),
             clientKey = TEST_CLIENT_KEY,
@@ -183,22 +178,68 @@ internal class AuthenticationComponentTest(
         }
 
         @Test
-        fun `action has paymentData, then paymentData is stored`() = runTest {
+        fun `action has paymentData and the fingerprint is submitted, then paymentData is sent with it`() = runTest {
             // GIVEN
-            val action = threeds2Action(
-                subtype = Threeds2Action.SubType.FINGERPRINT.value,
-                token = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray()),
-                paymentData = "test_payment_data",
-            )
-            component = createComponent(action = action)
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
+            whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
+                Result.success(SubmitFingerprintResult.Completed(JSONObject()))
+            component = createComponent(action = fingerprintAction(paymentData = "test_payment_data"))
             component.initialize(this)
 
             // WHEN
             component.handleAction(Activity(), mock())
 
             // THEN
-            assertEquals("test_payment_data", paymentDataRepository.paymentData)
+            verify(submitFingerprintRepository).submitFingerprint(any(), any(), eq("test_payment_data"))
         }
+
+        @Test
+        fun `action has paymentData and the fingerprint is submitted, then details do not contain it`() = runTest {
+            // GIVEN
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
+            whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
+                Result.success(SubmitFingerprintResult.Completed(JSONObject()))
+            component = createComponent(action = fingerprintAction(paymentData = "test_payment_data"))
+            val eventFlow = component.eventFlow.test(testScheduler)
+            component.initialize(this)
+
+            // WHEN
+            component.handleAction(Activity(), mock())
+
+            // THEN
+            val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(eventFlow.latestValue)
+            assertNull(event.data.paymentData)
+        }
+
+        @Test
+        fun `action has paymentData and the challenge completes, then details contain it`() = runTest {
+            // GIVEN
+            val action = threeds2Action(
+                subtype = Threeds2Action.SubType.CHALLENGE.value,
+                token = Base64.encode("""{"messageVersion":"2.1.0"}""".toByteArray()),
+                paymentData = "test_payment_data",
+            )
+            component = createComponent(action = action)
+            val transaction = initializeChallengeTransaction(this)
+            val eventFlow = component.eventFlow.test(testScheduler)
+            component.handleAction(Activity(), mock())
+
+            // WHEN
+            requireNotNull(transaction.challengeStatusHandler)
+                .onCompletion(ChallengeResult.Completed(transactionStatus = "Y"))
+
+            // THEN
+            val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(eventFlow.latestValue)
+            assertEquals("test_payment_data", event.data.paymentData)
+        }
+
+        private fun fingerprintAction(paymentData: String) = threeds2Action(
+            subtype = Threeds2Action.SubType.FINGERPRINT.value,
+            token = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray()),
+            paymentData = paymentData,
+        )
     }
 
     @Nested
@@ -530,6 +571,40 @@ internal class AuthenticationComponentTest(
 
             // THEN
             transaction.assertDoChallengeCalled()
+        }
+
+        @Test
+        fun `challenge is executed, then the component is the challenge status handler`() = runTest {
+            // GIVEN
+            val transaction = initializeChallengeTransaction(this)
+
+            // WHEN
+            component.challengeShopper(
+                Activity(),
+                Base64.encode("""{"messageVersion":"2.1.0"}""".toByteArray()),
+            )
+
+            // THEN
+            assertSame(component, transaction.challengeStatusHandler)
+        }
+
+        @Test
+        fun `challenge is executed and the 3ds2 sdk reports the result, then details are emitted`() = runTest {
+            // GIVEN
+            val transaction = initializeChallengeTransaction(this)
+            val eventFlow = component.eventFlow.test(testScheduler)
+            component.challengeShopper(
+                Activity(),
+                Base64.encode("""{"messageVersion":"2.1.0"}""".toByteArray()),
+            )
+
+            // WHEN
+            requireNotNull(transaction.challengeStatusHandler)
+                .onCompletion(ChallengeResult.Completed(transactionStatus = "Y"))
+
+            // THEN
+            val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(eventFlow.latestValue)
+            assertTrue(event.data.details!!.has("threeds2.challengeResult"))
         }
 
         @Test
@@ -1194,6 +1269,9 @@ private class TestTransaction(
     var shouldThrowError: Boolean = false
     private var timesDoChallengeCalled = 0
 
+    var challengeStatusHandler: ChallengeStatusHandler? = null
+        private set
+
     override fun getAuthenticationRequestParameters(): AuthenticationRequestParameters? = authReqParameters
 
     @Suppress("OVERRIDE_DEPRECATION", "deprecation")
@@ -1206,6 +1284,7 @@ private class TestTransaction(
         timeOut: Int,
     ) {
         timesDoChallengeCalled++
+        this.challengeStatusHandler = challengeStatusHandler
         if (shouldThrowError) {
             throw InvalidInputException("test", null)
         }

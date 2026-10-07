@@ -20,7 +20,6 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +36,6 @@ internal class AuthenticationFactory(
         savedStateHandle: SavedStateHandle,
     ): AuthenticationComponent {
         val redirectHandler = DefaultRedirectHandler()
-        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
@@ -48,11 +46,9 @@ internal class AuthenticationFactory(
         return AuthenticationComponent(
             action = action,
             componentParams = threeDS2ComponentParams,
-            savedStateHandle = savedStateHandle,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
             submitFingerprintRepository = submitFingerprintRepository,
-            paymentDataRepository = paymentDataRepository,
             threeDS2Service = ThreeDS2Service.INSTANCE,
             coroutineDispatcher = DispatcherProvider.Default,
             authenticationSerializer = authenticationSerializer,

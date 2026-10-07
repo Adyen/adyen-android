@@ -13,7 +13,6 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.authentication.internal.analytics.AuthenticationEvents
 import com.adyen.checkout.authentication.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.authentication.internal.data.model.AuthenticationSerializer
@@ -32,10 +31,8 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.internal.SavedStateHandleContainer
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
@@ -64,23 +61,29 @@ import org.json.JSONObject
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+/**
+ * Handles 3DS2 fingerprint and challenge actions.
+ *
+ * This component deliberately does not restore its state after process death. The 3DS2 SDK keeps the transaction in
+ * memory only, and does not persist it for security reasons. When its challenge screen is recreated in a new process,
+ * it closes itself without delivering a result. There is nothing left to resume, so a restored checkout flow fails
+ * instead, and all state, such as the payment data, is kept in memory.
+ */
 @Suppress("TooManyFunctions", "LargeClass")
 internal class AuthenticationComponent
 @Suppress("LongParameterList")
 constructor(
     private val action: Threeds2Action,
     private val componentParams: AuthenticationComponentParams,
-    override val savedStateHandle: SavedStateHandle,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
     private val authenticationSerializer: AuthenticationSerializer,
     private val threeDS2Service: ThreeDS2Service,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
-    private val paymentDataRepository: PaymentDataRepository,
     private val coroutineDispatcher: CoroutineDispatcher,
     private val application: Application,
     private val clientKey: String,
-) : ActionComponent, ChallengeStatusHandler, SavedStateHandleContainer {
+) : ActionComponent, ChallengeStatusHandler {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
@@ -88,7 +91,11 @@ constructor(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
+    @Volatile
     private var currentTransaction: Transaction? = null
+
+    @Volatile
+    private var paymentData: String? = null
 
     private val authenticationEventChannel = bufferedChannel<AuthenticationEvent>()
     private val authenticationEventFlow: Flow<AuthenticationEvent> = authenticationEventChannel.receiveAsFlow()
@@ -106,7 +113,6 @@ constructor(
 
     fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        SharedChallengeStatusHandler.onCompletionListener = this
     }
 
     override fun handleAction() {
@@ -119,8 +125,7 @@ constructor(
     }
 
     private fun handleAction(action: Threeds2Action, activity: Activity, uiCustomization: UiCustomization) {
-        val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
+        paymentData = action.paymentData
         handleThreeds2Action(action, activity, uiCustomization)
     }
 
@@ -400,7 +405,7 @@ constructor(
         submitFingerprintRepository.submitFingerprint(
             encodedFingerprint = encodedFingerprint,
             clientKey = clientKey,
-            paymentData = paymentDataRepository.paymentData,
+            paymentData = paymentData,
         )
             .fold(
                 onSuccess = { result -> onSubmitFingerprintResult(result, activity, uiCustomization) },
@@ -424,7 +429,7 @@ constructor(
         // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData
         // back to the merchant. Setting it to null ensures that when the flow ends and notifyDetails is called,
         // paymentData will not be included in the response.
-        paymentDataRepository.paymentData = null
+        paymentData = null
 
         when (result) {
             is SubmitFingerprintResult.Completed -> {
@@ -490,7 +495,7 @@ constructor(
             currentTransaction?.doChallenge(
                 activity,
                 challengeParameters,
-                SharedChallengeStatusHandler,
+                this,
                 DEFAULT_CHALLENGE_TIME_OUT,
             )
 
@@ -710,7 +715,7 @@ constructor(
     private fun emitDetails(details: JSONObject, shouldClearState: Boolean = true) {
         val actionComponentData = ActionComponentData(
             details = details,
-            paymentData = paymentDataRepository.paymentData,
+            paymentData = paymentData,
         )
         eventChannel.trySend(ActionComponentEvent.ActionDetails(actionComponentData))
 
@@ -726,7 +731,6 @@ constructor(
     }
 
     private fun clearState() {
-        SharedChallengeStatusHandler.reset()
         closeTransaction()
     }
 
