@@ -61,6 +61,14 @@ import org.json.JSONObject
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+/**
+ * Handles 3DS2 fingerprint and challenge actions.
+ *
+ * This component deliberately does not restore its state after process death. The 3DS2 SDK keeps the transaction in
+ * memory only, and does not persist it for security reasons. When its challenge screen is recreated in a new process,
+ * it closes itself without delivering a result. There is nothing left to resume, so a restored checkout flow fails
+ * instead, and all state, such as the payment data, is kept in memory.
+ */
 @Suppress("TooManyFunctions", "LargeClass")
 internal class AuthenticationComponent
 @Suppress("LongParameterList")
