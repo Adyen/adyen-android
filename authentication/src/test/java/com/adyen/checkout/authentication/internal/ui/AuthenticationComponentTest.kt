@@ -12,7 +12,6 @@ package com.adyen.checkout.authentication.internal.ui
 
 import android.app.Activity
 import android.app.Application
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.authentication.internal.analytics.AuthenticationEvents
 import com.adyen.checkout.authentication.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.authentication.internal.data.model.AuthenticationSerializer
@@ -27,7 +26,6 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.LoggingExtension
 import com.adyen.checkout.core.common.test
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
@@ -88,14 +86,12 @@ internal class AuthenticationComponentTest(
 
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var component: AuthenticationComponent
-    private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var threeDS2Service: TestThreeDS2Service
 
     @BeforeEach
     fun setup() {
         analyticsManager = TestAnalyticsManager()
         threeDS2Service = TestThreeDS2Service()
-        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         component = createComponent()
     }
 
@@ -117,7 +113,6 @@ internal class AuthenticationComponentTest(
             authenticationSerializer = authenticationSerializer,
             threeDS2Service = threeDS2Service,
             submitFingerprintRepository = submitFingerprintRepository,
-            paymentDataRepository = paymentDataRepository,
             coroutineDispatcher = UnconfinedTestDispatcher(),
             application = Application(),
             clientKey = TEST_CLIENT_KEY,
@@ -180,24 +175,6 @@ internal class AuthenticationComponentTest(
             // THEN
             val event = assertInstanceOf<ActionComponentEvent.Error>(eventFlow.latestValue)
             assertEquals("3DS2 token not found.", event.error.message)
-        }
-
-        @Test
-        fun `action has paymentData, then paymentData is stored`() = runTest {
-            // GIVEN
-            val action = threeds2Action(
-                subtype = Threeds2Action.SubType.FINGERPRINT.value,
-                token = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray()),
-                paymentData = "test_payment_data",
-            )
-            component = createComponent(action = action)
-            component.initialize(this)
-
-            // WHEN
-            component.handleAction(Activity(), mock())
-
-            // THEN
-            assertEquals("test_payment_data", paymentDataRepository.paymentData)
         }
 
         @Test

@@ -33,7 +33,6 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
@@ -73,7 +72,6 @@ constructor(
     private val authenticationSerializer: AuthenticationSerializer,
     private val threeDS2Service: ThreeDS2Service,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
-    private val paymentDataRepository: PaymentDataRepository,
     private val coroutineDispatcher: CoroutineDispatcher,
     private val application: Application,
     private val clientKey: String,
@@ -86,6 +84,8 @@ constructor(
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     private var currentTransaction: Transaction? = null
+
+    private var paymentData: String? = null
 
     private val authenticationEventChannel = bufferedChannel<AuthenticationEvent>()
     private val authenticationEventFlow: Flow<AuthenticationEvent> = authenticationEventChannel.receiveAsFlow()
@@ -115,8 +115,7 @@ constructor(
     }
 
     private fun handleAction(action: Threeds2Action, activity: Activity, uiCustomization: UiCustomization) {
-        val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
+        paymentData = action.paymentData
         handleThreeds2Action(action, activity, uiCustomization)
     }
 
@@ -396,7 +395,7 @@ constructor(
         submitFingerprintRepository.submitFingerprint(
             encodedFingerprint = encodedFingerprint,
             clientKey = clientKey,
-            paymentData = paymentDataRepository.paymentData,
+            paymentData = paymentData,
         )
             .fold(
                 onSuccess = { result -> onSubmitFingerprintResult(result, activity, uiCustomization) },
@@ -420,7 +419,7 @@ constructor(
         // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData
         // back to the merchant. Setting it to null ensures that when the flow ends and notifyDetails is called,
         // paymentData will not be included in the response.
-        paymentDataRepository.paymentData = null
+        paymentData = null
 
         when (result) {
             is SubmitFingerprintResult.Completed -> {
@@ -706,7 +705,7 @@ constructor(
     private fun emitDetails(details: JSONObject, shouldClearState: Boolean = true) {
         val actionComponentData = ActionComponentData(
             details = details,
-            paymentData = paymentDataRepository.paymentData,
+            paymentData = paymentData,
         )
         eventChannel.trySend(ActionComponentEvent.ActionDetails(actionComponentData))
 
