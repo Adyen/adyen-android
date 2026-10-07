@@ -112,7 +112,6 @@ internal class AuthenticationComponentTest(
                 threeDSRequestorAppURL = null,
                 deviceParameterBlockList = null,
             ),
-            savedStateHandle = SavedStateHandle(),
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
             authenticationSerializer = authenticationSerializer,

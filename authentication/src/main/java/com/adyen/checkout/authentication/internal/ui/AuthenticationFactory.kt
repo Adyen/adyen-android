@@ -48,7 +48,6 @@ internal class AuthenticationFactory(
         return AuthenticationComponent(
             action = action,
             componentParams = threeDS2ComponentParams,
-            savedStateHandle = savedStateHandle,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
             submitFingerprintRepository = submitFingerprintRepository,

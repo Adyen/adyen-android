@@ -13,7 +13,6 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.authentication.internal.analytics.AuthenticationEvents
 import com.adyen.checkout.authentication.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.authentication.internal.data.model.AuthenticationSerializer
@@ -32,7 +31,6 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.internal.SavedStateHandleContainer
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
@@ -70,7 +68,6 @@ internal class AuthenticationComponent
 constructor(
     private val action: Threeds2Action,
     private val componentParams: AuthenticationComponentParams,
-    override val savedStateHandle: SavedStateHandle,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
     private val authenticationSerializer: AuthenticationSerializer,
@@ -80,7 +77,7 @@ constructor(
     private val coroutineDispatcher: CoroutineDispatcher,
     private val application: Application,
     private val clientKey: String,
-) : ActionComponent, ChallengeStatusHandler, SavedStateHandleContainer {
+) : ActionComponent, ChallengeStatusHandler {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
