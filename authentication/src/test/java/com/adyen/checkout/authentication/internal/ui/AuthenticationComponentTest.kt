@@ -55,6 +55,7 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -92,8 +93,6 @@ internal class AuthenticationComponentTest(
 
     @BeforeEach
     fun setup() {
-        // Needs to reset before the component is created
-        SharedChallengeStatusHandler.reset()
         analyticsManager = TestAnalyticsManager()
         threeDS2Service = TestThreeDS2Service()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
@@ -595,6 +594,21 @@ internal class AuthenticationComponentTest(
 
             // THEN
             transaction.assertDoChallengeCalled()
+        }
+
+        @Test
+        fun `challenge is executed, then the component is the challenge status handler`() = runTest {
+            // GIVEN
+            val transaction = initializeChallengeTransaction(this)
+
+            // WHEN
+            component.challengeShopper(
+                Activity(),
+                Base64.encode("""{"messageVersion":"2.1.0"}""".toByteArray()),
+            )
+
+            // THEN
+            assertSame(component, transaction.challengeStatusHandler)
         }
 
         @Test

@@ -106,7 +106,6 @@ constructor(
 
     fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        SharedChallengeStatusHandler.onCompletionListener = this
     }
 
     override fun handleAction() {
@@ -490,7 +489,7 @@ constructor(
             currentTransaction?.doChallenge(
                 activity,
                 challengeParameters,
-                SharedChallengeStatusHandler,
+                this,
                 DEFAULT_CHALLENGE_TIME_OUT,
             )
 
@@ -726,7 +725,6 @@ constructor(
     }
 
     private fun clearState() {
-        SharedChallengeStatusHandler.reset()
         closeTransaction()
     }
 
