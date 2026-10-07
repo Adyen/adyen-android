@@ -218,16 +218,17 @@ internal class AuthenticationComponentTest(
             // GIVEN
             val action = threeds2Action(
                 subtype = Threeds2Action.SubType.CHALLENGE.value,
-                token = "token",
+                token = Base64.encode("""{"messageVersion":"2.1.0"}""".toByteArray()),
                 paymentData = "test_payment_data",
             )
             component = createComponent(action = action)
-            component.initialize(this)
+            val transaction = initializeChallengeTransaction(this)
             val eventFlow = component.eventFlow.test(testScheduler)
             component.handleAction(Activity(), mock())
 
             // WHEN
-            component.onCompletion(ChallengeResult.Completed(transactionStatus = "Y"))
+            requireNotNull(transaction.challengeStatusHandler)
+                .onCompletion(ChallengeResult.Completed(transactionStatus = "Y"))
 
             // THEN
             val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(eventFlow.latestValue)
