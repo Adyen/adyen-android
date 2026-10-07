@@ -412,6 +412,17 @@ internal class ActionHandlerTest(
             verify(componentRequestDispatcher).failure(any())
             assertNull(actionHandler.actionComponent)
         }
+
+        @Test
+        fun `when the action type is not registered, then the saved state is cleared`() {
+            val action = TestAction(type = "unregistered_actionType")
+            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(action)
+
+            assertNull(stateStore.restore())
+        }
     }
 
     @Nested

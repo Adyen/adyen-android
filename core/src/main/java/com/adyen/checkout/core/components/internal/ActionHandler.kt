@@ -63,7 +63,10 @@ constructor(
      * is not called again.
      */
     fun restoreAction(action: Action) {
-        val actionComponent = createActionComponent(action) ?: return
+        val actionComponent = createActionComponent(action) ?: run {
+            stateStore.clear()
+            return
+        }
         if (actionComponent !is RestorableActionComponent) {
             this.actionComponent = null
             stateStore.clear()
