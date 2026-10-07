@@ -31,13 +31,11 @@ import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentM
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -70,9 +68,6 @@ internal class PaymentMethodListViewModel(
     init {
         checkAvailability(controllerProvider)
     }
-
-    fun instantPaymentMethodFor(paymentFlowType: DropInPaymentFlowType): Flow<InstantPaymentMethod?> =
-        instantPaymentMethod.map { it?.takeIf { it.paymentFlowType == paymentFlowType } }
 
     /**
      * Runs the registered availability check for every candidate in parallel. The instant payment method's

@@ -163,12 +163,12 @@ private fun actionNavEntry(
                 // availability check passes. When the list view model is recreated, it is null until then.
                 // TODO - Test this case as part of state restoration, the recreated controller does not continue the
                 //  action yet.
-                val instantPaymentMethod = remember(paymentMethodListViewModel, key.paymentFlowType) {
-                    paymentMethodListViewModel.instantPaymentMethodFor(key.paymentFlowType)
-                }.collectAsStateWithLifecycle(initialValue = null).value
+                val instantPaymentMethod = paymentMethodListViewModel.instantPaymentMethod
+                    .collectAsStateWithLifecycle().value
+                    ?.takeIf { it.paymentFlowType == key.paymentFlowType }
 
                 if (instantPaymentMethod == null) {
-                    adyenLog(AdyenLogLevel.ERROR, "actionNavEntry") {
+                    adyenLog(AdyenLogLevel.DEBUG, "actionNavEntry") {
                         "No instant payment method for ${key.paymentFlowType}, the action cannot be displayed."
                     }
                 } else {
