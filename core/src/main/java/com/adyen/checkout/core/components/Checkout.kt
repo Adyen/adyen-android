@@ -10,8 +10,12 @@ package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
+import com.adyen.checkout.core.components.Checkout.setup
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
+import com.adyen.checkout.core.components.internal.PaymentMethodProvider
+import com.adyen.checkout.core.components.internal.PaymentMethodResolver
 import com.adyen.checkout.core.components.internal.validate
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.SessionResponse
@@ -127,6 +131,32 @@ object Checkout {
                 publicKey = initializationData.publicKey,
             ),
         )
+    }
+
+    /**
+     * Checks whether a payment method can be used in the current environment.
+     *
+     * The payment method is resolved from the [context] by its [type], as returned by the
+     * `/paymentMethods` or `/sessions` endpoint. Some payment methods depend on device
+     * capabilities, installed apps or SDK configuration to work (for example Google Pay requires a
+     * passing `isReadyToPay` check). Payment methods that have no environment requirements are
+     * always available.
+     *
+     * This method never throws. It returns `false` when the payment method is not part of the
+     * [context], when its module is not included in the integration, or when its availability
+     * check fails.
+     *
+     * @param type The type of the payment method, e.g. `"googlepay"`.
+     * @param context The [CheckoutContext] created by one of the [setup] methods.
+     * @return `true` when the payment method can be used, `false` otherwise.
+     */
+    suspend fun isPaymentMethodAvailable(
+        type: String,
+        context: CheckoutContext,
+    ): Boolean {
+        val paymentMethod = PaymentMethodResolver.resolve(CheckoutTarget.PaymentMethod(type), context) ?: return false
+        val params = CheckoutParamsFactory().create(context)
+        return PaymentMethodProvider.isAvailable(paymentMethod, params)
     }
 
     /**

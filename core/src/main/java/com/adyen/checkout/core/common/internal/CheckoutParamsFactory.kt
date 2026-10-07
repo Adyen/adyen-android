@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AnalyticsConfiguration
@@ -34,6 +35,14 @@ class CheckoutParamsFactory @VisibleForTesting internal constructor(
             AppCompatDelegate.getApplicationLocales().takeUnless { it.isEmpty }?.get(0) ?: Locale.getDefault()
         },
     )
+
+    fun create(context: CheckoutContext): CheckoutParams {
+        return create(
+            configuration = context.checkoutConfiguration,
+            session = (context as? CheckoutContext.Sessions)?.checkoutSession,
+            publicKey = context.publicKey,
+        )
+    }
 
     fun create(
         configuration: CheckoutConfiguration,

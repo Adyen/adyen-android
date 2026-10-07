@@ -658,6 +658,7 @@ public final class com/adyen/checkout/core/components/BeforeSubmitResult$Proceed
 public final class com/adyen/checkout/core/components/Checkout {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/adyen/checkout/core/components/Checkout;
+	public final fun isPaymentMethodAvailable (Ljava/lang/String;Lcom/adyen/checkout/core/common/CheckoutContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setup (Lcom/adyen/checkout/core/action/data/Action;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setup (Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethods;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setup (Lcom/adyen/checkout/core/sessions/SessionResponse;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

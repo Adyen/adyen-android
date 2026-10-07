@@ -23,12 +23,14 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
+import com.adyen.checkout.core.components.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -71,6 +73,16 @@ internal class PaymentMethodListViewModelTest {
         mockCheckoutController().also { createdControllers += it }
     }
 
+    private val checkedParams = mutableListOf<CheckoutParams>()
+    private var isAvailable: suspend (PaymentMethod) -> Boolean = { true }
+
+    private val availabilityCheck = object : PaymentMethodAvailabilityCheck {
+        override suspend fun isAvailable(paymentMethod: PaymentMethod, params: CheckoutParams): Boolean {
+            checkedParams += params
+            return isAvailable(paymentMethod)
+        }
+    }
+
     @Test
     fun `when an instant payment method is offered, then it is not a list item too`() {
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
@@ -91,14 +103,14 @@ internal class PaymentMethodListViewModelTest {
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY, GOOGLE_PAY_LEGACY))
 
         assertEquals(listOf(GOOGLE_PAY_FLOW), requestedPaymentFlowTypes)
-        assertSame(createdControllers.single(), viewModel.instantPaymentMethod?.controller)
+        assertSame(createdControllers.single(), viewModel.instantPaymentMethod.value?.controller)
     }
 
     @Test
     fun `when only the legacy Google Pay type is offered, then that type drives the instant payment method`() {
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY_LEGACY))
 
-        assertEquals(GOOGLE_PAY_LEGACY_FLOW, viewModel.instantPaymentMethod?.paymentFlowType)
+        assertEquals(GOOGLE_PAY_LEGACY_FLOW, viewModel.instantPaymentMethod.value?.paymentFlowType)
     }
 
     @Test
@@ -123,7 +135,7 @@ internal class PaymentMethodListViewModelTest {
     fun `when no instant payment method is offered, then no controller is created`() {
         val viewModel = createViewModel(listOf(CARD))
 
-        assertNull(viewModel.instantPaymentMethod)
+        assertNull(viewModel.instantPaymentMethod.value)
         assertEquals(emptyList<DropInPaymentFlowType>(), requestedPaymentFlowTypes)
     }
 
@@ -135,18 +147,45 @@ internal class PaymentMethodListViewModelTest {
     }
 
     @Test
-    fun `when the instant payment method is looked up by its own flow, then it is found`() {
+    fun `when the instant payment method is unavailable, then no controller is created`() {
+        isAvailable = { it.type != PaymentMethodTypes.GOOGLE_PAY }
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
 
-        assertSame(viewModel.instantPaymentMethod, viewModel.findInstantPaymentMethod(GOOGLE_PAY_FLOW))
+        assertNull(viewModel.instantPaymentMethod.value)
+        assertEquals(emptyList<DropInPaymentFlowType>(), requestedPaymentFlowTypes)
     }
 
     @Test
-    fun `when another payment flow is looked up, then no instant payment method is found`() {
+    fun `when a listed payment method is unavailable, then it is filtered out`() = runTest {
+        isAvailable = { it.type != PaymentMethodTypes.SCHEME }
         val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
 
-        // The action screen resolves its controller through this lookup, so a wrong answer pays the wrong thing.
-        assertNull(viewModel.findInstantPaymentMethod(CARD_FLOW))
+        viewModel.viewState.test {
+            assertEquals(emptyList<String>(), expectMostRecentItem().listedPaymentMethodIds())
+        }
+    }
+
+    @Test
+    fun `when payment methods are checked, then the checkout params are passed along`() {
+        createViewModel(listOf(CARD, GOOGLE_PAY))
+
+        assertEquals(listOf(checkoutParams, checkoutParams), checkedParams)
+    }
+
+    @Test
+    fun `when the availability check completes later, then the instant payment method is emitted`() = runTest {
+        val availability = CompletableDeferred<Boolean>()
+        isAvailable = { it.type != PaymentMethodTypes.GOOGLE_PAY || availability.await() }
+        val viewModel = createViewModel(listOf(CARD, GOOGLE_PAY))
+
+        // A recreated action screen observes the method before the availability check has completed.
+        viewModel.instantPaymentMethod.test {
+            assertNull(awaitItem())
+
+            availability.complete(true)
+
+            assertSame(createdControllers.single(), awaitItem()?.controller)
+        }
     }
 
     @Test
@@ -211,7 +250,10 @@ internal class PaymentMethodListViewModelTest {
     }
 
     private fun PaymentMethodListViewModel.listedPaymentMethodIds(): List<String> =
-        viewState.value.paymentOptionsSection?.options.orEmpty().map { it.id }
+        viewState.value.listedPaymentMethodIds()
+
+    private fun PaymentMethodListViewState.listedPaymentMethodIds(): List<String> =
+        paymentOptionsSection?.options.orEmpty().map { it.id }
 
     private fun createViewModel(
         paymentMethods: List<PaymentMethod>,
@@ -225,6 +267,7 @@ internal class PaymentMethodListViewModelTest {
             paymentMethods = paymentMethods,
         ),
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+        availabilityCheck = availabilityCheck,
         navigator = navigator,
         controllerProvider = controllerProvider,
     )
@@ -276,7 +319,6 @@ internal class PaymentMethodListViewModelTest {
             configuration = null,
         )
 
-        private val CARD_FLOW = DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.SCHEME)
         private val GOOGLE_PAY_FLOW = DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.GOOGLE_PAY)
         private val GOOGLE_PAY_LEGACY_FLOW =
             DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.GOOGLE_PAY_LEGACY)
