@@ -9,6 +9,7 @@
 package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.action.data.ActionComponentData
@@ -16,6 +17,7 @@ import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.action.internal.ui.ActionFormatter
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -42,6 +44,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 
+@Suppress("TooManyFunctions")
 internal class RedirectComponent
 @Suppress("LongParameterList")
 constructor(
@@ -51,13 +54,15 @@ constructor(
     private val nativeRedirectService: NativeRedirectService,
     private val clientKey: String,
     private val coroutineScope: CoroutineScope,
-) : ActionComponent, ReturningActionComponent {
+) : ActionComponent, ReturningActionComponent, RestorableActionComponent {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
 
     private val redirectEventChannel = bufferedChannel<RedirectViewEvent>()
-    private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
+
+    @VisibleForTesting
+    internal val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
     @Volatile
     private var paymentData: String? = null
@@ -88,6 +93,14 @@ constructor(
 
         initState()
         launchAction(action.url)
+    }
+
+    /**
+     * The shopper already left for the redirect before process death, so nothing is launched again. The component waits
+     * for [handleReturn].
+     */
+    override fun restoreAction() {
+        initState()
     }
 
     private fun initState() {

@@ -18,6 +18,7 @@ import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
+import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -83,6 +85,109 @@ internal class RedirectComponentTest(
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
+
+        @Test
+        fun `when handleAction is called, then the redirect is launched with the action url`() = runTest {
+            // GIVEN
+            val component = createComponent(action = redirectAction(url = TEST_URL))
+            val redirectEvents = component.redirectEventFlow.test(testScheduler)
+
+            // WHEN
+            component.handleAction()
+
+            // THEN
+            assertEquals(listOf(RedirectViewEvent.Redirect(TEST_URL)), redirectEvents.values)
+        }
+    }
+
+    @Nested
+    inner class RestoreActionTest {
+
+        @Test
+        fun `when restoreAction is called, then no redirect is launched`() = runTest {
+            // GIVEN
+            val component = createComponent(action = redirectAction(url = TEST_URL))
+            val redirectEvents = component.redirectEventFlow.test(testScheduler)
+
+            // WHEN
+            component.restoreAction()
+
+            // THEN
+            assertEquals(emptyList<RedirectViewEvent>(), redirectEvents.values)
+        }
+
+        @Test
+        fun `when restoreAction is called, then no action event is tracked`() {
+            // GIVEN
+            val component = createComponent(
+                action = redirectAction(
+                    paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                    type = TEST_ACTION_TYPE,
+                ),
+            )
+
+            // WHEN
+            component.restoreAction()
+
+            // THEN
+            val actionEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertEventCount(0, actionEvent)
+        }
+
+        @Test
+        fun `when restored and handleReturn is called, then details contain the action's paymentData`() = runTest {
+            // GIVEN
+            val expectedDetails = JSONObject().apply { put("redirectResult", "testResult") }
+            whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn expectedDetails
+            val component = createComponent(
+                action = redirectAction(
+                    type = ActionTypes.REDIRECT,
+                    paymentData = "testPaymentData",
+                ),
+            )
+            component.restoreAction()
+            val events = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.handleReturn(Intent())
+
+            // THEN
+            val event = assertInstanceOf<ActionComponentEvent.ActionDetails>(events.latestValue)
+            assertEquals(expectedDetails.toString(), event.data.details.toString())
+            assertEquals("testPaymentData", event.data.paymentData)
+        }
+
+        @Test
+        fun `when restored with native redirect and handleReturn is called, then the action's nativeRedirectData is sent`() =
+            runTest {
+                // GIVEN
+                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doReturn
+                    NativeRedirectResponse("someRedirectResult")
+                val redirectResult = JSONObject().apply {
+                    put("returnUrlQueryString", "gpid=ajfbasljbfaljfe")
+                }
+                whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn redirectResult
+                val component = createComponent(
+                    action = redirectAction(
+                        type = ActionTypes.NATIVE_REDIRECT,
+                        nativeRedirectData = "testNativeData",
+                    ),
+                )
+                component.restoreAction()
+
+                // WHEN
+                component.handleReturn(Intent())
+
+                // THEN
+                val expectedRequest = NativeRedirectRequest(
+                    redirectData = "testNativeData",
+                    returnQueryString = "gpid=ajfbasljbfaljfe",
+                )
+                verify(nativeRedirectService).makeNativeRedirect(expectedRequest, TEST_CLIENT_KEY)
+            }
     }
 
     @Nested
@@ -374,18 +479,20 @@ internal class RedirectComponentTest(
         paymentMethodType: String? = null,
         paymentData: String? = null,
         nativeRedirectData: String? = null,
+        url: String? = null,
     ) = RedirectAction(
         type = type,
         paymentMethodType = paymentMethodType,
         paymentData = paymentData,
         nativeRedirectData = nativeRedirectData,
         method = null,
-        url = null,
+        url = url,
     )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfgh"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
         private const val TEST_ACTION_TYPE = "TEST_ACTION_TYPE"
+        private const val TEST_URL = "https://test.adyen.com/redirect"
     }
 }
