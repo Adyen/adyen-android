@@ -88,18 +88,20 @@ internal class CheckoutControllerFactory {
             coroutineScope = coroutineScope,
         )
         val componentRequestDispatcher = ActionOnlyComponentRequestDispatcher(callbacks)
+        val stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = null)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
             savedStateHandle = savedStateHandle,
-            stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = null),
+            stateStore = stateStore,
             onAction = {},
         )
         val flow = ActionOnlyCheckoutFlow(
             action = context.action,
             actionHandler = actionHandler,
+            stateStore = stateStore,
         )
         CheckoutController(
             flow = flow,

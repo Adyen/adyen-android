@@ -61,14 +61,24 @@ internal class FullCheckoutFlow(
             .launchIn(coroutineScope)
     }
 
+    private fun restoreSavedState() {
+        when (val phase = stateStore.restore()) {
+            CheckoutFlowPhase.Submitted -> failWithUnknownOutcome()
+            is CheckoutFlowPhase.HandlingAction -> {
+                canSubmit.set(false)
+                actionHandler.restoreAction(phase.action)
+            }
+
+            CheckoutFlowPhase.Input, null -> Unit
+        }
+    }
+
     /**
      * The process died after the payment was submitted and before a response was received, so the payment outcome is
      * unknown. Submitting again could result in a double payment, so the flow fails instead. The saved state is
      * cleared, so that the failure is only reported once.
      */
-    private fun restoreSavedState() {
-        if (stateStore.restore() != CheckoutFlowPhase.Submitted) return
-
+    private fun failWithUnknownOutcome() {
         canSubmit.set(false)
         stateStore.clear()
         val error = CheckoutError(

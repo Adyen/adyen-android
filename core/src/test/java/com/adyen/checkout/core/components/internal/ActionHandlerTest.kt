@@ -20,6 +20,7 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.action.internal.ActionFactory
+import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
@@ -265,6 +266,166 @@ internal class ActionHandlerTest(
     }
 
     @Nested
+    inner class RestoreActionTest {
+
+        @BeforeEach
+        fun beforeEach() {
+            registerRestorableTestFactory()
+        }
+
+        @Test
+        fun `when restoreAction is called, then actionComponent is set`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(TestAction(type = RESTORABLE_ACTION_TYPE))
+
+            assertNotNull(actionHandler.actionComponent)
+        }
+
+        @Test
+        fun `when restoreAction is called, then restoreAction is called on the action component`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(TestAction(type = RESTORABLE_ACTION_TYPE))
+
+            val component = actionHandler.actionComponent as? ControllableRestorableActionComponent
+            assertEquals(1, component?.restoreActionCallCount)
+        }
+
+        @Test
+        fun `when restoreAction is called, then handleAction is not called on the action component`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(TestAction(type = RESTORABLE_ACTION_TYPE))
+
+            val component = actionHandler.actionComponent as? ControllableRestorableActionComponent
+            assertEquals(0, component?.handleActionCallCount)
+        }
+
+        @Test
+        fun `when restoreAction is called, then onAction is not called`() {
+            val capturedActions = mutableListOf<ActionData>()
+            val actionHandler = createActionHandler(onAction = { capturedActions += it })
+
+            actionHandler.restoreAction(TestAction(type = RESTORABLE_ACTION_TYPE))
+
+            assertEquals(emptyList<ActionData>(), capturedActions)
+        }
+
+        @Test
+        fun `when restoreAction is called, then the handling action phase is kept`() {
+            val action = TestAction(type = RESTORABLE_ACTION_TYPE)
+            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(action)
+
+            assertEquals(CheckoutFlowPhase.HandlingAction(action), stateStore.restore())
+        }
+
+        @Test
+        fun `when the restored component emits ActionDetails, then additional details are dispatched`() = runTest {
+            whenever(componentRequestDispatcher.additionalDetails(any())) doReturn
+                AdditionalDetailsResult.Completion("Authorised")
+            val actionHandler = createActionHandler()
+            actionHandler.restoreAction(TestAction(type = RESTORABLE_ACTION_TYPE))
+
+            val data = ActionComponentData()
+            eventFlow.emit(ActionComponentEvent.ActionDetails(data))
+
+            verify(componentRequestDispatcher).additionalDetails(data)
+            verify(componentRequestDispatcher).complete(CheckoutResultCode("Authorised"))
+        }
+
+        @Test
+        fun `when handleReturn is called after restoreAction, then it reaches the restored component`() {
+            val actionHandler = createActionHandler()
+            actionHandler.restoreAction(TestAction(type = RESTORABLE_ACTION_TYPE))
+
+            val intent = mock<Intent>()
+            actionHandler.handleReturn(intent)
+
+            val component = actionHandler.actionComponent as? ControllableRestorableActionComponent
+            assertEquals(intent, component?.lastIntent)
+        }
+
+        @Test
+        fun `when the action component is not restorable, then a generic failure is reported`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(TestAction(type = TEST_ACTION_TYPE))
+
+            with(argumentCaptor<CheckoutError>()) {
+                verify(componentRequestDispatcher).failure(capture())
+                assertEquals(CheckoutError.ErrorCode.GENERIC, lastValue.code)
+            }
+        }
+
+        @Test
+        fun `when the action component is not restorable, then actionComponent is null`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(TestAction(type = TEST_ACTION_TYPE))
+
+            assertNull(actionHandler.actionComponent)
+        }
+
+        @Test
+        fun `when the action component is not restorable, then the saved state is cleared`() {
+            val action = TestAction(type = TEST_ACTION_TYPE)
+            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(action)
+
+            assertNull(stateStore.restore())
+        }
+
+        @Test
+        fun `when the action component is not restorable, then handleAction is not called on it`() {
+            var handleActionCallCount = 0
+            ActionComponentProvider.register(
+                TEST_ACTION_TYPE,
+                object : ActionFactory<Action, ActionComponent> {
+                    override fun create(
+                        action: Action,
+                        coroutineScope: CoroutineScope,
+                        analyticsManager: AnalyticsManager,
+                        params: CheckoutParams,
+                        savedStateHandle: SavedStateHandle,
+                    ) = ControllableActionComponent(eventFlow) { handleActionCallCount++ }
+                },
+            )
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(TestAction(type = TEST_ACTION_TYPE))
+
+            assertEquals(0, handleActionCallCount)
+        }
+
+        @Test
+        fun `when the action type is not registered, then failure is called on the dispatcher`() {
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(TestAction(type = "unregistered_actionType"))
+
+            verify(componentRequestDispatcher).failure(any())
+            assertNull(actionHandler.actionComponent)
+        }
+
+        @Test
+        fun `when the action type is not registered, then the saved state is cleared`() {
+            val action = TestAction(type = "unregistered_actionType")
+            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+            val actionHandler = createActionHandler()
+
+            actionHandler.restoreAction(action)
+
+            assertNull(stateStore.restore())
+        }
+    }
+
+    @Nested
     inner class SavedStateTest {
 
         @Test
@@ -385,6 +546,21 @@ internal class ActionHandlerTest(
         )
     }
 
+    private fun registerRestorableTestFactory() {
+        ActionComponentProvider.register(
+            RESTORABLE_ACTION_TYPE,
+            object : ActionFactory<Action, ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ) = ControllableRestorableActionComponent(eventFlow)
+            },
+        )
+    }
+
     private fun registerTestFactory(actionType: String = TEST_ACTION_TYPE) {
         ActionComponentProvider.register(
             actionType,
@@ -470,8 +646,38 @@ internal class ActionHandlerTest(
         }
     }
 
+    private class ControllableRestorableActionComponent(
+        override val eventFlow: Flow<ActionComponentEvent>,
+    ) : ActionComponent, ReturningActionComponent, RestorableActionComponent {
+
+        var handleActionCallCount = 0
+            private set
+
+        var restoreActionCallCount = 0
+            private set
+
+        var lastIntent: Intent? = null
+            private set
+
+        @Composable
+        override fun Content(modifier: Modifier) = Unit
+
+        override fun handleAction() {
+            handleActionCallCount++
+        }
+
+        override fun restoreAction() {
+            restoreActionCallCount++
+        }
+
+        override fun handleReturn(intent: Intent) {
+            lastIntent = intent
+        }
+    }
+
     companion object {
         private const val TEST_ACTION_TYPE = "test_action"
         private const val RETURNING_ACTION_TYPE = "returning_action"
+        private const val RESTORABLE_ACTION_TYPE = "restorable_action"
     }
 }

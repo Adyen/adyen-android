@@ -8,12 +8,16 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.action.internal.ActionFactory
+import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.TestActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
@@ -37,6 +41,8 @@ import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InvalidConfigurationError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
@@ -91,6 +97,31 @@ internal class CheckoutControllerFactoryTest {
         createActionOnlyController()
 
         assertSame(savedStateHandle, receivedSavedStateHandle)
+    }
+
+    @Test
+    fun `when a controller is created again on the same saved state handle, then the action is restored`() {
+        val createdComponents = mutableListOf<RestorableTestActionComponent>()
+        ActionComponentProvider.register(
+            TEST_ACTION_TYPE,
+            object : ActionFactory<Action, ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ) = RestorableTestActionComponent().also { createdComponents += it }
+            },
+        )
+        createActionOnlyController()
+
+        createActionOnlyController()
+
+        val (initialComponent, restoredComponent) = createdComponents
+        assertEquals(1, initialComponent.handleActionCallCount)
+        assertEquals(0, restoredComponent.handleActionCallCount)
+        assertEquals(1, restoredComponent.restoreActionCallCount)
     }
 
     @Test
@@ -185,6 +216,28 @@ internal class CheckoutControllerFactoryTest {
                 ): PaymentComponent = throw throwable
             },
         )
+    }
+
+    private class RestorableTestActionComponent : ActionComponent, RestorableActionComponent {
+
+        override val eventFlow: Flow<ActionComponentEvent> = emptyFlow()
+
+        var handleActionCallCount = 0
+            private set
+
+        var restoreActionCallCount = 0
+            private set
+
+        @Composable
+        override fun Content(modifier: Modifier) = Unit
+
+        override fun handleAction() {
+            handleActionCallCount++
+        }
+
+        override fun restoreAction() {
+            restoreActionCallCount++
+        }
     }
 
     companion object {
