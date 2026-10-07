@@ -9,14 +9,12 @@
 package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Intent
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
@@ -55,12 +53,10 @@ internal class RedirectComponentTest(
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
-    private lateinit var paymentDataRepository: PaymentDataRepository
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
-        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
     }
 
     @Nested
@@ -86,40 +82,6 @@ internal class RedirectComponentTest(
                 subType = TEST_ACTION_TYPE,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
-        }
-
-        @Test
-        fun `when handleAction is called with regular redirect, then paymentData is stored`() {
-            // GIVEN
-            val component = createComponent(
-                action = redirectAction(
-                    type = ActionTypes.REDIRECT,
-                    paymentData = "testPaymentData",
-                ),
-            )
-
-            // WHEN
-            component.handleAction()
-
-            // THEN
-            assertEquals("testPaymentData", paymentDataRepository.paymentData)
-        }
-
-        @Test
-        fun `when handleAction is called with native redirect, then nativeRedirectData is stored`() {
-            // GIVEN
-            val component = createComponent(
-                action = redirectAction(
-                    type = ActionTypes.NATIVE_REDIRECT,
-                    nativeRedirectData = "testNativeData",
-                ),
-            )
-
-            // WHEN
-            component.handleAction()
-
-            // THEN
-            assertEquals("testNativeData", paymentDataRepository.nativeRedirectData)
         }
     }
 
@@ -401,7 +363,6 @@ internal class RedirectComponentTest(
             action = action,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
-            paymentDataRepository = paymentDataRepository,
             nativeRedirectService = nativeRedirectService,
             clientKey = TEST_CLIENT_KEY,
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),

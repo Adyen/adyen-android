@@ -25,7 +25,6 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
@@ -49,7 +48,6 @@ constructor(
     private val action: RedirectAction,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
-    private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
     private val clientKey: String,
     private val coroutineScope: CoroutineScope,
@@ -60,6 +58,12 @@ constructor(
 
     private val redirectEventChannel = bufferedChannel<RedirectViewEvent>()
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
+
+    @Volatile
+    private var paymentData: String? = null
+
+    @Volatile
+    private var nativeRedirectData: String? = null
 
     @Composable
     override fun Content(modifier: Modifier) {
@@ -89,11 +93,11 @@ constructor(
     private fun initState() {
         when (action.type) {
             ActionTypes.NATIVE_REDIRECT -> {
-                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
+                nativeRedirectData = action.nativeRedirectData
             }
 
             else -> {
-                paymentDataRepository.paymentData = action.paymentData
+                paymentData = action.paymentData
             }
         }
     }
@@ -110,7 +114,6 @@ constructor(
         adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
-            val nativeRedirectData = paymentDataRepository.nativeRedirectData
             when {
                 action.type == ActionTypes.NATIVE_REDIRECT -> {
                     handleNativeRedirect(nativeRedirectData, details)
@@ -174,7 +177,7 @@ constructor(
     private fun createActionComponentData(details: JSONObject): ActionComponentData {
         return ActionComponentData(
             details = details,
-            paymentData = paymentDataRepository.paymentData,
+            paymentData = paymentData,
         )
     }
 
