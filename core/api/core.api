@@ -490,6 +490,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field ADDRESS_HOUSE_NUMBER_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_HOUSE_NUMBER_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_INVALID_CHARACTERS_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_POSTAL_CODE_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_POSTAL_CODE_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_POSTAL_CODE_LABEL_ZIP_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
