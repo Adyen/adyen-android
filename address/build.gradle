@@ -9,6 +9,7 @@
 plugins {
     alias libs.plugins.checkout.android.library
     alias libs.plugins.kotlin.compose
+    alias libs.plugins.kotlin.parcelize
 }
 
 checkoutPublishing {
@@ -27,6 +28,7 @@ dependencies {
 
     //Tests
     testImplementation testFixtures(project(':core'))
+    testImplementation libs.json
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.kotlin.coroutines.test
     testImplementation libs.bundles.mockito
