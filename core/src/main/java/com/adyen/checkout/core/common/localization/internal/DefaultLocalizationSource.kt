@@ -18,18 +18,23 @@ internal class DefaultLocalizationSource {
     fun getString(context: Context, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
             // Address
+            CheckoutLocalizationKey.ADDRESS_COUNTRY_ERROR -> R.string.adyen_checkout_address_country_error
             CheckoutLocalizationKey.ADDRESS_STREET_LABEL -> R.string.adyen_checkout_address_street_label
             CheckoutLocalizationKey.ADDRESS_STREET_LABEL_ADDRESS -> R.string.adyen_checkout_address_street_label_address
+            CheckoutLocalizationKey.ADDRESS_STREET_ERROR -> R.string.adyen_checkout_address_street_error
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL -> R.string.adyen_checkout_address_house_number_label
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE ->
                 R.string.adyen_checkout_address_house_number_label_apartment_suite
 
+            CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_ERROR -> R.string.adyen_checkout_address_house_number_error
             CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL -> R.string.adyen_checkout_address_postal_code_label
             CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL_ZIP_CODE ->
                 R.string.adyen_checkout_address_postal_code_label_zip_code
 
+            CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR -> R.string.adyen_checkout_address_postal_code_error
             CheckoutLocalizationKey.ADDRESS_CITY_LABEL -> R.string.adyen_checkout_address_city_label
             CheckoutLocalizationKey.ADDRESS_CITY_LABEL_CITY_TOWN -> R.string.adyen_checkout_address_city_label_city_town
+            CheckoutLocalizationKey.ADDRESS_CITY_ERROR -> R.string.adyen_checkout_address_city_error
             CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL ->
                 R.string.adyen_checkout_address_state_or_province_label
 
@@ -38,6 +43,12 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_PROVINCE_OR_TERRITORY ->
                 R.string.adyen_checkout_address_state_or_province_label_province_or_territory
+
+            CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR ->
+                R.string.adyen_checkout_address_state_or_province_error
+
+            CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR_FREE_TEXT ->
+                R.string.adyen_checkout_address_state_or_province_error_free_text
 
             // Authentication
             CheckoutLocalizationKey.AUTHENTICATION_TITLE -> R.string.checkout_authentication_title

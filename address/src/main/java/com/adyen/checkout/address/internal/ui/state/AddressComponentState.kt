@@ -69,3 +69,51 @@ internal data class AddressComponentState(
         }
     }
 }
+
+/**
+ * Updates the text input corresponding to the provided [id]. Elements that are not text inputs, and the free text state
+ * while the state is not free text, are ignored.
+ */
+internal fun AddressComponentState.updateTextInput(
+    id: AddressFormElementId,
+    transform: (TextInputComponentState) -> TextInputComponentState,
+): AddressComponentState = when (id) {
+    AddressFormElementId.STREET -> copy(street = transform(street))
+    AddressFormElementId.HOUSE_NUMBER_OR_NAME -> copy(houseNumberOrName = transform(houseNumberOrName))
+    AddressFormElementId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
+    AddressFormElementId.CITY -> copy(city = transform(city))
+    AddressFormElementId.STATE_OR_PROVINCE_TEXT -> when (stateOrProvince) {
+        is StateOrProvinceState.FreeText -> copy(
+            stateOrProvince = stateOrProvince.copy(input = transform(stateOrProvince.input)),
+        )
+
+        else -> this
+    }
+
+    AddressFormElementId.COUNTRY,
+    AddressFormElementId.STATE_OR_PROVINCE_PICKER -> this
+}
+
+/**
+ * Updates the picker corresponding to the provided [id]. Elements that are not pickers, and the state picker while the
+ * state has no options, are ignored.
+ */
+internal fun AddressComponentState.updatePickerInput(
+    id: AddressFormElementId,
+    transform: (PickerInputComponentState<String>) -> PickerInputComponentState<String>,
+): AddressComponentState = when (id) {
+    AddressFormElementId.COUNTRY -> copy(country = transform(country))
+    AddressFormElementId.STATE_OR_PROVINCE_PICKER -> when (stateOrProvince) {
+        is StateOrProvinceState.Options -> copy(
+            stateOrProvince = stateOrProvince.copy(picker = transform(stateOrProvince.picker)),
+        )
+
+        else -> this
+    }
+
+    AddressFormElementId.STREET,
+    AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+    AddressFormElementId.POSTAL_CODE,
+    AddressFormElementId.CITY,
+    AddressFormElementId.STATE_OR_PROVINCE_TEXT -> this
+}
