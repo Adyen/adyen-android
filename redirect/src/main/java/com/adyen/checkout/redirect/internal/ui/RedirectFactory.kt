@@ -14,7 +14,6 @@ import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +28,6 @@ internal class RedirectFactory : ActionFactory<RedirectAction, RedirectComponent
         savedStateHandle: SavedStateHandle,
     ): RedirectComponent {
         val redirectHandler = DefaultRedirectHandler()
-        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val nativeRedirectService = NativeRedirectService(httpClient)
 
@@ -37,7 +35,6 @@ internal class RedirectFactory : ActionFactory<RedirectAction, RedirectComponent
             action = action,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
-            paymentDataRepository = paymentDataRepository,
             nativeRedirectService = nativeRedirectService,
             clientKey = params.clientKey,
             coroutineScope = coroutineScope,
