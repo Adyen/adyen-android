@@ -19,6 +19,9 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
 internal class AddressComponentStateValidatorTest {
@@ -173,9 +176,103 @@ internal class AddressComponentStateValidatorTest {
         assertTrue(options.picker.error?.isVisible == true)
     }
 
-    private fun createState(address: AddressModel) = AddressComponentStateFactory(
-        AddressComponentParams(shopperLocale = Locale.ROOT, supportedCountryCodes = emptySet()),
-    ).createState(address)
+    @ParameterizedTest
+    @MethodSource("matchingPostalCodeSource")
+    fun `when the postal code matches the country pattern then it is valid`(country: String, postalCode: String) {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(country = country, postalCode = postalCode))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertNull(result.postalCode.error)
+    }
+
+    /**
+     * The regression test for matching unanchored, like Web: anchoring the patterns would reject these.
+     */
+    @ParameterizedTest
+    @MethodSource("documentedVariantPostalCodeSource")
+    fun `when the postal code is a documented variant then it is valid`(country: String, postalCode: String) {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(country = country, postalCode = postalCode))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertNull(result.postalCode.error)
+    }
+
+    @ParameterizedTest
+    @MethodSource("mismatchingPostalCodeSource")
+    fun `when the postal code does not match the country pattern then it is invalid`(
+        country: String,
+        postalCode: String,
+    ) {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(country = country, postalCode = postalCode))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
+    }
+
+    @Test
+    fun `when the country has no pattern then any non blank postal code is valid`() {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(country = "AR", postalCode = "C1425 abc"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertNull(result.postalCode.error)
+    }
+
+    @Test
+    fun `when the postal code is blank then it is invalid`() {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(country = "AR", postalCode = " "))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
+    }
+
+    @ParameterizedTest
+    @MethodSource("lowerCasePostalCodeSource")
+    fun `when the postal code is lower case then it is still valid`(country: String, postalCode: String) {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(country = country, postalCode = postalCode))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertNull(result.postalCode.error)
+    }
+
+    @Test
+    fun `when the country changes then the postal code is revalidated`() {
+        // GIVEN
+        val state = validator.validate(createState(NL_ADDRESS))
+        val reducer = AddressComponentStateReducer(PARAMS, AddressComponentStateFactory(PARAMS))
+
+        // WHEN
+        val result = validator.validate(reducer.reduce(state, AddressIntent.UpdateCountry("US")))
+
+        // THEN
+        assertNull(state.postalCode.error)
+        assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
+    }
+
+    private fun createState(address: AddressModel) = AddressComponentStateFactory(PARAMS).createState(address)
 
     private fun AddressComponentState.withStateOptions(selected: String?) = copy(
         stateOrProvince = StateOrProvinceState.Options(
@@ -185,6 +282,8 @@ internal class AddressComponentStateValidatorTest {
     )
 
     companion object {
+        private val PARAMS = AddressComponentParams(shopperLocale = Locale.ROOT, supportedCountryCodes = emptySet())
+
         private val NL_ADDRESS = AddressModel(
             country = "NL",
             street = "Simon Carmiggeltstraat",
@@ -225,6 +324,43 @@ internal class AddressComponentStateValidatorTest {
             AddressRegion(code = "CA", name = "California"),
             AddressRegion(code = "ON", name = "Ontario"),
             AddressRegion(code = "SP", name = "São Paulo"),
+        )
+
+        @JvmStatic
+        fun matchingPostalCodeSource() = listOf(
+            arguments("NL", "1234AB"),
+            arguments("NL", "1234 AB"),
+            arguments("US", "12345"),
+            arguments("US", "94107-1234"),
+            arguments("JP", "107-0052"),
+            arguments("JP", "1070052"),
+            arguments("GB", "SW1A 1AA"),
+            arguments("GB", "GIR 0AA"),
+            arguments("CA", "K1A 0B1"),
+            arguments("BR", "12345-678"),
+        )
+
+        @JvmStatic
+        fun documentedVariantPostalCodeSource() = listOf(
+            arguments("SI", "SI-1234"),
+            arguments("SK", "SK-12345"),
+        )
+
+        @JvmStatic
+        fun mismatchingPostalCodeSource() = listOf(
+            arguments("US", "1234"),
+            arguments("US", "12345abc"),
+            arguments("US", "12345-12"),
+            arguments("JP", "107-005"),
+            arguments("NL", "1234"),
+            arguments("CA", "12345"),
+            arguments("BR", "1234567"),
+        )
+
+        @JvmStatic
+        fun lowerCasePostalCodeSource() = listOf(
+            arguments("NL", "1234ab"),
+            arguments("CA", "k1a 0b1"),
         )
     }
 }
