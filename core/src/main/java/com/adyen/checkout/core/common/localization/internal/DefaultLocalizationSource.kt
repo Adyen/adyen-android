@@ -50,6 +50,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR_FREE_TEXT ->
                 R.string.adyen_checkout_address_state_or_province_error_free_text
 
+            CheckoutLocalizationKey.ADDRESS_INVALID_CHARACTERS_ERROR ->
+                R.string.adyen_checkout_address_invalid_characters_error
+
             // Authentication
             CheckoutLocalizationKey.AUTHENTICATION_TITLE -> R.string.checkout_authentication_title
             CheckoutLocalizationKey.AUTHENTICATION_DESCRIPTION -> R.string.checkout_authentication_description

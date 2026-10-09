@@ -272,6 +272,66 @@ internal class AddressComponentStateValidatorTest {
         assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
     }
 
+    @Test
+    fun `when the street has invalid characters then it has an invalid characters error`() {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(street = "Simon Carmiggeltstraat 🏠"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.ADDRESS_INVALID_CHARACTERS_ERROR, result.street.error?.message)
+    }
+
+    @Test
+    fun `when the house number has invalid characters then it has an invalid characters error`() {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(houseNumberOrName = "6\u0000"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.ADDRESS_INVALID_CHARACTERS_ERROR, result.houseNumberOrName.error?.message)
+    }
+
+    @Test
+    fun `when the city has invalid characters then it has an invalid characters error`() {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(city = "Amsterdam 🇳🇱"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.ADDRESS_INVALID_CHARACTERS_ERROR, result.city.error?.message)
+    }
+
+    @Test
+    fun `when an optional field has invalid characters then it has an invalid characters error`() {
+        // GIVEN
+        val state = createState(US_ADDRESS.copy(houseNumberOrName = "Apt 4 😀"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertEquals(CheckoutLocalizationKey.ADDRESS_INVALID_CHARACTERS_ERROR, result.houseNumberOrName.error?.message)
+    }
+
+    @Test
+    fun `when the postal code has invalid characters then it has no invalid characters error`() {
+        // GIVEN
+        val state = createState(NL_ADDRESS.copy(country = "AR", postalCode = "C1425 😀"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertNull(result.postalCode.error)
+    }
+
     private fun createState(address: AddressModel) = AddressComponentStateFactory(PARAMS).createState(address)
 
     private fun AddressComponentState.withStateOptions(selected: String?) = copy(
