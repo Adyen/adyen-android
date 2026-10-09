@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.address.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -25,9 +26,7 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
         houseNumberOrName = state.houseNumberOrName.updateError(
             validateRequiredText(state.houseNumberOrName, CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_ERROR),
         ),
-        postalCode = state.postalCode.updateError(
-            validateRequiredText(state.postalCode, CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR),
-        ),
+        postalCode = state.postalCode.updateError(validatePostalCode(state.postalCode, state.country.selected)),
         city = state.city.updateError(
             validateRequiredText(state.city, CheckoutLocalizationKey.ADDRESS_CITY_ERROR),
         ),
@@ -58,6 +57,24 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
             is StateOrProvinceState.Loading,
             StateOrProvinceState.Unavailable -> stateOrProvince
         }
+
+    /**
+     * A blank postal code is invalid. Otherwise it must contain the selected country's pattern, matched unanchored as
+     * on Web; a country without a pattern accepts any value.
+     */
+    private fun validatePostalCode(
+        postalCode: TextInputComponentState,
+        countryCode: String?,
+    ): CheckoutLocalizationKey? {
+        val pattern = PostalCodeProperties.getPattern(countryCode)
+        val isValid = when {
+            !postalCode.requiresValidation() -> true
+            postalCode.text.isBlank() -> false
+            pattern == null -> true
+            else -> pattern.containsMatchIn(postalCode.text.trim())
+        }
+        return CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR.takeUnless { isValid }
+    }
 
     private fun validateSelection(
         picker: PickerInputComponentState<*>,
