@@ -26,7 +26,6 @@ import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldDecorator
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -212,7 +211,8 @@ fun CheckoutTextField(
 
 @Composable
 fun rememberTextFieldStateWithCurrentValue(currentText: String): TextFieldState {
-    val state = rememberTextFieldState(currentText)
+    // rememberTextFieldState is explicitly not used to prevent storing sensitive data in the saved state
+    val state = remember { TextFieldState(currentText) }
     LaunchedEffect(currentText) {
         // this allows external state changes to be reflected in the text field
         if (state.text.toString() != currentText) {
