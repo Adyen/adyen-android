@@ -99,6 +99,8 @@ private fun CardContent(
     onInstallmentPickerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    SecureWindowEffect()
+
     ComponentScaffold(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
