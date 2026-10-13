@@ -114,7 +114,7 @@ internal class AddressComponentStateReducer(
                 }
             },
             // TODO - Address: Offer the shopper a way to retry when the states fail to load, instead of hiding the
-            //  field. Align the design with iOS and Web first.
+            //  field. Align the design with iOS and Web first. Tracked in COSDK-1635.
             onFailure = { StateOrProvinceState.Unavailable },
         )
         return copy(stateOrProvince = stateOrProvince)
