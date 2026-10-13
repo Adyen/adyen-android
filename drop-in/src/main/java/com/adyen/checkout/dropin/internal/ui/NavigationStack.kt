@@ -21,8 +21,8 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodsScreen
-import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodsViewModel
+import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodManagementScreen
+import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodManagementViewModel
 
 @Composable
 internal fun NavigationStack(
@@ -99,10 +99,10 @@ private fun storedPaymentMethodsNavEntry(
     key = key,
     metadata = DropInTransitions.slideInAndOutHorizontally(),
 ) {
-    StoredPaymentMethodsScreen(
+    StoredPaymentMethodManagementScreen(
         navigator = viewModel.navigator,
         viewModel = viewModel(
-            factory = StoredPaymentMethodsViewModel.Factory(
+            factory = StoredPaymentMethodManagementViewModel.Factory(
                 paymentMethodRepository = viewModel.paymentMethodRepository,
             ),
         ),

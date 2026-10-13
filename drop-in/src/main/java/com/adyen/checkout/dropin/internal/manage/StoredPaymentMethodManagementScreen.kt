@@ -42,12 +42,12 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @Composable
-internal fun StoredPaymentMethodsScreen(
+internal fun StoredPaymentMethodManagementScreen(
     navigator: DropInNavigator,
-    viewModel: StoredPaymentMethodsViewModel,
+    viewModel: StoredPaymentMethodManagementViewModel,
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-    StoredPaymentMethodsContent(
+    StoredPaymentMethodManagementContent(
         navigator = navigator,
         viewState = viewState,
         onRemoveItem = { viewModel.removeStoredPaymentMethod(it.id) },
@@ -55,10 +55,10 @@ internal fun StoredPaymentMethodsScreen(
 }
 
 @Composable
-private fun StoredPaymentMethodsContent(
+private fun StoredPaymentMethodManagementContent(
     navigator: DropInNavigator,
-    viewState: StoredPaymentMethodsViewState,
-    onRemoveItem: (StoredPaymentMethodsViewState.StoredPaymentMethodsListItem) -> Unit,
+    viewState: StoredPaymentMethodManagementViewState,
+    onRemoveItem: (StoredPaymentMethodManagementViewState.ListItem) -> Unit,
 ) {
     DropInScaffold(
         navigationIcon = {
@@ -67,7 +67,7 @@ private fun StoredPaymentMethodsContent(
         title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
     ) { innerPadding ->
         var selectedItem by rememberSaveable {
-            mutableStateOf<StoredPaymentMethodsViewState.StoredPaymentMethodsListItem?>(
+            mutableStateOf<StoredPaymentMethodManagementViewState.ListItem?>(
                 null,
             )
         }
@@ -110,8 +110,8 @@ private fun StoredPaymentMethodsContent(
 
 private fun LazyListScope.section(
     title: CheckoutLocalizationKey,
-    storedPaymentMethods: List<StoredPaymentMethodsViewState.StoredPaymentMethodsListItem>,
-    onItemClick: (StoredPaymentMethodsViewState.StoredPaymentMethodsListItem) -> Unit,
+    storedPaymentMethods: List<StoredPaymentMethodManagementViewState.ListItem>,
+    onItemClick: (StoredPaymentMethodManagementViewState.ListItem) -> Unit,
 ) {
     if (storedPaymentMethods.isNotEmpty()) {
         item(key = title) {
@@ -139,8 +139,8 @@ private fun LazyListScope.section(
 
 @Composable
 private fun StoredPaymentMethodListItem(
-    item: StoredPaymentMethodsViewState.StoredPaymentMethodsListItem,
-    onClick: (StoredPaymentMethodsViewState.StoredPaymentMethodsListItem) -> Unit,
+    item: StoredPaymentMethodManagementViewState.ListItem,
+    onClick: (StoredPaymentMethodManagementViewState.ListItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ListItem(
@@ -165,19 +165,19 @@ private fun StoredPaymentMethodListItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun StoredPaymentMethodsContentPreview(
+private fun StoredPaymentMethodManagementContentPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     CheckoutThemePreviewWrapper(theme) {
-        val viewState = StoredPaymentMethodsViewState(
+        val viewState = StoredPaymentMethodManagementViewState(
             cards = listOf(
-                StoredPaymentMethodsViewState.StoredPaymentMethodsListItem(
+                StoredPaymentMethodManagementViewState.ListItem(
                     id = "1",
                     icon = "mc",
                     title = "•••• 1234",
                     subtitle = "Mastercard",
                 ),
-                StoredPaymentMethodsViewState.StoredPaymentMethodsListItem(
+                StoredPaymentMethodManagementViewState.ListItem(
                     id = "2",
                     icon = "visa",
                     title = "•••• 2567",
@@ -185,13 +185,13 @@ private fun StoredPaymentMethodsContentPreview(
                 ),
             ),
             others = listOf(
-                StoredPaymentMethodsViewState.StoredPaymentMethodsListItem(
+                StoredPaymentMethodManagementViewState.ListItem(
                     id = "3",
                     icon = "paybybank",
                     title = "•••• 1234",
                     subtitle = "WELLS FARGO",
                 ),
-                StoredPaymentMethodsViewState.StoredPaymentMethodsListItem(
+                StoredPaymentMethodManagementViewState.ListItem(
                     id = "4",
                     icon = "wechatpay",
                     title = "@someName",
@@ -201,7 +201,7 @@ private fun StoredPaymentMethodsContentPreview(
         )
 
         val persister = SavedStateBackStackPersister(SavedStateHandle())
-        StoredPaymentMethodsContent(
+        StoredPaymentMethodManagementContent(
             navigator = DropInNavigator(persister),
             viewState = viewState,
             onRemoveItem = {},

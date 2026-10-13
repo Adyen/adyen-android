@@ -22,32 +22,34 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-internal class StoredPaymentMethodsViewModel(
+internal class StoredPaymentMethodManagementViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
 ) : ViewModel() {
 
-    val viewState: StateFlow<StoredPaymentMethodsViewState> = paymentMethodRepository.storedPaymentMethods
+    val viewState: StateFlow<StoredPaymentMethodManagementViewState> = paymentMethodRepository.storedPaymentMethods
         .map { createViewState(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createViewState(emptyList()))
 
-    private fun createViewState(storedPaymentMethods: List<StoredPaymentMethod>): StoredPaymentMethodsViewState {
+    private fun createViewState(
+        storedPaymentMethods: List<StoredPaymentMethod>
+    ): StoredPaymentMethodManagementViewState {
         val (cards, others) = storedPaymentMethods
             .filter { paymentMethodSupportCheck.isSupported(it) }
             .partition { it.type == PaymentMethodTypes.SCHEME }
 
-        return StoredPaymentMethodsViewState(
+        return StoredPaymentMethodManagementViewState(
             cards = cards.map { it.toListItem() },
             others = others.map { it.toListItem() },
         )
     }
 
-    private fun StoredPaymentMethod.toListItem(): StoredPaymentMethodsViewState.StoredPaymentMethodsListItem {
+    private fun StoredPaymentMethod.toListItem(): StoredPaymentMethodManagementViewState.ListItem {
         val icon = StoredPaymentMethodFormatter.getIcon(this)
         val title = StoredPaymentMethodFormatter.getTitle(this)
         val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
 
-        return StoredPaymentMethodsViewState.StoredPaymentMethodsListItem(
+        return StoredPaymentMethodManagementViewState.ListItem(
             id = id,
             icon = icon,
             title = title,
@@ -65,7 +67,7 @@ internal class StoredPaymentMethodsViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            return StoredPaymentMethodsViewModel(
+            return StoredPaymentMethodManagementViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
             ) as T

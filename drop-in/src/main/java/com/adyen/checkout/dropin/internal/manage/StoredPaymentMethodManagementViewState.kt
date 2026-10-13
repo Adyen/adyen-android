@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.dropin.internal.manage
 
-internal data class StoredPaymentMethodsViewState(
-    val cards: List<StoredPaymentMethodsListItem>,
-    val others: List<StoredPaymentMethodsListItem>,
+internal data class StoredPaymentMethodManagementViewState(
+    val cards: List<ListItem>,
+    val others: List<ListItem>,
 ) {
 
-    internal data class StoredPaymentMethodsListItem(
+    internal data class ListItem(
         val id: String,
         val icon: String,
         val title: String,
