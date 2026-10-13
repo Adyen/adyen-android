@@ -17,6 +17,28 @@ internal class DefaultLocalizationSource {
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun getString(context: Context, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
+            // Address
+            CheckoutLocalizationKey.ADDRESS_STREET_LABEL -> R.string.adyen_checkout_address_street_label
+            CheckoutLocalizationKey.ADDRESS_STREET_LABEL_ADDRESS -> R.string.adyen_checkout_address_street_label_address
+            CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL -> R.string.adyen_checkout_address_house_number_label
+            CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE ->
+                R.string.adyen_checkout_address_house_number_label_apartment_suite
+
+            CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL -> R.string.adyen_checkout_address_postal_code_label
+            CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL_ZIP_CODE ->
+                R.string.adyen_checkout_address_postal_code_label_zip_code
+
+            CheckoutLocalizationKey.ADDRESS_CITY_LABEL -> R.string.adyen_checkout_address_city_label
+            CheckoutLocalizationKey.ADDRESS_CITY_LABEL_CITY_TOWN -> R.string.adyen_checkout_address_city_label_city_town
+            CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL ->
+                R.string.adyen_checkout_address_state_or_province_label
+
+            CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE ->
+                R.string.adyen_checkout_address_state_or_province_label_state
+
+            CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_PROVINCE_OR_TERRITORY ->
+                R.string.adyen_checkout_address_state_or_province_label_province_or_territory
+
             // Authentication
             CheckoutLocalizationKey.AUTHENTICATION_TITLE -> R.string.checkout_authentication_title
             CheckoutLocalizationKey.AUTHENTICATION_DESCRIPTION -> R.string.checkout_authentication_description

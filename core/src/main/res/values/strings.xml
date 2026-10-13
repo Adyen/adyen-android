@@ -8,6 +8,17 @@
 
 <!-- TODO - Add translations -->
 <resources>
+    <string name="adyen_checkout_address_street_label" translatable="false">Street</string>
+    <string name="adyen_checkout_address_street_label_address" translatable="false">Address</string>
+    <string name="adyen_checkout_address_house_number_label" translatable="false">House number</string>
+    <string name="adyen_checkout_address_house_number_label_apartment_suite" translatable="false">Apartment / Suite</string>
+    <string name="adyen_checkout_address_postal_code_label" translatable="false">Postal code</string>
+    <string name="adyen_checkout_address_postal_code_label_zip_code" translatable="false">Zip code</string>
+    <string name="adyen_checkout_address_city_label" translatable="false">City</string>
+    <string name="adyen_checkout_address_city_label_city_town" translatable="false">City / Town</string>
+    <string name="adyen_checkout_address_state_or_province_label" translatable="false">State or province</string>
+    <string name="adyen_checkout_address_state_or_province_label_state" translatable="false">State</string>
+    <string name="adyen_checkout_address_state_or_province_label_province_or_territory" translatable="false">Province or Territory</string>
     <string name="checkout_authentication_title" translatable="false">Security check</string>
     <string name="checkout_authentication_description" translatable="false">You will be guided to a secure environment to perform a security challenge</string>
     <string name="checkout_authentication_status" translatable="false">Launching challenge..</string>
