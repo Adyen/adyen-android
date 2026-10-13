@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.manage
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -64,7 +63,7 @@ private fun StoredPaymentMethodManagementContent(
         navigationIcon = {
             NavigationBackButton(onClick = { navigator.back() })
         },
-        title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
+        title = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_TITLE),
     ) { innerPadding ->
         var selectedItem by rememberSaveable {
             mutableStateOf<StoredPaymentMethodManagementViewState.ListItem?>(
@@ -73,19 +72,31 @@ private fun StoredPaymentMethodManagementContent(
         }
 
         LazyColumn(
-            contentPadding = PaddingValues(top = Dimensions.Spacing.ExtraLarge),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
+            item {
+                Body(
+                    text = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_DESCRIPTION),
+                    color = CheckoutThemeProvider.colors.textSecondary,
+                    modifier = Modifier
+                        .padding(
+                            start = Dimensions.Spacing.Large,
+                            end = Dimensions.Spacing.Large,
+                            bottom = Dimensions.Spacing.Large,
+                        ),
+                )
+            }
+
             section(
-                title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE,
+                title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_CARDS_SECTION_TITLE,
                 storedPaymentMethods = viewState.cards,
                 onItemClick = { selectedItem = it },
             )
 
             section(
-                title = CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE,
+                title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_OTHERS_SECTION_TITLE,
                 storedPaymentMethods = viewState.others,
                 onItemClick = { selectedItem = it },
             )
@@ -94,7 +105,7 @@ private fun StoredPaymentMethodManagementContent(
         selectedItem?.let { item ->
             ConfirmationDialog(
                 confirmationText = resolveString(
-                    CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE_CONFIRMATION,
+                    CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVE_CONFIRMATION,
                     item.title,
                 ),
                 onConfirmationClick = {
@@ -154,7 +165,7 @@ private fun StoredPaymentMethodListItem(
         subtitle = item.subtitle,
         trailingContent = {
             Body(
-                text = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE),
+                text = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVE),
                 color = CheckoutThemeProvider.colors.destructive,
             )
         },
