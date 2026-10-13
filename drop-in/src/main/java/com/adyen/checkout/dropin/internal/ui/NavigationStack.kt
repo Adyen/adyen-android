@@ -21,6 +21,8 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodsScreen
+import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodsViewModel
 
 @Composable
 internal fun NavigationStack(

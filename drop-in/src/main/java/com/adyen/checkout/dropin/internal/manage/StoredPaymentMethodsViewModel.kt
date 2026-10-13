@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2025 Adyen N.V.
+ * Copyright (c) 2026 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
  * Created by oscars on 18/12/2025.
  */
 
-package com.adyen.checkout.dropin.internal.ui
+package com.adyen.checkout.dropin.internal.manage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +17,6 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
-import com.adyen.checkout.dropin.internal.ui.StoredPaymentMethodsViewState.StoredPaymentMethodsListItem
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -43,12 +42,12 @@ internal class StoredPaymentMethodsViewModel(
         )
     }
 
-    private fun StoredPaymentMethod.toListItem(): StoredPaymentMethodsListItem {
+    private fun StoredPaymentMethod.toListItem(): StoredPaymentMethodsViewState.StoredPaymentMethodsListItem {
         val icon = StoredPaymentMethodFormatter.getIcon(this)
         val title = StoredPaymentMethodFormatter.getTitle(this)
         val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
 
-        return StoredPaymentMethodsListItem(
+        return StoredPaymentMethodsViewState.StoredPaymentMethodsListItem(
             id = id,
             icon = icon,
             title = title,
