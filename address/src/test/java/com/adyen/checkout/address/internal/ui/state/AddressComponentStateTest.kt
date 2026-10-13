@@ -33,7 +33,7 @@ internal class AddressComponentStateTest {
             AddressFormElementId.STREET,
             AddressFormElementId.HOUSE_NUMBER_OR_NAME,
             AddressFormElementId.CITY,
-            AddressFormElementId.STATE_OR_PROVINCE_PICKER,
+            AddressFormElementId.STATE_OR_PROVINCE,
             AddressFormElementId.POSTAL_CODE,
         )
         assertEquals(expected, ids)
@@ -48,8 +48,7 @@ internal class AddressComponentStateTest {
         val ids = state.form.elements.map { it.id }
 
         // THEN
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_PICKER))
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_TEXT))
+        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE))
     }
 
     @Test
@@ -61,8 +60,7 @@ internal class AddressComponentStateTest {
         val ids = state.form.elements.map { it.id }
 
         // THEN
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_PICKER))
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_TEXT))
+        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE))
     }
 
     @Test
@@ -74,23 +72,7 @@ internal class AddressComponentStateTest {
         val ids = state.form.elements.map { it.id }
 
         // THEN
-        assertTrue(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_PICKER))
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_TEXT))
-    }
-
-    @Test
-    fun `when the state request failed then the form has a free text state element`() {
-        // GIVEN
-        val state = createState(
-            stateOrProvince = StateOrProvinceState.FreeText(input = TextInputComponentState()),
-        )
-
-        // WHEN
-        val ids = state.form.elements.map { it.id }
-
-        // THEN
-        assertTrue(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_TEXT))
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE_PICKER))
+        assertTrue(ids.contains(AddressFormElementId.STATE_OR_PROVINCE))
     }
 
     private fun createState(stateOrProvince: StateOrProvinceState) = AddressComponentState(

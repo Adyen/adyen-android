@@ -14,7 +14,6 @@ import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -199,7 +198,7 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
-    fun `when loading the states fails then the state element becomes free text with the pending state as text`() {
+    fun `when loading the states fails then the state element is unavailable`() {
         // GIVEN
         val state = createState(US_ADDRESS)
 
@@ -207,8 +206,7 @@ internal class AddressComponentStateReducerTest {
         val result = createReducer().reduce(state, AddressIntent.StatesLoaded("US", Result.failure(IOException())))
 
         // THEN
-        val expected = StateOrProvinceState.FreeText(input = TextInputComponentState(text = "CA"))
-        assertEquals(expected, result.stateOrProvince)
+        assertEquals(StateOrProvinceState.Unavailable, result.stateOrProvince)
     }
 
     @Test
@@ -225,21 +223,6 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
-    fun `when the states could not be loaded then the typed state is stored`() {
-        // GIVEN
-        val state = createState(US_ADDRESS).copy(
-            stateOrProvince = StateOrProvinceState.FreeText(input = TextInputComponentState()),
-        )
-
-        // WHEN
-        val result = createReducer().reduce(state, AddressIntent.UpdateStateOrProvince("California"))
-
-        // THEN
-        val freeText = result.stateOrProvince as StateOrProvinceState.FreeText
-        assertEquals("California", freeText.input.text)
-    }
-
-    @Test
     fun `when states arrive for a country that is no longer selected then they are ignored`() {
         // GIVEN
         val state = createReducer().reduce(createState(US_ADDRESS), AddressIntent.UpdateCountry("CA"))
@@ -252,13 +235,13 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
-    fun `when prefilled without a country then the state element is unavailable`() {
+    fun `when reset without a country then the state element is unavailable`() {
         // GIVEN
         val params = createParams(shopperLocale = Locale.ROOT)
         val state = createState(US_ADDRESS, params)
 
         // WHEN
-        val result = createReducer(params).reduce(state, AddressIntent.Prefill(address = null))
+        val result = createReducer(params).reduce(state, AddressIntent.Reset(address = null))
 
         // THEN
         assertNull(result.country.selected)
@@ -266,7 +249,7 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
-    fun `when prefilled then the whole state is replaced`() {
+    fun `when reset then the whole state is replaced`() {
         // GIVEN
         val loadedCountries = createReducer().reduce(
             createState(address = null),
@@ -275,7 +258,7 @@ internal class AddressComponentStateReducerTest {
         val editedState = createReducer().reduce(loadedCountries, AddressIntent.UpdateStreet("Unconfirmed edit"))
 
         // WHEN
-        val result = createReducer().reduce(editedState, AddressIntent.Prefill(US_ADDRESS))
+        val result = createReducer().reduce(editedState, AddressIntent.Reset(US_ADDRESS))
 
         // THEN
         val expected = createState(US_ADDRESS).copy(

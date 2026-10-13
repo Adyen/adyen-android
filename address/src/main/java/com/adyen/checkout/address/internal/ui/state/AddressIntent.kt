@@ -17,8 +17,8 @@ internal sealed interface AddressIntent : ComponentStateIntent {
     /** @param countryCode The ISO 3166-1 alpha-2 code of the picked country. */
     data class UpdateCountry(val countryCode: String) : AddressIntent
 
-    /** @param value The code of the picked state, or the shopper's text when the states could not be loaded. */
-    data class UpdateStateOrProvince(val value: String) : AddressIntent
+    /** @param stateCode The ISO 3166-2 code of the picked state. */
+    data class UpdateStateOrProvince(val stateCode: String) : AddressIntent
 
     data class UpdateStreet(val street: String) : AddressIntent
 
@@ -34,8 +34,11 @@ internal sealed interface AddressIntent : ComponentStateIntent {
 
     data object HighlightValidationErrors : AddressIntent
 
-    /** Replaces the whole form with [address], or resets it when null, dropping edits that were never confirmed. */
-    data class Prefill(val address: AddressModel?) : AddressIntent
+    /**
+     * Resets the form to [address], or empties it when null, dropping edits that were never confirmed. Dispatched every
+     * time the address component is shown.
+     */
+    data class Reset(val address: AddressModel?) : AddressIntent
 
     data class CountriesLoaded(val result: Result<List<AddressItem>>) : AddressIntent
 

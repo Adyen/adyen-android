@@ -27,7 +27,7 @@ internal class AddressComponentStateReducer(
                 if (intent.countryCode == state.country.selected) state else state.selectCountry(intent.countryCode)
 
             is AddressIntent.UpdateStateOrProvince -> state.copy(
-                stateOrProvince = state.stateOrProvince.updateValue(intent.value),
+                stateOrProvince = state.stateOrProvince.selectState(intent.stateCode),
             )
 
             is AddressIntent.UpdateStreet -> state.copy(street = state.street.updateText(intent.street))
@@ -40,8 +40,8 @@ internal class AddressComponentStateReducer(
 
             is AddressIntent.UpdateCity -> state.copy(city = state.city.updateText(intent.city))
 
-            // The loaded countries do not depend on the address, so they survive a prefill.
-            is AddressIntent.Prefill -> componentStateFactory.createState(intent.address).copy(
+            // The loaded countries do not depend on the address, so they survive a reset.
+            is AddressIntent.Reset -> componentStateFactory.createState(intent.address).copy(
                 countries = state.countries,
                 isLoadingCountries = state.isLoadingCountries,
             )
@@ -70,7 +70,7 @@ internal class AddressComponentStateReducer(
             houseNumberOrName = houseNumberOrName.withRequirementPolicyOf(spec, AddressField.HOUSE_NUMBER_OR_NAME),
             postalCode = postalCode.withRequirementPolicyOf(spec, AddressField.POSTAL_CODE),
             city = city.withRequirementPolicyOf(spec, AddressField.CITY),
-            stateOrProvince = createStateOrProvince(countryCode, pendingCode = null),
+            stateOrProvince = StateOrProvinceState.forCountry(countryCode, pendingCode = null),
         )
     }
 
@@ -113,16 +113,15 @@ internal class AddressComponentStateReducer(
                     )
                 }
             },
-            onFailure = {
-                StateOrProvinceState.FreeText(input = TextInputComponentState(text = pendingCode.orEmpty()))
-            },
+            // TODO - Address: Offer the shopper a way to retry when the states fail to load, instead of hiding the
+            //  field. Align the design with iOS and Web first.
+            onFailure = { StateOrProvinceState.Unavailable },
         )
         return copy(stateOrProvince = stateOrProvince)
     }
 
-    private fun StateOrProvinceState.updateValue(value: String): StateOrProvinceState = when (this) {
-        is StateOrProvinceState.Options -> copy(picker = picker.copy(selected = value))
-        is StateOrProvinceState.FreeText -> copy(input = input.updateText(value))
+    private fun StateOrProvinceState.selectState(stateCode: String): StateOrProvinceState = when (this) {
+        is StateOrProvinceState.Options -> copy(picker = picker.copy(selected = stateCode))
         is StateOrProvinceState.Loading,
         StateOrProvinceState.Unavailable -> this
     }

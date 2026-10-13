@@ -9,7 +9,6 @@
 package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 /**
  * The state or province element. What it shows depends on the answer of the states dataset of the selected country.
@@ -24,7 +23,8 @@ internal sealed interface StateOrProvinceState {
     data class Loading(val pendingCode: String?) : StateOrProvinceState
 
     /**
-     * The country has no states (its dataset is empty or does not exist), or no country is selected. Nothing is shown.
+     * The country has no states (its dataset is empty or does not exist), no country is selected, or the states could
+     * not be loaded. Nothing is shown.
      */
     data object Unavailable : StateOrProvinceState
 
@@ -34,6 +34,13 @@ internal sealed interface StateOrProvinceState {
         val picker: PickerInputComponentState<String>,
     ) : StateOrProvinceState
 
-    /** The states could not be loaded. A text field is shown, so the shopper is never blocked. */
-    data class FreeText(val input: TextInputComponentState) : StateOrProvinceState
+    companion object {
+
+        /**
+         * The states of a selected country are loading until they arrive, keeping [pendingCode] to select it then.
+         * Without a country there are no states to show.
+         */
+        fun forCountry(countryCode: String?, pendingCode: String?): StateOrProvinceState =
+            if (countryCode != null) Loading(pendingCode = pendingCode) else Unavailable
+    }
 }

@@ -13,9 +13,7 @@ import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
 /**
  * Every element of the address form, whether or not the shopper can currently see it.
  *
- * The state or province has two elements because it is a picker when its states load and a text field when they fail
- * to load, and whether an element is a text input is fixed per id. The declaration order carries no meaning; the
- * order the shopper sees comes from the selected country's spec.
+ * The declaration order carries no meaning; the order the shopper sees comes from the selected country's spec.
  */
 internal enum class AddressFormElementId(override val isTextInput: Boolean) : FormElementId {
     COUNTRY(isTextInput = false),
@@ -23,6 +21,5 @@ internal enum class AddressFormElementId(override val isTextInput: Boolean) : Fo
     HOUSE_NUMBER_OR_NAME(isTextInput = true),
     POSTAL_CODE(isTextInput = true),
     CITY(isTextInput = true),
-    STATE_OR_PROVINCE_PICKER(isTextInput = false),
-    STATE_OR_PROVINCE_TEXT(isTextInput = true),
+    STATE_OR_PROVINCE(isTextInput = false),
 }

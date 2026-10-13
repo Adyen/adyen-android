@@ -62,10 +62,7 @@ internal data class AddressComponentState(
             StateOrProvinceState.Unavailable -> null
 
             is StateOrProvinceState.Options ->
-                stateOrProvince.picker.toFormElement(AddressFormElementId.STATE_OR_PROVINCE_PICKER)
-
-            is StateOrProvinceState.FreeText ->
-                stateOrProvince.input.toFormElementIfVisible(AddressFormElementId.STATE_OR_PROVINCE_TEXT)
+                stateOrProvince.picker.toFormElement(AddressFormElementId.STATE_OR_PROVINCE)
         }
     }
 }

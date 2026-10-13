@@ -51,6 +51,20 @@ internal class AddressComponentStateFactoryTest {
     }
 
     @Test
+    fun `when the address country is not supported then no country is selected`() {
+        // GIVEN
+        val factory = createFactory(supportedCountryCodes = setOf("NL", "DE"))
+
+        // WHEN
+        val state = factory.createState(US_ADDRESS)
+
+        // THEN
+        assertNull(state.country.selected)
+        assertEquals(AddressSpec.DEFAULT, state.spec)
+        assertEquals(StateOrProvinceState.Unavailable, state.stateOrProvince)
+    }
+
+    @Test
     fun `when an address is given then every field is prefilled`() {
         // GIVEN
         val factory = createFactory()
