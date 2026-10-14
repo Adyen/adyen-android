@@ -133,18 +133,23 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE ->
                 R.string.checkout_dropin_generic_payment_method_progress_title
 
-            CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE -> R.string.checkout_drop_in_manage_favorites_title
-            CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_CARDS_SECTION_TITLE ->
-                R.string.checkout_drop_in_manage_favorites_cards_section_title
+            CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_TITLE ->
+                R.string.checkout_drop_in_stored_payment_method_management_title
 
-            CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_OTHERS_SECTION_TITLE ->
-                R.string.checkout_drop_in_manage_favorites_others_section_title
+            CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_DESCRIPTION ->
+                R.string.checkout_drop_in_stored_payment_method_management_description
 
-            CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE ->
-                R.string.checkout_drop_in_manage_favorites_remove
+            CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_CARDS_SECTION_TITLE ->
+                R.string.checkout_drop_in_stored_payment_method_management_cards_section_title
 
-            CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_REMOVE_CONFIRMATION ->
-                R.string.checkout_drop_in_manage_favorites_remove_confirmation
+            CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_OTHERS_SECTION_TITLE ->
+                R.string.checkout_drop_in_stored_payment_method_management_others_section_title
+
+            CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVE ->
+                R.string.checkout_drop_in_stored_payment_method_management_remove
+
+            CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVE_CONFIRMATION ->
+                R.string.checkout_drop_in_stored_payment_method_management_remove_confirmation
 
             CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION ->
