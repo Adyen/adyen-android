@@ -13,7 +13,20 @@
   ],
   "prConcurrentLimit": 0,
   "prHourlyLimit": 10,
+  "skipArtifactsUpdate": true,
+  "gitIgnoredAuthors": [
+    "38424300+AdyenAutomationBot@users.noreply.github.com"
+  ],
   "packageRules": [
+    {
+      "description": [
+        "Let Renovate regenerate the Gradle wrapper files. Verification metadata is updated by the update_verification_metadata workflow."
+      ],
+      "matchManagers": [
+        "gradle-wrapper"
+      ],
+      "skipArtifactsUpdate": false
+    },
     {
       "description": [
         "[main] Group Kotlin Coroutines updates."
@@ -68,5 +81,5 @@
       ]
     }
   ],
-  "rebaseWhen": "never"
+  "rebaseWhen": "conflicted"
 }
