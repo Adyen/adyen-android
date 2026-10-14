@@ -78,5 +78,5 @@
       ]
     }
   ],
-  "rebaseWhen": "never"
+  "rebaseWhen": "conflicted"
 }
