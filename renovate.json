@@ -14,6 +14,9 @@
   "prConcurrentLimit": 0,
   "prHourlyLimit": 10,
   "skipArtifactsUpdate": true,
+  "gitIgnoredAuthors": [
+    "38424300+AdyenAutomationBot@users.noreply.github.com"
+  ],
   "packageRules": [
     {
       "description": [
