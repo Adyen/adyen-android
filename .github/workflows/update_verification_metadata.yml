@@ -3,11 +3,20 @@ name: Update verification metadata
 on:
   push:
     branches:
-      - 'renovate/main-android.gradle.plugin'
+      - 'renovate/**'
+    paths:
+      - 'gradle/libs.versions.toml'
+      - 'gradle/wrapper/**'
+      - '**.gradle'
+      - '**.gradle.kts'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   update-verification-metadata:
