@@ -9,6 +9,7 @@
 package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.action.data.ActionComponentData
@@ -16,6 +17,7 @@ import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.action.internal.ui.ActionFormatter
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -25,7 +27,6 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
-import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
@@ -43,23 +44,31 @@ import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 
+@Suppress("TooManyFunctions")
 internal class RedirectComponent
 @Suppress("LongParameterList")
 constructor(
     private val action: RedirectAction,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
-    private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
     private val clientKey: String,
     private val coroutineScope: CoroutineScope,
-) : ActionComponent, ReturningActionComponent {
+) : ActionComponent, ReturningActionComponent, RestorableActionComponent {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
 
     private val redirectEventChannel = bufferedChannel<RedirectViewEvent>()
-    private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
+
+    @VisibleForTesting
+    internal val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
+
+    @Volatile
+    private var paymentData: String? = null
+
+    @Volatile
+    private var nativeRedirectData: String? = null
 
     @Composable
     override fun Content(modifier: Modifier) {
@@ -86,14 +95,22 @@ constructor(
         launchAction(action.url)
     }
 
+    /**
+     * The shopper already left for the redirect before process death, so nothing is launched again. The component waits
+     * for [handleReturn].
+     */
+    override fun restoreAction() {
+        initState()
+    }
+
     private fun initState() {
         when (action.type) {
             ActionTypes.NATIVE_REDIRECT -> {
-                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
+                nativeRedirectData = action.nativeRedirectData
             }
 
             else -> {
-                paymentDataRepository.paymentData = action.paymentData
+                paymentData = action.paymentData
             }
         }
     }
@@ -110,7 +127,6 @@ constructor(
         adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
-            val nativeRedirectData = paymentDataRepository.nativeRedirectData
             when {
                 action.type == ActionTypes.NATIVE_REDIRECT -> {
                     handleNativeRedirect(nativeRedirectData, details)
@@ -174,7 +190,7 @@ constructor(
     private fun createActionComponentData(details: JSONObject): ActionComponentData {
         return ActionComponentData(
             details = details,
-            paymentData = paymentDataRepository.paymentData,
+            paymentData = paymentData,
         )
     }
 
