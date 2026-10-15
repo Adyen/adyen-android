@@ -20,6 +20,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionResponse
+import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.async
@@ -55,23 +56,10 @@ object CheckoutInitializer {
         val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
         val sessionService = SessionService(httpClient)
         val sessionRepository = SessionRepository(sessionService, checkoutConfiguration.clientKey)
-        // TODO - Do we need to pass order here?
-        sessionRepository.setupSession(sessionResponse.id, sessionResponse.sessionData, null)
-            .fold(
-                onSuccess = { response ->
-                    return CheckoutSession(
-                        // TODO - Check if this still needs to be overridden with local amount
-                        sessionSetupResponse = response.copy(amount = checkoutConfiguration.amount),
-                        // TODO - Check if orders need to be supported
-                        order = null,
-                        environment = checkoutConfiguration.environment,
-                        clientKey = checkoutConfiguration.clientKey,
-                    )
-                },
-                onFailure = {
-                    return null
-                },
-            )
+        return CheckoutSessionInitializer(
+            sessionRepository = sessionRepository,
+            sessionStateStore = DefaultSessionStateStore,
+        ).initialize(sessionResponse, checkoutConfiguration)
     }
 
     private suspend fun fetchPublicKey(checkoutConfiguration: CheckoutConfiguration): String? {
