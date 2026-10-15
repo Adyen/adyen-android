@@ -66,3 +66,41 @@ internal data class AddressComponentState(
         }
     }
 }
+
+/**
+ * Updates the text input corresponding to the provided [id]. Elements that are not text inputs are ignored.
+ */
+internal fun AddressComponentState.updateTextInput(
+    id: AddressFormElementId,
+    transform: (TextInputComponentState) -> TextInputComponentState,
+): AddressComponentState = when (id) {
+    AddressFormElementId.STREET -> copy(street = transform(street))
+    AddressFormElementId.HOUSE_NUMBER_OR_NAME -> copy(houseNumberOrName = transform(houseNumberOrName))
+    AddressFormElementId.POSTAL_CODE -> copy(postalCode = transform(postalCode))
+    AddressFormElementId.CITY -> copy(city = transform(city))
+    AddressFormElementId.COUNTRY,
+    AddressFormElementId.STATE_OR_PROVINCE -> this
+}
+
+/**
+ * Updates the picker corresponding to the provided [id]. Elements that are not pickers, and the state picker while the
+ * state has no options, are ignored.
+ */
+internal fun AddressComponentState.updatePickerInput(
+    id: AddressFormElementId,
+    transform: (PickerInputComponentState<String>) -> PickerInputComponentState<String>,
+): AddressComponentState = when (id) {
+    AddressFormElementId.COUNTRY -> copy(country = transform(country))
+    AddressFormElementId.STATE_OR_PROVINCE -> when (stateOrProvince) {
+        is StateOrProvinceState.Options -> copy(
+            stateOrProvince = stateOrProvince.copy(picker = transform(stateOrProvince.picker)),
+        )
+
+        else -> this
+    }
+
+    AddressFormElementId.STREET,
+    AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+    AddressFormElementId.POSTAL_CODE,
+    AddressFormElementId.CITY -> this
+}
