@@ -10,17 +10,17 @@ version-code = "1"
 # Build script
 jvm-target = "17"
 android-gradle-plugin = "9.4.1"
-kotlin = "2.4.10"
-ksp = "2.3.11"
+kotlin = "2.4.20"
+ksp = "2.3.12"
 dokka = "2.2.0"
 hilt = "2.60.1"
 
 # Code quality
 detekt = "1.23.8"
-kover = "0.9.9"
+kover = "0.9.11"
 ktlint = "1.8.0"
 sonarqube = "7.5.0.8588"
-binary-compatibility-validator = "0.18.1"
+binary-compatibility-validator = "0.18.2"
 
 # Android dependencies
 activity = "1.13.0"
