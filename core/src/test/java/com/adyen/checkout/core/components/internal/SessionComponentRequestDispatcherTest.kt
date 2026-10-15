@@ -12,6 +12,7 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.CheckoutResultCode
+import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.BeforeSubmitResult
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
@@ -23,9 +24,12 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.ShopperName
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.error.CheckoutError
+import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.internal.InMemorySessionStateStore
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsResponse
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -38,8 +42,10 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.io.IOException
@@ -48,6 +54,24 @@ import java.io.IOException
 internal class SessionComponentRequestDispatcherTest(
     @param:Mock private val sessionRepository: SessionRepository,
 ) {
+
+    private val sessionStateStore = InMemorySessionStateStore()
+
+    private val checkoutSession = CheckoutSession(
+        sessionSetupResponse = SessionSetupResponse(
+            id = "session-id",
+            sessionData = "session-data",
+            amount = null,
+            expiresAt = "2026-10-15T12:00:00Z",
+            paymentMethods = null,
+            returnUrl = null,
+            configuration = null,
+            shopperLocale = null,
+        ),
+        order = null,
+        environment = Environment.TEST,
+        clientKey = "test_qwertyuiopasdfghjklzxcvbnm",
+    )
 
     @Nested
     inner class SubmitTest {
@@ -497,14 +521,120 @@ internal class SessionComponentRequestDispatcherTest(
         }
     }
 
+    @Nested
+    inner class SessionDataTest {
+
+        @Test
+        fun `when no session data is stored, then submit sends the initial session data`() = runTest {
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn
+                Result.success(createPaymentsResponse())
+
+            createDispatcher().submit(emptyPaymentComponentData())
+
+            verify(sessionRepository).submitPayment(any(), eq("session-data"), any())
+        }
+
+        @Test
+        fun `when session data is stored, then submit sends the stored session data`() = runTest {
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn
+                Result.success(createPaymentsResponse())
+            sessionStateStore.setSessionData("session-id", "stored-session-data")
+
+            createDispatcher().submit(emptyPaymentComponentData())
+
+            verify(sessionRepository).submitPayment(any(), eq("stored-session-data"), any())
+        }
+
+        @Test
+        fun `when session data is stored for another session, then submit sends the initial session data`() =
+            runTest {
+                whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn
+                    Result.success(createPaymentsResponse())
+                sessionStateStore.setSessionData("other-session-id", "other-session-data")
+
+                createDispatcher().submit(emptyPaymentComponentData())
+
+                verify(sessionRepository).submitPayment(any(), eq("session-data"), any())
+            }
+
+        @Test
+        fun `when submit succeeds, then the returned session data is stored`() = runTest {
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn
+                Result.success(createPaymentsResponse(sessionData = "updated-session-data"))
+
+            createDispatcher().submit(emptyPaymentComponentData())
+
+            assertEquals("updated-session-data", sessionStateStore.getSessionData(checkoutSession))
+        }
+
+        @Test
+        fun `when submit fails, then the stored session data is unchanged`() = runTest {
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.failure(IOException())
+            sessionStateStore.setSessionData("session-id", "stored-session-data")
+
+            createDispatcher().submit(emptyPaymentComponentData())
+
+            assertEquals("stored-session-data", sessionStateStore.getSessionData(checkoutSession))
+        }
+
+        @Test
+        fun `when session data is stored, then additionalDetails sends the stored session data`() = runTest {
+            whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn
+                Result.success(createDetailsResponse(resultCode = "Authorised"))
+            sessionStateStore.setSessionData("session-id", "stored-session-data")
+
+            createDispatcher().additionalDetails(ActionComponentData())
+
+            verify(sessionRepository).submitDetails(any(), eq("stored-session-data"), any())
+        }
+
+        @Test
+        fun `when additionalDetails succeeds, then the returned session data is stored`() = runTest {
+            whenever(sessionRepository.submitDetails(any(), any(), any())) doReturn
+                Result.success(createDetailsResponse(resultCode = "Authorised", sessionData = "updated-session-data"))
+
+            createDispatcher().additionalDetails(ActionComponentData())
+
+            assertEquals("updated-session-data", sessionStateStore.getSessionData(checkoutSession))
+        }
+
+        @Test
+        fun `when onBeforeSubmit returns Proceed with sessionData, then it is sent and stored`() = runTest {
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn Result.failure(IOException())
+            sessionStateStore.setSessionData("session-id", "stored-session-data")
+            val dispatcher = createDispatcher(
+                onBeforeSubmit = { data ->
+                    BeforeSubmitResult.Proceed(data = data, sessionData = "patched-session-data")
+                },
+            )
+
+            dispatcher.submit(emptyPaymentComponentData())
+
+            verify(sessionRepository).submitPayment(any(), eq("patched-session-data"), any())
+            assertEquals("patched-session-data", sessionStateStore.getSessionData(checkoutSession))
+        }
+
+        @Test
+        fun `when another dispatcher of the same session updated the session data, then submit sends it`() = runTest {
+            whenever(sessionRepository.submitPayment(any(), any(), any())) doReturn
+                Result.success(createPaymentsResponse(resultCode = "Refused", sessionData = "updated-session-data"))
+            createDispatcher().submit(emptyPaymentComponentData())
+
+            createDispatcher().submit(emptyPaymentComponentData())
+
+            val capturedSessionData = argumentCaptor<String>()
+            verify(sessionRepository, times(2)).submitPayment(any(), capturedSessionData.capture(), any())
+            assertEquals(listOf("session-data", "updated-session-data"), capturedSessionData.allValues)
+        }
+    }
+
     private fun createDispatcher(
         onAction: (ActionData) -> Unit = {},
         onComplete: (SessionCheckoutResult) -> Unit = {},
         onFailure: (CheckoutError) -> Unit = {},
         onBeforeSubmit: (suspend (BeforeSubmitData) -> BeforeSubmitResult)? = null,
     ): SessionComponentRequestDispatcher = SessionComponentRequestDispatcher(
-        initialSessionData = "session-data",
-        sessionId = "session-id",
+        checkoutSession = checkoutSession,
         callbacks = SessionCheckoutCallbacks(
             onAction = onAction,
             onComplete = onComplete,
@@ -512,6 +642,7 @@ internal class SessionComponentRequestDispatcherTest(
             onBeforeSubmit = onBeforeSubmit,
         ),
         sessionRepository = sessionRepository,
+        sessionStateStore = sessionStateStore,
     )
 
     private fun createPaymentsResponse(

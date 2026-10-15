@@ -28,6 +28,7 @@ import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataP
 import com.adyen.checkout.core.error.CheckoutException
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
+import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineScope
@@ -217,15 +218,14 @@ internal class CheckoutControllerFactory {
         callbacks: SessionCheckoutCallbacks,
     ): SessionComponentRequestDispatcher {
         val checkoutConfiguration = context.checkoutConfiguration
-        val sessionSetup = context.checkoutSession.sessionSetupResponse
         val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
         val sessionService = SessionService(httpClient)
         val sessionRepository = SessionRepository(sessionService, checkoutConfiguration.clientKey)
         return SessionComponentRequestDispatcher(
-            initialSessionData = sessionSetup.sessionData,
-            sessionId = sessionSetup.id,
+            checkoutSession = context.checkoutSession,
             callbacks = callbacks,
             sessionRepository = sessionRepository,
+            sessionStateStore = DefaultSessionStateStore,
         )
     }
 

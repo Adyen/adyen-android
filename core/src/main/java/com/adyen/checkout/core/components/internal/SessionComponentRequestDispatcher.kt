@@ -23,16 +23,19 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.applyBeforeSubmitData
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
+import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.internal.SessionStateStore
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 
 internal class SessionComponentRequestDispatcher(
-    initialSessionData: String,
-    private val sessionId: String,
+    private val checkoutSession: CheckoutSession,
     private val callbacks: SessionCheckoutCallbacks,
     private val sessionRepository: SessionRepository,
+    private val sessionStateStore: SessionStateStore,
 ) : SubmittableComponentRequestDispatcher {
 
-    private var currentSessionData: String = initialSessionData
+    private val sessionId: String = checkoutSession.sessionSetupResponse.id
+
     private var sessionResult: String = ""
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
@@ -41,15 +44,15 @@ internal class SessionComponentRequestDispatcher(
         return when (beforeSubmitResult) {
             is BeforeSubmitResult.Abort -> SubmitResult.Retry()
             is BeforeSubmitResult.Proceed -> {
-                beforeSubmitResult.sessionData?.let { currentSessionData = it }
+                beforeSubmitResult.sessionData?.let { sessionStateStore.setSessionData(sessionId, it) }
                 val finalData = data.applyBeforeSubmitData(beforeSubmitResult.data)
                 sessionRepository.submitPayment(
                     sessionId = sessionId,
-                    sessionData = currentSessionData,
+                    sessionData = sessionStateStore.getSessionData(checkoutSession),
                     paymentComponentData = finalData,
                 ).fold(
                     onSuccess = { response ->
-                        currentSessionData = response.sessionData
+                        sessionStateStore.setSessionData(sessionId, response.sessionData)
                         sessionResult = response.sessionResult.orEmpty()
                         // TODO - Check if we need to support partial payment flow
                         when {
@@ -86,11 +89,11 @@ internal class SessionComponentRequestDispatcher(
     override suspend fun additionalDetails(data: ActionComponentData): AdditionalDetailsResult {
         sessionRepository.submitDetails(
             sessionId = sessionId,
-            sessionData = currentSessionData,
+            sessionData = sessionStateStore.getSessionData(checkoutSession),
             actionComponentData = data,
         ).fold(
             onSuccess = { response ->
-                currentSessionData = response.sessionData
+                sessionStateStore.setSessionData(sessionId, response.sessionData)
                 sessionResult = response.sessionResult.orEmpty()
                 return AdditionalDetailsResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
             },
