@@ -29,7 +29,7 @@ internal class ActionOnlyCheckoutFlowTest(
     @param:Mock private val actionHandler: ActionHandler,
 ) {
 
-    private val stateStore = CheckoutFlowStateStore(SavedStateHandle(), target = null)
+    private var savedStateHandle = SavedStateHandle()
 
     @Test
     fun `when created, then handleAction is called on actionHandler`() {
@@ -70,7 +70,7 @@ internal class ActionOnlyCheckoutFlowTest(
         @Test
         fun `when the same action was being handled, then it is restored`() {
             val action = createAction()
-            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+            givenSavedPhase(CheckoutFlowPhase.HandlingAction(action))
 
             createFlow(action)
 
@@ -80,7 +80,7 @@ internal class ActionOnlyCheckoutFlowTest(
         @Test
         fun `when the same action was being handled, then it is not handled again`() {
             val action = createAction()
-            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
+            givenSavedPhase(CheckoutFlowPhase.HandlingAction(action))
 
             createFlow(action)
 
@@ -89,7 +89,7 @@ internal class ActionOnlyCheckoutFlowTest(
 
         @Test
         fun `when another action was being handled, then the new action is handled`() {
-            stateStore.save(CheckoutFlowPhase.HandlingAction(createAction(paymentData = "previous_data")))
+            givenSavedPhase(CheckoutFlowPhase.HandlingAction(createAction(paymentData = "previous_data")))
             val action = createAction()
 
             createFlow(action)
@@ -102,8 +102,16 @@ internal class ActionOnlyCheckoutFlowTest(
     private fun createFlow(action: TestAction = createAction()) = ActionOnlyCheckoutFlow(
         action = action,
         actionHandler = actionHandler,
-        stateStore = stateStore,
+        stateStore = CheckoutFlowStateStore(savedStateHandle, target = null),
     )
+
+    /**
+     * Saves [phase] as a flow before process death would, and continues with the rebuilt saved state handle.
+     */
+    private fun givenSavedPhase(phase: CheckoutFlowPhase) {
+        CheckoutFlowStateStore(savedStateHandle, target = null).save(phase)
+        savedStateHandle = savedStateHandle.rebuildFromSavedState()
+    }
 
     private fun createAction(paymentData: String = "test_data") = TestAction(
         type = "redirect",
