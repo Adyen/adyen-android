@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 internal class StoredPaymentMethodManagementViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
@@ -57,8 +58,11 @@ internal class StoredPaymentMethodManagementViewModel(
         )
     }
 
+    // TODO - Show the progress and the error of the removal
     fun removeStoredPaymentMethod(id: String) {
-        paymentMethodRepository.removeStoredPaymentMethod(id)
+        viewModelScope.launch {
+            paymentMethodRepository.removeStoredPaymentMethod(id)
+        }
     }
 
     class Factory(

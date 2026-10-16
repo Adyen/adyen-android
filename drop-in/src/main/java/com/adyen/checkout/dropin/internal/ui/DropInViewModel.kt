@@ -13,14 +13,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
+import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
+import com.adyen.checkout.dropin.internal.data.DefaultStoredPaymentMethodRemover
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
+import com.adyen.checkout.dropin.internal.data.StoredPaymentMethodRemover
+import com.adyen.checkout.dropin.internal.data.api.DisableTokenRepository
+import com.adyen.checkout.dropin.internal.data.api.DisableTokenService
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +41,7 @@ internal class DropInViewModel(
     val navigator: DropInNavigator,
     val controllerProvider: DropInControllerProvider,
     private val dropInServiceManager: DropInServiceManager,
+    private val storedPaymentMethodRemover: StoredPaymentMethodRemover,
 ) : ViewModel() {
 
     val checkoutParams: CheckoutParams = CheckoutParamsFactory().create(input.checkoutContext)
@@ -57,6 +65,7 @@ internal class DropInViewModel(
         paymentMethodRepository = DefaultPaymentMethodRepository(
             paymentMethods = input.checkoutContext.getPaymentMethods(),
             storedPaymentMethods = input.checkoutContext.getStoredPaymentMethods(),
+            storedPaymentMethodRemover = storedPaymentMethodRemover,
         )
     }
 
@@ -103,7 +112,19 @@ internal class DropInViewModel(
                     dropInServiceManager = dropInServiceManager,
                 ),
                 dropInServiceManager = dropInServiceManager,
+                storedPaymentMethodRemover = createStoredPaymentMethodRemover(input.checkoutContext),
             ) as T
+        }
+
+        private fun createStoredPaymentMethodRemover(checkoutContext: CheckoutContext): StoredPaymentMethodRemover {
+            val httpClient = HttpClientFactory.getHttpClient(checkoutContext.checkoutConfiguration.environment)
+            return DefaultStoredPaymentMethodRemover(
+                checkoutContext = checkoutContext,
+                disableTokenRepository = DisableTokenRepository(
+                    disableTokenService = DisableTokenService(httpClient),
+                    sessionStateStore = DefaultSessionStateStore,
+                ),
+            )
         }
     }
 }

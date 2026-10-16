@@ -21,7 +21,8 @@ internal class TestPaymentMethodRepository(
     private val _storedPaymentMethods = MutableStateFlow(storedMethods)
     override val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>> = _storedPaymentMethods
 
-    override fun removeStoredPaymentMethod(id: String) {
+    override suspend fun removeStoredPaymentMethod(id: String): Result<Unit> {
         _storedPaymentMethods.value = _storedPaymentMethods.value.filterNot { it.id == id }
+        return Result.success(Unit)
     }
 }

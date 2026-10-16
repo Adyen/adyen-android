@@ -13,6 +13,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 internal interface PaymentMethodRepository {
 
@@ -20,19 +21,27 @@ internal interface PaymentMethodRepository {
 
     val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>>
 
-    fun removeStoredPaymentMethod(id: String)
+    /**
+     * Removes the stored payment method on the backend, and only takes it off [storedPaymentMethods] if that succeeds.
+     */
+    suspend fun removeStoredPaymentMethod(id: String): Result<Unit>
 }
 
 internal class DefaultPaymentMethodRepository(
     override val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
+    private val storedPaymentMethodRemover: StoredPaymentMethodRemover,
 ) : PaymentMethodRepository {
 
     private val _storedPaymentMethods = MutableStateFlow(storedPaymentMethods)
     override val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>> = _storedPaymentMethods.asStateFlow()
 
-    override fun removeStoredPaymentMethod(id: String) {
-        // TODO - Implement network call and only remove locally if successful
-        _storedPaymentMethods.value = _storedPaymentMethods.value.filterNot { it.id == id }
+    override suspend fun removeStoredPaymentMethod(id: String): Result<Unit> {
+        val storedPaymentMethod = _storedPaymentMethods.value.firstOrNull { it.id == id }
+            ?: return Result.failure(IllegalArgumentException("No stored payment method found with id $id"))
+
+        return storedPaymentMethodRemover.remove(storedPaymentMethod).onSuccess {
+            _storedPaymentMethods.update { current -> current.filterNot { it.id == id } }
+        }
     }
 }

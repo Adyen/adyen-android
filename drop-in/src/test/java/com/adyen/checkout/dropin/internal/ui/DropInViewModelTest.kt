@@ -167,6 +167,7 @@ internal class DropInViewModelTest {
             navigator = DropInNavigator(persister),
             controllerProvider = controllerProvider,
             dropInServiceManager = DropInServiceManager(DropInService::class.java),
+            storedPaymentMethodRemover = { Result.success(Unit) },
         )
     }
 
