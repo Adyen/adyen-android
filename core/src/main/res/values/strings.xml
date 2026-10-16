@@ -8,6 +8,9 @@
 
 <!-- TODO - Add translations -->
 <resources>
+    <string name="adyen_checkout_address_title" translatable="false">Address</string>
+    <string name="adyen_checkout_address_description" translatable="false">Enter your address</string>
+    <string name="adyen_checkout_address_save_label" translatable="false">Save address</string>
     <string name="adyen_checkout_address_country_label" translatable="false">Country/Region</string>
     <string name="adyen_checkout_address_country_error" translatable="false">Select a country/region</string>
     <string name="adyen_checkout_address_street_label" translatable="false">Street</string>
