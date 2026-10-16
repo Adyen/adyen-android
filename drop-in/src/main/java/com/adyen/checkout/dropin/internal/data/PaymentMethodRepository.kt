@@ -26,19 +26,9 @@ internal interface PaymentMethodRepository {
 
     val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>>
 
-    /**
-     * Removes the stored payment method on the backend, and only takes it off [storedPaymentMethods] if that succeeds.
-     *
-     * Cancelling the caller only stops the waiting: the removal itself keeps running, so the list and the session
-     * data stay in line with the backend. A removal requested while the same item is already being removed shares
-     * that removal's result instead of calling the backend again.
-     */
     suspend fun removeStoredPaymentMethod(id: String): Result<Unit>
 }
 
-/**
- * @param coroutineScope The scope removals run in. It has to live as long as Drop-in, not as long as a single screen.
- */
 internal class DefaultPaymentMethodRepository(
     override val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
@@ -51,6 +41,11 @@ internal class DefaultPaymentMethodRepository(
 
     private val ongoingRemovals = mutableMapOf<String, Deferred<Result<Unit>>>()
 
+    /**
+     * Cancelling the caller only stops the waiting: the removal itself keeps running, so the list and the session
+     * data stay in line with the backend. A removal requested while the same item is already being removed shares
+     * that removal's result instead of calling the backend again.
+     */
     override suspend fun removeStoredPaymentMethod(id: String): Result<Unit> {
         val storedPaymentMethod = _storedPaymentMethods.value.firstOrNull { it.id == id }
             ?: return Result.failure(IllegalArgumentException("No stored payment method found with id $id"))

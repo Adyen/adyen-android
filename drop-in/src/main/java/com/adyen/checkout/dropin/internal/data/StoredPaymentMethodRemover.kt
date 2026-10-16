@@ -12,9 +12,6 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.dropin.internal.data.api.DisableTokenRepository
 
-/**
- * Removes a stored payment method of the shopper on the backend.
- */
 internal fun interface StoredPaymentMethodRemover {
 
     suspend fun remove(storedPaymentMethod: StoredPaymentMethod): Result<Unit>
