@@ -8,12 +8,14 @@
 
 <!-- TODO - Add translations -->
 <resources>
+    <string name="adyen_checkout_address_country_label" translatable="false">Country/Region</string>
     <string name="adyen_checkout_address_country_error" translatable="false">Select a country/region</string>
     <string name="adyen_checkout_address_street_label" translatable="false">Street</string>
     <string name="adyen_checkout_address_street_label_address" translatable="false">Address</string>
     <string name="adyen_checkout_address_street_error" translatable="false">Enter the street</string>
     <string name="adyen_checkout_address_house_number_label" translatable="false">House number</string>
     <string name="adyen_checkout_address_house_number_label_apartment_suite" translatable="false">Apartment / Suite</string>
+    <string name="adyen_checkout_address_house_number_description" translatable="false">Make sure to include any additions</string>
     <string name="adyen_checkout_address_house_number_error" translatable="false">Enter the house number</string>
     <string name="adyen_checkout_address_postal_code_label" translatable="false">Postal code</string>
     <string name="adyen_checkout_address_postal_code_label_zip_code" translatable="false">Zip code</string>
