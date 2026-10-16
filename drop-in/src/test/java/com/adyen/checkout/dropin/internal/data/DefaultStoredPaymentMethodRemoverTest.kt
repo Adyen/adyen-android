@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.data
 
+import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
@@ -19,6 +20,7 @@ import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import com.adyen.checkout.dropin.internal.data.api.DisableTokenRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -65,7 +67,17 @@ internal class DefaultStoredPaymentMethodRemoverTest(
 
         val result = remover.remove(STORED_PAYMENT_METHOD)
 
-        assertTrue(result.isFailure)
+        assertInstanceOf(UnsupportedOperationException::class.java, result.exceptionOrNull())
+        verifyNoInteractions(disableTokenRepository)
+    }
+
+    @Test
+    fun `when the context is action only, then a failure is returned and the session is not called`() = runTest {
+        val remover = createRemover(actionOnlyContext())
+
+        val result = remover.remove(STORED_PAYMENT_METHOD)
+
+        assertInstanceOf(IllegalStateException::class.java, result.exceptionOrNull())
         verifyNoInteractions(disableTokenRepository)
     }
 
@@ -81,6 +93,18 @@ internal class DefaultStoredPaymentMethodRemoverTest(
 
     private fun advancedContext() = TestCheckoutContext.advanced(
         paymentMethods = PaymentMethods(),
+        checkoutConfiguration = CHECKOUT_CONFIGURATION,
+    )
+
+    private fun actionOnlyContext() = TestCheckoutContext.actionOnly(
+        action = RedirectAction(
+            type = RedirectAction.ACTION_TYPE,
+            paymentData = null,
+            paymentMethodType = "scheme",
+            method = null,
+            url = null,
+            nativeRedirectData = null,
+        ),
         checkoutConfiguration = CHECKOUT_CONFIGURATION,
     )
 

@@ -37,7 +37,9 @@ internal class DefaultStoredPaymentMethodRemover(
                 UnsupportedOperationException("Removing stored payment methods is not supported in the advanced flow."),
             )
 
-            is CheckoutContext.ActionOnly -> error("Unsupported context: $checkoutContext")
+            is CheckoutContext.ActionOnly -> Result.failure(
+                IllegalStateException("Drop-in can't remove stored payment methods with an action only context."),
+            )
         }
     }
 }
