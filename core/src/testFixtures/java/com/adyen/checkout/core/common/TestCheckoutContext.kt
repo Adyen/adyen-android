@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.core.common
 
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.sessions.CheckoutSession
 
 /**
  * Builds real [CheckoutContext] instances for tests.
@@ -30,6 +32,30 @@ object TestCheckoutContext {
         publicKey: String? = null,
     ): CheckoutContext.Advanced = CheckoutContext.Advanced(
         paymentMethods = paymentMethods,
+        checkoutConfiguration = checkoutConfiguration,
+        checkoutAttemptId = checkoutAttemptId,
+        publicKey = publicKey,
+    )
+
+    fun sessions(
+        checkoutSession: CheckoutSession,
+        checkoutConfiguration: CheckoutConfiguration,
+        checkoutAttemptId: String = TEST_CHECKOUT_ATTEMPT_ID,
+        publicKey: String? = null,
+    ): CheckoutContext.Sessions = CheckoutContext.Sessions(
+        checkoutSession = checkoutSession,
+        checkoutConfiguration = checkoutConfiguration,
+        checkoutAttemptId = checkoutAttemptId,
+        publicKey = publicKey,
+    )
+
+    fun actionOnly(
+        action: Action,
+        checkoutConfiguration: CheckoutConfiguration,
+        checkoutAttemptId: String = TEST_CHECKOUT_ATTEMPT_ID,
+        publicKey: String? = null,
+    ): CheckoutContext.ActionOnly = CheckoutContext.ActionOnly(
+        action = action,
         checkoutConfiguration = checkoutConfiguration,
         checkoutAttemptId = checkoutAttemptId,
         publicKey = publicKey,
