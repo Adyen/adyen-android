@@ -15,12 +15,14 @@ package com.adyen.checkout.core.common.localization
  * [CheckoutLocalizationProvider], allowing you to customize the copy shown to the shopper.
  */
 enum class CheckoutLocalizationKey {
+    ADDRESS_COUNTRY_LABEL,
     ADDRESS_COUNTRY_ERROR,
     ADDRESS_STREET_LABEL,
     ADDRESS_STREET_LABEL_ADDRESS,
     ADDRESS_STREET_ERROR,
     ADDRESS_HOUSE_NUMBER_LABEL,
     ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE,
+    ADDRESS_HOUSE_NUMBER_DESCRIPTION,
     ADDRESS_HOUSE_NUMBER_ERROR,
     ADDRESS_POSTAL_CODE_LABEL,
     ADDRESS_POSTAL_CODE_LABEL_ZIP_CODE,

@@ -18,6 +18,7 @@ internal class DefaultLocalizationSource {
     fun getString(context: Context, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
             // Address
+            CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL -> R.string.adyen_checkout_address_country_label
             CheckoutLocalizationKey.ADDRESS_COUNTRY_ERROR -> R.string.adyen_checkout_address_country_error
             CheckoutLocalizationKey.ADDRESS_STREET_LABEL -> R.string.adyen_checkout_address_street_label
             CheckoutLocalizationKey.ADDRESS_STREET_LABEL_ADDRESS -> R.string.adyen_checkout_address_street_label_address
@@ -25,6 +26,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL -> R.string.adyen_checkout_address_house_number_label
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE ->
                 R.string.adyen_checkout_address_house_number_label_apartment_suite
+
+            CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_DESCRIPTION ->
+                R.string.adyen_checkout_address_house_number_description
 
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_ERROR -> R.string.adyen_checkout_address_house_number_error
             CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL -> R.string.adyen_checkout_address_postal_code_label
