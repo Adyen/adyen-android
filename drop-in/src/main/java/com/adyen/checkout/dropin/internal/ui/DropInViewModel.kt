@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
@@ -66,6 +67,8 @@ internal class DropInViewModel(
             paymentMethods = input.checkoutContext.getPaymentMethods(),
             storedPaymentMethods = input.checkoutContext.getStoredPaymentMethods(),
             storedPaymentMethodRemover = storedPaymentMethodRemover,
+            // Removals outlive the management screen, so that leaving it can't cancel one halfway through.
+            coroutineScope = viewModelScope,
         )
     }
 
