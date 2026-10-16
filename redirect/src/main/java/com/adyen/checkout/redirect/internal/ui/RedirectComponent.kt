@@ -28,14 +28,11 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.error.internal.GenericError
-import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
-import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.redirect.internal.data.api.NativeRedirectRepository
 import com.adyen.checkout.redirect.internal.ui.view.RedirectContent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -51,7 +48,7 @@ constructor(
     private val action: RedirectAction,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
-    private val nativeRedirectService: NativeRedirectService,
+    private val nativeRedirectRepository: NativeRedirectRepository,
     private val clientKey: String,
     private val coroutineScope: CoroutineScope,
 ) : ActionComponent, ReturningActionComponent, RestorableActionComponent {
@@ -148,24 +145,18 @@ constructor(
     }
 
     private fun handleNativeRedirect(nativeRedirectData: String?, details: JSONObject) {
-        // TODO - Move this to a repository and use runSuspendCatching and remove the catches
         coroutineScope.launch {
-            val request = NativeRedirectRequest(
-                redirectData = nativeRedirectData,
-                returnQueryString = details.getStringOrNull(RETURN_URL_QUERY_STRING_PARAMETER)
-                    .orEmpty(),
+            nativeRedirectRepository.makeNativeRedirect(
+                nativeRedirectData = nativeRedirectData,
+                returnQueryString = details.getStringOrNull(RETURN_URL_QUERY_STRING_PARAMETER).orEmpty(),
+                clientKey = clientKey,
+            ).fold(
+                onSuccess = ::emitDetails,
+                onFailure = { e ->
+                    trackNativeRedirectError(if (e is JSONException) "Serialization error" else "Network error")
+                    emitError(e as? InternalCheckoutError ?: GenericError("Native redirect request failed.", e))
+                },
             )
-            try {
-                val response = nativeRedirectService.makeNativeRedirect(request, clientKey)
-                val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
-                emitDetails(detailsJson)
-            } catch (e: HttpError) {
-                trackNativeRedirectError("Network error")
-                emitError(e)
-            } catch (e: JSONException) {
-                trackNativeRedirectError("Serialization error")
-                emitError(GenericError("Serialization error", e))
-            }
         }
     }
 

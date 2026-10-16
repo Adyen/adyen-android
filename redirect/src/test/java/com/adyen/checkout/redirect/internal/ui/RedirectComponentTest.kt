@@ -19,9 +19,7 @@ import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.HttpError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
-import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.redirect.internal.data.api.NativeRedirectRepository
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
@@ -46,12 +44,13 @@ import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.net.UnknownHostException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class RedirectComponentTest(
     @param:Mock private val redirectHandler: RedirectHandler,
-    @param:Mock private val nativeRedirectService: NativeRedirectService,
+    @param:Mock private val nativeRedirectRepository: NativeRedirectRepository,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -164,8 +163,8 @@ internal class RedirectComponentTest(
         fun `when restored with native redirect and handleReturn is called, then the action's nativeRedirectData is sent`() =
             runTest {
                 // GIVEN
-                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doReturn
-                    NativeRedirectResponse("someRedirectResult")
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.success(JSONObject())
                 val redirectResult = JSONObject().apply {
                     put("returnUrlQueryString", "gpid=ajfbasljbfaljfe")
                 }
@@ -182,11 +181,11 @@ internal class RedirectComponentTest(
                 component.handleReturn(Intent())
 
                 // THEN
-                val expectedRequest = NativeRedirectRequest(
-                    redirectData = "testNativeData",
+                verify(nativeRedirectRepository).makeNativeRedirect(
+                    nativeRedirectData = "testNativeData",
                     returnQueryString = "gpid=ajfbasljbfaljfe",
+                    clientKey = TEST_CLIENT_KEY,
                 )
-                verify(nativeRedirectService).makeNativeRedirect(expectedRequest, TEST_CLIENT_KEY)
             }
     }
 
@@ -293,11 +292,12 @@ internal class RedirectComponentTest(
     inner class NativeRedirectTest {
 
         @Test
-        fun `when handleReturn is called with native redirect and service succeeds, then details are emitted`() =
+        fun `when handleReturn is called with native redirect and repository succeeds, then details are emitted`() =
             runTest {
                 // GIVEN
-                val response = NativeRedirectResponse("someRedirectResult")
-                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doReturn response
+                val expectedDetails = JSONObject().apply { put("redirectResult", "someRedirectResult") }
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.success(expectedDetails)
                 val redirectResult = JSONObject().apply {
                     put("returnUrlQueryString", "gpid=ajfbasljbfaljfe")
                 }
@@ -319,7 +319,6 @@ internal class RedirectComponentTest(
                 val event = events.latestValue
                 assertTrue(event is ActionComponentEvent.ActionDetails)
                 val details = (event as ActionComponentEvent.ActionDetails).data
-                val expectedDetails = NativeRedirectResponse.SERIALIZER.serialize(response)
                 assertEquals(expectedDetails.toString(), details.details.toString())
                 assertNull(details.paymentData)
             }
@@ -328,8 +327,8 @@ internal class RedirectComponentTest(
         fun `when handleReturn is called with native redirect, then the action's nativeRedirectData is sent`() =
             runTest {
                 // GIVEN
-                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doReturn
-                    NativeRedirectResponse("someRedirectResult")
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.success(JSONObject())
                 val redirectResult = JSONObject().apply {
                     put("returnUrlQueryString", "gpid=ajfbasljbfaljfe")
                 }
@@ -346,19 +345,20 @@ internal class RedirectComponentTest(
                 component.handleReturn(Intent())
 
                 // THEN
-                val expectedRequest = NativeRedirectRequest(
-                    redirectData = "testNativeData",
+                verify(nativeRedirectRepository).makeNativeRedirect(
+                    nativeRedirectData = "testNativeData",
                     returnQueryString = "gpid=ajfbasljbfaljfe",
+                    clientKey = TEST_CLIENT_KEY,
                 )
-                verify(nativeRedirectService).makeNativeRedirect(expectedRequest, TEST_CLIENT_KEY)
             }
 
         @Test
-        fun `when handleReturn is called with native redirect and HttpError is thrown, then error is emitted`() =
+        fun `when handleReturn is called with native redirect and HttpError is returned, then error is emitted`() =
             runTest {
                 // GIVEN
                 val error = HttpError(401, "Unauthorized", null)
-                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.failure(error)
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
                     action = redirectAction(
@@ -381,11 +381,12 @@ internal class RedirectComponentTest(
             }
 
         @Test
-        fun `when handleReturn is called with native redirect and HttpError is thrown, then api native redirect error event is tracked`() =
+        fun `when handleReturn is called with native redirect and HttpError is returned, then api native redirect error event is tracked`() =
             runTest {
                 // GIVEN
                 val error = HttpError(401, "Unauthorized", null)
-                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.failure(error)
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
                     action = redirectAction(
@@ -408,11 +409,12 @@ internal class RedirectComponentTest(
             }
 
         @Test
-        fun `when handleReturn is called with native redirect and JSONException is thrown, then error is emitted`() =
+        fun `when handleReturn is called with native redirect and JSONException is returned, then error is emitted`() =
             runTest {
                 // GIVEN
                 val error = JSONException("Serialization error")
-                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.failure(error)
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
                     action = redirectAction(
@@ -434,11 +436,12 @@ internal class RedirectComponentTest(
             }
 
         @Test
-        fun `when handleReturn is called with native redirect and JSONException is thrown, then api native redirect error event is tracked`() =
+        fun `when handleReturn is called with native redirect and JSONException is returned, then api native redirect error event is tracked`() =
             runTest {
                 // GIVEN
                 val error = JSONException("Serialization error")
-                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.failure(error)
                 whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
                 val component = createComponent(
                     action = redirectAction(
@@ -459,6 +462,33 @@ internal class RedirectComponentTest(
                 )
                 analyticsManager.assertHasEventEquals(expectedEvent)
             }
+
+        @Test
+        fun `when handleReturn is called with native redirect and IOException is returned, then generic error is emitted`() =
+            runTest {
+                // GIVEN
+                val error = UnknownHostException("Unable to resolve host")
+                whenever(nativeRedirectRepository.makeNativeRedirect(anyOrNull(), any(), any())) doReturn
+                    Result.failure(error)
+                whenever(redirectHandler.parseRedirectResult(anyOrNull())) doReturn JSONObject()
+                val component = createComponent(
+                    action = redirectAction(
+                        type = ActionTypes.NATIVE_REDIRECT,
+                        nativeRedirectData = "testData",
+                    ),
+                )
+                component.handleAction()
+
+                val events = component.eventFlow.test(testScheduler)
+
+                // WHEN
+                component.handleReturn(Intent())
+
+                // THEN
+                val event = assertInstanceOf<ActionComponentEvent.Error>(events.latestValue)
+                val genericError = assertInstanceOf<GenericError>(event.error)
+                assertEquals(error, genericError.cause)
+            }
     }
 
     private fun createComponent(
@@ -468,7 +498,7 @@ internal class RedirectComponentTest(
             action = action,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
-            nativeRedirectService = nativeRedirectService,
+            nativeRedirectRepository = nativeRedirectRepository,
             clientKey = TEST_CLIENT_KEY,
             coroutineScope = CoroutineScope(UnconfinedTestDispatcher()),
         )
