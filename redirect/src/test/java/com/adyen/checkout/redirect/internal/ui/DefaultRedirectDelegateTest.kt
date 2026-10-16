@@ -51,6 +51,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.net.UnknownHostException
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -167,6 +168,24 @@ internal class DefaultRedirectDelegateTest(
                 delegate.handleIntent(Intent())
 
                 assertEquals(error, awaitItem())
+            }
+        }
+
+    @Test
+    fun `when native redirect is handled and throws an IOException, then the error is propagated`() =
+        runTest {
+            delegate.exceptionFlow.test {
+                val error = UnknownHostException("Unable to resolve host")
+                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
+                delegate.initialize(this@runTest)
+                delegate.handleAction(
+                    action = RedirectAction(type = ActionTypes.NATIVE_REDIRECT, nativeRedirectData = "testData"),
+                    activity = Activity(),
+                )
+
+                delegate.handleIntent(Intent())
+
+                assertEquals(error, awaitItem().cause)
             }
         }
 
