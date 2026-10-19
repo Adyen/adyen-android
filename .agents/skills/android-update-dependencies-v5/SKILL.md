@@ -65,7 +65,7 @@ git diff origin/main HEAD -- build-logic/
 
 Every line this prints must match an entry in `DIFFERENCES.md`, and every `build-logic/` entry there must appear in this diff. Treat a mismatch in either direction as a problem: an unlisted change is drift, and a listed one that is missing was just reverted by the copy. Nothing in the build fails either way, so this diff is the only thing that catches it.
 
-Then copy `main`'s toolchain versions into the catalog: AGP, Gradle, Kotlin, KSP, Dokka, detekt, ktlint, kover, sonarqube, binary-compatibility-validator, hilt.
+Then copy `main`'s toolchain versions into the catalog: AGP, Gradle, Kotlin, KSP, Dokka, detekt, ktlint, kover, sonarqube, binary-compatibility-validator, hilt — except any that `DIFFERENCES.md` holds back. Check those still work with the rest of the toolchain you copied.
 
 **Scope: everything that configures the build rather than implementing the product.** That is the root and per-module `build.gradle` and `build.gradle.kts`, `settings.gradle`, `gradle.properties`, `gradle/` including the catalog and wrapper, `build-logic/`, `config/`, `scripts/`, `.github/`, `.editorconfig`, and any other `.gradle`, `.kts`, `.properties`, `.toml`, `.sh`, `.py`, `.yml` or dotfile outside `src/`.
 

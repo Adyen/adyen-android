@@ -13,6 +13,7 @@ The *Introduced* column records the PR that added the entry to this file, which 
 | `min-sdk` is lower than main's | v5 is still being released and cannot raise it. Every version ceiling below follows from this; if `min-sdk` changes, re-derive them all | #2886 |
 | Versions capped by that ceiling | See step 3 of the skill. Derive them from the AAR manifests each time; the set changes as AndroidX publishes | #2886 |
 | Versions where `main` is ahead | v5 must not exceed `main`, and does not chase it. Usually the release-age lag below | #2886 |
+| Kotlin held below `main`'s language version | Each newer one raises the AGP and Kotlin versions merchants need; moving it is a user decision | #3133 |
 | Majors of dependencies that ship to merchants not taken | Rule 4 of the skill | #3133 |
 | Catalog entries used only by v6 absent, along with their release-notes list entries | Not used on v5. `material3` stays `[excluded]` there, as only the example app uses it | #2886 |
 | `compose-material` has no explicit version | v5 lets the Compose BOM pin material3; `main` pins it directly | #2886 |
