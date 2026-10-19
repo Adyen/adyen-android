@@ -38,13 +38,11 @@ jobs:
   add_label_to_pr:
     needs: get_label
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+    # This job adds the label with the bot token, so it never needs GITHUB_TOKEN.
+    # Without the empty permissions object it would inherit the repository default, which it doesn't need.
+    permissions: { }
 
     steps:
-      - name: Checkout to current branch
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
       - name: Add label
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:

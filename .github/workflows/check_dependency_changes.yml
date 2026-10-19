@@ -7,7 +7,7 @@ jobs:
   get_base_dependency_list:
     name: Fetch dependency list in BASE
     permissions:
-      contents: write
+      contents: read
     # This step will only run on pull_request events.
     # PR information is only available when workflow gets triggered with pull_request event.
     if: github.event_name == 'pull_request'
@@ -19,7 +19,7 @@ jobs:
   get_head_dependency_list:
     name: Fetch dependency list in HEAD
     permissions:
-      contents: write
+      contents: read
     # This step will only run on pull_request events.
     # PR information is only available when workflow gets triggered with pull_request event.
     if: github.event_name == 'pull_request'
