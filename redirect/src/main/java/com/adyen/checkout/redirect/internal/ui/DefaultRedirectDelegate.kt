@@ -30,10 +30,10 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
@@ -187,17 +187,17 @@ constructor(
                 redirectData = nativeRedirectData,
                 returnQueryString = details.getStringOrNull(RETURN_URL_QUERY_STRING_PARAMETER).orEmpty(),
             )
-            try {
+            runSuspendCatching {
                 val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)
-                val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
-                emitDetails(detailsJson)
-            } catch (e: HttpException) {
-                trackNativeRedirectError("Network error")
-                emitError(e)
-            } catch (e: ModelSerializationException) {
-                trackNativeRedirectError("Serialization error")
-                emitError(e)
-            }
+                NativeRedirectResponse.SERIALIZER.serialize(response)
+            }.fold(
+                onSuccess = ::emitDetails,
+                onFailure = { e ->
+                    val message = if (e is ModelSerializationException) "Serialization error" else "Network error"
+                    trackNativeRedirectError(message)
+                    emitError(e as? CheckoutException ?: ComponentException("Native redirect request failed.", e))
+                },
+            )
         }
     }
 
