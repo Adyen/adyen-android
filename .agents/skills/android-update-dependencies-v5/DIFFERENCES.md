@@ -22,6 +22,7 @@ The *Introduced* column records the PR that added the entry to this file, which 
 | `.agents/` holds only this skill and `DIFFERENCES.md` | General agent guidance is maintained on `main` and read from there. Do not copy `AGENTS.md` or the other skills across; where they state a value that differs on v5, they would mislead | #2886 |
 | `[plugins] kotlin = { id = "kotlin" }` | Left on the legacy id deliberately; `main` uses `org.jetbrains.kotlin.jvm` | #2886 |
 | `DokkaConventionPlugin` points source links at `tree/v5` | `main` points at `tree/main`. Without this every source link in v5's published documentation resolves to v6 code | #2886 |
+| `JavaConventionPlugin` compiles Android modules for Java 11 | Keeps merchant-facing bytecode on 11; tooling follows `jvm-target` (17) as on `main` | #3133 |
 | Per-module `build.gradle` and `consumer-rules.pro` files differ throughout | v6 moved packages under `.old`, added the `core`, `authentication` and `ui` modules and adopted Compose across components, so module dependencies, namespaces and keep rules diverge. Expect around twenty files to differ for this reason alone. This covers only differences that follow from the refactor — anything else in those files is still drift, and must be ported or listed here | #2886 |
 
 ### Release-age lag

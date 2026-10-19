@@ -12,6 +12,7 @@ plugins {
     alias libs.plugins.ksp
     alias libs.plugins.hilt
     alias libs.plugins.checkout.detekt
+    alias libs.plugins.checkout.java
     alias libs.plugins.checkout.ktlint
 }
 
