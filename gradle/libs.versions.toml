@@ -23,23 +23,23 @@ sonarqube = "7.5.0.8588"
 binary-compatibility-validator = "0.18.2"
 
 # Android dependencies
-activity = "1.13.0"
+activity = "1.11.0"
 annotation = "1.11.0"
-appcompat = "1.8.0"
+appcompat = "1.7.1"
 autofill = "1.3.0"
-browser = "1.10.0"
+browser = "1.9.0"
 coroutines = "1.11.0"
-fragment = "1.9.1"
-lifecycle = "2.11.0"
-material = "1.14.0"
+fragment = "1.8.9"
+lifecycle = "2.9.4"
+material = "1.13.0"
 recyclerview = "1.4.0"
 constraintlayout = "2.2.2"
 
 # Compose dependencies
-compose-activity = "1.13.0"
-compose-bom = "2026.09.00"
-compose-hilt = "1.4.0"
-compose-viewmodel = "2.11.0"
+compose-activity = "1.11.0"
+compose-bom = "2025.11.01"
+compose-hilt = "1.2.0"
+compose-viewmodel = "2.9.4"
 
 # Adyen dependencies
 adyen3ds2 = "2.2.28"
@@ -47,7 +47,7 @@ adyen3ds2 = "2.2.28"
 # External dependencies
 cash-app-pay = "2.5.0"
 okhttp = "5.5.0"
-play-services-wallet = "20.0.0"
+play-services-wallet = "19.4.0"
 twint = "8.0.0"
 wechat-pay = "6.8.0"
 
@@ -74,7 +74,7 @@ robolectric = "4.17"
 test-ext = "1.3.0"
 test-rules = "1.7.0"
 turbine = "1.2.1"
-uiautomator = "2.4.0"
+uiautomator = "2.3.0"
 
 [libraries]
 
