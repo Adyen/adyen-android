@@ -47,7 +47,7 @@ Each v6 payment method is a small set of collaborators wired by a factory:
 3. **Inventory the v5 sources.** List the existing v5 files (delegate, views, provider, configuration, tests) and map each onto the v6 collaborators above. Note what already exists — some methods are partially migrated — so you don't recreate it.
 4. **Flag method-specific concerns** in the plan: external SDK handoff (`compileOnly` + `runCompileOnly`/`checkCompileOnly` + ProGuard `dontwarn`), availability pre-checks, action/redirect handling, and any events that originate outside composition and have to reach the UI. Also decide which **optional capabilities** apply: params/mapper, input fields, a stored variant, a secondary screen.
 5. **Invoke `architecture-guardian`** when a phase introduces or changes public API, new abstractions, or module boundaries.
-6. **Agree the commit/PR cadence with the developer.** Commits stay small (one per phase), but PRs need **not** map 1:1 to commits. Decide upfront whether to open a PR per phase or — the default — per cohesive **group** of phases (e.g. `old/` move; state + view-state + view; component + factory + registration). Cadence is a reviewer preference, so confirm it during planning.
+6. **Agree the commit/PR cadence with the developer.** Commits stay small and never span phases, and PRs need **not** map 1:1 to phases (but stay within the ~500-line limit from `AGENTS.md`). Decide upfront whether to open a PR per phase or — the default — per cohesive **group** of phases (e.g. `old/` move; state + view-state + view; component + factory + registration). Cadence is a reviewer preference, so confirm it during planning.
 
 ## Working rhythm (applies to every step)
 
@@ -56,7 +56,7 @@ Follow this loop for each phase below:
 1. **Tests first.** Write/move the tests for the layer before (or alongside) the implementation, using the given-when-then style. Every phase that adds a class adds its unit tests; the v5 tests for any code you move go with it.
 2. **Implement** the layer, defaulting to `internal` visibility.
 3. **Make it green**, then run the `android-check` skill scoped to the touched modules, plus `core` when core changed.
-4. **Commit** that single phase via the `android-commit` skill (one logical change per commit, `COSDK-XXXX` ticket). Never bundle multiple phases.
+4. **Commit** the phase via the `android-commit` skill (one logical change per commit, `COSDK-XXXX` ticket) — split it into several commits if that helps review. Never bundle multiple phases.
 
 ## Steps
 

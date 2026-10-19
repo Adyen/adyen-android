@@ -34,7 +34,9 @@ To move a v5 payment method to v6, use the `android-migrate-payment-method-v6` s
 
 **Plan before implementing.** For anything beyond a small, local change, present a plan and wait for approval before editing code. Break the work into phases and state the dependencies, risks, and testing strategy upfront. Multi-phase work gets a plan document (for example `*_IMPLEMENTATION_PLAN.md`) that you keep updated as phases complete — mark items done, note deviations. Plan documents are working artifacts: do not commit them unless asked.
 
-**One phase, one commit.** Finish a phase, commit it with the `android-commit` skill, then start the next. Never accumulate several phases in one commit.
+**Small commits, never spanning phases.** Commit with the `android-commit` skill. Keep each commit small and focused on one logical step — a phase may take several commits if that makes the change easier to review. Finish and commit a phase before starting the next; never mix several phases in one commit.
+
+**Keep PRs small.** A PR has at most ~500 changed lines; split larger work into stacked PRs. Never sacrifice code quality or tests to stay under the limit.
 
 **Find the precedent first.** Whatever you are building almost certainly has a close analogue in the codebase. Locate it and match it, rather than introducing a second way of doing the same thing.
 
