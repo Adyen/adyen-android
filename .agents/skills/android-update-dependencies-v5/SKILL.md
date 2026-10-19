@@ -37,13 +37,14 @@ gh pr list --base v5 --label Dependencies --state merged --limit 3
 
 Its commits show the shape of the work. Treat them as **precedent, not policy** — `DIFFERENCES.md` is the only authority on what is deliberate.
 
-## The three rules
+## The rules
 
 1. **v5 must never exceed `main`.** `main` owns and validates the toolchain and build system. Anything Renovate raises above `main` comes back down to `main`'s value. Trailing `main` is fine and often expected; see the release-age note in `DIFFERENCES.md`.
 2. **v5 must keep building at its `min-sdk`.** Read the value from `gradle/libs.versions.toml`; never assume it.
 3. **v5 must not diverge on its own.** Every change is either ported from `main` unchanged, or a deliberate divergence that is written down. If something cannot be ported as-is, stop and say so plainly, explain why, and get the user's decision before adapting it. Record the outcome in `DIFFERENCES.md`. Never invent a v5-only solution silently.
+4. **v5 takes no major updates of dependencies that ship to merchants.** A dependency that a published module declares outside its test configurations stays on the major version v5 already has, even when `main` has moved on. Minor and patch updates within that major are still taken. Majors of test, example-app, CI and build-tooling dependencies follow `main` as usual.
 
-Apply rule 1 first, then rule 2. Matching `main` pulls in versions that need a higher `minSdk`, so the ceiling has to be applied afterwards.
+Apply rule 1 first, then rules 2 and 4. Matching `main` pulls in versions that need a higher `minSdk` or a new major, so the ceilings and the holds have to be applied afterwards.
 
 ## Steps
 
@@ -111,6 +112,8 @@ Fall back to `https://repo1.maven.org/maven2/...`, then `unzip -p <aar> AndroidM
 - A ceiling is not reliably "one minor below `main`". Walk versions down until the manifest satisfies `min-sdk`; do not assume.
 
 If `min-sdk` ever changes, every ceiling has to be re-derived.
+
+Then apply rule 4. For every artifact the PR moves to a new major version, find where it is declared. If a published module — one that configures `checkoutPublishing` — declares it in a non-test configuration, keep the highest release of the current major that also satisfies the ceilings. Artifacts released together with it, such as its testing or logging companions, stay on the same version even where only tests or the example app use them, so that those run against what merchants get. A transitive dependency counts too: if a published module would only receive the new major through another dependency, that dependency is held instead.
 
 ### 4. Fix toolchain fallout
 
