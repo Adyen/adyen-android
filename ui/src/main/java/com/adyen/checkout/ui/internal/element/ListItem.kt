@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +46,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * @param onClick The callback to be invoked when the item is clicked.
  * @param modifier The [Modifier] to be applied to the layout.
  * @param subtitle The optional text to display below the title.
+ * @param containerColor The background color of the item.
  * @param leadingIcon The optional composable to display at the start of the item. **This should only be used for
  * icons!**
  * @param trailingContent The optional composable to display at the end of the item.
@@ -56,6 +58,7 @@ fun ListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    containerColor: Color = CheckoutThemeProvider.colors.background,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
@@ -73,7 +76,7 @@ fun ListItem(
     }
 
     val colors = ListItemDefaults.colors(
-        containerColor = CheckoutThemeProvider.colors.background,
+        containerColor = containerColor,
         contentColor = CheckoutThemeProvider.colors.text,
         leadingContentColor = CheckoutThemeProvider.colors.text,
         trailingContentColor = CheckoutThemeProvider.colors.text,

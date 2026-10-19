@@ -13,20 +13,15 @@
 package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
@@ -48,15 +43,12 @@ fun SelectableListItem(
         title = title,
         onClick = onClick,
         subtitle = subtitle,
-        modifier = modifier
-            .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
-            .background(
-                color = if (isSelected) {
-                    CheckoutThemeProvider.colors.container
-                } else {
-                    Color.Transparent
-                },
-            ),
+        modifier = modifier,
+        containerColor = if (isSelected) {
+            CheckoutThemeProvider.colors.container
+        } else {
+            CheckoutThemeProvider.colors.background
+        },
         leadingIcon = leadingIcon,
         trailingContent = {
             if (isSelected) {
