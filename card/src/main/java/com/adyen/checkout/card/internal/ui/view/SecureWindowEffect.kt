@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import android.app.Activity
+import android.content.pm.ApplicationInfo
 import android.view.View
 import android.view.ViewParent
 import android.view.ViewTreeObserver
@@ -26,6 +27,7 @@ import java.util.WeakHashMap
 internal fun SecureWindowEffect() {
     val view = LocalView.current
     val activity = LocalActivity.current
+    if (view.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) return
 
     DisposableEffect(view, activity) {
         val secureWindow = secureWindowFor(view, activity)
