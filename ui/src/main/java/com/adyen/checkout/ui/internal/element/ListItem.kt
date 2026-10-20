@@ -45,6 +45,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * @param title The text to display as the main title of the item.
  * @param onClick The callback to be invoked when the item is clicked.
  * @param modifier The [Modifier] to be applied to the layout.
+ * @param enabled Whether the item can be clicked. A disabled item ignores clicks and is not focusable.
  * @param subtitle The optional text to display below the title.
  * @param selected Whether the item is selected. A selected item is highlighted and, if no [trailingContent] is
  * provided, shows a checkmark.
@@ -58,6 +59,7 @@ fun ListItem(
     title: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     subtitle: String? = null,
     selected: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -90,6 +92,7 @@ fun ListItem(
     ListItem(
         selected = selected,
         onClick = onClick,
+        enabled = enabled,
         content = {
             BodyEmphasized(title)
         },
