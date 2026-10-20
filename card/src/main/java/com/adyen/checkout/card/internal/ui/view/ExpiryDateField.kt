@@ -25,6 +25,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.core.common.internal.properties.ExpiryDateProperties
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.resolveTextFieldLabel
 import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -52,12 +53,6 @@ internal fun ExpiryDateField(
     val supportingTextExpiryDate = expiryDateState.supportingText?.let { resolveString(it) }
         ?: resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
 
-    val labelSuffix = if (expiryDateState.isOptional) {
-        " ${resolveString(CheckoutLocalizationKey.GENERAL_OPTIONAL)}"
-    } else {
-        ""
-    }
-
     val inputTransformation = remember { ExpiryDateInputTransformation() }
     val outputTransformation = remember {
         SeparatorsOutputTransformation(
@@ -73,7 +68,7 @@ internal fun ExpiryDateField(
             .onFocusChanged { focusState ->
                 onFocusChange(focusState.isFocused)
             },
-        label = resolveString(key = CheckoutLocalizationKey.CARD_EXPIRY_DATE) + labelSuffix,
+        label = resolveTextFieldLabel(CheckoutLocalizationKey.CARD_EXPIRY_DATE, expiryDateState.isOptional),
         state = rememberTextFieldStateWithCurrentValue(expiryDateState.text),
         contentType = ContentType.CreditCardExpirationDate,
         isError = expiryDateState.isError,
