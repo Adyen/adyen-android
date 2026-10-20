@@ -19,9 +19,10 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -30,24 +31,36 @@ internal class StoredPaymentMethodManagementViewModel(
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
 ) : ViewModel() {
 
-    val viewState: StateFlow<StoredPaymentMethodManagementViewState> = paymentMethodRepository.storedPaymentMethods
-        .map { createViewState(it) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), createViewState(emptyList()))
+    private val showRemovalError = MutableStateFlow(false)
+
+    val viewState: StateFlow<StoredPaymentMethodManagementViewState> = combine(
+        paymentMethodRepository.storedPaymentMethods,
+        paymentMethodRepository.storedPaymentMethodIdsBeingRemoved,
+        showRemovalError,
+        ::createViewState,
+    ).stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        createViewState(emptyList(), emptySet(), false),
+    )
 
     private fun createViewState(
-        storedPaymentMethods: List<StoredPaymentMethod>
+        storedPaymentMethods: List<StoredPaymentMethod>,
+        idsBeingRemoved: Set<String>,
+        showRemovalError: Boolean,
     ): StoredPaymentMethodManagementViewState {
         val (cards, others) = storedPaymentMethods
             .filter { paymentMethodSupportCheck.isSupported(it) }
             .partition { it.type == PaymentMethodTypes.SCHEME }
 
         return StoredPaymentMethodManagementViewState(
-            cards = cards.map { it.toListItem() },
-            others = others.map { it.toListItem() },
+            cards = cards.map { it.toListItem(isRemoving = it.id in idsBeingRemoved) },
+            others = others.map { it.toListItem(isRemoving = it.id in idsBeingRemoved) },
+            showRemovalError = showRemovalError,
         )
     }
 
-    private fun StoredPaymentMethod.toListItem(): StoredPaymentMethodManagementViewState.ListItem {
+    private fun StoredPaymentMethod.toListItem(isRemoving: Boolean): StoredPaymentMethodManagementViewState.ListItem {
         val icon = StoredPaymentMethodFormatter.getIcon(this)
         val title = StoredPaymentMethodFormatter.getTitle(this)
         val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
@@ -57,14 +70,16 @@ internal class StoredPaymentMethodManagementViewModel(
             icon = icon,
             title = title,
             subtitle = subtitle,
+            isRemoving = isRemoving,
         )
     }
 
-    // TODO - Show the progress and the error of the removal
     fun removeStoredPaymentMethod(id: String) {
+        showRemovalError.value = false
         viewModelScope.launch {
             paymentMethodRepository.removeStoredPaymentMethod(id).onFailure { e ->
                 adyenLog(AdyenLogLevel.ERROR, e) { "Failed to remove the stored payment method." }
+                showRemovalError.value = true
             }
         }
     }
