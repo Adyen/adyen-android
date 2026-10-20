@@ -8,13 +8,16 @@
 
 package com.adyen.checkout.dropin.internal.manage
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,6 +26,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.SavedStateHandle
@@ -35,6 +40,7 @@ import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.ui.ConfirmationDialog
 import com.adyen.checkout.dropin.internal.ui.DropInNavigator
 import com.adyen.checkout.dropin.internal.ui.DropInScaffold
+import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.element.ProgressBar
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
@@ -135,9 +141,10 @@ private const val REMOVAL_ERROR_KEY = "removal_error"
 
 private fun LazyListScope.removalError() {
     item(key = REMOVAL_ERROR_KEY) {
-        Body(
-            text = resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVAL_ERROR),
-            color = CheckoutThemeProvider.colors.destructive,
+        val color = CheckoutThemeProvider.colors.destructive
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
             modifier = Modifier
                 .padding(
                     start = Dimensions.Spacing.Large,
@@ -145,7 +152,18 @@ private fun LazyListScope.removalError() {
                     bottom = Dimensions.Spacing.Large,
                 )
                 .animateItem(),
-        )
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_warning),
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(Dimensions.IconSize.small),
+            )
+            Body(
+                text = resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVAL_ERROR),
+                color = color,
+            )
+        }
     }
 }
 
