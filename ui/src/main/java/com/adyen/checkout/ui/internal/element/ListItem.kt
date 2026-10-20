@@ -78,15 +78,21 @@ fun ListItem(
         )
     }
 
+    val checkoutColors = CheckoutThemeProvider.colors
     val colors = ListItemDefaults.colors(
-        containerColor = CheckoutThemeProvider.colors.background,
-        contentColor = CheckoutThemeProvider.colors.text,
-        leadingContentColor = CheckoutThemeProvider.colors.text,
-        trailingContentColor = CheckoutThemeProvider.colors.text,
-        selectedContainerColor = CheckoutThemeProvider.colors.container,
-        selectedContentColor = CheckoutThemeProvider.colors.text,
-        selectedLeadingContentColor = CheckoutThemeProvider.colors.text,
-        selectedTrailingContentColor = CheckoutThemeProvider.colors.text,
+        containerColor = checkoutColors.background,
+        contentColor = checkoutColors.text,
+        leadingContentColor = checkoutColors.text,
+        trailingContentColor = checkoutColors.text,
+        selectedContainerColor = checkoutColors.container,
+        selectedContentColor = checkoutColors.text,
+        selectedLeadingContentColor = checkoutColors.text,
+        selectedTrailingContentColor = checkoutColors.text,
+        disabledContainerColor = checkoutColors.background,
+        disabledContentColor = checkoutColors.textOnDisabled,
+        disabledLeadingContentColor = checkoutColors.textOnDisabled,
+        disabledTrailingContentColor = checkoutColors.textOnDisabled,
+        disabledSupportingContentColor = checkoutColors.textOnDisabled,
     )
 
     ListItem(
@@ -137,6 +143,16 @@ private fun ListItemPreview(
 ) {
     CheckoutThemePreviewWrapper(theme) {
         ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ListItemDisabledPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(title = "Title", onClick = {}, subtitle = "Subtitle", enabled = false)
     }
 }
 
