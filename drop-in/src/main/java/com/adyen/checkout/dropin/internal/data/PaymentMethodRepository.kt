@@ -26,6 +26,12 @@ internal interface PaymentMethodRepository {
 
     val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>>
 
+    /**
+     * The ids of the stored payment methods whose removal is still running. Removals outlive the screen that started
+     * them, so a screen reads this instead of tracking them itself.
+     */
+    val storedPaymentMethodIdsBeingRemoved: StateFlow<Set<String>>
+
     suspend fun removeStoredPaymentMethod(id: String): Result<Unit>
 }
 
@@ -41,6 +47,10 @@ internal class DefaultPaymentMethodRepository(
 
     private val ongoingRemovals = mutableMapOf<String, Deferred<Result<Unit>>>()
 
+    private val _storedPaymentMethodIdsBeingRemoved = MutableStateFlow<Set<String>>(emptySet())
+    override val storedPaymentMethodIdsBeingRemoved: StateFlow<Set<String>> =
+        _storedPaymentMethodIdsBeingRemoved.asStateFlow()
+
     /**
      * Cancelling the caller only stops the waiting: the removal itself keeps running, so the list and the session
      * data stay in line with the backend. A removal requested while the same item is already being removed shares
@@ -54,7 +64,7 @@ internal class DefaultPaymentMethodRepository(
             // Started lazily, so that the removal is registered before it can finish and unregister itself.
             ongoingRemovals.getOrPut(id) {
                 coroutineScope.async(start = CoroutineStart.LAZY) { remove(storedPaymentMethod) }
-            }
+            }.also { _storedPaymentMethodIdsBeingRemoved.value = ongoingRemovals.keys.toSet() }
         }
         return removal.await()
     }
@@ -64,6 +74,9 @@ internal class DefaultPaymentMethodRepository(
             _storedPaymentMethods.update { current -> current.filterNot { it.id == storedPaymentMethod.id } }
         }
     } finally {
-        synchronized(ongoingRemovals) { ongoingRemovals.remove(storedPaymentMethod.id) }
+        synchronized(ongoingRemovals) {
+            ongoingRemovals.remove(storedPaymentMethod.id)
+            _storedPaymentMethodIdsBeingRemoved.value = ongoingRemovals.keys.toSet()
+        }
     }
 }

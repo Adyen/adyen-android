@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.data
 
+import app.cash.turbine.test
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -182,6 +183,26 @@ internal class DefaultPaymentMethodRepositoryTest {
             assertTrue(second.await().isSuccess)
             assertEquals(1, removerCalls)
         }
+
+    @Test
+    fun `when a removal is running, then its id is being removed until it finishes`() = runTest {
+        val response = CompletableDeferred<Result<Unit>>()
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
+            remover = { response.await() },
+            coroutineScope = backgroundScope,
+        )
+
+        repository.storedPaymentMethodIdsBeingRemoved.test {
+            assertEquals(emptySet<String>(), awaitItem())
+
+            launch { repository.removeStoredPaymentMethod("1") }
+            assertEquals(setOf("1"), awaitItem())
+
+            response.complete(Result.failure(IOException("network down")))
+            assertEquals(emptySet<String>(), awaitItem())
+        }
+    }
 
     @Test
     fun `when a removal failed, then the same item can be removed again`() = runTest {
