@@ -487,6 +487,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field ADDRESS_CITY_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_CITY_LABEL_CITY_TOWN Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_COUNTRY_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_COUNTRY_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_HOUSE_NUMBER_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_HOUSE_NUMBER_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
