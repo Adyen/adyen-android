@@ -68,11 +68,7 @@ private fun StoredPaymentMethodManagementContent(
         },
         title = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_TITLE),
     ) { innerPadding ->
-        var selectedItem by rememberSaveable {
-            mutableStateOf<StoredPaymentMethodManagementViewState.ListItem?>(
-                null,
-            )
-        }
+        var selectedItemId by rememberSaveable { mutableStateOf<String?>(null) }
 
         LazyColumn(
             modifier = Modifier
@@ -97,16 +93,18 @@ private fun StoredPaymentMethodManagementContent(
             section(
                 title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_CARDS_SECTION_TITLE,
                 storedPaymentMethods = viewState.cards,
-                onItemClick = { selectedItem = it },
+                onItemClick = { selectedItemId = it.id },
             )
 
             section(
                 title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_OTHERS_SECTION_TITLE,
                 storedPaymentMethods = viewState.others,
-                onItemClick = { selectedItem = it },
+                onItemClick = { selectedItemId = it.id },
             )
         }
 
+        // Looked up from the view state, so the dialog closes if the item is no longer listed.
+        val selectedItem = (viewState.cards + viewState.others).firstOrNull { it.id == selectedItemId }
         selectedItem?.let { item ->
             ConfirmationDialog(
                 confirmationText = resolveString(
@@ -115,10 +113,10 @@ private fun StoredPaymentMethodManagementContent(
                 ),
                 onConfirmationClick = {
                     onRemoveItem(item)
-                    selectedItem = null
+                    selectedItemId = null
                 },
                 cancellationText = resolveString(CheckoutLocalizationKey.GENERAL_CANCEL),
-                onDismissRequest = { selectedItem = null },
+                onDismissRequest = { selectedItemId = null },
             )
         }
     }
@@ -162,8 +160,7 @@ private fun LazyListScope.section(
         item(key = item.id) {
             StoredPaymentMethodListItem(
                 item = item,
-                // An item that is being removed can't be removed again, so its confirmation dialog doesn't open.
-                onClick = { if (!it.isRemoving) onItemClick(it) },
+                onClick = onItemClick,
                 modifier = Modifier
                     .padding(horizontal = Dimensions.Spacing.ExtraSmall)
                     .animateItem(),
@@ -205,6 +202,8 @@ private fun StoredPaymentMethodListItem(
         },
         onClick = { onClick(item) },
         modifier = modifier,
+        // An item that is being removed can't be removed again, so its confirmation dialog doesn't open.
+        enabled = !item.isRemoving,
     )
 }
 
