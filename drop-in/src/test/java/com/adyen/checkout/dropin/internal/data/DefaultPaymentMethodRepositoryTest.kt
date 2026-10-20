@@ -205,6 +205,36 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     @Test
+    fun `when several removals are running, then each id is being removed until its own removal finishes`() =
+        runTest {
+            val responses = mapOf(
+                "1" to CompletableDeferred<Result<Unit>>(),
+                "2" to CompletableDeferred<Result<Unit>>(),
+            )
+            val repository = createRepository(
+                storedPaymentMethods = listOf(storedCard("1"), storedCard("2"), storedCard("3")),
+                remover = { responses.getValue(it.id).await() },
+                coroutineScope = backgroundScope,
+            )
+
+            repository.storedPaymentMethodIdsBeingRemoved.test {
+                assertEquals(emptySet<String>(), awaitItem())
+
+                launch { repository.removeStoredPaymentMethod("1") }
+                assertEquals(setOf("1"), awaitItem())
+
+                launch { repository.removeStoredPaymentMethod("2") }
+                assertEquals(setOf("1", "2"), awaitItem())
+
+                responses.getValue("1").complete(Result.success(Unit))
+                assertEquals(setOf("2"), awaitItem())
+
+                responses.getValue("2").complete(Result.failure(IOException("network down")))
+                assertEquals(emptySet<String>(), awaitItem())
+            }
+        }
+
+    @Test
     fun `when a removal failed, then the same item can be removed again`() = runTest {
         var result = Result.failure<Unit>(IOException("network down"))
         var removerCalls = 0
