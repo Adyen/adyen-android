@@ -21,6 +21,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.resolveTextFieldLabel
 import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -58,19 +59,13 @@ internal fun AddressTextField(
 ) {
     val inputTransformation = remember(maxLength) { addressInputTransformation(maxLength) }
 
-    val labelSuffix = if (textInputViewState.isOptional) {
-        " ${resolveString(CheckoutLocalizationKey.GENERAL_OPTIONAL)}"
-    } else {
-        ""
-    }
-
     CheckoutTextField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
                 onFocusChange(focusState.isFocused)
             },
-        label = resolveString(label) + labelSuffix,
+        label = resolveTextFieldLabel(label, textInputViewState.isOptional),
         state = rememberTextFieldStateWithCurrentValue(textInputViewState.text),
         contentType = contentType,
         isError = textInputViewState.isError,

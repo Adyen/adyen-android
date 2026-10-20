@@ -30,6 +30,7 @@ import com.adyen.checkout.card.internal.ui.state.CardNumberFormat
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_AMEX
 import com.adyen.checkout.core.common.internal.properties.SecurityCodeProperties.SECURITY_CODE_MAX_LENGTH_DEFAULT
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
+import com.adyen.checkout.core.common.internal.ui.resolveTextFieldLabel
 import com.adyen.checkout.core.common.internal.ui.toImeAction
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -62,12 +63,6 @@ internal fun SecurityCodeField(
             },
         )
 
-    val labelSuffix = if (securityCodeState.isOptional) {
-        " ${resolveString(CheckoutLocalizationKey.GENERAL_OPTIONAL)}"
-    } else {
-        ""
-    }
-
     val inputTransformation = remember(cardNumberFormat) {
         val maxLength = when (cardNumberFormat) {
             CardNumberFormat.AMEX -> SECURITY_CODE_MAX_LENGTH_AMEX
@@ -84,7 +79,7 @@ internal fun SecurityCodeField(
             .onFocusChanged { focusState ->
                 onFocusChange(focusState.isFocused)
             },
-        label = resolveString(key = CheckoutLocalizationKey.CARD_SECURITY_CODE) + labelSuffix,
+        label = resolveTextFieldLabel(CheckoutLocalizationKey.CARD_SECURITY_CODE, securityCodeState.isOptional),
         state = rememberTextFieldStateWithCurrentValue(securityCodeState.text),
         contentType = ContentType.CreditCardSecurityCode,
         isError = securityCodeState.isError,
