@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -69,8 +71,15 @@ private fun StoredPaymentMethodManagementContent(
         title = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_TITLE),
     ) { innerPadding ->
         var selectedItemId by rememberSaveable { mutableStateOf<String?>(null) }
+        val listState = rememberLazyListState()
+
+        // The error is the first item after the description, so scroll up to make sure it is seen.
+        LaunchedEffect(viewState.showRemovalError) {
+            if (viewState.showRemovalError) listState.animateScrollToItem(0)
+        }
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
