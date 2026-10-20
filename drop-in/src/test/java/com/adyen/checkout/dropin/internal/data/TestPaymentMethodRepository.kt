@@ -24,7 +24,11 @@ internal class TestPaymentMethodRepository(
     override val storedPaymentMethodIdsBeingRemoved: StateFlow<Set<String>> = MutableStateFlow(emptySet())
 
     override suspend fun removeStoredPaymentMethod(id: String): Result<Unit> {
-        _storedPaymentMethods.value = _storedPaymentMethods.value.filterNot { it.id == id }
+        val current = _storedPaymentMethods.value
+        if (current.none { it.id == id }) {
+            return Result.failure(IllegalArgumentException("No stored payment method found with id $id"))
+        }
+        _storedPaymentMethods.value = current.filterNot { it.id == id }
         return Result.success(Unit)
     }
 }

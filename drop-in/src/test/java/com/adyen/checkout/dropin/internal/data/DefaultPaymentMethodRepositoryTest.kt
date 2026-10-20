@@ -45,7 +45,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     @Test
-    fun `when initialized with stored payment methods, then favorites are set`() = runTest {
+    fun `when initialized with stored payment methods, then stored payment methods are set`() = runTest {
         val storedPaymentMethods = listOf(storedCard("123"))
         val repository = createRepository(storedPaymentMethods = storedPaymentMethods)
 
@@ -53,7 +53,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     @Test
-    fun `when initialized with empty stored payment methods, then favorites are empty`() = runTest {
+    fun `when initialized with empty stored payment methods, then stored payment methods are empty`() = runTest {
         val repository = createRepository()
 
         assertEquals(emptyList<StoredCardPaymentMethod>(), repository.storedPaymentMethods.first())
@@ -78,7 +78,7 @@ internal class DefaultPaymentMethodRepositoryTest {
         }
 
     @Test
-    fun `when the removal succeeds, then success is returned and the item is removed from favorites`() = runTest {
+    fun `when the removal succeeds, then success is returned and the item is no longer stored`() = runTest {
         val repository = createRepository(
             storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
             remover = { Result.success(Unit) },
@@ -92,7 +92,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     @Test
-    fun `when the removal fails, then the failure is returned and favorites remain unchanged`() = runTest {
+    fun `when the removal fails, then the failure is returned and stored payment methods remain unchanged`() = runTest {
         val error = IOException("network down")
         val repository = createRepository(
             storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
@@ -127,7 +127,7 @@ internal class DefaultPaymentMethodRepositoryTest {
         }
 
     @Test
-    fun `when the remover throws, then the failure is returned and favorites remain unchanged`() = runTest {
+    fun `when the remover throws, then the failure is returned and stored payment methods remain unchanged`() = runTest {
         val error = IllegalStateException("unexpected")
         val repository = createRepository(
             storedPaymentMethods = listOf(storedCard("1")),
