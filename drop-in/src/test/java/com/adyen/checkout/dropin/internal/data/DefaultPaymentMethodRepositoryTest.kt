@@ -10,127 +10,223 @@ package com.adyen.checkout.dropin.internal.data
 
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.io.IOException
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with payment methods, then regulars are set`() {
         val paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Cards"))
-        val repository = DefaultPaymentMethodRepository(
-            paymentMethods = paymentMethods,
-            storedPaymentMethods = emptyList(),
-        )
+        val repository = createRepository(paymentMethods = paymentMethods)
 
         assertEquals(paymentMethods, repository.paymentMethods)
     }
 
     @Test
     fun `when initialized with empty payment methods, then regulars are empty`() {
-        val repository = DefaultPaymentMethodRepository(
-            paymentMethods = emptyList(),
-            storedPaymentMethods = emptyList(),
-        )
+        val repository = createRepository()
 
         assertEquals(emptyList<GenericPaymentMethod>(), repository.paymentMethods)
     }
 
     @Test
     fun `when initialized with stored payment methods, then favorites are set`() = runTest {
-        val storedPaymentMethods = listOf(
-            StoredCardPaymentMethod(
-                type = "scheme",
-                id = "123",
-                name = "MasterCard",
-                supportedShopperInteractions = emptyList(),
-                brand = "mc",
-                lastFour = "1234",
-                expiryMonth = "01",
-                expiryYear = "2030",
-                holderName = null,
-                fundingSource = null,
-            ),
-        )
-        val repository = DefaultPaymentMethodRepository(
-            paymentMethods = emptyList(),
-            storedPaymentMethods = storedPaymentMethods,
-        )
+        val storedPaymentMethods = listOf(storedCard("123"))
+        val repository = createRepository(storedPaymentMethods = storedPaymentMethods)
 
         assertEquals(storedPaymentMethods, repository.storedPaymentMethods.first())
     }
 
     @Test
     fun `when initialized with empty stored payment methods, then favorites are empty`() = runTest {
-        val repository = DefaultPaymentMethodRepository(
-            paymentMethods = emptyList(),
-            storedPaymentMethods = emptyList(),
-        )
+        val repository = createRepository()
 
         assertEquals(emptyList<StoredCardPaymentMethod>(), repository.storedPaymentMethods.first())
     }
 
     @Test
-    fun `when removeStoredPaymentMethod is called, then item is removed from favorites`() = runTest {
-        val storedPaymentMethod1 = StoredCardPaymentMethod(
-            type = "scheme",
-            id = "1",
-            name = "MasterCard",
-            supportedShopperInteractions = emptyList(),
-            brand = "mc",
-            lastFour = "1234",
-            expiryMonth = "01",
-            expiryYear = "2030",
-            holderName = null,
-            fundingSource = null,
-        )
-        val storedPaymentMethod2 = StoredCardPaymentMethod(
-            type = "scheme",
-            id = "2",
-            name = "MasterCard",
-            supportedShopperInteractions = emptyList(),
-            brand = "mc",
-            lastFour = "5678",
-            expiryMonth = "01",
-            expiryYear = "2030",
-            holderName = null,
-            fundingSource = null,
-        )
-        val repository = DefaultPaymentMethodRepository(
-            paymentMethods = emptyList(),
-            storedPaymentMethods = listOf(storedPaymentMethod1, storedPaymentMethod2),
+    fun `when removeStoredPaymentMethod is called, then the stored payment method is passed to the remover`() =
+        runTest {
+            val removed = mutableListOf<StoredPaymentMethod>()
+            val repository = createRepository(
+                storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
+                remover = {
+                    removed += it
+                    Result.success(Unit)
+                },
+                coroutineScope = backgroundScope,
+            )
+
+            repository.removeStoredPaymentMethod("1")
+
+            assertEquals(listOf(storedCard("1")), removed)
+        }
+
+    @Test
+    fun `when the removal succeeds, then success is returned and the item is removed from favorites`() = runTest {
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
+            remover = { Result.success(Unit) },
+            coroutineScope = backgroundScope,
         )
 
-        repository.removeStoredPaymentMethod("1")
+        val result = repository.removeStoredPaymentMethod("1")
 
-        val favorites = repository.storedPaymentMethods.first()
-        assertEquals(listOf(storedPaymentMethod2), favorites)
+        assertTrue(result.isSuccess)
+        assertEquals(listOf(storedCard("2")), repository.storedPaymentMethods.first())
     }
 
     @Test
-    fun `when removeStoredPaymentMethod is called with unknown id, then favorites remain unchanged`() = runTest {
-        val storedPaymentMethod1 = StoredCardPaymentMethod(
-            type = "scheme",
-            id = "1",
-            name = "MasterCard",
-            supportedShopperInteractions = emptyList(),
-            brand = "mc",
-            lastFour = "1234",
-            expiryMonth = "01",
-            expiryYear = "2030",
-            holderName = null,
-            fundingSource = null,
-        )
-        val repository = DefaultPaymentMethodRepository(
-            paymentMethods = emptyList(),
-            storedPaymentMethods = listOf(storedPaymentMethod1),
+    fun `when the removal fails, then the failure is returned and favorites remain unchanged`() = runTest {
+        val error = IOException("network down")
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
+            remover = { Result.failure(error) },
+            coroutineScope = backgroundScope,
         )
 
-        repository.removeStoredPaymentMethod("999")
+        val result = repository.removeStoredPaymentMethod("1")
 
-        val favorites = repository.storedPaymentMethods.first()
-        assertEquals(listOf(storedPaymentMethod1), favorites)
+        assertEquals(error, result.exceptionOrNull())
+        assertEquals(listOf(storedCard("1"), storedCard("2")), repository.storedPaymentMethods.first())
     }
+
+    @Test
+    fun `when removeStoredPaymentMethod is called with unknown id, then failure is returned and nothing is removed`() =
+        runTest {
+            val removed = mutableListOf<StoredPaymentMethod>()
+            val repository = createRepository(
+                storedPaymentMethods = listOf(storedCard("1")),
+                remover = {
+                    removed += it
+                    Result.success(Unit)
+                },
+                coroutineScope = backgroundScope,
+            )
+
+            val result = repository.removeStoredPaymentMethod("999")
+
+            assertTrue(result.isFailure)
+            assertEquals(emptyList<StoredPaymentMethod>(), removed)
+            assertEquals(listOf(storedCard("1")), repository.storedPaymentMethods.first())
+        }
+
+    @Test
+    fun `when the remover throws, then the failure is returned and favorites remain unchanged`() = runTest {
+        val error = IllegalStateException("unexpected")
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1")),
+            remover = { throw error },
+            coroutineScope = backgroundScope,
+        )
+
+        val result = repository.removeStoredPaymentMethod("1")
+
+        assertEquals(error, result.exceptionOrNull())
+        assertEquals(listOf(storedCard("1")), repository.storedPaymentMethods.first())
+    }
+
+    @Test
+    fun `when the caller is cancelled during the removal, then the removal still completes`() = runTest {
+        val response = CompletableDeferred<Result<Unit>>()
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
+            remover = { response.await() },
+            coroutineScope = backgroundScope,
+        )
+        val caller = launch { repository.removeStoredPaymentMethod("1") }
+        runCurrent()
+
+        // Stands in for the shopper leaving the management screen while the call is running.
+        caller.cancel()
+        response.complete(Result.success(Unit))
+        runCurrent()
+
+        assertEquals(listOf(storedCard("2")), repository.storedPaymentMethods.first())
+    }
+
+    @Test
+    fun `when the same item is removed twice at once, then the remover is called once and both get its result`() =
+        runTest {
+            val response = CompletableDeferred<Result<Unit>>()
+            var removerCalls = 0
+            val repository = createRepository(
+                storedPaymentMethods = listOf(storedCard("1")),
+                remover = {
+                    removerCalls++
+                    response.await()
+                },
+                coroutineScope = backgroundScope,
+            )
+            val first = async { repository.removeStoredPaymentMethod("1") }
+            val second = async { repository.removeStoredPaymentMethod("1") }
+            runCurrent()
+
+            response.complete(Result.success(Unit))
+
+            assertTrue(first.await().isSuccess)
+            assertTrue(second.await().isSuccess)
+            assertEquals(1, removerCalls)
+        }
+
+    @Test
+    fun `when a removal failed, then the same item can be removed again`() = runTest {
+        var result = Result.failure<Unit>(IOException("network down"))
+        var removerCalls = 0
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1")),
+            remover = {
+                removerCalls++
+                result
+            },
+            coroutineScope = backgroundScope,
+        )
+        repository.removeStoredPaymentMethod("1")
+        result = Result.success(Unit)
+
+        val retry = repository.removeStoredPaymentMethod("1")
+
+        assertTrue(retry.isSuccess)
+        assertEquals(2, removerCalls)
+        assertEquals(emptyList<StoredPaymentMethod>(), repository.storedPaymentMethods.first())
+    }
+
+    private fun createRepository(
+        paymentMethods: List<GenericPaymentMethod> = emptyList(),
+        storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),
+        remover: StoredPaymentMethodRemover = StoredPaymentMethodRemover { Result.success(Unit) },
+        coroutineScope: CoroutineScope = TestScope(),
+    ) = DefaultPaymentMethodRepository(
+        paymentMethods = paymentMethods,
+        storedPaymentMethods = storedPaymentMethods,
+        storedPaymentMethodRemover = remover,
+        coroutineScope = coroutineScope,
+    )
+
+    private fun storedCard(id: String) = StoredCardPaymentMethod(
+        type = "scheme",
+        id = id,
+        name = "MasterCard",
+        supportedShopperInteractions = emptyList(),
+        brand = "mc",
+        lastFour = "1234",
+        expiryMonth = "01",
+        expiryYear = "2030",
+        holderName = null,
+        fundingSource = null,
+    )
 }
