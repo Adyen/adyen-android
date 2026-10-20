@@ -82,6 +82,7 @@
     <string name="checkout_drop_in_stored_payment_method_management_others_section_title" translatable="false">Others</string>
     <string name="checkout_drop_in_stored_payment_method_management_remove" translatable="false">Remove</string>
     <string name="checkout_drop_in_stored_payment_method_management_remove_confirmation" translatable="false">Remove %s</string>
+    <string name="checkout_dropin_stored_payment_method_management_removal_error" translatable="false">We were unable to remove your payment method, try again later.</string>
     <string name="checkout_drop_in_other_payment_methods" translatable="false">Other payment methods</string>
     <string name="checkout_drop_in_payment_method_list_description" translatable="false">Select your preferred payment option to complete the payment</string>
     <string name="checkout_drop_in_payment_method_list_favorites_section_action" translatable="false">Manage</string>

@@ -163,6 +163,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVE_CONFIRMATION ->
                 R.string.checkout_drop_in_stored_payment_method_management_remove_confirmation
 
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVAL_ERROR ->
+                R.string.checkout_dropin_stored_payment_method_management_removal_error
+
             CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION ->
                 R.string.checkout_drop_in_payment_method_list_description
