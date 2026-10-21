@@ -37,9 +37,9 @@ fun ComponentScaffold(
         }
     }
 
-    Box {
+    Box(modifier = modifier) {
         Column(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             content?.invoke()

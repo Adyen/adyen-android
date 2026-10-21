@@ -177,10 +177,7 @@ private fun CardComponent(
 
     // Enables vertical scrolling when the CardView becomes too long.
     Column(modifier.verticalScroll(rememberScrollState())) {
-        AdyenComponent(
-            component,
-            modifier,
-        )
+        AdyenComponent(component)
     }
 
     val onActionConsumed by rememberUpdatedState(onActionConsumed)
