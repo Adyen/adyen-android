@@ -10,21 +10,15 @@ package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.properties.PostalCodeProperties
-import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
-import java.util.Locale
 
 /**
  * Resolves what the component state keeps as codes: the names of the selected country and state, the labels of the
  * selected country's layout and the postal-code maximum. Composables look nothing up.
- *
- * @param shopperLocale Names the selected country while the countries are not loaded.
  */
-internal class AddressViewStateProducer(
-    private val shopperLocale: Locale,
-) : ViewStateProducer<AddressComponentState, AddressViewState> {
+internal class AddressViewStateProducer : ViewStateProducer<AddressComponentState, AddressViewState> {
 
     override fun produce(state: AddressComponentState): AddressViewState {
         val selectedCountry = state.getSelectedCountry()
@@ -89,10 +83,9 @@ internal class AddressViewStateProducer(
 
     private fun AddressComponentState.getLabel(id: AddressFormElementId) = spec.getFieldSpec(id).label
 
-    /** The loaded name of the selected country or, while the countries are not loaded, the platform's name for it. */
-    private fun AddressComponentState.getSelectedCountry(): AddressRegion? = country.selected?.let { code ->
-        countries.find { it.code == code } ?: AddressRegion(code, CountryUtils.getCountryName(code, shopperLocale))
-    }
+    /** The selected country, which is always one of the loaded countries. */
+    private fun AddressComponentState.getSelectedCountry(): AddressRegion? =
+        country.selected?.let { code -> countries.find { it.code == code } }
 
     /** The selected state, which is always one of the loaded states. */
     private fun AddressComponentState.getSelectedState(): AddressRegion? =

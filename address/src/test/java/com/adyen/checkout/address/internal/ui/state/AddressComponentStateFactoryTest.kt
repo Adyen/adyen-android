@@ -10,6 +10,7 @@ package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
+import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -20,7 +21,7 @@ import java.util.Locale
 internal class AddressComponentStateFactoryTest {
 
     @Test
-    fun `when there is no address then the shopper locale country is selected before the countries load`() {
+    fun `when there is no address then no country is selected before the countries load`() {
         // GIVEN
         val factory = createFactory(shopperLocale = Locale.forLanguageTag("nl-NL"))
 
@@ -28,37 +29,45 @@ internal class AddressComponentStateFactoryTest {
         val state = factory.createInitialState()
 
         // THEN
+        assertNull(state.country.selected)
+        assertEquals(AddressSpec.DEFAULT, state.spec)
+    }
+
+    @Test
+    fun `when the countries contain the shopper locale country then it is selected`() {
+        // GIVEN
+        val factory = createFactory(shopperLocale = Locale.forLanguageTag("nl-NL"))
+
+        // WHEN
+        val state = factory.createState(address = null, countries = COUNTRIES)
+
+        // THEN
         assertEquals("NL", state.country.selected)
-        assertEquals(AddressSpec.DEFAULT, state.spec)
     }
 
     @Test
-    fun `when the shopper locale country is not supported then no country is selected`() {
+    fun `when the countries do not contain the shopper locale country then no country is selected`() {
         // GIVEN
-        val factory = createFactory(
-            shopperLocale = Locale.forLanguageTag("nl-NL"),
-            supportedCountryCodes = setOf("US", "CA"),
-        )
+        val factory = createFactory(shopperLocale = Locale.forLanguageTag("de-DE"))
 
         // WHEN
-        val state = factory.createInitialState()
+        val state = factory.createState(address = null, countries = COUNTRIES)
 
         // THEN
         assertNull(state.country.selected)
     }
 
     @Test
-    fun `when the address country is not supported then no country is selected`() {
+    fun `when the countries do not contain the address country then no country is selected`() {
         // GIVEN
-        val factory = createFactory(supportedCountryCodes = setOf("NL", "DE"))
+        val factory = createFactory()
 
         // WHEN
-        val state = factory.createState(US_ADDRESS)
+        val state = factory.createState(US_ADDRESS, countries = listOf(NETHERLANDS))
 
         // THEN
         assertNull(state.country.selected)
         assertEquals(AddressSpec.DEFAULT, state.spec)
-        assertNull(state.stateOrProvince.selected)
     }
 
     @Test
@@ -67,7 +76,7 @@ internal class AddressComponentStateFactoryTest {
         val factory = createFactory()
 
         // WHEN
-        val state = factory.createState(US_ADDRESS)
+        val state = factory.createState(US_ADDRESS, COUNTRIES)
 
         // THEN
         assertEquals("US", state.country.selected)
@@ -87,7 +96,7 @@ internal class AddressComponentStateFactoryTest {
         val factory = createFactory()
 
         // WHEN
-        val state = factory.createState(US_ADDRESS)
+        val state = factory.createState(US_ADDRESS, COUNTRIES)
 
         // THEN
         assertNull(state.stateOrProvince.selected)
@@ -106,17 +115,15 @@ internal class AddressComponentStateFactoryTest {
         assertTrue(state.countries.isEmpty())
     }
 
-    private fun createFactory(
-        shopperLocale: Locale = Locale.US,
-        supportedCountryCodes: Set<String> = emptySet(),
-    ) = AddressComponentStateFactory(
-        AddressComponentParams(
-            shopperLocale = shopperLocale,
-            supportedCountryCodes = supportedCountryCodes,
-        ),
+    private fun createFactory(shopperLocale: Locale = Locale.US) = AddressComponentStateFactory(
+        AddressComponentParams(shopperLocale = shopperLocale, supportedCountryCodes = emptySet()),
     )
 
     companion object {
+        private val NETHERLANDS = AddressRegion(code = "NL", name = "Netherlands")
+
+        private val COUNTRIES = listOf(NETHERLANDS, AddressRegion(code = "US", name = "United States"))
+
         private val US_ADDRESS = AddressModel(
             country = "US",
             street = "Main Street 1",

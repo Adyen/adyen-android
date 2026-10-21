@@ -23,10 +23,9 @@ internal class AddressComponentStateReducer(
 
     override fun reduce(state: AddressComponentState, intent: AddressIntent): AddressComponentState {
         return when (intent) {
-            is AddressIntent.UpdateCountry ->
-                if (intent.countryCode == state.country.selected) state else state.selectCountry(intent.countryCode)
+            is AddressIntent.UpdateCountry -> state.pickCountry(intent.countryCode)
 
-            is AddressIntent.UpdateStateOrProvince -> state.selectState(intent.stateCode)
+            is AddressIntent.UpdateStateOrProvince -> state.pickState(intent.stateCode)
 
             is AddressIntent.UpdateStreet -> state.copy(street = state.street.updateText(intent.street))
 
@@ -77,7 +76,7 @@ internal class AddressComponentStateReducer(
      * from them.
      */
     private fun AddressComponentState.reset(address: AddressModel?): AddressComponentState {
-        val resetState = componentStateFactory.createState(address).copy(countries = countries)
+        val resetState = componentStateFactory.createState(address, countries)
         if (resetState.country.selected != country.selected) return resetState
         return resetState.copy(
             states = states,
@@ -85,8 +84,14 @@ internal class AddressComponentStateReducer(
         )
     }
 
-    /** Only a loaded state can be selected; any other code is ignored. */
-    private fun AddressComponentState.selectState(stateCode: String): AddressComponentState {
+    /** Only a loaded country can be picked; any other code, and the selected one, is ignored. */
+    private fun AddressComponentState.pickCountry(countryCode: String): AddressComponentState {
+        val loadedCode = countries.findCode(countryCode)
+        return if (loadedCode == null || loadedCode == country.selected) this else selectCountry(loadedCode)
+    }
+
+    /** Only a loaded state can be picked; any other code is ignored. */
+    private fun AddressComponentState.pickState(stateCode: String): AddressComponentState {
         val loadedCode = states.findCode(stateCode) ?: return this
         return copy(stateOrProvince = stateOrProvince.copy(selected = loadedCode))
     }
@@ -95,8 +100,9 @@ internal class AddressComponentStateReducer(
         copy(requirementPolicy = spec.getFieldSpec(id).requirementPolicy)
 
     /**
-     * Keeps the selected country when the countries fail to load, so a prefilled or default country still works
-     * offline. Clears it when the loaded list does not contain it.
+     * A country is only ever selected from the loaded countries: a selected one is kept when the list contains it,
+     * otherwise the default one is selected when the list contains it. Without countries, after a failure, no country
+     * can be selected.
      */
     private fun AddressComponentState.onCountriesLoaded(result: Result<List<AddressItem>>): AddressComponentState {
         val supportedCountryCodes = componentParams.supportedCountryCodes
@@ -104,7 +110,9 @@ internal class AddressComponentStateReducer(
             supportedCountryCodes.isEmpty() || region.code in supportedCountryCodes
         }
         val loadedState = copy(countries = countries)
-        return if (countries.isMissing(country.selected)) loadedState.selectCountry(null) else loadedState
+        val countryCode = countries.findCode(country.selected)
+            ?: componentStateFactory.getDefaultCountryCode(address = null, countries)
+        return if (countryCode == country.selected) loadedState else loadedState.selectCountry(countryCode)
     }
 
     /**
@@ -128,8 +136,4 @@ internal class AddressComponentStateReducer(
 
     /** The [code] when this list contains it, otherwise null. */
     private fun List<AddressRegion>.findCode(code: String?): String? = code?.takeIf { any { it.code == code } }
-
-    /** Whether this loaded list leaves out the selected [code]. An empty list leaves nothing out. */
-    private fun List<AddressRegion>.isMissing(code: String?): Boolean =
-        code != null && isNotEmpty() && none { it.code == code }
 }

@@ -106,18 +106,6 @@ internal class AddressComponentStateValidatorTest {
     }
 
     @Test
-    fun `when the country list failed to load but a country is selected then the country is valid`() {
-        // GIVEN
-        val state = createState(NL_ADDRESS).copy(countries = emptyList())
-
-        // WHEN
-        val result = validator.validate(state)
-
-        // THEN
-        assertNull(result.country.error)
-    }
-
-    @Test
     fun `when every visible field is filled then the form is valid`() {
         // GIVEN
         val state = createState(US_ADDRESS).withStateOptions(selected = "CA")
@@ -256,7 +244,9 @@ internal class AddressComponentStateValidatorTest {
     @Test
     fun `when the country changes then the postal code is revalidated`() {
         // GIVEN
-        val state = validator.validate(createState(NL_ADDRESS))
+        val state = validator.validate(createState(NL_ADDRESS)).copy(
+            countries = listOf(AddressRegion(code = "NL", name = "NL"), AddressRegion(code = "US", name = "US")),
+        )
         val reducer = AddressComponentStateReducer(PARAMS, AddressComponentStateFactory(PARAMS))
 
         // WHEN
@@ -327,7 +317,11 @@ internal class AddressComponentStateValidatorTest {
         assertNull(result.postalCode.error)
     }
 
-    private fun createState(address: AddressModel) = AddressComponentStateFactory(PARAMS).createState(address)
+    /** A form for [address] whose countries loaded with its country. */
+    private fun createState(address: AddressModel) = AddressComponentStateFactory(PARAMS).createState(
+        address = address,
+        countries = listOfNotNull(address.country?.let { code -> AddressRegion(code = code, name = code) }),
+    )
 
     private fun AddressComponentState.withStateOptions(selected: String?) = copy(
         states = STATES,

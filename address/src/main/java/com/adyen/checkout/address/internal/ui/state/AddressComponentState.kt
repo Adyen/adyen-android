@@ -18,7 +18,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputCompo
 
 /**
  * @param countries The countries the shopper can pick. Empty until they are loaded, and when loading them failed.
- * @param country The ISO 3166-1 alpha-2 code of the selected country. It can be selected before [countries] load.
+ * @param country The ISO 3166-1 alpha-2 code of the selected country, only ever one of [countries].
  * @param states The states of the selected country. Empty until they are loaded, when loading them failed, and for a
  * country without states.
  * @param stateOrProvince The ISO 3166-2 code of the selected state, only ever one of [states]. Only a [spec] with

@@ -10,6 +10,7 @@ package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
+import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -17,20 +18,18 @@ internal class AddressComponentStateFactory(
     private val componentParams: AddressComponentParams,
 ) : ComponentStateFactory<AddressComponentState> {
 
-    override fun createInitialState() = createState(address = null)
+    override fun createInitialState() = createState(address = null, countries = emptyList())
 
     /**
-     * Creates the form for [address]. Without an address, the country of the shopper locale is preselected. Either
-     * country is only selected when the shopper can pick it. The countries are not loaded yet, so the selection is kept
-     * as a code. No state is selected: a state is only ever selected from its loaded states.
+     * Creates the form for [address] with the loaded [countries]. A country is only ever selected from [countries], so
+     * a new form, whose countries are not loaded yet, has none. No state is selected either: a state is only ever
+     * selected from its loaded states.
      */
-    fun createState(address: AddressModel?): AddressComponentState {
-        // TODO - Address: The default country is internal only. Align it with the other platforms if the team asks for
-        //  a merchant-facing default country.
-        val countryCode = (address?.country ?: componentParams.shopperLocale.country).takeIf { isSupported(it) }
+    fun createState(address: AddressModel?, countries: List<AddressRegion>): AddressComponentState {
+        val countryCode = getDefaultCountryCode(address, countries)
         val spec = AddressSpec.fromCountryCode(countryCode)
         return AddressComponentState(
-            countries = emptyList(),
+            countries = countries,
             country = PickerInputComponentState(selected = countryCode),
             street = spec.createTextInput(AddressFormElementId.STREET, address?.street),
             houseNumberOrName = spec.createTextInput(
@@ -44,9 +43,15 @@ internal class AddressComponentStateFactory(
         )
     }
 
-    private fun isSupported(countryCode: String): Boolean {
-        val supportedCountryCodes = componentParams.supportedCountryCodes
-        return countryCode.isNotEmpty() && (supportedCountryCodes.isEmpty() || countryCode in supportedCountryCodes)
+    /**
+     * The country of [address] or, without an address, the country of the shopper locale, when [countries] contains it.
+     * [countries] only holds the countries the shopper can pick.
+     */
+    fun getDefaultCountryCode(address: AddressModel?, countries: List<AddressRegion>): String? {
+        // TODO - Address: The default country is internal only. Align it with the other platforms if the team asks for
+        //  a merchant-facing default country.
+        val countryCode = address?.country ?: componentParams.shopperLocale.country
+        return countryCode.takeIf { countries.any { it.code == countryCode } }
     }
 }
 

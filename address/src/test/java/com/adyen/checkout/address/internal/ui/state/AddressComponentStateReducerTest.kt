@@ -65,6 +65,18 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
+    fun `when a country that is not loaded is picked then it is ignored`() {
+        // GIVEN
+        val state = createState(US_ADDRESS)
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.UpdateCountry("DE"))
+
+        // THEN
+        assertSame(state, result)
+    }
+
+    @Test
     fun `when the same country is selected again then nothing changes`() {
         // GIVEN
         val state = createState(US_ADDRESS).withStates(US_STATES)
@@ -106,38 +118,62 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
-    fun `when the countries are loaded without the selected country then the selection is cleared`() {
+    fun `when the countries are loaded then the shopper locale country is selected`() {
         // GIVEN
-        val state = createState(US_ADDRESS.copy(country = "XX"))
+        val state = createState(address = null, countries = emptyList())
 
         // WHEN
         val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
 
         // THEN
-        assertNull(result.country.selected)
-        assertEquals(AddressSpec.DEFAULT, result.spec)
-        assertNull(result.stateOrProvince.selected)
+        assertEquals("US", result.country.selected)
+        assertEquals(AddressSpec.US, result.spec)
     }
 
     @Test
-    fun `when the countries are loaded without a selected country then the fields are kept`() {
+    fun `when the countries are loaded without the shopper locale country then no country is selected`() {
         // GIVEN
-        val params = createParams(shopperLocale = Locale.ROOT)
-        val state = createReducer(params).reduce(
-            createState(address = null, params),
-            AddressIntent.UpdateStreet("Main Street 1"),
-        )
+        val params = createParams(shopperLocale = Locale.FRANCE)
+        val state = createState(address = null, params, countries = emptyList())
 
         // WHEN
         val result = createReducer(params).reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
 
         // THEN
         assertNull(result.country.selected)
+        assertEquals(AddressSpec.DEFAULT, result.spec)
+    }
+
+    @Test
+    fun `when the countries are loaded then the typed fields are kept`() {
+        // GIVEN
+        val state = createReducer().reduce(
+            createState(address = null, countries = emptyList()),
+            AddressIntent.UpdateStreet("Main Street 1"),
+        )
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
+
+        // THEN
+        assertEquals("US", result.country.selected)
         assertEquals("Main Street 1", result.street.text)
     }
 
     @Test
-    fun `when loading the countries fails then the selected country is kept`() {
+    fun `when the countries are loaded then a selected country they contain is kept`() {
+        // GIVEN
+        val state = createReducer().reduce(createState(US_ADDRESS), AddressIntent.UpdateCountry("NL"))
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
+
+        // THEN
+        assertEquals("NL", result.country.selected)
+    }
+
+    @Test
+    fun `when the countries fail to load after a country was selected then no country is selected`() {
         // GIVEN
         val state = createState(US_ADDRESS)
 
@@ -145,8 +181,20 @@ internal class AddressComponentStateReducerTest {
         val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.failure(IOException())))
 
         // THEN
-        assertEquals("US", result.country.selected)
-        assertEquals(AddressSpec.US, result.spec)
+        assertNull(result.country.selected)
+        assertEquals(AddressSpec.DEFAULT, result.spec)
+    }
+
+    @Test
+    fun `when loading the countries fails then no country is selected`() {
+        // GIVEN
+        val state = createState(address = null, countries = emptyList())
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.failure(IOException())))
+
+        // THEN
+        assertNull(result.country.selected)
         assertEquals(emptyList<AddressRegion>(), result.countries)
     }
 
@@ -256,7 +304,7 @@ internal class AddressComponentStateReducerTest {
         val result = createReducer().reduce(editedState, AddressIntent.Reset(US_ADDRESS))
 
         // THEN
-        val expected = createState(US_ADDRESS).copy(countries = loadedCountries.countries)
+        val expected = createState(US_ADDRESS, countries = loadedCountries.countries)
         assertEquals(expected, result)
     }
 
@@ -310,7 +358,8 @@ internal class AddressComponentStateReducerTest {
     private fun createState(
         address: AddressModel?,
         params: AddressComponentParams = createParams(),
-    ) = AddressComponentStateFactory(params).createState(address)
+        countries: List<AddressRegion> = LOADED_COUNTRIES,
+    ) = AddressComponentStateFactory(params).createState(address, countries)
 
     private fun createReducer(
         params: AddressComponentParams = createParams(),
@@ -329,6 +378,12 @@ internal class AddressComponentStateReducerTest {
             postalCode = "94107",
             city = "San Francisco",
             stateOrProvince = "CA",
+        )
+
+        private val LOADED_COUNTRIES = listOf(
+            AddressRegion(code = "CA", name = "Canada"),
+            AddressRegion(code = "NL", name = "Netherlands"),
+            AddressRegion(code = "US", name = "United States"),
         )
 
         private val COUNTRY_ITEMS = listOf(

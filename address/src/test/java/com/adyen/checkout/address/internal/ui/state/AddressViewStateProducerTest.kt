@@ -20,11 +20,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.util.Locale
 
 internal class AddressViewStateProducerTest {
 
-    private val producer = AddressViewStateProducer(shopperLocale = Locale.US)
+    private val producer = AddressViewStateProducer()
 
     @ParameterizedTest
     @MethodSource("countryOrderSource")
@@ -133,19 +132,6 @@ internal class AddressViewStateProducerTest {
             errorMessage = null,
         )
         assertEquals(expected, viewState.elements.filterIsInstance<AddressFormElement.Country>().single())
-    }
-
-    @Test
-    fun `when the country list is unavailable then the selected country falls back to the platform name`() {
-        // GIVEN
-        val state = createState().copy(countries = emptyList())
-
-        // WHEN
-        val viewState = producer.produce(state)
-
-        // THEN
-        val country = viewState.elements.filterIsInstance<AddressFormElement.Country>().single()
-        assertEquals(AddressRegion(code = "US", name = "United States"), country.selected)
     }
 
     @Test
@@ -261,6 +247,9 @@ internal class AddressViewStateProducerTest {
 
     companion object {
         private val COUNTRIES = listOf(
+            AddressRegion(code = "BR", name = "Brazil"),
+            AddressRegion(code = "CA", name = "Canada"),
+            AddressRegion(code = "GB", name = "United Kingdom"),
             AddressRegion(code = "NL", name = "Netherlands"),
             AddressRegion(code = "US", name = "United States"),
         )

@@ -24,8 +24,7 @@ internal sealed interface AddressFormElement {
     /**
      * The row that shows the selected country and opens the country picker.
      *
-     * @param selected The selected country, named from the loaded countries or, while they are not loaded, by the
-     * platform. Null when no country is selected.
+     * @param selected The selected country, one of the loaded countries. Null when no country is selected.
      * @param errorMessage The error to show, only once it is visible.
      */
     data class Country(
