@@ -11,9 +11,12 @@ package com.adyen.checkout.address.internal.ui.state
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullAndEmptySource
+import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
 
 internal class AddressSpecTest {
@@ -88,7 +91,7 @@ internal class AddressSpecTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = ["NL", "AU", "DE"])
+    @ValueSource(strings = ["NL", "DE"])
     fun `when the country is not supported then the default spec is used`(countryCode: String?) {
         // WHEN
         val spec = AddressSpec.fromCountryCode(countryCode)
@@ -104,6 +107,58 @@ internal class AddressSpecTest {
             AddressFormElementId.STATE_OR_PROVINCE,
         )
         assertEquals(expectedOrder, spec.order)
+    }
+
+    /** AU and JP keep the default layout; their spec only adds the state. */
+    @ParameterizedTest
+    @ValueSource(strings = ["AU", "JP"])
+    fun `when the country is AU or JP then the default fields are followed by the state`(countryCode: String) {
+        // WHEN
+        val spec = AddressSpec.fromCountryCode(countryCode)
+
+        // THEN
+        val expectedOrder = listOf(
+            AddressFormElementId.COUNTRY,
+            AddressFormElementId.STREET,
+            AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+            AddressFormElementId.POSTAL_CODE,
+            AddressFormElementId.CITY,
+            AddressFormElementId.STATE_OR_PROVINCE,
+        )
+        assertEquals(expectedOrder, spec.order)
+        assertEquals(
+            CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL,
+            spec.getFieldSpec(AddressFormElementId.STATE_OR_PROVINCE).label,
+        )
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["AU", "BR", "CA", "JP", "US"])
+    fun `when the country has states then its state is required`(countryCode: String) {
+        // WHEN
+        val spec = AddressSpec.fromCountryCode(countryCode)
+
+        // THEN
+        assertTrue(spec.hasStates)
+        assertEquals(
+            RequirementPolicy.Required,
+            spec.getFieldSpec(AddressFormElementId.STATE_OR_PROVINCE).requirementPolicy,
+        )
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = ["NL", "GB", "DE"])
+    fun `when the country has no states then its state is hidden`(countryCode: String?) {
+        // WHEN
+        val spec = AddressSpec.fromCountryCode(countryCode)
+
+        // THEN
+        assertFalse(spec.hasStates)
+        assertEquals(
+            RequirementPolicy.Hidden,
+            spec.getFieldSpec(AddressFormElementId.STATE_OR_PROVINCE).requirementPolicy,
+        )
     }
 
     @Test

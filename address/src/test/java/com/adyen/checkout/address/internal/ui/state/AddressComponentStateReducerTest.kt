@@ -64,6 +64,18 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
+    fun `when a country without states is picked then the state is unavailable`() {
+        // GIVEN
+        val state = createState(US_ADDRESS).withStates(US_STATES)
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.UpdateCountry("NL"))
+
+        // THEN
+        assertEquals(StateOrProvinceState.Unavailable, result.stateOrProvince)
+    }
+
+    @Test
     fun `when the same country is selected again then nothing changes`() {
         // GIVEN
         val state = createState(US_ADDRESS).withStates(US_STATES)

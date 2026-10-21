@@ -216,6 +216,19 @@ internal class AddressViewStateProducerTest {
         assertNull(viewState.statePickerViewState)
     }
 
+    @Test
+    fun `when the country has no states then there is no state element or state picker`() {
+        // GIVEN
+        val state = createState(countryCode = "NL")
+
+        // WHEN
+        val viewState = producer.produce(state)
+
+        // THEN
+        assertTrue(viewState.elements.none { it is AddressFormElement.StateOrProvince })
+        assertNull(viewState.statePickerViewState)
+    }
+
     /** A form for [countryCode], US unless given, whose states loaded, with nothing typed yet. */
     private fun createState(countryCode: String = "US", selectedState: String? = null): AddressComponentState {
         val spec = AddressSpec.fromCountryCode(countryCode)
@@ -277,7 +290,6 @@ internal class AddressViewStateProducerTest {
                     AddressFormElementId.STREET,
                     AddressFormElementId.CITY,
                     AddressFormElementId.POSTAL_CODE,
-                    AddressFormElementId.STATE_OR_PROVINCE,
                 ),
             ),
             arguments(
@@ -299,7 +311,6 @@ internal class AddressViewStateProducerTest {
                     AddressFormElementId.HOUSE_NUMBER_OR_NAME,
                     AddressFormElementId.POSTAL_CODE,
                     AddressFormElementId.CITY,
-                    AddressFormElementId.STATE_OR_PROVINCE,
                 ),
             ),
         )

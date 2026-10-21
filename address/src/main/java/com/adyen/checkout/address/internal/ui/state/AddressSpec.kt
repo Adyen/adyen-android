@@ -15,13 +15,25 @@ import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPol
  * The address form layout per country: the order of the fields, starting with the country, their labels and which of
  * them are optional.
  *
- * [AddressFormElementId.STATE_OR_PROVINCE] is part of every spec. Whether it is shown is decided at runtime by the
- * states dataset of the selected country, so there is no need for per-country state lists here.
+ * Every spec lists every field; a field a country does not use is hidden. Only the countries that have states require
+ * [AddressFormElementId.STATE_OR_PROVINCE], as Web's `hasDataset` (`adyen-web`
+ * `packages/lib/src/components/internal/Address/constants.ts`), and their states are requested; every other country
+ * lists it as hidden.
  */
 internal enum class AddressSpec(
     val fields: List<AddressFieldSpec>,
 ) {
     DEFAULT(
+        listOf(
+            country(),
+            street(),
+            houseNumberOrName(),
+            postalCode(),
+            city(),
+            stateOrProvince(requirementPolicy = RequirementPolicy.Hidden),
+        ),
+    ),
+    AU(
         listOf(
             country(),
             street(),
@@ -61,6 +73,16 @@ internal enum class AddressSpec(
             street(),
             city(label = CheckoutLocalizationKey.ADDRESS_CITY_LABEL_CITY_TOWN),
             postalCode(),
+            stateOrProvince(requirementPolicy = RequirementPolicy.Hidden),
+        ),
+    ),
+    JP(
+        listOf(
+            country(),
+            street(),
+            houseNumberOrName(),
+            postalCode(),
+            city(),
             stateOrProvince(),
         ),
     ),
@@ -80,6 +102,10 @@ internal enum class AddressSpec(
     ;
 
     val order: List<AddressFormElementId> = fields.map { it.id }
+
+    /** Whether the country has states, which are then requested and required. */
+    val hasStates: Boolean =
+        getFieldSpec(AddressFormElementId.STATE_OR_PROVINCE).requirementPolicy != RequirementPolicy.Hidden
 
     fun getFieldSpec(id: AddressFormElementId): AddressFieldSpec = fields.first { it.id == id }
 
@@ -111,4 +137,5 @@ private fun city(
 
 private fun stateOrProvince(
     label: CheckoutLocalizationKey = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL,
-) = AddressFieldSpec(AddressFormElementId.STATE_OR_PROVINCE, label, RequirementPolicy.Required)
+    requirementPolicy: RequirementPolicy = RequirementPolicy.Required,
+) = AddressFieldSpec(AddressFormElementId.STATE_OR_PROVINCE, label, requirementPolicy)

@@ -35,7 +35,8 @@ internal class AddressViewStateProducer(
                 regions = state.countries,
                 selected = selectedCountry,
             ),
-            statePickerViewState = state.stateOrProvince.getOptions()?.let { options ->
+            // Only a country with states has a state picker.
+            statePickerViewState = state.stateOrProvince.getOptions()?.takeIf { state.spec.hasStates }?.let { options ->
                 PickerViewState(
                     title = state.getLabel(AddressFormElementId.STATE_OR_PROVINCE),
                     regions = options.regions,
