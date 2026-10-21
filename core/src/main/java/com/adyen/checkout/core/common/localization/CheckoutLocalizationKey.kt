@@ -15,6 +15,9 @@ package com.adyen.checkout.core.common.localization
  * [CheckoutLocalizationProvider], allowing you to customize the copy shown to the shopper.
  */
 enum class CheckoutLocalizationKey {
+    ADDRESS_TITLE,
+    ADDRESS_DESCRIPTION,
+    ADDRESS_SAVE_LABEL,
     ADDRESS_COUNTRY_LABEL,
     ADDRESS_COUNTRY_ERROR,
     ADDRESS_STREET_LABEL,
