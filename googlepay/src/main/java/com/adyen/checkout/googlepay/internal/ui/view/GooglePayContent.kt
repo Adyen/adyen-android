@@ -13,6 +13,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,6 +37,7 @@ internal fun GooglePayContent(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val loadPaymentData by rememberUpdatedState(loadPaymentData)
 
     val launcher = rememberLauncherForActivityResult(
         contract = TaskResultContracts.GetPaymentDataResult(),

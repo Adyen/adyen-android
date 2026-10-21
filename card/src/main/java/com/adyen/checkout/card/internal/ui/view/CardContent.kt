@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +66,7 @@ internal fun CardContent(
     onScanButtonClick: (ActivityResultLauncher<IntentSenderRequest>) -> Unit,
 ) {
     val context = LocalContext.current
+    val initializeCardScanner by rememberUpdatedState(initializeCardScanner)
     LaunchedEffect(Unit) {
         initializeCardScanner(context)
     }
