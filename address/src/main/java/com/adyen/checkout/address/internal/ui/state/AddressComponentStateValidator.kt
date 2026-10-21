@@ -12,6 +12,7 @@ import com.adyen.checkout.address.internal.ui.properties.AddressCharacters
 import com.adyen.checkout.address.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.requiresValidation
 
@@ -19,7 +20,11 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
 
     override fun validate(state: AddressComponentState): AddressComponentState = state.copy(
         country = state.country.updateError(
-            validateSelection(state.country, CheckoutLocalizationKey.ADDRESS_COUNTRY_ERROR),
+            state.validateSelection(
+                id = AddressFormElementId.COUNTRY,
+                picker = state.country,
+                error = CheckoutLocalizationKey.ADDRESS_COUNTRY_ERROR,
+            ),
         ),
         street = state.street.updateError(
             validateAddressLine(state.street, CheckoutLocalizationKey.ADDRESS_STREET_ERROR),
@@ -31,26 +36,16 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
         city = state.city.updateError(
             validateAddressLine(state.city, CheckoutLocalizationKey.ADDRESS_CITY_ERROR),
         ),
-        stateOrProvince = validateStateOrProvince(state.stateOrProvince),
+        stateOrProvince = state.stateOrProvince.updateError(
+            state.validateSelection(
+                id = AddressFormElementId.STATE_OR_PROVINCE,
+                picker = state.stateOrProvince,
+                error = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR,
+            ),
+        ),
     )
 
     override fun isValid(state: AddressComponentState): Boolean = state.form.isFormValid
-
-    /** Loading and unavailable states are not in the form, so they are never validated. */
-    private fun validateStateOrProvince(stateOrProvince: StateOrProvinceState): StateOrProvinceState =
-        when (stateOrProvince) {
-            is StateOrProvinceState.Options -> stateOrProvince.copy(
-                picker = stateOrProvince.picker.updateError(
-                    validateSelection(stateOrProvince.picker, CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR),
-                ),
-            )
-
-            // TODO - Address: The API requires a state for US and CA. Treat Loading and Unavailable as invalid
-            //  there once the design for loading and failed states is aligned with iOS and Web. Tracked in
-            //  COSDK-1635.
-            is StateOrProvinceState.Loading,
-            StateOrProvinceState.Unavailable -> stateOrProvince
-        }
 
     /**
      * A blank postal code is invalid. Otherwise it must contain the selected country's pattern, matched unanchored as
@@ -70,10 +65,15 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
         return CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR.takeUnless { isValid }
     }
 
-    private fun validateSelection(
+    /** A picker the spec requires needs a selection; an optional or hidden one never has an error. */
+    private fun AddressComponentState.validateSelection(
+        id: AddressFormElementId,
         picker: PickerInputComponentState<*>,
         error: CheckoutLocalizationKey,
-    ): CheckoutLocalizationKey? = error.takeIf { picker.selected == null }
+    ): CheckoutLocalizationKey? {
+        val isRequired = spec.getFieldSpec(id).requirementPolicy == RequirementPolicy.Required
+        return error.takeIf { isRequired && picker.selected == null }
+    }
 
     /**
      * The street, the house number and the city: required as their spec says, and free of emoji and control

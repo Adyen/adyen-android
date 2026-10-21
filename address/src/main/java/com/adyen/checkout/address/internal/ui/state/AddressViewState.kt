@@ -17,7 +17,8 @@ import com.adyen.checkout.core.components.internal.ui.state.ViewState
  * @param elements The address form, in the order the shopper sees it. Each element carries everything needed to render
  * it.
  * @param countryPickerViewState The country picker screen state, separate from the country [AddressFormElement].
- * @param statePickerViewState The state picker screen state, or null while the selected country has no loaded states.
+ * @param statePickerViewState The state picker screen state, separate from the state [AddressFormElement]. Empty until
+ * the states are loaded, and null when the selected country has no states.
  */
 @Immutable
 internal data class AddressViewState(

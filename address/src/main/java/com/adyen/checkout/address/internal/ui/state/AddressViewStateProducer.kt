@@ -28,29 +28,31 @@ internal class AddressViewStateProducer(
 
     override fun produce(state: AddressComponentState): AddressViewState {
         val selectedCountry = state.getSelectedCountry()
+        val selectedState = state.getSelectedState()
         return AddressViewState(
-            elements = state.form.elements.mapNotNull { state.toElement(it.id, selectedCountry) },
+            elements = state.form.elements.map { state.toElement(it.id, selectedCountry, selectedState) },
             countryPickerViewState = PickerViewState(
                 title = state.getLabel(AddressFormElementId.COUNTRY),
                 regions = state.countries,
                 selected = selectedCountry,
             ),
-            // Only a country with states has a state picker.
-            statePickerViewState = state.stateOrProvince.getOptions()?.takeIf { state.spec.hasStates }?.let { options ->
+            statePickerViewState = if (state.spec.hasStates) {
                 PickerViewState(
                     title = state.getLabel(AddressFormElementId.STATE_OR_PROVINCE),
-                    regions = options.regions,
-                    selected = options.getSelectedRegion(),
+                    regions = state.states,
+                    selected = selectedState,
                 )
+            } else {
+                null
             },
         )
     }
 
-    /** Null only for an element that has nothing to render, which the form does not contain either. */
     private fun AddressComponentState.toElement(
         id: AddressFormElementId,
         selectedCountry: AddressRegion?,
-    ): AddressFormElement? = when (id) {
+        selectedState: AddressRegion?,
+    ): AddressFormElement = when (id) {
         AddressFormElementId.COUNTRY -> AddressFormElement.Country(
             label = getLabel(id),
             selected = selectedCountry,
@@ -78,22 +80,11 @@ internal class AddressViewStateProducer(
             textInputViewState = city.toViewState(form, focusRequest, id),
         )
 
-        // TODO - Address: Loading and unavailable states render nothing for now. Once their UI is designed and aligned
-        //  with iOS and Web, this becomes an exhaustive when with a row per state. Tracked in COSDK-1635.
-        AddressFormElementId.STATE_OR_PROVINCE -> stateOrProvince.getOptions()?.let { options ->
-            AddressFormElement.StateOrProvince(
-                label = getLabel(id),
-                selected = options.getSelectedRegion(),
-                errorMessage = options.picker.getVisibleErrorMessage(),
-            )
-        }
-    }
-
-    /** The states to pick from, or null while there are none to render. */
-    private fun StateOrProvinceState.getOptions(): StateOrProvinceState.Options? = when (this) {
-        is StateOrProvinceState.Options -> this
-        is StateOrProvinceState.Loading,
-        StateOrProvinceState.Unavailable -> null
+        AddressFormElementId.STATE_OR_PROVINCE -> AddressFormElement.StateOrProvince(
+            label = getLabel(id),
+            selected = selectedState,
+            errorMessage = stateOrProvince.getVisibleErrorMessage(),
+        )
     }
 
     private fun AddressComponentState.getLabel(id: AddressFormElementId) = spec.getFieldSpec(id).label
@@ -103,8 +94,9 @@ internal class AddressViewStateProducer(
         countries.find { it.code == code } ?: AddressRegion(code, CountryUtils.getCountryName(code, shopperLocale))
     }
 
-    private fun StateOrProvinceState.Options.getSelectedRegion(): AddressRegion? =
-        picker.selected?.let { code -> regions.find { it.code == code } }
+    /** The selected state, which is always one of the loaded states. */
+    private fun AddressComponentState.getSelectedState(): AddressRegion? =
+        stateOrProvince.selected?.let { code -> states.find { it.code == code } }
 
     private fun PickerInputComponentState<*>.getVisibleErrorMessage(): CheckoutLocalizationKey? =
         error?.takeIf { it.isVisible }?.message

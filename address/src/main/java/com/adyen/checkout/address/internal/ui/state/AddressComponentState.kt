@@ -19,6 +19,10 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputCompo
 /**
  * @param countries The countries the shopper can pick. Empty until they are loaded, and when loading them failed.
  * @param country The ISO 3166-1 alpha-2 code of the selected country. It can be selected before [countries] load.
+ * @param states The states of the selected country. Empty until they are loaded, when loading them failed, and for a
+ * country without states.
+ * @param stateOrProvince The ISO 3166-2 code of the selected state, only ever one of [states]. Only a [spec] with
+ * states has a state element.
  */
 internal data class AddressComponentState(
     val countries: List<AddressRegion>,
@@ -27,7 +31,8 @@ internal data class AddressComponentState(
     val houseNumberOrName: TextInputComponentState,
     val postalCode: TextInputComponentState,
     val city: TextInputComponentState,
-    val stateOrProvince: StateOrProvinceState,
+    val states: List<AddressRegion>,
+    val stateOrProvince: PickerInputComponentState<String>,
     val focusRequest: FocusRequest<AddressFormElementId>? = null,
 ) : ComponentState {
 
@@ -58,13 +63,8 @@ internal data class AddressComponentState(
         AddressFormElementId.HOUSE_NUMBER_OR_NAME -> houseNumberOrName.toFormElementIfVisible(id)
         AddressFormElementId.POSTAL_CODE -> postalCode.toFormElementIfVisible(id)
         AddressFormElementId.CITY -> city.toFormElementIfVisible(id)
-        AddressFormElementId.STATE_OR_PROVINCE -> when (stateOrProvince) {
-            is StateOrProvinceState.Loading,
-            StateOrProvinceState.Unavailable -> null
-
-            // A hidden state is left out like a hidden text input.
-            is StateOrProvinceState.Options -> stateOrProvince.picker.toFormElement(id).takeIf { spec.hasStates }
-        }
+        // A hidden state is left out like a hidden text input.
+        AddressFormElementId.STATE_OR_PROVINCE -> stateOrProvince.toFormElement(id).takeIf { spec.hasStates }
     }
 }
 
@@ -84,21 +84,14 @@ internal fun AddressComponentState.updateTextInput(
 }
 
 /**
- * Updates the picker corresponding to the provided [id]. Elements that are not pickers, and the state picker while the
- * state has no options, are ignored.
+ * Updates the picker corresponding to the provided [id]. Elements that are not pickers are ignored.
  */
 internal fun AddressComponentState.updatePickerInput(
     id: AddressFormElementId,
     transform: (PickerInputComponentState<String>) -> PickerInputComponentState<String>,
 ): AddressComponentState = when (id) {
     AddressFormElementId.COUNTRY -> copy(country = transform(country))
-    AddressFormElementId.STATE_OR_PROVINCE -> when (stateOrProvince) {
-        is StateOrProvinceState.Options -> copy(
-            stateOrProvince = stateOrProvince.copy(picker = transform(stateOrProvince.picker)),
-        )
-
-        else -> this
-    }
+    AddressFormElementId.STATE_OR_PROVINCE -> copy(stateOrProvince = transform(stateOrProvince))
 
     AddressFormElementId.STREET,
     AddressFormElementId.HOUSE_NUMBER_OR_NAME,

@@ -30,7 +30,6 @@ internal class AddressComponentStateFactoryTest {
         // THEN
         assertEquals("NL", state.country.selected)
         assertEquals(AddressSpec.DEFAULT, state.spec)
-        assertEquals(StateOrProvinceState.Unavailable, state.stateOrProvince)
     }
 
     @Test
@@ -46,7 +45,6 @@ internal class AddressComponentStateFactoryTest {
 
         // THEN
         assertNull(state.country.selected)
-        assertEquals(StateOrProvinceState.Unavailable, state.stateOrProvince)
     }
 
     @Test
@@ -60,7 +58,7 @@ internal class AddressComponentStateFactoryTest {
         // THEN
         assertNull(state.country.selected)
         assertEquals(AddressSpec.DEFAULT, state.spec)
-        assertEquals(StateOrProvinceState.Unavailable, state.stateOrProvince)
+        assertNull(state.stateOrProvince.selected)
     }
 
     @Test
@@ -82,8 +80,9 @@ internal class AddressComponentStateFactoryTest {
         assertEquals(RequirementPolicy.Optional, state.houseNumberOrName.requirementPolicy)
     }
 
+    /** A state is only selected from its loaded states, which a new form does not have yet. */
     @Test
-    fun `when an address with a state is given then the state is pending until the states load`() {
+    fun `when an address with a state is given then no state is selected before the states load`() {
         // GIVEN
         val factory = createFactory()
 
@@ -91,7 +90,8 @@ internal class AddressComponentStateFactoryTest {
         val state = factory.createState(US_ADDRESS)
 
         // THEN
-        assertEquals(StateOrProvinceState.Loading(pendingCode = "CA"), state.stateOrProvince)
+        assertNull(state.stateOrProvince.selected)
+        assertTrue(state.states.isEmpty())
     }
 
     @Test

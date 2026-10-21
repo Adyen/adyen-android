@@ -10,6 +10,8 @@ package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.data.model.AddressItem
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
+import com.adyen.checkout.address.internal.ui.model.AddressModel
+import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.model.toAddressRegions
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -24,9 +26,7 @@ internal class AddressComponentStateReducer(
             is AddressIntent.UpdateCountry ->
                 if (intent.countryCode == state.country.selected) state else state.selectCountry(intent.countryCode)
 
-            is AddressIntent.UpdateStateOrProvince -> state.copy(
-                stateOrProvince = state.stateOrProvince.selectState(intent.stateCode),
-            )
+            is AddressIntent.UpdateStateOrProvince -> state.selectState(intent.stateCode)
 
             is AddressIntent.UpdateStreet -> state.copy(street = state.street.updateText(intent.street))
 
@@ -38,10 +38,7 @@ internal class AddressComponentStateReducer(
 
             is AddressIntent.UpdateCity -> state.copy(city = state.city.updateText(intent.city))
 
-            // The loaded countries do not depend on the address, so they survive a reset.
-            is AddressIntent.Reset -> componentStateFactory.createState(intent.address).copy(
-                countries = state.countries,
-            )
+            is AddressIntent.Reset -> state.reset(intent.address)
 
             is AddressIntent.CountriesLoaded -> state.onCountriesLoaded(intent.result)
 
@@ -69,8 +66,29 @@ internal class AddressComponentStateReducer(
             ),
             postalCode = postalCode.withRequirementPolicyOf(newSpec, AddressFormElementId.POSTAL_CODE),
             city = city.withRequirementPolicyOf(newSpec, AddressFormElementId.CITY),
-            stateOrProvince = StateOrProvinceState.forCountry(countryCode, pendingCode = null),
+            states = emptyList(),
+            stateOrProvince = PickerInputComponentState(),
         )
+    }
+
+    /**
+     * Replaces the whole state with the form for [address]. The loaded countries do not depend on the address, so they
+     * survive a reset. So do the loaded states while the country stays the same, and the state of [address] is selected
+     * from them.
+     */
+    private fun AddressComponentState.reset(address: AddressModel?): AddressComponentState {
+        val resetState = componentStateFactory.createState(address).copy(countries = countries)
+        if (resetState.country.selected != country.selected) return resetState
+        return resetState.copy(
+            states = states,
+            stateOrProvince = PickerInputComponentState(selected = states.findCode(address?.stateOrProvince)),
+        )
+    }
+
+    /** Only a loaded state can be selected; any other code is ignored. */
+    private fun AddressComponentState.selectState(stateCode: String): AddressComponentState {
+        val loadedCode = states.findCode(stateCode) ?: return this
+        return copy(stateOrProvince = stateOrProvince.copy(selected = loadedCode))
     }
 
     private fun TextInputComponentState.withRequirementPolicyOf(spec: AddressSpec, id: AddressFormElementId) =
@@ -86,42 +104,32 @@ internal class AddressComponentStateReducer(
             supportedCountryCodes.isEmpty() || region.code in supportedCountryCodes
         }
         val loadedState = copy(countries = countries)
-        val selected = country.selected
-        val isSelectionUnlisted = selected != null && countries.isNotEmpty() && countries.none { it.code == selected }
-        return if (isSelectionUnlisted) loadedState.selectCountry(null) else loadedState
+        return if (countries.isMissing(country.selected)) loadedState.selectCountry(null) else loadedState
     }
 
+    /**
+     * A selected state is only kept when the loaded states contain it, so a failure clears it too. States of a country
+     * that is no longer selected are dropped.
+     */
     private fun AddressComponentState.onStatesLoaded(
         countryCode: String,
         result: Result<List<AddressItem>>,
     ): AddressComponentState {
-        val loading = stateOrProvince as? StateOrProvinceState.Loading
-        if (countryCode != country.selected || loading == null) return this
+        if (countryCode != country.selected) return this
 
-        val pendingCode = loading.pendingCode
-        val stateOrProvince = result.fold(
-            onSuccess = { items ->
-                val regions = items.toAddressRegions()
-                if (regions.isEmpty()) {
-                    StateOrProvinceState.Unavailable
-                } else {
-                    val selected = pendingCode?.takeIf { code -> regions.any { it.code == code } }
-                    StateOrProvinceState.Options(
-                        regions = regions,
-                        picker = PickerInputComponentState(selected = selected),
-                    )
-                }
-            },
-            // TODO - Address: Offer the shopper a way to retry when the states fail to load, instead of hiding the
-            //  field. Align the design with iOS and Web first. Tracked in COSDK-1635.
-            onFailure = { StateOrProvinceState.Unavailable },
+        // TODO - Address: Offer the shopper a way to retry when the states fail to load, instead of having to reopen
+        //  the form. Align the design with iOS and Web first. Tracked in COSDK-1635.
+        val states = result.getOrNull().orEmpty().toAddressRegions()
+        return copy(
+            states = states,
+            stateOrProvince = stateOrProvince.copy(selected = states.findCode(stateOrProvince.selected)),
         )
-        return copy(stateOrProvince = stateOrProvince)
     }
 
-    private fun StateOrProvinceState.selectState(stateCode: String): StateOrProvinceState = when (this) {
-        is StateOrProvinceState.Options -> copy(picker = picker.copy(selected = stateCode))
-        is StateOrProvinceState.Loading,
-        StateOrProvinceState.Unavailable -> this
-    }
+    /** The [code] when this list contains it, otherwise null. */
+    private fun List<AddressRegion>.findCode(code: String?): String? = code?.takeIf { any { it.code == code } }
+
+    /** Whether this loaded list leaves out the selected [code]. An empty list leaves nothing out. */
+    private fun List<AddressRegion>.isMissing(code: String?): Boolean =
+        code != null && isNotEmpty() && none { it.code == code }
 }
