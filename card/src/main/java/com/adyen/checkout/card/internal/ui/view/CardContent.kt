@@ -150,8 +150,9 @@ private fun CardFormElementContent(
     onScanButtonClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
 ) {
-    val onFocusChange: (Boolean) -> Unit = { hasFocus -> onIntent(CardIntent.UpdateFieldFocus(element.id, hasFocus)) }
-    val onFocusRequestConsumed: () -> Unit = { onIntent(CardIntent.FocusRequestConsumed(element.id)) }
+    val id = element.id
+    val onFocusChange: (Boolean) -> Unit = { hasFocus -> onIntent(CardIntent.UpdateFieldFocus(id, hasFocus)) }
+    val onFocusRequestConsumed: () -> Unit = { onIntent(CardIntent.FocusRequestConsumed(id)) }
 
     when (element) {
         is CardFormElement.CardNumber -> CardNumberField(
