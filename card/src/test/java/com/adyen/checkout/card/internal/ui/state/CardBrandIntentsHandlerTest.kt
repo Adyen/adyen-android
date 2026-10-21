@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentOptionsParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
@@ -841,6 +842,154 @@ internal class CardBrandIntentsHandlerTest(
         val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(createInitialState(), cardBrandState)
 
         assertEquals(3, actual.installmentState.installmentOptions.size) // OneTime, 3, 4
+    }
+
+    @Nested
+    @DisplayName("when installment state is updated")
+    inner class InstallmentSelectionTest {
+
+        private val visaBrand = CardBrand("visa")
+        private val mcBrand = CardBrand("mc")
+
+        @BeforeEach
+        fun beforeEach() {
+            val installmentParams = InstallmentParams(
+                defaultOptions = InstallmentOptionsParams(
+                    values = listOf(2, 3),
+                    plans = listOf(InstallmentPlan.REGULAR),
+                    preselectedValue = 2,
+                ),
+                cardBasedOptions = mapOf(
+                    visaBrand to InstallmentOptionsParams(
+                        values = listOf(3, 6),
+                        plans = listOf(InstallmentPlan.REGULAR),
+                        preselectedValue = 6,
+                    ),
+                    mcBrand to InstallmentOptionsParams(
+                        values = listOf(3, 6),
+                        plans = listOf(InstallmentPlan.REGULAR),
+                        preselectedValue = 3,
+                    ),
+                ),
+            )
+            whenever(cardComponentParams.installmentParams).thenReturn(installmentParams)
+        }
+
+        @Test
+        fun `and reliable brand changes to brand with identical options then selection resets to brand default`() {
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = mcBrand)),
+                selectedInstallment = createRegularInstallment(3),
+            )
+            val cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = visaBrand))
+
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            assertEquals(createRegularInstallment(6), actual.installmentState.selectedInstallment)
+        }
+
+        @Test
+        fun `and reliable brand changes and previous selection exists in new options then selection resets`() {
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = visaBrand)),
+                selectedInstallment = createRegularInstallment(6),
+            )
+            val cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = mcBrand))
+
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            assertEquals(createRegularInstallment(3), actual.installmentState.selectedInstallment)
+        }
+
+        @Test
+        fun `and reliable brand is cleared then selection resets to default options default`() {
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = visaBrand)),
+                selectedInstallment = createRegularInstallment(3),
+            )
+
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(
+                state,
+                CardBrandState.NoBrandsDetected,
+            )
+
+            assertEquals(createRegularInstallment(2), actual.installmentState.selectedInstallment)
+        }
+
+        @Test
+        fun `and reliable brand is detected then selection resets to brand default`() {
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.NoBrandsDetected,
+                selectedInstallment = createRegularInstallment(3),
+            )
+            val cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = visaBrand))
+
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            assertEquals(createRegularInstallment(6), actual.installmentState.selectedInstallment)
+        }
+
+        @Test
+        fun `and shopper selects another dual brand then selection resets to brand default`() {
+            val visaCardBrandData = createCardBrandData().copy(cardBrand = visaBrand)
+            val mcCardBrandData = createCardBrandData().copy(cardBrand = mcBrand)
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.DualBrandWithShopperSelection(
+                    cardBrandDataList = listOf(visaCardBrandData, mcCardBrandData),
+                    shopperSelectedCardBrandData = visaCardBrandData,
+                ),
+                selectedInstallment = createRegularInstallment(6),
+            )
+
+            val actual = cardBrandIntentsHandler.onBrandSelected(state, CardIntent.SelectBrand(mcBrand))
+
+            assertEquals(createRegularInstallment(3), actual.installmentState.selectedInstallment)
+        }
+
+        @Test
+        fun `and reliable brand is unchanged then shopper selection is kept`() {
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = visaBrand)),
+                selectedInstallment = createRegularInstallment(3),
+            )
+            val cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = visaBrand))
+
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            assertEquals(createRegularInstallment(3), actual.installmentState.selectedInstallment)
+        }
+
+        @Test
+        fun `and there is still no reliable brand then shopper selection is kept`() {
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.NoBrandsDetected,
+                selectedInstallment = createRegularInstallment(3),
+            )
+            val cardBrandState = CardBrandState.SingleUnreliableBrand(
+                createCardBrandData().copy(cardBrand = visaBrand),
+            )
+
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            assertEquals(createRegularInstallment(3), actual.installmentState.selectedInstallment)
+        }
+
+        private fun createStateWithInstallmentSelection(
+            cardBrandState: CardBrandState,
+            selectedInstallment: InstallmentModel,
+        ) = createInitialState().copy(
+            cardBrandState = cardBrandState,
+            installmentState = InstallmentState(
+                installmentOptions = emptyList(),
+                selectedInstallment = selectedInstallment,
+            ),
+        )
+
+        private fun createRegularInstallment(numberOfInstallments: Int) = InstallmentModel.Regular(
+            numberOfInstallments = numberOfInstallments,
+            amountPerInstallment = null,
+            showAmount = false,
+        )
     }
 
     @Nested
