@@ -12,10 +12,8 @@ import com.adyen.checkout.address.internal.data.model.AddressItem
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
-import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
@@ -104,7 +102,6 @@ internal class AddressComponentStateReducerTest {
             AddressRegion(code = "US", name = "United States"),
         )
         assertEquals(expected, result.countries)
-        assertFalse(result.isLoadingCountries)
     }
 
     @Test
@@ -150,7 +147,6 @@ internal class AddressComponentStateReducerTest {
         assertEquals("US", result.country.selected)
         assertEquals(AddressSpec.US, result.spec)
         assertEquals(emptyList<AddressRegion>(), result.countries)
-        assertFalse(result.isLoadingCountries)
     }
 
     @Test
@@ -261,10 +257,7 @@ internal class AddressComponentStateReducerTest {
         val result = createReducer().reduce(editedState, AddressIntent.Reset(US_ADDRESS))
 
         // THEN
-        val expected = createState(US_ADDRESS).copy(
-            countries = loadedCountries.countries,
-            isLoadingCountries = false,
-        )
+        val expected = createState(US_ADDRESS).copy(countries = loadedCountries.countries)
         assertEquals(expected, result)
     }
 

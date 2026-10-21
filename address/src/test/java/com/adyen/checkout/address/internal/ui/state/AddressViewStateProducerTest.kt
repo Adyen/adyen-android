@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.address.internal.ui.state
 
-import com.adyen.checkout.address.internal.ui.model.AddressField
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
-import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState.InputError
@@ -222,13 +220,11 @@ internal class AddressViewStateProducerTest {
     private fun createState(countryCode: String = "US", selectedState: String? = null): AddressComponentState {
         val spec = AddressSpec.fromCountryCode(countryCode)
         return AddressComponentState(
-            spec = spec,
             countries = COUNTRIES,
-            isLoadingCountries = false,
             country = PickerInputComponentState(selected = countryCode),
             street = TextInputComponentState(),
             houseNumberOrName = TextInputComponentState(
-                requirementPolicy = spec.getFieldSpec(AddressField.HOUSE_NUMBER_OR_NAME).requirementPolicy,
+                requirementPolicy = spec.getFieldSpec(AddressFormElementId.HOUSE_NUMBER_OR_NAME).requirementPolicy,
             ),
             postalCode = TextInputComponentState(),
             city = TextInputComponentState(),

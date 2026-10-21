@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.address.internal.ui.state
 
-import com.adyen.checkout.address.internal.ui.model.AddressField
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
-import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormElementState
@@ -19,14 +17,11 @@ import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIf
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 /**
- * @param spec The layout of the selected country, or the default layout when none is selected.
  * @param countries The countries the shopper can pick. Empty until they are loaded, and when loading them failed.
  * @param country The ISO 3166-1 alpha-2 code of the selected country. It can be selected before [countries] load.
  */
 internal data class AddressComponentState(
-    val spec: AddressSpec,
     val countries: List<AddressRegion>,
-    val isLoadingCountries: Boolean,
     val country: PickerInputComponentState<String>,
     val street: TextInputComponentState,
     val houseNumberOrName: TextInputComponentState,
@@ -37,32 +32,37 @@ internal data class AddressComponentState(
 ) : ComponentState {
 
     /**
-     * The visible elements in the order the shopper sees them: the country, then the fields in the order of [spec].
+     * The layout of the selected country, or the default layout when none is selected. It is derived from [country]
+     * and never stored, so the two cannot drift; cached like [form], which reads it.
+     */
+    val spec: AddressSpec by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        AddressSpec.fromCountryCode(country.selected)
+    }
+
+    /**
+     * The visible elements in the order the shopper sees them, which is the order of [spec], starting with the country.
      * This form is derived from the fields above and never manually created or modified.
      *
      * It is cached because the reducer, the validator, the post processor and the producer all read it.
      * [LazyThreadSafetyMode.PUBLICATION] is used because the same state might be read from several threads.
      */
     val form: FormState<AddressFormElementId> by lazy(LazyThreadSafetyMode.PUBLICATION) {
-        val countryElement = country.toFormElement(AddressFormElementId.COUNTRY)
         FormState(
-            elements = listOf(countryElement) + spec.order.mapNotNull { field -> getFormElement(field) },
+            elements = spec.order.mapNotNull { id -> getFormElement(id) },
         )
     }
 
-    private fun getFormElement(field: AddressField): FormElementState<AddressFormElementId>? = when (field) {
-        AddressField.STREET -> street.toFormElementIfVisible(AddressFormElementId.STREET)
-        AddressField.HOUSE_NUMBER_OR_NAME ->
-            houseNumberOrName.toFormElementIfVisible(AddressFormElementId.HOUSE_NUMBER_OR_NAME)
-
-        AddressField.POSTAL_CODE -> postalCode.toFormElementIfVisible(AddressFormElementId.POSTAL_CODE)
-        AddressField.CITY -> city.toFormElementIfVisible(AddressFormElementId.CITY)
-        AddressField.STATE_OR_PROVINCE -> when (stateOrProvince) {
+    private fun getFormElement(id: AddressFormElementId): FormElementState<AddressFormElementId>? = when (id) {
+        AddressFormElementId.COUNTRY -> country.toFormElement(id)
+        AddressFormElementId.STREET -> street.toFormElementIfVisible(id)
+        AddressFormElementId.HOUSE_NUMBER_OR_NAME -> houseNumberOrName.toFormElementIfVisible(id)
+        AddressFormElementId.POSTAL_CODE -> postalCode.toFormElementIfVisible(id)
+        AddressFormElementId.CITY -> city.toFormElementIfVisible(id)
+        AddressFormElementId.STATE_OR_PROVINCE -> when (stateOrProvince) {
             is StateOrProvinceState.Loading,
             StateOrProvinceState.Unavailable -> null
 
-            is StateOrProvinceState.Options ->
-                stateOrProvince.picker.toFormElement(AddressFormElementId.STATE_OR_PROVINCE)
+            is StateOrProvinceState.Options -> stateOrProvince.picker.toFormElement(id)
         }
     }
 }

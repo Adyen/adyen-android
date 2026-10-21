@@ -9,9 +9,7 @@
 package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
-import com.adyen.checkout.address.internal.ui.model.AddressField
 import com.adyen.checkout.address.internal.ui.model.AddressModel
-import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -32,14 +30,15 @@ internal class AddressComponentStateFactory(
         val countryCode = (address?.country ?: componentParams.shopperLocale.country).takeIf { isSupported(it) }
         val spec = AddressSpec.fromCountryCode(countryCode)
         return AddressComponentState(
-            spec = spec,
             countries = emptyList(),
-            isLoadingCountries = true,
             country = PickerInputComponentState(selected = countryCode),
-            street = spec.createTextInput(AddressField.STREET, address?.street),
-            houseNumberOrName = spec.createTextInput(AddressField.HOUSE_NUMBER_OR_NAME, address?.houseNumberOrName),
-            postalCode = spec.createTextInput(AddressField.POSTAL_CODE, address?.postalCode),
-            city = spec.createTextInput(AddressField.CITY, address?.city),
+            street = spec.createTextInput(AddressFormElementId.STREET, address?.street),
+            houseNumberOrName = spec.createTextInput(
+                AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+                address?.houseNumberOrName,
+            ),
+            postalCode = spec.createTextInput(AddressFormElementId.POSTAL_CODE, address?.postalCode),
+            city = spec.createTextInput(AddressFormElementId.CITY, address?.city),
             stateOrProvince = StateOrProvinceState.forCountry(countryCode, pendingCode = address?.stateOrProvince),
         )
     }
@@ -50,8 +49,8 @@ internal class AddressComponentStateFactory(
     }
 }
 
-/** Creates the text input of [field] with the requirement policy this spec gives it. */
-private fun AddressSpec.createTextInput(field: AddressField, text: String?) = TextInputComponentState(
+/** Creates the text input of [id] with the requirement policy this spec gives it. */
+private fun AddressSpec.createTextInput(id: AddressFormElementId, text: String?) = TextInputComponentState(
     text = text.orEmpty(),
-    requirementPolicy = getFieldSpec(field).requirementPolicy,
+    requirementPolicy = getFieldSpec(id).requirementPolicy,
 )

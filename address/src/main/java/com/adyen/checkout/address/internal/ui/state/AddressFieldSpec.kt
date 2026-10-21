@@ -6,13 +6,13 @@
  * Created by ararat on 6/10/2026.
  */
 
-package com.adyen.checkout.address.internal.ui.model
+package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
 internal data class AddressFieldSpec(
-    val field: AddressField,
+    val id: AddressFormElementId,
     val label: CheckoutLocalizationKey,
     val requirementPolicy: RequirementPolicy,
 )

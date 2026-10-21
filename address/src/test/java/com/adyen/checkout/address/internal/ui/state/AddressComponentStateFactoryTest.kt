@@ -10,7 +10,6 @@ package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
-import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -105,7 +104,6 @@ internal class AddressComponentStateFactoryTest {
 
         // THEN
         assertTrue(state.countries.isEmpty())
-        assertTrue(state.isLoadingCountries)
     }
 
     private fun createFactory(
