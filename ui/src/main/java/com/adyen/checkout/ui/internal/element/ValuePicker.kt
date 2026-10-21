@@ -38,10 +38,10 @@ fun ValuePicker(
             items = items,
             key = { it.id },
         ) { item ->
-            SelectableListItem(
+            ListItem(
                 title = item.title,
                 subtitle = item.subtitle,
-                isSelected = item.isSelected,
+                selected = item.isSelected,
                 onClick = { onItemClick(item) },
                 modifier = Modifier.animateItem(),
             )

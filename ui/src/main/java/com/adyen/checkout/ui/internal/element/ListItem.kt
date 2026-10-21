@@ -13,6 +13,7 @@ package com.adyen.checkout.ui.internal.element
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -22,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,7 +46,8 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * @param onClick The callback to be invoked when the item is clicked.
  * @param modifier The [Modifier] to be applied to the layout.
  * @param subtitle The optional text to display below the title.
- * @param containerColor The background color of the item.
+ * @param selected Whether the item is selected. A selected item is highlighted and, if no [trailingContent] is
+ * provided, shows a checkmark.
  * @param leadingIcon The optional composable to display at the start of the item. **This should only be used for
  * icons!**
  * @param trailingContent The optional composable to display at the end of the item.
@@ -58,7 +59,7 @@ fun ListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    containerColor: Color = CheckoutThemeProvider.colors.background,
+    selected: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
@@ -76,13 +77,18 @@ fun ListItem(
     }
 
     val colors = ListItemDefaults.colors(
-        containerColor = containerColor,
+        containerColor = CheckoutThemeProvider.colors.background,
         contentColor = CheckoutThemeProvider.colors.text,
         leadingContentColor = CheckoutThemeProvider.colors.text,
         trailingContentColor = CheckoutThemeProvider.colors.text,
+        selectedContainerColor = CheckoutThemeProvider.colors.container,
+        selectedContentColor = CheckoutThemeProvider.colors.text,
+        selectedLeadingContentColor = CheckoutThemeProvider.colors.text,
+        selectedTrailingContentColor = CheckoutThemeProvider.colors.text,
     )
 
     ListItem(
+        selected = selected,
         onClick = onClick,
         content = {
             BodyEmphasized(title)
@@ -96,12 +102,26 @@ fun ListItem(
             }
         },
         leadingContent = leadingIcon,
-        trailingContent = trailingContent,
+        trailingContent = trailingContent ?: if (selected) {
+            { SelectedCheckmark() }
+        } else {
+            null
+        },
         shapes = shapes,
         contentPadding = DefaultPaddingValues,
         colors = colors,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
+    )
+}
+
+@Composable
+private fun SelectedCheckmark() {
+    Icon(
+        imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
+        contentDescription = null,
+        tint = CheckoutThemeProvider.colors.text,
+        modifier = Modifier.size(Dimensions.IconSize.small),
     )
 }
 
@@ -244,6 +264,16 @@ private fun ListItemWithIconsPreview(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun ListItemSelectedPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        ListItem(title = "Title", onClick = {}, subtitle = "Subtitle", selected = true)
+    }
+}
+
 @Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
@@ -253,7 +283,7 @@ private fun ListItemListPreview(
     CheckoutThemePreviewWrapper(theme) {
         Column {
             repeat(5) {
-                ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
+                ListItem(title = "Title", onClick = {}, subtitle = "Subtitle", selected = it == 1)
             }
         }
     }
