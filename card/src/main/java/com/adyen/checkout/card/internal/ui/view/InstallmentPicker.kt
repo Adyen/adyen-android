@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +46,9 @@ internal fun InstallmentPicker(
         Spacer(Modifier.height(Dimensions.Spacing.Large))
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup(),
         ) {
             installmentOptions.forEach { option ->
                 ListItem(
