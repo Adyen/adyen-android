@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +25,7 @@ import com.adyen.checkout.core.common.internal.ui.ScreenHeader
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.ui.internal.element.SelectableListItem
+import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -45,13 +46,15 @@ internal fun InstallmentPicker(
         Spacer(Modifier.height(Dimensions.Spacing.Large))
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup(),
         ) {
             installmentOptions.forEach { option ->
-                SelectableListItem(
+                ListItem(
                     title = option.toDisplayText(),
                     subtitle = option.toSubtitleText(),
-                    isSelected = option == selectedInstallment,
+                    selected = option == selectedInstallment,
                     onClick = { onItemClick(option) },
                 )
             }

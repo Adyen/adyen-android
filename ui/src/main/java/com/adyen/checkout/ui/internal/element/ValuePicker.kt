@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -32,16 +33,18 @@ fun ValuePicker(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
-        modifier = modifier.heightIn(max = LocalWindowInfo.current.containerDpSize.height),
+        modifier = modifier
+            .heightIn(max = LocalWindowInfo.current.containerDpSize.height)
+            .selectableGroup(),
     ) {
         items(
             items = items,
             key = { it.id },
         ) { item ->
-            SelectableListItem(
+            ListItem(
                 title = item.title,
                 subtitle = item.subtitle,
-                isSelected = item.isSelected,
+                selected = item.isSelected,
                 onClick = { onItemClick(item) },
                 modifier = Modifier.animateItem(),
             )
