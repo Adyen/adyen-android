@@ -124,6 +124,17 @@ internal class AddressSpecTest {
     }
 
     @Test
+    fun `when any country is selected then its spec lists every address field`() {
+        AddressSpec.entries.forEach { spec ->
+            assertEquals(
+                AddressFormElementId.entries.toSet(),
+                spec.order.toSet(),
+                "$spec should list every address field",
+            )
+        }
+    }
+
+    @Test
     fun `when the country is CA then the house number is optional`() {
         // WHEN
         val spec = AddressSpec.fromCountryCode("CA")
