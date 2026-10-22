@@ -26,7 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
-@Suppress("LongParameterList")
+// The modifier styles the dialog's content inside the Surface, so callers can pad the content without padding the
+// Surface itself.
+@Suppress("LongParameterList", "ktlint:compose:modifier-not-used-at-root")
 @Composable
 fun GenericDialog(
     modifier: Modifier = Modifier,
@@ -63,7 +65,7 @@ fun GenericDialog(
 
 @Preview
 @Composable
-fun GenericDialogPreview() {
+private fun GenericDialogPreview() {
     ExampleTheme {
         GenericDialog(
             modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),

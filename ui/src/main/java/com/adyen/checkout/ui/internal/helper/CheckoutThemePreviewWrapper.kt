@@ -28,12 +28,13 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun CheckoutThemePreviewWrapper(
     theme: CheckoutTheme,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
-            modifier = Modifier
+            modifier = modifier
                 .background(theme.colors.background.toCompose())
                 .padding(Dimensions.Spacing.Large),
         ) {

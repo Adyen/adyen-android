@@ -226,19 +226,34 @@ private fun CardFormElementContent(
             Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
         }
 
-        is CardFormElement.Installments -> {
-            Subtitle(
-                text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
-                modifier = Modifier.padding(top = Dimensions.Spacing.Small),
-            )
-            ValuePickerField(
-                value = element.selectedInstallment?.toDisplayText() ?: "",
-                label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_PICKER_TITLE),
-                supportingText = element.selectedInstallment?.toSubtitleText(),
-                onClick = onInstallmentPickerClick,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        is CardFormElement.Installments -> InstallmentsField(
+            selectedInstallment = element.selectedInstallment,
+            onClick = onInstallmentPickerClick,
+        )
+    }
+}
+
+@Composable
+private fun InstallmentsField(
+    selectedInstallment: InstallmentModel?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
+    ) {
+        Subtitle(
+            text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
+            modifier = Modifier.padding(top = Dimensions.Spacing.Small),
+        )
+        ValuePickerField(
+            value = selectedInstallment?.toDisplayText() ?: "",
+            label = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_PICKER_TITLE),
+            supportingText = selectedInstallment?.toSubtitleText(),
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 

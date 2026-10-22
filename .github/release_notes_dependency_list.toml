@@ -90,6 +90,7 @@
 "io.gitlab.arturbosch.detekt" = ""
 "io.gitlab.arturbosch.detekt:detekt-formatting" = ""
 "io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin" = ""
+"io.nlopez.compose.rules:ktlint" = ""
 "junit:junit" = ""
 "org.bitbucket.b_c:jose4j" = ""
 "org.jetbrains.dokka" = ""

@@ -16,6 +16,7 @@ dokka = "2.2.0"
 hilt = "2.60.1"
 
 # Code quality
+compose-rules = "0.6.6"
 detekt = "1.23.8"
 kover = "0.9.11"
 ktlint = "1.8.0"
@@ -136,6 +137,7 @@ retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter
 wechat = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android-without-mta", version.ref = "wechat-pay" }
 detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 ktlint-cli = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "ktlint" }
+ktlint-compose-rules = { group = "io.nlopez.compose.rules", name = "ktlint", version.ref = "compose-rules" }
 twint = { group = "ch.twint.payment.sdk", name = "android-sdk", version.ref = "twint" }
 
 # Test libraries

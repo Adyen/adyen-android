@@ -30,8 +30,8 @@ import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
+import com.adyen.checkout.core.redirect.internal.ui.RedirectEventEffect
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
-import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -64,7 +64,7 @@ internal class AwaitComponent(
     @Composable
     override fun Content(modifier: Modifier) {
         // Await redirects do not return back to the app, so we do not need to handle new intents
-        redirectEvent(
+        RedirectEventEffect(
             redirectHandler = redirectHandler,
             viewEventFlow = redirectEventFlow,
             onError = ::emitError,
