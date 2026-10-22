@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.ui.view
 import android.app.Activity
 import android.content.pm.ApplicationInfo
 import android.view.View
-import android.view.ViewParent
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
@@ -55,29 +54,35 @@ private fun secureWindowsFor(view: View, activity: Activity?): List<SecureWindow
     // The activity window is secured even when the card is rendered in a dialog or popup. These hosts copy FLAG_SECURE
     // from the window they are hosted in whenever they recompose, if they use the default SecureFlagPolicy.Inherit.
     // Otherwise they clear the flag, and it only gets reapplied after the window manager has already received it.
-    val activitySecureWindow = activity?.window?.let { window ->
-        window.peekDecorView()?.let { decorView ->
-            secureWindows.getOrPut(decorView) { OwnedSecureWindow(decorView, window) }
-        }
-    }
-    val isActivityRoot = activitySecureWindow?.rootView === rootView
-    val hostedSecureWindow = if (isActivityRoot) null else hostedSecureWindowFor(view, rootView)
+    val activityWindow = activity?.window
+    val activityRootView = activityWindow?.peekDecorView()
+    val activitySecureWindow = activityRootView?.let { secureWindowFor(it, activityWindow) }
+    val isActivityRoot = rootView === activityRootView
+    val hostedSecureWindow = if (isActivityRoot) null else secureWindowFor(rootView, dialogWindowOf(view))
 
     return listOfNotNull(hostedSecureWindow, activitySecureWindow)
 }
 
-private fun hostedSecureWindowFor(view: View, rootView: View): SecureWindow = secureWindows.getOrPut(rootView) {
-    val dialogWindow = findDialogWindowProvider(view.parent)?.window?.takeIf { it.peekDecorView() === rootView }
-    if (dialogWindow != null) DialogSecureWindow(rootView, dialogWindow) else UnownedSecureWindow(rootView)
+private fun secureWindowFor(rootView: View, window: Window?) = secureWindows.getOrPut(rootView) {
+    SecureWindow(rootView, window)
 }
 
-private tailrec fun findDialogWindowProvider(parent: ViewParent?): DialogWindowProvider? = when (parent) {
-    null -> null
-    is DialogWindowProvider -> parent
-    else -> findDialogWindowProvider(parent.parent)
-}
+private fun dialogWindowOf(view: View): Window? = generateSequence(view.parent) { it.parent }
+    .filterIsInstance<DialogWindowProvider>()
+    .firstOrNull()
+    ?.window
+    ?.takeIf { it.peekDecorView() === view.rootView }
 
-private abstract class SecureWindow(val rootView: View) {
+/**
+ * Secures the window of [rootView], through [window] when there is one and through the layout params of [rootView]
+ * otherwise, such as for View-based dialogs. Hosts like Compose `Dialog` and `ModalBottomSheet` reset [FLAG_SECURE]
+ * from their own `SecureFlagPolicy` whenever they recompose, which also happens on their own right after being shown.
+ * The flag is therefore checked before every draw and reapplied when the host has cleared it.
+ */
+private class SecureWindow(
+    private val rootView: View,
+    private val window: Window?,
+) : ViewTreeObserver.OnPreDrawListener {
 
     private var refCount = 0
     private var wasSecure = false
@@ -85,84 +90,40 @@ private abstract class SecureWindow(val rootView: View) {
     fun acquire() {
         if (refCount++ > 0) return
         wasSecure = isSecure()
-        if (!wasSecure) setSecure(true)
+        if (!wasSecure) {
+            rootView.viewTreeObserver.addOnPreDrawListener(this)
+            setSecure(true)
+        }
     }
 
     fun release() {
         if (--refCount > 0) return
         secureWindows.remove(rootView)
-        if (!wasSecure) setSecure(false)
-    }
-
-    protected abstract fun isSecure(): Boolean
-
-    protected abstract fun setSecure(secure: Boolean)
-}
-
-private open class OwnedSecureWindow(
-    rootView: View,
-    private val window: Window,
-) : SecureWindow(rootView) {
-
-    override fun isSecure() = window.attributes.flags and FLAG_SECURE != 0
-
-    override fun setSecure(secure: Boolean) {
-        if (secure) window.addFlags(FLAG_SECURE) else window.clearFlags(FLAG_SECURE)
-    }
-}
-
-/**
- * A [Window] hosted by a Compose dialog, such as `Dialog` or `ModalBottomSheet`. These hosts reset [FLAG_SECURE] from
- * their own `SecureFlagPolicy` whenever they recompose, which also happens on their own right after being shown. The
- * flag is therefore checked before every draw and reapplied when the host has cleared it.
- */
-private class DialogSecureWindow(
-    rootView: View,
-    window: Window,
-) : OwnedSecureWindow(rootView, window), ViewTreeObserver.OnPreDrawListener {
-
-    override fun setSecure(secure: Boolean) {
-        if (secure) {
-            rootView.viewTreeObserver.addOnPreDrawListener(this)
-        } else {
+        if (!wasSecure) {
             rootView.viewTreeObserver.removeOnPreDrawListener(this)
+            setSecure(false)
         }
-        super.setSecure(secure)
     }
 
     override fun onPreDraw(): Boolean {
-        if (!isSecure()) super.setSecure(true)
+        if (!isSecure()) setSecure(true)
         return true
     }
-}
 
-private class UnownedSecureWindow(
-    rootView: View,
-) : SecureWindow(rootView), ViewTreeObserver.OnGlobalLayoutListener {
-
-    private val windowManager = rootView.context.getSystemService(WindowManager::class.java)
-
-    override fun isSecure(): Boolean {
-        val flags = (rootView.layoutParams as? WindowManager.LayoutParams)?.flags ?: 0
+    private fun isSecure(): Boolean {
+        val flags = window?.attributes?.flags ?: (rootView.layoutParams as? WindowManager.LayoutParams)?.flags ?: 0
         return flags and FLAG_SECURE != 0
     }
 
-    override fun setSecure(secure: Boolean) {
-        if (secure) {
-            rootView.viewTreeObserver.addOnGlobalLayoutListener(this)
+    private fun setSecure(secure: Boolean) {
+        if (window != null) {
+            if (secure) window.addFlags(FLAG_SECURE) else window.clearFlags(FLAG_SECURE)
         } else {
-            rootView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            val params = rootView.layoutParams as? WindowManager.LayoutParams ?: return
+            params.flags = if (secure) params.flags or FLAG_SECURE else params.flags and FLAG_SECURE.inv()
+            if (rootView.isAttachedToWindow) {
+                rootView.context.getSystemService(WindowManager::class.java).updateViewLayout(rootView, params)
+            }
         }
-        updateFlag(secure)
-    }
-
-    override fun onGlobalLayout() {
-        if (!isSecure()) updateFlag(true)
-    }
-
-    private fun updateFlag(secure: Boolean) {
-        val params = rootView.layoutParams as? WindowManager.LayoutParams ?: return
-        params.flags = if (secure) params.flags or FLAG_SECURE else params.flags and FLAG_SECURE.inv()
-        if (rootView.isAttachedToWindow) windowManager.updateViewLayout(rootView, params)
     }
 }
