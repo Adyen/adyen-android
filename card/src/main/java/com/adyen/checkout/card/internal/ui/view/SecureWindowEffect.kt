@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.DialogWindowProvider
-import java.util.WeakHashMap
 
 @Composable
 internal fun SecureWindowEffect() {
@@ -45,7 +44,9 @@ internal fun SecureWindowEffect(isEnabled: Boolean) {
     }
 }
 
-private val secureWindows = WeakHashMap<View, SecureWindow>()
+// A WeakHashMap would not help here, because every SecureWindow strongly references its root view, which is also the
+// key. Entries are removed in SecureWindow.release() instead, which DisposableEffect guarantees to call.
+private val secureWindows = mutableMapOf<View, SecureWindow>()
 
 private fun secureWindowFor(view: View, activity: Activity?): SecureWindow? {
     val rootView = view.rootView
