@@ -40,6 +40,7 @@ internal class AddressComponentStatePostProcessorTest {
             country = invalidPicker(),
             city = invalidField(),
             postalCode = invalidField(),
+            stateOrProvince = StateOrProvinceState.Unavailable,
         )
 
         // WHEN
