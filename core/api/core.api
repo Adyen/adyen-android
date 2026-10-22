@@ -554,6 +554,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVAL_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_OTHER_PAYMENT_METHODS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

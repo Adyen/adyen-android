@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.data
 
+import app.cash.turbine.test
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -44,7 +45,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     @Test
-    fun `when initialized with stored payment methods, then favorites are set`() = runTest {
+    fun `when initialized with stored payment methods, then stored payment methods are set`() = runTest {
         val storedPaymentMethods = listOf(storedCard("123"))
         val repository = createRepository(storedPaymentMethods = storedPaymentMethods)
 
@@ -52,7 +53,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     @Test
-    fun `when initialized with empty stored payment methods, then favorites are empty`() = runTest {
+    fun `when initialized with empty stored payment methods, then stored payment methods are empty`() = runTest {
         val repository = createRepository()
 
         assertEquals(emptyList<StoredCardPaymentMethod>(), repository.storedPaymentMethods.first())
@@ -77,7 +78,7 @@ internal class DefaultPaymentMethodRepositoryTest {
         }
 
     @Test
-    fun `when the removal succeeds, then success is returned and the item is removed from favorites`() = runTest {
+    fun `when the removal succeeds, then success is returned and the item is no longer stored`() = runTest {
         val repository = createRepository(
             storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
             remover = { Result.success(Unit) },
@@ -91,7 +92,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     @Test
-    fun `when the removal fails, then the failure is returned and favorites remain unchanged`() = runTest {
+    fun `when the removal fails, then the failure is returned and stored payment methods remain unchanged`() = runTest {
         val error = IOException("network down")
         val repository = createRepository(
             storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
@@ -126,7 +127,7 @@ internal class DefaultPaymentMethodRepositoryTest {
         }
 
     @Test
-    fun `when the remover throws, then the failure is returned and favorites remain unchanged`() = runTest {
+    fun `when the remover throws, then the failure is returned and stored payment methods remain unchanged`() = runTest {
         val error = IllegalStateException("unexpected")
         val repository = createRepository(
             storedPaymentMethods = listOf(storedCard("1")),
@@ -184,6 +185,56 @@ internal class DefaultPaymentMethodRepositoryTest {
         }
 
     @Test
+    fun `when a removal is running, then its id is being removed until it finishes`() = runTest {
+        val response = CompletableDeferred<Result<Unit>>()
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
+            remover = { response.await() },
+            coroutineScope = backgroundScope,
+        )
+
+        repository.storedPaymentMethodIdsBeingRemoved.test {
+            assertEquals(emptySet<String>(), awaitItem())
+
+            launch { repository.removeStoredPaymentMethod("1") }
+            assertEquals(setOf("1"), awaitItem())
+
+            response.complete(Result.failure(IOException("network down")))
+            assertEquals(emptySet<String>(), awaitItem())
+        }
+    }
+
+    @Test
+    fun `when several removals are running, then each id is being removed until its own removal finishes`() =
+        runTest {
+            val responses = mapOf(
+                "1" to CompletableDeferred<Result<Unit>>(),
+                "2" to CompletableDeferred<Result<Unit>>(),
+            )
+            val repository = createRepository(
+                storedPaymentMethods = listOf(storedCard("1"), storedCard("2"), storedCard("3")),
+                remover = { responses.getValue(it.id).await() },
+                coroutineScope = backgroundScope,
+            )
+
+            repository.storedPaymentMethodIdsBeingRemoved.test {
+                assertEquals(emptySet<String>(), awaitItem())
+
+                launch { repository.removeStoredPaymentMethod("1") }
+                assertEquals(setOf("1"), awaitItem())
+
+                launch { repository.removeStoredPaymentMethod("2") }
+                assertEquals(setOf("1", "2"), awaitItem())
+
+                responses.getValue("1").complete(Result.success(Unit))
+                assertEquals(setOf("2"), awaitItem())
+
+                responses.getValue("2").complete(Result.failure(IOException("network down")))
+                assertEquals(emptySet<String>(), awaitItem())
+            }
+        }
+
+    @Test
     fun `when a removal failed, then the same item can be removed again`() = runTest {
         var result = Result.failure<Unit>(IOException("network down"))
         var removerCalls = 0
@@ -203,6 +254,36 @@ internal class DefaultPaymentMethodRepositoryTest {
         assertTrue(retry.isSuccess)
         assertEquals(2, removerCalls)
         assertEquals(emptyList<StoredPaymentMethod>(), repository.storedPaymentMethods.first())
+    }
+
+    @Test
+    fun `when a removal fails, then its id is reported as a failed removal`() = runTest {
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1")),
+            remover = { Result.failure(IOException("network down")) },
+            coroutineScope = backgroundScope,
+        )
+
+        repository.storedPaymentMethodRemovalFailures.test {
+            launch { repository.removeStoredPaymentMethod("1") }
+
+            assertEquals("1", awaitItem())
+        }
+    }
+
+    @Test
+    fun `when a removal succeeds, then no failed removal is reported`() = runTest {
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1")),
+            remover = { Result.success(Unit) },
+            coroutineScope = backgroundScope,
+        )
+
+        repository.storedPaymentMethodRemovalFailures.test {
+            repository.removeStoredPaymentMethod("1")
+
+            expectNoEvents()
+        }
     }
 
     private fun createRepository(

@@ -24,6 +24,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.IOException
@@ -50,19 +52,110 @@ internal class StoredPaymentMethodManagementViewModelTest {
     }
 
     @Test
-    fun `when the removal fails, then the stored payment method stays listed`() = runTest {
+    fun `when the removal fails, then the stored payment method stays listed and the error is shown`() = runTest {
         val viewModel = createViewModel(
             remover = { Result.failure(IOException("network down")) },
             coroutineScope = backgroundScope,
         )
 
         viewModel.viewState.test {
-            assertEquals(listOf(FIRST_ID, SECOND_ID), expectMostRecentItem().cardIds())
+            assertFalse(expectMostRecentItem().showRemovalError)
 
             viewModel.removeStoredPaymentMethod(FIRST_ID)
             runCurrent()
 
-            expectNoEvents()
+            val viewState = expectMostRecentItem()
+            assertEquals(listOf(FIRST_ID, SECOND_ID), viewState.cardIds())
+            assertTrue(viewState.showRemovalError)
+        }
+    }
+
+    @Test
+    fun `when a removal is running, then only that item is shown as being removed`() = runTest {
+        val response = CompletableDeferred<Result<Unit>>()
+        val viewModel = createViewModel(
+            remover = { response.await() },
+            coroutineScope = backgroundScope,
+        )
+
+        viewModel.viewState.test {
+            assertEquals(emptyList<String>(), expectMostRecentItem().removingCardIds())
+
+            viewModel.removeStoredPaymentMethod(FIRST_ID)
+            runCurrent()
+            assertEquals(listOf(FIRST_ID), expectMostRecentItem().removingCardIds())
+
+            response.complete(Result.success(Unit))
+            runCurrent()
+            val viewState = expectMostRecentItem()
+            assertEquals(listOf(SECOND_ID), viewState.cardIds())
+            assertEquals(emptyList<String>(), viewState.removingCardIds())
+        }
+    }
+
+    @Test
+    fun `when a removal is running from an earlier screen, then a new screen shows it as being removed`() = runTest {
+        val response = CompletableDeferred<Result<Unit>>()
+        val repository = createRepository(
+            remover = { response.await() },
+            coroutineScope = backgroundScope,
+        )
+        createViewModel(repository).removeStoredPaymentMethod(FIRST_ID)
+        runCurrent()
+
+        val reopened = createViewModel(repository)
+
+        reopened.viewState.test {
+            assertEquals(listOf(FIRST_ID), expectMostRecentItem().removingCardIds())
+        }
+    }
+
+    @Test
+    fun `when a removal from an earlier screen fails, then a new screen shows the error`() = runTest {
+        val response = CompletableDeferred<Result<Unit>>()
+        val repository = createRepository(
+            remover = { response.await() },
+            coroutineScope = backgroundScope,
+        )
+        val earlier = createViewModel(repository)
+        earlier.removeStoredPaymentMethod(FIRST_ID)
+        runCurrent()
+        // Stands in for the shopper leaving the screen, which clears the view model of its nav entry.
+        earlier.viewModelScope.cancel()
+
+        val reopened = createViewModel(repository)
+
+        reopened.viewState.test {
+            assertFalse(expectMostRecentItem().showRemovalError)
+
+            response.complete(Result.failure(IOException("network down")))
+            runCurrent()
+
+            val viewState = expectMostRecentItem()
+            assertTrue(viewState.showRemovalError)
+            assertEquals(emptyList<String>(), viewState.removingCardIds())
+        }
+    }
+
+    @Test
+    fun `when a new removal starts after a failure, then the error is hidden`() = runTest {
+        val secondResponse = CompletableDeferred<Result<Unit>>()
+        val viewModel = createViewModel(
+            remover = {
+                if (it.id == FIRST_ID) Result.failure(IOException("network down")) else secondResponse.await()
+            },
+            coroutineScope = backgroundScope,
+        )
+
+        viewModel.viewState.test {
+            viewModel.removeStoredPaymentMethod(FIRST_ID)
+            runCurrent()
+            assertTrue(expectMostRecentItem().showRemovalError)
+
+            viewModel.removeStoredPaymentMethod(SECOND_ID)
+            runCurrent()
+
+            assertFalse(expectMostRecentItem().showRemovalError)
         }
     }
 
@@ -107,6 +200,8 @@ internal class StoredPaymentMethodManagementViewModelTest {
     )
 
     private fun StoredPaymentMethodManagementViewState.cardIds() = cards.map { it.id }
+
+    private fun StoredPaymentMethodManagementViewState.removingCardIds() = cards.filter { it.isRemoving }.map { it.id }
 
     private fun storedCard(id: String) = StoredCardPaymentMethod(
         type = PaymentMethodTypes.SCHEME,
