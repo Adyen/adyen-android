@@ -107,7 +107,7 @@ internal class AddressComponentStateValidatorTest {
     @Test
     fun `when the country list failed to load but a country is selected then the country is valid`() {
         // GIVEN
-        val state = createState(NL_ADDRESS).copy(countries = emptyList(), isLoadingCountries = false)
+        val state = createState(NL_ADDRESS).copy(countries = emptyList())
 
         // WHEN
         val result = validator.validate(state)

@@ -10,8 +10,6 @@ package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.data.model.AddressItem
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
-import com.adyen.checkout.address.internal.ui.model.AddressField
-import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.address.internal.ui.model.toAddressRegions
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -43,7 +41,6 @@ internal class AddressComponentStateReducer(
             // The loaded countries do not depend on the address, so they survive a reset.
             is AddressIntent.Reset -> componentStateFactory.createState(intent.address).copy(
                 countries = state.countries,
-                isLoadingCountries = state.isLoadingCountries,
             )
 
             is AddressIntent.CountriesLoaded -> state.onCountriesLoaded(intent.result)
@@ -62,20 +59,22 @@ internal class AddressComponentStateReducer(
      * requirement policy from the new spec.
      */
     private fun AddressComponentState.selectCountry(countryCode: String?): AddressComponentState {
-        val spec = AddressSpec.fromCountryCode(countryCode)
+        val newSpec = AddressSpec.fromCountryCode(countryCode)
         return copy(
-            spec = spec,
             country = country.copy(selected = countryCode),
-            street = street.withRequirementPolicyOf(spec, AddressField.STREET),
-            houseNumberOrName = houseNumberOrName.withRequirementPolicyOf(spec, AddressField.HOUSE_NUMBER_OR_NAME),
-            postalCode = postalCode.withRequirementPolicyOf(spec, AddressField.POSTAL_CODE),
-            city = city.withRequirementPolicyOf(spec, AddressField.CITY),
+            street = street.withRequirementPolicyOf(newSpec, AddressFormElementId.STREET),
+            houseNumberOrName = houseNumberOrName.withRequirementPolicyOf(
+                newSpec,
+                AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+            ),
+            postalCode = postalCode.withRequirementPolicyOf(newSpec, AddressFormElementId.POSTAL_CODE),
+            city = city.withRequirementPolicyOf(newSpec, AddressFormElementId.CITY),
             stateOrProvince = StateOrProvinceState.forCountry(countryCode, pendingCode = null),
         )
     }
 
-    private fun TextInputComponentState.withRequirementPolicyOf(spec: AddressSpec, field: AddressField) =
-        copy(requirementPolicy = spec.getFieldSpec(field).requirementPolicy)
+    private fun TextInputComponentState.withRequirementPolicyOf(spec: AddressSpec, id: AddressFormElementId) =
+        copy(requirementPolicy = spec.getFieldSpec(id).requirementPolicy)
 
     /**
      * Keeps the selected country when the countries fail to load, so a prefilled or default country still works
@@ -86,7 +85,7 @@ internal class AddressComponentStateReducer(
         val countries = result.getOrNull().orEmpty().toAddressRegions().filter { region ->
             supportedCountryCodes.isEmpty() || region.code in supportedCountryCodes
         }
-        val loadedState = copy(countries = countries, isLoadingCountries = false)
+        val loadedState = copy(countries = countries)
         val selected = country.selected
         val isSelectionUnlisted = selected != null && countries.isNotEmpty() && countries.none { it.code == selected }
         return if (isSelectionUnlisted) loadedState.selectCountry(null) else loadedState

@@ -9,7 +9,6 @@
 package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
-import com.adyen.checkout.address.internal.ui.model.AddressSpec
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -31,23 +30,24 @@ internal class AddressComponentStatePostProcessorTest {
     private val postProcessor = AddressComponentStatePostProcessor()
 
     /**
-     * The country picker comes first in the form but cannot take focus, so the request skips it. In the US layout the
-     * city comes before the postal code.
+     * The country picker comes first in the form but cannot take focus, so the request skips it. Without a country the
+     * default layout applies, where the postal code comes before the city.
      */
     @Test
-    fun `when the initial state is processed then focus goes to the first invalid text input`() {
+    fun `when the initial state has no country then focus goes to the first invalid text input of the default spec`() {
         // GIVEN
         val state = createState().copy(
             country = invalidPicker(),
             city = invalidField(),
             postalCode = invalidField(),
+            stateOrProvince = StateOrProvinceState.Unavailable,
         )
 
         // WHEN
         val result = postProcessor.processInitialState(state)
 
         // THEN
-        assertEquals(FocusRequest(AddressFormElementId.CITY), result.focusRequest)
+        assertEquals(FocusRequest(AddressFormElementId.POSTAL_CODE), result.focusRequest)
     }
 
     @Test
@@ -157,9 +157,7 @@ internal class AddressComponentStatePostProcessorTest {
 
     /** A valid US form: every element is filled, and the states loaded with one selected. */
     private fun createState() = AddressComponentState(
-        spec = AddressSpec.US,
         countries = emptyList(),
-        isLoadingCountries = false,
         country = PickerInputComponentState(selected = "US"),
         street = TextInputComponentState(text = "Main Street 1"),
         houseNumberOrName = TextInputComponentState(requirementPolicy = RequirementPolicy.Optional),

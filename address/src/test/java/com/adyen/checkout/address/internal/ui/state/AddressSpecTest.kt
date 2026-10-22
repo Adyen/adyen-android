@@ -6,7 +6,7 @@
  * Created by ararat on 6/10/2026.
  */
 
-package com.adyen.checkout.address.internal.ui.model
+package com.adyen.checkout.address.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -19,65 +19,69 @@ import org.junit.jupiter.params.provider.ValueSource
 internal class AddressSpecTest {
 
     @Test
-    fun `when the country is BR then the fields are ordered street house number postal code city state`() {
+    fun `when the country is BR then the fields are ordered country street house number postal code city state`() {
         // WHEN
         val spec = AddressSpec.fromCountryCode("BR")
 
         // THEN
         val expected = listOf(
-            AddressField.STREET,
-            AddressField.HOUSE_NUMBER_OR_NAME,
-            AddressField.POSTAL_CODE,
-            AddressField.CITY,
-            AddressField.STATE_OR_PROVINCE,
+            AddressFormElementId.COUNTRY,
+            AddressFormElementId.STREET,
+            AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+            AddressFormElementId.POSTAL_CODE,
+            AddressFormElementId.CITY,
+            AddressFormElementId.STATE_OR_PROVINCE,
         )
         assertEquals(expected, spec.order)
     }
 
     @Test
-    fun `when the country is CA then the fields are ordered street house number city postal code state`() {
+    fun `when the country is CA then the fields are ordered country street house number city postal code state`() {
         // WHEN
         val spec = AddressSpec.fromCountryCode("CA")
 
         // THEN
         val expected = listOf(
-            AddressField.STREET,
-            AddressField.HOUSE_NUMBER_OR_NAME,
-            AddressField.CITY,
-            AddressField.POSTAL_CODE,
-            AddressField.STATE_OR_PROVINCE,
+            AddressFormElementId.COUNTRY,
+            AddressFormElementId.STREET,
+            AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+            AddressFormElementId.CITY,
+            AddressFormElementId.POSTAL_CODE,
+            AddressFormElementId.STATE_OR_PROVINCE,
         )
         assertEquals(expected, spec.order)
     }
 
     @Test
-    fun `when the country is GB then the fields are ordered house number street city postal code state`() {
+    fun `when the country is GB then the fields are ordered country house number street city postal code state`() {
         // WHEN
         val spec = AddressSpec.fromCountryCode("GB")
 
         // THEN
         val expected = listOf(
-            AddressField.HOUSE_NUMBER_OR_NAME,
-            AddressField.STREET,
-            AddressField.CITY,
-            AddressField.POSTAL_CODE,
-            AddressField.STATE_OR_PROVINCE,
+            AddressFormElementId.COUNTRY,
+            AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+            AddressFormElementId.STREET,
+            AddressFormElementId.CITY,
+            AddressFormElementId.POSTAL_CODE,
+            AddressFormElementId.STATE_OR_PROVINCE,
         )
         assertEquals(expected, spec.order)
     }
 
     @Test
-    fun `when the country is US then the fields are ordered street house number city state postal code`() {
+    fun `when the country is US then the fields are ordered country street house number city state postal code`() {
         // WHEN
         val spec = AddressSpec.fromCountryCode("US")
 
         // THEN
         val expected = listOf(
-            AddressField.STREET,
-            AddressField.HOUSE_NUMBER_OR_NAME,
-            AddressField.CITY,
-            AddressField.STATE_OR_PROVINCE,
-            AddressField.POSTAL_CODE,
+            AddressFormElementId.COUNTRY,
+            AddressFormElementId.STREET,
+            AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+            AddressFormElementId.CITY,
+            AddressFormElementId.STATE_OR_PROVINCE,
+            AddressFormElementId.POSTAL_CODE,
         )
         assertEquals(expected, spec.order)
     }
@@ -92,13 +96,42 @@ internal class AddressSpecTest {
         // THEN
         assertEquals(AddressSpec.DEFAULT, spec)
         val expectedOrder = listOf(
-            AddressField.STREET,
-            AddressField.HOUSE_NUMBER_OR_NAME,
-            AddressField.POSTAL_CODE,
-            AddressField.CITY,
-            AddressField.STATE_OR_PROVINCE,
+            AddressFormElementId.COUNTRY,
+            AddressFormElementId.STREET,
+            AddressFormElementId.HOUSE_NUMBER_OR_NAME,
+            AddressFormElementId.POSTAL_CODE,
+            AddressFormElementId.CITY,
+            AddressFormElementId.STATE_OR_PROVINCE,
         )
         assertEquals(expectedOrder, spec.order)
+    }
+
+    @Test
+    fun `when any country is selected then the country comes first and is required`() {
+        AddressSpec.entries.forEach { spec ->
+            assertEquals(AddressFormElementId.COUNTRY, spec.order.first(), "$spec should start with the country")
+            assertEquals(
+                CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL,
+                spec.getFieldSpec(AddressFormElementId.COUNTRY).label,
+                "$spec should label the country",
+            )
+            assertEquals(
+                RequirementPolicy.Required,
+                spec.getFieldSpec(AddressFormElementId.COUNTRY).requirementPolicy,
+                "$spec should require the country",
+            )
+        }
+    }
+
+    @Test
+    fun `when any country is selected then its spec lists every address field`() {
+        AddressSpec.entries.forEach { spec ->
+            assertEquals(
+                AddressFormElementId.entries.toSet(),
+                spec.order.toSet(),
+                "$spec should list every address field",
+            )
+        }
     }
 
     @Test
@@ -107,7 +140,10 @@ internal class AddressSpecTest {
         val spec = AddressSpec.fromCountryCode("CA")
 
         // THEN
-        assertEquals(RequirementPolicy.Optional, spec.getFieldSpec(AddressField.HOUSE_NUMBER_OR_NAME).requirementPolicy)
+        assertEquals(
+            RequirementPolicy.Optional,
+            spec.getFieldSpec(AddressFormElementId.HOUSE_NUMBER_OR_NAME).requirementPolicy,
+        )
     }
 
     @Test
@@ -116,7 +152,10 @@ internal class AddressSpecTest {
         val spec = AddressSpec.fromCountryCode("US")
 
         // THEN
-        assertEquals(RequirementPolicy.Optional, spec.getFieldSpec(AddressField.HOUSE_NUMBER_OR_NAME).requirementPolicy)
+        assertEquals(
+            RequirementPolicy.Optional,
+            spec.getFieldSpec(AddressFormElementId.HOUSE_NUMBER_OR_NAME).requirementPolicy,
+        )
     }
 
     @Test
@@ -125,11 +164,11 @@ internal class AddressSpecTest {
         val spec = AddressSpec.fromCountryCode("BR")
 
         // THEN
-        AddressField.entries.forEach { field ->
+        AddressFormElementId.entries.forEach { id ->
             assertEquals(
                 RequirementPolicy.Required,
-                spec.getFieldSpec(field).requirementPolicy,
-                "$field should be required",
+                spec.getFieldSpec(id).requirementPolicy,
+                "$id should be required",
             )
         }
     }
@@ -142,7 +181,7 @@ internal class AddressSpecTest {
         // THEN
         assertEquals(
             CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL_ZIP_CODE,
-            spec.getFieldSpec(AddressField.POSTAL_CODE).label,
+            spec.getFieldSpec(AddressFormElementId.POSTAL_CODE).label,
         )
     }
 
@@ -154,11 +193,11 @@ internal class AddressSpecTest {
         // THEN
         assertEquals(
             CheckoutLocalizationKey.ADDRESS_STREET_LABEL_ADDRESS,
-            spec.getFieldSpec(AddressField.STREET).label,
+            spec.getFieldSpec(AddressFormElementId.STREET).label,
         )
         assertEquals(
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE,
-            spec.getFieldSpec(AddressField.HOUSE_NUMBER_OR_NAME).label,
+            spec.getFieldSpec(AddressFormElementId.HOUSE_NUMBER_OR_NAME).label,
         )
     }
 
@@ -170,7 +209,7 @@ internal class AddressSpecTest {
         // THEN
         assertEquals(
             CheckoutLocalizationKey.ADDRESS_CITY_LABEL_CITY_TOWN,
-            spec.getFieldSpec(AddressField.CITY).label,
+            spec.getFieldSpec(AddressFormElementId.CITY).label,
         )
     }
 
@@ -182,7 +221,7 @@ internal class AddressSpecTest {
         // THEN
         assertEquals(
             CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
-            spec.getFieldSpec(AddressField.STATE_OR_PROVINCE).label,
+            spec.getFieldSpec(AddressFormElementId.STATE_OR_PROVINCE).label,
         )
     }
 
@@ -194,7 +233,7 @@ internal class AddressSpecTest {
         // THEN
         assertEquals(
             CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_PROVINCE_OR_TERRITORY,
-            spec.getFieldSpec(AddressField.STATE_OR_PROVINCE).label,
+            spec.getFieldSpec(AddressFormElementId.STATE_OR_PROVINCE).label,
         )
     }
 }

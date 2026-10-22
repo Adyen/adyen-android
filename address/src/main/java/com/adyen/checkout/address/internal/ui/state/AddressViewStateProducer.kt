@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.address.internal.ui.state
 
-import com.adyen.checkout.address.internal.ui.model.AddressField
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
@@ -32,13 +31,13 @@ internal class AddressViewStateProducer(
         return AddressViewState(
             elements = state.form.elements.mapNotNull { state.toElement(it.id, selectedCountry) },
             countryPickerViewState = PickerViewState(
-                title = CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL,
+                title = state.getLabel(AddressFormElementId.COUNTRY),
                 regions = state.countries,
                 selected = selectedCountry,
             ),
             statePickerViewState = state.stateOrProvince.getOptions()?.let { options ->
                 PickerViewState(
-                    title = state.getLabel(AddressField.STATE_OR_PROVINCE),
+                    title = state.getLabel(AddressFormElementId.STATE_OR_PROVINCE),
                     regions = options.regions,
                     selected = options.getSelectedRegion(),
                 )
@@ -52,29 +51,29 @@ internal class AddressViewStateProducer(
         selectedCountry: AddressRegion?,
     ): AddressFormElement? = when (id) {
         AddressFormElementId.COUNTRY -> AddressFormElement.Country(
-            label = CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL,
+            label = getLabel(id),
             selected = selectedCountry,
             errorMessage = country.getVisibleErrorMessage(),
         )
 
         AddressFormElementId.STREET -> AddressFormElement.Street(
-            label = getLabel(AddressField.STREET),
+            label = getLabel(id),
             textInputViewState = street.toViewState(form, focusRequest, id),
         )
 
         AddressFormElementId.HOUSE_NUMBER_OR_NAME -> AddressFormElement.HouseNumberOrName(
-            label = getLabel(AddressField.HOUSE_NUMBER_OR_NAME),
+            label = getLabel(id),
             textInputViewState = houseNumberOrName.toViewState(form, focusRequest, id),
         )
 
         AddressFormElementId.POSTAL_CODE -> AddressFormElement.PostalCode(
-            label = getLabel(AddressField.POSTAL_CODE),
+            label = getLabel(id),
             maxLength = PostalCodeProperties.getMaxLength(country.selected),
             textInputViewState = postalCode.toViewState(form, focusRequest, id),
         )
 
         AddressFormElementId.CITY -> AddressFormElement.City(
-            label = getLabel(AddressField.CITY),
+            label = getLabel(id),
             textInputViewState = city.toViewState(form, focusRequest, id),
         )
 
@@ -82,7 +81,7 @@ internal class AddressViewStateProducer(
         //  with iOS and Web, this becomes an exhaustive when with a row per state. Tracked in COSDK-1635.
         AddressFormElementId.STATE_OR_PROVINCE -> stateOrProvince.getOptions()?.let { options ->
             AddressFormElement.StateOrProvince(
-                label = getLabel(AddressField.STATE_OR_PROVINCE),
+                label = getLabel(id),
                 selected = options.getSelectedRegion(),
                 errorMessage = options.picker.getVisibleErrorMessage(),
             )
@@ -96,7 +95,7 @@ internal class AddressViewStateProducer(
         StateOrProvinceState.Unavailable -> null
     }
 
-    private fun AddressComponentState.getLabel(field: AddressField) = spec.getFieldSpec(field).label
+    private fun AddressComponentState.getLabel(id: AddressFormElementId) = spec.getFieldSpec(id).label
 
     /** The loaded name of the selected country or, while the countries are not loaded, the platform's name for it. */
     private fun AddressComponentState.getSelectedCountry(): AddressRegion? = country.selected?.let { code ->
