@@ -22,7 +22,7 @@ internal class AddressComponentStateFactory(
     /**
      * Creates the form for [address]. Without an address, the country of the shopper locale is preselected. Either
      * country is only selected when the shopper can pick it. The countries are not loaded yet, so the selection is kept
-     * as a code.
+     * as a code. So is the state of [address], for a country that has states.
      */
     fun createState(address: AddressModel?): AddressComponentState {
         // TODO - Address: The default country is internal only. Align it with the other platforms if the team asks for
@@ -39,7 +39,8 @@ internal class AddressComponentStateFactory(
             ),
             postalCode = spec.createTextInput(AddressFormElementId.POSTAL_CODE, address?.postalCode),
             city = spec.createTextInput(AddressFormElementId.CITY, address?.city),
-            stateOrProvince = StateOrProvinceState.forCountry(countryCode, pendingCode = address?.stateOrProvince),
+            states = emptyList(),
+            stateOrProvince = PickerInputComponentState(selected = address?.stateOrProvince?.takeIf { spec.hasStates }),
         )
     }
 

@@ -40,7 +40,8 @@ internal class AddressComponentStatePostProcessorTest {
             country = invalidPicker(),
             city = invalidField(),
             postalCode = invalidField(),
-            stateOrProvince = StateOrProvinceState.Unavailable,
+            states = emptyList(),
+            stateOrProvince = PickerInputComponentState(),
         )
 
         // WHEN
@@ -89,7 +90,7 @@ internal class AddressComponentStatePostProcessorTest {
             street = invalidField(),
             houseNumberOrName = invalidField(),
             city = invalidField(),
-            stateOrProvince = StateOrProvinceState.Options(regions = STATES, picker = invalidPicker()),
+            stateOrProvince = invalidPicker(),
             postalCode = invalidField(),
         )
 
@@ -97,12 +98,11 @@ internal class AddressComponentStatePostProcessorTest {
         val result = process(state, AddressIntent.HighlightValidationErrors)
 
         // THEN
-        val options = result.stateOrProvince as StateOrProvinceState.Options
         assertTrue(result.country.error?.isVisible == true)
         assertTrue(result.street.isErrorVisible)
         assertTrue(result.houseNumberOrName.isErrorVisible)
         assertTrue(result.city.isErrorVisible)
-        assertTrue(options.picker.error?.isVisible == true)
+        assertTrue(result.stateOrProvince.error?.isVisible == true)
         assertTrue(result.postalCode.isErrorVisible)
         assertEquals(FocusRequest(AddressFormElementId.STREET, showErrorIfPresent = true), result.focusRequest)
     }
@@ -163,10 +163,8 @@ internal class AddressComponentStatePostProcessorTest {
         houseNumberOrName = TextInputComponentState(requirementPolicy = RequirementPolicy.Optional),
         postalCode = TextInputComponentState(text = "94107"),
         city = TextInputComponentState(text = "San Francisco"),
-        stateOrProvince = StateOrProvinceState.Options(
-            regions = STATES,
-            picker = PickerInputComponentState(selected = "CA"),
-        ),
+        states = STATES,
+        stateOrProvince = PickerInputComponentState(selected = "CA"),
     )
 
     companion object {

@@ -76,32 +76,33 @@ internal class AddressComponentStateValidatorTest {
         val result = validator.validate(state)
 
         // THEN
-        val options = result.stateOrProvince as StateOrProvinceState.Options
-        assertEquals(CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR, options.picker.error?.message)
+        assertEquals(CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR, result.stateOrProvince.error?.message)
     }
 
     @Test
-    fun `when the state is unavailable then it does not affect the form validity`() {
+    fun `when the country has no states then the form can be valid`() {
         // GIVEN
-        val state = createState(NL_ADDRESS).copy(stateOrProvince = StateOrProvinceState.Unavailable)
+        val state = createState(NL_ADDRESS)
 
         // WHEN
-        val isValid = validator.isValid(validator.validate(state))
+        val result = validator.validate(state)
 
         // THEN
-        assertTrue(isValid)
+        assertNull(result.stateOrProvince.error)
+        assertTrue(validator.isValid(result))
     }
 
     @Test
-    fun `when the states are loading then they do not affect the form validity`() {
+    fun `when the states are loading then the state has an error`() {
         // GIVEN
-        val state = createState(NL_ADDRESS).copy(stateOrProvince = StateOrProvinceState.Loading(pendingCode = null))
+        val state = createState(US_ADDRESS)
 
         // WHEN
-        val isValid = validator.isValid(validator.validate(state))
+        val result = validator.validate(state)
 
         // THEN
-        assertTrue(isValid)
+        assertEquals(CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR, result.stateOrProvince.error?.message)
+        assertFalse(validator.isValid(result))
     }
 
     @Test
@@ -114,6 +115,18 @@ internal class AddressComponentStateValidatorTest {
 
         // THEN
         assertNull(result.country.error)
+    }
+
+    @Test
+    fun `when the states are not loaded but a state is selected then the state is valid`() {
+        // GIVEN
+        val state = createState(US_ADDRESS.copy(stateOrProvince = "CA"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertNull(result.stateOrProvince.error)
     }
 
     @Test
@@ -158,19 +171,16 @@ internal class AddressComponentStateValidatorTest {
         val visibleError = InputError(CheckoutLocalizationKey.ADDRESS_STREET_ERROR, isVisible = true)
         val state = createState(US_ADDRESS).copy(
             street = TextInputComponentState(error = visibleError),
-            stateOrProvince = StateOrProvinceState.Options(
-                regions = STATES,
-                picker = PickerInputComponentState(error = visibleError),
-            ),
+            states = STATES,
+            stateOrProvince = PickerInputComponentState(error = visibleError),
         )
 
         // WHEN
         val result = validator.validate(state)
 
         // THEN
-        val options = result.stateOrProvince as StateOrProvinceState.Options
         assertTrue(result.street.error?.isVisible == true)
-        assertTrue(options.picker.error?.isVisible == true)
+        assertTrue(result.stateOrProvince.error?.isVisible == true)
     }
 
     @ParameterizedTest
@@ -332,10 +342,8 @@ internal class AddressComponentStateValidatorTest {
     private fun createState(address: AddressModel) = AddressComponentStateFactory(PARAMS).createState(address)
 
     private fun AddressComponentState.withStateOptions(selected: String?) = copy(
-        stateOrProvince = StateOrProvinceState.Options(
-            regions = STATES,
-            picker = PickerInputComponentState(selected = selected),
-        ),
+        states = STATES,
+        stateOrProvince = PickerInputComponentState(selected = selected),
     )
 
     companion object {

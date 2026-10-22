@@ -93,12 +93,7 @@ internal class AddressViewStateProducerTest {
     fun `when a picker has a visible error then its element carries the message`() {
         // GIVEN
         val visibleError = InputError(CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR, isVisible = true)
-        val state = createState().copy(
-            stateOrProvince = StateOrProvinceState.Options(
-                regions = US_STATES,
-                picker = PickerInputComponentState(error = visibleError),
-            ),
-        )
+        val state = createState().copy(stateOrProvince = PickerInputComponentState(error = visibleError))
 
         // WHEN
         val viewState = producer.produce(state)
@@ -200,20 +195,51 @@ internal class AddressViewStateProducerTest {
         assertEquals(expected, viewState.statePickerViewState)
     }
 
-    @ParameterizedTest
-    @MethodSource("statesWithoutOptionsSource")
-    fun `when the states have no options then there is no state element or state picker`(
-        stateOrProvince: StateOrProvinceState,
-    ) {
+    @Test
+    fun `when the states are loading then an empty state element is produced`() {
         // GIVEN
-        val state = createState().copy(stateOrProvince = stateOrProvince)
+        val state = createState().copy(states = emptyList())
 
         // WHEN
         val viewState = producer.produce(state)
 
         // THEN
-        assertTrue(viewState.elements.none { it is AddressFormElement.StateOrProvince })
-        assertNull(viewState.statePickerViewState)
+        val expected = AddressFormElement.StateOrProvince(
+            label = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+            selected = null,
+            errorMessage = null,
+        )
+        assertEquals(expected, viewState.elements.filterIsInstance<AddressFormElement.StateOrProvince>().single())
+    }
+
+    @Test
+    fun `when the states are not loaded then the selected state falls back to its code`() {
+        // GIVEN
+        val state = createState(selectedState = "CA").copy(states = emptyList())
+
+        // WHEN
+        val viewState = producer.produce(state)
+
+        // THEN
+        val stateOrProvince = viewState.elements.filterIsInstance<AddressFormElement.StateOrProvince>().single()
+        assertEquals(AddressRegion(code = "CA", name = "CA"), stateOrProvince.selected)
+    }
+
+    @Test
+    fun `when the states are loading then the state picker is empty`() {
+        // GIVEN
+        val state = createState().copy(states = emptyList())
+
+        // WHEN
+        val viewState = producer.produce(state)
+
+        // THEN
+        val expected = PickerViewState(
+            title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+            regions = emptyList(),
+            selected = null,
+        )
+        assertEquals(expected, viewState.statePickerViewState)
     }
 
     @Test
@@ -241,10 +267,8 @@ internal class AddressViewStateProducerTest {
             ),
             postalCode = TextInputComponentState(),
             city = TextInputComponentState(),
-            stateOrProvince = StateOrProvinceState.Options(
-                regions = US_STATES,
-                picker = PickerInputComponentState(selected = selectedState),
-            ),
+            states = if (spec.hasStates) US_STATES else emptyList(),
+            stateOrProvince = PickerInputComponentState(selected = selectedState),
         )
     }
 
@@ -313,12 +337,6 @@ internal class AddressViewStateProducerTest {
                     AddressFormElementId.CITY,
                 ),
             ),
-        )
-
-        @JvmStatic
-        fun statesWithoutOptionsSource() = listOf(
-            arguments(StateOrProvinceState.Loading(pendingCode = null)),
-            arguments(StateOrProvinceState.Unavailable),
         )
     }
 }

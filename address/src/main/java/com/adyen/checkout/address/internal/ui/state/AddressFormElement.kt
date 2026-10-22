@@ -66,9 +66,10 @@ internal sealed interface AddressFormElement {
     }
 
     /**
-     * The row that shows the picked state and opens the state picker. It only exists while the selected country's
-     * states are loaded.
+     * The row that shows the picked state and opens the state picker. It only exists for a country with states.
      *
+     * @param selected The selected state, named from the loaded states or, while they are not loaded, by its code. Null
+     * when no state is selected.
      * @param errorMessage The error to show, only once it is visible.
      */
     data class StateOrProvince(

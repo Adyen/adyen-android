@@ -21,7 +21,7 @@ internal class AddressComponentStateTest {
     @Test
     fun `when the country is US then the form elements follow the US order`() {
         // GIVEN
-        val state = createState(stateOrProvince = STATE_OPTIONS)
+        val state = createState(countryCode = "US", states = US_STATES)
 
         // WHEN
         val ids = state.form.elements.map { it.id }
@@ -39,33 +39,9 @@ internal class AddressComponentStateTest {
     }
 
     @Test
-    fun `when the states are loading then the form has no state element`() {
+    fun `when the states are loading then the state element is in the form`() {
         // GIVEN
-        val state = createState(stateOrProvince = StateOrProvinceState.Loading(pendingCode = "CA"))
-
-        // WHEN
-        val ids = state.form.elements.map { it.id }
-
-        // THEN
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE))
-    }
-
-    @Test
-    fun `when the state dataset is empty then the form has no state element`() {
-        // GIVEN
-        val state = createState(stateOrProvince = StateOrProvinceState.Unavailable)
-
-        // WHEN
-        val ids = state.form.elements.map { it.id }
-
-        // THEN
-        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE))
-    }
-
-    @Test
-    fun `when the state dataset has options then the form has a state element`() {
-        // GIVEN
-        val state = createState(stateOrProvince = STATE_OPTIONS)
+        val state = createState(countryCode = "US", states = emptyList())
 
         // WHEN
         val ids = state.form.elements.map { it.id }
@@ -74,20 +50,30 @@ internal class AddressComponentStateTest {
         assertTrue(ids.contains(AddressFormElementId.STATE_OR_PROVINCE))
     }
 
-    private fun createState(stateOrProvince: StateOrProvinceState) = AddressComponentState(
+    @Test
+    fun `when the country has no states then there is no state element`() {
+        // GIVEN
+        val state = createState(countryCode = "NL", states = emptyList())
+
+        // WHEN
+        val ids = state.form.elements.map { it.id }
+
+        // THEN
+        assertFalse(ids.contains(AddressFormElementId.STATE_OR_PROVINCE))
+    }
+
+    private fun createState(countryCode: String, states: List<AddressRegion>) = AddressComponentState(
         countries = emptyList(),
-        country = PickerInputComponentState(selected = "US"),
+        country = PickerInputComponentState(selected = countryCode),
         street = TextInputComponentState(),
         houseNumberOrName = TextInputComponentState(requirementPolicy = RequirementPolicy.Optional),
         postalCode = TextInputComponentState(),
         city = TextInputComponentState(),
-        stateOrProvince = stateOrProvince,
+        states = states,
+        stateOrProvince = PickerInputComponentState(),
     )
 
     companion object {
-        private val STATE_OPTIONS = StateOrProvinceState.Options(
-            regions = listOf(AddressRegion(code = "CA", name = "California")),
-            picker = PickerInputComponentState(),
-        )
+        private val US_STATES = listOf(AddressRegion(code = "CA", name = "California"))
     }
 }
