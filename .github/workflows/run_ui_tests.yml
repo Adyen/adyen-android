@@ -95,8 +95,14 @@ jobs:
           MAX_LISTED = 20
 
           failed = set()
+          unreadable = 0
           for path in glob.glob('**/build/outputs/androidTest-results/connected/**/*.xml', recursive=True):
-              for case in ET.parse(path).iter('testcase'):
+              try:
+                  cases = ET.parse(path).iter('testcase')
+              except ET.ParseError:
+                  unreadable += 1
+                  continue
+              for case in cases:
                   if case.find('failure') is not None or case.find('error') is not None:
                       failed.add(f"{case.get('classname')}.{case.get('name')}")
 
@@ -111,6 +117,8 @@ jobs:
               summary = f"*{len(failed)} failing test(s):*\n" + "\n".join(lines)
           else:
               summary = "No failing tests were reported, the run probably failed before or while starting the tests."
+          if unreadable:
+              summary += f"\n_{unreadable} result file(s) could not be read, so the list may be incomplete._"
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write(f"summary<<FAILED_TESTS_EOF\n{summary}\nFAILED_TESTS_EOF\n")
