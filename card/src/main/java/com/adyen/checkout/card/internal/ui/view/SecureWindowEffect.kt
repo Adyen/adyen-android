@@ -35,11 +35,11 @@ internal fun SecureWindowEffect(isEnabled: Boolean) {
     if (!isEnabled) return
 
     DisposableEffect(view, activity) {
-        val secureWindow = secureWindowFor(view, activity)
-        secureWindow?.acquire()
+        val windows = secureWindowsFor(view, activity)
+        windows.forEach { it.acquire() }
 
         onDispose {
-            secureWindow?.release()
+            windows.forEach { it.release() }
         }
     }
 }
@@ -48,19 +48,27 @@ internal fun SecureWindowEffect(isEnabled: Boolean) {
 // key. Entries are removed in SecureWindow.release() instead, which DisposableEffect guarantees to call.
 private val secureWindows = mutableMapOf<View, SecureWindow>()
 
-private fun secureWindowFor(view: View, activity: Activity?): SecureWindow? {
+private fun secureWindowsFor(view: View, activity: Activity?): List<SecureWindow> {
     val rootView = view.rootView
-    if (rootView.layoutParams !is WindowManager.LayoutParams) return null
+    if (rootView.layoutParams !is WindowManager.LayoutParams) return emptyList()
 
-    return secureWindows.getOrPut(rootView) {
-        val dialogWindow = findDialogWindowProvider(view.parent)?.window?.takeIf { it.peekDecorView() === rootView }
-        val activityWindow = activity?.window?.takeIf { it.peekDecorView() === rootView }
-        when {
-            dialogWindow != null -> DialogSecureWindow(rootView, dialogWindow)
-            activityWindow != null -> OwnedSecureWindow(rootView, activityWindow)
-            else -> UnownedSecureWindow(rootView)
+    // The activity window is secured even when the card is rendered in a dialog or popup. These hosts copy FLAG_SECURE
+    // from the window they are hosted in whenever they recompose, if they use the default SecureFlagPolicy.Inherit.
+    // Otherwise they clear the flag, and it only gets reapplied after the window manager has already received it.
+    val activitySecureWindow = activity?.window?.let { window ->
+        window.peekDecorView()?.let { decorView ->
+            secureWindows.getOrPut(decorView) { OwnedSecureWindow(decorView, window) }
         }
     }
+    val isActivityRoot = activitySecureWindow?.rootView === rootView
+    val hostedSecureWindow = if (isActivityRoot) null else hostedSecureWindowFor(view, rootView)
+
+    return listOfNotNull(hostedSecureWindow, activitySecureWindow)
+}
+
+private fun hostedSecureWindowFor(view: View, rootView: View): SecureWindow = secureWindows.getOrPut(rootView) {
+    val dialogWindow = findDialogWindowProvider(view.parent)?.window?.takeIf { it.peekDecorView() === rootView }
+    if (dialogWindow != null) DialogSecureWindow(rootView, dialogWindow) else UnownedSecureWindow(rootView)
 }
 
 private tailrec fun findDialogWindowProvider(parent: ViewParent?): DialogWindowProvider? = when (parent) {
@@ -69,7 +77,7 @@ private tailrec fun findDialogWindowProvider(parent: ViewParent?): DialogWindowP
     else -> findDialogWindowProvider(parent.parent)
 }
 
-private abstract class SecureWindow(protected val rootView: View) {
+private abstract class SecureWindow(val rootView: View) {
 
     private var refCount = 0
     private var wasSecure = false

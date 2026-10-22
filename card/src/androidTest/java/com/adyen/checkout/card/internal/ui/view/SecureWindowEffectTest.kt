@@ -10,6 +10,7 @@ import android.app.Activity
 import android.content.pm.ApplicationInfo
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.activity.ComponentDialog
 import androidx.activity.compose.LocalActivity
@@ -117,6 +118,61 @@ class SecureWindowEffectTest {
         composeTestRule.waitUntil("dialog window is secure after recomposition", TIMEOUT_MS) {
             dialogWindow.isSecure()
         }
+    }
+
+    @Test
+    fun whenDialogHostRecomposes_thenDialogWindowIsNeverUnsecured() {
+        var dismissOnClickOutside by mutableStateOf(true)
+        var dialogWindow: Window? = null
+        composeTestRule.setContent {
+            Dialog(
+                onDismissRequest = {},
+                properties = DialogProperties(dismissOnClickOutside = dismissOnClickOutside),
+            ) {
+                dialogWindow = LocalView.current.dialogWindow()
+                SecureWindowEffect(isEnabled = true)
+            }
+        }
+        composeTestRule.waitUntil("dialog window is secure", TIMEOUT_MS) { dialogWindow.isSecure() }
+        val dispatchedFlags = mutableListOf<Int>()
+        composeTestRule.runOnIdle { checkNotNull(dialogWindow).recordDispatchedFlags(dispatchedFlags) }
+
+        composeTestRule.runOnIdle { dismissOnClickOutside = false }
+
+        composeTestRule.runOnIdle {
+            assertTrue(dispatchedFlags.isNotEmpty())
+            assertTrue(dispatchedFlags.all { it and FLAG_SECURE != 0 })
+        }
+    }
+
+    @Test
+    fun whenShownInDialog_thenActivityWindowIsSecure() {
+        var activity: Activity? = null
+        composeTestRule.setContent {
+            activity = LocalActivity.current
+            Dialog(onDismissRequest = {}) {
+                SecureWindowEffect(isEnabled = true)
+            }
+        }
+
+        composeTestRule.waitUntil("activity window is secure", TIMEOUT_MS) { activity?.window.isSecure() }
+    }
+
+    @Test
+    fun whenEffectLeavesDialog_thenActivityWindowIsNoLongerSecure() {
+        var isEffectShown by mutableStateOf(true)
+        var activity: Activity? = null
+        composeTestRule.setContent {
+            activity = LocalActivity.current
+            Dialog(onDismissRequest = {}) {
+                if (isEffectShown) SecureWindowEffect(isEnabled = true)
+            }
+        }
+        composeTestRule.waitUntil("activity window is secure", TIMEOUT_MS) { activity?.window.isSecure() }
+
+        composeTestRule.runOnIdle { isEffectShown = false }
+
+        composeTestRule.runOnIdle { assertFalse(activity?.window.isSecure()) }
     }
 
     @Test
@@ -280,6 +336,16 @@ class SecureWindowEffectTest {
     }
 
     private fun Window?.isSecure() = this != null && attributes.flags and FLAG_SECURE != 0
+
+    private fun Window.recordDispatchedFlags(flags: MutableList<Int>) {
+        val original = callback
+        callback = object : Window.Callback by original {
+            override fun onWindowAttributesChanged(attrs: WindowManager.LayoutParams) {
+                flags += attrs.flags
+                original.onWindowAttributesChanged(attrs)
+            }
+        }
+    }
 
     private fun View.dialogWindow(): Window = generateSequence(parent) { it.parent }
         .filterIsInstance<DialogWindowProvider>()
