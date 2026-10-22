@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ListItemShapes
 import androidx.compose.runtime.Composable
@@ -79,7 +80,43 @@ fun ListItem(
     }
 
     val checkoutColors = CheckoutThemeProvider.colors
-    val colors = ListItemDefaults.colors(
+
+    ListItem(
+        selected = selected,
+        onClick = onClick,
+        enabled = enabled,
+        content = {
+            BodyEmphasized(
+                text = title,
+                color = if (enabled) checkoutColors.text else checkoutColors.textOnDisabled,
+            )
+        },
+        supportingContent = subtitle?.let {
+            {
+                SubHeadline(
+                    text = it,
+                    color = if (enabled) checkoutColors.textSecondary else checkoutColors.textOnDisabled,
+                )
+            }
+        },
+        leadingContent = leadingIcon,
+        trailingContent = trailingContent ?: if (selected) {
+            { SelectedCheckmark() }
+        } else {
+            null
+        },
+        shapes = shapes,
+        contentPadding = DefaultPaddingValues,
+        colors = listItemColors(),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun listItemColors(): ListItemColors {
+    val checkoutColors = CheckoutThemeProvider.colors
+    return ListItemDefaults.colors(
         containerColor = checkoutColors.background,
         contentColor = checkoutColors.text,
         leadingContentColor = checkoutColors.text,
@@ -93,34 +130,6 @@ fun ListItem(
         disabledLeadingContentColor = checkoutColors.textOnDisabled,
         disabledTrailingContentColor = checkoutColors.textOnDisabled,
         disabledSupportingContentColor = checkoutColors.textOnDisabled,
-    )
-
-    ListItem(
-        selected = selected,
-        onClick = onClick,
-        enabled = enabled,
-        content = {
-            BodyEmphasized(title)
-        },
-        supportingContent = subtitle?.let {
-            {
-                SubHeadline(
-                    text = it,
-                    color = CheckoutThemeProvider.colors.textSecondary,
-                )
-            }
-        },
-        leadingContent = leadingIcon,
-        trailingContent = trailingContent ?: if (selected) {
-            { SelectedCheckmark() }
-        } else {
-            null
-        },
-        shapes = shapes,
-        contentPadding = DefaultPaddingValues,
-        colors = colors,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier,
     )
 }
 
