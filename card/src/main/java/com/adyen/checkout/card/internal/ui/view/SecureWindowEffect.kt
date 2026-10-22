@@ -25,9 +25,15 @@ import java.util.WeakHashMap
 
 @Composable
 internal fun SecureWindowEffect() {
+    val isDebuggable = LocalView.current.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+    SecureWindowEffect(isEnabled = !isDebuggable)
+}
+
+@Composable
+internal fun SecureWindowEffect(isEnabled: Boolean) {
     val view = LocalView.current
     val activity = LocalActivity.current
-    if (view.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) return
+    if (!isEnabled) return
 
     DisposableEffect(view, activity) {
         val secureWindow = secureWindowFor(view, activity)
@@ -46,9 +52,13 @@ private fun secureWindowFor(view: View, activity: Activity?): SecureWindow? {
     if (rootView.layoutParams !is WindowManager.LayoutParams) return null
 
     return secureWindows.getOrPut(rootView) {
-        val window = listOfNotNull(findDialogWindowProvider(view.parent)?.window, activity?.window)
-            .firstOrNull { it.peekDecorView() === rootView }
-        if (window != null) OwnedSecureWindow(rootView, window) else UnownedSecureWindow(rootView)
+        val dialogWindow = findDialogWindowProvider(view.parent)?.window?.takeIf { it.peekDecorView() === rootView }
+        val activityWindow = activity?.window?.takeIf { it.peekDecorView() === rootView }
+        when {
+            dialogWindow != null -> DialogSecureWindow(rootView, dialogWindow)
+            activityWindow != null -> OwnedSecureWindow(rootView, activityWindow)
+            else -> UnownedSecureWindow(rootView)
+        }
     }
 }
 
@@ -80,7 +90,7 @@ private abstract class SecureWindow(protected val rootView: View) {
     protected abstract fun setSecure(secure: Boolean)
 }
 
-private class OwnedSecureWindow(
+private open class OwnedSecureWindow(
     rootView: View,
     private val window: Window,
 ) : SecureWindow(rootView) {
@@ -89,6 +99,31 @@ private class OwnedSecureWindow(
 
     override fun setSecure(secure: Boolean) {
         if (secure) window.addFlags(FLAG_SECURE) else window.clearFlags(FLAG_SECURE)
+    }
+}
+
+/**
+ * A [Window] hosted by a Compose dialog, such as `Dialog` or `ModalBottomSheet`. These hosts reset [FLAG_SECURE] from
+ * their own `SecureFlagPolicy` whenever they recompose, which also happens on their own right after being shown. The
+ * flag is therefore checked before every draw and reapplied when the host has cleared it.
+ */
+private class DialogSecureWindow(
+    rootView: View,
+    window: Window,
+) : OwnedSecureWindow(rootView, window), ViewTreeObserver.OnPreDrawListener {
+
+    override fun setSecure(secure: Boolean) {
+        if (secure) {
+            rootView.viewTreeObserver.addOnPreDrawListener(this)
+        } else {
+            rootView.viewTreeObserver.removeOnPreDrawListener(this)
+        }
+        super.setSecure(secure)
+    }
+
+    override fun onPreDraw(): Boolean {
+        if (!isSecure()) super.setSecure(true)
+        return true
     }
 }
 
