@@ -83,3 +83,46 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: ./gradlew connectedDebugAndroidTest -Pstrip-resources=true
+
+      - name: Collect failed tests
+        id: failed-tests
+        if: failure() && github.ref == 'refs/heads/main'
+        shell: python
+        run: |
+          import glob, os
+          import xml.etree.ElementTree as ET
+
+          MAX_LISTED = 20
+
+          failed = set()
+          for path in glob.glob('**/build/outputs/androidTest-results/connected/**/*.xml', recursive=True):
+              for case in ET.parse(path).iter('testcase'):
+                  if case.find('failure') is not None or case.find('error') is not None:
+                      class_name = case.get('classname', '').rsplit('.', 1)[-1]
+                      failed.add(f"{class_name}.{case.get('name')}")
+
+          def escape(text):
+              return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+          failed = sorted(failed)
+          if failed:
+              lines = [f"• `{escape(test)}`" for test in failed[:MAX_LISTED]]
+              if len(failed) > MAX_LISTED:
+                  lines.append(f"…and {len(failed) - MAX_LISTED} more")
+              summary = f"*{len(failed)} failing test(s):*\n" + "\n".join(lines)
+          else:
+              summary = "No failing tests were reported, the run probably failed before or while starting the tests."
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f"summary<<FAILED_TESTS_EOF\n{summary}\nFAILED_TESTS_EOF\n")
+
+      - name: Notify Slack about failure
+        if: failure() && github.ref == 'refs/heads/main'
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ secrets.SLACK_CHANNEL_ID }}
+          message: |
+            :x: *Android UI tests failed on `main`* (API ${{ matrix.api-level }})
+            ${{ steps.failed-tests.outputs.summary }}
+            <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>
