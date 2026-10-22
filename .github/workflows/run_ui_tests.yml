@@ -98,8 +98,7 @@ jobs:
           for path in glob.glob('**/build/outputs/androidTest-results/connected/**/*.xml', recursive=True):
               for case in ET.parse(path).iter('testcase'):
                   if case.find('failure') is not None or case.find('error') is not None:
-                      class_name = case.get('classname', '').rsplit('.', 1)[-1]
-                      failed.add(f"{class_name}.{case.get('name')}")
+                      failed.add(f"{case.get('classname')}.{case.get('name')}")
 
           def escape(text):
               return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
