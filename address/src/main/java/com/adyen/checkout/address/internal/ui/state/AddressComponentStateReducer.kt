@@ -106,13 +106,14 @@ internal class AddressComponentStateReducer(
 
     /**
      * Keeps the selected state when the states fail to load, so a saved state still works offline, as the country does.
-     * Clears it when the loaded states do not contain it. States of a country that is no longer selected are dropped.
+     * Clears it when the loaded states do not contain it. States of a country that is no longer selected are dropped,
+     * and so is any answer once the states are loaded, so a late answer of an earlier request cannot replace them.
      */
     private fun AddressComponentState.onStatesLoaded(
         countryCode: String,
         result: Result<List<AddressItem>>,
     ): AddressComponentState {
-        if (countryCode != country.selected) return this
+        if (countryCode != country.selected || states.isNotEmpty()) return this
 
         // TODO - Address: Offer the shopper a way to retry when the states fail to load, instead of having to reopen
         //  the form. Align the design with iOS and Web first. Tracked in COSDK-1635.

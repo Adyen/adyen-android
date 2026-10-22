@@ -190,6 +190,32 @@ internal class AddressComponentStateReducerTest {
         assertEquals("CA", result.stateOrProvince.selected)
     }
 
+    /** A late answer of an earlier request, e.g. after switching US → CA → US, must not replace the loaded states. */
+    @Test
+    fun `when loading the states fails once the states are loaded then the answer is ignored`() {
+        // GIVEN
+        val state = createState(US_ADDRESS).withStates(US_STATES)
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.StatesLoaded("US", Result.failure(IOException())))
+
+        // THEN
+        assertSame(state, result)
+    }
+
+    @Test
+    fun `when other states arrive once the states are loaded then they are ignored`() {
+        // GIVEN
+        val state = createState(US_ADDRESS).withStates(US_STATES)
+        val otherStates = listOf(AddressItem(id = "TX", name = "Texas"))
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.StatesLoaded("US", Result.success(otherStates)))
+
+        // THEN
+        assertSame(state, result)
+    }
+
     @Test
     fun `when a state is picked then its code is stored`() {
         // GIVEN
