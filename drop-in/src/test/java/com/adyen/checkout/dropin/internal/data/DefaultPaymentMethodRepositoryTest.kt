@@ -256,6 +256,36 @@ internal class DefaultPaymentMethodRepositoryTest {
         assertEquals(emptyList<StoredPaymentMethod>(), repository.storedPaymentMethods.first())
     }
 
+    @Test
+    fun `when a removal fails, then its id is reported as a failed removal`() = runTest {
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1")),
+            remover = { Result.failure(IOException("network down")) },
+            coroutineScope = backgroundScope,
+        )
+
+        repository.storedPaymentMethodRemovalFailures.test {
+            launch { repository.removeStoredPaymentMethod("1") }
+
+            assertEquals("1", awaitItem())
+        }
+    }
+
+    @Test
+    fun `when a removal succeeds, then no failed removal is reported`() = runTest {
+        val repository = createRepository(
+            storedPaymentMethods = listOf(storedCard("1")),
+            remover = { Result.success(Unit) },
+            coroutineScope = backgroundScope,
+        )
+
+        repository.storedPaymentMethodRemovalFailures.test {
+            repository.removeStoredPaymentMethod("1")
+
+            expectNoEvents()
+        }
+    }
+
     private fun createRepository(
         paymentMethods: List<GenericPaymentMethod> = emptyList(),
         storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),

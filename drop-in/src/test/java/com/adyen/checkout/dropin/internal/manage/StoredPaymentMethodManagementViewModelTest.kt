@@ -111,6 +111,33 @@ internal class StoredPaymentMethodManagementViewModelTest {
     }
 
     @Test
+    fun `when a removal from an earlier screen fails, then a new screen shows the error`() = runTest {
+        val response = CompletableDeferred<Result<Unit>>()
+        val repository = createRepository(
+            remover = { response.await() },
+            coroutineScope = backgroundScope,
+        )
+        val earlier = createViewModel(repository)
+        earlier.removeStoredPaymentMethod(FIRST_ID)
+        runCurrent()
+        // Stands in for the shopper leaving the screen, which clears the view model of its nav entry.
+        earlier.viewModelScope.cancel()
+
+        val reopened = createViewModel(repository)
+
+        reopened.viewState.test {
+            assertFalse(expectMostRecentItem().showRemovalError)
+
+            response.complete(Result.failure(IOException("network down")))
+            runCurrent()
+
+            val viewState = expectMostRecentItem()
+            assertTrue(viewState.showRemovalError)
+            assertEquals(emptyList<String>(), viewState.removingCardIds())
+        }
+    }
+
+    @Test
     fun `when a new removal starts after a failure, then the error is hidden`() = runTest {
         val secondResponse = CompletableDeferred<Result<Unit>>()
         val viewModel = createViewModel(

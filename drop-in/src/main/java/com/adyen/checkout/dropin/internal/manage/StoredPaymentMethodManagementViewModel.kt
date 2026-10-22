@@ -12,8 +12,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
@@ -23,6 +21,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -43,6 +43,12 @@ internal class StoredPaymentMethodManagementViewModel(
         SharingStarted.WhileSubscribed(5000),
         createViewState(emptyList(), emptySet(), false),
     )
+
+    init {
+        paymentMethodRepository.storedPaymentMethodRemovalFailures
+            .onEach { showRemovalError.value = true }
+            .launchIn(viewModelScope)
+    }
 
     private fun createViewState(
         storedPaymentMethods: List<StoredPaymentMethod>,
@@ -76,12 +82,7 @@ internal class StoredPaymentMethodManagementViewModel(
 
     fun removeStoredPaymentMethod(id: String) {
         showRemovalError.value = false
-        viewModelScope.launch {
-            paymentMethodRepository.removeStoredPaymentMethod(id).onFailure { e ->
-                adyenLog(AdyenLogLevel.ERROR, e) { "Failed to remove the stored payment method." }
-                showRemovalError.value = true
-            }
-        }
+        viewModelScope.launch { paymentMethodRepository.removeStoredPaymentMethod(id) }
     }
 
     class Factory(
