@@ -153,8 +153,7 @@ private class UnownedSecureWindow(
 
     private fun updateFlag(secure: Boolean) {
         val params = rootView.layoutParams as? WindowManager.LayoutParams ?: return
-        if (!rootView.isAttachedToWindow) return
         params.flags = if (secure) params.flags or FLAG_SECURE else params.flags and FLAG_SECURE.inv()
-        windowManager.updateViewLayout(rootView, params)
+        if (rootView.isAttachedToWindow) windowManager.updateViewLayout(rootView, params)
     }
 }

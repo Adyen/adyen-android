@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -196,6 +197,37 @@ class SecureWindowEffectTest {
         composeTestRule.runOnIdle { isEffectShown = false }
 
         composeTestRule.waitUntil("dialog window is not secure", TIMEOUT_MS) { !dialog?.window.isSecure() }
+    }
+
+    @Test
+    fun whenViewBasedDialogIsReshownAfterEffectWasDisposedLate_thenDialogWindowIsNotSecure() {
+        var isEffectShown by mutableStateOf(true)
+        var activity: Activity? = null
+        composeTestRule.setContent { activity = LocalActivity.current }
+        val dialog = composeTestRule.runOnIdle {
+            val context = checkNotNull(activity)
+            ComponentDialog(context).apply {
+                setContentView(
+                    ComposeView(context).apply {
+                        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                        setContent { if (isEffectShown) SecureWindowEffect(isEnabled = true) }
+                    },
+                )
+                show()
+            }
+        }
+        composeTestRule.waitUntil("dialog window is secure", TIMEOUT_MS) { dialog.window.isSecure() }
+
+        composeTestRule.runOnIdle {
+            dialog.dismiss()
+            isEffectShown = false
+            dialog.show()
+        }
+
+        composeTestRule.runOnIdle {
+            assertFalse(dialog.window.isSecure())
+            dialog.dismiss()
+        }
     }
 
     @Test
