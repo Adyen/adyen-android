@@ -200,6 +200,24 @@ class SecureWindowEffectTest {
     }
 
     @Test
+    fun whenViewBasedDialogHostClearsTheFlag_thenDialogWindowIsSecuredAgain() {
+        var dialog: ComponentDialog? = null
+        composeTestRule.setContent {
+            ViewBasedDialog(onDialogShown = { dialog = it }) {
+                SecureWindowEffect(isEnabled = true)
+            }
+        }
+        composeTestRule.waitUntil("dialog window is secure", TIMEOUT_MS) { dialog?.window.isSecure() }
+
+        composeTestRule.runOnIdle {
+            dialog?.window?.clearFlags(FLAG_SECURE)
+            assertFalse(dialog?.window.isSecure())
+        }
+
+        composeTestRule.waitUntil("dialog window is secure again", TIMEOUT_MS) { dialog?.window.isSecure() }
+    }
+
+    @Test
     fun whenViewBasedDialogIsReshownAfterEffectWasDisposedLate_thenDialogWindowIsNotSecure() {
         var isEffectShown by mutableStateOf(true)
         var activity: Activity? = null
