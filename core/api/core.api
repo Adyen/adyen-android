@@ -492,6 +492,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field ADDRESS_HOUSE_NUMBER_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_HOUSE_NUMBER_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_HOUSE_NUMBER_LABEL_BUILDING_NAME_ROOM_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_INVALID_CHARACTERS_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_POSTAL_CODE_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_POSTAL_CODE_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -499,11 +500,13 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field ADDRESS_SAVE_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_STATE_OR_PROVINCE_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_STATE_OR_PROVINCE_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_STATE_OR_PROVINCE_LABEL_PREFECTURE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_STATE_OR_PROVINCE_LABEL_PROVINCE_OR_TERRITORY Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_STATE_OR_PROVINCE_LABEL_STATE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_STREET_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_STREET_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_STREET_LABEL_ADDRESS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field ADDRESS_STREET_LABEL_NAME_AND_BLOCK_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field ADDRESS_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AUTHENTICATION_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field AUTHENTICATION_STATUS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

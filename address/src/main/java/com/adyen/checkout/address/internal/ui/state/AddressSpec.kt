@@ -36,11 +36,14 @@ internal enum class AddressSpec(
     AU(
         listOf(
             country(),
-            street(),
-            houseNumberOrName(),
-            postalCode(),
+            street(label = CheckoutLocalizationKey.ADDRESS_STREET_LABEL_ADDRESS),
+            houseNumberOrName(
+                label = CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE,
+                requirementPolicy = RequirementPolicy.Optional,
+            ),
             city(),
-            stateOrProvince(),
+            stateOrProvince(label = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE),
+            postalCode(),
         ),
     ),
     BR(
@@ -79,11 +82,14 @@ internal enum class AddressSpec(
     JP(
         listOf(
             country(),
-            street(),
-            houseNumberOrName(),
             postalCode(),
-            city(),
-            stateOrProvince(),
+            stateOrProvince(label = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_PREFECTURE),
+            city(label = CheckoutLocalizationKey.ADDRESS_CITY_LABEL_CITY_TOWN),
+            street(label = CheckoutLocalizationKey.ADDRESS_STREET_LABEL_NAME_AND_BLOCK_NUMBER),
+            houseNumberOrName(
+                label = CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_BUILDING_NAME_ROOM_NUMBER,
+                requirementPolicy = RequirementPolicy.Optional,
+            ),
         ),
     ),
     US(

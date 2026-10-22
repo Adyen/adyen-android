@@ -15,9 +15,11 @@
     <string name="adyen_checkout_address_country_error" translatable="false">Select a country/region</string>
     <string name="adyen_checkout_address_street_label" translatable="false">Street</string>
     <string name="adyen_checkout_address_street_label_address" translatable="false">Address</string>
+    <string name="adyen_checkout_address_street_label_name_and_block_number" translatable="false">Street name and block number</string>
     <string name="adyen_checkout_address_street_error" translatable="false">Enter the street</string>
     <string name="adyen_checkout_address_house_number_label" translatable="false">House number</string>
     <string name="adyen_checkout_address_house_number_label_apartment_suite" translatable="false">Apartment / Suite</string>
+    <string name="adyen_checkout_address_house_number_label_building_name_room_number" translatable="false">Building name, room number</string>
     <string name="adyen_checkout_address_house_number_error" translatable="false">Enter the house number</string>
     <string name="adyen_checkout_address_postal_code_label" translatable="false">Postal code</string>
     <string name="adyen_checkout_address_postal_code_label_zip_code" translatable="false">Zip code</string>
@@ -28,6 +30,7 @@
     <string name="adyen_checkout_address_state_or_province_label" translatable="false">State or province</string>
     <string name="adyen_checkout_address_state_or_province_label_state" translatable="false">State</string>
     <string name="adyen_checkout_address_state_or_province_label_province_or_territory" translatable="false">Province or Territory</string>
+    <string name="adyen_checkout_address_state_or_province_label_prefecture" translatable="false">Prefecture</string>
     <string name="adyen_checkout_address_state_or_province_error" translatable="false">Select a state or province</string>
     <string name="adyen_checkout_address_invalid_characters_error" translatable="false">Some special characters are not allowed</string>
     <string name="checkout_authentication_title" translatable="false">Security check</string>
