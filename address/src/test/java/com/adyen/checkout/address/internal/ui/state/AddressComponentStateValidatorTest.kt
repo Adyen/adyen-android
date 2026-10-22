@@ -118,6 +118,18 @@ internal class AddressComponentStateValidatorTest {
     }
 
     @Test
+    fun `when the states are not loaded but a state is selected then the state is valid`() {
+        // GIVEN
+        val state = createState(US_ADDRESS.copy(stateOrProvince = "CA"))
+
+        // WHEN
+        val result = validator.validate(state)
+
+        // THEN
+        assertNull(result.stateOrProvince.error)
+    }
+
+    @Test
     fun `when every visible field is filled then the form is valid`() {
         // GIVEN
         val state = createState(US_ADDRESS).withStateOptions(selected = "CA")

@@ -213,6 +213,19 @@ internal class AddressViewStateProducerTest {
     }
 
     @Test
+    fun `when the states are not loaded then the selected state falls back to its code`() {
+        // GIVEN
+        val state = createState(selectedState = "CA").copy(states = emptyList())
+
+        // WHEN
+        val viewState = producer.produce(state)
+
+        // THEN
+        val stateOrProvince = viewState.elements.filterIsInstance<AddressFormElement.StateOrProvince>().single()
+        assertEquals(AddressRegion(code = "CA", name = "CA"), stateOrProvince.selected)
+    }
+
+    @Test
     fun `when the states are loading then the state picker is empty`() {
         // GIVEN
         val state = createState().copy(states = emptyList())

@@ -21,8 +21,8 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputCompo
  * @param country The ISO 3166-1 alpha-2 code of the selected country. It can be selected before [countries] load.
  * @param states The states of the selected country. Empty until they are loaded, when loading them failed, and for a
  * country without states.
- * @param stateOrProvince The ISO 3166-2 code of the selected state, only ever one of [states]. Only a [spec] with
- * states has a state element.
+ * @param stateOrProvince The ISO 3166-2 code of the selected state. It can be selected before [states] load. Only a
+ * [spec] with states has a state element.
  */
 internal data class AddressComponentState(
     val countries: List<AddressRegion>,

@@ -94,9 +94,10 @@ internal class AddressViewStateProducer(
         countries.find { it.code == code } ?: AddressRegion(code, CountryUtils.getCountryName(code, shopperLocale))
     }
 
-    /** The selected state, which is always one of the loaded states. */
-    private fun AddressComponentState.getSelectedState(): AddressRegion? =
-        stateOrProvince.selected?.let { code -> states.find { it.code == code } }
+    /** The loaded selected state or, while the states are not loaded, its code. */
+    private fun AddressComponentState.getSelectedState(): AddressRegion? = stateOrProvince.selected?.let { code ->
+        states.find { it.code == code } ?: AddressRegion(code, code)
+    }
 
     private fun PickerInputComponentState<*>.getVisibleErrorMessage(): CheckoutLocalizationKey? =
         error?.takeIf { it.isVisible }?.message

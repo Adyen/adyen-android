@@ -73,16 +73,13 @@ internal class AddressComponentStateReducer(
 
     /**
      * Replaces the whole state with the form for [address]. The loaded countries do not depend on the address, so they
-     * survive a reset. So do the loaded states while the country stays the same, and the state of [address] is selected
-     * from them.
+     * survive a reset. So do the loaded states while the country stays the same; the state of [address] is cleared when
+     * they do not contain it.
      */
     private fun AddressComponentState.reset(address: AddressModel?): AddressComponentState {
         val resetState = componentStateFactory.createState(address).copy(countries = countries)
         if (resetState.country.selected != country.selected) return resetState
-        return resetState.copy(
-            states = states,
-            stateOrProvince = PickerInputComponentState(selected = states.findCode(address?.stateOrProvince)),
-        )
+        return resetState.copy(states = states).clearUnlistedState()
     }
 
     /** Only a loaded state can be selected; any other code is ignored. */
@@ -108,8 +105,8 @@ internal class AddressComponentStateReducer(
     }
 
     /**
-     * A selected state is only kept when the loaded states contain it, so a failure clears it too. States of a country
-     * that is no longer selected are dropped.
+     * Keeps the selected state when the states fail to load, so a saved state still works offline, as the country does.
+     * Clears it when the loaded states do not contain it. States of a country that is no longer selected are dropped.
      */
     private fun AddressComponentState.onStatesLoaded(
         countryCode: String,
@@ -119,11 +116,13 @@ internal class AddressComponentStateReducer(
 
         // TODO - Address: Offer the shopper a way to retry when the states fail to load, instead of having to reopen
         //  the form. Align the design with iOS and Web first. Tracked in COSDK-1635.
-        val states = result.getOrNull().orEmpty().toAddressRegions()
-        return copy(
-            states = states,
-            stateOrProvince = stateOrProvince.copy(selected = states.findCode(stateOrProvince.selected)),
-        )
+        return copy(states = result.getOrNull().orEmpty().toAddressRegions()).clearUnlistedState()
+    }
+
+    /** Clears the selected state when the loaded states leave it out, as [onCountriesLoaded] does for the country. */
+    private fun AddressComponentState.clearUnlistedState(): AddressComponentState {
+        if (!states.isMissing(stateOrProvince.selected)) return this
+        return copy(stateOrProvince = stateOrProvince.copy(selected = null))
     }
 
     /** The [code] when this list contains it, otherwise null. */

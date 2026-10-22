@@ -80,9 +80,9 @@ internal class AddressComponentStateFactoryTest {
         assertEquals(RequirementPolicy.Optional, state.houseNumberOrName.requirementPolicy)
     }
 
-    /** A state is only selected from its loaded states, which a new form does not have yet. */
+    /** As the country, the state is kept as a code until its states load. */
     @Test
-    fun `when an address with a state is given then no state is selected before the states load`() {
+    fun `when an address with a state is given then the state is selected before the states load`() {
         // GIVEN
         val factory = createFactory()
 
@@ -90,8 +90,20 @@ internal class AddressComponentStateFactoryTest {
         val state = factory.createState(US_ADDRESS)
 
         // THEN
-        assertNull(state.stateOrProvince.selected)
+        assertEquals("CA", state.stateOrProvince.selected)
         assertTrue(state.states.isEmpty())
+    }
+
+    @Test
+    fun `when an address of a country without states is given then no state is selected`() {
+        // GIVEN
+        val factory = createFactory()
+
+        // WHEN
+        val state = factory.createState(US_ADDRESS.copy(country = "NL"))
+
+        // THEN
+        assertNull(state.stateOrProvince.selected)
     }
 
     @Test
