@@ -38,7 +38,7 @@ class FormAccessibilityTest {
                     supportingText = ERROR_MESSAGE,
                     isError = true,
                     modifier = Modifier.testTag(TEXT_FIELD_TAG),
-                    trailingIcon = null,
+                    trailingContent = null,
                 )
             }
         }
@@ -58,7 +58,7 @@ class FormAccessibilityTest {
                     supportingText = DESCRIPTION,
                     isError = false,
                     modifier = Modifier.testTag(TEXT_FIELD_TAG),
-                    trailingIcon = null,
+                    trailingContent = null,
                 )
             }
         }
@@ -79,7 +79,7 @@ class FormAccessibilityTest {
                     isError = true,
                     isSecureField = true,
                     modifier = Modifier.testTag(TEXT_FIELD_TAG),
-                    trailingIcon = null,
+                    trailingContent = null,
                 )
             }
         }
