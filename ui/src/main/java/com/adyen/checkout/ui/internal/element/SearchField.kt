@@ -44,7 +44,6 @@ fun SearchField(
     supportingText: String? = null,
     isError: Boolean = false,
 ) {
-    val state = rememberTextFieldState()
     val style = CheckoutThemeProvider.elements.searchField
     val focusManager = LocalFocusManager.current
     CheckoutTextField(
