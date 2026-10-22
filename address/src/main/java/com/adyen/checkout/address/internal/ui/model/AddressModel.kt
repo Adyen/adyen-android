@@ -12,8 +12,7 @@ package com.adyen.checkout.address.internal.ui.model
  * An address as the address component collects it. Field names follow the API.
  *
  * @param country The ISO 3166-1 alpha-2 code of the country.
- * @param stateOrProvince The ISO 3166-2 code of the state when it was picked, or the shopper's text when the states
- * could not be loaded.
+ * @param stateOrProvince The ISO 3166-2 code of the picked state. Only the countries that have states have one.
  */
 internal data class AddressModel(
     val country: String?,

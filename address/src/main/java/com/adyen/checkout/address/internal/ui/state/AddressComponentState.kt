@@ -62,7 +62,8 @@ internal data class AddressComponentState(
             is StateOrProvinceState.Loading,
             StateOrProvinceState.Unavailable -> null
 
-            is StateOrProvinceState.Options -> stateOrProvince.picker.toFormElement(id)
+            // A hidden state is left out like a hidden text input.
+            is StateOrProvinceState.Options -> stateOrProvince.picker.toFormElement(id).takeIf { spec.hasStates }
         }
     }
 }

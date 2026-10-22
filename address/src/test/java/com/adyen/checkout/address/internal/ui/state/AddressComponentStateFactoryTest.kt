@@ -30,7 +30,7 @@ internal class AddressComponentStateFactoryTest {
         // THEN
         assertEquals("NL", state.country.selected)
         assertEquals(AddressSpec.DEFAULT, state.spec)
-        assertEquals(StateOrProvinceState.Loading(pendingCode = null), state.stateOrProvince)
+        assertEquals(StateOrProvinceState.Unavailable, state.stateOrProvince)
     }
 
     @Test

@@ -11,7 +11,8 @@ package com.adyen.checkout.address.internal.ui.state
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 
 /**
- * The state or province element. What it shows depends on the answer of the states dataset of the selected country.
+ * The state or province element of a country that has states. What it shows depends on the answer of its states
+ * dataset.
  */
 internal sealed interface StateOrProvinceState {
 
@@ -23,8 +24,8 @@ internal sealed interface StateOrProvinceState {
     data class Loading(val pendingCode: String?) : StateOrProvinceState
 
     /**
-     * The country has no states (its dataset is empty or does not exist), no country is selected, or the states could
-     * not be loaded. Nothing is shown.
+     * The country has no states, its dataset is empty, no country is selected, or the states could not be loaded.
+     * Nothing is shown.
      */
     data object Unavailable : StateOrProvinceState
 
@@ -37,10 +38,10 @@ internal sealed interface StateOrProvinceState {
     companion object {
 
         /**
-         * The states of a selected country are loading until they arrive, keeping [pendingCode] to select it then.
-         * Without a country there are no states to show.
+         * The states of a country that has them are loading until they arrive, keeping [pendingCode] to select it
+         * then. Any other country, or no country, has no state element.
          */
         fun forCountry(countryCode: String?, pendingCode: String?): StateOrProvinceState =
-            if (countryCode != null) Loading(pendingCode = pendingCode) else Unavailable
+            if (AddressSpec.fromCountryCode(countryCode).hasStates) Loading(pendingCode = pendingCode) else Unavailable
     }
 }
