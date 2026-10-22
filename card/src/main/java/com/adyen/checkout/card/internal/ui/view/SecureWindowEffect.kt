@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import android.app.Activity
-import android.content.pm.ApplicationInfo
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
@@ -20,11 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.DialogWindowProvider
+import com.adyen.checkout.card.internal.helper.isDebuggable
 
 @Composable
 internal fun SecureWindowEffect() {
-    val isDebuggable = LocalView.current.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-    SecureWindowEffect(isEnabled = !isDebuggable)
+    SecureWindowEffect(isEnabled = !LocalView.current.context.isDebuggable())
 }
 
 @Composable
