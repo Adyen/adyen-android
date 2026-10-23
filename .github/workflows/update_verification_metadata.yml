@@ -4,37 +4,67 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  update-verification-metadata:
-    name: Update verification metadata
+  # The build runs code from the updated dependencies, so it never gets the bot token. Only the commit job, which
+  # does not run the build, can push.
+  generate-verification-metadata:
+    name: Generate verification metadata
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip update-verification-metadata]') }}
 
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          token: ${{ secrets.ADYEN_AUTOMATION_BOT_ACCESS_TOKEN }}
+          persist-credentials: false
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: Set up JDK
-        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: 'temurin'
           java-version: 21
 
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           cache-read-only: true
 
       - name: Gradle update verification metadata
-        # We have to run assembleDebug to make sure dynamic dependencies (aapt2) are resolved.
-        run: ./gradlew --write-verification-metadata sha256 resolveDependencies assembleDebug
+        # --refresh-dependencies is required: metadata files (BOM and parent poms) that are already in the module
+        # metadata cache are not re-parsed, so they would not be recorded in the verification metadata.
+        run: ./gradlew --write-verification-metadata sha256 resolveDependencies --refresh-dependencies
+
+      - name: Upload verification metadata
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-metadata
+          path: gradle/verification-metadata.xml
+          if-no-files-found: error
+          retention-days: 1
+
+  commit-verification-metadata:
+    name: Commit verification metadata
+    needs: generate-verification-metadata
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.ADYEN_AUTOMATION_BOT_ACCESS_TOKEN }}
+
+      - name: Download verification metadata
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: verification-metadata
+          path: gradle
 
       - name: Commit
         env:
@@ -43,8 +73,6 @@ jobs:
         run: |
           git config user.name "$USER_NAME"
           git config user.email "$USER_EMAIL"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "Update verification metadata
-          
-          [skip update-verification-metadata]"
+          git add gradle/verification-metadata.xml
+          git diff --cached --quiet || git commit -m "Update verification metadata"
           git push

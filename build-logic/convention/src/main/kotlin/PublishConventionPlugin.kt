@@ -6,6 +6,7 @@
  * Created by oscars on 3/12/2025.
  */
 
+import com.adyen.checkout.CHECKOUT_GROUP_ID
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.component.AdhocComponentWithVariants
@@ -76,7 +77,6 @@ class PublishConventionPlugin : Plugin<Project> {
     private fun Project.configurePublishing(extension: PublishConventionPluginExtension) {
         val versionName: String by project.rootProject.extraProperties
 
-        val checkoutGroupId = "com.adyen.checkout"
         val companyName = "Adyen N.V."
         val companyUrl = "https://www.adyen.com/"
         val githubUrl = "https://github.com/Adyen/adyen-android"
@@ -104,7 +104,7 @@ class PublishConventionPlugin : Plugin<Project> {
 
                         from(releaseComponent)
 
-                        groupId = checkoutGroupId
+                        groupId = CHECKOUT_GROUP_ID
                         artifactId = extension.id.get()
                         version = versionName
 

@@ -27,7 +27,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # Publish Github release and the tag
       - name: Publish Github release
@@ -52,7 +52,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Remove release branch
         env:
@@ -70,7 +70,6 @@ jobs:
     name: Publish docs to Github pages
     permissions:
       contents: write
-      deployments: write
     uses: ./.github/workflows/publish_docs.yml
     secrets:
       GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}

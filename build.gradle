@@ -1,5 +1,4 @@
 import com.android.build.gradle.LibraryPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -29,8 +28,6 @@ ext {
 }
 
 subprojects {
-    def javaVersion = 11
-
     plugins.withType(com.android.build.gradle.BasePlugin).configureEach {
         android {
             if (project.hasProperty("strip-resources") && project.property("strip-resources") == "true") {
@@ -45,11 +42,6 @@ subprojects {
                 }
             }
 
-            compileOptions {
-                sourceCompatibility = javaVersion
-                targetCompatibility = javaVersion
-            }
-
             packagingOptions {
                 excludes += "/META-INF/{AL2.0,LGPL2.1}"
                 merges += "META-INF/LICENSE.md"
@@ -61,12 +53,6 @@ subprojects {
     plugins.withType(LibraryPlugin).configureEach {
         dependencies {
             lintChecks project(':lint')
-        }
-    }
-
-    plugins.withType(KotlinAndroidPluginWrapper).configureEach {
-        kotlin {
-            jvmToolchain(javaVersion)
         }
     }
 
