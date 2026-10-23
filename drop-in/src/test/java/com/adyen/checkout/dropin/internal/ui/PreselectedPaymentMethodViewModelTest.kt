@@ -118,14 +118,16 @@ internal class PreselectedPaymentMethodViewModelTest {
     }
 
     @Test
-    fun `when onPayClicked, then navigates to payment method with stored type`() {
+    fun `when onPayClicked, then navigates to payment method with stored type and keeps preselected in back stack`() {
+        val preselectedKey = PreselectedPaymentMethodNavKey("stored-id-1")
+        navigator.navigateTo(preselectedKey)
         val repository = TestPaymentMethodRepository(listOf(storedPaymentMethod))
         val viewModel = createViewModel(repository, storedPaymentMethodId = "stored-id-1")
 
         viewModel.onPayClicked()
 
         val expectedKey = PaymentMethodNavKey(DropInPaymentFlowType.StoredPaymentMethod("stored-id-1"))
-        assertEquals(listOf(EmptyNavKey, expectedKey), navigator.backStack)
+        assertEquals(listOf(EmptyNavKey, preselectedKey, expectedKey), navigator.backStack)
     }
 
     @Test
