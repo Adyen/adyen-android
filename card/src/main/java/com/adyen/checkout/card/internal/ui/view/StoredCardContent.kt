@@ -56,6 +56,8 @@ private fun StoredCardContent(
     onSubmitClick: () -> Unit,
     modifier: Modifier,
 ) {
+    SecureWindowEffect()
+
     ComponentScaffold(
         modifier = modifier,
         disableInteraction = viewState.isLoading,
