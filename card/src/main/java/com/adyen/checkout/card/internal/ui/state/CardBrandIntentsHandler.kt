@@ -21,7 +21,6 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
-import kotlin.collections.contains
 
 internal class CardBrandIntentsHandler(
     private val componentParams: CardComponentParams,
@@ -226,12 +225,13 @@ internal class CardBrandIntentsHandler(
         cardBrand: CardBrand?
     ): InstallmentState {
         val updatedInstallmentOptions = getUpdatedInstallmentOptions(cardBrand)
-        val selectedInstallment = if (updatedInstallmentOptions.contains(state.installmentState.selectedInstallment)) {
+        val selectedInstallment = if (cardBrand == state.cardBrandState.asReliableCardBrandData()?.cardBrand) {
             state.installmentState.selectedInstallment
         } else {
             val installmentParams = componentParams.installmentParams
-            val preselectedValue = installmentParams?.cardBasedOptions?.get(cardBrand)?.preselectedValue
-                ?: installmentParams?.defaultOptions?.preselectedValue
+            val installmentOptionsParams = installmentParams?.cardBasedOptions?.get(cardBrand)
+                ?: installmentParams?.defaultOptions
+            val preselectedValue = installmentOptionsParams?.preselectedValue
             updatedInstallmentOptions.firstOrNull {
                 it is InstallmentModel.Regular && it.numberOfInstallments == preselectedValue
             }
