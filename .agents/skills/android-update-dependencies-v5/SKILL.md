@@ -27,7 +27,7 @@ git ls-tree -r origin/main --name-only | rg '^\.agents/|^AGENTS.md'
 git show origin/main:<path>
 ```
 
-Enumerate them dynamically — a hardcoded list will go stale. Where any of them states a value that differs on v5, such as `minSdk`, take v5's value from the repository rather than the one written there.
+Enumerate them dynamically — a hardcoded list will go stale. Where any of them states a value that differs on v5, such as `minSdk`, take v5's value from the repository rather than the one written there. Where one points at a file v5 does not have, read `main`'s copy the same way.
 
 ### Read the previous update for precedent
 

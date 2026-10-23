@@ -20,6 +20,7 @@ The *Introduced* column records the PR that added the entry to this file, which 
 | `config/detekt/detekt.yml` lacks the Compose relaxations | Compose-motivated configuration is not ported to v5, which has no first-class Compose support | #2886 |
 | `config/module/` absent | **Never port it.** The scaffolding is not compatible with v5 | #2886 |
 | `.agents/` holds only this skill and `DIFFERENCES.md` | General agent guidance is maintained on `main` and read from there. Do not copy `AGENTS.md` or the other skills across; where they state a value that differs on v5, they would mislead | #2886 |
+| `renovate.json`, `.github/ISSUE_TEMPLATE/` and `.github/pull_request_template.md` absent | GitHub and Renovate only read them from `main`, whose `renovate.json` also configures v5's updates | #3133 |
 | `[plugins] kotlin = { id = "kotlin" }` | Left on the legacy id deliberately; `main` uses `org.jetbrains.kotlin.jvm` | #2886 |
 | `DokkaConventionPlugin` points source links at `tree/v5` | `main` points at `tree/main`. Without this every source link in v5's published documentation resolves to v6 code | #2886 |
 | `JavaConventionPlugin` compiles Android modules for Java 11 | Keeps merchant-facing bytecode on 11; tooling follows `jvm-target` (17) as on `main` | #3133 |
@@ -27,7 +28,7 @@ The *Introduced* column records the PR that added the entry to this file, which 
 
 ### Release-age lag
 
-`renovate.json` sets `minimumReleaseAge: 14 days`, so each quarterly PR holds back anything published in the fortnight before it was cut; Renovate lists those under *Pending* in the PR body. `main` updates monthly and picks them up sooner, so v5 will always trail on a handful of dependencies.
+`main`'s `renovate.json` sets `minimumReleaseAge: 14 days`, so each quarterly PR holds back anything published in the fortnight before it was cut; Renovate lists those under *Pending* in the PR body. `main` updates monthly and picks them up sooner, so v5 will always trail on a handful of dependencies.
 
 This is expected and self-correcting — the next quarterly run takes them. Do not chase them individually, and do not lower `minimumReleaseAge` to avoid it.
 
