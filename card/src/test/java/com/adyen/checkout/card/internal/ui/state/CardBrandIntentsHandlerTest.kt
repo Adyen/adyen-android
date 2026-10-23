@@ -974,6 +974,35 @@ internal class CardBrandIntentsHandlerTest(
             assertEquals(createRegularInstallment(3), actual.installmentState.selectedInstallment)
         }
 
+        @Test
+        fun `and reliable brand has options without preselected value then one time is selected`() {
+            whenever(cardComponentParams.installmentParams).thenReturn(
+                InstallmentParams(
+                    defaultOptions = InstallmentOptionsParams(
+                        values = listOf(2, 3),
+                        plans = listOf(InstallmentPlan.REGULAR),
+                        preselectedValue = 3,
+                    ),
+                    cardBasedOptions = mapOf(
+                        visaBrand to InstallmentOptionsParams(
+                            values = listOf(3, 6),
+                            plans = listOf(InstallmentPlan.REGULAR),
+                            preselectedValue = null,
+                        ),
+                    ),
+                ),
+            )
+            val state = createStateWithInstallmentSelection(
+                cardBrandState = CardBrandState.NoBrandsDetected,
+                selectedInstallment = createRegularInstallment(3),
+            )
+            val cardBrandState = CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = visaBrand))
+
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            assertEquals(InstallmentModel.OneTime, actual.installmentState.selectedInstallment)
+        }
+
         private fun createStateWithInstallmentSelection(
             cardBrandState: CardBrandState,
             selectedInstallment: InstallmentModel,

@@ -229,8 +229,9 @@ internal class CardBrandIntentsHandler(
             state.installmentState.selectedInstallment
         } else {
             val installmentParams = componentParams.installmentParams
-            val preselectedValue = installmentParams?.cardBasedOptions?.get(cardBrand)?.preselectedValue
-                ?: installmentParams?.defaultOptions?.preselectedValue
+            val installmentOptionsParams = installmentParams?.cardBasedOptions?.get(cardBrand)
+                ?: installmentParams?.defaultOptions
+            val preselectedValue = installmentOptionsParams?.preselectedValue
             updatedInstallmentOptions.firstOrNull {
                 it is InstallmentModel.Regular && it.numberOfInstallments == preselectedValue
             }
