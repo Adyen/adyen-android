@@ -6,6 +6,8 @@
  * Created by oscars on 30/11/2023.
  */
 
+@file:Suppress("ktlint:compose:compositionlocal-allowlist")
+
 package com.adyen.checkout.example.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme

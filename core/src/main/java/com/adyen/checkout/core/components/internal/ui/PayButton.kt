@@ -31,6 +31,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun PayButton(
     payButtonViewState: PayButtonViewState,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val amount = payButtonViewState.amount
     val text = when {
@@ -44,7 +45,7 @@ fun PayButton(
         onClick = onClick,
         text = text,
         buttonState = buttonState,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     )
 }
 

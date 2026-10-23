@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun ComponentScaffold(
-    modifier: Modifier = Modifier,
     footer: (@Composable () -> Unit)?,
     disableInteraction: Boolean,
+    modifier: Modifier = Modifier,
     content: (@Composable () -> Unit)?,
 ) {
     val focusManager = LocalFocusManager.current
@@ -37,9 +37,9 @@ fun ComponentScaffold(
         }
     }
 
-    Box {
+    Box(modifier = modifier) {
         Column(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             content?.invoke()

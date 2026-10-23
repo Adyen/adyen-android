@@ -6,6 +6,8 @@
  * Created by oscars on 26/11/2025.
  */
 
+@file:Suppress("ktlint:compose:compositionlocal-allowlist")
+
 package com.adyen.checkout.ui.internal.theme
 
 import androidx.annotation.RestrictTo

@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -93,6 +94,7 @@ private fun SessionsCardContent(
     addressLookupCallback: AddressLookupCallback,
     modifier: Modifier = Modifier,
 ) {
+    val onOneTimeMessageConsumed by rememberUpdatedState(onOneTimeMessageConsumed)
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -175,12 +177,10 @@ private fun CardComponent(
 
     // Enables vertical scrolling when the CardView becomes too long.
     Column(modifier.verticalScroll(rememberScrollState())) {
-        AdyenComponent(
-            component,
-            modifier,
-        )
+        AdyenComponent(component)
     }
 
+    val onActionConsumed by rememberUpdatedState(onActionConsumed)
     val activity = LocalActivity.current
     if (activity != null && action != null) {
         LaunchedEffect(action) {

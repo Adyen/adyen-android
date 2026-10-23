@@ -6,6 +6,8 @@
  * Created by ararat on 10/11/2025.
  */
 
+@file:Suppress("ktlint:compose:compositionlocal-allowlist")
+
 package com.adyen.checkout.core.common.internal.helper
 
 import android.content.Context

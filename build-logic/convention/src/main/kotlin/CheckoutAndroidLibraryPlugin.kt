@@ -17,6 +17,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.plugin.extraProperties
 
 class CheckoutAndroidLibraryPlugin : Plugin<Project> {
@@ -62,6 +63,36 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
             }
 
             configureBcvWorkaround()
+            configureComposeCompiler()
+        }
+    }
+
+    /**
+     * Configures the Compose compiler in every module that applies it.
+     *
+     * `config/compose/stability.conf` always applies. It lists types the compiler cannot prove stable but that we
+     * promise never change, so composables taking them can skip recomposition.
+     *
+     * The stability reports and metrics are written to `build/compose_compiler` only when the build runs with
+     * `-PcomposeCompilerReports=true`, because generating them slows down compilation. The compiler only reports on the
+     * files it compiles, so an incremental or cached compilation gives a partial report. Force a full one:
+     * `./gradlew :card:compileReleaseKotlin --rerun -PcomposeCompilerReports=true`.
+     */
+    private fun Project.configureComposeCompiler() {
+        val stabilityConfig = rootProject.layout.projectDirectory.file("config/compose/stability.conf")
+        val isReportsEnabled =
+            providers.gradleProperty("composeCompilerReports").map { it.toBoolean() }.getOrElse(false)
+
+        pluginManager.withPlugin("org.jetbrains.kotlin.plugin.compose") {
+            extensions.configure<ComposeCompilerGradlePluginExtension> {
+                stabilityConfigurationFiles.add(stabilityConfig)
+
+                if (isReportsEnabled) {
+                    val outputDir = layout.buildDirectory.dir("compose_compiler")
+                    reportsDestination.set(outputDir)
+                    metricsDestination.set(outputDir)
+                }
+            }
         }
     }
 

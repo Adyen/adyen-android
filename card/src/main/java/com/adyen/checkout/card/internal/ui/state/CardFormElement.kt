@@ -19,6 +19,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
  * Keep new data on the element that needs it rather than beside the list. [CardNumberFormat] is on two elements for
  * that reason, and both derive it from the same brand state so they cannot disagree.
  */
+@Immutable
 internal sealed interface CardFormElement {
 
     /** The composition key, and what tells the state layer which field a focus event came from. */
@@ -86,7 +87,6 @@ internal sealed interface CardFormElement {
      * The installments row on the card form, which shows the current choice and opens the installments screen. The
      * options themselves belong to that screen, not to this row, so they live in [InstallmentPickerViewState].
      */
-    @Immutable
     data class Installments(
         val selectedInstallment: InstallmentModel?,
     ) : CardFormElement {

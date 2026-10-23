@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
 
 /**
@@ -19,7 +20,11 @@ import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
  *
  * Implementations must be comparable by equality, as they are used as the target state of an animation. Prefer
  * `data object` or `data class`.
+ *
+ * Implementations must also be immutable. [Immutable] is inherited, so the Compose compiler trusts every subclass, and
+ * every text field view state holding one, to never change.
  */
+@Immutable
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class TrailingIcon {
 

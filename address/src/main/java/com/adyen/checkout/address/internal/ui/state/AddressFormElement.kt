@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.address.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
@@ -16,6 +17,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
  * One row of the address form, carrying everything needed to render it, including the label of the selected
  * country's layout. A row that is not shown has no element.
  */
+@Immutable
 internal sealed interface AddressFormElement {
 
     /** The composition key, and what tells the state layer which field a focus event came from. */

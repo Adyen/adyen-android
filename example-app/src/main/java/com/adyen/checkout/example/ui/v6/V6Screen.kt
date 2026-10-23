@@ -69,9 +69,11 @@ fun V6Screen(
     theme: CheckoutTheme,
     uiState: V6UiState,
     onPaymentMethodSelected: (PaymentMethodResponse) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
+        modifier = modifier,
         containerColor = Color(theme.colors.background.value),
         topBar = {
             TopAppBar(

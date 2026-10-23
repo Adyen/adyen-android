@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.components.data.model.Amount
 
+@Immutable
 internal sealed interface InstallmentModel {
     data object OneTime : InstallmentModel
     data object Revolving : InstallmentModel

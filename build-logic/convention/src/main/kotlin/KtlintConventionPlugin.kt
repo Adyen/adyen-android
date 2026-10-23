@@ -31,6 +31,7 @@ class KtlintConventionPlugin : Plugin<Project> {
                         attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
                     }
                 }
+                ktlint(libs.ktlint.compose.rules)
             }
 
             val ktLintTask = tasks.register<JavaExec>("ktlint") {

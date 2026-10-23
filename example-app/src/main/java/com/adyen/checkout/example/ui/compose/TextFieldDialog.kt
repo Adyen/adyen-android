@@ -35,11 +35,11 @@ import com.adyen.checkout.example.ui.theme.ExampleTheme
 @Suppress("LongParameterList")
 @Composable
 fun TextFieldDialog(
-    modifier: Modifier = Modifier,
     title: String,
     content: String,
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
     allowNumbersOnly: Boolean = false,
     placeholder: String? = null,
 ) {
@@ -105,7 +105,7 @@ fun TextFieldDialog(
 
 @Preview
 @Composable
-fun EditTextDialogPreview() {
+private fun EditTextDialogPreview() {
     ExampleTheme {
         TextFieldDialog(
             title = "Title",

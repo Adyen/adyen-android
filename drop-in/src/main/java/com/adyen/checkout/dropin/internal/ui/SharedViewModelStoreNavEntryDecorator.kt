@@ -16,6 +16,8 @@
  *    the sharing set an explicit [NavEntry.contentKey] instead, and pass that same value to [parent].
  */
 
+@file:Suppress("ktlint:compose:compositionlocal-allowlist")
+
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.runtime.Composable
