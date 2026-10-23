@@ -753,6 +753,7 @@ class CardView @JvmOverloads constructor(
             binding.autoCompleteTextViewInstallments.setText(
                 InstallmentUtils.getTextForInstallmentOption(localizedContext, outputData.installmentState.value),
             )
+            binding.switchStorePaymentMethod.isChecked = outputData.shouldStorePaymentMethod
         }
     }
 
