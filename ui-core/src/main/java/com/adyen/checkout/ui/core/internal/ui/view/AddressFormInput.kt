@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.autofill.HintConstants
+import androidx.core.view.ViewCompat
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
@@ -111,6 +112,8 @@ class AddressFormInput @JvmOverloads constructor(
         orientation = VERTICAL
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
+        ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO)
+        textViewHeader?.let { ViewCompat.setAccessibilityHeading(it, true) }
 
         autoCompleteTextViewCountry?.apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
