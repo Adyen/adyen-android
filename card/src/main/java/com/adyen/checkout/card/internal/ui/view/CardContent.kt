@@ -24,6 +24,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -227,7 +229,9 @@ private fun CardFormElementContent(
         is CardFormElement.Installments -> {
             Subtitle(
                 text = resolveString(CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE),
-                modifier = Modifier.padding(top = Dimensions.Spacing.Small),
+                modifier = Modifier
+                    .padding(top = Dimensions.Spacing.Small)
+                    .semantics { heading() },
             )
             ValuePickerField(
                 value = element.selectedInstallment?.toDisplayText() ?: "",

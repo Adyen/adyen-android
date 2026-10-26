@@ -9,13 +9,18 @@ package com.adyen.checkout.ui.internal.element.input
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.adyen.checkout.ui.internal.element.SwitchContainer
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
+import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import org.junit.Rule
 import org.junit.Test
@@ -108,9 +113,30 @@ class FormAccessibilityTest {
             .assert(SemanticsMatcher.expectValue(SemanticsProperties.Error, ERROR_MESSAGE))
     }
 
+    @Test
+    fun whenSwitchContainerIsRendered_thenLabelRoleAndStateAreMergedOnOneNode() {
+        composeTestRule.setContent {
+            CheckoutThemePreviewWrapper(CheckoutTheme()) {
+                SwitchContainer(
+                    checked = false,
+                    onCheckedChange = {},
+                    modifier = Modifier.testTag(SWITCH_TAG),
+                ) {
+                    Body(LABEL)
+                }
+            }
+        }
+
+        composeTestRule.onNodeWithTag(SWITCH_TAG)
+            .assert(hasText(LABEL))
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Switch))
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.ToggleableState, ToggleableState.Off))
+    }
+
     private companion object {
         const val TEXT_FIELD_TAG = "text_field"
         const val VALUE_PICKER_TAG = "value_picker"
+        const val SWITCH_TAG = "switch"
         const val LABEL = "Label"
         const val VALUE = "Value"
         const val DESCRIPTION = "Description"

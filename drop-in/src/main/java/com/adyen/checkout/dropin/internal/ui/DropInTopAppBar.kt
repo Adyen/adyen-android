@@ -19,6 +19,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.internal.ui.NavigationCloseButton
@@ -41,7 +44,10 @@ internal fun DropInTopAppBar(
     MediumFlexibleTopAppBar(
         colors = dropInTopAppBarColors(),
         title = {
-            Title(title)
+            Title(
+                text = title,
+                modifier = Modifier.semantics { heading() },
+            )
         },
         navigationIcon = navigationIcon,
         scrollBehavior = scrollBehavior,

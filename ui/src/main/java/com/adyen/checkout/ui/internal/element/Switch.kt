@@ -16,10 +16,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -44,9 +47,21 @@ fun SwitchContainer(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
             .background(
                 color = CheckoutThemeProvider.colors.container,
                 shape = RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp),
+            )
+            .then(
+                if (onCheckedChange != null) {
+                    Modifier.toggleable(
+                        value = checked,
+                        onValueChange = onCheckedChange,
+                        role = Role.Switch,
+                    )
+                } else {
+                    Modifier
+                },
             )
             .padding(horizontal = Dimensions.Spacing.Medium, vertical = Dimensions.Spacing.Small),
     ) {
@@ -56,7 +71,7 @@ fun SwitchContainer(
         Spacer(Modifier.size(Dimensions.Spacing.Small))
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange,
+            onCheckedChange = null,
         )
     }
 }
