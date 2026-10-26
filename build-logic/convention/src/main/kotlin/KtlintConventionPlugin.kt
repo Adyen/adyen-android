@@ -81,9 +81,11 @@ class KtlintConventionPlugin : Plugin<Project> {
      * ktlint skips its own directory walk, which covered the whole module including build/ and crashed on files that
      * other tasks create and delete during the build. If a listed file disappears before ktlint starts, ktlint falls
      * back to walking; running from src/ keeps that walk inside src/ unless the module has .kts files in its root.
+     * Modules without src/ run from the module directory instead, because a missing working directory fails the task.
      */
     private fun JavaExec.pipeFilesToStdin(files: FileCollection) {
-        workingDir = project.file("src")
+        val srcDir = project.file("src")
+        workingDir = if (srcDir.exists()) srcDir else project.projectDir
         // The trailing "=" is intentional: an empty delimiter selects NUL, which cannot occur in a file name.
         argumentProviders.add(CommandLineArgumentProvider { listOf("--patterns-from-stdin=") })
         doFirst {
