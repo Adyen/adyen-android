@@ -26,6 +26,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.error.CheckoutError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -59,7 +60,7 @@ internal class FullCheckoutFlowTest(
 
     private val eventFlow = MutableSharedFlow<PaymentComponentEvent>()
 
-    private val savedStateHandle = SavedStateHandle()
+    private var savedStateHandle = SavedStateHandle()
 
     @BeforeEach
     fun setUp() {
@@ -303,7 +304,7 @@ internal class FullCheckoutFlowTest(
             runTest {
                 var phaseDuringSubmit: CheckoutFlowPhase? = null
                 whenever(componentRequestDispatcher.submit(any())) doSuspendableAnswer {
-                    phaseDuringSubmit = createStateStore().restore()
+                    phaseDuringSubmit = savedPhase()
                     SubmitResult.Retry()
                 }
                 createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
@@ -320,7 +321,7 @@ internal class FullCheckoutFlowTest(
 
             eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
 
-            assertEquals(CheckoutFlowPhase.Input, createStateStore().restore())
+            assertEquals(CheckoutFlowPhase.Input, savedPhase())
         }
 
         @Test
@@ -330,7 +331,7 @@ internal class FullCheckoutFlowTest(
 
             eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
 
-            assertNull(createStateStore().restore())
+            assertNull(savedPhase())
         }
     }
 
@@ -339,7 +340,7 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when restored in the submitted phase, then a generic failure is reported`() = runTest {
-            createStateStore().save(CheckoutFlowPhase.Submitted)
+            givenSavedPhase(CheckoutFlowPhase.Submitted)
 
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -351,7 +352,7 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when restored in the submitted phase, then submit requests are not dispatched`() = runTest {
-            createStateStore().save(CheckoutFlowPhase.Submitted)
+            givenSavedPhase(CheckoutFlowPhase.Submitted)
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
             eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
@@ -361,17 +362,17 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when restored in the submitted phase, then the saved state is cleared`() = runTest {
-            createStateStore().save(CheckoutFlowPhase.Submitted)
+            givenSavedPhase(CheckoutFlowPhase.Submitted)
 
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
-            assertNull(createStateStore().restore())
+            assertNull(savedPhase())
         }
 
         @Test
         fun `when restored in the handling action phase, then the action is restored`() = runTest {
             val action = TestAction(type = "redirect", paymentData = "test_data")
-            createStateStore().save(CheckoutFlowPhase.HandlingAction(action))
+            givenSavedPhase(CheckoutFlowPhase.HandlingAction(action))
 
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -380,7 +381,7 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when restored in the handling action phase, then submit requests are not dispatched`() = runTest {
-            createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+            givenSavedPhase(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
             eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
@@ -390,7 +391,7 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when restored in the handling action phase, then the flow reports no failure`() = runTest {
-            createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+            givenSavedPhase(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
 
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -398,8 +399,34 @@ internal class FullCheckoutFlowTest(
         }
 
         @Test
+        fun `when a flow for the same target is created again on the same handle, then the action is not restored`() =
+            runTest {
+                createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+                createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+
+                createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+                verify(actionHandler, never()).restoreAction(any())
+            }
+
+        @Test
+        fun `when a flow for the same target is created again on the same handle, then submit requests are dispatched`() =
+            runTest {
+                whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
+                val firstFlowScope = CoroutineScope(UnconfinedTestDispatcher())
+                createFullCheckoutFlow(firstFlowScope)
+                createStateStore().save(CheckoutFlowPhase.HandlingAction(TestAction(type = "redirect")))
+                firstFlowScope.cancel()
+                createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
+
+                eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
+
+                verify(componentRequestDispatcher).submit(any())
+            }
+
+        @Test
         fun `when restored in the input phase, then no action is restored`() = runTest {
-            createStateStore().save(CheckoutFlowPhase.Input)
+            givenSavedPhase(CheckoutFlowPhase.Input)
 
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -408,7 +435,7 @@ internal class FullCheckoutFlowTest(
 
         @Test
         fun `when restored in the input phase, then no failure is reported`() = runTest {
-            createStateStore().save(CheckoutFlowPhase.Input)
+            givenSavedPhase(CheckoutFlowPhase.Input)
 
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -418,7 +445,7 @@ internal class FullCheckoutFlowTest(
         @Test
         fun `when restored in the input phase, then submit requests are dispatched`() = runTest {
             whenever(componentRequestDispatcher.submit(any())) doReturn SubmitResult.Retry()
-            createStateStore().save(CheckoutFlowPhase.Input)
+            givenSavedPhase(CheckoutFlowPhase.Input)
             createFullCheckoutFlow(CoroutineScope(UnconfinedTestDispatcher()))
 
             eventFlow.emit(PaymentComponentEvent.Submit(createPaymentComponentState()))
@@ -427,10 +454,23 @@ internal class FullCheckoutFlowTest(
         }
     }
 
-    private fun createStateStore() = CheckoutFlowStateStore(
-        savedStateHandle = savedStateHandle,
+    private fun createStateStore(handle: SavedStateHandle = savedStateHandle) = CheckoutFlowStateStore(
+        savedStateHandle = handle,
         target = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
     )
+
+    /**
+     * Saves [phase] as a flow before process death would, and continues with the rebuilt saved state handle.
+     */
+    private fun givenSavedPhase(phase: CheckoutFlowPhase) {
+        createStateStore().save(phase)
+        savedStateHandle = savedStateHandle.rebuildFromSavedState()
+    }
+
+    /**
+     * The phase that a flow created after process death would restore.
+     */
+    private fun savedPhase() = createStateStore(handle = savedStateHandle.rebuildFromSavedState()).restore()
 
     private fun createFullCheckoutFlow(
         coroutineScope: CoroutineScope,
