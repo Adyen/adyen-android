@@ -10,6 +10,7 @@ import com.adyen.checkout.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.attributes.Bundling
+import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.JavaExec
 import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.dependencies
@@ -37,10 +38,7 @@ class KtlintConventionPlugin : Plugin<Project> {
                 description = "Check Kotlin code style"
                 group = LifecycleBasePlugin.VERIFICATION_GROUP
 
-                val inputFiles = project.fileTree("src") {
-                    include("**/*.kt", "**/*.kts")
-                    exclude("**/build/**", "**/.gradle/**")
-                }
+                val inputFiles = kotlinFiles("**/main/**/*.kt")
                 inputs.files(inputFiles)
 
                 val outputFile = project.layout.buildDirectory.file("reports/ktlint/ktlint-report.txt")
@@ -53,12 +51,10 @@ class KtlintConventionPlugin : Plugin<Project> {
                         listOf(
                             "--reporter=plain",
                             "--reporter=plain,output=${outputFile.get().asFile.absolutePath}",
-                            "**/src/**/main/**/*.kt",
-                            "**.kts",
-                            "!**/build/**",
                         )
                     },
                 )
+                pipeFilesToStdin(inputFiles)
             }
 
             tasks.named(LifecycleBasePlugin.CHECK_TASK_NAME) {
@@ -71,13 +67,27 @@ class KtlintConventionPlugin : Plugin<Project> {
 
                 classpath = ktlint
                 mainClass.set("com.pinterest.ktlint.Main")
-                args(
-                    "-F",
-                    "**/src/**/*.kt",
-                    "**.kts",
-                    "!**/build/**",
-                )
+                args("-F")
+                pipeFilesToStdin(kotlinFiles("**/*.kt"))
             }
+        }
+    }
+
+    private fun Project.kotlinFiles(sourcePattern: String): FileCollection =
+        fileTree("src") { include(sourcePattern, "**/*.kts") } + fileTree(projectDir) { include("*.kts") }
+
+    /**
+     * Gives ktlint an explicit list of [files] on stdin instead of glob patterns. When every entry is an existing file,
+     * ktlint skips its own directory walk, which covered the whole module including build/ and crashed on files that
+     * other tasks create and delete during the build. If a listed file disappears before ktlint starts, ktlint falls
+     * back to walking; running from src/ keeps that walk inside src/ unless the module has .kts files in its root.
+     */
+    private fun JavaExec.pipeFilesToStdin(files: FileCollection) {
+        workingDir = project.file("src")
+        // The trailing "=" is intentional: an empty delimiter selects NUL, which cannot occur in a file name.
+        argumentProviders.add(CommandLineArgumentProvider { listOf("--patterns-from-stdin=") })
+        doFirst {
+            standardInput = files.joinToString(separator = "\u0000") { it.absolutePath }.byteInputStream()
         }
     }
 }
