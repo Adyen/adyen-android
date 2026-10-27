@@ -1,85 +1,116 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>Builder</title>
-<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/main.css" rel="Stylesheet">
 <link href="../../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
 <body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../../index.html">
-                            adyen-android
-                    </a>            </div>
-            <div class="library-version">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    adyen-android
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":upi/release">release</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":upi/release" data-filter=":upi/release">
+                                <span class="checkbox--icon"></span>
+                                release
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":upi:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    adyen-android
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="upi::com.adyen.checkout.upi/UPIConfiguration.Builder///PointingToDeclaration//-792221961">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="upi::com.adyen.checkout.upi/UPIConfiguration.Builder///PointingToDeclaration//-24803172">
   <div class="breadcrumbs"><a href="../../../index.html">upi</a><span class="delimiter">/</span><a href="../../index.html">com.adyen.checkout.upi</a><span class="delimiter">/</span><a href="../index.html">UPIConfiguration</a><span class="delimiter">/</span><span class="current">Builder</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Builder</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html"><strike>Builder</strike></a> : <a href="../../../../action-core/com.adyen.checkout.action.core.internal/-action-handling-payment-method-configuration-builder/index.html">ActionHandlingPaymentMethodConfigurationBuilder</a><span class="token operator">&lt;</span><a href="../index.html">UPIConfiguration</a><span class="token punctuation">, </span><a href="index.html">UPIConfiguration.Builder</a><span class="token operator">&gt; </span>, <a href="../../../../components-core/com.adyen.checkout.components.core.internal/-button-configuration-builder/index.html">ButtonConfigurationBuilder</a></div><div class="deprecation-content"><h3 class="">Deprecated</h3><p class="paragraph">Configuration builders are deprecated, use CheckoutConfiguration instead.</p></div><p class="paragraph">Builder to create a <a href="../index.html">UPIConfiguration</a>.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html"><strike>Builder</strike></a> : <a href="../../../../action-core/com.adyen.checkout.action.core.internal/-action-handling-payment-method-configuration-builder/index.html">ActionHandlingPaymentMethodConfigurationBuilder</a><span class="token operator">&lt;</span><a href="../index.html">UPIConfiguration</a><span class="token punctuation">, </span><a href="index.html">UPIConfiguration.Builder</a><span class="token operator">&gt; </span>, <a href="../../../../components-core/com.adyen.checkout.components.core.internal/-button-configuration-builder/index.html">ButtonConfigurationBuilder</a><span class="source-link-wrapper"><span class="source-link" data-element-type="source-link">(<a href="https://github.com/Adyen/adyen-android/tree/v5/upi/src/main/java/com/adyen/checkout/upi/UPIConfiguration.kt#L47">source</a>)</span></span></div><div class="deprecation-content"><h3 class="">Deprecated</h3><p class="paragraph">Configuration builders are deprecated, use CheckoutConfiguration instead.</p></div><p class="paragraph">Builder to create a <a href="../index.html">UPIConfiguration</a>.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="251138245%2FConstructors%2F-792221961" anchor-label="Builder" id="251138245%2FConstructors%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="251138245%2FConstructors%2F-24803172" anchor-label="Builder" id="251138245%2FConstructors%2F-24803172" data-filterable-set=":upi/release"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":upi/release" data-filterable-set=":upi/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-builder.html"><span><span>Builder</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="251138245%2FConstructors%2F-792221961"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="251138245%2FConstructors%2F-24803172"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Alternative constructor that uses the <a href="../../../../upi/com.adyen.checkout.upi/-u-p-i-configuration/-builder/[60]init[62].html">context</a> to fetch the user locale and use it as a shopper locale.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Locale.html">Locale</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields and a shopper locale.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Alternative constructor that uses the <a href="../../../../upi/com.adyen.checkout.upi/-u-p-i-configuration/-builder/--root--.html">context</a> to fetch the user locale and use it as a shopper locale.</p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Locale.html">Locale</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Initialize a configuration builder with the required fields and a shopper locale.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -87,18 +118,18 @@
         </div>
       </div>
       <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1363335500%2FProperties%2F-792221961" anchor-label="isSubmitButtonVisible" id="1363335500%2FProperties%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1363335500%2FProperties%2F-24803172" anchor-label="isSubmitButtonVisible" id="1363335500%2FProperties%2F-24803172" data-filterable-set=":upi/release"></a>
+          <div class="table-row table-row_content" data-filterable-current=":upi/release" data-filterable-set=":upi/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-submit-button-visible.html"><span>is</span><wbr><span>Submit</span><wbr><span>Button</span><wbr><span><span>Visible</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1363335500%2FProperties%2F-792221961"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1363335500%2FProperties%2F-24803172"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-submit-button-visible.html"><strike>isSubmitButtonVisible</strike></a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-submit-button-visible.html"><strike>isSubmitButtonVisible</strike></a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -106,183 +137,18 @@
         </div>
       </div>
       <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="241905999%2FFunctions%2F-792221961" anchor-label="add3ds2ActionConfiguration" id="241905999%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#241905999%2FFunctions%2F-792221961"><span>add3ds2Action</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="241905999%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#241905999%2FFunctions%2F-792221961"><span class="token function"><strike>add3ds2ActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../3ds2/com.adyen.checkout.adyen3ds2/-adyen3-d-s2-configuration/index.html">Adyen3DS2Configuration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1749787135%2FFunctions%2F-792221961" anchor-label="addAwaitActionConfiguration" id="1749787135%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1749787135%2FFunctions%2F-792221961"><span>add</span><wbr><span>Await</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1749787135%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1749787135%2FFunctions%2F-792221961"><span class="token function"><strike>addAwaitActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../await/com.adyen.checkout.await/-await-configuration/index.html">AwaitConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-882291569%2FFunctions%2F-792221961" anchor-label="addQRCodeActionConfiguration" id="-882291569%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-882291569%2FFunctions%2F-792221961"><span>add</span><wbr><span>QRCode</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-882291569%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-882291569%2FFunctions%2F-792221961"><span class="token function"><strike>addQRCodeActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../qr-code/com.adyen.checkout.qrcode/-q-r-code-configuration/index.html">QRCodeConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-744342335%2FFunctions%2F-792221961" anchor-label="addRedirectActionConfiguration" id="-744342335%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-744342335%2FFunctions%2F-792221961"><span>add</span><wbr><span>Redirect</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-744342335%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-744342335%2FFunctions%2F-792221961"><span class="token function"><strike>addRedirectActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../redirect/com.adyen.checkout.redirect/-redirect-configuration/index.html">RedirectConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1306462007%2FFunctions%2F-792221961" anchor-label="addTwintActionConfiguration" id="1306462007%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1306462007%2FFunctions%2F-792221961"><span>add</span><wbr><span>Twint</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1306462007%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1306462007%2FFunctions%2F-792221961"><span class="token function"><strike>addTwintActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../twint-action/com.adyen.checkout.twint.action/-twint-action-configuration/index.html">TwintActionConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="689772119%2FFunctions%2F-792221961" anchor-label="addVoucherActionConfiguration" id="689772119%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#689772119%2FFunctions%2F-792221961"><span>add</span><wbr><span>Voucher</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="689772119%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#689772119%2FFunctions%2F-792221961"><span class="token function"><strike>addVoucherActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../voucher/com.adyen.checkout.voucher/-voucher-configuration/index.html">VoucherConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1800668351%2FFunctions%2F-792221961" anchor-label="addWeChatPayActionConfiguration" id="-1800668351%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#-1800668351%2FFunctions%2F-792221961"><span>add</span><wbr><span>We</span><wbr><span>Chat</span><wbr><span>Pay</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1800668351%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1800668351%2FFunctions%2F-792221961"><span class="token function"><strike>addWeChatPayActionConfiguration</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../wechatpay/com.adyen.checkout.wechatpay/-we-chat-pay-action-configuration/index.html">WeChatPayActionConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="35561497%2FFunctions%2F-792221961" anchor-label="build" id="35561497%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#35561497%2FFunctions%2F-792221961"><span><span>build</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="35561497%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html#35561497%2FFunctions%2F-792221961"><span class="token function">build</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">UPIConfiguration</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1617939930%2FFunctions%2F-792221961" anchor-label="setAmount" id="1617939930%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1617939930%2FFunctions%2F-792221961"><span>set</span><wbr><span><span>Amount</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1617939930%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="index.html#1617939930%2FFunctions%2F-792221961"><span class="token function">setAmount</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">amount<span class="token operator">: </span><a href="../../../../components-core/com.adyen.checkout.components.core/-amount/index.html">Amount</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1368223450%2FFunctions%2F-792221961" anchor-label="setAnalyticsConfiguration" id="1368223450%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1368223450%2FFunctions%2F-792221961"><span>set</span><wbr><span>Analytics</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1368223450%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html#1368223450%2FFunctions%2F-792221961"><span class="token function">setAnalyticsConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">analyticsConfiguration<span class="token operator">: </span><a href="../../../../components-core/com.adyen.checkout.components.core/-analytics-configuration/index.html">AnalyticsConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1796914586%2FFunctions%2F-792221961" anchor-label="setShopperLocale" id="1796914586%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="index.html#1796914586%2FFunctions%2F-792221961"><span>set</span><wbr><span>Shopper</span><wbr><span><span>Locale</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1796914586%2FFunctions%2F-792221961"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="index.html#1796914586%2FFunctions%2F-792221961"><span class="token function">setShopperLocale</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Locale.html">Locale</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1204534287%2FFunctions%2F-792221961" anchor-label="setSubmitButtonVisible" id="1204534287%2FFunctions%2F-792221961" data-filterable-set=":upi:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":upi:dokkaHtmlPartial/release" data-filterable-set=":upi:dokkaHtmlPartial/release">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1204534287%2FFunctions%2F-24803172" anchor-label="setSubmitButtonVisible" id="1204534287%2FFunctions%2F-24803172" data-filterable-set=":upi/release"></a>
+          <div class="table-row table-row_content" data-filterable-current=":upi/release" data-filterable-set=":upi/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-submit-button-visible.html"><span>set</span><wbr><span>Submit</span><wbr><span>Button</span><wbr><span><span>Visible</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1204534287%2FFunctions%2F-792221961"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1204534287%2FFunctions%2F-24803172"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-submit-button-visible.html"><span class="token function"><strike>setSubmitButtonVisible</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isSubmitButtonVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets if submit button will be visible or not.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":upi/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-submit-button-visible.html"><span class="token function"><strike>setSubmitButtonVisible</strike></span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isSubmitButtonVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">UPIConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Sets if submit button will be visible or not.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -292,12 +158,22 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2026 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>Copyright (c) 2026 Adyen N.V.</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
-
