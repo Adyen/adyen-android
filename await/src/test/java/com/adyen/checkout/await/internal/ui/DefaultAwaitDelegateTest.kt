@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.TestStatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -199,7 +200,7 @@ internal class DefaultAwaitDelegateTest {
 
     @Test
     fun `when max polling time is exceeded, then an error is propagated`() = runTest {
-        val error = IllegalStateException("Max polling time exceeded.")
+        val error = IllegalStateException(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE)
         statusRepository.pollingResults = listOf(Result.failure(error))
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
@@ -212,7 +213,7 @@ internal class DefaultAwaitDelegateTest {
             Activity(),
         )
 
-        assertEquals("Max polling time exceeded.", exceptionFlow.latestValue.message)
+        assertEquals(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE, exceptionFlow.latestValue.message)
         assertEquals(error, exceptionFlow.latestValue.cause)
     }
 
@@ -461,7 +462,8 @@ internal class DefaultAwaitDelegateTest {
         )
     }
 
-    private class TimeoutMessageIllegalStateException : IllegalStateException("Max polling time exceeded.")
+    private class TimeoutMessageIllegalStateException :
+        IllegalStateException(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE)
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

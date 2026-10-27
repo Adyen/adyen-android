@@ -149,7 +149,7 @@ class DefaultStatusRepository(
     }
 
     companion object {
-        internal const val STATUS_POLLING_TIMEOUT_MESSAGE = "Max polling time exceeded."
+        const val STATUS_POLLING_TIMEOUT_MESSAGE = "Max polling time exceeded."
 
         private val POLLING_DELAY_FAST = 2.seconds.inWholeMilliseconds
         private val POLLING_DELAY_SLOW = 10.seconds.inWholeMilliseconds

@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -214,7 +215,7 @@ internal class DefaultAwaitDelegate(
     // Runtime class and message must both match. A subclass, or any other IllegalStateException, is not a timeout.
     private fun Throwable.isStatusPollingTimeout(): Boolean =
         javaClass == IllegalStateException::class.java &&
-            message == "Max polling time exceeded."
+            message == DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE
 
     private fun Throwable.isNonTerminalStatusFailure(): Boolean =
         this is IOException ||
