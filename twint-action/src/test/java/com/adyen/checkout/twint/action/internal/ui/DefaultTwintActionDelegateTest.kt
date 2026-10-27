@@ -167,6 +167,23 @@ internal class DefaultTwintActionDelegateTest {
         }
 
         @Test
+        fun `polling exceeds max duration, then an error is propagated`() = runTest {
+            val error = IllegalStateException("Max polling time exceeded.")
+            statusRepository.pollingResults = listOf(Result.failure(error))
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+            delegate.handleAction(
+                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false)),
+                activity = Activity(),
+            )
+
+            delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
+
+            assertEquals("Error while polling status.", exceptionFlow.latestValue.message)
+            assertEquals(error, exceptionFlow.latestValue.cause)
+        }
+
+        @Test
         fun `polling succeeds and payload is missing, then an error is propagated`() = runTest {
             statusRepository.pollingResults = listOf(
                 Result.success(StatusResponse(resultCode = StatusResponseUtils.RESULT_AUTHORIZED, payload = null)),

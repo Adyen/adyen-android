@@ -247,6 +247,23 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
+        fun `polling for pix exceeds max duration, then an error is propagated`() = runTest {
+            val error = IllegalStateException("Max polling time exceeded.")
+            statusRepository.pollingResults = listOf(Result.failure(error))
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
+
+            assertTrue(exceptionFlow.latestValue is ComponentException)
+            assertEquals("Error while polling status", exceptionFlow.latestValue.message)
+            assertEquals(error, exceptionFlow.latestValue.cause)
+        }
+
+        @Test
         fun `polling for pix is final and payload is empty, then an error is propagated`() = runTest {
             statusRepository.pollingResults = listOf(
                 Result.success(StatusResponse(resultCode = "finished", payload = "")),
