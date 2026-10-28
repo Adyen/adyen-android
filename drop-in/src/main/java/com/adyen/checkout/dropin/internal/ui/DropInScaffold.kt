@@ -19,6 +19,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.core.common.internal.ui.NavigationBackButton
+import com.adyen.checkout.ui.internal.element.NavigationTopAppBar
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -42,9 +43,9 @@ internal fun DropInScaffold(
     Scaffold(
         containerColor = CheckoutThemeProvider.colors.background,
         topBar = {
-            DropInTopAppBar(
-                title = title,
+            NavigationTopAppBar(
                 navigationIcon = navigationIcon,
+                title = title,
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -68,7 +69,7 @@ internal fun DropInScaffold(
     Scaffold(
         containerColor = CheckoutThemeProvider.colors.background,
         topBar = {
-            DropInTopAppBar(navigationIcon = navigationIcon)
+            NavigationTopAppBar(navigationIcon = navigationIcon)
         },
         modifier = modifier,
     ) { innerPadding ->
