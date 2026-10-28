@@ -46,7 +46,7 @@ adyen3ds2 = "2.2.28"
 
 # External dependencies
 cash-app-pay = "2.5.0"
-okhttp = "4.12.0"
+okhttp = "4.12.1"
 play-services-wallet = "19.4.0"
 twint = "8.0.0"
 wechat-pay = "6.8.0"
@@ -55,7 +55,7 @@ wechat-pay = "6.8.0"
 leak-canary = "2.14"
 moshi-adapters = "1.15.2"
 moshi-kotlin-adapter = "1.15.2"
-okhttp-logging = "4.12.0"
+okhttp-logging = "4.12.1"
 preference = "1.2.1"
 retrofit2 = "3.0.0"
 
