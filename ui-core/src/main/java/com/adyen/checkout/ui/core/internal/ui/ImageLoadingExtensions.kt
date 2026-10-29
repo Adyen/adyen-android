@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 // Re-use the same instance to ensure the cache is working optimally
 private var localImageLoader: ImageLoader? = null
-private val Context.imageLoader: ImageLoader
+internal val Context.imageLoader: ImageLoader
     get() {
         localImageLoader?.let { return it }
         val newImageLoader = DefaultImageLoader(this)
