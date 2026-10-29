@@ -14,7 +14,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.os.Build
 import android.os.Environment
@@ -31,18 +30,18 @@ import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
+import com.adyen.checkout.ui.core.internal.ui.imageLoader
 import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
 import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
 import com.google.android.material.R as MaterialR
@@ -74,7 +73,9 @@ class ImageSaver(
 
         view.draw(canvas)
 
-        return saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
+        val result = saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
+        bitmap.recycle()
+        return result
     }
 
     suspend fun saveImageFromUrl(
@@ -84,17 +85,27 @@ class ImageSaver(
         fileName: String? = null,
         fileRelativePath: String? = null,
     ): Result<Unit> = withContext(dispatcher) {
-        val url = imageUrl.toURL() ?: return@withContext Result.failure(CheckoutException("Malformed URL"))
+        imageUrl.toURL() ?: return@withContext Result.failure(CheckoutException("Malformed URL"))
 
-        return@withContext try {
-            val inputStream = url.openStream()
-            val bufferedInputStream = BufferedInputStream(inputStream)
-            val bitmap = BitmapFactory.decodeStream(bufferedInputStream)
-
-            saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
-        } catch (exception: IOException) {
-            Result.failure(CheckoutException("Malformed URL: $exception"))
+        val bitmap = loadBitmap(context, imageUrl).getOrElse { error ->
+            return@withContext Result.failure(CheckoutException("Failed to load image", error))
         }
+
+        saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
+    }
+
+    private suspend fun loadBitmap(context: Context, imageUrl: String): Result<Bitmap> {
+        var bitmapResult: Result<Bitmap> = Result.failure(CheckoutException("Image was not loaded"))
+
+        runSuspendCatching {
+            context.imageLoader.load(
+                url = imageUrl,
+                onSuccess = { bitmap -> bitmapResult = Result.success(bitmap) },
+                onError = { error -> bitmapResult = Result.failure(error) },
+            )
+        }.onFailure { error -> bitmapResult = Result.failure(error) }
+
+        return bitmapResult
     }
 
     private suspend fun saveImageFromBitmap(
@@ -115,13 +126,11 @@ class ImageSaver(
             put(Media.RELATIVE_PATH, imagePath)
         }
 
-        val result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             saveImageApi29AndAbove(context, bitmap, contentValues)
         } else {
             saveImageApi28AndBelow(context, permissionHandler, bitmap, contentValues)
         }
-        bitmap.recycle()
-        return result
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
