@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -33,6 +34,8 @@ import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.exception.HttpException
+import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -47,6 +50,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 @Suppress("LongParameterList", "TooManyFunctions")
@@ -80,6 +84,9 @@ internal class DefaultAwaitDelegate(
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     private var statusPollingJob: Job? = null
+
+    // Cleared at the start of each poll so a reused delegate does not suppress diagnostics for the next attempt.
+    private val loggedNonTerminalStatusFailures = mutableSetOf<Class<out Throwable>>()
 
     private var action: AwaitAction? by SavedStateHandleProperty(ACTION_KEY)
 
@@ -172,6 +179,7 @@ internal class DefaultAwaitDelegate(
 
     private fun startStatusPolling(paymentData: String, action: Action) {
         statusPollingJob?.cancel()
+        loggedNonTerminalStatusFailures.clear()
         statusPollingJob = statusRepository.poll(paymentData, DEFAULT_MAX_POLLING_DURATION)
             .onEach { onStatus(it, action) }
             .launchIn(coroutineScope)
@@ -186,11 +194,43 @@ internal class DefaultAwaitDelegate(
                     onPollingSuccessful(response)
                 }
             },
-            onFailure = {
-                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
-                emitError(ComponentException("Error while polling status", it))
+            onFailure = { error ->
+                when {
+                    error.isStatusPollingTimeout() -> {
+                        adyenLog(AdyenLogLevel.WARN) { error.message.orEmpty() }
+                        emitError(ComponentException(requireNotNull(error.message), error))
+                    }
+
+                    error.isNonTerminalStatusFailure() -> logNonTerminalStatusFailure(error)
+
+                    else -> {
+                        adyenLog(AdyenLogLevel.ERROR, error) { "Error while polling status" }
+                        emitError(ComponentException("Error while polling status", error))
+                    }
+                }
             },
         )
+    }
+
+    // Runtime class and message must both match. A subclass, or any other IllegalStateException, is not a timeout.
+    private fun Throwable.isStatusPollingTimeout(): Boolean =
+        javaClass == IllegalStateException::class.java &&
+            message == DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE
+
+    private fun Throwable.isNonTerminalStatusFailure(): Boolean =
+        this is IOException ||
+            this is HttpException ||
+            this is JSONException ||
+            this is ModelSerializationException
+
+    private fun logNonTerminalStatusFailure(error: Throwable) {
+        if (loggedNonTerminalStatusFailures.add(error.javaClass)) {
+            adyenLog(AdyenLogLevel.WARN, error) { "Status poll failed; polling continues" }
+        } else {
+            adyenLog(AdyenLogLevel.DEBUG) {
+                "Status poll failed; polling continues. ${error.javaClass.simpleName}"
+            }
+        }
     }
 
     private fun createOutputData(statusResponse: StatusResponse?, action: Action) {

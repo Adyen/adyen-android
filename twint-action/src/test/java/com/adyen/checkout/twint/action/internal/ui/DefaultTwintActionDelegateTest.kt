@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.TestStatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -164,6 +165,23 @@ internal class DefaultTwintActionDelegateTest {
 
             val expectedErrorMessage = "Error while polling status."
             assertEquals(expectedErrorMessage, exceptionFlow.latestValue.message)
+        }
+
+        @Test
+        fun `polling exceeds max duration, then an error is propagated`() = runTest {
+            val error = IllegalStateException(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE)
+            statusRepository.pollingResults = listOf(Result.failure(error))
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+            delegate.handleAction(
+                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false)),
+                activity = Activity(),
+            )
+
+            delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
+
+            assertEquals("Error while polling status.", exceptionFlow.latestValue.message)
+            assertEquals(error, exceptionFlow.latestValue.cause)
         }
 
         @Test

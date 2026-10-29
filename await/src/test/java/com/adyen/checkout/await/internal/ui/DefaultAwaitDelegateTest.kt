@@ -17,12 +17,15 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.TestStatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.exception.HttpException
+import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.TestRedirectHandler
@@ -30,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -119,8 +123,66 @@ internal class DefaultAwaitDelegateTest {
     }
 
     @Test
-    fun `when polling fails, then an error is propagated`() = runTest {
-        val error = IOException("test")
+    fun `when polling fails with an IOException and a later status is final, then details are emitted`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.failure(IOException("test")),
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+        val detailsFlow = delegate.detailsFlow.test(testScheduler)
+
+        delegate.handleAction(
+            AwaitAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            ),
+            Activity(),
+        )
+
+        assertTrue(exceptionFlow.values.isEmpty())
+        val payload = detailsFlow.latestValue.details?.getString(DefaultAwaitDelegate.PAYLOAD_DETAILS_KEY)
+        assertEquals("testpayload", payload)
+        assertEquals(TEST_PAYMENT_DATA, detailsFlow.latestValue.paymentData)
+    }
+
+    @Test
+    fun `when polling fails with an HttpException, then no error is propagated`() = runTest {
+        statusRepository.pollingResults = listOf(Result.failure(HttpException(503, "unavailable", null)))
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handleAction(
+            AwaitAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            ),
+            Activity(),
+        )
+
+        assertTrue(exceptionFlow.values.isEmpty())
+    }
+
+    @Test
+    fun `when polling fails with a JSONException, then no error is propagated`() = runTest {
+        statusRepository.pollingResults = listOf(Result.failure(JSONException("malformed")))
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handleAction(
+            AwaitAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            ),
+            Activity(),
+        )
+
+        assertTrue(exceptionFlow.values.isEmpty())
+    }
+
+    @Test
+    fun `when polling fails with a ModelSerializationException, then no error is propagated`() = runTest {
+        val error = ModelSerializationException(StatusResponse::class.java, JSONException("malformed"))
         statusRepository.pollingResults = listOf(Result.failure(error))
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
@@ -133,6 +195,63 @@ internal class DefaultAwaitDelegateTest {
             Activity(),
         )
 
+        assertTrue(exceptionFlow.values.isEmpty())
+    }
+
+    @Test
+    fun `when max polling time is exceeded, then an error is propagated`() = runTest {
+        val error = IllegalStateException(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE)
+        statusRepository.pollingResults = listOf(Result.failure(error))
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handleAction(
+            AwaitAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            ),
+            Activity(),
+        )
+
+        assertEquals(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE, exceptionFlow.latestValue.message)
+        assertEquals(error, exceptionFlow.latestValue.cause)
+    }
+
+    @Test
+    fun `when polling fails with an unexpected IllegalStateException, then a generic error is propagated`() = runTest {
+        val error = IllegalStateException("unexpected")
+        statusRepository.pollingResults = listOf(Result.failure(error))
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handleAction(
+            AwaitAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            ),
+            Activity(),
+        )
+
+        assertEquals("Error while polling status", exceptionFlow.latestValue.message)
+        assertEquals(error, exceptionFlow.latestValue.cause)
+    }
+
+    @Test
+    fun `when polling fails with an IllegalStateException subclass, then a generic error is propagated`() = runTest {
+        val error = TimeoutMessageIllegalStateException()
+        statusRepository.pollingResults = listOf(Result.failure(error))
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handleAction(
+            AwaitAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            ),
+            Activity(),
+        )
+
+        assertEquals("Error while polling status", exceptionFlow.latestValue.message)
         assertEquals(error, exceptionFlow.latestValue.cause)
     }
 
@@ -342,6 +461,9 @@ internal class DefaultAwaitDelegateTest {
             analyticsManager = analyticsManager,
         )
     }
+
+    private class TimeoutMessageIllegalStateException :
+        IllegalStateException(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE)
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

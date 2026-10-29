@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.api.TestStatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
@@ -243,6 +244,23 @@ internal class DefaultQRCodeDelegateTest(
                 Activity(),
             )
 
+            assertEquals(error, exceptionFlow.latestValue.cause)
+        }
+
+        @Test
+        fun `polling for pix exceeds max duration, then an error is propagated`() = runTest {
+            val error = IllegalStateException(DefaultStatusRepository.STATUS_POLLING_TIMEOUT_MESSAGE)
+            statusRepository.pollingResults = listOf(Result.failure(error))
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
+
+            assertTrue(exceptionFlow.latestValue is ComponentException)
+            assertEquals("Error while polling status", exceptionFlow.latestValue.message)
             assertEquals(error, exceptionFlow.latestValue.cause)
         }
 

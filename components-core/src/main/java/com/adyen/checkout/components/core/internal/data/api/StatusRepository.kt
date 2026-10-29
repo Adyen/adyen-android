@@ -25,7 +25,6 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -63,6 +62,8 @@ class DefaultStatusRepository(
     @OptIn(FlowPreview::class)
     override fun poll(paymentData: String, maxPollingDuration: Long): Flow<Result<StatusResponse>> {
         val startTime = timeSource.markNow()
+        // One poll() call is one polling lifecycle. A reused repository must not carry this into the next attempt.
+        var hasLoggedSkippedStatusFailure = false
 
         updateDelay(startTime, maxPollingDuration)
 
@@ -81,13 +82,25 @@ class DefaultStatusRepository(
             .map {
                 fetchStatus(it)
             }
-            .filterNot {
-                // For API >= 35, apps lose connectivity if in background. That results in an UnknownHostException here.
-                // We do not emit this since connection can be recovered and thus, it's not a payment critical failure.
-                it.exceptionOrNull() is UnknownHostException
-            }
             .transform { result ->
-                emit(result)
+                val failure = result.exceptionOrNull()
+                if (failure is UnknownHostException) {
+                    // For API >= 35, apps lose connectivity if in background. That results in an UnknownHostException
+                    // here. We do not emit this since connection can be recovered and thus, it's not a payment
+                    // critical failure. The max-duration check below still runs.
+                    if (!hasLoggedSkippedStatusFailure) {
+                        hasLoggedSkippedStatusFailure = true
+                        adyenLog(AdyenLogLevel.WARN, failure) {
+                            "Status poll failed with UnknownHostException; polling continues"
+                        }
+                    } else {
+                        adyenLog(AdyenLogLevel.DEBUG) {
+                            "Status poll failed with UnknownHostException; polling continues"
+                        }
+                    }
+                } else {
+                    emit(result)
+                }
 
                 if (result.isSuccess && StatusResponseUtils.isFinalResult(result.getOrThrow())) {
                     currentCoroutineContext().cancel()
@@ -95,7 +108,7 @@ class DefaultStatusRepository(
 
                 if (!updateDelay(startTime, maxPollingDuration)) {
                     adyenLog(AdyenLogLevel.DEBUG) { "Max polling time exceeded" }
-                    emit(Result.failure(IllegalStateException("Max polling time exceeded.")))
+                    emit(Result.failure(IllegalStateException(STATUS_POLLING_TIMEOUT_MESSAGE)))
                     currentCoroutineContext().cancel()
                 }
             }
@@ -136,6 +149,8 @@ class DefaultStatusRepository(
     }
 
     companion object {
+        const val STATUS_POLLING_TIMEOUT_MESSAGE = "Max polling time exceeded."
+
         private val POLLING_DELAY_FAST = 2.seconds.inWholeMilliseconds
         private val POLLING_DELAY_SLOW = 10.seconds.inWholeMilliseconds
         private val POLLING_THRESHOLD = 60.seconds.inWholeMilliseconds
