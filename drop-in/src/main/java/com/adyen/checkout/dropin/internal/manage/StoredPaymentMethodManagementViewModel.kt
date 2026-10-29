@@ -103,7 +103,7 @@ internal class StoredPaymentMethodManagementViewModel(
             return StoredPaymentMethodManagementViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
-                expiryCheck = StoredPaymentMethodExpiryCheck.DEFAULT,
+                expiryCheck = StoredPaymentMethodExpiryCheck(),
             ) as T
         }
     }

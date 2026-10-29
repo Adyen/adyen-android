@@ -225,7 +225,7 @@ internal class PaymentMethodListViewModel(
                 dropInParams = dropInParams,
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
-                expiryCheck = StoredPaymentMethodExpiryCheck.DEFAULT,
+                expiryCheck = StoredPaymentMethodExpiryCheck(),
                 availabilityCheck = PaymentMethodProvider,
                 navigator = navigator,
                 controllerProvider = controllerProvider,

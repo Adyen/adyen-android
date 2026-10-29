@@ -28,6 +28,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CompletableDeferred
@@ -311,7 +312,7 @@ internal class PaymentMethodListViewModelTest {
             paymentMethods = paymentMethods,
         ),
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
-        expiryCheck = { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
+        expiryCheck = StoredPaymentMethodExpiryCheck { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
         availabilityCheck = availabilityCheck,
         navigator = navigator,
         controllerProvider = controllerProvider,

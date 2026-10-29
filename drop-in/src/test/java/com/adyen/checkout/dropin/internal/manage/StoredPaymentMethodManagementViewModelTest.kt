@@ -17,6 +17,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.StoredPaymentMethodRemover
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CompletableDeferred
@@ -265,7 +266,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
     private fun createViewModel(repository: DefaultPaymentMethodRepository) = StoredPaymentMethodManagementViewModel(
         paymentMethodRepository = repository,
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
-        expiryCheck = { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
+        expiryCheck = StoredPaymentMethodExpiryCheck { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
     )
 
     private fun createRepository(

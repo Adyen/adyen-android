@@ -17,9 +17,9 @@ import java.util.Calendar
  * [com.adyen.checkout.core.common.helper.CardExpiryDateValidator], there is no grace period, because this only labels
  * the card and doesn't block paying with it.
  */
-internal fun interface StoredPaymentMethodExpiryCheck {
-
-    fun currentCalendar(): Calendar
+internal class StoredPaymentMethodExpiryCheck(
+    private val currentCalendar: () -> Calendar = { Calendar.getInstance() },
+) {
 
     fun isExpired(storedPaymentMethod: StoredPaymentMethod): Boolean {
         val card = storedPaymentMethod as? StoredCardPaymentMethod
@@ -42,14 +42,12 @@ internal fun interface StoredPaymentMethodExpiryCheck {
         return currentYear > expiryYear || (currentYear == expiryYear && currentMonth > expiryMonth)
     }
 
-    companion object {
+    private companion object {
         private const val MONTH_DIGITS = 2
         private const val SHORT_YEAR_DIGITS = 2
         private const val LONG_YEAR_DIGITS = 4
         private const val CENTURY = 2000
         private const val FIRST_MONTH = 1
         private const val LAST_MONTH = 12
-
-        val DEFAULT = StoredPaymentMethodExpiryCheck { Calendar.getInstance() }
     }
 }
