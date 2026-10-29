@@ -24,9 +24,9 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-fun CheckoutTextFieldErrorIcon() {
+fun CheckoutTextFieldErrorIcon(modifier: Modifier = Modifier) {
     Icon(
-        modifier = Modifier.size(Dimensions.IconSize.small),
+        modifier = modifier.size(Dimensions.IconSize.small),
         imageVector = ImageVector.vectorResource(R.drawable.ic_warning),
         contentDescription = null,
         tint = CheckoutThemeProvider.colors.destructive,

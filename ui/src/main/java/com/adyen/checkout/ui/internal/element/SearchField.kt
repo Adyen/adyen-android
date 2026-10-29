@@ -36,15 +36,14 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun SearchField(
+    hint: String,
     modifier: Modifier = Modifier,
     state: TextFieldState = rememberTextFieldState(),
-    hint: String,
     onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
     supportingText: String? = null,
     isError: Boolean = false,
 ) {
-    val state = rememberTextFieldState()
     val style = CheckoutThemeProvider.elements.searchField
     val focusManager = LocalFocusManager.current
     CheckoutTextField(

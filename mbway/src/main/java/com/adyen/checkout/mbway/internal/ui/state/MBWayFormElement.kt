@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.mbway.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 /**
  * One row of the MB Way form, carrying everything needed to render it.
  */
+@Immutable
 internal sealed interface MBWayFormElement {
 
     val id: MBWayFormElementId

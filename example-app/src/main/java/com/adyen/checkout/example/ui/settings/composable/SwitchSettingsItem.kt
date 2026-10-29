@@ -44,7 +44,7 @@ internal fun SwitchSettingsItem(
             text = stringResource(id = settingsItem.titleResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = modifier.weight(1f),
+            modifier = Modifier.weight(1f),
         )
 
         Switch(

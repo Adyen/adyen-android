@@ -30,8 +30,8 @@ import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
+import com.adyen.checkout.core.redirect.internal.ui.RedirectEventEffect
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
-import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectRepository
 import com.adyen.checkout.redirect.internal.ui.view.RedirectContent
 import kotlinx.coroutines.CoroutineScope
@@ -69,7 +69,7 @@ constructor(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        redirectEvent(
+        RedirectEventEffect(
             redirectHandler = redirectHandler,
             viewEventFlow = redirectEventFlow,
             onError = ::emitError,

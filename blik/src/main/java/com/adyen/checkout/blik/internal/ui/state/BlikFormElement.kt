@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.blik.internal.ui.state
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 /**
@@ -16,6 +17,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewS
  * A sealed interface for a single element looks like more than it needs to be, and it is deliberate: every v6 component
  * describes its form the same way, so the shape does not have to change when a second element arrives.
  */
+@Immutable
 internal sealed interface BlikFormElement {
 
     val id: BlikFormElementId
