@@ -29,6 +29,16 @@ git show origin/main:<path>
 
 Enumerate them dynamically — a hardcoded list will go stale. Where any of them states a value that differs on v5, such as `minSdk`, take v5's value from the repository rather than the one written there. Where one points at a file v5 does not have, read `main`'s copy the same way.
 
+### Renovate's rules live on main
+
+`renovate.json` exists only on `main`, and it configures v5's updates too. Read the file from the main branch.
+
+Every version you pick yourself, rather than taking it from Renovate or from `main`, must satisfy the settings that apply to v5: the top-level ones, and every package rule whose `matchBaseBranches` includes `v5` or is absent. That covers settings such as `minimumReleaseAge`, `allowedVersions`, `ignoreDeps` and `enabled`. Read them from the file every time; never assume their values.
+
+To check `minimumReleaseAge`, read the publication date from the `Last-Modified` header of that version's POM.
+
+If you cannot establish whether a version satisfies a rule, do not pick it — take the next one down and say so in the report.
+
 ### Read the previous update for precedent
 
 ```
@@ -113,7 +123,18 @@ Fall back to `https://repo1.maven.org/maven2/...`, then `unzip -p <aar> AndroidM
 
 If `min-sdk` ever changes, every ceiling has to be re-derived.
 
-Then apply rule 4. For every artifact the PR moves to a new major version, find where it is declared. If a published module — one that configures `checkoutPublishing` — declares it in a non-test configuration, keep the highest release of the current major that also satisfies the ceilings. Artifacts released together with it, such as its testing or logging companions, stay on the same version even where only tests or the example app use them, so that those run against what merchants get. A transitive dependency counts too: if a published module would only receive the new major through another dependency, that dependency is held instead.
+Then apply rule 4. For every artifact the PR moves to a new major version, find where it is declared. If a published module — one that configures `checkoutPublishing` — declares it in a non-test configuration, keep the highest release of the current major that also satisfies the ceilings and `main`'s Renovate rules.
+
+That is not necessarily the version v5 already has. Renovate only proposes the newest version, so a newer release of the current major never appears in the PR, and simply reverting Renovate's change leaves v5 behind. Look it up in the artifact's metadata, on Google Maven or Maven Central:
+
+```
+https://dl.google.com/dl/android/maven2/<group-path>/<name>/maven-metadata.xml
+https://repo1.maven.org/maven2/<group-path>/<name>/maven-metadata.xml
+```
+
+Take the highest stable version on the current major — skip anything with a pre-release suffix such as alpha, beta or RC — then walk down from it until it satisfies the ceilings and Renovate's rules.
+
+Artifacts released together with it, such as its testing or logging companions, stay on the same version even where only tests or the example app use them, so that those run against what merchants get. A transitive dependency counts too: if a published module would only receive the new major through another dependency, that dependency is held instead.
 
 ### 4. Fix toolchain fallout
 
