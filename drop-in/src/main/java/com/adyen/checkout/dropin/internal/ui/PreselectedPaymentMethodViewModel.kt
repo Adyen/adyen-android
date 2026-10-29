@@ -60,7 +60,7 @@ internal class PreselectedPaymentMethodViewModel(
 
     fun onPayClicked() {
         val type = DropInPaymentFlowType.StoredPaymentMethod(storedPaymentMethodId)
-        navigator.clearAndNavigateTo(PaymentMethodNavKey(type))
+        navigator.navigateTo(PaymentMethodNavKey(type))
     }
 
     fun onOtherPaymentMethodClicked() {
