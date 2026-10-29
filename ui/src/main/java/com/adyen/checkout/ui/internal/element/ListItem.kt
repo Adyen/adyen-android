@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +49,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * @param modifier The [Modifier] to be applied to the layout.
  * @param enabled Whether the item can be clicked. A disabled item ignores clicks and is not focusable.
  * @param subtitle The optional text to display below the title.
+ * @param subtitleColor The color of the subtitle while the item is enabled. Defaults to the secondary text color.
  * @param selected Whether the item is selected. A selected item is highlighted and, if no [trailingContent] is
  * provided, shows a checkmark.
  * @param leadingIcon The optional composable to display at the start of the item. **This should only be used for
@@ -62,6 +64,7 @@ fun ListItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     subtitle: String? = null,
+    subtitleColor: Color? = null,
     selected: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
@@ -95,7 +98,10 @@ fun ListItem(
             {
                 SubHeadline(
                     text = it,
-                    color = if (enabled) checkoutColors.textSecondary else checkoutColors.textOnDisabled,
+                    color = when {
+                        !enabled -> checkoutColors.textOnDisabled
+                        else -> subtitleColor ?: checkoutColors.textSecondary
+                    },
                 )
             }
         },

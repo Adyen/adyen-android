@@ -236,7 +236,12 @@ private fun StoredPaymentMethodListItem(
             }
         },
         title = item.title,
-        subtitle = item.subtitle,
+        subtitle = if (item.isExpired) {
+            resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_STATUS_EXPIRED)
+        } else {
+            item.subtitle
+        },
+        subtitleColor = CheckoutThemeProvider.colors.destructive.takeIf { item.isExpired },
         trailingContent = {
             val colors = CheckoutThemeProvider.colors
             Body(
@@ -264,6 +269,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "mc",
                     title = "•••• 1234",
                     subtitle = "Mastercard",
+                    isExpired = true,
                     removalTitle = "Mastercard •••• 1234",
                     isRemoving = false,
                 ),
@@ -272,6 +278,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "visa",
                     title = "•••• 2567",
                     subtitle = "Visa",
+                    isExpired = false,
                     removalTitle = "Visa •••• 2567",
                     isRemoving = true,
                 ),
@@ -282,6 +289,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "paybybank",
                     title = "•••• 1234",
                     subtitle = "WELLS FARGO",
+                    isExpired = false,
                     removalTitle = "WELLS FARGO",
                     isRemoving = false,
                 ),
@@ -290,6 +298,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "wechatpay",
                     title = "@someName",
                     subtitle = "WeChat Pay",
+                    isExpired = false,
                     removalTitle = "WeChat Pay",
                     isRemoving = false,
                 ),

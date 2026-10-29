@@ -31,6 +31,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.IOException
+import java.util.Calendar
+import java.util.GregorianCalendar
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(LoggingExtension::class, TestDispatcherExtension::class)
@@ -217,6 +219,21 @@ internal class StoredPaymentMethodManagementViewModelTest {
         }
     }
 
+    @Test
+    fun `when a card is expired, then only that card is shown as expired`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(
+                storedPaymentMethods = listOf(storedCard(FIRST_ID, expiryYear = "2025"), storedCard(SECOND_ID)),
+                coroutineScope = backgroundScope,
+            ),
+        )
+
+        viewModel.viewState.test {
+            val expiredIds = expectMostRecentItem().cards.filter { it.isExpired }.map { it.id }
+            assertEquals(listOf(FIRST_ID), expiredIds)
+        }
+    }
+
     private fun createViewModel(
         remover: StoredPaymentMethodRemover,
         coroutineScope: CoroutineScope,
@@ -225,6 +242,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
     private fun createViewModel(repository: DefaultPaymentMethodRepository) = StoredPaymentMethodManagementViewModel(
         paymentMethodRepository = repository,
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+        expiryCheck = { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
     )
 
     private fun createRepository(
@@ -242,7 +260,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
 
     private fun StoredPaymentMethodManagementViewState.removingCardIds() = cards.filter { it.isRemoving }.map { it.id }
 
-    private fun storedCard(id: String) = StoredCardPaymentMethod(
+    private fun storedCard(id: String, expiryYear: String = "2030") = StoredCardPaymentMethod(
         type = PaymentMethodTypes.SCHEME,
         id = id,
         name = "Visa",
@@ -250,7 +268,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
         brand = "visa",
         lastFour = "1234",
         expiryMonth = "01",
-        expiryYear = "2030",
+        expiryYear = expiryYear,
         holderName = null,
         fundingSource = null,
     )

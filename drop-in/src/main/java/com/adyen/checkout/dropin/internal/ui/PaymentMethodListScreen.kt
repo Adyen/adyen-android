@@ -235,7 +235,12 @@ private fun PaymentMethodListItem(
             )
         },
         title = item.title,
-        subtitle = item.subtitle,
+        subtitle = if (item.isExpired) {
+            resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_STATUS_EXPIRED)
+        } else {
+            item.subtitle
+        },
+        subtitleColor = CheckoutThemeProvider.colors.destructive.takeIf { item.isExpired },
         trailingContent = {
             PaymentMethodItemTrailingContent(item)
         },

@@ -200,6 +200,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION ->
                 R.string.checkout_dropin_stored_payment_method_description
 
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_STATUS_EXPIRED ->
+                R.string.checkout_dropin_stored_payment_method_status_expired
+
             // General
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CANCEL -> R.string.checkout_general_cancel

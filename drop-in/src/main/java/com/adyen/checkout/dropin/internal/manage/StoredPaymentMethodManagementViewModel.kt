@@ -16,6 +16,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayment
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 internal class StoredPaymentMethodManagementViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
+    private val expiryCheck: StoredPaymentMethodExpiryCheck,
 ) : ViewModel() {
 
     private val showRemovalError = MutableStateFlow(false)
@@ -77,6 +79,7 @@ internal class StoredPaymentMethodManagementViewModel(
             icon = icon,
             title = title,
             subtitle = subtitle,
+            isExpired = expiryCheck.isExpired(this),
             removalTitle = StoredPaymentMethodFormatter.getRemovalTitle(this),
             isRemoving = isRemoving,
         )
@@ -96,6 +99,7 @@ internal class StoredPaymentMethodManagementViewModel(
             return StoredPaymentMethodManagementViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+                expiryCheck = StoredPaymentMethodExpiryCheck.DEFAULT,
             ) as T
         }
     }
