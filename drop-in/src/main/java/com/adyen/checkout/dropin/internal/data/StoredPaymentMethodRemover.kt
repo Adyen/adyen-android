@@ -29,7 +29,7 @@ internal class DefaultStoredPaymentMethodRemover(
                 storedPaymentMethodId = storedPaymentMethod.id,
             )
 
-            // TODO - Call DropInService.onRemoveStoredPaymentMethod once it is added
+            // TODO - Remove this branch together with the advanced flow
             is CheckoutContext.Advanced -> Result.failure(
                 UnsupportedOperationException("Removing stored payment methods is not supported in the advanced flow."),
             )
