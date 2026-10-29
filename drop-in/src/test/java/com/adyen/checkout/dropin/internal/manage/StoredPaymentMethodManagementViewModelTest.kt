@@ -220,6 +220,29 @@ internal class StoredPaymentMethodManagementViewModelTest {
     }
 
     @Test
+    fun `when stored payment methods are listed, then the list is not empty from the start`() = runTest {
+        val viewModel = createViewModel(createRepository(coroutineScope = backgroundScope))
+
+        assertFalse(viewModel.viewState.value.isEmpty)
+    }
+
+    @Test
+    fun `when the last stored payment method is removed, then the list is empty`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(storedPaymentMethods = listOf(storedCard(FIRST_ID)), coroutineScope = backgroundScope),
+        )
+
+        viewModel.viewState.test {
+            assertFalse(expectMostRecentItem().isEmpty)
+
+            viewModel.removeStoredPaymentMethod(FIRST_ID)
+            runCurrent()
+
+            assertTrue(expectMostRecentItem().isEmpty)
+        }
+    }
+
+    @Test
     fun `when a card is expired, then only that card is shown as expired`() = runTest {
         val viewModel = createViewModel(
             createRepository(

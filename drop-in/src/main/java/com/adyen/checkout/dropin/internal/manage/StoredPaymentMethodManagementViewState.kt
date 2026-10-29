@@ -15,6 +15,8 @@ internal data class StoredPaymentMethodManagementViewState(
     val showRemovalError: Boolean,
 ) {
 
+    val isEmpty: Boolean get() = cards.isEmpty() && others.isEmpty()
+
     internal data class ListItem(
         val id: String,
         val icon: String,

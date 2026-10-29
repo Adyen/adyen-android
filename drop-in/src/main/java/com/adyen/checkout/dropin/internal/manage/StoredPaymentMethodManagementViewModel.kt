@@ -43,7 +43,11 @@ internal class StoredPaymentMethodManagementViewModel(
     ).stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        createViewState(emptyList(), emptySet(), false),
+        createViewState(
+            paymentMethodRepository.storedPaymentMethods.value,
+            paymentMethodRepository.storedPaymentMethodIdsBeingRemoved.value,
+            showRemovalError.value,
+        ),
     )
 
     init {

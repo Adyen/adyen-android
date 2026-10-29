@@ -10,8 +10,10 @@ package com.adyen.checkout.dropin.internal.manage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.SavedStateHandle
@@ -43,10 +46,12 @@ import com.adyen.checkout.dropin.internal.ui.DropInScaffold
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.element.ProgressBar
+import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
+import com.adyen.checkout.ui.internal.text.Subtitle
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -77,14 +82,19 @@ private fun StoredPaymentMethodManagementContent(
         title = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_TITLE),
     ) { innerPadding ->
         var selectedItemId by rememberSaveable { mutableStateOf<String?>(null) }
+        val contentModifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
 
-        StoredPaymentMethodList(
-            viewState = viewState,
-            onItemClick = { selectedItemId = it.id },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-        )
+        if (viewState.isEmpty) {
+            EmptyState(onPaymentOptionsClick = { navigator.back() }, modifier = contentModifier)
+        } else {
+            StoredPaymentMethodList(
+                viewState = viewState,
+                onItemClick = { selectedItemId = it.id },
+                modifier = contentModifier,
+            )
+        }
 
         // Looked up from the view state, so the dialog closes if the item is no longer listed.
         val selectedItem = (viewState.cards + viewState.others).firstOrNull { it.id == selectedItemId }
@@ -137,6 +147,42 @@ private fun StoredPaymentMethodList(
                 .takeIf { viewState.showOthersSectionTitle },
             storedPaymentMethods = viewState.others,
             onItemClick = onItemClick,
+        )
+    }
+}
+
+@Composable
+private fun EmptyState(
+    onPaymentOptionsClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Description()
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Small, Alignment.CenterVertically),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(horizontal = Dimensions.Spacing.Large),
+        ) {
+            Subtitle(
+                text = resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_EMPTY_TITLE),
+                textAlign = TextAlign.Center,
+            )
+            Body(
+                text = resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_EMPTY_DESCRIPTION),
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        PrimaryButton(
+            onClick = onPaymentOptionsClick,
+            text = resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_PAYMENT_OPTIONS_LABEL),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimensions.Spacing.Large),
         )
     }
 }
@@ -305,6 +351,28 @@ private fun StoredPaymentMethodManagementContentPreview(
             ),
             showOthersSectionTitle = true,
             showRemovalError = true,
+        )
+
+        val persister = SavedStateBackStackPersister(SavedStateHandle())
+        StoredPaymentMethodManagementContent(
+            navigator = DropInNavigator(persister),
+            viewState = viewState,
+            onRemoveItem = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StoredPaymentMethodManagementEmptyPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    CheckoutThemePreviewWrapper(theme) {
+        val viewState = StoredPaymentMethodManagementViewState(
+            cards = emptyList(),
+            others = emptyList(),
+            showOthersSectionTitle = false,
+            showRemovalError = false,
         )
 
         val persister = SavedStateBackStackPersister(SavedStateHandle())

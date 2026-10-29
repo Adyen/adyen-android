@@ -178,6 +178,15 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVAL_ERROR ->
                 R.string.checkout_dropin_stored_payment_method_management_removal_error
 
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_EMPTY_TITLE ->
+                R.string.checkout_dropin_stored_payment_method_management_empty_title
+
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_EMPTY_DESCRIPTION ->
+                R.string.checkout_dropin_stored_payment_method_management_empty_description
+
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_PAYMENT_OPTIONS_LABEL ->
+                R.string.checkout_dropin_stored_payment_method_management_payment_options_label
+
             CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION ->
                 R.string.checkout_drop_in_payment_method_list_description
