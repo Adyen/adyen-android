@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
@@ -25,7 +26,14 @@ internal class DropInParamsMapperTest {
     fun `when drop-in configuration is null then default values are used`() {
         val params = mapper.mapToParams(createCheckoutParams(dropInConfiguration = null))
 
-        assertEquals(DropInParams(hideStoredPaymentMethods = false, startWithLastStoredPaymentMethod = true), params)
+        assertEquals(
+            DropInParams(
+                hideStoredPaymentMethods = false,
+                startWithLastStoredPaymentMethod = true,
+                isRemovingStoredPaymentMethodsEnabled = false,
+            ),
+            params,
+        )
     }
 
     @Test
@@ -68,6 +76,40 @@ internal class DropInParamsMapperTest {
         assertEquals(false, params.startWithLastStoredPaymentMethod)
     }
 
+    @Test
+    fun `when the session shows the remove payment method button, then removing is enabled`() {
+        val params = mapper.mapToParams(
+            createCheckoutParams(additionalSessionParams = createSessionParams(showRemovePaymentMethodButton = true)),
+        )
+
+        assertEquals(true, params.isRemovingStoredPaymentMethodsEnabled)
+    }
+
+    @Test
+    fun `when the session hides the remove payment method button, then removing is disabled`() {
+        val params = mapper.mapToParams(
+            createCheckoutParams(additionalSessionParams = createSessionParams(showRemovePaymentMethodButton = false)),
+        )
+
+        assertEquals(false, params.isRemovingStoredPaymentMethodsEnabled)
+    }
+
+    @Test
+    fun `when the session does not set the remove payment method button, then removing is disabled`() {
+        val params = mapper.mapToParams(
+            createCheckoutParams(additionalSessionParams = createSessionParams(showRemovePaymentMethodButton = null)),
+        )
+
+        assertEquals(false, params.isRemovingStoredPaymentMethodsEnabled)
+    }
+
+    @Test
+    fun `when there is no session, then removing is disabled`() {
+        val params = mapper.mapToParams(createCheckoutParams(additionalSessionParams = null))
+
+        assertEquals(false, params.isRemovingStoredPaymentMethodsEnabled)
+    }
+
     private fun createDropInConfiguration(
         hideStoredPaymentMethods: Boolean? = null,
         startWithLastStoredPaymentMethod: Boolean? = null,
@@ -76,8 +118,16 @@ internal class DropInParamsMapperTest {
         startWithLastStoredPaymentMethod = startWithLastStoredPaymentMethod,
     )
 
+    private fun createSessionParams(showRemovePaymentMethodButton: Boolean?) = AdditionalSessionParams(
+        enableStoreDetails = null,
+        installmentConfiguration = null,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        returnUrl = null,
+    )
+
     private fun createCheckoutParams(
         dropInConfiguration: DropInConfiguration? = createDropInConfiguration(),
+        additionalSessionParams: AdditionalSessionParams? = null,
     ) = CheckoutParams(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
@@ -89,7 +139,7 @@ internal class DropInParamsMapperTest {
         additionalConfigurations = buildMap {
             dropInConfiguration?.let { this[DropInConfiguration::class.java.name] = it }
         },
-        additionalSessionParams = null,
+        additionalSessionParams = additionalSessionParams,
     )
 
     private companion object {

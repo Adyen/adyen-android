@@ -272,9 +272,13 @@ internal class PaymentMethodListViewModelTest {
         controllerProvider = controllerProvider,
     )
 
-    private fun createDropInParams(hideStoredPaymentMethods: Boolean = false) = DropInParams(
+    private fun createDropInParams(
+        hideStoredPaymentMethods: Boolean = false,
+        isRemovingStoredPaymentMethodsEnabled: Boolean = true,
+    ) = DropInParams(
         hideStoredPaymentMethods = hideStoredPaymentMethods,
         startWithLastStoredPaymentMethod = true,
+        isRemovingStoredPaymentMethodsEnabled = isRemovingStoredPaymentMethodsEnabled,
     )
 
     /** [CheckoutController] is final with an internal constructor, so it can only be mocked rather than faked. */

@@ -118,7 +118,11 @@ internal class DropInViewModelTest {
         val viewModel = createViewModel()
 
         assertEquals(
-            DropInParams(hideStoredPaymentMethods = false, startWithLastStoredPaymentMethod = true),
+            DropInParams(
+                hideStoredPaymentMethods = false,
+                startWithLastStoredPaymentMethod = true,
+                isRemovingStoredPaymentMethodsEnabled = false,
+            ),
             viewModel.dropInParams,
         )
     }
@@ -132,7 +136,11 @@ internal class DropInViewModelTest {
         )
 
         assertEquals(
-            DropInParams(hideStoredPaymentMethods = true, startWithLastStoredPaymentMethod = false),
+            DropInParams(
+                hideStoredPaymentMethods = true,
+                startWithLastStoredPaymentMethod = false,
+                isRemovingStoredPaymentMethodsEnabled = false,
+            ),
             viewModel.dropInParams,
         )
     }

@@ -15,9 +15,11 @@ internal class DropInParamsMapper {
 
     fun mapToParams(params: CheckoutParams): DropInParams {
         val dropInConfiguration = params.getConfiguration<DropInConfiguration>()
+        val showRemovePaymentMethodButton = params.additionalSessionParams?.showRemovePaymentMethodButton
         return DropInParams(
             hideStoredPaymentMethods = dropInConfiguration?.hideStoredPaymentMethods ?: false,
             startWithLastStoredPaymentMethod = dropInConfiguration?.startWithLastStoredPaymentMethod ?: true,
+            isRemovingStoredPaymentMethodsEnabled = showRemovePaymentMethodButton ?: false,
         )
     }
 }
