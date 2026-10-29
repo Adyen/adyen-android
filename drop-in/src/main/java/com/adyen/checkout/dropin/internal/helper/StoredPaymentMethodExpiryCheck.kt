@@ -22,6 +22,7 @@ internal class StoredPaymentMethodExpiryCheck(
 ) {
 
     fun isExpired(storedPaymentMethod: StoredPaymentMethod): Boolean {
+        // TODO - Check StoredBCMCPaymentMethod too once stored Bancontact is supported, like iOS
         val card = storedPaymentMethod as? StoredCardPaymentMethod
         val expiryMonth = card?.expiryMonth
             ?.takeIf { it.length == MONTH_DIGITS }

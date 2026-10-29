@@ -63,6 +63,7 @@ internal class StoredPaymentMethodManagementViewModel(
     ): StoredPaymentMethodManagementViewState {
         val (cards, others) = storedPaymentMethods
             .filter { paymentMethodSupportCheck.isSupported(it) }
+            // TODO - List stored Bancontact with the cards once it is supported, like iOS
             .partition { it.type == PaymentMethodTypes.SCHEME }
 
         return StoredPaymentMethodManagementViewState(
