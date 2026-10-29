@@ -10,7 +10,9 @@ package com.adyen.checkout.dropin.internal.manage
 
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.StoredPaymentMethodRemover
@@ -179,10 +181,37 @@ internal class StoredPaymentMethodManagementViewModelTest {
             assertEquals(listOf(SECOND_ID), repository.storedPaymentMethods.value.map { it.id })
         }
 
+    @Test
+    fun `when there are cards and other stored payment methods, then the other section has a title`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(
+                storedPaymentMethods = listOf(storedCard(FIRST_ID), storedBlik(SECOND_ID)),
+                coroutineScope = backgroundScope,
+            ),
+        )
+
+        viewModel.viewState.test {
+            assertTrue(expectMostRecentItem().showOthersSectionTitle)
+        }
+    }
+
+    @Test
+    fun `when there are only other stored payment methods, then the other section has no title`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(storedPaymentMethods = listOf(storedBlik(SECOND_ID)), coroutineScope = backgroundScope),
+        )
+
+        viewModel.viewState.test {
+            val viewState = expectMostRecentItem()
+            assertEquals(listOf(SECOND_ID), viewState.others.map { it.id })
+            assertFalse(viewState.showOthersSectionTitle)
+        }
+    }
+
     private fun createViewModel(
         remover: StoredPaymentMethodRemover,
         coroutineScope: CoroutineScope,
-    ) = createViewModel(createRepository(remover, coroutineScope))
+    ) = createViewModel(createRepository(remover = remover, coroutineScope = coroutineScope))
 
     private fun createViewModel(repository: DefaultPaymentMethodRepository) = StoredPaymentMethodManagementViewModel(
         paymentMethodRepository = repository,
@@ -190,11 +219,12 @@ internal class StoredPaymentMethodManagementViewModelTest {
     )
 
     private fun createRepository(
-        remover: StoredPaymentMethodRemover,
+        remover: StoredPaymentMethodRemover = StoredPaymentMethodRemover { Result.success(Unit) },
+        storedPaymentMethods: List<StoredPaymentMethod> = listOf(storedCard(FIRST_ID), storedCard(SECOND_ID)),
         coroutineScope: CoroutineScope,
     ) = DefaultPaymentMethodRepository(
         paymentMethods = emptyList(),
-        storedPaymentMethods = listOf(storedCard(FIRST_ID), storedCard(SECOND_ID)),
+        storedPaymentMethods = storedPaymentMethods,
         storedPaymentMethodRemover = remover,
         coroutineScope = coroutineScope,
     )
@@ -214,6 +244,13 @@ internal class StoredPaymentMethodManagementViewModelTest {
         expiryYear = "2030",
         holderName = null,
         fundingSource = null,
+    )
+
+    private fun storedBlik(id: String) = StoredBLIKPaymentMethod(
+        type = PaymentMethodTypes.BLIK,
+        name = "BLIK",
+        id = id,
+        supportedShopperInteractions = listOf("Ecommerce"),
     )
 
     private companion object {

@@ -77,46 +77,14 @@ private fun StoredPaymentMethodManagementContent(
         title = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_TITLE),
     ) { innerPadding ->
         var selectedItemId by rememberSaveable { mutableStateOf<String?>(null) }
-        val listState = rememberLazyListState()
 
-        // The error is the first item after the description, so scroll up to make sure it is seen.
-        LaunchedEffect(viewState.showRemovalError) {
-            if (viewState.showRemovalError) listState.animateScrollToItem(0)
-        }
-
-        LazyColumn(
-            state = listState,
+        StoredPaymentMethodList(
+            viewState = viewState,
+            onItemClick = { selectedItemId = it.id },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-        ) {
-            item {
-                Body(
-                    text = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_DESCRIPTION),
-                    color = CheckoutThemeProvider.colors.textSecondary,
-                    modifier = Modifier
-                        .padding(
-                            start = Dimensions.Spacing.Large,
-                            end = Dimensions.Spacing.Large,
-                            bottom = Dimensions.Spacing.Large,
-                        ),
-                )
-            }
-
-            if (viewState.showRemovalError) removalError()
-
-            section(
-                title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_CARDS_SECTION_TITLE,
-                storedPaymentMethods = viewState.cards,
-                onItemClick = { selectedItemId = it.id },
-            )
-
-            section(
-                title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_OTHERS_SECTION_TITLE,
-                storedPaymentMethods = viewState.others,
-                onItemClick = { selectedItemId = it.id },
-            )
-        }
+        )
 
         // Looked up from the view state, so the dialog closes if the item is no longer listed.
         val selectedItem = (viewState.cards + viewState.others).firstOrNull { it.id == selectedItemId }
@@ -135,6 +103,55 @@ private fun StoredPaymentMethodManagementContent(
             )
         }
     }
+}
+
+@Composable
+private fun StoredPaymentMethodList(
+    viewState: StoredPaymentMethodManagementViewState,
+    onItemClick: (StoredPaymentMethodManagementViewState.ListItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val listState = rememberLazyListState()
+
+    // The error is the first item after the description, so scroll up to make sure it is seen.
+    LaunchedEffect(viewState.showRemovalError) {
+        if (viewState.showRemovalError) listState.animateScrollToItem(0)
+    }
+
+    LazyColumn(
+        state = listState,
+        modifier = modifier,
+    ) {
+        item { Description() }
+
+        if (viewState.showRemovalError) removalError()
+
+        section(
+            title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_CARDS_SECTION_TITLE,
+            storedPaymentMethods = viewState.cards,
+            onItemClick = onItemClick,
+        )
+
+        section(
+            title = CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_OTHERS_SECTION_TITLE
+                .takeIf { viewState.showOthersSectionTitle },
+            storedPaymentMethods = viewState.others,
+            onItemClick = onItemClick,
+        )
+    }
+}
+
+@Composable
+private fun Description(modifier: Modifier = Modifier) {
+    Body(
+        text = resolveString(CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_DESCRIPTION),
+        color = CheckoutThemeProvider.colors.textSecondary,
+        modifier = modifier.padding(
+            start = Dimensions.Spacing.Large,
+            end = Dimensions.Spacing.Large,
+            bottom = Dimensions.Spacing.Large,
+        ),
+    )
 }
 
 private const val REMOVAL_ERROR_KEY = "removal_error"
@@ -168,11 +185,11 @@ private fun LazyListScope.removalError() {
 }
 
 private fun LazyListScope.section(
-    title: CheckoutLocalizationKey,
+    title: CheckoutLocalizationKey?,
     storedPaymentMethods: List<StoredPaymentMethodManagementViewState.ListItem>,
     onItemClick: (StoredPaymentMethodManagementViewState.ListItem) -> Unit,
 ) {
-    if (storedPaymentMethods.isNotEmpty()) {
+    if (title != null && storedPaymentMethods.isNotEmpty()) {
         item(key = title) {
             SubHeadlineEmphasized(
                 text = resolveString(title),
@@ -273,6 +290,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     isRemoving = false,
                 ),
             ),
+            showOthersSectionTitle = true,
             showRemovalError = true,
         )
 

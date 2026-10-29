@@ -62,6 +62,7 @@ internal class StoredPaymentMethodManagementViewModel(
         return StoredPaymentMethodManagementViewState(
             cards = cards.map { it.toListItem(isRemoving = it.id in idsBeingRemoved) },
             others = others.map { it.toListItem(isRemoving = it.id in idsBeingRemoved) },
+            showOthersSectionTitle = cards.isNotEmpty(),
             showRemovalError = showRemovalError,
         )
     }
