@@ -227,6 +227,7 @@ private fun PaymentMethodListItem(
     onClick: (PaymentMethodItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val subtitle = storedPaymentMethodSubtitle(item.subtitle, item.isExpired)
     ListItem(
         leadingIcon = {
             CheckoutNetworkLogo(
@@ -235,12 +236,8 @@ private fun PaymentMethodListItem(
             )
         },
         title = item.title,
-        subtitle = if (item.isExpired) {
-            resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_STATUS_EXPIRED)
-        } else {
-            item.subtitle
-        },
-        subtitleColor = CheckoutThemeProvider.colors.destructive.takeIf { item.isExpired },
+        subtitle = subtitle.text,
+        subtitleColor = subtitle.color,
         trailingContent = {
             PaymentMethodItemTrailingContent(item)
         },

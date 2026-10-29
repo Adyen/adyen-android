@@ -43,6 +43,7 @@ import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.ui.ConfirmationDialog
 import com.adyen.checkout.dropin.internal.ui.DropInNavigator
 import com.adyen.checkout.dropin.internal.ui.DropInScaffold
+import com.adyen.checkout.dropin.internal.ui.storedPaymentMethodSubtitle
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.element.ProgressBar
@@ -265,6 +266,7 @@ private fun StoredPaymentMethodListItem(
     onClick: (StoredPaymentMethodManagementViewState.ListItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val subtitle = storedPaymentMethodSubtitle(item.subtitle, item.isExpired)
     ListItem(
         leadingIcon = {
             if (item.isRemoving) {
@@ -282,12 +284,8 @@ private fun StoredPaymentMethodListItem(
             }
         },
         title = item.title,
-        subtitle = if (item.isExpired) {
-            resolveString(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_STATUS_EXPIRED)
-        } else {
-            item.subtitle
-        },
-        subtitleColor = CheckoutThemeProvider.colors.destructive.takeIf { item.isExpired },
+        subtitle = subtitle.text,
+        subtitleColor = subtitle.color,
         trailingContent = {
             val colors = CheckoutThemeProvider.colors
             Body(
