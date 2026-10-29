@@ -20,6 +20,7 @@ internal data class StoredPaymentMethodManagementViewState(
         val icon: String,
         val title: String,
         val subtitle: String?,
+        val removalTitle: String,
         val isRemoving: Boolean,
     )
 }

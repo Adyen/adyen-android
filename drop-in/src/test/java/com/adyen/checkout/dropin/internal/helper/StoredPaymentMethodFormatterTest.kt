@@ -272,4 +272,54 @@ internal class StoredPaymentMethodFormatterTest {
 
         assertNull(result)
     }
+
+    @Test
+    fun `when type is scheme, then removal title is name and last four`() {
+        val storedPaymentMethod = StoredCardPaymentMethod(
+            type = PaymentMethodTypes.SCHEME,
+            name = "Visa",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            brand = "visa",
+            lastFour = "1234",
+            expiryMonth = "01",
+            expiryYear = "2030",
+            holderName = null,
+            fundingSource = null,
+        )
+
+        val result = StoredPaymentMethodFormatter.getRemovalTitle(storedPaymentMethod)
+
+        assertEquals("Visa •••• 1234", result)
+    }
+
+    @Test
+    fun `when type is ach, then removal title is name and last four digits of account number`() {
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
+            type = PaymentMethodTypes.ACH,
+            name = "ACH",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            bankAccountNumber = "123456789",
+        )
+
+        val result = StoredPaymentMethodFormatter.getRemovalTitle(storedPaymentMethod)
+
+        assertEquals("ACH •••• 6789", result)
+    }
+
+    @Test
+    fun `when type is cash app pay, then removal title is name`() {
+        val storedPaymentMethod = StoredCashAppPayPaymentMethod(
+            type = PaymentMethodTypes.CASH_APP_PAY,
+            name = "Cash App Pay",
+            id = "id",
+            supportedShopperInteractions = emptyList(),
+            cashtag = "cashtag",
+        )
+
+        val result = StoredPaymentMethodFormatter.getRemovalTitle(storedPaymentMethod)
+
+        assertEquals("Cash App Pay", result)
+    }
 }

@@ -51,4 +51,13 @@ internal object StoredPaymentMethodFormatter {
             else -> null
         }
     }
+
+    fun getRemovalTitle(storedPaymentMethod: StoredPaymentMethod): String {
+        return when (storedPaymentMethod) {
+            is StoredACHDirectDebitPaymentMethod,
+            is StoredCardPaymentMethod -> "${storedPaymentMethod.name} ${getTitle(storedPaymentMethod)}"
+
+            else -> storedPaymentMethod.name
+        }
+    }
 }

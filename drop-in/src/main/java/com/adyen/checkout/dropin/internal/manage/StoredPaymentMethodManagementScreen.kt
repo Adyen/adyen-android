@@ -92,7 +92,7 @@ private fun StoredPaymentMethodManagementContent(
             ConfirmationDialog(
                 confirmationText = resolveString(
                     CheckoutLocalizationKey.DROP_IN_STORED_PAYMENT_METHOD_MANAGEMENT_REMOVE_CONFIRMATION,
-                    item.title,
+                    item.removalTitle,
                 ),
                 onConfirmationClick = {
                     onRemoveItem(item)
@@ -264,6 +264,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "mc",
                     title = "•••• 1234",
                     subtitle = "Mastercard",
+                    removalTitle = "Mastercard •••• 1234",
                     isRemoving = false,
                 ),
                 StoredPaymentMethodManagementViewState.ListItem(
@@ -271,6 +272,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "visa",
                     title = "•••• 2567",
                     subtitle = "Visa",
+                    removalTitle = "Visa •••• 2567",
                     isRemoving = true,
                 ),
             ),
@@ -280,6 +282,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "paybybank",
                     title = "•••• 1234",
                     subtitle = "WELLS FARGO",
+                    removalTitle = "WELLS FARGO",
                     isRemoving = false,
                 ),
                 StoredPaymentMethodManagementViewState.ListItem(
@@ -287,6 +290,7 @@ private fun StoredPaymentMethodManagementContentPreview(
                     icon = "wechatpay",
                     title = "@someName",
                     subtitle = "WeChat Pay",
+                    removalTitle = "WeChat Pay",
                     isRemoving = false,
                 ),
             ),

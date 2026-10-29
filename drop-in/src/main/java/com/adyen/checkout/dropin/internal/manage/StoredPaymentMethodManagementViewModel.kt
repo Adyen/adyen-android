@@ -77,6 +77,7 @@ internal class StoredPaymentMethodManagementViewModel(
             icon = icon,
             title = title,
             subtitle = subtitle,
+            removalTitle = StoredPaymentMethodFormatter.getRemovalTitle(this),
             isRemoving = isRemoving,
         )
     }

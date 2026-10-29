@@ -208,6 +208,15 @@ internal class StoredPaymentMethodManagementViewModelTest {
         }
     }
 
+    @Test
+    fun `when a card is listed, then its removal is confirmed with its name and last four`() = runTest {
+        val viewModel = createViewModel(createRepository(coroutineScope = backgroundScope))
+
+        viewModel.viewState.test {
+            assertEquals("Visa •••• 1234", expectMostRecentItem().cards.first().removalTitle)
+        }
+    }
+
     private fun createViewModel(
         remover: StoredPaymentMethodRemover,
         coroutineScope: CoroutineScope,
