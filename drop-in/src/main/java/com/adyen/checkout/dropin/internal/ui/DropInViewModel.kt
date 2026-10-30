@@ -53,6 +53,7 @@ import kotlin.reflect.KClass
 @Suppress("LongParameterList")
 internal class DropInViewModel(
     private val input: DropInResultContract.Input,
+    val checkoutParams: CheckoutParams,
     val navigator: DropInNavigator,
     val controllerProvider: DropInControllerProvider,
     private val dropInServiceManager: DropInServiceManager,
@@ -60,8 +61,6 @@ internal class DropInViewModel(
     val analyticsManager: AnalyticsManager,
     coroutineScope: CoroutineScope,
 ) : ViewModel(coroutineScope) {
-
-    val checkoutParams: CheckoutParams = CheckoutParamsFactory().create(input.checkoutContext)
 
     val dropInParams: DropInParams = DropInParamsMapper().mapToParams(checkoutParams)
 
@@ -116,7 +115,7 @@ internal class DropInViewModel(
      */
     class Factory(
         private val inputProvider: () -> DropInResultContract.Input,
-        private val analyticsManagerFactory: (CheckoutContext, CoroutineScope) -> AnalyticsManager =
+        private val analyticsManagerFactory: (CheckoutContext, CheckoutParams, CoroutineScope) -> AnalyticsManager =
             ::createDropInAnalyticsManager,
     ) : ViewModelProvider.Factory {
 
@@ -127,13 +126,15 @@ internal class DropInViewModel(
 
         @VisibleForTesting
         internal fun create(input: DropInResultContract.Input, savedStateHandle: SavedStateHandle): DropInViewModel {
+            val checkoutParams = CheckoutParamsFactory().create(input.checkoutContext)
             val dropInServiceManager = DropInServiceManager(input.serviceClass)
             val coroutineScope = CoroutineScope(SupervisorJob() + DispatcherProvider.Main.immediate)
             // TODO - Send the Drop-in level rendered and closed events through this manager, like v5's DropInEvents
-            val analyticsManager = analyticsManagerFactory(input.checkoutContext, coroutineScope)
+            val analyticsManager = analyticsManagerFactory(input.checkoutContext, checkoutParams, coroutineScope)
 
             return DropInViewModel(
                 input = input,
+                checkoutParams = checkoutParams,
                 navigator = DropInNavigator(
                     backStackPersister = SavedStateBackStackPersister(savedStateHandle = savedStateHandle),
                 ),
@@ -164,11 +165,12 @@ internal class DropInViewModel(
 
 private fun createDropInAnalyticsManager(
     checkoutContext: CheckoutContext,
+    checkoutParams: CheckoutParams,
     coroutineScope: CoroutineScope,
 ): AnalyticsManager {
     return AnalyticsManagerFactory().provide(
         context = checkoutContext,
-        params = CheckoutParamsFactory().create(checkoutContext),
+        params = checkoutParams,
         source = checkoutContext.dropInAnalyticsSource(),
         coroutineScope = coroutineScope,
     )

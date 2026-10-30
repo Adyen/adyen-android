@@ -14,6 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.Amount
@@ -111,8 +113,13 @@ internal class DropInViewModelTest {
     }
 
     @Test
-    fun `when created, then the checkout params are mapped from the checkout configuration`() {
-        val viewModel = createViewModel()
+    fun `when the factory creates Drop-in, then the checkout params are mapped from the checkout configuration`() {
+        val factory = DropInViewModel.Factory(
+            inputProvider = { createInput() },
+            analyticsManagerFactory = { _, _, _ -> TestAnalyticsManager() },
+        )
+
+        val viewModel = factory.create(createInput(), SavedStateHandle())
 
         assertEquals(Locale.US, viewModel.checkoutParams.shopperLocale)
         assertEquals(Environment.TEST, viewModel.checkoutParams.environment)
@@ -154,10 +161,12 @@ internal class DropInViewModelTest {
     @Test
     fun `when the factory creates Drop-in, then one analytics manager is created on the scope of the view model`() {
         val analyticsManager = TestAnalyticsManager()
+        val receivedParams = mutableListOf<CheckoutParams>()
         val createdScopes = mutableListOf<CoroutineScope>()
         val factory = DropInViewModel.Factory(
             inputProvider = { createInput() },
-            analyticsManagerFactory = { _, coroutineScope ->
+            analyticsManagerFactory = { _, checkoutParams, coroutineScope ->
+                receivedParams += checkoutParams
                 createdScopes += coroutineScope
                 analyticsManager
             },
@@ -167,6 +176,7 @@ internal class DropInViewModelTest {
 
         assertEquals(1, createdScopes.size)
         assertSame(analyticsManager, viewModel.analyticsManager)
+        assertSame(viewModel.checkoutParams, receivedParams.single())
         assertSame(createdScopes.single().coroutineContext[Job], viewModel.viewModelScope.coroutineContext[Job])
     }
 
@@ -179,6 +189,7 @@ internal class DropInViewModelTest {
                 environment = Environment.TEST,
                 clientKey = CLIENT_KEY,
                 shopperLocale = Locale.US,
+                amount = AMOUNT,
             ),
         ),
         serviceClass = DropInService::class.java,
@@ -212,6 +223,7 @@ internal class DropInViewModelTest {
                 serviceClass = DropInService::class.java,
                 theme = CheckoutTheme(),
             ),
+            checkoutParams = CheckoutParamsFactory().create(checkoutContext),
             navigator = DropInNavigator(persister),
             controllerProvider = controllerProvider,
             dropInServiceManager = DropInServiceManager(DropInService::class.java),
