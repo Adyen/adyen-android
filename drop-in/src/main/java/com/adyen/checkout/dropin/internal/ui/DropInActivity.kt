@@ -30,7 +30,7 @@ class DropInActivity : ComponentActivity() {
 
     private lateinit var input: DropInResultContract.Input
 
-    private val viewModel: DropInViewModel by viewModels { DropInViewModel.Factory { input } }
+    private val viewModel: DropInViewModel by viewModels { DropInViewModel.Factory(inputProvider = { input }) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

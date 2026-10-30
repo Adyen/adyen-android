@@ -9,6 +9,8 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -55,6 +57,7 @@ internal class DropInViewModel(
     val controllerProvider: DropInControllerProvider,
     private val dropInServiceManager: DropInServiceManager,
     private val storedPaymentMethodRemover: StoredPaymentMethodRemover,
+    val analyticsManager: AnalyticsManager,
     coroutineScope: CoroutineScope,
 ) : ViewModel(coroutineScope) {
 
@@ -107,44 +110,41 @@ internal class DropInViewModel(
         dropInServiceManager.stop(context)
     }
 
+    /**
+     * @param analyticsManagerFactory Called once per Drop-in session. The manager it returns is shared by every
+     * controller Drop-in creates, so the session makes a single analytics setup call.
+     */
     class Factory(
         private val inputProvider: () -> DropInResultContract.Input,
+        private val analyticsManagerFactory: (CheckoutContext, CoroutineScope) -> AnalyticsManager =
+            ::createDropInAnalyticsManager,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            val input = inputProvider()
+            return create(inputProvider(), extras.createSavedStateHandle()) as T
+        }
+
+        @VisibleForTesting
+        internal fun create(input: DropInResultContract.Input, savedStateHandle: SavedStateHandle): DropInViewModel {
             val dropInServiceManager = DropInServiceManager(input.serviceClass)
             val coroutineScope = CoroutineScope(SupervisorJob() + DispatcherProvider.Main.immediate)
+            // TODO - Send the Drop-in level rendered and closed events through this manager, like v5's DropInEvents
+            val analyticsManager = analyticsManagerFactory(input.checkoutContext, coroutineScope)
 
             return DropInViewModel(
                 input = input,
                 navigator = DropInNavigator(
-                    backStackPersister = SavedStateBackStackPersister(
-                        savedStateHandle = extras.createSavedStateHandle(),
-                    ),
+                    backStackPersister = SavedStateBackStackPersister(savedStateHandle = savedStateHandle),
                 ),
                 controllerProvider = DefaultDropInControllerProvider(
                     checkoutContext = input.checkoutContext,
                     dropInServiceManager = dropInServiceManager,
-                    controllerFactory = CheckoutControllerFactory(
-                        analyticsManager = createAnalyticsManager(input.checkoutContext, coroutineScope),
-                    ),
+                    controllerFactory = CheckoutControllerFactory(analyticsManager),
                 ),
                 dropInServiceManager = dropInServiceManager,
                 storedPaymentMethodRemover = createStoredPaymentMethodRemover(input.checkoutContext),
-                coroutineScope = coroutineScope,
-            ) as T
-        }
-
-        private fun createAnalyticsManager(
-            checkoutContext: CheckoutContext,
-            coroutineScope: CoroutineScope,
-        ): AnalyticsManager {
-            return AnalyticsManagerFactory().provide(
-                context = checkoutContext,
-                params = CheckoutParamsFactory().create(checkoutContext),
-                source = checkoutContext.dropInAnalyticsSource(),
+                analyticsManager = analyticsManager,
                 coroutineScope = coroutineScope,
             )
         }
@@ -160,4 +160,16 @@ internal class DropInViewModel(
             )
         }
     }
+}
+
+private fun createDropInAnalyticsManager(
+    checkoutContext: CheckoutContext,
+    coroutineScope: CoroutineScope,
+): AnalyticsManager {
+    return AnalyticsManagerFactory().provide(
+        context = checkoutContext,
+        params = CheckoutParamsFactory().create(checkoutContext),
+        source = checkoutContext.dropInAnalyticsSource(),
+        coroutineScope = coroutineScope,
+    )
 }
