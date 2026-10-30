@@ -13,6 +13,7 @@ import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfigu
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AdditionalSessionParams(
+    val sessionId: String,
     val enableStoreDetails: Boolean?,
     val installmentConfiguration: SessionInstallmentConfiguration?,
     val showRemovePaymentMethodButton: Boolean?,

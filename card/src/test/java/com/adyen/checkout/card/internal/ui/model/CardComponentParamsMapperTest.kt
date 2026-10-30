@@ -539,6 +539,7 @@ internal class CardComponentParamsMapperTest {
         installmentPlans: List<String> = emptyList(),
         installmentValues: List<Int> = emptyList(),
     ) = AdditionalSessionParams(
+        sessionId = "test_session_id",
         enableStoreDetails = enableStoreDetails,
         showRemovePaymentMethodButton = null,
         returnUrl = "",
@@ -568,6 +569,7 @@ internal class CardComponentParamsMapperTest {
         analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = null,
         showSubmitButton = true,
+        checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = "test_publicKey",
         additionalConfigurations = buildMap {
             cardConfiguration?.let { this[CardConfiguration::class.java.name] = it }
