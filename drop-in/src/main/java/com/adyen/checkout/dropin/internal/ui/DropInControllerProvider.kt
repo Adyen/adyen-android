@@ -24,6 +24,7 @@ import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.internal.copy
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
@@ -47,9 +48,14 @@ internal fun interface DropInControllerProvider {
     ): CheckoutController
 }
 
+/**
+ * @param controllerFactory Shares Drop-in's analytics manager between every controller, so that a Drop-in session
+ * makes a single analytics setup call.
+ */
 internal class DefaultDropInControllerProvider(
     checkoutContext: CheckoutContext,
     private val dropInServiceManager: DropInServiceManager,
+    private val controllerFactory: CheckoutControllerFactory,
 ) : DropInControllerProvider {
 
     private val checkoutContext = checkoutContext.withSubmitButtonEnforced()
@@ -63,7 +69,7 @@ internal class DefaultDropInControllerProvider(
 
         return when (checkoutContext) {
             is CheckoutContext.Advanced -> {
-                CheckoutController(
+                controllerFactory.create(
                     target = target,
                     context = checkoutContext,
                     callbacks = AdvancedCheckoutCallbacks(
@@ -78,7 +84,7 @@ internal class DefaultDropInControllerProvider(
             }
 
             is CheckoutContext.Sessions -> {
-                CheckoutController(
+                controllerFactory.create(
                     target = target,
                     context = checkoutContext,
                     callbacks = SessionCheckoutCallbacks(

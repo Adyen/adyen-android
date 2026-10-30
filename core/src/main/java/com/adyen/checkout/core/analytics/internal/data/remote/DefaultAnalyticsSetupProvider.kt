@@ -19,7 +19,6 @@ import java.util.Locale
 @Suppress("LongParameterList")
 internal class DefaultAnalyticsSetupProvider(
     private val shopperLocale: Locale,
-    private val isCreatedByDropIn: Boolean,
     private val analyticsLevel: AnalyticsParamsLevel,
     private val packageName: String,
     private val screenWidth: Int,
@@ -36,7 +35,7 @@ internal class DefaultAnalyticsSetupProvider(
             platform = AnalyticsPlatformParams.platform,
             locale = shopperLocale.toLanguageTag(),
             component = getComponentQueryParameter(source),
-            flavor = getFlavorQueryParameter(isCreatedByDropIn),
+            flavor = getFlavorQueryParameter(source),
             level = getLevelQueryParameter(analyticsLevel),
             deviceBrand = Build.BRAND,
             deviceModel = Build.MODEL,
@@ -52,10 +51,9 @@ internal class DefaultAnalyticsSetupProvider(
         )
     }
 
-    private fun getFlavorQueryParameter(isCreatedByDropIn: Boolean) = if (isCreatedByDropIn) {
-        DROP_IN
-    } else {
-        COMPONENTS
+    private fun getFlavorQueryParameter(source: AnalyticsSource) = when (source) {
+        is AnalyticsSource.DropIn -> DROP_IN
+        is AnalyticsSource.PaymentComponent -> COMPONENTS
     }
 
     private fun getComponentQueryParameter(source: AnalyticsSource) = when (source) {

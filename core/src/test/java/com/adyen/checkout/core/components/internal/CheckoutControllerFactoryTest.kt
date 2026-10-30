@@ -20,6 +20,7 @@ import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.TestActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -35,6 +36,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.CheckoutException
 import com.adyen.checkout.core.error.internal.GenericError
@@ -45,6 +47,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertThrows
 import org.junit.Before
@@ -125,6 +128,92 @@ internal class CheckoutControllerFactoryTest {
     }
 
     @Test
+    fun `when an analytics manager is given, then the action components of every controller share it`() {
+        val analyticsManager = TestAnalyticsManager()
+        val receivedAnalyticsManagers = mutableListOf<AnalyticsManager>()
+        ActionComponentProvider.register(
+            TEST_ACTION_TYPE,
+            object : ActionFactory<Action, ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ): ActionComponent {
+                    receivedAnalyticsManagers += analyticsManager
+                    return TestActionComponent()
+                }
+            },
+        )
+
+        val factory = CheckoutControllerFactory(analyticsManager)
+
+        createActionOnlyController(factory)
+        createActionOnlyController(factory)
+
+        assertEquals(2, receivedAnalyticsManagers.size)
+        receivedAnalyticsManagers.forEach { assertSame(analyticsManager, it) }
+    }
+
+    @Test
+    fun `when an analytics manager is given, then the payment components of every controller share it`() {
+        val analyticsManager = TestAnalyticsManager()
+        val receivedAnalyticsManagers = mutableListOf<AnalyticsManager>()
+        PaymentMethodProvider.register(
+            TEST_PAYMENT_METHOD_TYPE,
+            object : PaymentComponentFactory<PaymentComponent> {
+                override fun create(
+                    paymentMethod: PaymentMethod,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    sdkDataProvider: SdkDataProvider,
+                    params: CheckoutParams,
+                    additionalCallbacks: Set<CheckoutAdditionalCallback>,
+                ): PaymentComponent {
+                    receivedAnalyticsManagers += analyticsManager
+                    return TestPaymentComponent()
+                }
+            },
+        )
+        val factory = CheckoutControllerFactory(analyticsManager)
+
+        createAdvancedController(factory)
+        createAdvancedController(factory)
+
+        assertEquals(2, receivedAnalyticsManagers.size)
+        receivedAnalyticsManagers.forEach { assertSame(analyticsManager, it) }
+    }
+
+    @Test
+    fun `when no analytics manager is given, then every controller creates its own`() {
+        val receivedAnalyticsManagers = mutableListOf<AnalyticsManager>()
+        PaymentMethodProvider.register(
+            TEST_PAYMENT_METHOD_TYPE,
+            object : PaymentComponentFactory<PaymentComponent> {
+                override fun create(
+                    paymentMethod: PaymentMethod,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    sdkDataProvider: SdkDataProvider,
+                    params: CheckoutParams,
+                    additionalCallbacks: Set<CheckoutAdditionalCallback>,
+                ): PaymentComponent {
+                    receivedAnalyticsManagers += analyticsManager
+                    return TestPaymentComponent()
+                }
+            },
+        )
+        val factory = CheckoutControllerFactory()
+
+        createAdvancedController(factory)
+        createAdvancedController(factory)
+
+        val (firstAnalyticsManager, secondAnalyticsManager) = receivedAnalyticsManagers
+        assertNotSame(firstAnalyticsManager, secondAnalyticsManager)
+    }
+
+    @Test
     fun `when creation throws InvalidConfigurationError, then CheckoutException with INVALID_CONFIGURATION is thrown`() {
         registerThrowingFactory(InvalidConfigurationError("missing merchant account"))
 
@@ -157,7 +246,9 @@ internal class CheckoutControllerFactoryTest {
         }
     }
 
-    private fun createAdvancedController() = CheckoutControllerFactory().create(
+    private fun createAdvancedController(
+        factory: CheckoutControllerFactory = CheckoutControllerFactory(),
+    ) = factory.create(
         target = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
         context = CheckoutContext.Advanced(
             paymentMethods = PaymentMethods(
@@ -183,7 +274,9 @@ internal class CheckoutControllerFactoryTest {
         savedStateHandle = savedStateHandle,
     )
 
-    private fun createActionOnlyController() = CheckoutControllerFactory().create(
+    private fun createActionOnlyController(
+        factory: CheckoutControllerFactory = CheckoutControllerFactory(),
+    ) = factory.create(
         context = CheckoutContext.ActionOnly(
             action = TestAction(type = TEST_ACTION_TYPE),
             checkoutConfiguration = CheckoutConfiguration(

@@ -9,8 +9,13 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
+import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.Amount
@@ -29,7 +34,10 @@ import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.theme.CheckoutTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
@@ -105,8 +113,13 @@ internal class DropInViewModelTest {
     }
 
     @Test
-    fun `when created, then the checkout params are mapped from the checkout configuration`() {
-        val viewModel = createViewModel()
+    fun `when the factory creates Drop-in, then the checkout params are mapped from the checkout configuration`() {
+        val factory = DropInViewModel.Factory(
+            inputProvider = { createInput() },
+            analyticsManagerFactory = { _, _, _ -> TestAnalyticsManager() },
+        )
+
+        val viewModel = factory.create(createInput(), SavedStateHandle())
 
         assertEquals(Locale.US, viewModel.checkoutParams.shopperLocale)
         assertEquals(Environment.TEST, viewModel.checkoutParams.environment)
@@ -145,6 +158,44 @@ internal class DropInViewModelTest {
         )
     }
 
+    @Test
+    fun `when the factory creates Drop-in, then one analytics manager is created on the scope of the view model`() {
+        val analyticsManager = TestAnalyticsManager()
+        val receivedParams = mutableListOf<CheckoutParams>()
+        val createdScopes = mutableListOf<CoroutineScope>()
+        val factory = DropInViewModel.Factory(
+            inputProvider = { createInput() },
+            analyticsManagerFactory = { _, checkoutParams, coroutineScope ->
+                receivedParams += checkoutParams
+                createdScopes += coroutineScope
+                analyticsManager
+            },
+        )
+
+        val viewModel = factory.create(createInput(), SavedStateHandle())
+
+        assertEquals(1, createdScopes.size)
+        assertSame(analyticsManager, viewModel.analyticsManager)
+        assertSame(viewModel.checkoutParams, receivedParams.single())
+        assertSame(createdScopes.single().coroutineContext[Job], viewModel.viewModelScope.coroutineContext[Job])
+    }
+
+    private fun createInput() = DropInResultContract.Input(
+        checkoutContext = TestCheckoutContext.advanced(
+            paymentMethods = PaymentMethods(
+                paymentMethods = listOf(GenericPaymentMethod(type = PaymentMethodTypes.SCHEME, name = "Cards")),
+            ),
+            checkoutConfiguration = CheckoutConfiguration(
+                environment = Environment.TEST,
+                clientKey = CLIENT_KEY,
+                shopperLocale = Locale.US,
+                amount = AMOUNT,
+            ),
+        ),
+        serviceClass = DropInService::class.java,
+        theme = CheckoutTheme(),
+    )
+
     private fun createViewModel(
         storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),
         paymentMethods: List<PaymentMethod> = listOf(
@@ -172,10 +223,13 @@ internal class DropInViewModelTest {
                 serviceClass = DropInService::class.java,
                 theme = CheckoutTheme(),
             ),
+            checkoutParams = CheckoutParamsFactory().create(checkoutContext),
             navigator = DropInNavigator(persister),
             controllerProvider = controllerProvider,
             dropInServiceManager = DropInServiceManager(DropInService::class.java),
             storedPaymentMethodRemover = { Result.success(Unit) },
+            analyticsManager = TestAnalyticsManager(),
+            coroutineScope = CoroutineScope(Dispatchers.Main),
         )
     }
 
