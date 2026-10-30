@@ -32,8 +32,7 @@ import java.util.Locale
 class AnalyticsManagerFactory {
 
     /**
-     * Creates an [AnalyticsManager], which makes its setup call right away. Drop-in creates one for its whole session
-     * and shares it with every [com.adyen.checkout.core.components.CheckoutController] it creates.
+     * Creates an [AnalyticsManager], which makes its setup call right away.
      */
     fun provide(
         context: CheckoutContext,
@@ -47,7 +46,11 @@ class AnalyticsManagerFactory {
         analyticsParams = params.analyticsParams,
         amount = params.amount,
         source = source,
-        sessionId = (context as? CheckoutContext.Sessions)?.checkoutSession?.sessionSetupResponse?.id,
+        sessionId = when (context) {
+            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.id
+            is CheckoutContext.Advanced,
+            is CheckoutContext.ActionOnly -> null
+        },
         checkoutAttemptId = context.checkoutAttemptId,
         coroutineScope = coroutineScope,
     )
