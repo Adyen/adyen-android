@@ -23,24 +23,22 @@ internal class StoredPaymentMethodExpiryCheck(
 
     fun isExpired(storedPaymentMethod: StoredPaymentMethod): Boolean {
         // TODO - Check StoredBCMCPaymentMethod too once stored Bancontact is supported, like iOS
-        val card = storedPaymentMethod as? StoredCardPaymentMethod
-        val expiryMonth = card?.expiryMonth
-            ?.takeIf { it.length == MONTH_DIGITS }
+        val card = storedPaymentMethod as? StoredCardPaymentMethod ?: return false
+        val expiryMonth = card.expiryMonth
+            .takeIf { it.length == MONTH_DIGITS }
             ?.toIntOrNull()
             ?.takeIf { it in FIRST_MONTH..LAST_MONTH }
-        val expiryYear = card?.expiryYear?.let { year ->
-            when (year.length) {
-                SHORT_YEAR_DIGITS -> year.toIntOrNull()?.plus(CENTURY)
-                LONG_YEAR_DIGITS -> year.toIntOrNull()
-                else -> null
-            }
+        val expiryYear = when (card.expiryYear.length) {
+            SHORT_YEAR_DIGITS -> card.expiryYear.toIntOrNull()?.plus(CENTURY)
+            LONG_YEAR_DIGITS -> card.expiryYear.toIntOrNull()
+            else -> null
         }
-        if (expiryMonth == null || expiryYear == null) return false
 
         val now = currentCalendar()
         val currentYear = now.get(Calendar.YEAR)
         val currentMonth = now.get(Calendar.MONTH) + 1
-        return currentYear > expiryYear || (currentYear == expiryYear && currentMonth > expiryMonth)
+        return expiryMonth != null && expiryYear != null &&
+            (currentYear > expiryYear || (currentYear == expiryYear && currentMonth > expiryMonth))
     }
 
     private companion object {
