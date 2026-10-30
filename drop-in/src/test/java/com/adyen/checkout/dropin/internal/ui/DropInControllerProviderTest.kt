@@ -14,9 +14,12 @@ import com.adyen.checkout.core.common.TestCheckoutContext
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
@@ -87,6 +90,41 @@ internal class DropInControllerProviderTest {
         assertSame(controller, result)
     }
 
+    @Test
+    fun `when a controller is provided for a session, then it is created by the injected controller factory`() {
+        val controller = mock<CheckoutController>()
+        val controllerFactory = mock<CheckoutControllerFactory> {
+            on {
+                create(
+                    target = any(),
+                    context = any<CheckoutContext.Sessions>(),
+                    callbacks = any<SessionCheckoutCallbacks>(),
+                    coroutineScope = any(),
+                    savedStateHandle = any(),
+                )
+            } doReturn controller
+        }
+        val provider = DefaultDropInControllerProvider(
+            checkoutContext = TestCheckoutContext.sessions(
+                checkoutSession = CHECKOUT_SESSION,
+                checkoutConfiguration = CheckoutConfiguration(
+                    environment = Environment.TEST,
+                    clientKey = TEST_CLIENT_KEY,
+                ),
+            ),
+            dropInServiceManager = DropInServiceManager(DropInService::class.java),
+            controllerFactory = controllerFactory,
+        )
+
+        val result = provider.provide(
+            paymentFlowType = DropInPaymentFlowType.StoredPaymentMethod(STORED_ID),
+            coroutineScope = CoroutineScope(Dispatchers.Unconfined),
+            onAction = {},
+        )
+
+        assertSame(controller, result)
+    }
+
     private fun createCheckoutContext(showSubmitButton: Boolean?) = TestCheckoutContext.advanced(
         paymentMethods = PaymentMethods(),
         checkoutConfiguration = CheckoutConfiguration(
@@ -98,5 +136,22 @@ internal class DropInControllerProviderTest {
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfgh"
+        private const val STORED_ID = "stored-id-1"
+
+        private val CHECKOUT_SESSION = CheckoutSession(
+            sessionSetupResponse = SessionSetupResponse(
+                id = "session-id",
+                sessionData = "session-data",
+                amount = null,
+                expiresAt = "2026-10-16T12:00:00Z",
+                paymentMethods = null,
+                returnUrl = null,
+                configuration = null,
+                shopperLocale = null,
+            ),
+            order = null,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+        )
     }
 }
