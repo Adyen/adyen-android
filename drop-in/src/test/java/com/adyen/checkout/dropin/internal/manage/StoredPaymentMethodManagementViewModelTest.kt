@@ -11,12 +11,12 @@ package com.adyen.checkout.dropin.internal.manage
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.dropin.internal.analytics.StoredPaymentMethodManagementEvents
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.StoredPaymentMethodRemover
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
@@ -27,6 +27,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -267,23 +268,31 @@ internal class StoredPaymentMethodManagementViewModelTest {
 
         createViewModel(createRepository(coroutineScope = backgroundScope), analyticsManager)
 
-        analyticsManager.assertLastEventEquals(GenericEvents.rendered(component = "storedPaymentMethodManagement"))
+        analyticsManager.assertLastEventEquals(StoredPaymentMethodManagementEvents.rendered())
     }
 
     @Test
-    fun `when a removal is confirmed, then a click on the remove button is tracked`() = runTest {
-        val analyticsManager = TestAnalyticsManager()
-        val viewModel = createViewModel(createRepository(coroutineScope = backgroundScope), analyticsManager)
+    fun `when a removal is confirmed, then a click on the remove button is tracked before the removal starts`() =
+        runTest {
+            val analyticsManager = TestAnalyticsManager()
+            var clickCheckWhenRemoving: Result<Unit>? = null
+            val remover = StoredPaymentMethodRemover {
+                clickCheckWhenRemoving = runCatching {
+                    analyticsManager.assertLastEventEquals(StoredPaymentMethodManagementEvents.removeClicked())
+                }
+                Result.success(Unit)
+            }
+            // Removals start right away, as they do in the app, so the order of tracking and removing is observable.
+            val eagerScope = CoroutineScope(backgroundScope.coroutineContext + UnconfinedTestDispatcher(testScheduler))
+            val viewModel = createViewModel(
+                createRepository(remover = remover, coroutineScope = eagerScope),
+                analyticsManager,
+            )
 
-        viewModel.removeStoredPaymentMethod(FIRST_ID)
+            viewModel.removeStoredPaymentMethod(FIRST_ID)
 
-        analyticsManager.assertLastEventEquals(
-            GenericEvents.clicked(
-                component = "storedPaymentMethodManagement",
-                target = "stored_payment_method_remove_button",
-            ),
-        )
-    }
+            checkNotNull(clickCheckWhenRemoving) { "The removal didn't start" }.getOrThrow()
+        }
 
     private fun createViewModel(
         remover: StoredPaymentMethodRemover,

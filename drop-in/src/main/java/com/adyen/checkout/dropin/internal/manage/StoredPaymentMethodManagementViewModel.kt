@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.dropin.internal.analytics.StoredPaymentMethodManagementEvents
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
@@ -54,7 +54,7 @@ internal class StoredPaymentMethodManagementViewModel(
     )
 
     init {
-        analyticsManager.trackEvent(GenericEvents.rendered(component = ANALYTICS_COMPONENT))
+        analyticsManager.trackEvent(StoredPaymentMethodManagementEvents.rendered())
 
         paymentMethodRepository.storedPaymentMethodRemovalFailures
             .onEach { showRemovalError.value = true }
@@ -96,9 +96,7 @@ internal class StoredPaymentMethodManagementViewModel(
     }
 
     fun removeStoredPaymentMethod(id: String) {
-        analyticsManager.trackEvent(
-            GenericEvents.clicked(component = ANALYTICS_COMPONENT, target = ANALYTICS_TARGET_REMOVE_BUTTON),
-        )
+        analyticsManager.trackEvent(StoredPaymentMethodManagementEvents.removeClicked())
         showRemovalError.value = false
         viewModelScope.launch { paymentMethodRepository.removeStoredPaymentMethod(id) }
     }
@@ -117,10 +115,5 @@ internal class StoredPaymentMethodManagementViewModel(
                 analyticsManager = analyticsManager,
             ) as T
         }
-    }
-
-    private companion object {
-        private const val ANALYTICS_COMPONENT = "storedPaymentMethodManagement"
-        private const val ANALYTICS_TARGET_REMOVE_BUTTON = "stored_payment_method_remove_button"
     }
 }
