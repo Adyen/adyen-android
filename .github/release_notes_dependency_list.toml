@@ -28,7 +28,7 @@
 "com.google.pay.button:compose-pay-button" = "[Google Pay Compose Button](https://github.com/google-pay/compose-pay-button/releases/tag/v{})"
 "com.squareup.okhttp3:okhttp" = "[OkHttp](https://square.github.io/okhttp/changelogs/changelog/)"
 "com.tencent.mm.opensdk:wechat-sdk-android-without-mta" = "[WeChat](https://developers.weixin.qq.com/doc/oplatform/en/Mobile_App/Access_Guide/Android.html)"
-"kotlin" = "[Kotlin](https://github.com/JetBrains/kotlin/releases/tag/v{})"
+"org.jetbrains.kotlin:kotlin-gradle-plugin" = "[Kotlin](https://github.com/JetBrains/kotlin/releases/tag/v{})"
 "org.jetbrains.kotlinx:kotlinx-coroutines-android" = "[Kotlin Coroutines Android](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/{})"
 "org.jetbrains.kotlinx:kotlinx-coroutines-core" = "[Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/{})"
 "org.jetbrains.kotlinx:kotlinx-coroutines-play-services" = "[Kotlin Coroutines Play Services](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/{})"
@@ -115,11 +115,11 @@
 "org.sonarqube:org.sonarqube.gradle.plugin" = ""
 "resolve-dependencies" = ""
 "sonarqube-convention" = ""
-# These are used in our SDK, but we already display Kotlin in through another dependency.
+# These are used in our SDK, but we already display Kotlin through org.jetbrains.kotlin:kotlin-gradle-plugin.
 "kotlin-android" = ""
 "kotlin-parcelize" = ""
 "org.jetbrains.kotlin.android" = ""
+"org.jetbrains.kotlin.jvm" = ""
 "org.jetbrains.kotlin:compose-compiler-gradle-plugin" = ""
-"org.jetbrains.kotlin:kotlin-gradle-plugin" = ""
 "org.jetbrains.kotlin:kotlin-parcelize-runtime" = ""
 "org.jetbrains.kotlin.plugin.compose" = ""
