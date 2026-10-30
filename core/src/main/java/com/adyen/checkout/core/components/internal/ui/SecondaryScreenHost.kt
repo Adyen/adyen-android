@@ -52,17 +52,18 @@ internal fun <T> SecondaryScreenHost(
 
     LaunchedEffect(component) {
         component.navigation.collect { event ->
-            backStack = when (event) {
-                is SecondaryNavigationEvent.Open -> {
-                    backStack + event.key
-                }
-
-                SecondaryNavigationEvent.Close -> {
-                    backStack.dropLast(1)
-                }
-            }
+            backStack = event.applyTo(backStack)
         }
     }
+}
+
+/**
+ * Applies this event to [backStack]. Opening the screen that is already on top changes nothing: a double tap on the
+ * row that opens a screen sends two opens before the screen covers the row, which would otherwise stack it twice.
+ */
+internal fun SecondaryNavigationEvent.applyTo(backStack: List<String>): List<String> = when (this) {
+    is SecondaryNavigationEvent.Open -> if (backStack.lastOrNull() == key) backStack else backStack + key
+    SecondaryNavigationEvent.Close -> backStack.dropLast(1)
 }
 
 private fun AnimatedContentTransitionScope<List<String>>.slideHorizontally(): ContentTransform {
