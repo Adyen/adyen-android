@@ -18,7 +18,6 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.common.internal.checkoutAttemptId
 import com.adyen.checkout.core.components.ActionOnlyCheckoutCallbacks
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -166,7 +165,7 @@ class CheckoutControllerFactory(
             stateStore = stateStore,
             onAction = componentRequestDispatcher::action,
         )
-        val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
+        val sdkDataProvider = DefaultSdkDataProvider(checkoutParams.checkoutAttemptId)
         val paymentComponentResult = PaymentComponentResolver.resolve(
             paymentMethod = paymentMethod,
             callbacks = callbacks,
