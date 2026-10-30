@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertThrows
 import org.junit.Before
@@ -127,7 +128,7 @@ internal class CheckoutControllerFactoryTest {
     }
 
     @Test
-    fun `when an analytics manager is given, then the components of the controller use it`() {
+    fun `when an analytics manager is given, then the action components of every controller share it`() {
         val analyticsManager = TestAnalyticsManager()
         val receivedAnalyticsManagers = mutableListOf<AnalyticsManager>()
         ActionComponentProvider.register(
@@ -146,8 +147,10 @@ internal class CheckoutControllerFactoryTest {
             },
         )
 
-        createActionOnlyController(CheckoutControllerFactory(analyticsManager))
-        createActionOnlyController(CheckoutControllerFactory(analyticsManager))
+        val factory = CheckoutControllerFactory(analyticsManager)
+
+        createActionOnlyController(factory)
+        createActionOnlyController(factory)
 
         assertEquals(2, receivedAnalyticsManagers.size)
         receivedAnalyticsManagers.forEach { assertSame(analyticsManager, it) }
@@ -180,6 +183,34 @@ internal class CheckoutControllerFactoryTest {
 
         assertEquals(2, receivedAnalyticsManagers.size)
         receivedAnalyticsManagers.forEach { assertSame(analyticsManager, it) }
+    }
+
+    @Test
+    fun `when no analytics manager is given, then every controller creates its own`() {
+        val receivedAnalyticsManagers = mutableListOf<AnalyticsManager>()
+        PaymentMethodProvider.register(
+            TEST_PAYMENT_METHOD_TYPE,
+            object : PaymentComponentFactory<PaymentComponent> {
+                override fun create(
+                    paymentMethod: PaymentMethod,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    sdkDataProvider: SdkDataProvider,
+                    params: CheckoutParams,
+                    additionalCallbacks: Set<CheckoutAdditionalCallback>,
+                ): PaymentComponent {
+                    receivedAnalyticsManagers += analyticsManager
+                    return TestPaymentComponent()
+                }
+            },
+        )
+        val factory = CheckoutControllerFactory()
+
+        createAdvancedController(factory)
+        createAdvancedController(factory)
+
+        val (firstAnalyticsManager, secondAnalyticsManager) = receivedAnalyticsManagers
+        assertNotSame(firstAnalyticsManager, secondAnalyticsManager)
     }
 
     @Test
