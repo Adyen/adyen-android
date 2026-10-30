@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.address.internal.data.api.AddressRepository
 import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStateFactory
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStatePostProcessor
@@ -29,26 +30,32 @@ import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.core.components.internal.ui.SecondaryScreenComponent
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * A form that collects an address for another component, its host. The host merges [navigation] into its own, passes
  * the screens for which [hasScreen] is true to [SecondaryContent], opens the form with [show] and keeps the address
  * reported through [eventFlow].
  */
+@Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class AddressComponent internal constructor(
+class AddressComponent
+@Suppress("LongParameterList")
+internal constructor(
+    private val addressRepository: AddressRepository,
     private val componentStateValidator: AddressComponentStateValidator,
     componentStateFactory: AddressComponentStateFactory,
     componentStateReducer: AddressComponentStateReducer,
     componentStatePostProcessor: AddressComponentStatePostProcessor,
     viewStateProducer: AddressViewStateProducer,
-    coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) : SecondaryScreenComponent,
     EventComponent<AddressComponentEvent> {
 
@@ -75,6 +82,12 @@ class AddressComponent internal constructor(
         .map(viewStateProducer::produce)
         .stateIn(coroutineScope, SharingStarted.Eagerly, viewStateProducer.produce(componentState.value))
 
+    private var statesJob: Job? = null
+
+    init {
+        fetchCountries()
+    }
+
     @Composable
     override fun SecondaryContent(identifier: String, modifier: Modifier) {
         AddressSecondaryContent(
@@ -93,9 +106,15 @@ class AddressComponent internal constructor(
      */
     fun hasScreen(identifier: String): Boolean = AddressSecondaryContentEntry.fromKey(identifier) != null
 
-    /** Opens the form on [address], or on a new form when null, dropping edits the shopper did not save. */
+    /**
+     * Opens the form on [address], or on a new form when null, dropping edits the shopper did not save. The countries
+     * and the selected country's states are requested again, so a failed request is retried; loaded ones come from the
+     * repository's cache.
+     */
     fun show(address: AddressModel?) {
         onIntent(AddressIntent.Reset(address))
+        fetchCountries()
+        fetchStates()
         navigationChannel.trySend(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM.key))
     }
 
@@ -121,6 +140,7 @@ class AddressComponent internal constructor(
     internal fun onCountrySelected(countryCode: String) {
         onIntent(AddressIntent.UpdateCountry(countryCode))
         navigationChannel.trySend(SecondaryNavigationEvent.Close)
+        fetchStates()
     }
 
     /** @param stateCode The ISO 3166-2 code of the picked state. */
@@ -131,5 +151,21 @@ class AddressComponent internal constructor(
 
     private fun onIntent(intent: AddressIntent) {
         componentState.handleIntent(intent)
+    }
+
+    private fun fetchCountries() {
+        coroutineScope.launch {
+            onIntent(AddressIntent.CountriesLoaded(addressRepository.getCountries()))
+        }
+    }
+
+    /** Cancels the previous states request, then requests the selected country's states when it has states. */
+    private fun fetchStates() {
+        statesJob?.cancel()
+        val state = componentState.value
+        val countryCode = state.country.selected?.takeIf { state.spec.hasStates } ?: return
+        statesJob = coroutineScope.launch {
+            onIntent(AddressIntent.StatesLoaded(countryCode, addressRepository.getStates(countryCode)))
+        }
     }
 }
