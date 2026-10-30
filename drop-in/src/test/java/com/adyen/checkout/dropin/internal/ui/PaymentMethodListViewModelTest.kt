@@ -249,6 +249,37 @@ internal class PaymentMethodListViewModelTest {
         }
     }
 
+    @Test
+    fun `when removing stored payment methods is enabled, then they can be managed`() = runTest {
+        val viewModel = createViewModel(
+            listOf(CARD),
+            storedPaymentMethods = listOf(STORED_CARD),
+            dropInParams = createDropInParams(isRemovingStoredPaymentMethodsEnabled = true),
+        )
+
+        viewModel.viewState.test {
+            assertEquals(
+                CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION,
+                expectMostRecentItem().storedPaymentMethodSection?.action,
+            )
+        }
+    }
+
+    @Test
+    fun `when removing stored payment methods is disabled, then they can't be managed`() = runTest {
+        val viewModel = createViewModel(
+            listOf(CARD),
+            storedPaymentMethods = listOf(STORED_CARD),
+            dropInParams = createDropInParams(isRemovingStoredPaymentMethodsEnabled = false),
+        )
+
+        viewModel.viewState.test {
+            val section = expectMostRecentItem().storedPaymentMethodSection
+            assertEquals(listOf(STORED_ID), section?.options.orEmpty().map { it.id })
+            assertNull(section?.action)
+        }
+    }
+
     private fun PaymentMethodListViewModel.listedPaymentMethodIds(): List<String> =
         viewState.value.listedPaymentMethodIds()
 
@@ -272,9 +303,13 @@ internal class PaymentMethodListViewModelTest {
         controllerProvider = controllerProvider,
     )
 
-    private fun createDropInParams(hideStoredPaymentMethods: Boolean = false) = DropInParams(
+    private fun createDropInParams(
+        hideStoredPaymentMethods: Boolean = false,
+        isRemovingStoredPaymentMethodsEnabled: Boolean = true,
+    ) = DropInParams(
         hideStoredPaymentMethods = hideStoredPaymentMethods,
         startWithLastStoredPaymentMethod = true,
+        isRemovingStoredPaymentMethodsEnabled = isRemovingStoredPaymentMethodsEnabled,
     )
 
     /** [CheckoutController] is final with an internal constructor, so it can only be mocked rather than faked. */

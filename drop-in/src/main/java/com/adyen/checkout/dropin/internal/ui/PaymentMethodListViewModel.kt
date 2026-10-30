@@ -139,7 +139,8 @@ internal class PaymentMethodListViewModel(
             ?.let { paymentMethods ->
                 PaymentMethodListSection(
                     title = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE,
-                    action = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION,
+                    action = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION
+                        .takeIf { dropInParams.isRemovingStoredPaymentMethodsEnabled },
                     options = paymentMethods,
                 )
             }

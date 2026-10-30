@@ -11,4 +11,5 @@ package com.adyen.checkout.dropin.internal.ui
 internal data class DropInParams(
     val hideStoredPaymentMethods: Boolean,
     val startWithLastStoredPaymentMethod: Boolean,
+    val isRemovingStoredPaymentMethodsEnabled: Boolean,
 )
