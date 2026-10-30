@@ -16,7 +16,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
-import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -145,7 +144,7 @@ internal class DropInViewModel(
             return AnalyticsManagerFactory().provide(
                 context = checkoutContext,
                 params = CheckoutParamsFactory().create(checkoutContext),
-                source = AnalyticsSource.DropIn(checkoutContext.getPaymentMethods().map { it.type }),
+                source = checkoutContext.dropInAnalyticsSource(),
                 coroutineScope = coroutineScope,
             )
         }
