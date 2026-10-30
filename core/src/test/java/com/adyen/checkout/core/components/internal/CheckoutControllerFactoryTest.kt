@@ -20,6 +20,7 @@ import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.TestActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -125,6 +126,33 @@ internal class CheckoutControllerFactoryTest {
     }
 
     @Test
+    fun `when an analytics manager is given, then the components of the controller use it`() {
+        val analyticsManager = TestAnalyticsManager()
+        val receivedAnalyticsManagers = mutableListOf<AnalyticsManager>()
+        ActionComponentProvider.register(
+            TEST_ACTION_TYPE,
+            object : ActionFactory<Action, ActionComponent> {
+                override fun create(
+                    action: Action,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    params: CheckoutParams,
+                    savedStateHandle: SavedStateHandle,
+                ): ActionComponent {
+                    receivedAnalyticsManagers += analyticsManager
+                    return TestActionComponent()
+                }
+            },
+        )
+
+        createActionOnlyController(CheckoutControllerFactory(analyticsManager))
+        createActionOnlyController(CheckoutControllerFactory(analyticsManager))
+
+        assertEquals(2, receivedAnalyticsManagers.size)
+        receivedAnalyticsManagers.forEach { assertSame(analyticsManager, it) }
+    }
+
+    @Test
     fun `when creation throws InvalidConfigurationError, then CheckoutException with INVALID_CONFIGURATION is thrown`() {
         registerThrowingFactory(InvalidConfigurationError("missing merchant account"))
 
@@ -183,7 +211,9 @@ internal class CheckoutControllerFactoryTest {
         savedStateHandle = savedStateHandle,
     )
 
-    private fun createActionOnlyController() = CheckoutControllerFactory().create(
+    private fun createActionOnlyController(
+        factory: CheckoutControllerFactory = CheckoutControllerFactory(),
+    ) = factory.create(
         context = CheckoutContext.ActionOnly(
             action = TestAction(type = TEST_ACTION_TYPE),
             checkoutConfiguration = CheckoutConfiguration(

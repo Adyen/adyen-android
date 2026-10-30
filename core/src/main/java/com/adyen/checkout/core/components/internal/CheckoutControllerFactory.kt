@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -33,7 +34,14 @@ import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineScope
 
-internal class CheckoutControllerFactory {
+/**
+ * @param analyticsManager Shared by every controller this factory creates, so that a host like Drop-in makes a single
+ * analytics setup call. When it is null, every controller creates its own [AnalyticsManager].
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class CheckoutControllerFactory(
+    private val analyticsManager: AnalyticsManager? = null,
+) {
 
     fun create(
         target: CheckoutTarget,
@@ -203,7 +211,7 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext,
         coroutineScope: CoroutineScope,
     ): AnalyticsManager {
-        return AnalyticsManagerFactory().provide(
+        return analyticsManager ?: AnalyticsManagerFactory().provide(
             context = context,
             params = checkoutParams,
             source = AnalyticsSource.PaymentComponent(paymentMethodType),
