@@ -598,6 +598,7 @@ internal class ActionHandlerTest(
         analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = null,
         showSubmitButton = true,
+        checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = "test_publicKey",
         additionalConfigurations = emptyMap(),
         additionalSessionParams = null,

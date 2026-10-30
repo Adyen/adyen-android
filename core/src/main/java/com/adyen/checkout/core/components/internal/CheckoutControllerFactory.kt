@@ -18,7 +18,6 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.common.internal.checkoutAttemptId
 import com.adyen.checkout.core.components.ActionOnlyCheckoutCallbacks
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -54,6 +53,7 @@ class CheckoutControllerFactory(
         createFullCheckoutController(
             target = target,
             context = context,
+            checkoutParams = CheckoutParamsFactory().create(context),
             callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
@@ -68,13 +68,16 @@ class CheckoutControllerFactory(
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
+        val checkoutParams = CheckoutParamsFactory().create(context)
         val componentRequestDispatcher = createSessionComponentRequestDispatcher(
             context = context,
+            checkoutParams = checkoutParams,
             callbacks = callbacks,
         )
         createFullCheckoutController(
             target = target,
             context = context,
+            checkoutParams = checkoutParams,
             callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
@@ -93,7 +96,6 @@ class CheckoutControllerFactory(
         val analyticsManager = createAnalyticsManager(
             checkoutParams = checkoutParams,
             paymentMethodType = "NONE",
-            context = context,
             coroutineScope = coroutineScope,
         )
         val componentRequestDispatcher = ActionOnlyComponentRequestDispatcher(callbacks)
@@ -139,13 +141,12 @@ class CheckoutControllerFactory(
     private fun createFullCheckoutController(
         target: CheckoutTarget,
         context: CheckoutContext,
+        checkoutParams: CheckoutParams,
         callbacks: CheckoutCallbacks,
         componentRequestDispatcher: SubmittableComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
     ): CheckoutController {
-        val checkoutParams = CheckoutParamsFactory().create(context)
-
         val paymentMethod = PaymentMethodResolver.resolve(target, context) ?: return createFailedCheckoutController(
             errorMessage = "Payment method for target '$target' was not found in the payment methods response.",
             componentRequestDispatcher = componentRequestDispatcher,
@@ -155,7 +156,6 @@ class CheckoutControllerFactory(
         val analyticsManager = createAnalyticsManager(
             checkoutParams = checkoutParams,
             paymentMethodType = paymentMethod.type,
-            context = context,
             coroutineScope = coroutineScope,
         )
         val stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = target)
@@ -168,7 +168,7 @@ class CheckoutControllerFactory(
             stateStore = stateStore,
             onAction = componentRequestDispatcher::action,
         )
-        val sdkDataProvider = DefaultSdkDataProvider(context.checkoutAttemptId)
+        val sdkDataProvider = DefaultSdkDataProvider(checkoutParams.checkoutAttemptId)
         val paymentComponentResult = PaymentComponentResolver.resolve(
             paymentMethod = paymentMethod,
             callbacks = callbacks,
@@ -208,11 +208,9 @@ class CheckoutControllerFactory(
     private fun createAnalyticsManager(
         checkoutParams: CheckoutParams,
         paymentMethodType: String,
-        context: CheckoutContext,
         coroutineScope: CoroutineScope,
     ): AnalyticsManager {
         return analyticsManager ?: AnalyticsManagerFactory().provide(
-            context = context,
             params = checkoutParams,
             source = AnalyticsSource.PaymentComponent(paymentMethodType),
             coroutineScope = coroutineScope,
@@ -221,12 +219,12 @@ class CheckoutControllerFactory(
 
     private fun createSessionComponentRequestDispatcher(
         context: CheckoutContext.Sessions,
+        checkoutParams: CheckoutParams,
         callbacks: SessionCheckoutCallbacks,
     ): SessionComponentRequestDispatcher {
-        val checkoutConfiguration = context.checkoutConfiguration
-        val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
+        val httpClient = HttpClientFactory.getHttpClient(checkoutParams.environment)
         val sessionService = SessionService(httpClient)
-        val sessionRepository = SessionRepository(sessionService, checkoutConfiguration.clientKey)
+        val sessionRepository = SessionRepository(sessionService, checkoutParams.clientKey)
         return SessionComponentRequestDispatcher(
             checkoutSession = context.checkoutSession,
             callbacks = callbacks,

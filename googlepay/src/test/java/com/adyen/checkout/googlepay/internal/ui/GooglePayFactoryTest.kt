@@ -88,6 +88,7 @@ internal class GooglePayFactoryTest {
         analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = null,
         showSubmitButton = true,
+        checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = null,
         additionalConfigurations = mapOf(
             GooglePayConfiguration::class.java.name to

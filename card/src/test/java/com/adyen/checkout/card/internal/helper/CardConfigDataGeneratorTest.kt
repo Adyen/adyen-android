@@ -250,6 +250,7 @@ internal class CardConfigDataGeneratorTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             amount = null,
             showSubmitButton = showSubmitButton,
+            checkoutAttemptId = "test_checkout_attempt_id",
             publicKey = null,
             additionalConfigurations = emptyMap(),
             additionalSessionParams = null,

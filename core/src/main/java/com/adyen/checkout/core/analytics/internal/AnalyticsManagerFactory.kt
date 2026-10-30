@@ -17,16 +17,10 @@ import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequ
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsRemoteDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSetupProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
-import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.common.internal.checkoutAttemptId
-import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsManagerFactory {
@@ -35,36 +29,8 @@ class AnalyticsManagerFactory {
      * Creates an [AnalyticsManager], which makes its setup call right away.
      */
     fun provide(
-        context: CheckoutContext,
         params: CheckoutParams,
         source: AnalyticsSource,
-        coroutineScope: CoroutineScope,
-    ): AnalyticsManager = provide(
-        shopperLocale = params.shopperLocale,
-        environment = params.environment,
-        clientKey = params.clientKey,
-        analyticsParams = params.analyticsParams,
-        amount = params.amount,
-        source = source,
-        sessionId = when (context) {
-            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.id
-            is CheckoutContext.Advanced,
-            is CheckoutContext.ActionOnly -> null
-        },
-        checkoutAttemptId = context.checkoutAttemptId,
-        coroutineScope = coroutineScope,
-    )
-
-    @Suppress("LongParameterList")
-    private fun provide(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        analyticsParams: AnalyticsParams,
-        amount: Amount?,
-        source: AnalyticsSource,
-        sessionId: String?,
-        checkoutAttemptId: String,
         coroutineScope: CoroutineScope,
     ): AnalyticsManager {
         val applicationContext = ApplicationContextHolder.require()
@@ -76,27 +42,27 @@ class AnalyticsManagerFactory {
                 localErrorDataStore = ErrorAnalyticsLocalDataStore(),
                 remoteDataStore = DefaultAnalyticsRemoteDataStore(
                     analyticsService = AnalyticsService(
-                        HttpClientFactory.getAnalyticsHttpClient(environment),
+                        HttpClientFactory.getAnalyticsHttpClient(params.environment),
                     ),
-                    clientKey = clientKey,
+                    clientKey = params.clientKey,
                     infoSize = INFO_SIZE,
                     logSize = LOG_SIZE,
                     errorSize = ERROR_SIZE,
                 ),
                 analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-                    shopperLocale = shopperLocale,
-                    analyticsLevel = analyticsParams.level,
+                    shopperLocale = params.shopperLocale,
+                    analyticsLevel = params.analyticsParams.level,
                     packageName = applicationContext.packageName,
                     screenWidth = applicationContext.resources.displayMetrics.widthPixels,
-                    amount = amount,
+                    amount = params.amount,
                     source = source,
-                    sessionId = sessionId,
-                    checkoutAttemptId = checkoutAttemptId,
+                    sessionId = params.additionalSessionParams?.sessionId,
+                    checkoutAttemptId = params.checkoutAttemptId,
                 ),
                 analyticsTrackRequestProvider = AnalyticsTrackRequestProvider(),
             ),
-            analyticsParams = analyticsParams,
-            checkoutAttemptId = checkoutAttemptId,
+            analyticsParams = params.analyticsParams,
+            checkoutAttemptId = params.checkoutAttemptId,
             coroutineScope = coroutineScope,
         )
     }
