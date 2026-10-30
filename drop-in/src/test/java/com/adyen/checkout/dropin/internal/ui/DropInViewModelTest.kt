@@ -29,6 +29,8 @@ import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.theme.CheckoutTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertSame
@@ -176,6 +178,7 @@ internal class DropInViewModelTest {
             controllerProvider = controllerProvider,
             dropInServiceManager = DropInServiceManager(DropInService::class.java),
             storedPaymentMethodRemover = { Result.success(Unit) },
+            coroutineScope = CoroutineScope(Dispatchers.Main),
         )
     }
 

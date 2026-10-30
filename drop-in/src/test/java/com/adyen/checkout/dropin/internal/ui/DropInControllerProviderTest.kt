@@ -8,12 +8,25 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
+import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
+import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.dropin.DropInService
+import com.adyen.checkout.dropin.internal.service.DropInServiceManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 
 internal class DropInControllerProviderTest {
 
@@ -43,6 +56,35 @@ internal class DropInControllerProviderTest {
 
         assertEquals(Environment.TEST, actual.checkoutConfiguration.environment)
         assertEquals(TEST_CLIENT_KEY, actual.checkoutConfiguration.clientKey)
+    }
+
+    @Test
+    fun `when a controller is provided, then it is created by the injected controller factory`() {
+        val controller = mock<CheckoutController>()
+        val controllerFactory = mock<CheckoutControllerFactory> {
+            on {
+                create(
+                    target = any(),
+                    context = any<CheckoutContext.Advanced>(),
+                    callbacks = any<AdvancedCheckoutCallbacks>(),
+                    coroutineScope = any(),
+                    savedStateHandle = any(),
+                )
+            } doReturn controller
+        }
+        val provider = DefaultDropInControllerProvider(
+            checkoutContext = createCheckoutContext(showSubmitButton = null),
+            dropInServiceManager = DropInServiceManager(DropInService::class.java),
+            controllerFactory = controllerFactory,
+        )
+
+        val result = provider.provide(
+            paymentFlowType = DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.SCHEME),
+            coroutineScope = CoroutineScope(Dispatchers.Unconfined),
+            onAction = {},
+        )
+
+        assertSame(controller, result)
     }
 
     private fun createCheckoutContext(showSubmitButton: Boolean?) = TestCheckoutContext.advanced(

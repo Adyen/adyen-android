@@ -14,12 +14,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
+import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.DropInResultContract
@@ -31,19 +35,29 @@ import com.adyen.checkout.dropin.internal.data.api.DisableTokenRepository
 import com.adyen.checkout.dropin.internal.data.api.DisableTokenService
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlin.reflect.KClass
 
+/**
+ * @param coroutineScope Becomes the [viewModelScope], so it is cancelled when Drop-in is closed. It is passed in
+ * because the dependencies that live as long as Drop-in, like its analytics manager, need it before this view model
+ * exists.
+ */
+@Suppress("LongParameterList")
 internal class DropInViewModel(
     private val input: DropInResultContract.Input,
     val navigator: DropInNavigator,
     val controllerProvider: DropInControllerProvider,
     private val dropInServiceManager: DropInServiceManager,
     private val storedPaymentMethodRemover: StoredPaymentMethodRemover,
-) : ViewModel() {
+    coroutineScope: CoroutineScope,
+) : ViewModel(coroutineScope) {
 
     val checkoutParams: CheckoutParams = CheckoutParamsFactory().create(input.checkoutContext)
 
@@ -102,6 +116,7 @@ internal class DropInViewModel(
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             val input = inputProvider()
             val dropInServiceManager = DropInServiceManager(input.serviceClass)
+            val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
             return DropInViewModel(
                 input = input,
@@ -113,10 +128,26 @@ internal class DropInViewModel(
                 controllerProvider = DefaultDropInControllerProvider(
                     checkoutContext = input.checkoutContext,
                     dropInServiceManager = dropInServiceManager,
+                    controllerFactory = CheckoutControllerFactory(
+                        analyticsManager = createAnalyticsManager(input.checkoutContext, coroutineScope),
+                    ),
                 ),
                 dropInServiceManager = dropInServiceManager,
                 storedPaymentMethodRemover = createStoredPaymentMethodRemover(input.checkoutContext),
+                coroutineScope = coroutineScope,
             ) as T
+        }
+
+        private fun createAnalyticsManager(
+            checkoutContext: CheckoutContext,
+            coroutineScope: CoroutineScope,
+        ): AnalyticsManager {
+            return AnalyticsManagerFactory().provide(
+                context = checkoutContext,
+                params = CheckoutParamsFactory().create(checkoutContext),
+                source = AnalyticsSource.DropIn(checkoutContext.getPaymentMethods().map { it.type }),
+                coroutineScope = coroutineScope,
+            )
         }
 
         private fun createStoredPaymentMethodRemover(checkoutContext: CheckoutContext): StoredPaymentMethodRemover {
