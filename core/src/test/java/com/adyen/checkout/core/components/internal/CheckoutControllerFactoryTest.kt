@@ -36,6 +36,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.CheckoutException
 import com.adyen.checkout.core.error.internal.GenericError
@@ -153,6 +154,35 @@ internal class CheckoutControllerFactoryTest {
     }
 
     @Test
+    fun `when an analytics manager is given, then the payment components of every controller share it`() {
+        val analyticsManager = TestAnalyticsManager()
+        val receivedAnalyticsManagers = mutableListOf<AnalyticsManager>()
+        PaymentMethodProvider.register(
+            TEST_PAYMENT_METHOD_TYPE,
+            object : PaymentComponentFactory<PaymentComponent> {
+                override fun create(
+                    paymentMethod: PaymentMethod,
+                    coroutineScope: CoroutineScope,
+                    analyticsManager: AnalyticsManager,
+                    sdkDataProvider: SdkDataProvider,
+                    params: CheckoutParams,
+                    additionalCallbacks: Set<CheckoutAdditionalCallback>,
+                ): PaymentComponent {
+                    receivedAnalyticsManagers += analyticsManager
+                    return TestPaymentComponent()
+                }
+            },
+        )
+        val factory = CheckoutControllerFactory(analyticsManager)
+
+        createAdvancedController(factory)
+        createAdvancedController(factory)
+
+        assertEquals(2, receivedAnalyticsManagers.size)
+        receivedAnalyticsManagers.forEach { assertSame(analyticsManager, it) }
+    }
+
+    @Test
     fun `when creation throws InvalidConfigurationError, then CheckoutException with INVALID_CONFIGURATION is thrown`() {
         registerThrowingFactory(InvalidConfigurationError("missing merchant account"))
 
@@ -185,7 +215,9 @@ internal class CheckoutControllerFactoryTest {
         }
     }
 
-    private fun createAdvancedController() = CheckoutControllerFactory().create(
+    private fun createAdvancedController(
+        factory: CheckoutControllerFactory = CheckoutControllerFactory(),
+    ) = factory.create(
         target = CheckoutTarget.PaymentMethod(TEST_PAYMENT_METHOD_TYPE),
         context = CheckoutContext.Advanced(
             paymentMethods = PaymentMethods(
