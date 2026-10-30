@@ -49,8 +49,8 @@ internal class DefaultAnalyticsSetupProviderTest {
     }
 
     @Test
-    fun `when created by drop in, then flavor should be dropin`() {
-        val analyticsSetupProvider = createAnalyticsSetupProvider(isCreatedByDropIn = true)
+    fun `when source is drop in, then flavor should be dropin`() {
+        val analyticsSetupProvider = createAnalyticsSetupProvider(source = AnalyticsSource.DropIn(listOf("scheme")))
 
         val result = analyticsSetupProvider.provide()
 
@@ -58,8 +58,8 @@ internal class DefaultAnalyticsSetupProviderTest {
     }
 
     @Test
-    fun `when not created by drop in, then flavor should be components`() {
-        val analyticsSetupProvider = createAnalyticsSetupProvider(isCreatedByDropIn = false)
+    fun `when source is a component, then flavor should be components`() {
+        val analyticsSetupProvider = createAnalyticsSetupProvider(source = AnalyticsSource.PaymentComponent("scheme"))
 
         val result = analyticsSetupProvider.provide()
 
@@ -105,7 +105,6 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Suppress("LongParameterList")
     private fun createAnalyticsSetupProvider(
         shopperLocale: Locale = Locale.US,
-        isCreatedByDropIn: Boolean = false,
         analyticsLevel: AnalyticsParamsLevel = AnalyticsParamsLevel.INITIAL,
         packageName: String = "com.adyen.checkout",
         screenWidth: Int = 420,
@@ -115,7 +114,6 @@ internal class DefaultAnalyticsSetupProviderTest {
         checkoutAttemptId: String = "checkoutAttemptId",
     ) = DefaultAnalyticsSetupProvider(
         shopperLocale = shopperLocale,
-        isCreatedByDropIn = isCreatedByDropIn,
         analyticsLevel = analyticsLevel,
         packageName = packageName,
         screenWidth = screenWidth,

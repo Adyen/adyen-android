@@ -203,12 +203,10 @@ internal class CheckoutControllerFactory {
         context: CheckoutContext,
         coroutineScope: CoroutineScope,
     ): AnalyticsManager {
-        val session = (context as? CheckoutContext.Sessions)?.checkoutSession
         return AnalyticsManagerFactory().provide(
+            context = context,
             params = checkoutParams,
             source = AnalyticsSource.PaymentComponent(paymentMethodType),
-            sessionId = session?.sessionSetupResponse?.id,
-            checkoutAttemptId = context.checkoutAttemptId,
             coroutineScope = coroutineScope,
         )
     }
