@@ -22,6 +22,7 @@ import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
+import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
@@ -36,7 +37,6 @@ import com.adyen.checkout.dropin.internal.data.api.DisableTokenService
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -116,7 +116,7 @@ internal class DropInViewModel(
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             val input = inputProvider()
             val dropInServiceManager = DropInServiceManager(input.serviceClass)
-            val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+            val coroutineScope = CoroutineScope(SupervisorJob() + DispatcherProvider.Main.immediate)
 
             return DropInViewModel(
                 input = input,
