@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
@@ -31,6 +33,7 @@ internal class StoredPaymentMethodManagementViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
     private val expiryCheck: StoredPaymentMethodExpiryCheck,
+    private val analyticsManager: AnalyticsManager,
 ) : ViewModel() {
 
     private val showRemovalError = MutableStateFlow(false)
@@ -51,6 +54,8 @@ internal class StoredPaymentMethodManagementViewModel(
     )
 
     init {
+        analyticsManager.trackEvent(GenericEvents.rendered(component = ANALYTICS_COMPONENT))
+
         paymentMethodRepository.storedPaymentMethodRemovalFailures
             .onEach { showRemovalError.value = true }
             .launchIn(viewModelScope)
@@ -91,12 +96,16 @@ internal class StoredPaymentMethodManagementViewModel(
     }
 
     fun removeStoredPaymentMethod(id: String) {
+        analyticsManager.trackEvent(
+            GenericEvents.clicked(component = ANALYTICS_COMPONENT, target = ANALYTICS_TARGET_REMOVE_BUTTON),
+        )
         showRemovalError.value = false
         viewModelScope.launch { paymentMethodRepository.removeStoredPaymentMethod(id) }
     }
 
     class Factory(
         private val paymentMethodRepository: PaymentMethodRepository,
+        private val analyticsManager: AnalyticsManager,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -105,7 +114,13 @@ internal class StoredPaymentMethodManagementViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
                 expiryCheck = StoredPaymentMethodExpiryCheck(),
+                analyticsManager = analyticsManager,
             ) as T
         }
+    }
+
+    private companion object {
+        private const val ANALYTICS_COMPONENT = "storedPaymentMethodManagement"
+        private const val ANALYTICS_TARGET_REMOVE_BUTTON = "stored_payment_method_remove_button"
     }
 }

@@ -104,6 +104,7 @@ private fun storedPaymentMethodsNavEntry(
         viewModel = viewModel(
             factory = StoredPaymentMethodManagementViewModel.Factory(
                 paymentMethodRepository = viewModel.paymentMethodRepository,
+                analyticsManager = viewModel.analyticsManager,
             ),
         ),
     )

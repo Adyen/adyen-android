@@ -10,6 +10,9 @@ package com.adyen.checkout.dropin.internal.manage
 
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.GenericEvents
+import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
@@ -258,15 +261,43 @@ internal class StoredPaymentMethodManagementViewModelTest {
         }
     }
 
+    @Test
+    fun `when the screen is opened, then a rendered event is tracked`() = runTest {
+        val analyticsManager = TestAnalyticsManager()
+
+        createViewModel(createRepository(coroutineScope = backgroundScope), analyticsManager)
+
+        analyticsManager.assertLastEventEquals(GenericEvents.rendered(component = "storedPaymentMethodManagement"))
+    }
+
+    @Test
+    fun `when a removal is confirmed, then a click on the remove button is tracked`() = runTest {
+        val analyticsManager = TestAnalyticsManager()
+        val viewModel = createViewModel(createRepository(coroutineScope = backgroundScope), analyticsManager)
+
+        viewModel.removeStoredPaymentMethod(FIRST_ID)
+
+        analyticsManager.assertLastEventEquals(
+            GenericEvents.clicked(
+                component = "storedPaymentMethodManagement",
+                target = "stored_payment_method_remove_button",
+            ),
+        )
+    }
+
     private fun createViewModel(
         remover: StoredPaymentMethodRemover,
         coroutineScope: CoroutineScope,
     ) = createViewModel(createRepository(remover = remover, coroutineScope = coroutineScope))
 
-    private fun createViewModel(repository: DefaultPaymentMethodRepository) = StoredPaymentMethodManagementViewModel(
+    private fun createViewModel(
+        repository: DefaultPaymentMethodRepository,
+        analyticsManager: AnalyticsManager = TestAnalyticsManager(),
+    ) = StoredPaymentMethodManagementViewModel(
         paymentMethodRepository = repository,
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
         expiryCheck = StoredPaymentMethodExpiryCheck { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
+        analyticsManager = analyticsManager,
     )
 
     private fun createRepository(
