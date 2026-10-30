@@ -1,0 +1,8 @@
+### Fixed
+- Compromised [eMudhra certificates](https://emudhra.com/en-in/) no longer cause a vulnerability. On Android devices without Google Play services, Drop-in and Components now block the eight [compromised eMudhra intermediate CA certificates](https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/0R3XLJL6FuE/m/0XofdebrAAAJ). Devices with Google Play services were already protected by an automatic update from Google.
+
+### Changed
+- Dependency versions:
+  | Name | Version |
+  |------|---------|
+  | [OkHttp](https://lysine.dev/okhttp/changelogs/changelog_4x/#version-4121) | `4.12.0` -> `4.12.1` |
