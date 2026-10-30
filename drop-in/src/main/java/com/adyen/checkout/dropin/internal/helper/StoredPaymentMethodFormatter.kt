@@ -51,4 +51,14 @@ internal object StoredPaymentMethodFormatter {
             else -> null
         }
     }
+
+    fun getRemovalTitle(storedPaymentMethod: StoredPaymentMethod): String {
+        // TODO - Treat StoredBCMCPaymentMethod like a card once stored Bancontact is supported, like iOS
+        return when (storedPaymentMethod) {
+            is StoredACHDirectDebitPaymentMethod,
+            is StoredCardPaymentMethod -> "${storedPaymentMethod.name} ${getTitle(storedPaymentMethod)}"
+
+            else -> storedPaymentMethod.name
+        }
+    }
 }

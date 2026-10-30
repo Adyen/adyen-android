@@ -227,6 +227,7 @@ private fun PaymentMethodListItem(
     onClick: (PaymentMethodItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val subtitle = storedPaymentMethodSubtitle(item.subtitle, item.isExpired)
     ListItem(
         leadingIcon = {
             CheckoutNetworkLogo(
@@ -235,7 +236,8 @@ private fun PaymentMethodListItem(
             )
         },
         title = item.title,
-        subtitle = item.subtitle,
+        subtitle = subtitle.text,
+        subtitleColor = subtitle.color,
         trailingContent = {
             PaymentMethodItemTrailingContent(item)
         },

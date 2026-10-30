@@ -25,6 +25,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodItem
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodListViewState.PaymentMethodListSection
@@ -45,6 +46,7 @@ internal class PaymentMethodListViewModel(
     private val dropInParams: DropInParams,
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
+    private val expiryCheck: StoredPaymentMethodExpiryCheck,
     private val availabilityCheck: PaymentMethodAvailabilityCheck,
     private val navigator: DropInNavigator,
     controllerProvider: DropInControllerProvider,
@@ -182,6 +184,7 @@ internal class PaymentMethodListViewModel(
             icon = icon,
             title = title,
             subtitle = subtitle,
+            isExpired = expiryCheck.isExpired(this),
         )
     }
 
@@ -222,6 +225,7 @@ internal class PaymentMethodListViewModel(
                 dropInParams = dropInParams,
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+                expiryCheck = StoredPaymentMethodExpiryCheck(),
                 availabilityCheck = PaymentMethodProvider,
                 navigator = navigator,
                 controllerProvider = controllerProvider,

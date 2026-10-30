@@ -10,11 +10,14 @@ package com.adyen.checkout.dropin.internal.manage
 
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.StoredPaymentMethodRemover
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CompletableDeferred
@@ -29,6 +32,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.IOException
+import java.util.Calendar
+import java.util.GregorianCalendar
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(LoggingExtension::class, TestDispatcherExtension::class)
@@ -179,22 +184,98 @@ internal class StoredPaymentMethodManagementViewModelTest {
             assertEquals(listOf(SECOND_ID), repository.storedPaymentMethods.value.map { it.id })
         }
 
+    @Test
+    fun `when there are cards and other stored payment methods, then the other section has a title`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(
+                storedPaymentMethods = listOf(storedCard(FIRST_ID), storedBlik(SECOND_ID)),
+                coroutineScope = backgroundScope,
+            ),
+        )
+
+        viewModel.viewState.test {
+            assertTrue(expectMostRecentItem().showOthersSectionTitle)
+        }
+    }
+
+    @Test
+    fun `when there are only other stored payment methods, then the other section has no title`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(storedPaymentMethods = listOf(storedBlik(SECOND_ID)), coroutineScope = backgroundScope),
+        )
+
+        viewModel.viewState.test {
+            val viewState = expectMostRecentItem()
+            assertEquals(listOf(SECOND_ID), viewState.others.map { it.id })
+            assertFalse(viewState.showOthersSectionTitle)
+        }
+    }
+
+    @Test
+    fun `when a card is listed, then its removal is confirmed with its name and last four`() = runTest {
+        val viewModel = createViewModel(createRepository(coroutineScope = backgroundScope))
+
+        viewModel.viewState.test {
+            assertEquals("Visa •••• 1234", expectMostRecentItem().cards.first().removalTitle)
+        }
+    }
+
+    @Test
+    fun `when stored payment methods are listed, then the list is not empty from the start`() = runTest {
+        val viewModel = createViewModel(createRepository(coroutineScope = backgroundScope))
+
+        assertFalse(viewModel.viewState.value.isEmpty)
+    }
+
+    @Test
+    fun `when the last stored payment method is removed, then the list is empty`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(storedPaymentMethods = listOf(storedCard(FIRST_ID)), coroutineScope = backgroundScope),
+        )
+
+        viewModel.viewState.test {
+            assertFalse(expectMostRecentItem().isEmpty)
+
+            viewModel.removeStoredPaymentMethod(FIRST_ID)
+            runCurrent()
+
+            assertTrue(expectMostRecentItem().isEmpty)
+        }
+    }
+
+    @Test
+    fun `when a card is expired, then only that card is shown as expired`() = runTest {
+        val viewModel = createViewModel(
+            createRepository(
+                storedPaymentMethods = listOf(storedCard(FIRST_ID, expiryYear = "2025"), storedCard(SECOND_ID)),
+                coroutineScope = backgroundScope,
+            ),
+        )
+
+        viewModel.viewState.test {
+            val expiredIds = expectMostRecentItem().cards.filter { it.isExpired }.map { it.id }
+            assertEquals(listOf(FIRST_ID), expiredIds)
+        }
+    }
+
     private fun createViewModel(
         remover: StoredPaymentMethodRemover,
         coroutineScope: CoroutineScope,
-    ) = createViewModel(createRepository(remover, coroutineScope))
+    ) = createViewModel(createRepository(remover = remover, coroutineScope = coroutineScope))
 
     private fun createViewModel(repository: DefaultPaymentMethodRepository) = StoredPaymentMethodManagementViewModel(
         paymentMethodRepository = repository,
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+        expiryCheck = StoredPaymentMethodExpiryCheck { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
     )
 
     private fun createRepository(
-        remover: StoredPaymentMethodRemover,
+        remover: StoredPaymentMethodRemover = StoredPaymentMethodRemover { Result.success(Unit) },
+        storedPaymentMethods: List<StoredPaymentMethod> = listOf(storedCard(FIRST_ID), storedCard(SECOND_ID)),
         coroutineScope: CoroutineScope,
     ) = DefaultPaymentMethodRepository(
         paymentMethods = emptyList(),
-        storedPaymentMethods = listOf(storedCard(FIRST_ID), storedCard(SECOND_ID)),
+        storedPaymentMethods = storedPaymentMethods,
         storedPaymentMethodRemover = remover,
         coroutineScope = coroutineScope,
     )
@@ -203,7 +284,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
 
     private fun StoredPaymentMethodManagementViewState.removingCardIds() = cards.filter { it.isRemoving }.map { it.id }
 
-    private fun storedCard(id: String) = StoredCardPaymentMethod(
+    private fun storedCard(id: String, expiryYear: String = "2030") = StoredCardPaymentMethod(
         type = PaymentMethodTypes.SCHEME,
         id = id,
         name = "Visa",
@@ -211,9 +292,16 @@ internal class StoredPaymentMethodManagementViewModelTest {
         brand = "visa",
         lastFour = "1234",
         expiryMonth = "01",
-        expiryYear = "2030",
+        expiryYear = expiryYear,
         holderName = null,
         fundingSource = null,
+    )
+
+    private fun storedBlik(id: String) = StoredBLIKPaymentMethod(
+        type = PaymentMethodTypes.BLIK,
+        name = "BLIK",
+        id = id,
+        supportedShopperInteractions = listOf("Ecommerce"),
     )
 
     private companion object {

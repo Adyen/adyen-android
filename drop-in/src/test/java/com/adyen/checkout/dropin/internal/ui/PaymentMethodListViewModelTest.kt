@@ -28,6 +28,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
+import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CompletableDeferred
@@ -42,6 +43,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import java.util.Calendar
+import java.util.GregorianCalendar
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -280,6 +283,17 @@ internal class PaymentMethodListViewModelTest {
         }
     }
 
+    @Test
+    fun `when a stored card is expired, then it is shown as expired`() = runTest {
+        val expiredCard = STORED_CARD.copy(id = "expired-id", expiryYear = "2025")
+        val viewModel = createViewModel(listOf(CARD), storedPaymentMethods = listOf(expiredCard, STORED_CARD))
+
+        viewModel.viewState.test {
+            val options = expectMostRecentItem().storedPaymentMethodSection?.options.orEmpty()
+            assertEquals(listOf("expired-id"), options.filter { it.isExpired }.map { it.id })
+        }
+    }
+
     private fun PaymentMethodListViewModel.listedPaymentMethodIds(): List<String> =
         viewState.value.listedPaymentMethodIds()
 
@@ -298,6 +312,7 @@ internal class PaymentMethodListViewModelTest {
             paymentMethods = paymentMethods,
         ),
         paymentMethodSupportCheck = PaymentMethodSupportCheck(),
+        expiryCheck = StoredPaymentMethodExpiryCheck { GregorianCalendar(2026, Calendar.OCTOBER, 22) },
         availabilityCheck = availabilityCheck,
         navigator = navigator,
         controllerProvider = controllerProvider,

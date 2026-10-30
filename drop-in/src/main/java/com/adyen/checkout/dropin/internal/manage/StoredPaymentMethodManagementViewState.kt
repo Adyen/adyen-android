@@ -11,14 +11,19 @@ package com.adyen.checkout.dropin.internal.manage
 internal data class StoredPaymentMethodManagementViewState(
     val cards: List<ListItem>,
     val others: List<ListItem>,
+    val showOthersSectionTitle: Boolean,
     val showRemovalError: Boolean,
 ) {
+
+    val isEmpty: Boolean get() = cards.isEmpty() && others.isEmpty()
 
     internal data class ListItem(
         val id: String,
         val icon: String,
         val title: String,
         val subtitle: String?,
+        val isExpired: Boolean,
+        val removalTitle: String,
         val isRemoving: Boolean,
     )
 }
