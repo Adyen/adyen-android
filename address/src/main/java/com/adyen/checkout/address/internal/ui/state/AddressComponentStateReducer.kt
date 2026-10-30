@@ -92,12 +92,13 @@ internal class AddressComponentStateReducer(
         copy(requirementPolicy = spec.getFieldSpec(id).requirementPolicy)
 
     /**
-     * Keeps the selected country when the countries fail to load, so a prefilled or default country still works
-     * offline. Clears it when the loaded list does not contain it.
+     * A failure changes nothing, so a prefilled or default country still works offline and a list loaded earlier is
+     * kept. Clears the selected country when a non-empty list leaves it out.
      */
     private fun AddressComponentState.onCountriesLoaded(result: Result<List<AddressItem>>): AddressComponentState {
+        val items = result.getOrNull() ?: return this
         val supportedCountryCodes = componentParams.supportedCountryCodes
-        val countries = result.getOrNull().orEmpty().toAddressRegions().filter { region ->
+        val countries = items.toAddressRegions().filter { region ->
             supportedCountryCodes.isEmpty() || region.code in supportedCountryCodes
         }
         val loadedState = copy(countries = countries)

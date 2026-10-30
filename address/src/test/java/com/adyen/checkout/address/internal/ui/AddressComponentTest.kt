@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.address.internal.ui
 
+import com.adyen.checkout.address.internal.data.api.AddressRepository
+import com.adyen.checkout.address.internal.data.model.AddressItem
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
+import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStateFactory
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStatePostProcessor
 import com.adyen.checkout.address.internal.ui.state.AddressComponentStateReducer
@@ -20,6 +23,7 @@ import com.adyen.checkout.address.internal.ui.view.AddressSecondaryContentEntry
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -29,12 +33,62 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.IOException
 import java.util.Locale
+import kotlin.coroutines.cancellation.CancellationException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class AddressComponentTest {
+
+    private lateinit var addressRepository: TestAddressRepository
+
+    @BeforeEach
+    fun beforeEach() {
+        addressRepository = TestAddressRepository()
+    }
+
+    @Test
+    fun `when created then the countries are loaded and no states are requested`() = runTest {
+        // WHEN
+        val component = createComponent()
+
+        // THEN
+        assertEquals(COUNTRY_REGIONS, component.viewState.value.countryPickerViewState.regions)
+        assertTrue(addressRepository.requestedStates.isEmpty())
+    }
+
+    @Test
+    fun `when the countries request fails then the prefilled country is kept`() = runTest {
+        // GIVEN
+        addressRepository.countriesResult = Result.failure(IOException("offline"))
+        val component = createComponent()
+
+        // WHEN
+        component.show(US_ADDRESS)
+
+        // THEN
+        assertTrue(component.viewState.value.countryPickerViewState.regions.isEmpty())
+        assertEquals("US", component.viewState.value.elements.element<AddressFormElement.Country>().selected?.code)
+    }
+
+    @Test
+    fun `when shown after the countries request failed then the countries are requested again`() = runTest {
+        // GIVEN
+        addressRepository.countriesResult = Result.failure(IOException("offline"))
+        val component = createComponent()
+        addressRepository.countriesResult = Result.success(COUNTRIES)
+
+        // WHEN
+        component.show(address = null)
+
+        // THEN
+        assertEquals(2, addressRepository.countriesRequests)
+        assertEquals(COUNTRY_REGIONS, component.viewState.value.countryPickerViewState.regions)
+    }
 
     @Test
     fun `when shown then the form screen opens`() = runTest {
@@ -64,6 +118,45 @@ internal class AddressComponentTest {
         assertEquals("San Francisco", elements.element<AddressFormElement.City>().textInputViewState.text)
         assertEquals("CA", elements.element<AddressFormElement.StateOrProvince>().selected?.code)
         assertEquals("94105", elements.element<AddressFormElement.PostalCode>().textInputViewState.text)
+    }
+
+    @Test
+    fun `when shown then the states of the selected country are requested`() = runTest {
+        // GIVEN
+        val component = createComponent()
+
+        // WHEN
+        component.show(US_ADDRESS)
+
+        // THEN
+        assertEquals(listOf("US"), addressRepository.requestedStates)
+        assertEquals(US_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
+    }
+
+    @Test
+    fun `when shown with a country without states then no states are requested`() = runTest {
+        // GIVEN
+        val component = createComponent()
+
+        // WHEN
+        component.show(US_ADDRESS.copy(country = "NL", stateOrProvince = null))
+
+        // THEN
+        assertTrue(addressRepository.requestedStates.isEmpty())
+    }
+
+    @Test
+    fun `when shown with no country selected then no states are requested`() = runTest {
+        // GIVEN
+        // The shopper locale country, US, cannot be picked, so nothing is preselected.
+        val component = createComponent(supportedCountryCodes = setOf("NL", "GB"))
+
+        // WHEN
+        component.show(address = null)
+
+        // THEN
+        assertNull(component.viewState.value.elements.element<AddressFormElement.Country>().selected)
+        assertTrue(addressRepository.requestedStates.isEmpty())
     }
 
     @Test
@@ -130,7 +223,84 @@ internal class AddressComponentTest {
     }
 
     @Test
-    fun `when a state is selected then the picker closes`() = runTest {
+    fun `when a country is selected then its states are requested`() = runTest {
+        // GIVEN
+        val component = createComponent()
+        component.show(address = null)
+
+        // WHEN
+        component.onCountrySelected("CA")
+
+        // THEN
+        assertEquals(listOf("US", "CA"), addressRepository.requestedStates)
+        assertEquals(CA_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
+    }
+
+    @Test
+    fun `when a country without states is selected then no states are requested for it`() = runTest {
+        // GIVEN
+        val component = createComponent()
+        component.show(address = null)
+
+        // WHEN
+        component.onCountrySelected("NL")
+
+        // THEN
+        assertEquals(listOf("US"), addressRepository.requestedStates)
+        assertNull(component.viewState.value.statePickerViewState)
+    }
+
+    @Test
+    fun `when the country is changed while its states are loading then the previous request is cancelled`() =
+        runTest {
+            // GIVEN
+            val component = createComponent()
+            component.show(address = null)
+            val statesAnswer = CompletableDeferred<Unit>()
+            addressRepository.statesAnswer = statesAnswer
+            component.onCountrySelected("CA")
+
+            // WHEN
+            component.onCountrySelected("NL")
+
+            // THEN
+            assertEquals(listOf("CA"), addressRepository.cancelledStates)
+        }
+
+    @Test
+    fun `when shown with another country while the states are loading then the previous request is cancelled`() =
+        runTest {
+            // GIVEN
+            val component = createComponent()
+            addressRepository.statesAnswer = CompletableDeferred()
+            component.show(US_ADDRESS)
+
+            // WHEN
+            component.show(US_ADDRESS.copy(country = "CA", stateOrProvince = null))
+
+            // THEN
+            assertEquals(listOf("US"), addressRepository.cancelledStates)
+            assertEquals(listOf("US", "CA"), addressRepository.requestedStates)
+        }
+
+    @Test
+    fun `when shown again after the states request failed then they are requested again`() = runTest {
+        // GIVEN
+        addressRepository.statesResults["US"] = Result.failure(IOException("offline"))
+        val component = createComponent()
+        component.show(US_ADDRESS)
+        addressRepository.statesResults["US"] = Result.success(US_STATES)
+
+        // WHEN
+        component.show(US_ADDRESS)
+
+        // THEN
+        assertEquals(listOf("US", "US"), addressRepository.requestedStates)
+        assertEquals(US_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
+    }
+
+    @Test
+    fun `when a state is selected then the picker closes and the state is stored`() = runTest {
         // GIVEN
         val component = createComponent()
         component.show(address = null)
@@ -141,6 +311,26 @@ internal class AddressComponentTest {
 
         // THEN
         assertEquals(SecondaryNavigationEvent.Close, navigation.latestValue)
+        val state = component.viewState.value.elements.element<AddressFormElement.StateOrProvince>()
+        assertEquals(AddressRegion(code = "NY", name = "New York"), state.selected)
+    }
+
+    @Test
+    fun `when the state request fails then the state field stays empty and saving shows its error`() = runTest {
+        // GIVEN
+        addressRepository.statesResults["US"] = Result.failure(IOException("offline"))
+        val component = createComponent()
+        component.show(US_ADDRESS.copy(stateOrProvince = null))
+        val events = component.eventFlow.test(testScheduler)
+
+        // WHEN
+        component.confirm()
+
+        // THEN
+        val state = component.viewState.value.elements.element<AddressFormElement.StateOrProvince>()
+        assertNull(state.selected)
+        assertEquals(CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_ERROR, state.errorMessage)
+        assertTrue(events.values.isEmpty())
     }
 
     @Test
@@ -239,13 +429,16 @@ internal class AddressComponentTest {
             assertEquals("94105", postalCode.textInputViewState.text)
         }
 
-    private fun TestScope.createComponent(): AddressComponent {
+    private fun TestScope.createComponent(
+        supportedCountryCodes: Set<String> = emptySet(),
+    ): AddressComponent {
         val componentParams = AddressComponentParams(
             shopperLocale = SHOPPER_LOCALE,
-            supportedCountryCodes = emptySet(),
+            supportedCountryCodes = supportedCountryCodes,
         )
         val componentStateFactory = AddressComponentStateFactory(componentParams)
         return AddressComponent(
+            addressRepository = addressRepository,
             componentStateValidator = AddressComponentStateValidator(),
             componentStateFactory = componentStateFactory,
             componentStateReducer = AddressComponentStateReducer(componentParams, componentStateFactory),
@@ -258,8 +451,60 @@ internal class AddressComponentTest {
     private inline fun <reified T : AddressFormElement> List<AddressFormElement>.element(): T =
         filterIsInstance<T>().single()
 
+    private class TestAddressRepository : AddressRepository {
+
+        var countriesResult = Result.success(COUNTRIES)
+
+        var countriesRequests = 0
+            private set
+
+        val statesResults = mutableMapOf(
+            "US" to Result.success(US_STATES),
+            "CA" to Result.success(CA_STATES),
+        )
+
+        /** When set, every states request waits for it to complete. */
+        var statesAnswer: CompletableDeferred<Unit>? = null
+
+        val requestedStates = mutableListOf<String>()
+        val cancelledStates = mutableListOf<String>()
+
+        override suspend fun getCountries(): Result<List<AddressItem>> {
+            countriesRequests++
+            return countriesResult
+        }
+
+        override suspend fun getStates(countryCode: String): Result<List<AddressItem>> {
+            requestedStates += countryCode
+            try {
+                statesAnswer?.await()
+            } catch (e: CancellationException) {
+                cancelledStates += countryCode
+                throw e
+            }
+            return statesResults[countryCode] ?: Result.success(emptyList())
+        }
+    }
+
     companion object {
         private val SHOPPER_LOCALE = Locale.US
+
+        private val COUNTRIES = listOf(
+            AddressItem(id = "CA", name = "Canada"),
+            AddressItem(id = "GB", name = "United Kingdom"),
+            AddressItem(id = "NL", name = "Netherlands"),
+            AddressItem(id = "US", name = "United States"),
+        )
+        private val COUNTRY_REGIONS = COUNTRIES.map { AddressRegion(code = it.id!!, name = it.name!!) }
+
+        private val US_STATES = listOf(
+            AddressItem(id = "CA", name = "California"),
+            AddressItem(id = "NY", name = "New York"),
+        )
+        private val US_STATE_REGIONS = US_STATES.map { AddressRegion(code = it.id!!, name = it.name!!) }
+
+        private val CA_STATES = listOf(AddressItem(id = "ON", name = "Ontario"))
+        private val CA_STATE_REGIONS = CA_STATES.map { AddressRegion(code = it.id!!, name = it.name!!) }
 
         private val US_ADDRESS = AddressModel(
             country = "US",
