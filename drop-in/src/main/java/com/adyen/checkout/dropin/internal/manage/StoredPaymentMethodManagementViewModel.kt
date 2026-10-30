@@ -12,8 +12,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.dropin.internal.analytics.StoredPaymentMethodManagementEvents
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodSupportCheck
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodExpiryCheck
@@ -31,6 +33,7 @@ internal class StoredPaymentMethodManagementViewModel(
     private val paymentMethodRepository: PaymentMethodRepository,
     private val paymentMethodSupportCheck: PaymentMethodSupportCheck,
     private val expiryCheck: StoredPaymentMethodExpiryCheck,
+    private val analyticsManager: AnalyticsManager,
 ) : ViewModel() {
 
     private val showRemovalError = MutableStateFlow(false)
@@ -51,6 +54,8 @@ internal class StoredPaymentMethodManagementViewModel(
     )
 
     init {
+        analyticsManager.trackEvent(StoredPaymentMethodManagementEvents.rendered())
+
         paymentMethodRepository.storedPaymentMethodRemovalFailures
             .onEach { showRemovalError.value = true }
             .launchIn(viewModelScope)
@@ -91,12 +96,14 @@ internal class StoredPaymentMethodManagementViewModel(
     }
 
     fun removeStoredPaymentMethod(id: String) {
+        analyticsManager.trackEvent(StoredPaymentMethodManagementEvents.removeClicked())
         showRemovalError.value = false
         viewModelScope.launch { paymentMethodRepository.removeStoredPaymentMethod(id) }
     }
 
     class Factory(
         private val paymentMethodRepository: PaymentMethodRepository,
+        private val analyticsManager: AnalyticsManager,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -105,6 +112,7 @@ internal class StoredPaymentMethodManagementViewModel(
                 paymentMethodRepository = paymentMethodRepository,
                 paymentMethodSupportCheck = PaymentMethodSupportCheck(),
                 expiryCheck = StoredPaymentMethodExpiryCheck(),
+                analyticsManager = analyticsManager,
             ) as T
         }
     }

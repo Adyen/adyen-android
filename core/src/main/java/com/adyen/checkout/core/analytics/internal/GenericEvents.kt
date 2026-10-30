@@ -42,6 +42,15 @@ object GenericEvents {
         brand = brand,
     )
 
+    fun clicked(
+        component: String,
+        target: String,
+    ) = AnalyticsEvent.Info(
+        component = component,
+        type = AnalyticsEvent.Info.Type.CLICKED,
+        target = target,
+    )
+
     fun selected(
         component: String,
         target: String,

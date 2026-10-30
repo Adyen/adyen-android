@@ -38,6 +38,7 @@ sealed interface AnalyticsEvent {
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         enum class Type(val value: String) {
+            CLICKED("clicked"),
             DISPLAYED("displayed"),
             DOWNLOAD("download"),
             FOCUS("focus"),
