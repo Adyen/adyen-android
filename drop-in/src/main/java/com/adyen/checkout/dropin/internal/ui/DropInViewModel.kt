@@ -169,7 +169,6 @@ private fun createDropInAnalyticsManager(
     coroutineScope: CoroutineScope,
 ): AnalyticsManager {
     return AnalyticsManagerFactory().provide(
-        context = checkoutContext,
         params = checkoutParams,
         source = checkoutContext.dropInAnalyticsSource(),
         coroutineScope = coroutineScope,

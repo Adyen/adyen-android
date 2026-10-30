@@ -93,7 +93,6 @@ class CheckoutControllerFactory(
         val analyticsManager = createAnalyticsManager(
             checkoutParams = checkoutParams,
             paymentMethodType = "NONE",
-            context = context,
             coroutineScope = coroutineScope,
         )
         val componentRequestDispatcher = ActionOnlyComponentRequestDispatcher(callbacks)
@@ -155,7 +154,6 @@ class CheckoutControllerFactory(
         val analyticsManager = createAnalyticsManager(
             checkoutParams = checkoutParams,
             paymentMethodType = paymentMethod.type,
-            context = context,
             coroutineScope = coroutineScope,
         )
         val stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = target)
@@ -208,11 +206,9 @@ class CheckoutControllerFactory(
     private fun createAnalyticsManager(
         checkoutParams: CheckoutParams,
         paymentMethodType: String,
-        context: CheckoutContext,
         coroutineScope: CoroutineScope,
     ): AnalyticsManager {
         return analyticsManager ?: AnalyticsManagerFactory().provide(
-            context = context,
             params = checkoutParams,
             source = AnalyticsSource.PaymentComponent(paymentMethodType),
             coroutineScope = coroutineScope,

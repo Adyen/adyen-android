@@ -17,11 +17,9 @@ import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequ
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsRemoteDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSetupProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
-import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.common.internal.checkoutAttemptId
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
@@ -35,7 +33,6 @@ class AnalyticsManagerFactory {
      * Creates an [AnalyticsManager], which makes its setup call right away.
      */
     fun provide(
-        context: CheckoutContext,
         params: CheckoutParams,
         source: AnalyticsSource,
         coroutineScope: CoroutineScope,
@@ -46,12 +43,8 @@ class AnalyticsManagerFactory {
         analyticsParams = params.analyticsParams,
         amount = params.amount,
         source = source,
-        sessionId = when (context) {
-            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.id
-            is CheckoutContext.Advanced,
-            is CheckoutContext.ActionOnly -> null
-        },
-        checkoutAttemptId = context.checkoutAttemptId,
+        sessionId = params.additionalSessionParams?.sessionId,
+        checkoutAttemptId = params.checkoutAttemptId,
         coroutineScope = coroutineScope,
     )
 
