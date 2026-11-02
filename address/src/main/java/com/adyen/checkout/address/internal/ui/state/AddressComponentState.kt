@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.address.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
@@ -15,6 +16,7 @@ import com.adyen.checkout.core.components.internal.ui.state.form.FormElementStat
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
 import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.getPaymentDataValue
 
 /**
  * @param countries The countries the shopper can pick. Empty until they are loaded, and when loading them failed.
@@ -67,6 +69,21 @@ internal data class AddressComponentState(
         AddressFormElementId.STATE_OR_PROVINCE -> stateOrProvince.toFormElement(id).takeIf { spec.hasStates }
     }
 }
+
+/**
+ * The address the shopper confirms: the selected country, the trimmed text of the text fields with null for a blank
+ * one, and the selected state for a country that has states.
+ */
+internal fun AddressComponentState.toAddressModel() = AddressModel(
+    country = country.selected,
+    street = street.getTrimmedValue(),
+    houseNumberOrName = houseNumberOrName.getTrimmedValue(),
+    postalCode = postalCode.getTrimmedValue(),
+    city = city.getTrimmedValue(),
+    stateOrProvince = stateOrProvince.selected?.takeIf { spec.hasStates },
+)
+
+private fun TextInputComponentState.getTrimmedValue(): String? = getPaymentDataValue()?.trim()
 
 /**
  * Updates the text input corresponding to the provided [id]. Elements that are not text inputs are ignored.
