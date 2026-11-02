@@ -65,6 +65,7 @@ To move a v5 payment method to v6, use the `android-migrate-payment-method-v6` s
 | Compiling, linting, running tests | `android-check` |
 | Committing a finished phase | `android-commit` |
 | Opening a pull request | `android-pr-create` |
+| Reviewing a pull request or the current branch | `android-code-review` |
 | Public API: visibility, signatures, `apiDump`, sealed vs abstract | `android-public-api-change` |
 | Files under a module's `res/`: layouts, styles, strings | `android-ui-resources` |
 | A new Gradle module, or an optional external SDK | `android-add-module` |
