@@ -49,6 +49,7 @@ internal class AuthenticationComponentParamsMapperTest {
         analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = null,
         showSubmitButton = true,
+        checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = null,
         additionalConfigurations = configuration?.let {
             mapOf<String, Configuration>(AuthenticationConfiguration::class.java.name to it)

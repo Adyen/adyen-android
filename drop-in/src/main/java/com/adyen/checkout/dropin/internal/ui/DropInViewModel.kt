@@ -144,14 +144,17 @@ internal class DropInViewModel(
                     controllerFactory = CheckoutControllerFactory(analyticsManager),
                 ),
                 dropInServiceManager = dropInServiceManager,
-                storedPaymentMethodRemover = createStoredPaymentMethodRemover(input.checkoutContext),
+                storedPaymentMethodRemover = createStoredPaymentMethodRemover(input.checkoutContext, checkoutParams),
                 analyticsManager = analyticsManager,
                 coroutineScope = coroutineScope,
             )
         }
 
-        private fun createStoredPaymentMethodRemover(checkoutContext: CheckoutContext): StoredPaymentMethodRemover {
-            val httpClient = HttpClientFactory.getHttpClient(checkoutContext.checkoutConfiguration.environment)
+        private fun createStoredPaymentMethodRemover(
+            checkoutContext: CheckoutContext,
+            checkoutParams: CheckoutParams,
+        ): StoredPaymentMethodRemover {
+            val httpClient = HttpClientFactory.getHttpClient(checkoutParams.environment)
             return DefaultStoredPaymentMethodRemover(
                 checkoutContext = checkoutContext,
                 disableTokenRepository = DisableTokenRepository(
@@ -169,7 +172,6 @@ private fun createDropInAnalyticsManager(
     coroutineScope: CoroutineScope,
 ): AnalyticsManager {
     return AnalyticsManagerFactory().provide(
-        context = checkoutContext,
         params = checkoutParams,
         source = checkoutContext.dropInAnalyticsSource(),
         coroutineScope = coroutineScope,

@@ -43,7 +43,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(shopperLocale = Locale.FRANCE)
             val session = createSession(shopperLocale = "en-US")
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(Locale.FRANCE, result.shopperLocale)
         }
@@ -53,7 +53,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(shopperLocale = null)
             val session = createSession(shopperLocale = "en-US")
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(Locale.US, result.shopperLocale)
         }
@@ -63,7 +63,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(shopperLocale = null)
             val session = createSession(shopperLocale = null)
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(deviceLocale, result.shopperLocale)
         }
@@ -74,7 +74,7 @@ internal class CheckoutParamsFactoryTest {
             // Underscores instead of hyphens, a common mistake when a Java Locale is stringified
             val session = createSession(shopperLocale = "en_US")
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(deviceLocale, result.shopperLocale)
         }
@@ -83,7 +83,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when configuration has no shopperLocale and session is null, then use device locale`() {
             val configuration = createConfiguration(shopperLocale = null)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertEquals(deviceLocale, result.shopperLocale)
         }
@@ -93,7 +93,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(shopperLocale = null)
             val session = createSession(shopperLocale = "nl-NL")
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(Locale.forLanguageTag("nl-NL"), result.shopperLocale)
         }
@@ -107,7 +107,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(environment = Environment.TEST)
             val session = createSession(environment = Environment.LIVE_EUROPE)
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(Environment.LIVE_EUROPE, result.environment)
         }
@@ -116,7 +116,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when session is null, then use configuration environment`() {
             val configuration = createConfiguration(environment = Environment.TEST)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertEquals(Environment.TEST, result.environment)
         }
@@ -130,7 +130,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(clientKey = "test_config_key")
             val session = createSession(clientKey = "test_session_key")
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals("test_session_key", result.clientKey)
         }
@@ -139,7 +139,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when session is null, then use configuration clientKey`() {
             val configuration = createConfiguration(clientKey = "test_config_key")
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertEquals("test_config_key", result.clientKey)
         }
@@ -152,7 +152,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when analyticsConfiguration is null, then level is ALL`() {
             val configuration = createConfiguration(analyticsConfiguration = null)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertEquals(AnalyticsParams(level = AnalyticsParamsLevel.ALL), result.analyticsParams)
         }
@@ -162,7 +162,7 @@ internal class CheckoutParamsFactoryTest {
             val analyticsConfig = AnalyticsConfiguration(level = AnalyticsLevel.ALL)
             val configuration = createConfiguration(analyticsConfiguration = analyticsConfig)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertEquals(AnalyticsParams(level = AnalyticsParamsLevel.ALL), result.analyticsParams)
         }
@@ -172,7 +172,7 @@ internal class CheckoutParamsFactoryTest {
             val analyticsConfig = AnalyticsConfiguration(level = AnalyticsLevel.NONE)
             val configuration = createConfiguration(analyticsConfiguration = analyticsConfig)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertEquals(AnalyticsParams(level = AnalyticsParamsLevel.INITIAL), result.analyticsParams)
         }
@@ -188,7 +188,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(amount = configAmount)
             val session = createSession(amount = sessionAmount)
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(sessionAmount, result.amount)
         }
@@ -199,7 +199,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration(amount = configAmount)
             val session = createSession(amount = null)
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             assertEquals(configAmount, result.amount)
         }
@@ -208,7 +208,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when session is null and configuration has no amount, then amount is null`() {
             val configuration = createConfiguration(amount = null)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertNull(result.amount)
         }
@@ -221,7 +221,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when configuration has showSubmitButton set, then use that value`() {
             val configuration = createConfiguration(showSubmitButton = false)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertEquals(false, result.showSubmitButton)
         }
@@ -230,7 +230,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when configuration has showSubmitButton null, then default to true`() {
             val configuration = createConfiguration(showSubmitButton = null)
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertTrue(result.showSubmitButton)
         }
@@ -243,7 +243,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when publicKey is provided, then it is set`() {
             val configuration = createConfiguration()
 
-            val result = factory.create(configuration, session = null, publicKey = "test_public_key")
+            val result = createParams(configuration, session = null, publicKey = "test_public_key")
 
             assertEquals("test_public_key", result.publicKey)
         }
@@ -252,9 +252,22 @@ internal class CheckoutParamsFactoryTest {
         fun `when publicKey is null, then it is null`() {
             val configuration = createConfiguration()
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertNull(result.publicKey)
+        }
+    }
+
+    @Nested
+    inner class CheckoutAttemptIdTest {
+
+        @Test
+        fun `when created, then the checkout attempt id is set`() {
+            val configuration = createConfiguration()
+
+            val result = factory.create(configuration, null, null, checkoutAttemptId = "attempt-id")
+
+            assertEquals("attempt-id", result.checkoutAttemptId)
         }
     }
 
@@ -265,7 +278,7 @@ internal class CheckoutParamsFactoryTest {
         fun `when session is null, then additionalSessionParams is null`() {
             val configuration = createConfiguration()
 
-            val result = factory.create(configuration, session = null, publicKey = null)
+            val result = createParams(configuration, session = null, publicKey = null)
 
             assertNull(result.additionalSessionParams)
         }
@@ -282,9 +295,10 @@ internal class CheckoutParamsFactoryTest {
                 returnUrl = "test://return",
             )
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             val expected = AdditionalSessionParams(
+                sessionId = "test_session_id",
                 enableStoreDetails = true,
                 installmentConfiguration = SessionInstallmentConfiguration(
                     installmentOptions = null,
@@ -312,7 +326,7 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration()
             val session = createSession(sessionConfiguration = setupConfig)
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             val expectedInstallmentConfig = SessionInstallmentConfiguration(
                 installmentOptions = mapOf(
@@ -332,9 +346,10 @@ internal class CheckoutParamsFactoryTest {
             val configuration = createConfiguration()
             val session = createSession(sessionConfiguration = null)
 
-            val result = factory.create(configuration, session, null)
+            val result = createParams(configuration, session, null)
 
             val expected = AdditionalSessionParams(
+                sessionId = "test_session_id",
                 enableStoreDetails = null,
                 installmentConfiguration = SessionInstallmentConfiguration(
                     installmentOptions = null,
@@ -357,13 +372,13 @@ internal class CheckoutParamsFactoryTest {
             val context = CheckoutContext.Sessions(
                 checkoutSession = session,
                 checkoutConfiguration = configuration,
-                checkoutAttemptId = "",
+                checkoutAttemptId = TEST_CHECKOUT_ATTEMPT_ID,
                 publicKey = TEST_PUBLIC_KEY,
             )
 
             val result = factory.create(context)
 
-            assertEquals(factory.create(configuration, session, TEST_PUBLIC_KEY), result)
+            assertEquals(createParams(configuration, session, TEST_PUBLIC_KEY), result)
         }
 
         @Test
@@ -372,15 +387,21 @@ internal class CheckoutParamsFactoryTest {
             val context = CheckoutContext.Advanced(
                 paymentMethods = PaymentMethods(),
                 checkoutConfiguration = configuration,
-                checkoutAttemptId = "",
+                checkoutAttemptId = TEST_CHECKOUT_ATTEMPT_ID,
                 publicKey = TEST_PUBLIC_KEY,
             )
 
             val result = factory.create(context)
 
-            assertEquals(factory.create(configuration, null, TEST_PUBLIC_KEY), result)
+            assertEquals(createParams(configuration, null, TEST_PUBLIC_KEY), result)
         }
     }
+
+    private fun createParams(
+        configuration: CheckoutConfiguration,
+        session: CheckoutSession?,
+        publicKey: String?,
+    ) = factory.create(configuration, session, publicKey, TEST_CHECKOUT_ATTEMPT_ID)
 
     @Suppress("LongParameterList")
     private fun createConfiguration(
@@ -425,5 +446,6 @@ internal class CheckoutParamsFactoryTest {
 
     private companion object {
         const val TEST_PUBLIC_KEY = "test_public_key"
+        const val TEST_CHECKOUT_ATTEMPT_ID = "test_checkout_attempt_id"
     }
 }

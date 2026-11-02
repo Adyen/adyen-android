@@ -24,6 +24,7 @@ data class CheckoutParams(
     val amount: Amount?,
     val showSubmitButton: Boolean,
     val publicKey: String?,
+    val checkoutAttemptId: String,
     val additionalConfigurations: Map<String, Configuration>,
     val additionalSessionParams: AdditionalSessionParams?,
 ) {

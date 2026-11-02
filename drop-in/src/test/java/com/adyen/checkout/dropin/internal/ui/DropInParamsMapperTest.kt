@@ -119,6 +119,7 @@ internal class DropInParamsMapperTest {
     )
 
     private fun createSessionParams(showRemovePaymentMethodButton: Boolean?) = AdditionalSessionParams(
+        sessionId = "test_session_id",
         enableStoreDetails = null,
         installmentConfiguration = null,
         showRemovePaymentMethodButton = showRemovePaymentMethodButton,
@@ -135,6 +136,7 @@ internal class DropInParamsMapperTest {
         analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = null,
         showSubmitButton = true,
+        checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = null,
         additionalConfigurations = buildMap {
             dropInConfiguration?.let { this[DropInConfiguration::class.java.name] = it }

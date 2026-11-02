@@ -41,6 +41,7 @@ class CheckoutParamsFactory @VisibleForTesting internal constructor(
             configuration = context.checkoutConfiguration,
             session = (context as? CheckoutContext.Sessions)?.checkoutSession,
             publicKey = context.publicKey,
+            checkoutAttemptId = context.checkoutAttemptId,
         )
     }
 
@@ -48,6 +49,7 @@ class CheckoutParamsFactory @VisibleForTesting internal constructor(
         configuration: CheckoutConfiguration,
         session: CheckoutSession?,
         publicKey: String?,
+        checkoutAttemptId: String,
     ): CheckoutParams {
         return CheckoutParams(
             shopperLocale = configuration.shopperLocale ?: session?.getShopperLocale() ?: deviceLocaleProvider(),
@@ -59,6 +61,7 @@ class CheckoutParamsFactory @VisibleForTesting internal constructor(
             amount = session?.sessionSetupResponse?.amount ?: configuration.amount,
             showSubmitButton = configuration.showSubmitButton ?: true,
             publicKey = publicKey,
+            checkoutAttemptId = checkoutAttemptId,
             additionalConfigurations = configuration.getAvailableConfigurations(),
             additionalSessionParams = session?.createAdditionalSessionParams(),
         )
@@ -84,6 +87,7 @@ class CheckoutParamsFactory @VisibleForTesting internal constructor(
     private fun CheckoutSession.createAdditionalSessionParams(): AdditionalSessionParams {
         val setupConfig = sessionSetupResponse.configuration
         return AdditionalSessionParams(
+            sessionId = sessionSetupResponse.id,
             enableStoreDetails = setupConfig?.enableStoreDetails,
             installmentConfiguration = SessionInstallmentConfiguration(
                 installmentOptions = setupConfig?.installmentOptions?.mapValues { entry ->

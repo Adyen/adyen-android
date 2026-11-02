@@ -408,6 +408,7 @@ internal class GooglePayComponentParamsMapperTest {
         analyticsParams = analyticsParams,
         amount = amount,
         showSubmitButton = showSubmitButton,
+        checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = publicKey,
         additionalConfigurations = mapOf(GooglePayConfiguration::class.java.name to configuration),
         additionalSessionParams = null,

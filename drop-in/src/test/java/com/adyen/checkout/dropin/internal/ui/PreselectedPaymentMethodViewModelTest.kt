@@ -38,6 +38,7 @@ internal class PreselectedPaymentMethodViewModelTest {
         analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         amount = Amount(currency = "USD", value = 999L),
         showSubmitButton = true,
+        checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = null,
         additionalConfigurations = emptyMap(),
         additionalSessionParams = null,
