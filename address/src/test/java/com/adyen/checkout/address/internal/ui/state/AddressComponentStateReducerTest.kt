@@ -151,6 +151,22 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
+    fun `when the countries fail to load after they loaded then the loaded countries are kept`() {
+        // GIVEN
+        val reducer = createReducer()
+        val state = reducer.reduce(
+            createState(US_ADDRESS),
+            AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)),
+        )
+
+        // WHEN
+        val result = reducer.reduce(state, AddressIntent.CountriesLoaded(Result.failure(IOException())))
+
+        // THEN
+        assertEquals(state, result)
+    }
+
+    @Test
     fun `when the states are loaded with the selected state then it stays selected`() {
         // GIVEN
         val state = createState(US_ADDRESS)
