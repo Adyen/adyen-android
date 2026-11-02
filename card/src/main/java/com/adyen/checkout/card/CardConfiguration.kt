@@ -10,11 +10,12 @@ package com.adyen.checkout.card
 
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutConfigurationScope
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 
 /**
- * Configuration for the card payment method. Create it by calling [CheckoutConfiguration.card].
+ * Configuration for the card payment method. Create it by calling [CheckoutConfigurationScope.card].
  */
 @Parcelize
 @Suppress("LongParameterList")
@@ -33,7 +34,7 @@ class CardConfiguration internal constructor(
 ) : Configuration
 
 /**
- * Adds a [CardConfiguration] to this [CheckoutConfiguration] to configure the card payment method.
+ * Adds a [CardConfiguration] to the [CheckoutConfiguration] to configure the card payment method.
  *
  * @param billingAddressMode The type of billing address form to show to the shopper.
  * @param koreanAuthenticationVisibility Whether the security fields for Korean cards should be shown.
@@ -55,7 +56,7 @@ class CardConfiguration internal constructor(
  */
 @Suppress("LongParameterList")
 @JvmOverloads
-fun CheckoutConfiguration.card(
+fun CheckoutConfigurationScope.card(
     billingAddressMode: BillingAddressMode? = null,
     koreanAuthenticationVisibility: FieldVisibility? = null,
     showCardholderName: Boolean? = null,
@@ -67,7 +68,7 @@ fun CheckoutConfiguration.card(
     supportedCardBrands: List<CardBrand>? = null,
     showCardScanner: Boolean? = null,
     installmentConfiguration: InstallmentConfiguration? = null,
-): CheckoutConfiguration {
+) {
     val config = CardConfiguration(
         billingAddressMode = billingAddressMode,
         koreanAuthenticationVisibility = koreanAuthenticationVisibility,
@@ -82,5 +83,4 @@ fun CheckoutConfiguration.card(
         installmentConfiguration = installmentConfiguration,
     )
     addConfiguration(config)
-    return this
 }

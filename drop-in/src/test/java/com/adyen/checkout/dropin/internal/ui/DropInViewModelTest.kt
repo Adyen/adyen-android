@@ -17,6 +17,7 @@ import com.adyen.checkout.core.common.TestCheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutConfigurationScope
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -199,7 +200,7 @@ internal class DropInViewModelTest {
             GenericPaymentMethod(type = PaymentMethodTypes.SCHEME, name = "Cards"),
         ),
         persister: BackStackPersister = InMemoryBackStackPersister(),
-        configureCheckoutConfiguration: CheckoutConfiguration.() -> Unit = {},
+        configureCheckoutConfiguration: CheckoutConfigurationScope.() -> Unit = {},
     ): DropInViewModel {
         val checkoutContext = TestCheckoutContext.advanced(
             paymentMethods = PaymentMethods(
@@ -210,7 +211,8 @@ internal class DropInViewModelTest {
                 environment = Environment.TEST,
                 clientKey = CLIENT_KEY,
                 shopperLocale = Locale.US,
-            ).apply(configureCheckoutConfiguration),
+                configurationBlock = configureCheckoutConfiguration,
+            ),
         )
 
         return DropInViewModel(

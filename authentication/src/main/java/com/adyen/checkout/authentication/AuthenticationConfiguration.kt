@@ -9,6 +9,7 @@
 package com.adyen.checkout.authentication
 
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutConfigurationScope
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 
@@ -18,18 +19,17 @@ internal class AuthenticationConfiguration internal constructor(
 ) : Configuration
 
 /**
- * Adds an authentication configuration to this [CheckoutConfiguration] to configure 3D Secure 2 authentication.
+ * Adds an authentication configuration to the [CheckoutConfiguration] to configure 3D Secure 2 authentication.
  *
  * @param threeDSRequestorAppURL The URL of the requestor app, used by the issuer's ACS app to redirect the shopper
  * back to your app after out-of-band (OOB) authentication.
  */
 @JvmOverloads
-fun CheckoutConfiguration.authentication(
+fun CheckoutConfigurationScope.authentication(
     threeDSRequestorAppURL: String? = null,
-): CheckoutConfiguration {
+) {
     val config = AuthenticationConfiguration(
         threeDSRequestorAppURL = threeDSRequestorAppURL,
     )
     addConfiguration(config)
-    return this
 }

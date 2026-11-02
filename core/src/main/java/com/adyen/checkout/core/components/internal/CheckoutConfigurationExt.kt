@@ -26,6 +26,6 @@ fun CheckoutConfiguration.copy(showSubmitButton: Boolean?): CheckoutConfiguratio
         shopperLocale = shopperLocale,
         analyticsConfiguration = analyticsConfiguration,
         showSubmitButton = showSubmitButton,
-        availableConfigurations = getAvailableConfigurations().toMutableMap(),
+        availableConfigurations = getAvailableConfigurations(),
     )
 }

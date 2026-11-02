@@ -1,7 +1,7 @@
 public final class com/adyen/checkout/authentication/AuthenticationConfigurationKt {
-	public static final fun authentication (Lcom/adyen/checkout/core/components/CheckoutConfiguration;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static final fun authentication (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static synthetic fun authentication$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun authentication (Lcom/adyen/checkout/core/components/CheckoutConfigurationScope;)V
+	public static final fun authentication (Lcom/adyen/checkout/core/components/CheckoutConfigurationScope;Ljava/lang/String;)V
+	public static synthetic fun authentication$default (Lcom/adyen/checkout/core/components/CheckoutConfigurationScope;Ljava/lang/String;ILjava/lang/Object;)V
 }
 
 public final class com/adyen/checkout/authentication/BuildConfig {
