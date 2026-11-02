@@ -15,7 +15,6 @@ import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
@@ -29,7 +28,6 @@ import java.util.Locale
  *     environment,
  *     clientKey,
  *     shopperLocale, // optional
- *     amount, // not applicable with the Sessions flow
  * ) {
  *     dropIn {
  *         setEnableRemovingStoredPaymentMethods(true)
@@ -46,21 +44,16 @@ import java.util.Locale
  * match the value passed to the API with the sessions flow, or the primary user locale on the device otherwise. Check
  * out the [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
  * this value.
- * @param amount The amount of the transaction. Not applicable for the sessions flow. Check out the
- * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set this
- * value.
  * @param analyticsConfiguration A configuration for the internal analytics of the library.
  * @param showSubmitButton Determines if the submit button should be visible or not. For drop-in this will be
  * ignored.
  * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */
-@Suppress("LongParameterList")
 @CheckoutConfigurationMarker
 class CheckoutConfiguration(
     val environment: Environment,
     val clientKey: String,
     val shopperLocale: Locale? = null,
-    val amount: Amount? = null,
     val analyticsConfiguration: AnalyticsConfiguration? = null,
     val showSubmitButton: Boolean? = null,
     @IgnoredOnParcel
@@ -82,7 +75,6 @@ class CheckoutConfiguration(
         shopperLocale = parcel.readSerializable() as? Locale,
         environment = requireNotNull(parcel.readParcelable(Environment::class.java.classLoader)),
         clientKey = requireNotNull(parcel.readString()),
-        amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
         showSubmitButton = parcel.readValue(null) as? Boolean?,
     ) {
@@ -113,7 +105,6 @@ class CheckoutConfiguration(
         dest.writeSerializable(shopperLocale)
         dest.writeParcelable(environment, flags)
         dest.writeString(clientKey)
-        dest.writeParcelable(amount, flags)
         dest.writeParcelable(analyticsConfiguration, flags)
         dest.writeValue(showSubmitButton)
         dest.writeInt(availableConfigurations.size)

@@ -47,7 +47,6 @@ import com.adyen.checkout.core.components.CheckoutAction
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutPaymentMethod
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import java.util.Locale
 import kotlinx.coroutines.launch
@@ -58,7 +57,7 @@ import kotlinx.coroutines.launch
 `CheckoutConfiguration` is the checkout-wide container for:
 
 - environment and client key
-- optional shopper locale, amount, analytics, and submit-button behavior
+- optional shopper locale, analytics, and submit-button behavior
 - payment-method configuration registered through the builder block
 - action configuration such as authentication
 
@@ -67,7 +66,6 @@ val configuration = CheckoutConfiguration(
     environment = Environment.TEST,
     clientKey = clientKey,
     shopperLocale = Locale.forLanguageTag("en-US"),
-    amount = Amount(currency = "USD", value = 10_00),
     analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
     showSubmitButton = true,
 ) {
@@ -87,7 +85,7 @@ val configuration = CheckoutConfiguration(
 
 Use the builder block to register payment-method and action configuration that should apply to the flow.
 
-In session flow, the effective `amount` comes from the `/sessions` response. A client-side `amount` on `CheckoutConfiguration` does not override it. For card-specific session-controlled settings such as `showStorePaymentMethod`, `installmentConfiguration`, and `showInstallmentAmount`, see [card-session-flow.md](card-session-flow.md).
+In session flow, the amount comes from the `/sessions` response. For card-specific session-controlled settings such as `showStorePaymentMethod`, `installmentConfiguration`, and `showInstallmentAmount`, see [card-session-flow.md](card-session-flow.md).
 
 ## Session flow
 
@@ -178,7 +176,7 @@ Set the flag from the `onAction` callback you pass to `AdvancedCheckoutCallbacks
 ```kotlin
 onAction = {
     isHandlingAction = true
-},
+}
 ```
 
 The action does not progress until you render `CheckoutAction(...)`, because that composable hosts the launcher an action needs. Secondary screens of a payment method, such as pickers, are drawn on top of `CheckoutPaymentMethod(...)` without any extra handling.

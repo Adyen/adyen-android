@@ -15,7 +15,6 @@ val configuration = CheckoutConfiguration(
     environment = Environment.TEST,
     clientKey = clientKey,
     shopperLocale = Locale.forLanguageTag("en-US"),
-    amount = Amount(currency = "USD", value = 10_00),
 ) {
     card(
         billingAddressMode = BillingAddressMode.PostalCode(),

@@ -63,7 +63,7 @@ internal class CheckoutSessionInitializerTest(
         val result = initializer.initialize(SessionResponse(TEST_SESSION_ID, "merchant-session-data"), configuration)
 
         val expected = CheckoutSession(
-            sessionSetupResponse = setupResponse.copy(amount = TEST_AMOUNT),
+            sessionSetupResponse = setupResponse,
             order = null,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY,
@@ -110,7 +110,6 @@ internal class CheckoutSessionInitializerTest(
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY,
         shopperLocale = Locale.US,
-        amount = TEST_AMOUNT,
     )
 
     // Reads through a session with different setup data, so a value that was never stored can't pass as stored.
@@ -139,6 +138,5 @@ internal class CheckoutSessionInitializerTest(
     companion object {
         private const val TEST_SESSION_ID = "session-id"
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnm"
-        private val TEST_AMOUNT = Amount(currency = "EUR", value = 1000L)
     }
 }

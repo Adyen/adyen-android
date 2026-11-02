@@ -118,7 +118,6 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             environment = Environment.TEST,
             clientKey = clientKey,
             shopperLocale = shopperLocale,
-            amount = keyValueStorage.getAmount(),
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             card(

@@ -12,7 +12,6 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AnalyticsConfiguration
 import com.adyen.checkout.core.components.AnalyticsLevel
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.Amount
 import kotlinx.parcelize.Parcelize
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -46,7 +45,6 @@ internal class CheckoutConfigurationExtTest {
             environment = Environment.LIVE_UNITED_STATES,
             clientKey = "test_client_key",
             shopperLocale = Locale.FRANCE,
-            amount = Amount("EUR", 1337),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
             showSubmitButton = false,
         )
@@ -56,7 +54,6 @@ internal class CheckoutConfigurationExtTest {
         assertEquals(Environment.LIVE_UNITED_STATES, actual.environment)
         assertEquals("test_client_key", actual.clientKey)
         assertEquals(Locale.FRANCE, actual.shopperLocale)
-        assertEquals(Amount("EUR", 1337), actual.amount)
         assertEquals(AnalyticsLevel.NONE, actual.analyticsConfiguration?.level)
     }
 
@@ -107,7 +104,6 @@ internal class CheckoutConfigurationExtTest {
             Environment::class.java,
             String::class.java,
             Locale::class.java,
-            Amount::class.java,
             AnalyticsConfiguration::class.java,
             Boolean::class.javaObjectType,
             Function1::class.java,
@@ -134,14 +130,12 @@ internal class CheckoutConfigurationExtTest {
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY,
         shopperLocale: Locale? = null,
-        amount: Amount? = null,
         analyticsConfiguration: AnalyticsConfiguration? = null,
         showSubmitButton: Boolean? = null,
     ) = CheckoutConfiguration(
         environment = environment,
         clientKey = clientKey,
         shopperLocale = shopperLocale,
-        amount = amount,
         analyticsConfiguration = analyticsConfiguration,
         showSubmitButton = showSubmitButton,
     )
