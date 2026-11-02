@@ -22,16 +22,12 @@ import java.util.Locale
  *
  * ```
  * val checkoutConfiguration = CheckoutConfiguration(
- *     environment,
- *     clientKey,
- *     shopperLocale, // optional
+ *     environment = Environment.TEST,
+ *     clientKey = clientKey,
+ *     shopperLocale = Locale.US, // optional
  * ) {
- *     dropIn {
- *         setEnableRemovingStoredPaymentMethods(true)
- *     }
- *     card {
- *         setHolderNameRequired(true)
- *     }
+ *     dropIn(hideStoredPaymentMethods = true)
+ *     card(showCardholderName = true)
  * }
  * ```
  *
