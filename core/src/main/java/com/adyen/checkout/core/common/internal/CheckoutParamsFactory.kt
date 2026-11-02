@@ -58,7 +58,7 @@ class CheckoutParamsFactory @VisibleForTesting internal constructor(
             analyticsParams = AnalyticsParams(
                 level = getAnalyticsLevel(configuration.analyticsConfiguration),
             ),
-            amount = session?.sessionSetupResponse?.amount ?: configuration.amount,
+            amount = session?.sessionSetupResponse?.amount,
             showSubmitButton = configuration.showSubmitButton ?: true,
             publicKey = publicKey,
             checkoutAttemptId = checkoutAttemptId,

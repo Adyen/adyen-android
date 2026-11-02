@@ -23,7 +23,6 @@ fun CheckoutConfiguration.copy(showSubmitButton: Boolean?): CheckoutConfiguratio
         environment = environment,
         clientKey = clientKey,
         shopperLocale = shopperLocale,
-        amount = amount,
         analyticsConfiguration = analyticsConfiguration,
         showSubmitButton = showSubmitButton,
     ).also { copy ->

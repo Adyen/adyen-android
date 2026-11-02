@@ -18,7 +18,6 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
@@ -123,7 +122,6 @@ internal class DropInViewModelTest {
 
         assertEquals(Locale.US, viewModel.checkoutParams.shopperLocale)
         assertEquals(Environment.TEST, viewModel.checkoutParams.environment)
-        assertEquals(AMOUNT, viewModel.checkoutParams.amount)
     }
 
     @Test
@@ -189,7 +187,6 @@ internal class DropInViewModelTest {
                 environment = Environment.TEST,
                 clientKey = CLIENT_KEY,
                 shopperLocale = Locale.US,
-                amount = AMOUNT,
             ),
         ),
         serviceClass = DropInService::class.java,
@@ -213,7 +210,6 @@ internal class DropInViewModelTest {
                 environment = Environment.TEST,
                 clientKey = CLIENT_KEY,
                 shopperLocale = Locale.US,
-                amount = AMOUNT,
             ).apply(configureCheckoutConfiguration),
         )
 
@@ -249,6 +245,5 @@ internal class DropInViewModelTest {
     private companion object {
         private const val STORED_ID = "stored-id-1"
         private const val CLIENT_KEY = "test_client_key"
-        private val AMOUNT = Amount(currency = "USD", value = 999L)
     }
 }

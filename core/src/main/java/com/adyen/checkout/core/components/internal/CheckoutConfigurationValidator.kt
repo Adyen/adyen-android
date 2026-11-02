@@ -26,7 +26,5 @@ internal fun CheckoutConfiguration.validate(): CheckoutError? {
         LocaleUtil.validateLocale(locale)?.let { return it }
     }
 
-    amount?.validate()?.let { return it }
-
     return null
 }

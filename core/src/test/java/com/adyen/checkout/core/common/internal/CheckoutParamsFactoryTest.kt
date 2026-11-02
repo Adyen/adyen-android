@@ -184,31 +184,25 @@ internal class CheckoutParamsFactoryTest {
         @Test
         fun `when session has amount, then use session amount`() {
             val sessionAmount = Amount(currency = "EUR", value = 1000L)
-            val configAmount = Amount(currency = "USD", value = 500L)
-            val configuration = createConfiguration(amount = configAmount)
             val session = createSession(amount = sessionAmount)
 
-            val result = createParams(configuration, session, null)
+            val result = createParams(createConfiguration(), session, null)
 
             assertEquals(sessionAmount, result.amount)
         }
 
         @Test
-        fun `when session has no amount, then use configuration amount`() {
-            val configAmount = Amount(currency = "USD", value = 500L)
-            val configuration = createConfiguration(amount = configAmount)
+        fun `when session has no amount, then amount is null`() {
             val session = createSession(amount = null)
 
-            val result = createParams(configuration, session, null)
+            val result = createParams(createConfiguration(), session, null)
 
-            assertEquals(configAmount, result.amount)
+            assertNull(result.amount)
         }
 
         @Test
-        fun `when session is null and configuration has no amount, then amount is null`() {
-            val configuration = createConfiguration(amount = null)
-
-            val result = createParams(configuration, session = null, publicKey = null)
+        fun `when session is null, then amount is null`() {
+            val result = createParams(createConfiguration(), session = null, publicKey = null)
 
             assertNull(result.amount)
         }
@@ -408,14 +402,12 @@ internal class CheckoutParamsFactoryTest {
         environment: Environment = Environment.TEST,
         clientKey: String = "test_qwertyuiopasdfgh",
         shopperLocale: Locale? = null,
-        amount: Amount? = null,
         analyticsConfiguration: AnalyticsConfiguration? = null,
         showSubmitButton: Boolean? = null,
     ) = CheckoutConfiguration(
         environment = environment,
         clientKey = clientKey,
         shopperLocale = shopperLocale,
-        amount = amount,
         analyticsConfiguration = analyticsConfiguration,
         showSubmitButton = showSubmitButton,
     )
