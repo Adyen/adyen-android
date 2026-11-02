@@ -12,12 +12,11 @@ import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -38,14 +37,16 @@ fun SearchableValuePicker(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         modifier = modifier,
     ) {
-        var query by remember { mutableStateOf("") }
+        // The search field's text is the query, so both are restored together.
+        val searchState = rememberTextFieldState()
         SearchField(
             hint = searchHint,
-            onValueChange = { query = it },
+            state = searchState,
         )
 
-        val filteredItems by remember {
+        val filteredItems by remember(items) {
             derivedStateOf {
+                val query = searchState.text
                 items.filter {
                     it.title.contains(query, ignoreCase = true) ||
                         it.subtitle.contains(query, ignoreCase = true)
