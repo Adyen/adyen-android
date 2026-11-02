@@ -31,6 +31,8 @@ fun ValuePicker(
     onItemClick: (ValuePickerItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // TODO - ValuePicker: Scroll the selected item into view when the picker opens. A long list, such as the address
+    //  countries, opens at the top, far from the selected item.
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.ExtraSmall),
         modifier = modifier
