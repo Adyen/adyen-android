@@ -22,11 +22,11 @@ The review is read-only. It ends with a report in the chat; in PR mode, selected
 **PR mode** (a number or URL was given):
 - Fetch the PR metadata (title, body, author, base and head branch, head SHA), the diff, and the list of changed files.
 - Fetch the existing review threads, from humans and bots (e.g. `gemini-code-assist`), with their resolved state. These are used in step 5 to avoid repeating what was already raised.
-- Do **not** check out the PR branch — the working tree may hold the developer's own work. Fetch the head of the pull request and read the full files directly from that commit.
+- Do **not** check out the PR branch in the developer's working tree — it may hold their own work. Create a temporary worktree at the head commit of the pull request, outside the repository, and do all reading and searching of the code there. The developer's working tree reflects a different branch, so callers and precedents found there can be wrong. Remove the worktree when the review ends, also when it ends early.
 
 **Branch mode** (no number given):
 - Determine the base the same way as the `android-pr-create` skill: `main` by default, `v5` for v5 work, or the branch directly below in a stack.
-- Review the changes the branch adds on top of the merge base. If the working tree has uncommitted changes, include them and say so in the report.
+- Review the changes the branch adds on top of the merge base. If the working tree has uncommitted changes, include them and say so in the report. Leave out plan documents (`*_IMPLEMENTATION_PLAN.md`): they are working artifacts, not part of the change.
 
 In both modes, a layer in a stack is reviewed against the layer below it — never re-review lower layers.
 
@@ -35,7 +35,7 @@ In both modes, a layer in a stack is reviewed against the layer below it — nev
 Before judging the code, establish what it is supposed to do:
 
 - Read the PR description, commit messages, and the ticket number (`COSDK-XXXX`) if present.
-- If the work is phased, read the plan document (`*_IMPLEMENTATION_PLAN.md`) or the PR's `### Progress` section. Work that is explicitly deferred to a later phase is not a finding — at most a question.
+- If the work is phased, read the PR's `### Progress` section and, in branch mode only, the plan document (`*_IMPLEMENTATION_PLAN.md`). Plan documents are not committed, so in PR mode any plan in the developer's working tree belongs to other work. Work that is explicitly deferred to a later phase is not a finding — at most a question.
 - Decide whether the touched code is v5 or v6, using the rules in `AGENTS.md`. New code that extends v5 on `main` is a finding unless it is an essential fix.
 - Note the size. More than ~500 changed lines means the PR should probably be split into a stack.
 
@@ -61,6 +61,7 @@ Work through the categories that apply to the diff.
 - Exhaustive `when` over sealed types rather than casts or `else` branches, so a future case fails to compile instead of being silently ignored.
 - State that must survive configuration changes and process death.
 - Failure paths: when a request fails, what does the shopper see, and can they recover?
+- Parity with v5: when the functionality also exists in v5, its behavior in v6 should be the same. Compare against the v5 implementation (an `old/` package, a module that has not been migrated, or the `v5` branch): defaults, validation rules, error handling, and edge cases. Raise any difference the PR does not explain, as a question to the author, since it may be intentional.
 
 #### Shopper-facing input and UI
 
@@ -71,8 +72,10 @@ Work through the categories that apply to the diff.
 
 #### Architecture and consistency
 
-- New abstractions, interfaces, or generic type parameters with a single consumer. Ask whether a second consumer is planned before accepting them.
-- Names that describe the effect, not the trigger (e.g. `Reset` rather than `Prefill` when the action resets the form).
+- Over-engineering: the change should be the simplest one that does the job. Options, layers, or extension points for needs that nobody has raised are a finding. For new abstractions, interfaces, or generic type parameters with a single consumer, ask whether a second consumer is planned before accepting them.
+- Clean code: functions with a single responsibility, no dead or commented-out code, no unexplained magic values, and no hidden side effects. Skip what detekt and ktlint already enforce.
+- Industry standards: established Kotlin, coroutines, and Jetpack Compose practices, such as structured concurrency instead of `GlobalScope`, and state hoisting. If the codebase precedent differs from the standard, raise it as a question rather than a finding.
+- Naming: names are explicit about what something does or holds. They describe the effect, not the trigger (e.g. `Reset` rather than `Prefill` when the action resets the form). Vague names such as `data`, `info`, or `handle`, and unexplained abbreviations, are a finding. Booleans read as a condition (`isValid`, `hasStoredPaymentMethods`), and the same concept keeps the same name throughout the codebase.
 - No new imports from v5 core modules (`checkout-core`, `components-core`, `ui-core`, `action-core`, `sessions-core`) in v6 code.
 
 #### Public API
@@ -167,7 +170,7 @@ Afterwards, share the link to the PR's files tab so the developer can review and
 
 ## Important
 
-- The review is read-only: never edit code, commit, push, or check out branches.
+- The review is read-only: never edit code, commit, push, or change the developer's working tree. The temporary worktree in PR mode is only for reading code and running checks.
 - Never submit, approve, or request changes on a PR. Only create a pending review, and only after the developer has selected the findings.
-- Do not run Gradle checks — CI runs them. If a finding depends on a check result, suggest the `android-check` skill.
+- Do not run Gradle checks by default — CI runs them. If a finding depends on a check result, ask the developer before running the `android-check` skill; in PR mode, run it in the temporary worktree.
 - When unsure whether something is a problem, ask it as a question instead of asserting it.
