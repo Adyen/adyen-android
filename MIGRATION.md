@@ -290,7 +290,6 @@ val checkoutConfiguration = CheckoutConfiguration(
 val configuration = CheckoutConfiguration(
     environment = Environment.TEST,
     clientKey = clientKey,
-    amount = amount,
 ) {
     googlePay(
         countryCode = "US",

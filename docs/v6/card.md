@@ -22,7 +22,6 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.Amount
 ```
 
 ## Configure the card component
@@ -33,7 +32,6 @@ Register card configuration inside `CheckoutConfiguration`:
 val configuration = CheckoutConfiguration(
     environment = Environment.TEST,
     clientKey = clientKey,
-    amount = Amount(currency = "USD", value = 10_00),
 ) {
     card(
         billingAddressMode = BillingAddressMode.PostalCode(),
