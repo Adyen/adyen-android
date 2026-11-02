@@ -30,8 +30,7 @@ internal class CheckoutSessionInitializer(
                     // Setup is a fresh response from the server, so it replaces any stored value, also a restored one.
                     sessionStateStore.setSessionData(response.id, response.sessionData)
                     return CheckoutSession(
-                        // TODO - Check if this still needs to be overridden with local amount
-                        sessionSetupResponse = response.copy(amount = checkoutConfiguration.amount),
+                        sessionSetupResponse = response,
                         // TODO - Check if orders need to be supported
                         order = null,
                         environment = checkoutConfiguration.environment,
