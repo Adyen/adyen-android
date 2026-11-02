@@ -49,7 +49,6 @@ internal class FakeCheckoutConfigurationProvider @Inject constructor() : Configu
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY,
             shopperLocale = locale,
-            amount = null,
         )
 
     companion object {
