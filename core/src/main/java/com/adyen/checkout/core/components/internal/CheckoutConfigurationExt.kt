@@ -15,7 +15,8 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
  * Creates a copy of this configuration with a different [showSubmitButton].
  *
  * Every other value is carried over unchanged, including the configurations that were added through the
- * configuration block. The block itself is not run again, since applying it only adds those configurations.
+ * configuration block. This calls the primary constructor, which has no default values, so a value added to
+ * [CheckoutConfiguration] does not compile until it is carried over here.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun CheckoutConfiguration.copy(showSubmitButton: Boolean?): CheckoutConfiguration {
@@ -25,9 +26,6 @@ fun CheckoutConfiguration.copy(showSubmitButton: Boolean?): CheckoutConfiguratio
         shopperLocale = shopperLocale,
         analyticsConfiguration = analyticsConfiguration,
         showSubmitButton = showSubmitButton,
-    ).also { copy ->
-        getAvailableConfigurations().values.forEach { configuration ->
-            copy.addConfiguration(configuration)
-        }
-    }
+        availableConfigurations = getAvailableConfigurations().toMutableMap(),
+    )
 }

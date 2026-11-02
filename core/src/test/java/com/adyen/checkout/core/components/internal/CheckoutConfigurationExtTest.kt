@@ -93,36 +93,14 @@ internal class CheckoutConfigurationExtTest {
         assertTrue(configuration !== actual)
     }
 
-    /**
-     * [copy] has to list every value of [CheckoutConfiguration] to carry it over. A value that is added to the class
-     * but not to [copy] is silently dropped for every caller of [copy], which is why this test fails when the primary
-     * constructor changes.
-     */
     @Test
-    fun `when CheckoutConfiguration gains a value then copy has to be updated`() {
-        val expected = listOf(
-            Environment::class.java,
-            String::class.java,
-            Locale::class.java,
-            AnalyticsConfiguration::class.java,
-            Boolean::class.javaObjectType,
-            Function1::class.java,
-        )
+    fun `when a configuration is added to the original after copying then the copy does not get it`() {
+        val configuration = createConfiguration()
+        val actual = configuration.copy(showSubmitButton = true)
 
-        val actual = CheckoutConfiguration::class.java.declaredConstructors
-            .filterNot { constructor ->
-                constructor.parameterTypes.any { it.name.endsWith("DefaultConstructorMarker") }
-            }
-            .maxBy { it.parameterCount }
-            .parameterTypes
-            .toList()
+        configuration.addConfiguration(TestConfiguration("added_later"))
 
-        assertEquals(
-            expected,
-            actual,
-            "The primary constructor of CheckoutConfiguration changed. Update CheckoutConfiguration.copy() to " +
-                "carry the new value over, then update this test.",
-        )
+        assertTrue(actual.getAvailableConfigurations().isEmpty())
     }
 
     @Suppress("LongParameterList")

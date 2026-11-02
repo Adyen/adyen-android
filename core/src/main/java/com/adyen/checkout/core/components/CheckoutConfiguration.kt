@@ -8,15 +8,12 @@
 
 package com.adyen.checkout.core.components
 
-import android.annotation.SuppressLint
-import android.os.Parcel
 import android.os.Parcelable
-import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.internal.Configuration
-import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 /**
@@ -38,54 +35,48 @@ import java.util.Locale
  * }
  * ```
  *
- * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
- * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
- * @param shopperLocale The [Locale] used to display information to the shopper. By default the shopper locale will
+ * @property environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+ * @property clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+ * @property shopperLocale The [Locale] used to display information to the shopper. By default the shopper locale will
  * match the value passed to the API with the sessions flow, or the primary user locale on the device otherwise. Check
  * out the [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
  * this value.
- * @param analyticsConfiguration A configuration for the internal analytics of the library.
- * @param showSubmitButton Determines if the submit button should be visible or not. For drop-in this will be
+ * @property analyticsConfiguration A configuration for the internal analytics of the library.
+ * @property showSubmitButton Determines if the submit button should be visible or not. For drop-in this will be
  * ignored.
- * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */
+@Parcelize
 @CheckoutConfigurationMarker
-class CheckoutConfiguration(
+class CheckoutConfiguration internal constructor(
     val environment: Environment,
     val clientKey: String,
-    val shopperLocale: Locale? = null,
-    val analyticsConfiguration: AnalyticsConfiguration? = null,
-    val showSubmitButton: Boolean? = null,
-    @IgnoredOnParcel
-    private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
+    val shopperLocale: Locale?,
+    val analyticsConfiguration: AnalyticsConfiguration?,
+    val showSubmitButton: Boolean?,
+    private val availableConfigurations: MutableMap<String, Configuration>,
 ) : Parcelable {
 
-    private val availableConfigurations = mutableMapOf<String, Configuration>()
-
-    init {
-        apply(configurationBlock)
-    }
-
-    // We need custom parcelization for this class to parcelize availableConfigurations.
-    @SuppressLint("ParcelClassLoader")
-    @Suppress("UNCHECKED_CAST", "DEPRECATION")
-    private constructor(parcel: Parcel) : this(
-        // the order in which these fields are read from Parcel should match the order in which they are written to
-        // Parcel in the `writeToParcel` function
-        shopperLocale = parcel.readSerializable() as? Locale,
-        environment = requireNotNull(parcel.readParcelable(Environment::class.java.classLoader)),
-        clientKey = requireNotNull(parcel.readString()),
-        analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
-        showSubmitButton = parcel.readValue(null) as? Boolean?,
+    /**
+     * Creates a [CheckoutConfiguration].
+     *
+     * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
+     */
+    constructor(
+        environment: Environment,
+        clientKey: String,
+        shopperLocale: Locale? = null,
+        analyticsConfiguration: AnalyticsConfiguration? = null,
+        showSubmitButton: Boolean? = null,
+        configurationBlock: CheckoutConfiguration.() -> Unit = {},
+    ) : this(
+        environment = environment,
+        clientKey = clientKey,
+        shopperLocale = shopperLocale,
+        analyticsConfiguration = analyticsConfiguration,
+        showSubmitButton = showSubmitButton,
+        availableConfigurations = mutableMapOf(),
     ) {
-        val size = parcel.readInt()
-
-        repeat(size) {
-            val key = requireNotNull(parcel.readString())
-            val configClass = parcel.readSerializable() as Class<Configuration>
-            val config = requireNotNull(parcel.readParcelable<Configuration>(configClass.classLoader))
-            availableConfigurations[key] = config
-        }
+        apply(configurationBlock)
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -97,34 +88,5 @@ class CheckoutConfiguration(
 
     internal fun getAvailableConfigurations(): Map<String, Configuration> {
         return availableConfigurations
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        // the order in which these fields are written from Parcel should match the order in which they are read from
-        // Parcel in `constructor(parcel: Parcel)`
-        dest.writeSerializable(shopperLocale)
-        dest.writeParcelable(environment, flags)
-        dest.writeString(clientKey)
-        dest.writeParcelable(analyticsConfiguration, flags)
-        dest.writeValue(showSubmitButton)
-        dest.writeInt(availableConfigurations.size)
-        availableConfigurations.forEach {
-            dest.writeString(it.key)
-            dest.writeSerializable(it.value::class.java)
-            dest.writeParcelable(it.value, flags)
-        }
-    }
-
-    override fun describeContents(): Int = CONTENTS_FILE_DESCRIPTOR
-
-    companion object CREATOR : Parcelable.Creator<CheckoutConfiguration> {
-
-        override fun createFromParcel(source: Parcel): CheckoutConfiguration {
-            return CheckoutConfiguration(source)
-        }
-
-        override fun newArray(size: Int): Array<CheckoutConfiguration?> {
-            return arrayOfNulls(size)
-        }
     }
 }

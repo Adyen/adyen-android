@@ -736,24 +736,16 @@ public abstract class com/adyen/checkout/core/components/CheckoutCallbacks {
 
 public final class com/adyen/checkout/core/components/CheckoutConfiguration : android/os/Parcelable {
 	public static final field $stable I
-	public static final field CREATOR Lcom/adyen/checkout/core/components/CheckoutConfiguration$CREATOR;
-	public synthetic fun <init> (Landroid/os/Parcel;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun <init> (Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/components/AnalyticsConfiguration;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/components/AnalyticsConfiguration;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public final fun getAnalyticsConfiguration ()Lcom/adyen/checkout/core/components/AnalyticsConfiguration;
 	public final fun getClientKey ()Ljava/lang/String;
 	public final fun getEnvironment ()Lcom/adyen/checkout/core/common/Environment;
 	public final fun getShopperLocale ()Ljava/util/Locale;
 	public final fun getShowSubmitButton ()Ljava/lang/Boolean;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
-}
-
-public final class com/adyen/checkout/core/components/CheckoutConfiguration$CREATOR : android/os/Parcelable$Creator {
-	public fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public fun newArray (I)[Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutController {
