@@ -63,12 +63,25 @@ internal class SecondaryScreenHostTest {
     }
 
     @Test
-    fun `when a screen is closed then the top of the back stack is popped`() {
+    fun `when the screen on top is closed then it is popped`() {
         // GIVEN
         val backStack = listOf(FIRST, SECOND)
 
         // WHEN
-        val result = SecondaryNavigationEvent.Close.applyTo(backStack)
+        val result = SecondaryNavigationEvent.Close(SECOND).applyTo(backStack)
+
+        // THEN
+        assertEquals(listOf(FIRST), result)
+    }
+
+    @Test
+    fun `when a screen that is not on top is closed then the back stack does not change`() {
+        // GIVEN
+        // A double tap on a picker entry sends a second close after the picker was already popped.
+        val backStack = listOf(FIRST)
+
+        // WHEN
+        val result = SecondaryNavigationEvent.Close(SECOND).applyTo(backStack)
 
         // THEN
         assertEquals(listOf(FIRST), result)
@@ -80,7 +93,7 @@ internal class SecondaryScreenHostTest {
         val backStack = emptyList<String>()
 
         // WHEN
-        val result = SecondaryNavigationEvent.Close.applyTo(backStack)
+        val result = SecondaryNavigationEvent.Close(FIRST).applyTo(backStack)
 
         // THEN
         assertEquals(emptyList<String>(), result)

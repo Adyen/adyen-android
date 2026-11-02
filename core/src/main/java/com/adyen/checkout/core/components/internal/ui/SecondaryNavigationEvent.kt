@@ -22,7 +22,12 @@ sealed interface SecondaryNavigationEvent {
         val key: String,
     ) : SecondaryNavigationEvent
 
-    /** Pops the screen on top of the back stack, whichever screen that is. */
+    /**
+     * Pops the screen with [key] when it is on top of the back stack. Otherwise it is ignored, so a double tap closes
+     * the screen once.
+     */
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    data object Close : SecondaryNavigationEvent
+    data class Close(
+        val key: String,
+    ) : SecondaryNavigationEvent
 }

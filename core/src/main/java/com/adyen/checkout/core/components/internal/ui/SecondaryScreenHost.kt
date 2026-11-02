@@ -58,12 +58,12 @@ internal fun <T> SecondaryScreenHost(
 }
 
 /**
- * Applies this event to [backStack]. Opening the screen that is already on top changes nothing: a double tap on the
- * row that opens a screen sends two opens before the screen covers the row, which would otherwise stack it twice.
+ * Applies this event to [backStack]. Opening the screen on top, or closing one that is not on top, changes nothing: a
+ * double tap sends the same event twice before the screen changes, which would otherwise open or close two screens.
  */
 internal fun SecondaryNavigationEvent.applyTo(backStack: List<String>): List<String> = when (this) {
     is SecondaryNavigationEvent.Open -> if (backStack.lastOrNull() == key) backStack else backStack + key
-    SecondaryNavigationEvent.Close -> backStack.dropLast(1)
+    is SecondaryNavigationEvent.Close -> if (backStack.lastOrNull() == key) backStack.dropLast(1) else backStack
 }
 
 private fun AnimatedContentTransitionScope<List<String>>.slideHorizontally(): ContentTransform {
