@@ -149,7 +149,7 @@ constructor(
             viewState = viewState,
             onInstallmentClick = { installment ->
                 onIntent(CardIntent.UpdateInstallment(installment))
-                navigationChannel.trySend(SecondaryNavigationEvent.Close)
+                navigationChannel.trySend(SecondaryNavigationEvent.Close(CardSecondaryContentEntry.INSTALLMENTS))
             },
         )
     }

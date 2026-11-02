@@ -92,7 +92,9 @@ constructor(
             viewState = viewState,
             onItemClick = {
                 onIntent(MBWayIntent.UpdateCountry(it))
-                navigationChannel.trySend(SecondaryNavigationEvent.Close)
+                navigationChannel.trySend(
+                    SecondaryNavigationEvent.Close(MBWaySecondaryContentEntry.COUNTRY_CODE_PICKER),
+                )
             },
         )
     }
