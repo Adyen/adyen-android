@@ -12,13 +12,21 @@ sealed class BillingAddressMode : Parcelable {
      * Billing address form will not be shown.
      */
     @Parcelize
-    class None : BillingAddressMode()
+    class None : BillingAddressMode() {
+        override fun equals(other: Any?) = other is None
+
+        override fun hashCode() = javaClass.hashCode()
+    }
 
     /**
      * Only postal code will be shown as part of the card component
      */
     @Parcelize
-    class PostalCode : BillingAddressMode()
+    class PostalCode : BillingAddressMode() {
+        override fun equals(other: Any?) = other is PostalCode
+
+        override fun hashCode() = javaClass.hashCode()
+    }
 
     /* The Full and Lookup below are for the types completeness.
     Uncomment and refine them once implementing that flows.
