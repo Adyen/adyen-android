@@ -19,7 +19,6 @@ import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertInstanceOf
 
 internal class CheckoutContextExtTest {
 
@@ -37,11 +36,13 @@ internal class CheckoutContextExtTest {
 
             val actual = context.withCheckoutConfiguration(createConfiguration(showSubmitButton = true))
 
-            val advanced = assertInstanceOf<CheckoutContext.Advanced>(actual)
-            assertEquals(true, advanced.checkoutConfiguration.showSubmitButton)
-            assertEquals(paymentMethods, advanced.paymentMethods)
-            assertEquals(TEST_CHECKOUT_ATTEMPT_ID, advanced.checkoutAttemptId)
-            assertEquals(TEST_PUBLIC_KEY, advanced.publicKey)
+            val expected = CheckoutContext.Advanced(
+                paymentMethods = paymentMethods,
+                checkoutConfiguration = createConfiguration(showSubmitButton = true),
+                checkoutAttemptId = TEST_CHECKOUT_ATTEMPT_ID,
+                publicKey = TEST_PUBLIC_KEY,
+            )
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -55,11 +56,13 @@ internal class CheckoutContextExtTest {
 
             val actual = context.withCheckoutConfiguration(createConfiguration(showSubmitButton = true))
 
-            val sessions = assertInstanceOf<CheckoutContext.Sessions>(actual)
-            assertEquals(true, sessions.checkoutConfiguration.showSubmitButton)
-            assertEquals(checkoutSession, sessions.checkoutSession)
-            assertEquals(TEST_CHECKOUT_ATTEMPT_ID, sessions.checkoutAttemptId)
-            assertEquals(TEST_PUBLIC_KEY, sessions.publicKey)
+            val expected = CheckoutContext.Sessions(
+                checkoutSession = checkoutSession,
+                checkoutConfiguration = createConfiguration(showSubmitButton = true),
+                checkoutAttemptId = TEST_CHECKOUT_ATTEMPT_ID,
+                publicKey = TEST_PUBLIC_KEY,
+            )
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -73,11 +76,13 @@ internal class CheckoutContextExtTest {
 
             val actual = context.withCheckoutConfiguration(createConfiguration(showSubmitButton = true))
 
-            val actionOnly = assertInstanceOf<CheckoutContext.ActionOnly>(actual)
-            assertEquals(true, actionOnly.checkoutConfiguration.showSubmitButton)
-            assertEquals(action, actionOnly.action)
-            assertEquals(TEST_CHECKOUT_ATTEMPT_ID, actionOnly.checkoutAttemptId)
-            assertEquals(TEST_PUBLIC_KEY, actionOnly.publicKey)
+            val expected = CheckoutContext.ActionOnly(
+                action = action,
+                checkoutConfiguration = createConfiguration(showSubmitButton = true),
+                checkoutAttemptId = TEST_CHECKOUT_ATTEMPT_ID,
+                publicKey = TEST_PUBLIC_KEY,
+            )
+            assertEquals(expected, actual)
         }
     }
 

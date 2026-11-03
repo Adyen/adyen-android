@@ -25,7 +25,7 @@ import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
-import com.adyen.checkout.core.components.internal.copy
+import com.adyen.checkout.core.components.internal.withShowSubmitButton
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
@@ -147,5 +147,5 @@ internal class DefaultDropInControllerProvider(
 }
 
 internal fun CheckoutContext.withSubmitButtonEnforced(): CheckoutContext {
-    return withCheckoutConfiguration(checkoutConfiguration.copy(showSubmitButton = true))
+    return withCheckoutConfiguration(checkoutConfiguration.withShowSubmitButton(true))
 }

@@ -21,6 +21,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import com.adyen.checkout.dropin.DropInService
+import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,8 +58,7 @@ internal class DropInControllerProviderTest {
 
         val actual = checkoutContext.withSubmitButtonEnforced()
 
-        assertEquals(Environment.TEST, actual.checkoutConfiguration.environment)
-        assertEquals(TEST_CLIENT_KEY, actual.checkoutConfiguration.clientKey)
+        assertEquals(createCheckoutContext(showSubmitButton = true), actual)
     }
 
     @Test
@@ -125,13 +125,16 @@ internal class DropInControllerProviderTest {
         assertSame(controller, result)
     }
 
+    // Creates every value again on each call, so equality can't rely on shared instances.
     private fun createCheckoutContext(showSubmitButton: Boolean?) = TestCheckoutContext.advanced(
         paymentMethods = PaymentMethods(),
         checkoutConfiguration = CheckoutConfiguration(
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY,
             showSubmitButton = showSubmitButton,
-        ),
+        ) {
+            dropIn(hideStoredPaymentMethods = true)
+        },
     )
 
     companion object {
