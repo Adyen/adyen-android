@@ -11,6 +11,6 @@ package com.adyen.checkout.dropin.internal.ui
 internal data class PreselectedPaymentMethodViewState(
     val logoTxVariant: String,
     val title: String,
-    val subtitle: String,
-    val payButtonText: String,
+    val subtitle: UiText,
+    val payButtonText: UiText,
 )

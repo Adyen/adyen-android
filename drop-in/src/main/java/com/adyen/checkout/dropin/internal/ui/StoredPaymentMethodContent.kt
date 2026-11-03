@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.internal.ui.IconHeaderContent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
@@ -61,11 +60,7 @@ internal fun StoredPaymentMethodContent(
                 IconHeaderContent(
                     logoTxVariant = viewState.logoTxVariant,
                     title = viewState.title,
-                    description = resolveString(
-                        CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION,
-                        viewState.paymentMethodName,
-                        viewState.formattedAmount,
-                    ),
+                    description = viewState.description.resolve(),
                     content = content,
                 )
             }
@@ -78,18 +73,67 @@ internal fun StoredPaymentMethodContent(
 private fun StoredPaymentMethodContentPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
+    StoredPaymentMethodContentPreview(
+        theme = theme,
+        navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
+        description = UiText.Localized(
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+            listOf("Visa", "$140.98"),
+        ),
+        payButtonText = "Pay $140.98",
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StoredPaymentMethodContentZeroAmountPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    StoredPaymentMethodContentPreview(
+        theme = theme,
+        navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
+        description = UiText.Localized(
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS,
+            listOf("Visa"),
+        ),
+        payButtonText = "Save details",
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StoredPaymentMethodContentNoAmountPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    StoredPaymentMethodContentPreview(
+        theme = theme,
+        navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
+        description = UiText.Localized(
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION,
+            listOf("Visa"),
+        ),
+        payButtonText = "Pay",
+    )
+}
+
+@Composable
+private fun StoredPaymentMethodContentPreview(
+    theme: CheckoutTheme,
+    navigator: DropInNavigator,
+    description: UiText,
+    payButtonText: String,
+) {
     CheckoutThemePreviewWrapper(theme) {
         StoredPaymentMethodContent(
-            navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
+            navigator = navigator,
             viewState = PaymentMethodViewState.Stored(
                 logoTxVariant = "visa",
                 title = "•••• 4556",
-                paymentMethodName = "Visa",
-                formattedAmount = "$140.98",
+                description = description,
             ),
             // Stands in for the payment method component, which cannot be built without a controller.
             content = {
-                PrimaryButton(onClick = {}, text = "Pay $140.98", modifier = Modifier.fillMaxWidth())
+                PrimaryButton(onClick = {}, text = payButtonText, modifier = Modifier.fillMaxWidth())
             },
         )
     }

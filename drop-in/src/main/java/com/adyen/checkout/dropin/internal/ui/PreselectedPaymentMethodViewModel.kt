@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.internal.CheckoutParams
-import com.adyen.checkout.core.components.data.model.format
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
@@ -43,15 +43,27 @@ internal class PreselectedPaymentMethodViewModel(
     }
 
     private fun createInitialViewState(storedPaymentMethod: StoredPaymentMethod): PreselectedPaymentMethodViewState {
-        val formattedAmount = checkoutParams.amount?.format(checkoutParams.shopperLocale).orEmpty()
-
         return PreselectedPaymentMethodViewState(
             logoTxVariant = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod),
             title = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod),
-            // TODO - Move to string resources after we support arguments
-            subtitle = "Use ${storedPaymentMethod.name} to pay $formattedAmount",
-            payButtonText = "Pay $formattedAmount",
+            subtitle = StoredPaymentMethodFormatter.getDescription(
+                storedPaymentMethod = storedPaymentMethod,
+                amount = checkoutParams.amount,
+                locale = checkoutParams.shopperLocale,
+            ),
+            payButtonText = createPayButtonText(storedPaymentMethod),
         )
+    }
+
+    private fun createPayButtonText(storedPaymentMethod: StoredPaymentMethod): UiText {
+        return if (checkoutParams.amount?.value == 0L) {
+            UiText.Localized(CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT)
+        } else {
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_PRESELECTED_PAYMENT_METHOD_BUTTON_LABEL,
+                listOf(storedPaymentMethod.name),
+            )
+        }
     }
 
     fun onBackClicked() {
