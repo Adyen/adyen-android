@@ -11,6 +11,7 @@ import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElement
 import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElementId.NUMBER
 import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElementId.STORE_DETAILS
 import com.adyen.checkout.core.components.internal.ui.state.form.TestFormElementId.VERIFICATION_CODE
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -47,6 +48,32 @@ internal class FormStateExtTest {
 
             // THEN
             assertNull(element)
+        }
+
+        @Test
+        fun `when a picker has no error, then its validity is represented in the form`() {
+            // GIVEN
+            val picker = PickerInputComponentState(selected = "US")
+
+            // WHEN
+            val element = picker.toFormElement(STORE_DETAILS)
+
+            // THEN
+            assertEquals(FormElementState(STORE_DETAILS, isValid = true), element)
+        }
+
+        @Test
+        fun `when a picker has an error, then it is invalid in the form`() {
+            // GIVEN
+            val picker = PickerInputComponentState<String>(
+                error = TextInputComponentState.InputError(CheckoutLocalizationKey.ADDRESS_COUNTRY_ERROR),
+            )
+
+            // WHEN
+            val element = picker.toFormElement(STORE_DETAILS)
+
+            // THEN
+            assertEquals(FormElementState(STORE_DETAILS, isValid = false), element)
         }
     }
 
