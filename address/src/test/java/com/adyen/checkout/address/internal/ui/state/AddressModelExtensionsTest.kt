@@ -47,13 +47,38 @@ internal class AddressModelExtensionsTest {
     @Test
     fun `when a field is missing then it is left out`() {
         // GIVEN
-        val address = US_ADDRESS.copy(houseNumberOrName = null)
+        val address = US_ADDRESS.copy(city = null)
 
         // WHEN
         val result = address.format(Locale.US)
 
         // THEN
-        assertEquals("Market Street 1, San Francisco, CA, 94107, United States", result)
+        assertEquals("Market Street 1 Apt 4, CA, 94107, United States", result)
+    }
+
+    @ParameterizedTest
+    @MethodSource("partialStreetLineSource")
+    fun `when only the street or only the house number is set then it is shown on its own`(
+        address: AddressModel,
+        expected: String,
+    ) {
+        // WHEN
+        val result = address.format(Locale.US)
+
+        // THEN
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `when the street and the house number are missing then there is no street line`() {
+        // GIVEN
+        val address = US_ADDRESS.copy(street = null, houseNumberOrName = null)
+
+        // WHEN
+        val result = address.format(Locale.US)
+
+        // THEN
+        assertEquals("San Francisco, CA, 94107, United States", result)
     }
 
     @Test
@@ -72,7 +97,28 @@ internal class AddressModelExtensionsTest {
         val result = address.format(Locale.US)
 
         // THEN
-        assertEquals("Main Street, 1, 1234AB, Amsterdam", result)
+        assertEquals("Main Street 1, 1234AB, Amsterdam", result)
+    }
+
+    @Test
+    fun `when only the country is set then only its name is shown`() {
+        // GIVEN
+        val address = EMPTY_ADDRESS.copy(country = "NL")
+
+        // WHEN
+        val result = address.format(Locale.US)
+
+        // THEN
+        assertEquals("Netherlands", result)
+    }
+
+    @Test
+    fun `when nothing is set then the summary is empty`() {
+        // WHEN
+        val result = EMPTY_ADDRESS.format(Locale.US)
+
+        // THEN
+        assertEquals("", result)
     }
 
     companion object {
@@ -85,20 +131,28 @@ internal class AddressModelExtensionsTest {
             stateOrProvince = "CA",
         )
 
+        private val GB_ADDRESS = AddressModel(
+            country = "GB",
+            street = "Downing Street",
+            houseNumberOrName = "10",
+            postalCode = "SW1A 2AA",
+            city = "London",
+            stateOrProvince = null,
+        )
+
+        private val EMPTY_ADDRESS = AddressModel(
+            country = null,
+            street = null,
+            houseNumberOrName = null,
+            postalCode = null,
+            city = null,
+            stateOrProvince = null,
+        )
+
         @JvmStatic
         fun countryOrderSource() = listOf(
-            arguments(US_ADDRESS, "Market Street 1, Apt 4, San Francisco, CA, 94107, United States"),
-            arguments(
-                AddressModel(
-                    country = "GB",
-                    street = "Downing Street",
-                    houseNumberOrName = "10",
-                    postalCode = "SW1A 2AA",
-                    city = "London",
-                    stateOrProvince = null,
-                ),
-                "10, Downing Street, London, SW1A 2AA, United Kingdom",
-            ),
+            arguments(US_ADDRESS, "Market Street 1 Apt 4, San Francisco, CA, 94107, United States"),
+            arguments(GB_ADDRESS, "10 Downing Street, London, SW1A 2AA, United Kingdom"),
             arguments(
                 AddressModel(
                     country = "JP",
@@ -108,7 +162,40 @@ internal class AddressModelExtensionsTest {
                     city = "Chiyoda",
                     stateOrProvince = "13",
                 ),
-                "100-0005, 13, Chiyoda, Marunouchi 1-1, Tower 5F, Japan",
+                "100-0005, 13, Chiyoda, Marunouchi 1-1 Tower 5F, Japan",
+            ),
+            arguments(
+                AddressModel(
+                    country = "AU",
+                    street = "200 George Street",
+                    houseNumberOrName = "Level 5",
+                    postalCode = "2000",
+                    city = "Sydney",
+                    stateOrProvince = "NSW",
+                ),
+                "200 George Street Level 5, Sydney, NSW, 2000, Australia",
+            ),
+            arguments(
+                AddressModel(
+                    country = "BR",
+                    street = "Avenida Paulista",
+                    houseNumberOrName = "1000",
+                    postalCode = "01310-100",
+                    city = "São Paulo",
+                    stateOrProvince = "SP",
+                ),
+                "Avenida Paulista 1000, 01310-100, São Paulo, SP, Brazil",
+            ),
+            arguments(
+                AddressModel(
+                    country = "CA",
+                    street = "100 Queen Street W",
+                    houseNumberOrName = "Suite 200",
+                    postalCode = "M5H 2N2",
+                    city = "Toronto",
+                    stateOrProvince = "ON",
+                ),
+                "100 Queen Street W Suite 200, Toronto, M5H 2N2, ON, Canada",
             ),
             arguments(
                 AddressModel(
@@ -119,17 +206,39 @@ internal class AddressModelExtensionsTest {
                     city = "Amsterdam",
                     stateOrProvince = null,
                 ),
-                "Simon Carmiggeltstraat, 6, 1011 DJ, Amsterdam, Netherlands",
+                "Simon Carmiggeltstraat 6, 1011 DJ, Amsterdam, Netherlands",
+            ),
+            arguments(
+                AddressModel(
+                    country = "DE",
+                    street = "Friedrichstraße",
+                    houseNumberOrName = "43",
+                    postalCode = "10117",
+                    city = "Berlin",
+                    stateOrProvince = null,
+                ),
+                "Friedrichstraße 43, 10117, Berlin, Germany",
             ),
         )
 
         @JvmStatic
         fun shopperLocaleSource() = listOf(
-            arguments(Locale.US, "Market Street 1, Apt 4, San Francisco, CA, 94107, United States"),
+            arguments(Locale.US, "Market Street 1 Apt 4, San Francisco, CA, 94107, United States"),
             arguments(
                 Locale.forLanguageTag("nl-NL"),
-                "Market Street 1, Apt 4, San Francisco, CA, 94107, Verenigde Staten",
+                "Market Street 1 Apt 4, San Francisco, CA, 94107, Verenigde Staten",
             ),
+        )
+
+        @JvmStatic
+        fun partialStreetLineSource() = listOf(
+            arguments(
+                US_ADDRESS.copy(houseNumberOrName = null),
+                "Market Street 1, San Francisco, CA, 94107, United States",
+            ),
+            arguments(US_ADDRESS.copy(street = null), "Apt 4, San Francisco, CA, 94107, United States"),
+            arguments(GB_ADDRESS.copy(houseNumberOrName = null), "Downing Street, London, SW1A 2AA, United Kingdom"),
+            arguments(GB_ADDRESS.copy(street = null), "10, London, SW1A 2AA, United Kingdom"),
         )
     }
 }
