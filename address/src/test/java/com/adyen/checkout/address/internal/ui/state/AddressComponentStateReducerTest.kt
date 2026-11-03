@@ -12,6 +12,7 @@ import com.adyen.checkout.address.internal.data.model.AddressItem
 import com.adyen.checkout.address.internal.ui.model.AddressComponentParams
 import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull

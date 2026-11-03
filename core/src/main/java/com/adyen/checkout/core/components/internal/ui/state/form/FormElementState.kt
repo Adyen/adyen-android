@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.components.internal.ui.state.form
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -39,3 +40,11 @@ fun <Id : FormElementId> TextInputComponentState.toFormElementIfVisible(id: Id):
         null
     }
 }
+
+/**
+ * Returns this picker as a form element. Unlike a text input it has no requirement policy, so whether it is visible is
+ * decided by the caller.
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <Id : FormElementId> PickerInputComponentState<*>.toFormElement(id: Id): FormElementState<Id> =
+    FormElementState(id = id, isValid = error == null)

@@ -6,11 +6,10 @@
  * Created by ararat on 7/10/2026.
  */
 
-package com.adyen.checkout.address.internal.ui.state
+package com.adyen.checkout.core.components.internal.ui.state.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.internal.ui.state.form.FormElementId
-import com.adyen.checkout.core.components.internal.ui.state.form.FormElementState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState.InputError
 
 // TODO - Address: Non-text elements support neither focus nor scrolling yet, so an invalid picker only shows its
@@ -20,7 +19,8 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputCompo
  *
  * Unlike a text input it cannot take focus, so its error only becomes visible when validation errors are highlighted.
  */
-internal data class PickerInputComponentState<T>(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class PickerInputComponentState<T>(
     val selected: T? = null,
     val error: InputError? = null,
 ) {
@@ -35,10 +35,3 @@ internal data class PickerInputComponentState<T>(
 
     fun showErrorIfPresent(): PickerInputComponentState<T> = copy(error = error?.copy(isVisible = true))
 }
-
-/**
- * Returns this picker as a form element. Unlike a text input it has no requirement policy, so whether it is visible is
- * decided by the caller.
- */
-internal fun <Id : FormElementId> PickerInputComponentState<*>.toFormElement(id: Id): FormElementState<Id> =
-    FormElementState(id = id, isValid = error == null)

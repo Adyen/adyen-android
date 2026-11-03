@@ -13,6 +13,7 @@ import com.adyen.checkout.address.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 import java.util.Locale
 

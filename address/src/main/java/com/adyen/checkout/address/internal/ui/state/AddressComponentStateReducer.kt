@@ -14,6 +14,7 @@ import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.model.toAddressRegions
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class AddressComponentStateReducer(
