@@ -15,7 +15,7 @@ internal class CardComponentStateReducer(
     private val cardBrandIntentsHandler: CardBrandIntentsHandler,
 ) : ComponentStateReducer<CardComponentState, CardIntent> {
 
-    @Suppress("CyclomaticComplexMethod")
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun reduce(state: CardComponentState, intent: CardIntent): CardComponentState {
         return when (intent) {
             is CardIntent.UpdateCardNumber -> state.copy(
@@ -48,6 +48,12 @@ internal class CardComponentStateReducer(
 
             is CardIntent.UpdatePostalCode -> state.copy(
                 postalCode = state.postalCode.updateText(intent.postalCode),
+            )
+
+            is CardIntent.UpdateBillingAddress -> state.copy(
+                billingAddress = state.billingAddress.copy(
+                    address = state.billingAddress.address.copy(selected = intent.address),
+                ),
             )
 
             is CardIntent.UpdateStorePaymentMethod -> state.copy(

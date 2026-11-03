@@ -14,6 +14,7 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
@@ -47,6 +48,7 @@ internal class CardComponentStateFactory(
             postalCode = TextInputComponentState(
                 requirementPolicy = getPostalCodeRequirementPolicy(),
             ),
+            billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
             storePaymentMethod = false,
             isStorePaymentFieldVisible = componentParams.showStorePaymentMethod,
             supportedCardBrands = componentParams.supportedCardBrands,

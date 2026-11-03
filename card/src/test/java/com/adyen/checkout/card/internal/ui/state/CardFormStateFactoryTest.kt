@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.KeyboardAction
 import com.adyen.checkout.core.components.internal.ui.state.form.keyboardActionFor
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.isErrorVisible
@@ -202,6 +203,7 @@ internal class CardFormStateFactoryTest {
         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber,
         kcpCardPassword = kcpCardPassword,
         postalCode = postalCode,
+        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
         supportedCardBrands = emptyList(),

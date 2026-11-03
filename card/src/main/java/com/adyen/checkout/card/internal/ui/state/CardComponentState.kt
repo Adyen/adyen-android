@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class CardComponentState(
@@ -26,6 +28,7 @@ internal data class CardComponentState(
     val kcpBirthDateOrTaxNumber: TextInputComponentState,
     val kcpCardPassword: TextInputComponentState,
     val postalCode: TextInputComponentState,
+    val billingAddress: BillingAddressState,
 
     // UI configuration
     val storePaymentMethod: Boolean,
@@ -106,4 +109,13 @@ internal data class CardBrandData(
 internal data class InstallmentState(
     val installmentOptions: List<InstallmentModel>,
     val selectedInstallment: InstallmentModel?,
+)
+
+/**
+ * The billing address row. The address form belongs to the address component, so the card only keeps the address the
+ * shopper confirmed there.
+ */
+internal data class BillingAddressState(
+    val isVisible: Boolean,
+    val address: PickerInputComponentState<AddressModel>,
 )

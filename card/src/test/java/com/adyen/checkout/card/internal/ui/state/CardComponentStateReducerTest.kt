@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -195,6 +197,26 @@ internal class CardComponentStateReducerTest {
         assertEquals(installment, actual.installmentState.selectedInstallment)
     }
 
+    @Test
+    fun `when a billing address is confirmed then it is stored`() {
+        // GIVEN
+        val state = createInitialState()
+        val address = AddressModel(
+            country = "NL",
+            street = "Simon Carmiggeltstraat",
+            houseNumberOrName = "6",
+            postalCode = "1011 DJ",
+            city = "Amsterdam",
+            stateOrProvince = null,
+        )
+
+        // WHEN
+        val actual = reducer.reduce(state, CardIntent.UpdateBillingAddress(address))
+
+        // THEN
+        assertEquals(address, actual.billingAddress.address.selected)
+    }
+
     private fun createInitialState() = CardComponentState(
         cardNumber = TextInputComponentState(),
         expiryDate = TextInputComponentState(),
@@ -204,6 +226,7 @@ internal class CardComponentStateReducerTest {
         kcpCardPassword = TextInputComponentState(),
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
         postalCode = TextInputComponentState(),
+        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

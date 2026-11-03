@@ -13,6 +13,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
+@Suppress("TooManyFunctions")
 internal class CardComponentStateValidator(
     private val cardValidationMapper: CardValidationMapper,
 ) : ComponentStateValidator<CardComponentState> {
@@ -43,6 +44,7 @@ internal class CardComponentStateValidator(
         val kcpBirthDateOrTaxNumberError = validateKcpBirthDateOrTaxNumber(state.kcpBirthDateOrTaxNumber)
         val kcpCardPasswordError = validateKcpCardPassword(state.kcpCardPassword)
         val postalCodeError = validatePostalCode(state.postalCode)
+        val billingAddressError = validateBillingAddress(state.billingAddress)
 
         return state.copy(
             cardNumber = state.cardNumber.updateError(cardNumberError),
@@ -53,6 +55,9 @@ internal class CardComponentStateValidator(
             kcpBirthDateOrTaxNumber = state.kcpBirthDateOrTaxNumber.updateError(kcpBirthDateOrTaxNumberError),
             kcpCardPassword = state.kcpCardPassword.updateError(kcpCardPasswordError),
             postalCode = state.postalCode.updateError(postalCodeError),
+            billingAddress = state.billingAddress.copy(
+                address = state.billingAddress.address.updateError(billingAddressError),
+            ),
         )
     }
 
@@ -134,5 +139,12 @@ internal class CardComponentStateValidator(
         return cardValidationMapper.mapPostalCodeValidation(
             validation = CardValidationUtils.validatePostalCode(postalCode = postalCode)
         )
+    }
+
+    private fun validateBillingAddress(
+        billingAddress: BillingAddressState,
+    ): CheckoutLocalizationKey? {
+        return CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR
+            .takeIf { billingAddress.isVisible && billingAddress.address.selected == null }
     }
 }
