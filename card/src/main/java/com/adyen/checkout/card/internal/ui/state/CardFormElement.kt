@@ -9,7 +9,9 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import androidx.compose.runtime.Immutable
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 
 /**
@@ -75,6 +77,14 @@ internal sealed interface CardFormElement {
         val textInputViewState: TextInputViewState,
     ) : CardFormElement {
         override val id get() = CardFormElementId.POSTAL_CODE
+    }
+
+    /** The billing address row, which shows the confirmed address and opens the address form. */
+    data class BillingAddress(
+        val address: AddressModel?,
+        val errorMessage: CheckoutLocalizationKey?,
+    ) : CardFormElement {
+        override val id get() = CardFormElementId.BILLING_ADDRESS
     }
 
     data class StorePaymentMethod(

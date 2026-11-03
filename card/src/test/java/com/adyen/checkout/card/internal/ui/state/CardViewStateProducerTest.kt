@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
@@ -770,6 +771,75 @@ internal class CardViewStateProducerTest {
     }
 
     @Test
+    fun `when the billing address row is visible then a billing address element is produced`() {
+        // GIVEN
+        val address = AddressModel(
+            country = "NL",
+            street = "Simon Carmiggeltstraat",
+            houseNumberOrName = "6",
+            postalCode = "1011 DJ",
+            city = "Amsterdam",
+            stateOrProvince = null,
+        )
+        val componentState = createComponentState(
+            billingAddress = BillingAddressState(isVisible = true, address = PickerInputComponentState(address)),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(
+            CardFormElement.BillingAddress(address = address, errorMessage = null),
+            viewState.element<CardFormElement.BillingAddress>(),
+        )
+    }
+
+    @Test
+    fun `when the billing address error is not visible yet then the row shows no error`() {
+        // GIVEN
+        val componentState = createComponentState(
+            billingAddress = BillingAddressState(
+                isVisible = true,
+                address = PickerInputComponentState(
+                    error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR),
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertNull(viewState.element<CardFormElement.BillingAddress>()?.errorMessage)
+    }
+
+    @Test
+    fun `when the billing address error is visible then the row shows it`() {
+        // GIVEN
+        val componentState = createComponentState(
+            billingAddress = BillingAddressState(
+                isVisible = true,
+                address = PickerInputComponentState(
+                    error = TextInputComponentState.InputError(
+                        message = CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR,
+                        isVisible = true,
+                    ),
+                ),
+            ),
+        )
+
+        // WHEN
+        val viewState = producer.produce(componentState)
+
+        // THEN
+        assertEquals(
+            CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR,
+            viewState.element<CardFormElement.BillingAddress>()?.errorMessage,
+        )
+    }
+
+    @Test
     fun `when focus is requested, then only the requested field receives a focus token`() {
         // GIVEN
         val componentState = createComponentState().copy(
@@ -808,6 +878,10 @@ internal class CardViewStateProducerTest {
         showSupportedCardBrandLogos: Boolean = true,
         isCardScanningAvailable: Boolean = false,
         installmentState: InstallmentState = InstallmentState(emptyList(), null),
+        billingAddress: BillingAddressState = BillingAddressState(
+            isVisible = false,
+            address = PickerInputComponentState(),
+        ),
     ) = CardComponentState(
         cardNumber = cardNumber,
         expiryDate = expiryDate,
@@ -817,7 +891,7 @@ internal class CardViewStateProducerTest {
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
         kcpCardPassword = TextInputComponentState(),
         postalCode = postalCode,
-        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
+        billingAddress = billingAddress,
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = supportedCardBrands,

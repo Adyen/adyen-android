@@ -59,6 +59,7 @@ internal class CardFormStateFactoryTest {
                 kcpBirthDateOrTaxNumber = required(),
                 kcpCardPassword = required(),
                 postalCode = required(),
+                billingAddress = visibleBillingAddress(),
                 isStorePaymentFieldVisible = true,
                 installmentOptions = listOf(InstallmentModel.OneTime),
             )
@@ -108,6 +109,18 @@ internal class CardFormStateFactoryTest {
         fun `when no installment options are available, then the installment picker is left out`() {
             assertFalse(createState().form.elements.any { it.id == CardFormElementId.INSTALLMENTS })
         }
+
+        @Test
+        fun `when the billing address row is hidden, then it is left out`() {
+            // GIVEN
+            val state = createState(billingAddress = hiddenBillingAddress())
+
+            // WHEN
+            val order = state.form.elements.map { it.id }
+
+            // THEN
+            assertFalse(order.contains(CardFormElementId.BILLING_ADDRESS))
+        }
     }
 
     @Nested
@@ -145,6 +158,22 @@ internal class CardFormStateFactoryTest {
 
             assertFalse(state.form.isElementVisibleAndValid(CardFormElementId.CARD_NUMBER))
             assertFalse(state.cardNumber.isErrorVisible)
+        }
+
+        @Test
+        fun `when the billing address row holds an error, then the form is invalid`() {
+            // GIVEN
+            val state = createState(
+                billingAddress = visibleBillingAddress().let {
+                    it.copy(address = it.address.updateError(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR))
+                },
+            )
+
+            // WHEN
+            val isFormValid = state.form.isFormValid
+
+            // THEN
+            assertFalse(isFormValid)
         }
 
         private fun createStateWithErrorOn(id: CardFormElementId): CardComponentState {
@@ -192,6 +221,7 @@ internal class CardFormStateFactoryTest {
         kcpBirthDateOrTaxNumber: TextInputComponentState = hidden(),
         kcpCardPassword: TextInputComponentState = hidden(),
         postalCode: TextInputComponentState = hidden(),
+        billingAddress: BillingAddressState = hiddenBillingAddress(),
         isStorePaymentFieldVisible: Boolean = false,
         installmentOptions: List<InstallmentModel> = emptyList(),
     ) = CardComponentState(
@@ -203,7 +233,7 @@ internal class CardFormStateFactoryTest {
         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumber,
         kcpCardPassword = kcpCardPassword,
         postalCode = postalCode,
-        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
+        billingAddress = billingAddress,
         storePaymentMethod = false,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
         supportedCardBrands = emptyList(),
@@ -223,4 +253,8 @@ internal class CardFormStateFactoryTest {
     private fun optional() = TextInputComponentState(requirementPolicy = RequirementPolicy.Optional)
 
     private fun hidden() = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden)
+
+    private fun visibleBillingAddress() = BillingAddressState(isVisible = true, address = PickerInputComponentState())
+
+    private fun hiddenBillingAddress() = BillingAddressState(isVisible = false, address = PickerInputComponentState())
 }

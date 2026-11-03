@@ -11,10 +11,9 @@ package com.adyen.checkout.address.internal.ui.state
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
-import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
-import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.visibleErrorMessage
 import java.util.Locale
 
 /**
@@ -57,7 +56,7 @@ internal class AddressViewStateProducer(
         AddressFormElementId.COUNTRY -> AddressFormElement.Country(
             label = getLabel(id),
             selected = selectedCountry,
-            errorMessage = country.getVisibleErrorMessage(),
+            errorMessage = country.visibleErrorMessage,
         )
 
         AddressFormElementId.STREET -> AddressFormElement.Street(
@@ -84,7 +83,7 @@ internal class AddressViewStateProducer(
         AddressFormElementId.STATE_OR_PROVINCE -> AddressFormElement.StateOrProvince(
             label = getLabel(id),
             selected = selectedState,
-            errorMessage = stateOrProvince.getVisibleErrorMessage(),
+            errorMessage = stateOrProvince.visibleErrorMessage,
         )
     }
 
@@ -99,7 +98,4 @@ internal class AddressViewStateProducer(
     private fun AddressComponentState.getSelectedState(): AddressRegion? = stateOrProvince.selected?.let { code ->
         states.find { it.code == code } ?: AddressRegion(code, code)
     }
-
-    private fun PickerInputComponentState<*>.getVisibleErrorMessage(): CheckoutLocalizationKey? =
-        error?.takeIf { it.isVisible }?.message
 }

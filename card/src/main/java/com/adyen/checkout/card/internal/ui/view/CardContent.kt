@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.address.internal.ui.view.AddressPickerField
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
 import com.adyen.checkout.card.internal.ui.model.toSubtitleText
@@ -62,6 +63,7 @@ internal fun CardContent(
     onIntent: (CardIntent) -> Unit,
     onSubmitClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
+    onBillingAddressClick: () -> Unit,
     initializeCardScanner: (Context) -> Unit,
     onCardScannerResult: (Int, Intent?) -> Unit,
     onScanButtonClick: (ActivityResultLauncher<IntentSenderRequest>) -> Unit,
@@ -89,6 +91,7 @@ internal fun CardContent(
             onScanButtonClick(scannerLauncher)
         },
         onInstallmentPickerClick = onInstallmentPickerClick,
+        onBillingAddressClick = onBillingAddressClick,
         modifier = modifier,
     )
 }
@@ -100,6 +103,7 @@ private fun CardContent(
     onSubmitClick: () -> Unit,
     onScanButtonClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
+    onBillingAddressClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SecureWindowEffect()
@@ -114,6 +118,7 @@ private fun CardContent(
             onIntent = onIntent,
             onScanButtonClick = onScanButtonClick,
             onInstallmentPickerClick = onInstallmentPickerClick,
+            onBillingAddressClick = onBillingAddressClick,
         )
     }
 }
@@ -124,6 +129,7 @@ private fun CardForm(
     onIntent: (CardIntent) -> Unit,
     onScanButtonClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
+    onBillingAddressClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -138,6 +144,7 @@ private fun CardForm(
                     onIntent = onIntent,
                     onScanButtonClick = onScanButtonClick,
                     onInstallmentPickerClick = onInstallmentPickerClick,
+                    onBillingAddressClick = onBillingAddressClick,
                 )
             }
         }
@@ -154,6 +161,7 @@ private fun CardFormElementContent(
     onIntent: (CardIntent) -> Unit,
     onScanButtonClick: () -> Unit,
     onInstallmentPickerClick: () -> Unit,
+    onBillingAddressClick: () -> Unit,
 ) {
     val id = element.id
     val onFocusChange: (Boolean) -> Unit = { hasFocus -> onIntent(CardIntent.UpdateFieldFocus(id, hasFocus)) }
@@ -222,6 +230,12 @@ private fun CardFormElementContent(
             onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
+        is CardFormElement.BillingAddress -> AddressPickerField(
+            address = element.address,
+            errorMessage = element.errorMessage,
+            onClick = onBillingAddressClick,
+        )
+
         is CardFormElement.StorePaymentMethod -> SwitchContainer(
             checked = element.isSelected,
             onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
@@ -282,6 +296,7 @@ private fun CardContentPreview(
             onSubmitClick = {},
             onScanButtonClick = {},
             onInstallmentPickerClick = {},
+            onBillingAddressClick = {},
         )
     }
 }
@@ -303,6 +318,7 @@ private fun CardContentPreviewAllFields(
                     CardFormElement.KcpBirthDateOrTaxNumber(TextInputViewState(text = "1234567890")),
                     CardFormElement.KcpCardPassword(TextInputViewState(text = "12")),
                     CardFormElement.PostalCode(TextInputViewState(text = "1234 AB")),
+                    CardFormElement.BillingAddress(address = null, errorMessage = null),
                     CardFormElement.StorePaymentMethod(isSelected = true),
                     CardFormElement.Installments(selectedInstallment = InstallmentModel.OneTime),
                 ),
@@ -314,6 +330,7 @@ private fun CardContentPreviewAllFields(
             onSubmitClick = {},
             onScanButtonClick = {},
             onInstallmentPickerClick = {},
+            onBillingAddressClick = {},
         )
     }
 }

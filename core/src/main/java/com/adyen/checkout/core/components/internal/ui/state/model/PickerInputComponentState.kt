@@ -35,3 +35,7 @@ data class PickerInputComponentState<T>(
 
     fun showErrorIfPresent(): PickerInputComponentState<T> = copy(error = error?.copy(isVisible = true))
 }
+
+@get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+val PickerInputComponentState<*>.visibleErrorMessage: CheckoutLocalizationKey?
+    get() = error?.takeIf { it.isVisible }?.message

@@ -17,6 +17,8 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.address.internal.ui.AddressComponent
+import com.adyen.checkout.address.internal.ui.AddressComponentEvent
 import com.adyen.checkout.card.OnBinChangeCallback
 import com.adyen.checkout.card.OnBinLookupCallback
 import com.adyen.checkout.card.internal.analytics.CardScannerEvents
@@ -64,9 +66,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -94,6 +98,7 @@ constructor(
     private val publicKey: String?,
     private val environment: Environment,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
+    private val addressComponent: AddressComponent?,
 ) : PaymentComponent,
     SecondaryScreenComponent {
 
@@ -101,7 +106,10 @@ constructor(
     override val eventFlow: Flow<PaymentComponentEvent> = eventChannel.receiveAsFlow()
 
     private val navigationChannel = bufferedChannel<SecondaryNavigationEvent>()
-    override val navigation: Flow<SecondaryNavigationEvent> = navigationChannel.receiveAsFlow()
+    override val navigation: Flow<SecondaryNavigationEvent> = merge(
+        navigationChannel.receiveAsFlow(),
+        addressComponent?.navigation ?: emptyFlow(),
+    )
 
     private val componentState = ComponentStateFlow(
         initialState = componentStateFactory.createInitialState(),
@@ -117,6 +125,7 @@ constructor(
         subscribeToDualBrandSelectionAppearAnalyticsEvents()
         onCardBrandDataChanged()
         onBinChanged()
+        subscribeToAddressEvents()
     }
 
     private fun trackRenderEvent() {
@@ -135,6 +144,7 @@ constructor(
             onIntent = ::handleIntent,
             onSubmitClick = ::submit,
             onInstallmentPickerClick = ::onInstallmentPickerClick,
+            onBillingAddressClick = ::onBillingAddressClick,
             initializeCardScanner = ::initializeCardScanner,
             onCardScannerResult = ::onCardScannerResult,
             onScanButtonClick = ::onScanButtonClick,
@@ -143,15 +153,19 @@ constructor(
 
     @Composable
     override fun SecondaryContent(identifier: String, modifier: Modifier) {
-        CardSecondaryContent(
-            modifier = modifier,
-            identifier = identifier,
-            viewState = viewState,
-            onInstallmentClick = { installment ->
-                onIntent(CardIntent.UpdateInstallment(installment))
-                navigationChannel.trySend(SecondaryNavigationEvent.Close(CardSecondaryContentEntry.INSTALLMENTS))
-            },
-        )
+        if (addressComponent?.hasScreen(identifier) == true) {
+            addressComponent.SecondaryContent(identifier, modifier)
+        } else {
+            CardSecondaryContent(
+                modifier = modifier,
+                identifier = identifier,
+                viewState = viewState,
+                onInstallmentClick = { installment ->
+                    onIntent(CardIntent.UpdateInstallment(installment))
+                    navigationChannel.trySend(SecondaryNavigationEvent.Close(CardSecondaryContentEntry.INSTALLMENTS))
+                },
+            )
+        }
     }
 
     @Suppress("ReturnCount")
@@ -401,8 +415,24 @@ constructor(
             .launchIn(coroutineScope)
     }
 
-    private fun onInstallmentPickerClick() {
+    @VisibleForTesting
+    internal fun onInstallmentPickerClick() {
         navigationChannel.trySend(SecondaryNavigationEvent.Open(CardSecondaryContentEntry.INSTALLMENTS))
+    }
+
+    @VisibleForTesting
+    internal fun onBillingAddressClick() {
+        addressComponent?.show(componentState.value.billingAddress.address.selected)
+    }
+
+    private fun subscribeToAddressEvents() {
+        addressComponent?.eventFlow
+            ?.onEach { event ->
+                when (event) {
+                    is AddressComponentEvent.Confirmed -> onIntent(CardIntent.UpdateBillingAddress(event.address))
+                }
+            }
+            ?.launchIn(coroutineScope)
     }
 
     private fun onEncryptionError(e: EncryptionException) {

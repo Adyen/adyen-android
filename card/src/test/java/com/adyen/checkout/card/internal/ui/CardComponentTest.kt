@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.address.internal.ui.AddressComponent
+import com.adyen.checkout.address.internal.ui.AddressComponentEvent
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.analytics.DualBrandCardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
@@ -30,6 +33,7 @@ import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateProducer
+import com.adyen.checkout.card.internal.ui.view.CardSecondaryContentEntry
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
@@ -38,12 +42,14 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.cse.internal.TestGenericEncryptor
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -60,6 +66,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -513,6 +520,88 @@ internal class CardComponentTest(
         }
     }
 
+    @Nested
+    inner class BillingAddressTest {
+
+        private val addressEventFlow = MutableSharedFlow<AddressComponentEvent>(extraBufferCapacity = 1)
+        private val addressNavigation = MutableSharedFlow<SecondaryNavigationEvent>(extraBufferCapacity = 1)
+        private lateinit var addressComponent: AddressComponent
+
+        @BeforeEach
+        fun beforeEach() {
+            addressComponent = mock()
+            whenever(addressComponent.eventFlow).thenReturn(addressEventFlow)
+            whenever(addressComponent.navigation).thenReturn(addressNavigation)
+        }
+
+        @Test
+        fun `when the billing address row is clicked then the address form is shown with the confirmed address`() {
+            // GIVEN
+            val component = createComponent(addressComponent = addressComponent)
+            addressEventFlow.tryEmit(AddressComponentEvent.Confirmed(TEST_ADDRESS))
+
+            // WHEN
+            component.onBillingAddressClick()
+
+            // THEN
+            verify(addressComponent).show(TEST_ADDRESS)
+        }
+
+        @Test
+        fun `when nothing is confirmed then the address form is shown empty`() {
+            // GIVEN
+            val component = createComponent(addressComponent = addressComponent)
+
+            // WHEN
+            component.onBillingAddressClick()
+
+            // THEN
+            verify(addressComponent).show(null)
+        }
+
+        @Test
+        fun `when the address component confirms an address then the card stores it`() {
+            // GIVEN
+            val componentStateReducer = spy(createComponentStateReducer(createCardComponentParams()))
+            createComponent(addressComponent = addressComponent, componentStateReducer = componentStateReducer)
+
+            // WHEN
+            addressEventFlow.tryEmit(AddressComponentEvent.Confirmed(TEST_ADDRESS))
+
+            // THEN
+            verify(componentStateReducer).reduce(any(), eq(CardIntent.UpdateBillingAddress(TEST_ADDRESS)))
+        }
+
+        @Test
+        fun `when the address component opens one of its own screens then the card passes it on`() = runTest {
+            // GIVEN
+            val component = createComponent(addressComponent = addressComponent)
+            val navigation = component.navigation.test(testScheduler)
+
+            // WHEN
+            addressNavigation.emit(SecondaryNavigationEvent.Open(ADDRESS_SCREEN_KEY))
+
+            // THEN
+            assertEquals(SecondaryNavigationEvent.Open(ADDRESS_SCREEN_KEY), navigation.latestValue)
+        }
+
+        @Test
+        fun `when the card opens its own screen then it is still passed on`() = runTest {
+            // GIVEN
+            val component = createComponent(addressComponent = addressComponent)
+            val navigation = component.navigation.test(testScheduler)
+
+            // WHEN
+            component.onInstallmentPickerClick()
+
+            // THEN
+            assertEquals(
+                SecondaryNavigationEvent.Open(CardSecondaryContentEntry.INSTALLMENTS),
+                navigation.latestValue,
+            )
+        }
+    }
+
     private fun createEmptyDetectedCardTypeList() = DetectedCardTypeList(
         detectedCardTypes = emptyList(),
         source = DetectedCardTypeList.Source.NETWORK,
@@ -568,6 +657,7 @@ internal class CardComponentTest(
         cardComponentParams: CardComponentParams = createCardComponentParams(),
         publicKey: String? = null,
         componentStateReducer: CardComponentStateReducer = createComponentStateReducer(cardComponentParams),
+        addressComponent: AddressComponent? = null,
     ): CardComponent {
         return CardComponent(
             analyticsManager = analyticsManager,
@@ -589,6 +679,7 @@ internal class CardComponentTest(
             publicKey = publicKey,
             environment = Environment.TEST,
             cardConfigDataGenerator = cardConfigDataGenerator,
+            addressComponent = addressComponent,
         )
     }
 
@@ -610,5 +701,14 @@ internal class CardComponentTest(
         private const val PAYMENT_METHOD_TYPE = "scheme"
         private const val TEST_PUBLIC_KEY = "test_public_key"
         private const val TEST_CARD_NUMBER = "4111111111111111"
+        private const val ADDRESS_SCREEN_KEY = "ADDRESS_FORM"
+        private val TEST_ADDRESS = AddressModel(
+            country = "NL",
+            street = "Simon Carmiggeltstraat",
+            houseNumberOrName = "6",
+            postalCode = "1011 DJ",
+            city = "Amsterdam",
+            stateOrProvince = null,
+        )
     }
 }
