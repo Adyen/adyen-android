@@ -12,6 +12,7 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
+import com.adyen.checkout.card.internal.ui.model.isStorePaymentFieldEnabled
 import com.adyen.checkout.core.common.internal.CheckoutParams
 
 internal class CardConfigDataGenerator(
@@ -24,7 +25,7 @@ internal class CardConfigDataGenerator(
             put("billingAddressRequired", params.getBillingAddressRequired())
             put("brands", params.supportedCardBrands.joinToString(",") { it.txVariant })
             put("showSupportedCardBrandLogos", params.showSupportedCardBrandLogos.toString())
-            put("enableStoreDetails", params.showStorePaymentMethod.toString())
+            put("enableStoreDetails", checkoutParams.isStorePaymentFieldEnabled().toString())
             put("hasHolderName", params.showCardholderName.toString())
             put("hasInstallmentOptions", (params.installmentParams != null).toString())
             put("hideCVC", params.getHideCVC(isStored))

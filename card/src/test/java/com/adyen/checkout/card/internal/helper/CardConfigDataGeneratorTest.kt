@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.helper
 
+import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -15,6 +16,7 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
@@ -41,7 +43,43 @@ internal class CardConfigDataGeneratorTest {
         assertEquals(expected, result)
     }
 
+    @ParameterizedTest
+    @MethodSource("enableStoreDetailsSource")
+    fun `when generating, then enableStoreDetails reports the configured value`(
+        checkoutParams: CheckoutParams,
+        expected: String,
+    ) {
+        val cardConfigDataGenerator = CardConfigDataGenerator(checkoutParams)
+        val params = createCardComponentParams(
+            showCardholderName = false,
+            supportedCardBrands = emptyList(),
+            showSupportedCardBrandLogos = false,
+            showStorePaymentMethod = false,
+            socialSecurityNumberVisibility = FieldVisibility.HIDE,
+            koreanAuthenticationVisibility = FieldVisibility.HIDE,
+            installmentParams = null,
+            showPostalCode = false,
+            cvcVisibility = CVCVisibility.ALWAYS_SHOW,
+            storedCVCVisibility = StoredCVCVisibility.SHOW,
+            showCardScanner = false,
+        )
+
+        val result = cardConfigDataGenerator.generate(params, isStored = false)
+
+        assertEquals(expected, result["enableStoreDetails"])
+    }
+
     companion object {
+
+        @JvmStatic
+        fun enableStoreDetailsSource() = listOf(
+            // checkoutParams, expected
+            arguments(createCheckoutParams(showStorePaymentMethod = true), "true"),
+            arguments(createCheckoutParams(showStorePaymentMethod = false), "false"),
+            arguments(createCheckoutParams(showStorePaymentMethod = null), "true"),
+            arguments(createCheckoutParams(enableStoreDetails = true), "true"),
+            arguments(createCheckoutParams(showStorePaymentMethod = true, enableStoreDetails = false), "false"),
+        )
 
         @JvmStatic
         fun testSource() = listOf(
@@ -61,7 +99,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardScanner = true,
                 ),
                 false,
-                createCheckoutParams(showSubmitButton = true),
+                createCheckoutParams(showSubmitButton = true, showStorePaymentMethod = true),
                 mapOf(
                     "billingAddressMode" to "PostalCode",
                     "billingAddressRequired" to "true",
@@ -95,7 +133,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardScanner = false,
                 ),
                 false,
-                createCheckoutParams(showSubmitButton = false),
+                createCheckoutParams(showSubmitButton = false, showStorePaymentMethod = false),
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
@@ -129,7 +167,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardScanner = false,
                 ),
                 false,
-                createCheckoutParams(showSubmitButton = false),
+                createCheckoutParams(showSubmitButton = false, showStorePaymentMethod = false),
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
@@ -162,7 +200,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardScanner = false,
                 ),
                 true,
-                createCheckoutParams(showSubmitButton = false),
+                createCheckoutParams(showSubmitButton = false, showStorePaymentMethod = false),
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
@@ -195,7 +233,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardScanner = false,
                 ),
                 true,
-                createCheckoutParams(showSubmitButton = false),
+                createCheckoutParams(showSubmitButton = false, showStorePaymentMethod = false),
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
@@ -242,7 +280,9 @@ internal class CardConfigDataGeneratorTest {
         )
 
         private fun createCheckoutParams(
-            showSubmitButton: Boolean,
+            showSubmitButton: Boolean = true,
+            showStorePaymentMethod: Boolean? = null,
+            enableStoreDetails: Boolean? = null,
         ) = CheckoutParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
@@ -252,8 +292,32 @@ internal class CardConfigDataGeneratorTest {
             showSubmitButton = showSubmitButton,
             checkoutAttemptId = "test_checkout_attempt_id",
             publicKey = null,
-            additionalConfigurations = emptyMap(),
-            additionalSessionParams = null,
+            additionalConfigurations = mapOf(
+                CardConfiguration::class.java.name to createCardConfiguration(showStorePaymentMethod),
+            ),
+            additionalSessionParams = enableStoreDetails?.let {
+                AdditionalSessionParams(
+                    sessionId = "test_session_id",
+                    enableStoreDetails = it,
+                    installmentConfiguration = null,
+                    showRemovePaymentMethodButton = null,
+                    returnUrl = "",
+                )
+            },
+        )
+
+        private fun createCardConfiguration(showStorePaymentMethod: Boolean?) = CardConfiguration(
+            billingAddressMode = null,
+            koreanAuthenticationVisibility = null,
+            showCardholderName = null,
+            showSecurityCode = null,
+            showSecurityCodeForStoredCard = null,
+            showStorePaymentMethod = showStorePaymentMethod,
+            showSupportedCardBrandLogos = null,
+            socialSecurityNumberVisibility = null,
+            supportedCardBrands = null,
+            showCardScanner = null,
+            installmentConfiguration = null,
         )
     }
 }

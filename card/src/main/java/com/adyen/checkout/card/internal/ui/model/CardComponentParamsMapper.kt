@@ -31,7 +31,7 @@ internal class CardComponentParamsMapper {
         return CardComponentParams(
             showCardholderName = cardConfiguration?.showCardholderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
-            showStorePaymentMethod = getStorePaymentFieldVisible(params.additionalSessionParams, cardConfiguration),
+            showStorePaymentMethod = params.isStorePaymentFieldEnabled(),
             showSupportedCardBrandLogos = cardConfiguration?.showSupportedCardBrandLogos ?: true,
             socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberVisibility
                 ?: FieldVisibility.HIDE,
@@ -87,13 +87,6 @@ internal class CardComponentParamsMapper {
         }
     }
 
-    private fun getStorePaymentFieldVisible(
-        sessionParams: AdditionalSessionParams?,
-        cardConfiguration: CardConfiguration?,
-    ): Boolean {
-        return sessionParams?.enableStoreDetails ?: cardConfiguration?.showStorePaymentMethod ?: true
-    }
-
     private fun makeInstallmentParams(
         sessionParams: AdditionalSessionParams?,
         cardConfiguration: CardConfiguration?,
@@ -118,4 +111,13 @@ internal class CardComponentParamsMapper {
 
         private const val DEBIT_FUNDING_SOURCE = "debit"
     }
+}
+
+/**
+ * Whether the store payment method field is enabled by the session or the merchant configuration.
+ */
+internal fun CheckoutParams.isStorePaymentFieldEnabled(): Boolean {
+    return additionalSessionParams?.enableStoreDetails
+        ?: getConfiguration<CardConfiguration>()?.showStorePaymentMethod
+        ?: true
 }
