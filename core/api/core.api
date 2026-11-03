@@ -557,7 +557,14 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_STORE_PAYMENT_METHOD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_GENERIC_PAYMENT_METHOD_PROGRESS_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_SAVE_DETAILS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_PAYMENT_METHOD_LIST_TITLE_PAYMENT_OPTIONS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_PAYMENT_METHOD_LIST_TITLE_SAVE_DETAILS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_PRESELECTED_PAYMENT_METHOD_BUTTON_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_EMPTY_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_EMPTY_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROPIN_STORED_PAYMENT_METHOD_MANAGEMENT_PAYMENT_OPTIONS_LABEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -565,7 +572,6 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field DROPIN_STORED_PAYMENT_METHOD_STATUS_EXPIRED Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_OTHER_PAYMENT_METHODS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
