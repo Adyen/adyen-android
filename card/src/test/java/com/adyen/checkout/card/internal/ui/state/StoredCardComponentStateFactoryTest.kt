@@ -12,6 +12,7 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardStorePaymentMethodMode
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
@@ -189,7 +190,7 @@ internal class StoredCardComponentStateFactoryTest {
         componentParams = CardComponentParams(
             showCardholderName = false,
             supportedCardBrands = emptyList(),
-            showStorePaymentMethod = false,
+            storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
             showSupportedCardBrandLogos = true,
             socialSecurityNumberVisibility = FieldVisibility.HIDE,
             koreanAuthenticationVisibility = FieldVisibility.HIDE,

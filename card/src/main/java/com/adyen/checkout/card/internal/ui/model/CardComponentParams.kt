@@ -14,7 +14,7 @@ import com.adyen.checkout.core.common.CardBrand
 internal data class CardComponentParams(
     val showCardholderName: Boolean,
     val supportedCardBrands: List<CardBrand>,
-    val showStorePaymentMethod: Boolean,
+    val storePaymentMethodMode: CardStorePaymentMethodMode,
     val showSupportedCardBrandLogos: Boolean,
     val socialSecurityNumberVisibility: FieldVisibility,
     val koreanAuthenticationVisibility: FieldVisibility,

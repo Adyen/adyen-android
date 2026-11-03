@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardStorePaymentMethodMode
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.core.common.CardBrand
@@ -155,6 +156,10 @@ internal class CardPaymentComponentStateFactory(
     }
 
     private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams): Boolean? {
-        return storePaymentMethod.takeIf { componentParams.showStorePaymentMethod }
+        return when (componentParams.storePaymentMethodMode) {
+            CardStorePaymentMethodMode.HIDDEN -> null
+            CardStorePaymentMethodMode.ASK_FOR_CONSENT -> storePaymentMethod
+            CardStorePaymentMethodMode.ALWAYS -> true
+        }
     }
 }

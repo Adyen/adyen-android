@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardStorePaymentMethodMode
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.InstallmentOptionsParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
@@ -133,15 +134,23 @@ internal class CardComponentStateFactoryTest {
 
     // region storePayment
     @Test
-    fun `when showStorePaymentMethod is true, then isStorePaymentFieldVisible is true`() {
-        val state = createFactory(showStorePaymentMethod = true).createInitialState()
+    fun `when storePaymentMethodMode is ASK_FOR_CONSENT, then isStorePaymentFieldVisible is true`() {
+        val state = createFactory(storePaymentMethodMode = CardStorePaymentMethodMode.ASK_FOR_CONSENT)
+            .createInitialState()
 
         assertTrue(state.isStorePaymentFieldVisible)
     }
 
     @Test
-    fun `when showStorePaymentMethod is false, then isStorePaymentFieldVisible is false`() {
-        val state = createFactory(showStorePaymentMethod = false).createInitialState()
+    fun `when storePaymentMethodMode is HIDDEN, then isStorePaymentFieldVisible is false`() {
+        val state = createFactory(storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN).createInitialState()
+
+        assertFalse(state.isStorePaymentFieldVisible)
+    }
+
+    @Test
+    fun `when storePaymentMethodMode is ALWAYS, then isStorePaymentFieldVisible is false`() {
+        val state = createFactory(storePaymentMethodMode = CardStorePaymentMethodMode.ALWAYS).createInitialState()
 
         assertFalse(state.isStorePaymentFieldVisible)
     }
@@ -234,7 +243,7 @@ internal class CardComponentStateFactoryTest {
     private fun createFactory(
         showCardholderName: Boolean = false,
         supportedCardBrands: List<CardBrand> = emptyList(),
-        showStorePaymentMethod: Boolean = false,
+        storePaymentMethodMode: CardStorePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
         showSupportedCardBrandLogos: Boolean = true,
         socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
@@ -245,7 +254,7 @@ internal class CardComponentStateFactoryTest {
         componentParams = CardComponentParams(
             showCardholderName = showCardholderName,
             supportedCardBrands = supportedCardBrands,
-            showStorePaymentMethod = showStorePaymentMethod,
+            storePaymentMethodMode = storePaymentMethodMode,
             showSupportedCardBrandLogos = showSupportedCardBrandLogos,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility,
             koreanAuthenticationVisibility = koreanAuthenticationVisibility,

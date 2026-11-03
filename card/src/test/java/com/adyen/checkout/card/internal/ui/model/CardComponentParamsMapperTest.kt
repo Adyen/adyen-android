@@ -17,6 +17,7 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
@@ -83,7 +84,7 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
-    fun `when showStorePaymentMethod is null then it defaults to true`() {
+    fun `when showStorePaymentMethod is null then storePaymentMethodMode defaults to ASK_FOR_CONSENT`() {
         val params = mapper.mapToParams(
             params = generateCheckoutParams(
                 cardConfiguration = createCardConfiguration(showStorePaymentMethod = null),
@@ -91,7 +92,7 @@ internal class CardComponentParamsMapperTest {
             paymentMethod = null,
         )
 
-        assertEquals(true, params.showStorePaymentMethod)
+        assertEquals(CardStorePaymentMethodMode.ASK_FOR_CONSENT, params.storePaymentMethodMode)
     }
 
     @Test
@@ -319,20 +320,22 @@ internal class CardComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
-    fun `showStorePaymentMethod should match sessions value if it exists, otherwise should match configuration`(
+    fun `when amount is not zero then storePaymentMethodMode follows sessions value, otherwise configuration`(
         configurationValue: Boolean?,
         sessionsValue: Boolean?,
-        expectedValue: Boolean,
+        amount: Amount?,
+        expectedValue: CardStorePaymentMethodMode,
     ) {
         val params = mapper.mapToParams(
             params = generateCheckoutParams(
                 cardConfiguration = createCardConfiguration(showStorePaymentMethod = configurationValue),
                 additionalSessionParams = createAdditionalSessionParams(enableStoreDetails = sessionsValue),
+                amount = amount,
             ),
             paymentMethod = null,
         )
 
-        assertEquals(expectedValue, params.showStorePaymentMethod)
+        assertEquals(expectedValue, params.storePaymentMethodMode)
     }
 
     @Test
@@ -514,7 +517,7 @@ internal class CardComponentParamsMapperTest {
         val expected = createExpectedParams(
             showCardholderName = true,
             supportedCardBrands = customBrands,
-            showStorePaymentMethod = false,
+            storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
             showSupportedCardBrandLogos = false,
             socialSecurityNumberVisibility = FieldVisibility.SHOW,
             koreanAuthenticationVisibility = FieldVisibility.SHOW,
@@ -562,12 +565,13 @@ internal class CardComponentParamsMapperTest {
     private fun generateCheckoutParams(
         cardConfiguration: CardConfiguration? = createCardConfiguration(),
         additionalSessionParams: AdditionalSessionParams? = null,
+        amount: Amount? = null,
     ) = CheckoutParams(
         shopperLocale = DEVICE_LOCALE,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY,
         analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-        amount = null,
+        amount = amount,
         showSubmitButton = true,
         checkoutAttemptId = "test_checkout_attempt_id",
         publicKey = "test_publicKey",
@@ -618,7 +622,7 @@ internal class CardComponentParamsMapperTest {
     private fun createExpectedParams(
         showCardholderName: Boolean = false,
         supportedCardBrands: List<CardBrand> = CardComponentParamsMapper.DEFAULT_SUPPORTED_CARDS_LIST,
-        showStorePaymentMethod: Boolean = true,
+        storePaymentMethodMode: CardStorePaymentMethodMode = CardStorePaymentMethodMode.ASK_FOR_CONSENT,
         showSupportedCardBrandLogos: Boolean = true,
         socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
@@ -630,7 +634,7 @@ internal class CardComponentParamsMapperTest {
     ) = CardComponentParams(
         showCardholderName = showCardholderName,
         supportedCardBrands = supportedCardBrands,
-        showStorePaymentMethod = showStorePaymentMethod,
+        storePaymentMethodMode = storePaymentMethodMode,
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         koreanAuthenticationVisibility = koreanAuthenticationVisibility,
@@ -665,18 +669,25 @@ internal class CardComponentParamsMapperTest {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val DEVICE_LOCALE = Locale.forLanguageTag("nl-NL")
 
-        @JvmStatic
-        fun enableStoreDetailsSource() = listOf(
+        private val STORE_DETAILS_COMBINATIONS = listOf(
             // configurationValue, sessionsValue, expectedValue
-            arguments(false, false, false),
-            arguments(false, true, true),
-            arguments(true, false, false),
-            arguments(true, true, true),
-            arguments(false, null, false),
-            arguments(true, null, true),
-            arguments(null, null, true),
-            arguments(null, false, false),
-            arguments(null, true, true),
+            Triple(false, false, CardStorePaymentMethodMode.HIDDEN),
+            Triple(false, true, CardStorePaymentMethodMode.ASK_FOR_CONSENT),
+            Triple(true, false, CardStorePaymentMethodMode.HIDDEN),
+            Triple(true, true, CardStorePaymentMethodMode.ASK_FOR_CONSENT),
+            Triple(false, null, CardStorePaymentMethodMode.HIDDEN),
+            Triple(true, null, CardStorePaymentMethodMode.ASK_FOR_CONSENT),
+            Triple(null, null, CardStorePaymentMethodMode.ASK_FOR_CONSENT),
+            Triple(null, false, CardStorePaymentMethodMode.HIDDEN),
+            Triple(null, true, CardStorePaymentMethodMode.ASK_FOR_CONSENT),
         )
+
+        @JvmStatic
+        fun enableStoreDetailsSource() = listOf(null, Amount(currency = "EUR", value = 1000)).flatMap { amount ->
+            // configurationValue, sessionsValue, amount, expectedValue
+            STORE_DETAILS_COMBINATIONS.map { (configurationValue, sessionsValue, expectedValue) ->
+                arguments(configurationValue, sessionsValue, amount, expectedValue)
+            }
+        }
     }
 }

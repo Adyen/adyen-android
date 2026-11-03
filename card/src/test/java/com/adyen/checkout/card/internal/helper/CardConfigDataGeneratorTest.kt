@@ -12,6 +12,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardStorePaymentMethodMode
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
@@ -54,7 +55,7 @@ internal class CardConfigDataGeneratorTest {
             showCardholderName = false,
             supportedCardBrands = emptyList(),
             showSupportedCardBrandLogos = false,
-            showStorePaymentMethod = false,
+            storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
             socialSecurityNumberVisibility = FieldVisibility.HIDE,
             koreanAuthenticationVisibility = FieldVisibility.HIDE,
             installmentParams = null,
@@ -89,7 +90,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardholderName = true,
                     supportedCardBrands = listOf(CardBrand("mc"), CardBrand("visa")),
                     showSupportedCardBrandLogos = true,
-                    showStorePaymentMethod = true,
+                    storePaymentMethodMode = CardStorePaymentMethodMode.ASK_FOR_CONSENT,
                     socialSecurityNumberVisibility = FieldVisibility.SHOW,
                     koreanAuthenticationVisibility = FieldVisibility.SHOW,
                     installmentParams = InstallmentParams(showInstallmentAmount = true),
@@ -123,7 +124,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardholderName = false,
                     supportedCardBrands = emptyList(),
                     showSupportedCardBrandLogos = false,
-                    showStorePaymentMethod = false,
+                    storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
                     socialSecurityNumberVisibility = FieldVisibility.HIDE,
                     koreanAuthenticationVisibility = FieldVisibility.HIDE,
                     installmentParams = InstallmentParams(showInstallmentAmount = false),
@@ -157,7 +158,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardholderName = false,
                     supportedCardBrands = emptyList(),
                     showSupportedCardBrandLogos = false,
-                    showStorePaymentMethod = false,
+                    storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
                     socialSecurityNumberVisibility = FieldVisibility.HIDE,
                     koreanAuthenticationVisibility = FieldVisibility.HIDE,
                     installmentParams = null,
@@ -190,7 +191,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardholderName = false,
                     supportedCardBrands = emptyList(),
                     showSupportedCardBrandLogos = false,
-                    showStorePaymentMethod = false,
+                    storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
                     socialSecurityNumberVisibility = FieldVisibility.HIDE,
                     koreanAuthenticationVisibility = FieldVisibility.HIDE,
                     installmentParams = null,
@@ -223,7 +224,7 @@ internal class CardConfigDataGeneratorTest {
                     showCardholderName = false,
                     supportedCardBrands = emptyList(),
                     showSupportedCardBrandLogos = false,
-                    showStorePaymentMethod = false,
+                    storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
                     socialSecurityNumberVisibility = FieldVisibility.HIDE,
                     koreanAuthenticationVisibility = FieldVisibility.HIDE,
                     installmentParams = null,
@@ -257,7 +258,7 @@ internal class CardConfigDataGeneratorTest {
             showCardholderName: Boolean,
             supportedCardBrands: List<CardBrand>,
             showSupportedCardBrandLogos: Boolean,
-            showStorePaymentMethod: Boolean,
+            storePaymentMethodMode: CardStorePaymentMethodMode,
             socialSecurityNumberVisibility: FieldVisibility,
             koreanAuthenticationVisibility: FieldVisibility,
             installmentParams: InstallmentParams?,
@@ -269,7 +270,7 @@ internal class CardConfigDataGeneratorTest {
             showCardholderName = showCardholderName,
             supportedCardBrands = supportedCardBrands,
             showSupportedCardBrandLogos = showSupportedCardBrandLogos,
-            showStorePaymentMethod = showStorePaymentMethod,
+            storePaymentMethodMode = storePaymentMethodMode,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility,
             koreanAuthenticationVisibility = koreanAuthenticationVisibility,
             installmentParams = installmentParams,

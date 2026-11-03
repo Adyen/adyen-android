@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardStorePaymentMethodMode
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
@@ -48,7 +49,8 @@ internal class CardComponentStateFactory(
                 requirementPolicy = getPostalCodeRequirementPolicy(),
             ),
             storePaymentMethod = false,
-            isStorePaymentFieldVisible = componentParams.showStorePaymentMethod,
+            isStorePaymentFieldVisible = componentParams.storePaymentMethodMode ==
+                CardStorePaymentMethodMode.ASK_FOR_CONSENT,
             supportedCardBrands = componentParams.supportedCardBrands,
             showSupportedCardBrandLogos = componentParams.showSupportedCardBrandLogos,
             isLoading = false,

@@ -12,6 +12,7 @@ import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardStorePaymentMethodMode
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
@@ -213,10 +214,11 @@ internal class CardPaymentComponentStateFactoryTest(
     inner class PaymentComponentDataTest {
 
         @Test
-        fun `and store payment method is visible then it is part of the payment data`() {
+        fun `and store payment method mode is ASK_FOR_CONSENT then the shopper choice is sent`() {
             // GIVEN
             val factory = createFactory(
-                componentParams = createCardComponentParams().copy(showStorePaymentMethod = true),
+                componentParams = createCardComponentParams()
+                    .copy(storePaymentMethodMode = CardStorePaymentMethodMode.ASK_FOR_CONSENT),
             )
             val cardComponentState = createCardComponentState().copy(storePaymentMethod = true)
 
@@ -232,10 +234,11 @@ internal class CardPaymentComponentStateFactoryTest(
         }
 
         @Test
-        fun `and store payment method is visible but not checked then it is part of the payment data as false`() {
+        fun `and store payment method mode is ASK_FOR_CONSENT but not checked then false is sent`() {
             // GIVEN
             val factory = createFactory(
-                componentParams = createCardComponentParams().copy(showStorePaymentMethod = true),
+                componentParams = createCardComponentParams()
+                    .copy(storePaymentMethodMode = CardStorePaymentMethodMode.ASK_FOR_CONSENT),
             )
             val cardComponentState = createCardComponentState().copy(storePaymentMethod = false)
 
@@ -251,10 +254,11 @@ internal class CardPaymentComponentStateFactoryTest(
         }
 
         @Test
-        fun `and store payment method is hidden then it is not part of the payment data`() {
+        fun `and store payment method mode is HIDDEN then it is not part of the payment data`() {
             // GIVEN
             val factory = createFactory(
-                componentParams = createCardComponentParams().copy(showStorePaymentMethod = false),
+                componentParams = createCardComponentParams()
+                    .copy(storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN),
             )
             val cardComponentState = createCardComponentState().copy(storePaymentMethod = true)
 
@@ -267,6 +271,26 @@ internal class CardPaymentComponentStateFactoryTest(
 
             // THEN
             assertNull(state.data.storePaymentMethod)
+        }
+
+        @Test
+        fun `and store payment method mode is ALWAYS then it is part of the payment data as true`() {
+            // GIVEN
+            val factory = createFactory(
+                componentParams = createCardComponentParams()
+                    .copy(storePaymentMethodMode = CardStorePaymentMethodMode.ALWAYS),
+            )
+            val cardComponentState = createCardComponentState().copy(storePaymentMethod = false)
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            assertEquals(true, state.data.storePaymentMethod)
         }
 
         @Test
@@ -529,7 +553,7 @@ internal class CardPaymentComponentStateFactoryTest(
     private fun createCardComponentParams() = CardComponentParams(
         showCardholderName = false,
         supportedCardBrands = emptyList(),
-        showStorePaymentMethod = false,
+        storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
         showSupportedCardBrandLogos = false,
         socialSecurityNumberVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility = FieldVisibility.HIDE,

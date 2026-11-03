@@ -31,7 +31,7 @@ internal class CardComponentParamsMapper {
         return CardComponentParams(
             showCardholderName = cardConfiguration?.showCardholderName ?: false,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
-            showStorePaymentMethod = params.isStorePaymentFieldEnabled(),
+            storePaymentMethodMode = getStorePaymentMethodMode(params),
             showSupportedCardBrandLogos = cardConfiguration?.showSupportedCardBrandLogos ?: true,
             socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberVisibility
                 ?: FieldVisibility.HIDE,
@@ -84,6 +84,13 @@ internal class CardComponentParamsMapper {
                 adyenLog(AdyenLogLevel.VERBOSE) { "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST" }
                 DEFAULT_SUPPORTED_CARDS_LIST
             }
+        }
+    }
+
+    private fun getStorePaymentMethodMode(params: CheckoutParams): CardStorePaymentMethodMode {
+        return when {
+            params.isStorePaymentFieldEnabled() -> CardStorePaymentMethodMode.ASK_FOR_CONSENT
+            else -> CardStorePaymentMethodMode.HIDDEN
         }
     }
 
