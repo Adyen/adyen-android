@@ -168,10 +168,35 @@ internal class PaymentMethodListViewModel(
             }
 
         return PaymentMethodListViewState(
-            amount = checkoutParams.amount?.format(checkoutParams.shopperLocale).orEmpty(),
+            title = createTitle(),
+            description = createDescription(),
             storedPaymentMethodSection = storedPaymentMethodSection,
             paymentOptionsSection = paymentOptionsSection,
         )
+    }
+
+    private fun createTitle(): UiText {
+        val amount = checkoutParams.amount
+        return when {
+            amount == null -> UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_PAYMENT_OPTIONS,
+            )
+
+            amount.value == 0L -> UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_SAVE_DETAILS,
+            )
+
+            else -> UiText.Raw(amount.format(checkoutParams.shopperLocale))
+        }
+    }
+
+    private fun createDescription(): UiText {
+        val key = if (checkoutParams.amount?.value == 0L) {
+            CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_SAVE_DETAILS
+        } else {
+            CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT
+        }
+        return UiText.Localized(key)
     }
 
     private fun StoredPaymentMethod.toPaymentMethodItem(): PaymentMethodItem {

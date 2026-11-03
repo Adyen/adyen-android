@@ -11,7 +11,8 @@ package com.adyen.checkout.dropin.internal.ui
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 internal data class PaymentMethodListViewState(
-    val amount: String,
+    val title: UiText,
+    val description: UiText,
     val storedPaymentMethodSection: PaymentMethodListSection?,
     val paymentOptionsSection: PaymentMethodListSection?,
 ) {

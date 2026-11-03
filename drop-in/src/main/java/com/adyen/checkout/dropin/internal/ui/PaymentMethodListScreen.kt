@@ -6,6 +6,8 @@
  * Created by oscars on 6/11/2025.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.foundation.clickable
@@ -81,7 +83,7 @@ private fun PaymentMethodListContent(
         navigationIcon = {
             NavigationCloseButton(onClick = { navigator.back() })
         },
-        title = viewState.amount,
+        title = viewState.title.resolve(),
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -90,9 +92,7 @@ private fun PaymentMethodListContent(
         ) {
             item {
                 Body(
-                    text = resolveString(
-                        CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT,
-                    ),
+                    text = viewState.description.resolve(),
                     color = CheckoutThemeProvider.colors.textSecondary,
                     modifier = Modifier
                         .padding(
@@ -277,11 +277,52 @@ private fun PaymentMethodItemTrailingContent(item: PaymentMethodItem) {
     }
 }
 
-@Suppress("LongMethod")
 @Preview(showBackground = true)
 @Composable
 private fun PaymentMethodListContentPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    PaymentMethodListContentPreview(
+        theme = theme,
+        navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
+        title = UiText.Raw("$140.38"),
+        description = UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PaymentMethodListContentZeroAmountPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    PaymentMethodListContentPreview(
+        theme = theme,
+        navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
+        title = UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_SAVE_DETAILS),
+        description = UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_SAVE_DETAILS),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PaymentMethodListContentNoAmountPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    PaymentMethodListContentPreview(
+        theme = theme,
+        navigator = DropInNavigator(SavedStateBackStackPersister(SavedStateHandle())),
+        title = UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_PAYMENT_OPTIONS),
+        description = UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT),
+    )
+}
+
+@Suppress("LongMethod")
+@Composable
+private fun PaymentMethodListContentPreview(
+    theme: CheckoutTheme,
+    navigator: DropInNavigator,
+    title: UiText,
+    description: UiText,
 ) {
     CheckoutThemePreviewWrapper(theme) {
         val storedPaymentMethods = listOf(
@@ -320,13 +361,13 @@ private fun PaymentMethodListContentPreview(
 
         val paymentOptionsTitle =
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES
-        val persister = SavedStateBackStackPersister(SavedStateHandle())
         PaymentMethodListContent(
-            navigator = DropInNavigator(persister),
+            navigator = navigator,
             // A CheckoutController cannot be built in a preview.
             instantPaymentMethodController = null,
             viewState = PaymentMethodListViewState(
-                amount = "$140.38",
+                title = title,
+                description = description,
                 storedPaymentMethodSection = PaymentMethodListViewState.PaymentMethodListSection(
                     title = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE,
                     action = CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION,
