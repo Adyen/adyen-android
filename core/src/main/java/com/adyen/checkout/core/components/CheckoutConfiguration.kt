@@ -9,9 +9,7 @@
 package com.adyen.checkout.core.components
 
 import android.os.Parcelable
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -42,14 +40,13 @@ import java.util.Locale
  * ignored.
  */
 @Parcelize
-@CheckoutConfigurationMarker
 class CheckoutConfiguration internal constructor(
     val environment: Environment,
     val clientKey: String,
     val shopperLocale: Locale?,
     val analyticsConfiguration: AnalyticsConfiguration?,
     val showSubmitButton: Boolean?,
-    private val availableConfigurations: MutableMap<String, Configuration>,
+    private val availableConfigurations: Map<String, Configuration>,
 ) : Parcelable {
 
     /**
@@ -63,24 +60,15 @@ class CheckoutConfiguration internal constructor(
         shopperLocale: Locale? = null,
         analyticsConfiguration: AnalyticsConfiguration? = null,
         showSubmitButton: Boolean? = null,
-        configurationBlock: CheckoutConfiguration.() -> Unit = {},
+        configurationBlock: CheckoutConfigurationScope.() -> Unit = {},
     ) : this(
         environment = environment,
         clientKey = clientKey,
         shopperLocale = shopperLocale,
         analyticsConfiguration = analyticsConfiguration,
         showSubmitButton = showSubmitButton,
-        availableConfigurations = mutableMapOf(),
-    ) {
-        apply(configurationBlock)
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun addConfiguration(configuration: Configuration) {
-        // In the future if we might need to support multiple configurations of the same type we should use the payment
-        // method type as the key instead of the class name.
-        availableConfigurations[configuration::class.java.name] = configuration
-    }
+        availableConfigurations = CheckoutConfigurationScope().apply(configurationBlock).getConfigurations(),
+    )
 
     internal fun getAvailableConfigurations(): Map<String, Configuration> {
         return availableConfigurations

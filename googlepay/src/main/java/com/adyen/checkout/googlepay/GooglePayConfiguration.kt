@@ -9,11 +9,12 @@
 package com.adyen.checkout.googlepay
 
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutConfigurationScope
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 
 /**
- * Configuration for the Google Pay payment method. Create it by calling [CheckoutConfiguration.googlePay].
+ * Configuration for the Google Pay payment method. Create it by calling [CheckoutConfigurationScope.googlePay].
  */
 @Parcelize
 @Suppress("LongParameterList")
@@ -33,7 +34,7 @@ class GooglePayConfiguration internal constructor(
 ) : Configuration
 
 /**
- * Adds a [GooglePayConfiguration] to this [CheckoutConfiguration] to configure the Google Pay payment method.
+ * Adds a [GooglePayConfiguration] to the [CheckoutConfiguration] to configure the Google Pay payment method.
  *
  * Most parameters map to fields of the Google Pay request objects. See the
  * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects) for more details.
@@ -56,7 +57,7 @@ class GooglePayConfiguration internal constructor(
  * @param appearance The appearance of the Google Pay button.
  */
 @Suppress("LongParameterList")
-fun CheckoutConfiguration.googlePay(
+fun CheckoutConfigurationScope.googlePay(
     merchantAccount: String? = null,
     googlePayEnvironment: Int? = null,
     totalPriceStatus: String? = null,
@@ -69,7 +70,7 @@ fun CheckoutConfiguration.googlePay(
     shippingAddressParameters: ShippingAddressParameters? = null,
     checkoutOption: String? = null,
     appearance: GooglePayButtonAppearance? = null,
-): CheckoutConfiguration {
+) {
     val config = GooglePayConfiguration(
         merchantAccount = merchantAccount,
         googlePayEnvironment = googlePayEnvironment,
@@ -85,5 +86,4 @@ fun CheckoutConfiguration.googlePay(
         appearance = appearance,
     )
     addConfiguration(config)
-    return this
 }

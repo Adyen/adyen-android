@@ -25,6 +25,44 @@ import java.util.Locale
 internal class CheckoutConfigurationTest {
 
     @Test
+    fun `when configurations are added in the configuration block, then they are available`() {
+        val firstConfiguration = FirstTestConfiguration("first")
+        val secondConfiguration = SecondTestConfiguration(2)
+
+        val actual = CheckoutConfiguration(
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+        ) {
+            addConfiguration(firstConfiguration)
+            addConfiguration(secondConfiguration)
+        }
+
+        assertEquals(
+            mapOf(
+                FirstTestConfiguration::class.java.name to firstConfiguration,
+                SecondTestConfiguration::class.java.name to secondConfiguration,
+            ),
+            actual.getAvailableConfigurations(),
+        )
+    }
+
+    @Test
+    fun `when a configuration of the same type is added twice, then the last one is kept`() {
+        val actual = CheckoutConfiguration(
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+        ) {
+            addConfiguration(FirstTestConfiguration("first"))
+            addConfiguration(FirstTestConfiguration("second"))
+        }
+
+        assertEquals(
+            mapOf(FirstTestConfiguration::class.java.name to FirstTestConfiguration("second")),
+            actual.getAvailableConfigurations(),
+        )
+    }
+
+    @Test
     fun `when parcelized with all values, then all values are restored`() {
         val configuration = CheckoutConfiguration(
             environment = Environment.LIVE_UNITED_STATES,

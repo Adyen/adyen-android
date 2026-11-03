@@ -29,8 +29,8 @@ public final class com/adyen/checkout/dropin/DropInConfiguration : com/adyen/che
 }
 
 public final class com/adyen/checkout/dropin/DropInConfigurationKt {
-	public static final fun dropIn (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static synthetic fun dropIn$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun dropIn (Lcom/adyen/checkout/core/components/CheckoutConfigurationScope;Ljava/lang/Boolean;Ljava/lang/Boolean;)V
+	public static synthetic fun dropIn$default (Lcom/adyen/checkout/core/components/CheckoutConfigurationScope;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)V
 }
 
 public final class com/adyen/checkout/dropin/DropInKt {

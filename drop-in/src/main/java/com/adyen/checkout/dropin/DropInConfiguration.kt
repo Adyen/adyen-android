@@ -9,11 +9,12 @@
 package com.adyen.checkout.dropin
 
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutConfigurationScope
 import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 
 /**
- * Configuration for Drop-in. Create it by calling [CheckoutConfiguration.dropIn].
+ * Configuration for Drop-in. Create it by calling [CheckoutConfigurationScope.dropIn].
  */
 @Parcelize
 class DropInConfiguration internal constructor(
@@ -22,7 +23,7 @@ class DropInConfiguration internal constructor(
 ) : Configuration
 
 /**
- * Adds a [DropInConfiguration] to this [CheckoutConfiguration] to configure Drop-in.
+ * Adds a [DropInConfiguration] to the [CheckoutConfiguration] to configure Drop-in.
  *
  * @param hideStoredPaymentMethods Whether the stored payment methods of the shopper should be left off the payment
  * method list. Defaults to false.
@@ -30,14 +31,13 @@ class DropInConfiguration internal constructor(
  * last, instead of on the payment method list. Only applies if the shopper has a stored payment method, and is not
  * affected by [hideStoredPaymentMethods]. Defaults to true.
  */
-fun CheckoutConfiguration.dropIn(
+fun CheckoutConfigurationScope.dropIn(
     hideStoredPaymentMethods: Boolean? = null,
     startWithLastStoredPaymentMethod: Boolean? = null,
-): CheckoutConfiguration {
+) {
     val config = DropInConfiguration(
         hideStoredPaymentMethods = hideStoredPaymentMethods,
         startWithLastStoredPaymentMethod = startWithLastStoredPaymentMethod,
     )
     addConfiguration(config)
-    return this
 }

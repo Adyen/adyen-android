@@ -93,16 +93,6 @@ internal class CheckoutConfigurationExtTest {
         assertTrue(configuration !== actual)
     }
 
-    @Test
-    fun `when a configuration is added to the original after copying then the copy does not get it`() {
-        val configuration = createConfiguration()
-        val actual = configuration.copy(showSubmitButton = true)
-
-        configuration.addConfiguration(TestConfiguration("added_later"))
-
-        assertTrue(actual.getAvailableConfigurations().isEmpty())
-    }
-
     @Suppress("LongParameterList")
     private fun createConfiguration(
         environment: Environment = Environment.TEST,
