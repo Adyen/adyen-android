@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.helper
 
 import com.adyen.checkout.card.FieldVisibility
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
@@ -41,14 +42,16 @@ internal class CardConfigDataGenerator(
         }
     }
 
-    // TODO - Adjust this method when we support full address
     private fun CardComponentParams.getBillingAddressMode(): String {
-        return if (showPostalCode) "PostalCode" else "None"
+        return when (billingAddressParams) {
+            BillingAddressParams.None -> "None"
+            BillingAddressParams.PostalCode -> "PostalCode"
+            is BillingAddressParams.Full -> "Full"
+        }
     }
 
-    // TODO - Adjust this method when we support full address
     private fun CardComponentParams.getBillingAddressRequired(): String {
-        return if (showPostalCode) "true" else "false"
+        return (billingAddressParams != BillingAddressParams.None).toString()
     }
 
     private fun CardComponentParams.getHideCVC(isStored: Boolean): String {

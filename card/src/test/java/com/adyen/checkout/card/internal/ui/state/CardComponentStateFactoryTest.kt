@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.FieldVisibility
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
@@ -117,17 +118,47 @@ internal class CardComponentStateFactoryTest {
 
     // region postalCode
     @Test
-    fun `when showPostalCode is true, then postalCode is Required`() {
-        val state = createFactory(showPostalCode = true).createInitialState()
+    fun `when the billing address mode is postal code, then postalCode is Required`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.PostalCode).createInitialState()
 
         assertEquals(RequirementPolicy.Required, state.postalCode.requirementPolicy)
     }
 
     @Test
-    fun `when showPostalCode is false, then postalCode is Hidden`() {
-        val state = createFactory(showPostalCode = false).createInitialState()
+    fun `when the billing address mode is none, then postalCode is Hidden`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.None).createInitialState()
 
         assertEquals(RequirementPolicy.Hidden, state.postalCode.requirementPolicy)
+    }
+
+    @Test
+    fun `when the billing address mode is full, then postalCode is Hidden`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.Full(emptySet())).createInitialState()
+
+        assertEquals(RequirementPolicy.Hidden, state.postalCode.requirementPolicy)
+    }
+    // endregion
+
+    // region billingAddress
+    @Test
+    fun `when the billing address mode is full, then the billing address row is visible`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.Full(emptySet())).createInitialState()
+
+        assertTrue(state.billingAddress.isVisible)
+    }
+
+    @Test
+    fun `when the billing address mode is none, then the billing address row is hidden`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.None).createInitialState()
+
+        assertFalse(state.billingAddress.isVisible)
+    }
+
+    @Test
+    fun `when the billing address mode is postal code, then the billing address row is hidden`() {
+        val state = createFactory(billingAddressParams = BillingAddressParams.PostalCode).createInitialState()
+
+        assertFalse(state.billingAddress.isVisible)
     }
     // endregion
 
@@ -238,7 +269,7 @@ internal class CardComponentStateFactoryTest {
         showSupportedCardBrandLogos: Boolean = true,
         socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
-        showPostalCode: Boolean = false,
+        billingAddressParams: BillingAddressParams = BillingAddressParams.None,
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
         installmentParams: InstallmentParams = InstallmentParams(),
     ) = CardComponentStateFactory(
@@ -249,7 +280,7 @@ internal class CardComponentStateFactoryTest {
             showSupportedCardBrandLogos = showSupportedCardBrandLogos,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility,
             koreanAuthenticationVisibility = koreanAuthenticationVisibility,
-            showPostalCode = showPostalCode,
+            billingAddressParams = billingAddressParams,
             cvcVisibility = cvcVisibility,
             storedCVCVisibility = StoredCVCVisibility.SHOW,
             showCardScanner = true,
