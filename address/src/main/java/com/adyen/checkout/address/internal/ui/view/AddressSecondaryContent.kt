@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.address.internal.ui.state.AddressIntent
 import com.adyen.checkout.address.internal.ui.state.AddressViewState
+import com.adyen.checkout.address.internal.ui.state.PickerViewState
 import kotlinx.coroutines.flow.StateFlow
 
-/** Renders the address screen opened with [identifier]. */
 @Composable
 internal fun AddressSecondaryContent(
     identifier: String,
@@ -25,6 +25,8 @@ internal fun AddressSecondaryContent(
     onCountryClick: () -> Unit,
     onStateOrProvinceClick: () -> Unit,
     onSaveClick: () -> Unit,
+    onCountrySelected: (String) -> Unit,
+    onStateOrProvinceSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewState by viewStateFlow.collectAsStateWithLifecycle()
@@ -39,13 +41,35 @@ internal fun AddressSecondaryContent(
             modifier = modifier,
         )
 
-        // TODO - Address: Render the country and state pickers. A picked region goes to
-        //  AddressComponent.onCountrySelected or AddressComponent.onStateOrProvinceSelected.
-        AddressSecondaryContentEntry.COUNTRY_PICKER,
-        AddressSecondaryContentEntry.STATE_PICKER -> Unit
+        AddressSecondaryContentEntry.COUNTRY_PICKER -> AddressRegionPicker(
+            viewState = viewState.countryPickerViewState,
+            onItemClick = onCountrySelected,
+            modifier = modifier,
+        )
+
+        AddressSecondaryContentEntry.STATE_PICKER -> StateOrProvincePicker(
+            statePickerViewState = viewState.statePickerViewState,
+            onItemClick = onStateOrProvinceSelected,
+            modifier = modifier,
+        )
 
         null -> Unit
     }
+}
+
+@Composable
+private fun StateOrProvincePicker(
+    statePickerViewState: PickerViewState?,
+    onItemClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // Unreachable: without states the row that opens this screen is not on the address form either.
+    if (statePickerViewState == null) return
+    AddressRegionPicker(
+        viewState = statePickerViewState,
+        onItemClick = onItemClick,
+        modifier = modifier,
+    )
 }
 
 /**

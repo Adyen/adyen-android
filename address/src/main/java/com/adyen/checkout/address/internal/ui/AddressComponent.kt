@@ -97,6 +97,8 @@ internal constructor(
             onCountryClick = ::onCountryClick,
             onStateOrProvinceClick = ::onStateOrProvinceClick,
             onSaveClick = ::confirm,
+            onCountrySelected = ::onCountrySelected,
+            onStateOrProvinceSelected = ::onStateOrProvinceSelected,
             modifier = modifier,
         )
     }
