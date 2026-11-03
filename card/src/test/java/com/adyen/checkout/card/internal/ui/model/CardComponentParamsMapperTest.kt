@@ -338,6 +338,24 @@ internal class CardComponentParamsMapperTest {
         assertEquals(expectedValue, params.storePaymentMethodMode)
     }
 
+    @ParameterizedTest
+    @MethodSource("zeroAmountEnableStoreDetailsSource")
+    fun `when amount is zero then storePaymentMethodMode is ALWAYS regardless of sessions value and configuration`(
+        configurationValue: Boolean?,
+        sessionsValue: Boolean?,
+    ) {
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(showStorePaymentMethod = configurationValue),
+                additionalSessionParams = createAdditionalSessionParams(enableStoreDetails = sessionsValue),
+                amount = Amount(currency = "EUR", value = 0),
+            ),
+            paymentMethod = null,
+        )
+
+        assertEquals(CardStorePaymentMethodMode.ALWAYS, params.storePaymentMethodMode)
+    }
+
     @Test
     fun `when installmentConfiguration is null then installmentParams is null`() {
         val params = mapper.mapToParams(
@@ -689,5 +707,12 @@ internal class CardComponentParamsMapperTest {
                 arguments(configurationValue, sessionsValue, amount, expectedValue)
             }
         }
+
+        @JvmStatic
+        fun zeroAmountEnableStoreDetailsSource() =
+            STORE_DETAILS_COMBINATIONS.map { (configurationValue, sessionsValue) ->
+                // configurationValue, sessionsValue
+                arguments(configurationValue, sessionsValue)
+            }
     }
 }

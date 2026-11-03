@@ -19,6 +19,7 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -46,7 +47,7 @@ internal class CardConfigDataGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
-    fun `when generating, then enableStoreDetails reports the configured value`(
+    fun `when amount is zero, then enableStoreDetails reports the configured value`(
         checkoutParams: CheckoutParams,
         expected: String,
     ) {
@@ -55,7 +56,7 @@ internal class CardConfigDataGeneratorTest {
             showCardholderName = false,
             supportedCardBrands = emptyList(),
             showSupportedCardBrandLogos = false,
-            storePaymentMethodMode = CardStorePaymentMethodMode.HIDDEN,
+            storePaymentMethodMode = CardStorePaymentMethodMode.ALWAYS,
             socialSecurityNumberVisibility = FieldVisibility.HIDE,
             koreanAuthenticationVisibility = FieldVisibility.HIDE,
             installmentParams = null,
@@ -72,14 +73,19 @@ internal class CardConfigDataGeneratorTest {
 
     companion object {
 
+        private val ZERO_AMOUNT = Amount(currency = "EUR", value = 0)
+
         @JvmStatic
         fun enableStoreDetailsSource() = listOf(
             // checkoutParams, expected
-            arguments(createCheckoutParams(showStorePaymentMethod = true), "true"),
-            arguments(createCheckoutParams(showStorePaymentMethod = false), "false"),
-            arguments(createCheckoutParams(showStorePaymentMethod = null), "true"),
-            arguments(createCheckoutParams(enableStoreDetails = true), "true"),
-            arguments(createCheckoutParams(showStorePaymentMethod = true, enableStoreDetails = false), "false"),
+            arguments(createCheckoutParams(amount = ZERO_AMOUNT, showStorePaymentMethod = true), "true"),
+            arguments(createCheckoutParams(amount = ZERO_AMOUNT, showStorePaymentMethod = false), "false"),
+            arguments(createCheckoutParams(amount = ZERO_AMOUNT, showStorePaymentMethod = null), "true"),
+            arguments(createCheckoutParams(amount = ZERO_AMOUNT, enableStoreDetails = true), "true"),
+            arguments(
+                createCheckoutParams(amount = ZERO_AMOUNT, showStorePaymentMethod = true, enableStoreDetails = false),
+                "false",
+            ),
         )
 
         @JvmStatic
@@ -284,12 +290,13 @@ internal class CardConfigDataGeneratorTest {
             showSubmitButton: Boolean = true,
             showStorePaymentMethod: Boolean? = null,
             enableStoreDetails: Boolean? = null,
+            amount: Amount? = null,
         ) = CheckoutParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = "test_clientKey",
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-            amount = null,
+            amount = amount,
             showSubmitButton = showSubmitButton,
             checkoutAttemptId = "test_checkout_attempt_id",
             publicKey = null,
