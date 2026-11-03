@@ -64,7 +64,7 @@ fun ValuePickerField(
     CheckoutTextFieldDecorationBox(
         label = label,
         innerTextField = {
-            Body(value)
+            Body(value, maxLines = 1)
         },
         supportingText = supportingText,
         isError = isError,

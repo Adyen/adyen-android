@@ -18,6 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullAndEmptySource
 import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
+import kotlin.math.abs
 
 internal class AddressSpecTest {
 
@@ -196,6 +197,20 @@ internal class AddressSpecTest {
                 AddressFormElementId.entries.toSet(),
                 spec.order.toSet(),
                 "$spec should list every address field",
+            )
+        }
+    }
+
+    // The address summary shows the street and the house number as one part, so they must stay next to each other.
+    @Test
+    fun `when any country is selected then the street and the house number are next to each other`() {
+        AddressSpec.entries.forEach { spec ->
+            val streetIndex = spec.order.indexOf(AddressFormElementId.STREET)
+            val houseNumberIndex = spec.order.indexOf(AddressFormElementId.HOUSE_NUMBER_OR_NAME)
+            assertEquals(
+                1,
+                abs(streetIndex - houseNumberIndex),
+                "$spec should keep the street and house number together",
             )
         }
     }
