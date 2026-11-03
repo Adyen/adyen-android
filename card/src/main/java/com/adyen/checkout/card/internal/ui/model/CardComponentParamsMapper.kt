@@ -89,9 +89,9 @@ internal class CardComponentParamsMapper {
 
     private fun getStorePaymentMethodMode(params: CheckoutParams): CardStorePaymentMethodMode {
         return when {
+            !params.isStorePaymentFieldEnabled() -> CardStorePaymentMethodMode.HIDDEN
             params.amount?.value == 0L -> CardStorePaymentMethodMode.ALWAYS
-            params.isStorePaymentFieldEnabled() -> CardStorePaymentMethodMode.ASK_FOR_CONSENT
-            else -> CardStorePaymentMethodMode.HIDDEN
+            else -> CardStorePaymentMethodMode.ASK_FOR_CONSENT
         }
     }
 

@@ -340,9 +340,10 @@ internal class CardComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("zeroAmountEnableStoreDetailsSource")
-    fun `when amount is zero then storePaymentMethodMode is ALWAYS regardless of sessions value and configuration`(
+    fun `when amount is zero then storePaymentMethodMode is ALWAYS if the field is enabled, otherwise HIDDEN`(
         configurationValue: Boolean?,
         sessionsValue: Boolean?,
+        expectedValue: CardStorePaymentMethodMode,
     ) {
         val params = mapper.mapToParams(
             params = generateCheckoutParams(
@@ -353,7 +354,7 @@ internal class CardComponentParamsMapperTest {
             paymentMethod = null,
         )
 
-        assertEquals(CardStorePaymentMethodMode.ALWAYS, params.storePaymentMethodMode)
+        assertEquals(expectedValue, params.storePaymentMethodMode)
     }
 
     @Test
@@ -709,10 +710,17 @@ internal class CardComponentParamsMapperTest {
         }
 
         @JvmStatic
-        fun zeroAmountEnableStoreDetailsSource() =
-            STORE_DETAILS_COMBINATIONS.map { (configurationValue, sessionsValue) ->
-                // configurationValue, sessionsValue
-                arguments(configurationValue, sessionsValue)
-            }
+        fun zeroAmountEnableStoreDetailsSource() = listOf(
+            // configurationValue, sessionsValue, expectedValue
+            arguments(false, false, CardStorePaymentMethodMode.HIDDEN),
+            arguments(false, true, CardStorePaymentMethodMode.ALWAYS),
+            arguments(true, false, CardStorePaymentMethodMode.HIDDEN),
+            arguments(true, true, CardStorePaymentMethodMode.ALWAYS),
+            arguments(false, null, CardStorePaymentMethodMode.HIDDEN),
+            arguments(true, null, CardStorePaymentMethodMode.ALWAYS),
+            arguments(null, null, CardStorePaymentMethodMode.ALWAYS),
+            arguments(null, false, CardStorePaymentMethodMode.HIDDEN),
+            arguments(null, true, CardStorePaymentMethodMode.ALWAYS),
+        )
     }
 }

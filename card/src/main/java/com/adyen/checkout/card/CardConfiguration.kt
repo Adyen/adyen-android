@@ -44,8 +44,8 @@ class CardConfiguration internal constructor(
  * @param showSecurityCodeForStoredCard Whether the security code (CVC/CVV) field should be shown and requested from
  * the shopper on a stored card payment.
  * @param showStorePaymentMethod Whether the option to store the card for future payments should be shown as an input
- * field. Not applicable for the sessions flow. Ignored when the amount is zero: the field is then hidden and the card
- * is always stored.
+ * field. Not applicable for the sessions flow. When the amount is zero, the field is hidden and the card is always
+ * stored if this is enabled.
  * @param showSupportedCardBrandLogos Whether the logos of the supported card brands should be shown.
  * @param socialSecurityNumberVisibility Whether the CPF/CNPJ field for Brazilian shoppers should be shown.
  * @param supportedCardBrands The supported card brands, shown as the shopper inputs the card number. Defaults to the
