@@ -133,7 +133,8 @@ Use the `android-branch-create` skill to create a `chore/` branch (base `main` d
 
 ### 10. Public configuration / DSL
 
-- Add/confirm the public `XConfiguration` and its `CheckoutConfiguration` DSL extension. Everything else stays `internal` or `@RestrictTo(LIBRARY_GROUP)`. Prefer abstract classes over sealed for merchant-facing `when` safety (see the `android-public-api-change` skill).
+- Add/confirm the public `XConfiguration` and its `CheckoutConfigurationScope` DSL extension. Everything else stays `internal` or `@RestrictTo(LIBRARY_GROUP)`. Prefer abstract classes over sealed for merchant-facing `when` safety (see the `android-public-api-change` skill).
+- `XConfiguration` is a `@ConsistentCopyVisibility data class` with an `internal constructor` that holds only values (no callbacks), and its nested types compare by value too (`ConfigurationDataClassTest` in `example-app` enforces the data class).
 - **Gate:** if the public API changed intentionally, run `:module:apiDump` and commit the `.api` files. Commit.
 
 ### 11. Example-app wiring
