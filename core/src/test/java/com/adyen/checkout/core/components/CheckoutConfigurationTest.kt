@@ -14,7 +14,7 @@ import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -63,61 +63,61 @@ internal class CheckoutConfigurationTest {
     }
 
     @Test
-    fun `when parcelized with all values, then all values are restored`() {
-        val configuration = CheckoutConfiguration(
+    fun `when two configurations are created with the same values, then they are equal`() {
+        val first = createConfiguration()
+        val second = createConfiguration()
+
+        assertEquals(first, second)
+        assertEquals(first.hashCode(), second.hashCode())
+    }
+
+    @Test
+    fun `when two configurations have different configurations added in the block, then they are not equal`() {
+        val first = createConfiguration()
+        val second = CheckoutConfiguration(
             environment = Environment.LIVE_UNITED_STATES,
             clientKey = TEST_CLIENT_KEY,
             shopperLocale = Locale.FRANCE,
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
             showSubmitButton = false,
-        )
-
-        val actual = configuration.parcelize()
-
-        assertEquals(Environment.LIVE_UNITED_STATES, actual.environment)
-        assertEquals(TEST_CLIENT_KEY, actual.clientKey)
-        assertEquals(Locale.FRANCE, actual.shopperLocale)
-        assertEquals(AnalyticsLevel.NONE, actual.analyticsConfiguration?.level)
-        assertEquals(false, actual.showSubmitButton)
-    }
-
-    @Test
-    fun `when parcelized with only required values, then optional values are not set`() {
-        val configuration = CheckoutConfiguration(
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-        )
-
-        val actual = configuration.parcelize()
-
-        assertEquals(Environment.TEST, actual.environment)
-        assertEquals(TEST_CLIENT_KEY, actual.clientKey)
-        assertNull(actual.shopperLocale)
-        assertNull(actual.analyticsConfiguration)
-        assertNull(actual.showSubmitButton)
-    }
-
-    @Test
-    fun `when parcelized, then configurations added through the configuration block are restored`() {
-        val firstConfiguration = FirstTestConfiguration("first")
-        val secondConfiguration = SecondTestConfiguration(2)
-        val configuration = CheckoutConfiguration(
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
         ) {
-            addConfiguration(firstConfiguration)
-            addConfiguration(secondConfiguration)
+            addConfiguration(FirstTestConfiguration("other"))
         }
 
+        assertNotEquals(first, second)
+    }
+
+    @Test
+    fun `when parcelized with all values, then an equal configuration is restored`() {
+        val configuration = createConfiguration()
+
         val actual = configuration.parcelize()
 
-        assertEquals(
-            mapOf(
-                FirstTestConfiguration::class.java.name to firstConfiguration,
-                SecondTestConfiguration::class.java.name to secondConfiguration,
-            ),
-            actual.getAvailableConfigurations(),
+        assertEquals(configuration, actual)
+    }
+
+    @Test
+    fun `when parcelized with only required values, then an equal configuration is restored`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
         )
+
+        val actual = configuration.parcelize()
+
+        assertEquals(configuration, actual)
+    }
+
+    // Creates every value again on each call, so equality can't rely on shared instances.
+    private fun createConfiguration() = CheckoutConfiguration(
+        environment = Environment.LIVE_UNITED_STATES,
+        clientKey = TEST_CLIENT_KEY,
+        shopperLocale = Locale.FRANCE,
+        analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
+        showSubmitButton = false,
+    ) {
+        addConfiguration(FirstTestConfiguration("first"))
+        addConfiguration(SecondTestConfiguration(2))
     }
 
     // Goes through writeParcelable and readParcelable, like the system does when it restores state.

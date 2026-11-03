@@ -14,7 +14,7 @@ import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-internal class AuthenticationConfiguration internal constructor(
+internal data class AuthenticationConfiguration(
     val threeDSRequestorAppURL: String?,
 ) : Configuration
 

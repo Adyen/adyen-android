@@ -17,8 +17,9 @@ import kotlinx.parcelize.Parcelize
  * Configuration for the Google Pay payment method. Create it by calling [CheckoutConfigurationScope.googlePay].
  */
 @Parcelize
+@ConsistentCopyVisibility
 @Suppress("LongParameterList")
-class GooglePayConfiguration internal constructor(
+data class GooglePayConfiguration internal constructor(
     val merchantAccount: String?,
     val googlePayEnvironment: Int?,
     val totalPriceStatus: String?,

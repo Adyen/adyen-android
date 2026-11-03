@@ -17,7 +17,8 @@ import kotlinx.parcelize.Parcelize
  * Configuration for Drop-in. Create it by calling [CheckoutConfigurationScope.dropIn].
  */
 @Parcelize
-class DropInConfiguration internal constructor(
+@ConsistentCopyVisibility
+data class DropInConfiguration internal constructor(
     val hideStoredPaymentMethods: Boolean?,
     val startWithLastStoredPaymentMethod: Boolean?,
 ) : Configuration

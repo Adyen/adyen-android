@@ -40,7 +40,8 @@ import java.util.Locale
  * ignored.
  */
 @Parcelize
-class CheckoutConfiguration internal constructor(
+@ConsistentCopyVisibility
+data class CheckoutConfiguration internal constructor(
     val environment: Environment,
     val clientKey: String,
     val shopperLocale: Locale?,

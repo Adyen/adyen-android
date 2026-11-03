@@ -15,17 +15,10 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
  * Creates a copy of this configuration with a different [showSubmitButton].
  *
  * Every other value is carried over unchanged, including the configurations that were added through the
- * configuration block. This calls the primary constructor, which has no default values, so a value added to
- * [CheckoutConfiguration] does not compile until it is carried over here.
+ * configuration block. The generated `copy` of [CheckoutConfiguration] is internal to this module, which is why other
+ * modules go through this function.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun CheckoutConfiguration.copy(showSubmitButton: Boolean?): CheckoutConfiguration {
-    return CheckoutConfiguration(
-        environment = environment,
-        clientKey = clientKey,
-        shopperLocale = shopperLocale,
-        analyticsConfiguration = analyticsConfiguration,
-        showSubmitButton = showSubmitButton,
-        availableConfigurations = getAvailableConfigurations(),
-    )
+fun CheckoutConfiguration.withShowSubmitButton(showSubmitButton: Boolean?): CheckoutConfiguration {
+    return copy(showSubmitButton = showSubmitButton)
 }

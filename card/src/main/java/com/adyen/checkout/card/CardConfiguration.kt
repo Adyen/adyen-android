@@ -18,8 +18,9 @@ import kotlinx.parcelize.Parcelize
  * Configuration for the card payment method. Create it by calling [CheckoutConfigurationScope.card].
  */
 @Parcelize
+@ConsistentCopyVisibility
 @Suppress("LongParameterList")
-class CardConfiguration internal constructor(
+data class CardConfiguration internal constructor(
     val billingAddressMode: BillingAddressMode?,
     val koreanAuthenticationVisibility: FieldVisibility?,
     val showCardholderName: Boolean?,
