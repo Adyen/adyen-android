@@ -28,10 +28,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.io.IOException
+import java.net.UnknownHostException
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.TimeSource
 
@@ -134,6 +137,59 @@ internal class DefaultStatusRepositoryTest(
 
         statusFlow.cancel()
     }
+
+    @Test
+    fun `when fetching the status fails with UnknownHostException, then nothing is emitted`() = runTest {
+        statusRepository = createRepository(testScheduler, testTimeSource)
+        whenever(statusService.checkStatus(any(), any())) doAnswer { throw UnknownHostException() }
+
+        val statusFlow = statusRepository
+            .poll("paymentData", MAX_POLLING_DURATION)
+            .test(testScheduler)
+
+        testScheduler.advanceTimeBy(DefaultStatusRepository.DEBOUNCE_TIME + 1)
+
+        verify(statusService, times(1)).checkStatus(any(), any())
+        assertTrue(statusFlow.values.isEmpty())
+
+        statusFlow.cancel()
+    }
+
+    @Test
+    fun `when fetching the status fails with another exception, then the failure is emitted`() = runTest {
+        statusRepository = createRepository(testScheduler, testTimeSource)
+        val exception = IOException()
+        whenever(statusService.checkStatus(any(), any())) doAnswer { throw exception }
+
+        val statusFlow = statusRepository
+            .poll("paymentData", MAX_POLLING_DURATION)
+            .test(testScheduler)
+
+        testScheduler.advanceTimeBy(DefaultStatusRepository.DEBOUNCE_TIME + 1)
+
+        assertEquals(listOf(Result.failure<StatusResponse>(exception)), statusFlow.values)
+
+        statusFlow.cancel()
+    }
+
+    @Test
+    fun `when fetching the status keeps failing with UnknownHostException, then max polling time still ends the flow`() =
+        runTest {
+            statusRepository = createRepository(testScheduler, testTimeSource)
+            whenever(statusService.checkStatus(any(), any())) doAnswer { throw UnknownHostException() }
+
+            val statusFlow = statusRepository
+                .poll("paymentData", MAX_POLLING_DURATION)
+                .test(testScheduler)
+
+            testScheduler.advanceTimeBy(MAX_POLLING_DURATION + 2100)
+
+            assertEquals(1, statusFlow.values.size)
+            assertInstanceOf(IllegalStateException::class.java, statusFlow.latestValue.exceptionOrNull())
+            assertInstanceOf(CancellationException::class.java, statusFlow.completionThrowable)
+
+            statusFlow.cancel()
+        }
 
     private fun createRepository(
         testScheduler: TestCoroutineScheduler,

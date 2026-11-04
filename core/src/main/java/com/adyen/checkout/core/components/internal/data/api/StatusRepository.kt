@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
+import java.net.UnknownHostException
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
@@ -80,7 +81,11 @@ class DefaultStatusRepository(
                 fetchStatus(it)
             }
             .transform { result ->
-                emit(result)
+                // For API >= 35, apps lose connectivity if in background. That results in an UnknownHostException here.
+                // We do not emit this since connection can be recovered and thus, it's not a payment critical failure.
+                if (result.exceptionOrNull() !is UnknownHostException) {
+                    emit(result)
+                }
 
                 if (result.isSuccess && result.getOrThrow().isFinalResult()) {
                     currentCoroutineContext().cancel()
