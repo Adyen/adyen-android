@@ -372,6 +372,33 @@ internal class CardPaymentComponentStateFactoryTest(
         }
 
         @Test
+        fun `and the billing address row is hidden then a confirmed address is not sent`() {
+            // GIVEN
+            val factory = createFactory()
+            val address = AddressModel(
+                country = "NL",
+                street = "Simon Carmiggeltstraat",
+                houseNumberOrName = "6",
+                postalCode = "1011 DJ",
+                city = "Amsterdam",
+                stateOrProvince = null,
+            )
+            val cardComponentState = createCardComponentState().copy(
+                billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState(address)),
+            )
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            assertNull(state.data.billingAddress)
+        }
+
+        @Test
         fun `and the billing address row is visible and nothing is confirmed then there is no billing address`() {
             // GIVEN
             val factory = createFactory()
