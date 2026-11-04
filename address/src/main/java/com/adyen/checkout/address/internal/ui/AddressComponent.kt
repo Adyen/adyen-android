@@ -86,6 +86,7 @@ internal constructor(
 
     init {
         fetchCountries()
+        fetchStates()
     }
 
     @Composable

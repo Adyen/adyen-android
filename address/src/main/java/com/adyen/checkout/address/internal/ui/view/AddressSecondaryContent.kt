@@ -63,7 +63,8 @@ private fun StateOrProvincePicker(
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // Unreachable: without states the row that opens this screen is not on the address form either.
+    // Without states the row that opens this screen is not on the address form either, so this is only reached when
+    // process death restores the screen on a form whose country has no states. Back leaves it.
     if (statePickerViewState == null) return
     AddressRegionPicker(
         viewState = statePickerViewState,

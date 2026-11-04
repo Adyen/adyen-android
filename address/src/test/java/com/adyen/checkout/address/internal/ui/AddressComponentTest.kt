@@ -52,12 +52,22 @@ internal class AddressComponentTest {
     }
 
     @Test
-    fun `when created then the countries are loaded and no states are requested`() = runTest {
+    fun `when created then the countries and the states of the selected country are loaded`() = runTest {
         // WHEN
         val component = createComponent()
 
         // THEN
         assertEquals(COUNTRY_REGIONS, component.viewState.value.countryPickerViewState.regions)
+        assertEquals(listOf("US"), addressRepository.requestedStates)
+        assertEquals(US_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
+    }
+
+    @Test
+    fun `when created without a selected country then no states are requested`() = runTest {
+        // WHEN
+        createComponent(supportedCountryCodes = setOf("NL", "GB"))
+
+        // THEN
         assertTrue(addressRepository.requestedStates.isEmpty())
     }
 
@@ -126,15 +136,15 @@ internal class AddressComponentTest {
         val component = createComponent()
 
         // WHEN
-        component.show(US_ADDRESS)
+        component.show(US_ADDRESS.copy(country = "CA", stateOrProvince = null))
 
         // THEN
-        assertEquals(listOf("US"), addressRepository.requestedStates)
-        assertEquals(US_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
+        assertEquals(listOf("US", "CA"), addressRepository.requestedStates)
+        assertEquals(CA_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
     }
 
     @Test
-    fun `when shown with a country without states then no states are requested`() = runTest {
+    fun `when shown with a country without states then no states are requested for it`() = runTest {
         // GIVEN
         val component = createComponent()
 
@@ -142,7 +152,7 @@ internal class AddressComponentTest {
         component.show(US_ADDRESS.copy(country = "NL", stateOrProvince = null))
 
         // THEN
-        assertTrue(addressRepository.requestedStates.isEmpty())
+        assertEquals(listOf("US"), addressRepository.requestedStates)
     }
 
     @Test
@@ -235,7 +245,7 @@ internal class AddressComponentTest {
         component.onCountrySelected("CA")
 
         // THEN
-        assertEquals(listOf("US", "CA"), addressRepository.requestedStates)
+        assertEquals(listOf("US", "US", "CA"), addressRepository.requestedStates)
         assertEquals(CA_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
     }
 
@@ -249,7 +259,7 @@ internal class AddressComponentTest {
         component.onCountrySelected("NL")
 
         // THEN
-        assertEquals(listOf("US"), addressRepository.requestedStates)
+        assertEquals(listOf("US", "US"), addressRepository.requestedStates)
         assertNull(component.viewState.value.statePickerViewState)
     }
 
@@ -283,7 +293,7 @@ internal class AddressComponentTest {
 
             // THEN
             assertEquals(listOf("US"), addressRepository.cancelledStates)
-            assertEquals(listOf("US", "CA"), addressRepository.requestedStates)
+            assertEquals(listOf("US", "US", "CA"), addressRepository.requestedStates)
         }
 
     @Test
@@ -298,7 +308,7 @@ internal class AddressComponentTest {
         component.show(US_ADDRESS)
 
         // THEN
-        assertEquals(listOf("US", "US"), addressRepository.requestedStates)
+        assertEquals(listOf("US", "US", "US"), addressRepository.requestedStates)
         assertEquals(US_STATE_REGIONS, component.viewState.value.statePickerViewState?.regions)
     }
 
