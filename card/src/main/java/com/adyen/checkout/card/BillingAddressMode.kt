@@ -20,14 +20,14 @@ sealed class BillingAddressMode : Parcelable {
     }
 
     /**
-     * Only postal code will be shown as part of the card component
+     * Only postal code will be shown as part of the card component.
+     *
+     * @param hideForCardBrands The [CardBrand]s for which the postal code field will be hidden.
      */
     @Parcelize
-    class PostalCode : BillingAddressMode() {
-        override fun equals(other: Any?) = other is PostalCode
-
-        override fun hashCode() = javaClass.hashCode()
-    }
+    data class PostalCode(
+        val hideForCardBrands: Set<CardBrand> = emptySet()
+    ) : BillingAddressMode()
 
     /**
      * Full Address Form will be requested as part of the card component.

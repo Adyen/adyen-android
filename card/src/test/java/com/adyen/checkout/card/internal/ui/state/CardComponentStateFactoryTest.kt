@@ -119,7 +119,8 @@ internal class CardComponentStateFactoryTest {
     // region postalCode
     @Test
     fun `when the billing address mode is postal code, then postalCode is Required`() {
-        val state = createFactory(billingAddressParams = BillingAddressParams.PostalCode).createInitialState()
+        val billingAddressParams = BillingAddressParams.PostalCode(hideForCardBrands = emptySet())
+        val state = createFactory(billingAddressParams = billingAddressParams).createInitialState()
 
         assertEquals(RequirementPolicy.Required, state.postalCode.requirementPolicy)
     }
@@ -133,7 +134,8 @@ internal class CardComponentStateFactoryTest {
 
     @Test
     fun `when the billing address mode is full, then postalCode is Hidden`() {
-        val state = createFactory(billingAddressParams = BillingAddressParams.Full(emptySet())).createInitialState()
+        val billingAddressParams = BillingAddressParams.Full(emptySet(), emptySet())
+        val state = createFactory(billingAddressParams = billingAddressParams).createInitialState()
 
         assertEquals(RequirementPolicy.Hidden, state.postalCode.requirementPolicy)
     }
@@ -142,7 +144,8 @@ internal class CardComponentStateFactoryTest {
     // region billingAddress
     @Test
     fun `when the billing address mode is full, then the billing address row is visible`() {
-        val state = createFactory(billingAddressParams = BillingAddressParams.Full(emptySet())).createInitialState()
+        val billingAddressParams = BillingAddressParams.Full(emptySet(), emptySet())
+        val state = createFactory(billingAddressParams = billingAddressParams).createInitialState()
 
         assertTrue(state.billingAddress.isVisible)
     }
@@ -156,7 +159,8 @@ internal class CardComponentStateFactoryTest {
 
     @Test
     fun `when the billing address mode is postal code, then the billing address row is hidden`() {
-        val state = createFactory(billingAddressParams = BillingAddressParams.PostalCode).createInitialState()
+        val billingAddressParams = BillingAddressParams.PostalCode(hideForCardBrands = emptySet())
+        val state = createFactory(billingAddressParams = billingAddressParams).createInitialState()
 
         assertFalse(state.billingAddress.isVisible)
     }

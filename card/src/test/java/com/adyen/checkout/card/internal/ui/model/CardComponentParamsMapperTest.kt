@@ -281,23 +281,9 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
-    fun `when the billing address mode is postal code then the mode is postal code`() {
-        // WHEN
-        val params = mapper.mapToParams(
-            params = generateCheckoutParams(
-                cardConfiguration = createCardConfiguration(billingAddressMode = BillingAddressMode.PostalCode()),
-            ),
-            paymentMethod = null,
-        )
-
-        // THEN
-        assertEquals(BillingAddressParams.PostalCode, params.billingAddressParams)
-    }
-
-    @Test
-    fun `when the billing address mode is full then the params carry the supported country codes`() {
+    fun `when the billing address mode is postal code then the params carry the hidden card brands`() {
         // GIVEN
-        val billingAddressMode = BillingAddressMode.Full(supportedCountryCodes = setOf("NL", "US"))
+        val billingAddressMode = BillingAddressMode.PostalCode(hideForCardBrands = setOf(CardBrand.JCB))
 
         // WHEN
         val params = mapper.mapToParams(
@@ -308,7 +294,32 @@ internal class CardComponentParamsMapperTest {
         )
 
         // THEN
-        assertEquals(BillingAddressParams.Full(supportedCountryCodes = setOf("NL", "US")), params.billingAddressParams)
+        val expected = BillingAddressParams.PostalCode(hideForCardBrands = setOf(CardBrand.JCB))
+        assertEquals(expected, params.billingAddressParams)
+    }
+
+    @Test
+    fun `when the billing address mode is full then the params carry the supported country codes and the hidden card brands`() {
+        // GIVEN
+        val billingAddressMode = BillingAddressMode.Full(
+            supportedCountryCodes = setOf("NL", "US"),
+            hideForCardBrands = setOf(CardBrand.JCB),
+        )
+
+        // WHEN
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(billingAddressMode = billingAddressMode),
+            ),
+            paymentMethod = null,
+        )
+
+        // THEN
+        val expected = BillingAddressParams.Full(
+            supportedCountryCodes = setOf("NL", "US"),
+            hideForCardBrands = setOf(CardBrand.JCB),
+        )
+        assertEquals(expected, params.billingAddressParams)
     }
 
     @Test
@@ -561,7 +572,7 @@ internal class CardComponentParamsMapperTest {
             showSupportedCardBrandLogos = false,
             socialSecurityNumberVisibility = FieldVisibility.SHOW,
             koreanAuthenticationVisibility = FieldVisibility.SHOW,
-            billingAddressParams = BillingAddressParams.PostalCode,
+            billingAddressParams = BillingAddressParams.PostalCode(hideForCardBrands = emptySet()),
             cvcVisibility = CVCVisibility.ALWAYS_HIDE,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
             showCardScanner = false,

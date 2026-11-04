@@ -8,13 +8,18 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import com.adyen.checkout.core.common.CardBrand
+
 internal sealed interface BillingAddressParams {
 
     data object None : BillingAddressParams
 
-    data object PostalCode : BillingAddressParams
+    data class PostalCode(
+        val hideForCardBrands: Set<CardBrand>,
+    ) : BillingAddressParams
 
     data class Full(
         val supportedCountryCodes: Set<String>,
+        val hideForCardBrands: Set<CardBrand>,
     ) : BillingAddressParams
 }

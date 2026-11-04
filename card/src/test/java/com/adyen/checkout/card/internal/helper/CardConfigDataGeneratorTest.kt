@@ -46,7 +46,7 @@ internal class CardConfigDataGeneratorTest {
 
         @JvmStatic
         fun testSource() = listOf(
-            // All features enabled, not stored, ALWAYS_SHOW CVC
+            // All features enabled, not stored, ALWAYS_SHOW CVC, postal code hidden for card brands
             arguments(
                 createCardComponentParams(
                     showCardholderName = true,
@@ -56,7 +56,9 @@ internal class CardConfigDataGeneratorTest {
                     socialSecurityNumberVisibility = FieldVisibility.SHOW,
                     koreanAuthenticationVisibility = FieldVisibility.SHOW,
                     installmentParams = InstallmentParams(showInstallmentAmount = true),
-                    billingAddressParams = BillingAddressParams.PostalCode,
+                    billingAddressParams = BillingAddressParams.PostalCode(
+                        hideForCardBrands = setOf(CardBrand.VISA, CardBrand.JCB),
+                    ),
                     cvcVisibility = CVCVisibility.ALWAYS_SHOW,
                     storedCVCVisibility = StoredCVCVisibility.SHOW,
                     showCardScanner = true,
@@ -66,6 +68,7 @@ internal class CardConfigDataGeneratorTest {
                 mapOf(
                     "billingAddressMode" to "PostalCode",
                     "billingAddressRequired" to "true",
+                    "billingAddressHideForCardBrands" to "jcb,visa",
                     "brands" to "mc,visa",
                     "showSupportedCardBrandLogos" to "true",
                     "enableStoreDetails" to "true",
@@ -100,6 +103,7 @@ internal class CardConfigDataGeneratorTest {
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
+                    "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
                     "enableStoreDetails" to "false",
@@ -134,6 +138,7 @@ internal class CardConfigDataGeneratorTest {
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
+                    "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
                     "enableStoreDetails" to "false",
@@ -167,6 +172,7 @@ internal class CardConfigDataGeneratorTest {
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
+                    "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
                     "enableStoreDetails" to "false",
@@ -200,6 +206,7 @@ internal class CardConfigDataGeneratorTest {
                 mapOf(
                     "billingAddressMode" to "None",
                     "billingAddressRequired" to "false",
+                    "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
                     "enableStoreDetails" to "false",
@@ -213,7 +220,7 @@ internal class CardConfigDataGeneratorTest {
                     "showCardScanner" to "false",
                 ),
             ),
-            // Full billing address, not stored
+            // Full billing address hidden for a card brand, not stored
             arguments(
                 createCardComponentParams(
                     showCardholderName = false,
@@ -223,7 +230,10 @@ internal class CardConfigDataGeneratorTest {
                     socialSecurityNumberVisibility = FieldVisibility.HIDE,
                     koreanAuthenticationVisibility = FieldVisibility.HIDE,
                     installmentParams = null,
-                    billingAddressParams = BillingAddressParams.Full(supportedCountryCodes = setOf("NL", "US")),
+                    billingAddressParams = BillingAddressParams.Full(
+                        supportedCountryCodes = setOf("NL", "US"),
+                        hideForCardBrands = setOf(CardBrand.JCB),
+                    ),
                     cvcVisibility = CVCVisibility.ALWAYS_SHOW,
                     storedCVCVisibility = StoredCVCVisibility.SHOW,
                     showCardScanner = false,
@@ -234,6 +244,7 @@ internal class CardConfigDataGeneratorTest {
                     "billingAddressAllowedCountries" to "NL,US",
                     "billingAddressMode" to "Full",
                     "billingAddressRequired" to "true",
+                    "billingAddressHideForCardBrands" to "jcb",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
                     "enableStoreDetails" to "false",
@@ -257,7 +268,10 @@ internal class CardConfigDataGeneratorTest {
                     socialSecurityNumberVisibility = FieldVisibility.HIDE,
                     koreanAuthenticationVisibility = FieldVisibility.HIDE,
                     installmentParams = null,
-                    billingAddressParams = BillingAddressParams.Full(supportedCountryCodes = emptySet()),
+                    billingAddressParams = BillingAddressParams.Full(
+                        supportedCountryCodes = emptySet(),
+                        hideForCardBrands = emptySet(),
+                    ),
                     cvcVisibility = CVCVisibility.ALWAYS_SHOW,
                     storedCVCVisibility = StoredCVCVisibility.SHOW,
                     showCardScanner = false,
@@ -267,6 +281,7 @@ internal class CardConfigDataGeneratorTest {
                 mapOf(
                     "billingAddressMode" to "Full",
                     "billingAddressRequired" to "true",
+                    "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
                     "enableStoreDetails" to "false",

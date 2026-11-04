@@ -84,6 +84,14 @@ card(
 )
 ```
 
+To skip the billing address for some card brands, pass them in `hideForCardBrands`, available on both `PostalCode()` and `Full()`. Once BIN lookup identifies one of these brands, or the shopper picks one of them on a dual-branded card, the postal-code field or the billing-address row is hidden, and it is neither validated nor sent with the payment. If the brand changes, it is shown again with what the shopper already entered.
+
+```kotlin
+card(
+    billingAddressMode = BillingAddressMode.Full(hideForCardBrands = setOf(CardBrand.JCB)),
+)
+```
+
 This guide intentionally documents only the currently public API surface.
 
 ## Card callbacks

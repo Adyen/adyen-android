@@ -101,7 +101,7 @@ internal class CardComponentStateFactory(
 
     private fun getPostalCodeRequirementPolicy(): RequirementPolicy =
         when (componentParams.billingAddressParams) {
-            BillingAddressParams.PostalCode -> RequirementPolicy.Required
+            is BillingAddressParams.PostalCode -> RequirementPolicy.Required
             BillingAddressParams.None,
             is BillingAddressParams.Full -> RequirementPolicy.Hidden
         }
