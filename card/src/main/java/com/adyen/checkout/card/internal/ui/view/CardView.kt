@@ -91,6 +91,8 @@ class CardView @JvmOverloads constructor(
         val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
 
+        binding.recyclerViewCardList.isFocusable = false
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.editTextExpiryDate.setAutofillHints(AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_DATE)
         }
