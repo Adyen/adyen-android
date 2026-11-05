@@ -84,15 +84,14 @@ class DefaultStatusRepository(
                 // when the OS pauses network access for apps in the background, so polling continues until a final
                 // result or a timeout.
                 result.fold(
-                    onSuccess = { emit(result) },
+                    onSuccess = { response ->
+                        emit(result)
+                        if (response.isFinalResult()) currentCoroutineContext().cancel()
+                    },
                     onFailure = {
                         adyenLog(AdyenLogLevel.WARN, it) { "Fetching the status failed, polling continues" }
                     },
                 )
-
-                if (result.isSuccess && result.getOrThrow().isFinalResult()) {
-                    currentCoroutineContext().cancel()
-                }
 
                 if (!updateDelay(startTime, maxPollingDuration)) {
                     adyenLog(AdyenLogLevel.DEBUG) { "Max polling time exceeded" }
