@@ -197,6 +197,16 @@ internal class DropInViewModelTest {
     }
 
     @Test
+    fun `when an error occurs, then the back stack is cleared`() = runTest {
+        val dropInServiceManager = DropInServiceManager(DropInService::class.java)
+        val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
+
+        dropInServiceManager.onFailure(CheckoutError(code = "test", message = "Test error"))
+
+        assertEquals(emptyList<NavKey>(), viewModel.navigator.backStack)
+    }
+
+    @Test
     fun `when a payment is completed, then the result waits for Drop-in to be dismissed`() = runTest {
         val dropInServiceManager = DropInServiceManager(DropInService::class.java)
         val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
