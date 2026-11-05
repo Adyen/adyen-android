@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.address.internal.ui.view.AddressPickerField
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
 import com.adyen.checkout.card.internal.ui.model.toDisplayText
@@ -230,7 +231,7 @@ private fun CardFormElementContent(
             onFocusRequestConsumed = onFocusRequestConsumed,
         )
 
-        is CardFormElement.BillingAddress -> AddressPickerField(
+        is CardFormElement.BillingAddress -> BillingAddressField(
             address = element.address,
             errorMessage = element.errorMessage,
             onClick = onBillingAddressClick,
@@ -246,6 +247,29 @@ private fun CardFormElementContent(
         is CardFormElement.Installments -> InstallmentsField(
             selectedInstallment = element.selectedInstallment,
             onClick = onInstallmentPickerClick,
+        )
+    }
+}
+
+@Composable
+private fun BillingAddressField(
+    address: AddressModel?,
+    errorMessage: CheckoutLocalizationKey?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
+    ) {
+        Subtitle(
+            text = resolveString(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_TITLE),
+            modifier = Modifier.padding(top = Dimensions.Spacing.Small),
+        )
+        AddressPickerField(
+            address = address,
+            errorMessage = errorMessage,
+            onClick = onClick,
         )
     }
 }
