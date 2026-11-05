@@ -79,6 +79,7 @@
     <string name="checkout_card_installments_option_revolving_description" translatable="false">Predetermined amount each month</string>
     <string name="checkout_card_installments_option_regular_description" translatable="false">%s monthly payments</string>
     <string name="checkout_card_installments_option_regular_description_with_price" translatable="false">%s monthly payments of %s</string>
+    <string name="adyen_checkout_country_picker_description" translatable="false">Search and select your country/region</string>
     <string name="checkout_dropin_generic_payment_method_description" translatable="false">You will be guided to the next step of the process.</string>
     <string name="checkout_dropin_generic_payment_method_progress_title" translatable="false">Processing..</string>
     <string name="checkout_drop_in_stored_payment_method_management_title" translatable="false">Manage</string>
@@ -111,7 +112,7 @@
     <string name="checkout_general_close" translatable="false">Close</string>
     <string name="adyen_checkout_general_field_error" translatable="false">Enter a valid %s</string>
     <string name="checkout_general_optional" translatable="false">(Optional)</string>
-    <string name="checkout_general_search_hint" translatable="false">Search..</string>
+    <string name="checkout_general_search_hint" translatable="false">Search...</string>
     <string name="checkout_blik_code" translatable="false">Code</string>
     <string name="checkout_blik_code_hint" translatable="false">6-digit code</string>
     <string name="checkout_blik_code_not_valid" translatable="false">Enter 6 numbers</string>

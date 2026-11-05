@@ -72,6 +72,7 @@ internal class AddressRegionPickerTest {
 
     private fun pickerViewState(selected: AddressRegion?) = PickerViewState(
         title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+        description = null,
         regions = listOf(CALIFORNIA, NEW_YORK),
         selected = selected,
     )

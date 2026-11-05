@@ -28,8 +28,8 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
- * The country or the state picker screen, titled with the label of the field that opens it. Empty while the regions
- * load or after they failed to load.
+ * The country or the state picker screen, titled with the label of the field that opens it and, when the picker has
+ * one, its description. Empty while the regions load or after they failed to load.
  *
  * @param onItemClick Receives the code of the picked region.
  */
@@ -45,7 +45,10 @@ internal fun AddressRegionPicker(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.Large),
         modifier = modifier,
     ) {
-        ScreenHeader(title = resolveString(viewState.title))
+        ScreenHeader(
+            title = resolveString(viewState.title),
+            subtitle = viewState.description?.let { resolveString(it) },
+        )
 
         SearchableValuePicker(
             searchHint = resolveString(CheckoutLocalizationKey.GENERAL_SEARCH_HINT),
@@ -81,6 +84,7 @@ private fun AddressRegionPickerCountryPreview(
         AddressRegionPicker(
             viewState = PickerViewState(
                 title = CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL,
+                description = CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION,
                 regions = countries,
                 selected = countries.first(),
             ),
@@ -103,6 +107,7 @@ private fun AddressRegionPickerStatePreview(
         AddressRegionPicker(
             viewState = PickerViewState(
                 title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_PROVINCE_OR_TERRITORY,
+                description = null,
                 regions = states,
                 selected = null,
             ),
@@ -120,6 +125,7 @@ private fun AddressRegionPickerEmptyPreview(
         AddressRegionPicker(
             viewState = PickerViewState(
                 title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+                description = null,
                 regions = emptyList(),
                 selected = null,
             ),

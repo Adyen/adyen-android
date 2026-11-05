@@ -173,6 +173,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val expected = PickerViewState(
             title = CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL,
+            description = CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION,
             regions = COUNTRIES,
             selected = AddressRegion(code = "US", name = "United States"),
         )
@@ -190,6 +191,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val expected = PickerViewState(
             title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+            description = null,
             regions = US_STATES,
             selected = CALIFORNIA,
         )
@@ -237,6 +239,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val expected = PickerViewState(
             title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+            description = null,
             regions = emptyList(),
             selected = null,
         )

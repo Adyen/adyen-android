@@ -320,6 +320,7 @@ private fun previewViewState(vararg elements: AddressFormElement) = AddressViewS
     elements = elements.toList(),
     countryPickerViewState = PickerViewState(
         title = CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL,
+        description = CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION,
         regions = emptyList(),
         selected = null,
     ),

@@ -149,6 +149,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_DESCRIPTION_WITH_PRICE ->
                 R.string.checkout_card_installments_option_regular_description_with_price
 
+            // Country picker
+            CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION -> R.string.adyen_checkout_country_picker_description
+
             // Drop-in
             CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION ->
                 R.string.checkout_dropin_generic_payment_method_description
