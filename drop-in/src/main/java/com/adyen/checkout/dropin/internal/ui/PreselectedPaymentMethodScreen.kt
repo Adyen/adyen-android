@@ -90,8 +90,9 @@ private fun PreselectedPaymentMethodBottomSheet(
     val scope = rememberCoroutineScope()
     val dismiss: () -> Unit = {
         if (isResumed) {
-            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                if (!sheetState.isVisible) onDismissed()
+            scope.launch {
+                sheetState.hide()
+                onDismissed()
             }
         }
     }
@@ -103,8 +104,8 @@ private fun PreselectedPaymentMethodBottomSheet(
 
     Box(Modifier.fillMaxSize()) {
         Scrim(
-            contentDescription = null,
-            onClick = null,
+            contentDescription = resolveString(CheckoutLocalizationKey.GENERAL_CLOSE),
+            onClick = dismiss,
             alpha = { scrimAlpha },
         )
 
