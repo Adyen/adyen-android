@@ -34,15 +34,15 @@ internal class DropInNavigatorTest {
     }
 
     @Test
-    fun `when initialized then back stack contains only empty key`() {
-        assertEquals(listOf(EmptyNavKey), navigator.backStack)
+    fun `when initialized then back stack is empty`() {
+        assertEquals(emptyList<NavKey>(), navigator.backStack)
     }
 
     @Test
     fun `when navigating to a key then it is added to the back stack`() {
         val key = TestNavKey("test")
         navigator.navigateTo(key)
-        assertEquals(listOf(EmptyNavKey, key), navigator.backStack)
+        assertEquals(listOf(key), navigator.backStack)
     }
 
     @Test
@@ -53,21 +53,23 @@ internal class DropInNavigatorTest {
         val newKey = TestNavKey("new")
         navigator.clearAndNavigateTo(newKey)
 
-        assertEquals(listOf(EmptyNavKey, newKey), navigator.backStack)
+        assertEquals(listOf(newKey), navigator.backStack)
     }
 
     @Test
     fun `when going back then last key is removed`() {
-        val key = TestNavKey("test")
-        navigator.navigateTo(key)
+        val key1 = TestNavKey("key1")
+        val key2 = TestNavKey("key2")
+        navigator.navigateTo(key1)
+        navigator.navigateTo(key2)
 
         navigator.back()
 
-        assertEquals(listOf(EmptyNavKey), navigator.backStack)
+        assertEquals(listOf(key1), navigator.backStack)
     }
 
     @Test
-    fun `when going back to empty key then finish flow emits true`() = runTest {
+    fun `when going back from the only key then finish flow emits true`() = runTest {
         val key = TestNavKey("test")
         navigator.navigateTo(key)
 
@@ -76,6 +78,15 @@ internal class DropInNavigatorTest {
         navigator.back()
 
         assertEquals(true, finishFlow.latestValue)
+    }
+
+    @Test
+    fun `when going back from the only key then the back stack is empty`() {
+        navigator.navigateTo(TestNavKey("test"))
+
+        navigator.back()
+
+        assertEquals(emptyList<NavKey>(), navigator.backStack)
     }
 
     @Test
@@ -130,7 +141,7 @@ internal class DropInNavigatorTest {
 
         val restoredNavigator = DropInNavigator(persister)
 
-        assertEquals(listOf(EmptyNavKey, key), restoredNavigator.backStack)
+        assertEquals(listOf(key), restoredNavigator.backStack)
     }
 
     @Serializable

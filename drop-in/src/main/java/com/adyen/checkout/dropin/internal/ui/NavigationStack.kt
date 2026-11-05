@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.AdyenLogLevel
@@ -26,9 +27,11 @@ import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodManagementVi
 internal fun NavigationStack(
     viewModel: DropInViewModel,
 ) {
-    NavDisplay(
-        backStack = viewModel.navigator.backStack,
-        onBack = { viewModel.navigator.back() },
+    val navigator = viewModel.navigator
+    val entries = rememberDecoratedNavEntries(
+        // NavDisplay only handles back, and animates it, when there is an entry to go back to. The dismissed entry is
+        // that entry for the first screen.
+        backStack = listOf(DismissedNavKey) + navigator.backStack,
         // Without a view model decorator every view model would go into the activity's store and only be cleared when
         // the activity is destroyed, so a payment flow would outlive the screen that started it. The saveable
         // decorator is the NavDisplay default and is required by the view model one, so both have to be listed once
@@ -40,7 +43,7 @@ internal fun NavigationStack(
         ),
         entryProvider = { key ->
             when (key) {
-                is EmptyNavKey -> emptyNavEntry(key)
+                is DismissedNavKey -> NavEntry(key) {}
                 is PreselectedPaymentMethodNavKey -> preselectedPaymentMethodNavEntry(key, viewModel)
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
@@ -50,10 +53,15 @@ internal fun NavigationStack(
             }
         },
     )
+
+    NavDisplay(
+        entries = entries,
+        onBack = { navigator.back() },
+    )
 }
 
-// This empty entry makes sure a bottom sheet can be rendered on top of nothing
-private fun emptyNavEntry(key: EmptyNavKey): NavEntry<NavKey> = NavEntry(key) {}
+/** Only exists in the UI, so the navigator and the persisted back stack never contain it. */
+private data object DismissedNavKey : NavKey
 
 private fun preselectedPaymentMethodNavEntry(
     key: PreselectedPaymentMethodNavKey,

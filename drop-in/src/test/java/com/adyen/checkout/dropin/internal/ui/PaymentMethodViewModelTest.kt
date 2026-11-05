@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
+import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -215,7 +216,7 @@ internal class PaymentMethodViewModelTest {
 
         // Replacing the back stack is what makes going back from the action cancel Drop-in.
         assertEquals(
-            listOf(EmptyNavKey, ActionNavKey(REGULAR_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
+            listOf(ActionNavKey(REGULAR_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
             navigator.backStack,
         )
     }
@@ -227,7 +228,7 @@ internal class PaymentMethodViewModelTest {
         capturedOnActions.single().invoke(ActionData(ACTION_TYPE))
 
         assertEquals(
-            listOf(EmptyNavKey, ActionNavKey(STORED_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
+            listOf(ActionNavKey(STORED_TYPE, ActionFlowOwner.PAYMENT_METHOD)),
             navigator.backStack,
         )
     }
@@ -236,7 +237,7 @@ internal class PaymentMethodViewModelTest {
     fun `when the controller reports no action, then the back stack is untouched`() {
         createViewModel(REGULAR_TYPE)
 
-        assertEquals(listOf(EmptyNavKey), navigator.backStack)
+        assertEquals(emptyList<NavKey>(), navigator.backStack)
     }
 
     @Test
@@ -247,7 +248,7 @@ internal class PaymentMethodViewModelTest {
         createViewModel(REGULAR_TYPE)
 
         assertEquals(
-            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
+            listOf(StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
             navigator.backStack,
         )
     }
@@ -260,7 +261,7 @@ internal class PaymentMethodViewModelTest {
         createViewModel(STORED_TYPE)
 
         assertEquals(
-            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(STORED_TYPE)),
+            listOf(StoredPaymentMethodsNavKey, PaymentMethodNavKey(STORED_TYPE)),
             navigator.backStack,
         )
     }
@@ -273,7 +274,7 @@ internal class PaymentMethodViewModelTest {
         createViewModel(REGULAR_TYPE)
 
         assertEquals(
-            listOf(EmptyNavKey, StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
+            listOf(StoredPaymentMethodsNavKey, PaymentMethodNavKey(REGULAR_TYPE)),
             navigator.backStack,
         )
     }

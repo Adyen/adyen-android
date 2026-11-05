@@ -12,9 +12,6 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data object EmptyNavKey : NavKey
-
-@Serializable
 internal data class PreselectedPaymentMethodNavKey(
     val storedPaymentMethodId: String,
 ) : NavKey

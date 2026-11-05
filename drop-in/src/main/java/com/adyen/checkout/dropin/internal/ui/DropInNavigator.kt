@@ -19,9 +19,8 @@ internal class DropInNavigator(
     private val backStackPersister: BackStackPersister,
 ) {
 
-    // Initialized with an empty key to make the preselected bottom sheet possible
     val backStack: List<NavKey>
-        field: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
+        field: SnapshotStateList<NavKey> = mutableStateListOf()
 
     private val _finishFlow = MutableStateFlow(false)
     val finishFlow = _finishFlow.asStateFlow()
@@ -44,27 +43,28 @@ internal class DropInNavigator(
 
     fun clearAndNavigateTo(key: NavKey) {
         backStack.clear()
-        backStack.add(EmptyNavKey)
         backStack.add(key)
         persist()
     }
 
+    /**
+     * Going back from the last key empties the back stack, which finishes Drop-in.
+     */
     fun back() {
         backStack.removeLastOrNull()
 
-        if (backStack.singleOrNull() == EmptyNavKey) {
+        if (backStack.isEmpty()) {
             _finishFlow.tryEmit(true)
         }
         persist()
     }
 
     fun isEmptyAfterCurrent(): Boolean {
-        return backStack.filterNot { it is EmptyNavKey }.size <= 1
+        return backStack.size <= 1
     }
 
     fun keyBelowCurrent(): NavKey? {
-        val keys = backStack.filterNot { it is EmptyNavKey }
-        return keys.getOrNull(keys.lastIndex - 1)
+        return backStack.getOrNull(backStack.lastIndex - 1)
     }
 
     private fun persist() {

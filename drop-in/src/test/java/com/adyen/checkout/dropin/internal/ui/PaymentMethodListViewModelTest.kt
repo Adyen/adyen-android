@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.lifecycle.viewModelScope
+import androidx.navigation3.runtime.NavKey
 import app.cash.turbine.test
 import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.common.Environment
@@ -200,7 +201,7 @@ internal class PaymentMethodListViewModelTest {
 
         // The owner is what points the action screen back at this view model's controller.
         assertEquals(
-            listOf(EmptyNavKey, ActionNavKey(GOOGLE_PAY_FLOW, ActionFlowOwner.PAYMENT_METHOD_LIST)),
+            listOf(ActionNavKey(GOOGLE_PAY_FLOW, ActionFlowOwner.PAYMENT_METHOD_LIST)),
             navigator.backStack,
         )
     }
@@ -209,7 +210,7 @@ internal class PaymentMethodListViewModelTest {
     fun `when the instant controller reports no action, then the back stack is untouched`() {
         createViewModel(listOf(CARD, GOOGLE_PAY))
 
-        assertEquals(listOf(EmptyNavKey), navigator.backStack)
+        assertEquals(emptyList<NavKey>(), navigator.backStack)
     }
 
     @Test

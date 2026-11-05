@@ -55,7 +55,7 @@ internal class DropInViewModelTest {
     fun `when there are no stored payment methods, then the payment method list is the starting point`() {
         val viewModel = createViewModel(storedPaymentMethods = emptyList())
 
-        assertEquals(listOf(EmptyNavKey, PaymentMethodListNavKey), viewModel.navigator.backStack)
+        assertEquals(listOf(PaymentMethodListNavKey), viewModel.navigator.backStack)
     }
 
     @Test
@@ -63,7 +63,7 @@ internal class DropInViewModelTest {
         val viewModel = createViewModel(storedPaymentMethods = listOf(storedPaymentMethod(STORED_ID)))
 
         assertEquals(
-            listOf(EmptyNavKey, PreselectedPaymentMethodNavKey(STORED_ID)),
+            listOf(PreselectedPaymentMethodNavKey(STORED_ID)),
             viewModel.navigator.backStack,
         )
     }
@@ -75,7 +75,7 @@ internal class DropInViewModelTest {
             configureCheckoutConfiguration = { dropIn(startWithLastStoredPaymentMethod = false) },
         )
 
-        assertEquals(listOf(EmptyNavKey, PaymentMethodListNavKey), viewModel.navigator.backStack)
+        assertEquals(listOf(PaymentMethodListNavKey), viewModel.navigator.backStack)
     }
 
     @Test
@@ -88,7 +88,7 @@ internal class DropInViewModelTest {
         // Hiding stored payment methods only takes them off the list. What Drop-in opens on is the other flag's
         // business, so the two do not interfere.
         assertEquals(
-            listOf(EmptyNavKey, PreselectedPaymentMethodNavKey(STORED_ID)),
+            listOf(PreselectedPaymentMethodNavKey(STORED_ID)),
             viewModel.navigator.backStack,
         )
     }
@@ -97,11 +97,11 @@ internal class DropInViewModelTest {
     fun `when the back stack was restored, then no starting point is added`() {
         // A persister that already holds a back stack stands in for a recreated Drop-in.
         val persister = InMemoryBackStackPersister()
-        persister.store(mutableStateListOf(EmptyNavKey, StoredPaymentMethodsNavKey))
+        persister.store(mutableStateListOf(PaymentMethodListNavKey, StoredPaymentMethodsNavKey))
 
         val viewModel = createViewModel(storedPaymentMethods = emptyList(), persister = persister)
 
-        assertEquals(listOf(EmptyNavKey, StoredPaymentMethodsNavKey), viewModel.navigator.backStack)
+        assertEquals(listOf(PaymentMethodListNavKey, StoredPaymentMethodsNavKey), viewModel.navigator.backStack)
     }
 
     @Test
