@@ -12,8 +12,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.dropin.internal.helper.BackStackPersister
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 internal class DropInNavigator(
     private val backStackPersister: BackStackPersister,
@@ -21,9 +19,6 @@ internal class DropInNavigator(
 
     val backStack: List<NavKey>
         field: SnapshotStateList<NavKey> = mutableStateListOf()
-
-    private val _finishFlow = MutableStateFlow(false)
-    val finishFlow = _finishFlow.asStateFlow()
 
     val didRestoreState: Boolean
 
@@ -48,14 +43,18 @@ internal class DropInNavigator(
     }
 
     /**
-     * Going back from the last key empties the back stack, which finishes Drop-in.
+     * Going back from the last key empties the back stack, which is what dismisses Drop-in.
      */
     fun back() {
         backStack.removeLastOrNull()
+        persist()
+    }
 
-        if (backStack.isEmpty()) {
-            _finishFlow.tryEmit(true)
-        }
+    /**
+     * Empties the back stack, which dismisses Drop-in.
+     */
+    fun clear() {
+        backStack.clear()
         persist()
     }
 

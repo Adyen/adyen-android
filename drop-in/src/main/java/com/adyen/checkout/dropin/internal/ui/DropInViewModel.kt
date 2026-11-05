@@ -25,6 +25,7 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
 import com.adyen.checkout.dropin.DropInResult
@@ -40,9 +41,11 @@ import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.reflect.KClass
 
 /**
@@ -66,15 +69,24 @@ internal class DropInViewModel(
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
 
-    val resultFlow: Flow<DropInResult> = merge(
-        dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
-        dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },
-        navigator.finishFlow.filter { it }.map { DropInResult.Cancelled() },
-    )
+    private val resultChannel = bufferedChannel<DropInResult>()
+
+    /**
+     * Only emits once Drop-in is dismissed, so the screens can animate away before it is closed.
+     */
+    val resultFlow: Flow<DropInResult> = resultChannel.receiveAsFlow()
+
+    // Without a result by the time Drop-in is dismissed, the shopper went back from the first screen
+    // TODO - The pending result is not persisted, so a Drop-in recreated after process death during the exit
+    //  animation reports it as cancelled. To be solved as part of process death handling.
+    private var pendingResult: DropInResult? = null
+
+    private var isDismissed = false
 
     init {
         initializePaymentMethods()
         initializeBackStack()
+        observeServiceResults()
     }
 
     private fun initializePaymentMethods() {
@@ -99,6 +111,28 @@ internal class DropInViewModel(
             PaymentMethodListNavKey
         }
         navigator.navigateTo(startingPoint)
+    }
+
+    private fun observeServiceResults() {
+        merge(
+            dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
+            dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },
+        )
+            .onEach { result ->
+                pendingResult = result
+                navigator.clear()
+            }
+            .launchIn(viewModelScope)
+    }
+
+    /**
+     * Called whenever the UI shows the dismissed state with no transition running. That is also the case before the
+     * first screen is shown, so a result is only sent once the back stack is empty.
+     */
+    fun onDismissed() {
+        if (isDismissed || navigator.backStack.isNotEmpty()) return
+        isDismissed = true
+        resultChannel.trySend(pendingResult ?: DropInResult.Cancelled())
     }
 
     fun startDropInService(context: Context) {

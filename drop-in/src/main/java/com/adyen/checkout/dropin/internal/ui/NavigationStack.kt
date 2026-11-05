@@ -8,8 +8,17 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,10 +37,16 @@ internal fun NavigationStack(
     viewModel: DropInViewModel,
 ) {
     val navigator = viewModel.navigator
+    // The activity has no open transition of its own, so the first frame only shows the dismissed entry. Adding the
+    // back stack after it makes NavDisplay animate the first screen in, the same way it animates it out. Saved, so
+    // this does not happen again when the activity is recreated.
+    var isBackStackShown by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(Unit) { isBackStackShown = true }
+
     val entries = rememberDecoratedNavEntries(
         // NavDisplay only handles back, and animates it, when there is an entry to go back to. The dismissed entry is
         // that entry for the first screen.
-        backStack = listOf(DismissedNavKey) + navigator.backStack,
+        backStack = if (isBackStackShown) listOf(DismissedNavKey) + navigator.backStack else listOf(DismissedNavKey),
         // Without a view model decorator every view model would go into the activity's store and only be cleared when
         // the activity is destroyed, so a payment flow would outlive the screen that started it. The saveable
         // decorator is the NavDisplay default and is required by the view model one, so both have to be listed once
@@ -43,7 +58,7 @@ internal fun NavigationStack(
         ),
         entryProvider = { key ->
             when (key) {
-                is DismissedNavKey -> NavEntry(key) {}
+                is DismissedNavKey -> dismissedNavEntry(key, viewModel)
                 is PreselectedPaymentMethodNavKey -> preselectedPaymentMethodNavEntry(key, viewModel)
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
@@ -63,10 +78,30 @@ internal fun NavigationStack(
 /** Only exists in the UI, so the navigator and the persisted back stack never contain it. */
 private data object DismissedNavKey : NavKey
 
+/**
+ * Shown on the first frame and once the back stack is empty. NavDisplay only resumes an entry once its transition has
+ * settled, so this entry being resumed with an empty back stack means the last screen has finished animating away and
+ * Drop-in can close.
+ */
+private fun dismissedNavEntry(
+    key: DismissedNavKey,
+    viewModel: DropInViewModel,
+): NavEntry<NavKey> = NavEntry(key) {
+    LifecycleResumeEffect(Unit) {
+        viewModel.onDismissed()
+        onPauseOrDispose {}
+    }
+}
+
 private fun preselectedPaymentMethodNavEntry(
     key: PreselectedPaymentMethodNavKey,
     viewModel: DropInViewModel,
-): NavEntry<NavKey> = NavEntry(key) {
+): NavEntry<NavKey> = NavEntry(
+    key = key,
+    // The sheet animates itself in, and hides itself before it is taken off the back stack
+    metadata = NavDisplay.transitionSpec { EnterTransition.None togetherWith ExitTransition.None } +
+        NavDisplay.popTransitionSpec { EnterTransition.None togetherWith ExitTransition.None },
+) {
     PreselectedPaymentMethodScreen(
         viewModel(
             factory = PreselectedPaymentMethodViewModel.Factory(

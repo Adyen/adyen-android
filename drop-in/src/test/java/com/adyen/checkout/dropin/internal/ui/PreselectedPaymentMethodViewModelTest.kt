@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -19,8 +20,6 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.TestPaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.test.LoggingExtension
-import com.adyen.checkout.test.extensions.test
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -111,15 +110,14 @@ internal class PreselectedPaymentMethodViewModelTest {
     }
 
     @Test
-    fun `when onBackClicked, then drop-in is finished`() = runTest {
+    fun `when onBackClicked, then the preselected payment method is taken off the back stack`() {
         navigator.navigateTo(PreselectedPaymentMethodNavKey("stored-id-1"))
         val repository = TestPaymentMethodRepository(listOf(storedPaymentMethod))
         val viewModel = createViewModel(repository, storedPaymentMethodId = "stored-id-1")
-        val finishFlow = navigator.finishFlow.test(testScheduler)
 
         viewModel.onBackClicked()
 
-        assertEquals(true, finishFlow.latestValue)
+        assertEquals(emptyList<NavKey>(), navigator.backStack)
     }
 
     @Test

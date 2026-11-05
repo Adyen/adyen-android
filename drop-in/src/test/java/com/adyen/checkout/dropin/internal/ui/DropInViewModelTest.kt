@@ -11,7 +11,9 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -25,6 +27,8 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.core.error.CheckoutError
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.dropin.internal.DropInResultContract
@@ -33,12 +37,15 @@ import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -179,6 +186,98 @@ internal class DropInViewModelTest {
         assertSame(createdScopes.single().coroutineContext[Job], viewModel.viewModelScope.coroutineContext[Job])
     }
 
+    @Test
+    fun `when a payment is completed, then the back stack is cleared`() = runTest {
+        val dropInServiceManager = DropInServiceManager(DropInService::class.java)
+        val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
+
+        dropInServiceManager.onPaymentCompleted(CheckoutResultCode.AUTHORISED)
+
+        assertEquals(emptyList<NavKey>(), viewModel.navigator.backStack)
+    }
+
+    @Test
+    fun `when a payment is completed, then the result waits for Drop-in to be dismissed`() = runTest {
+        val dropInServiceManager = DropInServiceManager(DropInService::class.java)
+        val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+
+        dropInServiceManager.onPaymentCompleted(CheckoutResultCode.AUTHORISED)
+
+        assertEquals(emptyList<DropInResult>(), resultFlow.values)
+    }
+
+    @Test
+    fun `when Drop-in is dismissed after a payment is completed, then the result is completed`() = runTest {
+        val dropInServiceManager = DropInServiceManager(DropInService::class.java)
+        val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+        dropInServiceManager.onPaymentCompleted(CheckoutResultCode.AUTHORISED)
+
+        viewModel.onDismissed()
+
+        assertEquals(listOf(DropInResult.Completed(CheckoutResultCode.AUTHORISED)), resultFlow.values)
+    }
+
+    @Test
+    fun `when Drop-in is dismissed after an error, then the result is failed`() = runTest {
+        val dropInServiceManager = DropInServiceManager(DropInService::class.java)
+        val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+        dropInServiceManager.onFailure(CheckoutError(code = "test", message = "Test error"))
+
+        viewModel.onDismissed()
+
+        assertEquals(listOf(DropInResult.Failed("Test error")), resultFlow.values)
+    }
+
+    @Test
+    fun `when Drop-in is dismissed without a result, then the result is cancelled`() = runTest {
+        val viewModel = createViewModel()
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+        viewModel.navigator.back()
+
+        viewModel.onDismissed()
+
+        assertInstanceOf(DropInResult.Cancelled::class.java, resultFlow.values.single())
+    }
+
+    @Test
+    fun `when Drop-in is dismissed twice, then only one result is sent`() = runTest {
+        val viewModel = createViewModel()
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+        viewModel.navigator.back()
+
+        viewModel.onDismissed()
+        viewModel.onDismissed()
+
+        assertEquals(1, resultFlow.values.size)
+    }
+
+    @Test
+    fun `when Drop-in is dismissed while the back stack is not empty, then no result is sent`() = runTest {
+        // Before the first screen is shown, the UI shows the dismissed state while the back stack already holds it
+        val viewModel = createViewModel()
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+
+        viewModel.onDismissed()
+
+        assertEquals(emptyList<DropInResult>(), resultFlow.values)
+    }
+
+    @Test
+    fun `when Drop-in is dismissed while the back stack is not empty, then it can still be dismissed later`() =
+        runTest {
+            val viewModel = createViewModel()
+            val resultFlow = viewModel.resultFlow.test(testScheduler)
+            viewModel.onDismissed()
+            viewModel.navigator.back()
+
+            viewModel.onDismissed()
+
+            assertInstanceOf(DropInResult.Cancelled::class.java, resultFlow.values.single())
+        }
+
     private fun createInput() = DropInResultContract.Input(
         checkoutContext = TestCheckoutContext.advanced(
             paymentMethods = PaymentMethods(
@@ -201,6 +300,7 @@ internal class DropInViewModelTest {
         ),
         persister: BackStackPersister = InMemoryBackStackPersister(),
         configureCheckoutConfiguration: CheckoutConfigurationScope.() -> Unit = {},
+        dropInServiceManager: DropInServiceManager = DropInServiceManager(DropInService::class.java),
     ): DropInViewModel {
         val checkoutContext = TestCheckoutContext.advanced(
             paymentMethods = PaymentMethods(
@@ -224,7 +324,7 @@ internal class DropInViewModelTest {
             checkoutParams = CheckoutParamsFactory().create(checkoutContext),
             navigator = DropInNavigator(persister),
             controllerProvider = controllerProvider,
-            dropInServiceManager = DropInServiceManager(DropInService::class.java),
+            dropInServiceManager = dropInServiceManager,
             storedPaymentMethodRemover = { Result.success(Unit) },
             analyticsManager = TestAnalyticsManager(),
             coroutineScope = CoroutineScope(Dispatchers.Main),

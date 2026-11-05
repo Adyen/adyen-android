@@ -12,8 +12,6 @@ import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.dropin.internal.helper.BackStackPersister
 import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.test.LoggingExtension
-import com.adyen.checkout.test.extensions.test
-import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -69,18 +67,6 @@ internal class DropInNavigatorTest {
     }
 
     @Test
-    fun `when going back from the only key then finish flow emits true`() = runTest {
-        val key = TestNavKey("test")
-        navigator.navigateTo(key)
-
-        val finishFlow = navigator.finishFlow.test(testScheduler)
-
-        navigator.back()
-
-        assertEquals(true, finishFlow.latestValue)
-    }
-
-    @Test
     fun `when going back from the only key then the back stack is empty`() {
         navigator.navigateTo(TestNavKey("test"))
 
@@ -90,17 +76,29 @@ internal class DropInNavigatorTest {
     }
 
     @Test
-    fun `when going back with multiple keys then finish flow does not emit`() = runTest {
-        val key1 = TestNavKey("key1")
-        val key2 = TestNavKey("key2")
-        navigator.navigateTo(key1)
-        navigator.navigateTo(key2)
-
-        val finishFlow = navigator.finishFlow.test(testScheduler)
-
+    fun `when going back from an empty back stack then it stays empty`() {
         navigator.back()
 
-        assertEquals(1, finishFlow.values.size)
+        assertEquals(emptyList<NavKey>(), navigator.backStack)
+    }
+
+    @Test
+    fun `when clearing then the back stack is empty`() {
+        navigator.navigateTo(TestNavKey("first"))
+        navigator.navigateTo(TestNavKey("second"))
+
+        navigator.clear()
+
+        assertEquals(emptyList<NavKey>(), navigator.backStack)
+    }
+
+    @Test
+    fun `when clearing then the empty back stack is restored`() {
+        navigator.navigateTo(TestNavKey("test"))
+
+        navigator.clear()
+
+        assertEquals(emptyList<NavKey>(), DropInNavigator(persister).backStack)
     }
 
     @Test

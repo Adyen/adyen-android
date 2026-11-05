@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,6 +47,7 @@ class DropInActivity : ComponentActivity() {
         input = parsedInput
 
         viewModel.startDropInService(this)
+        disableActivityTransitions()
 
         viewModel.resultFlow
             .flowWithLifecycle(lifecycle)
@@ -65,6 +67,31 @@ class DropInActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * The screens animate in and out by themselves, and Drop-in only closes once they have. The default transitions of
+     * a translucent activity would slide the whole window in and out on top of that. Below Android 14 the close
+     * transition is disabled in [disableCloseTransitionBelowAndroid14] instead.
+     */
+    private fun disableActivityTransitions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, 0, 0)
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
+    }
+
+    /**
+     * Below Android 14 the close transition can only be overridden right after [finish].
+     */
+    private fun disableCloseTransitionBelowAndroid14() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
+    }
+
     private fun sendResult(dropInResult: DropInResult) {
         adyenLog(AdyenLogLevel.DEBUG) { "sendResult: $dropInResult" }
         val resultIntent = Intent().putExtra(
@@ -79,6 +106,7 @@ class DropInActivity : ComponentActivity() {
         adyenLog(AdyenLogLevel.DEBUG) { "terminate" }
         viewModel.stopDropInService(this)
         finish()
+        disableCloseTransitionBelowAndroid14()
     }
 
     override fun onDestroy() {
