@@ -71,7 +71,7 @@ private fun AddressPostalCodeFieldPreview(
             maxLength = PREVIEW_MAX_LENGTH,
             postalCodeState = TextInputViewState(
                 text = "1234",
-                supportingText = CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR,
+                supportingText = CheckoutLocalizationKey.GENERAL_FIELD_ERROR,
                 isError = true,
             ),
             onValueChange = {},

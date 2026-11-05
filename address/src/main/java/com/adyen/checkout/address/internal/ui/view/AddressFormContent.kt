@@ -279,7 +279,7 @@ private fun AddressFormContentErrorPreview(
                 AddressFormElement.Street(
                     label = CheckoutLocalizationKey.ADDRESS_STREET_LABEL,
                     textInputViewState = TextInputViewState(
-                        supportingText = CheckoutLocalizationKey.ADDRESS_STREET_ERROR,
+                        supportingText = CheckoutLocalizationKey.GENERAL_FIELD_ERROR,
                         isError = true,
                     ),
                 ),
@@ -296,14 +296,14 @@ private fun AddressFormContentErrorPreview(
                     maxLength = PREVIEW_POSTAL_CODE_MAX_LENGTH,
                     textInputViewState = TextInputViewState(
                         text = "1234",
-                        supportingText = CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR,
+                        supportingText = CheckoutLocalizationKey.GENERAL_FIELD_ERROR,
                         isError = true,
                     ),
                 ),
                 AddressFormElement.City(
                     label = CheckoutLocalizationKey.ADDRESS_CITY_LABEL,
                     textInputViewState = TextInputViewState(
-                        supportingText = CheckoutLocalizationKey.ADDRESS_CITY_ERROR,
+                        supportingText = CheckoutLocalizationKey.GENERAL_FIELD_ERROR,
                         isError = true,
                     ),
                 ),

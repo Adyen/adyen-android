@@ -59,7 +59,7 @@ private fun AddressCityFieldPreview(
         AddressCityField(
             label = CheckoutLocalizationKey.ADDRESS_CITY_LABEL_CITY_TOWN,
             cityState = TextInputViewState(
-                supportingText = CheckoutLocalizationKey.ADDRESS_CITY_ERROR,
+                supportingText = CheckoutLocalizationKey.GENERAL_FIELD_ERROR,
                 isError = true,
             ),
             onValueChange = {},

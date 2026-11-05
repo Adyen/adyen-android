@@ -46,7 +46,7 @@ internal class AddressViewStateProducerTest {
     @Test
     fun `when a field has a visible error then its view state is an error`() {
         // GIVEN
-        val visibleError = InputError(CheckoutLocalizationKey.ADDRESS_CITY_ERROR, isVisible = true)
+        val visibleError = InputError(CheckoutLocalizationKey.GENERAL_FIELD_ERROR, isVisible = true)
         val state = createState().copy(city = TextInputComponentState(error = visibleError))
 
         // WHEN
@@ -55,7 +55,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val city = viewState.elements.filterIsInstance<AddressFormElement.City>().single()
         assertTrue(city.textInputViewState.isError)
-        assertEquals(CheckoutLocalizationKey.ADDRESS_CITY_ERROR, city.textInputViewState.supportingText)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR, city.textInputViewState.supportingText)
     }
 
     @Test
