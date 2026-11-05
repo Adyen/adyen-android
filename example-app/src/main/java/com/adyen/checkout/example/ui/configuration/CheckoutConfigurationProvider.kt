@@ -172,7 +172,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         when (keyValueStorage.getCardAddressMode()) {
             CardAddressMode.NONE -> BillingAddressMode.None()
             CardAddressMode.POSTAL_CODE -> BillingAddressMode.PostalCode()
-            CardAddressMode.FULL_ADDRESS -> TODO()
+            CardAddressMode.FULL_ADDRESS -> BillingAddressMode.Full(
+                supportedCountryCodes = setOf("AU", "BR", "CA", "DE", "GB", "IE", "IN", "JP", "NL", "US"),
+            )
             CardAddressMode.LOOKUP -> TODO()
         }
 

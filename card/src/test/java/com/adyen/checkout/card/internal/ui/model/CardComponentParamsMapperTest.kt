@@ -269,6 +269,49 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
+    fun `when no billing address mode is set then the mode is none`() {
+        // WHEN
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(cardConfiguration = createCardConfiguration(billingAddressMode = null)),
+            paymentMethod = null,
+        )
+
+        // THEN
+        assertEquals(BillingAddressParams.None, params.billingAddressParams)
+    }
+
+    @Test
+    fun `when the billing address mode is postal code then the mode is postal code`() {
+        // WHEN
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(billingAddressMode = BillingAddressMode.PostalCode()),
+            ),
+            paymentMethod = null,
+        )
+
+        // THEN
+        assertEquals(BillingAddressParams.PostalCode, params.billingAddressParams)
+    }
+
+    @Test
+    fun `when the billing address mode is full then the params carry the supported country codes`() {
+        // GIVEN
+        val billingAddressMode = BillingAddressMode.Full(supportedCountryCodes = setOf("NL", "US"))
+
+        // WHEN
+        val params = mapper.mapToParams(
+            params = generateCheckoutParams(
+                cardConfiguration = createCardConfiguration(billingAddressMode = billingAddressMode),
+            ),
+            paymentMethod = null,
+        )
+
+        // THEN
+        assertEquals(BillingAddressParams.Full(supportedCountryCodes = setOf("NL", "US")), params.billingAddressParams)
+    }
+
+    @Test
     fun `when supportedCardBrands is set in configuration then it takes priority over payment method brands`() {
         val configBrands = listOf(CardBrand.MAESTRO)
         val paymentMethod = createCardPaymentMethod(
@@ -518,7 +561,7 @@ internal class CardComponentParamsMapperTest {
             showSupportedCardBrandLogos = false,
             socialSecurityNumberVisibility = FieldVisibility.SHOW,
             koreanAuthenticationVisibility = FieldVisibility.SHOW,
-            showPostalCode = true,
+            billingAddressParams = BillingAddressParams.PostalCode,
             cvcVisibility = CVCVisibility.ALWAYS_HIDE,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
             showCardScanner = false,
@@ -622,7 +665,7 @@ internal class CardComponentParamsMapperTest {
         showSupportedCardBrandLogos: Boolean = true,
         socialSecurityNumberVisibility: FieldVisibility = FieldVisibility.HIDE,
         koreanAuthenticationVisibility: FieldVisibility = FieldVisibility.HIDE,
-        showPostalCode: Boolean = false,
+        billingAddressParams: BillingAddressParams = BillingAddressParams.None,
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW,
         showCardScanner: Boolean = true,
@@ -634,7 +677,7 @@ internal class CardComponentParamsMapperTest {
         showSupportedCardBrandLogos = showSupportedCardBrandLogos,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         koreanAuthenticationVisibility = koreanAuthenticationVisibility,
-        showPostalCode = showPostalCode,
+        billingAddressParams = billingAddressParams,
         cvcVisibility = cvcVisibility,
         storedCVCVisibility = storedCVCVisibility,
         showCardScanner = showCardScanner,

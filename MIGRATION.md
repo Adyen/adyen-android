@@ -215,6 +215,13 @@ val configuration = CheckoutConfiguration(
 }
 ```
 
+`AddressConfiguration` becomes `BillingAddressMode`:
+
+- `AddressConfiguration.None` becomes `BillingAddressMode.None()`.
+- `AddressConfiguration.PostalCode()` becomes `BillingAddressMode.PostalCode()`.
+- `AddressConfiguration.FullAddress(supportedCountryCodes = ...)` becomes `BillingAddressMode.Full(supportedCountryCodes = ...)`, which takes a `Set` of uppercase ISO 3166-1 alpha-2 codes.
+- `defaultCountryCode` and `addressFieldPolicy` have no v6 equivalent. The country of the shopper locale is preselected when the shopper can pick it, and the selected country's form decides which fields are required.
+
 #### Callback migration
 
 - `ComponentCallback<CardComponentState>.onSubmit(...)` moves to `AdvancedCheckoutCallbacks(onSubmit = { ... })`.

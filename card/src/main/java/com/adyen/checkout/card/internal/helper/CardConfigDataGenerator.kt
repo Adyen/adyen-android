@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.helper
 
 import com.adyen.checkout.card.FieldVisibility
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
@@ -20,6 +21,7 @@ internal class CardConfigDataGenerator(
 
     fun generate(params: CardComponentParams, isStored: Boolean): Map<String, String> {
         return buildMap {
+            params.getBillingAddressAllowedCountries()?.let { put("billingAddressAllowedCountries", it) }
             put("billingAddressMode", params.getBillingAddressMode())
             put("billingAddressRequired", params.getBillingAddressRequired())
             put("brands", params.supportedCardBrands.joinToString(",") { it.txVariant })
@@ -41,14 +43,21 @@ internal class CardConfigDataGenerator(
         }
     }
 
-    // TODO - Adjust this method when we support full address
-    private fun CardComponentParams.getBillingAddressMode(): String {
-        return if (showPostalCode) "PostalCode" else "None"
+    private fun CardComponentParams.getBillingAddressAllowedCountries(): String? {
+        val supportedCountryCodes = (billingAddressParams as? BillingAddressParams.Full)?.supportedCountryCodes
+        return supportedCountryCodes?.takeIf { it.isNotEmpty() }?.joinToString(",")
     }
 
-    // TODO - Adjust this method when we support full address
+    private fun CardComponentParams.getBillingAddressMode(): String {
+        return when (billingAddressParams) {
+            BillingAddressParams.None -> "None"
+            BillingAddressParams.PostalCode -> "PostalCode"
+            is BillingAddressParams.Full -> "Full"
+        }
+    }
+
     private fun CardComponentParams.getBillingAddressRequired(): String {
-        return if (showPostalCode) "true" else "false"
+        return (billingAddressParams != BillingAddressParams.None).toString()
     }
 
     private fun CardComponentParams.getHideCVC(isStored: Boolean): String {
