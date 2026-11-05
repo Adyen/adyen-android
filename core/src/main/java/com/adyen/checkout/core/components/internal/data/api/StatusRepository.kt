@@ -80,11 +80,18 @@ class DefaultStatusRepository(
                 fetchStatus(it)
             }
             .transform { result ->
-                emit(result)
-
-                if (result.isSuccess && result.getOrThrow().isFinalResult()) {
-                    currentCoroutineContext().cancel()
-                }
+                // A failed status request does not mean the payment failed. Connectivity can be recovered, for example
+                // when the OS pauses network access for apps in the background, so polling continues until a final
+                // result or a timeout.
+                result.fold(
+                    onSuccess = { response ->
+                        emit(result)
+                        if (response.isFinalResult()) currentCoroutineContext().cancel()
+                    },
+                    onFailure = {
+                        adyenLog(AdyenLogLevel.WARN, it) { "Fetching the status failed, polling continues" }
+                    },
+                )
 
                 if (!updateDelay(startTime, maxPollingDuration)) {
                     adyenLog(AdyenLogLevel.DEBUG) { "Max polling time exceeded" }
