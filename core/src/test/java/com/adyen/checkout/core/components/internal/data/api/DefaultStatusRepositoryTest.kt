@@ -12,6 +12,7 @@ import com.adyen.checkout.core.common.LoggingExtension
 import com.adyen.checkout.core.common.TestDispatcherExtension
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
+import com.adyen.checkout.core.error.internal.HttpError
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -20,11 +21,15 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
+import org.json.JSONException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
@@ -34,6 +39,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.TimeSource
@@ -138,10 +144,11 @@ internal class DefaultStatusRepositoryTest(
         statusFlow.cancel()
     }
 
-    @Test
-    fun `when fetching the status fails with UnknownHostException, then nothing is emitted`() = runTest {
+    @ParameterizedTest
+    @MethodSource("statusFailuresSource")
+    fun `when fetching the status fails, then nothing is emitted`(exception: Exception) = runTest {
         statusRepository = createRepository(testScheduler, testTimeSource)
-        whenever(statusService.checkStatus(any(), any())) doAnswer { throw UnknownHostException() }
+        whenever(statusService.checkStatus(any(), any())) doAnswer { throw exception }
 
         val statusFlow = statusRepository
             .poll("paymentData", MAX_POLLING_DURATION)
@@ -156,40 +163,42 @@ internal class DefaultStatusRepositoryTest(
     }
 
     @Test
-    fun `when fetching the status fails with another exception, then the failure is emitted`() = runTest {
+    fun `when fetching the status fails and then returns a final result, then the final result is emitted`() = runTest {
         statusRepository = createRepository(testScheduler, testTimeSource)
-        val exception = IOException()
-        whenever(statusService.checkStatus(any(), any())) doAnswer { throw exception }
+        val response = StatusResponse(resultCode = "authorised")
+        whenever(statusService.checkStatus(any(), any()))
+            .doAnswer { throw IOException() }
+            .doReturn(response)
 
         val statusFlow = statusRepository
             .poll("paymentData", MAX_POLLING_DURATION)
             .test(testScheduler)
 
-        testScheduler.advanceTimeBy(DefaultStatusRepository.DEBOUNCE_TIME + 1)
+        advanceUntilIdle()
 
-        assertEquals(listOf(Result.failure<StatusResponse>(exception)), statusFlow.values)
+        assertEquals(listOf(Result.success(response)), statusFlow.values)
+        assertInstanceOf(CancellationException::class.java, statusFlow.completionThrowable)
 
         statusFlow.cancel()
     }
 
     @Test
-    fun `when fetching the status keeps failing with UnknownHostException, then max polling time still ends the flow`() =
-        runTest {
-            statusRepository = createRepository(testScheduler, testTimeSource)
-            whenever(statusService.checkStatus(any(), any())) doAnswer { throw UnknownHostException() }
+    fun `when fetching the status keeps failing, then max polling time still ends the flow`() = runTest {
+        statusRepository = createRepository(testScheduler, testTimeSource)
+        whenever(statusService.checkStatus(any(), any())) doAnswer { throw IOException() }
 
-            val statusFlow = statusRepository
-                .poll("paymentData", MAX_POLLING_DURATION)
-                .test(testScheduler)
+        val statusFlow = statusRepository
+            .poll("paymentData", MAX_POLLING_DURATION)
+            .test(testScheduler)
 
-            testScheduler.advanceTimeBy(MAX_POLLING_DURATION + 2100)
+        testScheduler.advanceTimeBy(MAX_POLLING_DURATION + 2100)
 
-            assertEquals(1, statusFlow.values.size)
-            assertInstanceOf(IllegalStateException::class.java, statusFlow.latestValue.exceptionOrNull())
-            assertInstanceOf(CancellationException::class.java, statusFlow.completionThrowable)
+        assertEquals(1, statusFlow.values.size)
+        assertInstanceOf(IllegalStateException::class.java, statusFlow.latestValue.exceptionOrNull())
+        assertInstanceOf(CancellationException::class.java, statusFlow.completionThrowable)
 
-            statusFlow.cancel()
-        }
+        statusFlow.cancel()
+    }
 
     private fun createRepository(
         testScheduler: TestCoroutineScheduler,
@@ -205,5 +214,14 @@ internal class DefaultStatusRepositoryTest(
 
     companion object {
         private val MAX_POLLING_DURATION = 1.minutes.inWholeMilliseconds
+
+        @JvmStatic
+        fun statusFailuresSource() = listOf(
+            arguments(UnknownHostException()),
+            arguments(SocketTimeoutException()),
+            arguments(HttpError(code = 500, message = "Internal server error", errorBody = null)),
+            arguments(HttpError(code = 401, message = "Unauthorized", errorBody = null)),
+            arguments(JSONException("Invalid JSON")),
+        )
     }
 }

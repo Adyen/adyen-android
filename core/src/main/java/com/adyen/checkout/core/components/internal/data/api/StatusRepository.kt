@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
-import java.net.UnknownHostException
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeMark
@@ -81,11 +80,15 @@ class DefaultStatusRepository(
                 fetchStatus(it)
             }
             .transform { result ->
-                // For API >= 35, apps lose connectivity if in background. That results in an UnknownHostException here.
-                // We do not emit this since connection can be recovered and thus, it's not a payment critical failure.
-                if (result.exceptionOrNull() !is UnknownHostException) {
-                    emit(result)
-                }
+                // A failed status request does not mean the payment failed. Connectivity can be recovered, for example
+                // when the OS pauses network access for apps in the background, so polling continues until a final
+                // result or a timeout.
+                result.fold(
+                    onSuccess = { emit(result) },
+                    onFailure = {
+                        adyenLog(AdyenLogLevel.WARN, it) { "Fetching the status failed, polling continues" }
+                    },
+                )
 
                 if (result.isSuccess && result.getOrThrow().isFinalResult()) {
                     currentCoroutineContext().cancel()
