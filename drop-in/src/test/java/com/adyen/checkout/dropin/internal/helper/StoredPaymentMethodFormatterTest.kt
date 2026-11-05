@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.helper
 
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
@@ -16,9 +18,11 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBa
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.dropin.internal.ui.UiText
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 internal class StoredPaymentMethodFormatterTest {
 
@@ -322,4 +326,66 @@ internal class StoredPaymentMethodFormatterTest {
 
         assertEquals("Cash App Pay", result)
     }
+
+    @Test
+    fun `when amount is null, then description asks to pay without an amount`() {
+        val result = StoredPaymentMethodFormatter.getDescription(createStoredCard(), null, Locale.US)
+
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION, listOf("Visa")),
+            result,
+        )
+    }
+
+    @Test
+    fun `when amount is zero, then description asks to save details`() {
+        val result = StoredPaymentMethodFormatter.getDescription(createStoredCard(), Amount("USD", 0L), Locale.US)
+
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS,
+                listOf("Visa"),
+            ),
+            result,
+        )
+    }
+
+    @Test
+    fun `when amount is positive, then description asks to pay the formatted amount`() {
+        val result = StoredPaymentMethodFormatter.getDescription(createStoredCard(), Amount("USD", 999L), Locale.US)
+
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+                listOf("Visa", "$9.99"),
+            ),
+            result,
+        )
+    }
+
+    @Test
+    fun `when amount is negative, then description asks to pay the formatted amount`() {
+        val result = StoredPaymentMethodFormatter.getDescription(createStoredCard(), Amount("USD", -999L), Locale.US)
+
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+                listOf("Visa", "-$9.99"),
+            ),
+            result,
+        )
+    }
+
+    private fun createStoredCard() = StoredCardPaymentMethod(
+        type = PaymentMethodTypes.SCHEME,
+        name = "Visa",
+        id = "id",
+        supportedShopperInteractions = emptyList(),
+        brand = "visa",
+        lastFour = "1234",
+        expiryMonth = "01",
+        expiryYear = "2030",
+        holderName = null,
+        fundingSource = null,
+    )
 }

@@ -190,8 +190,17 @@ internal class DefaultLocalizationSource {
                 R.string.adyen_checkout_dropin_stored_payment_method_management_payment_options_label
 
             CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
-            CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION ->
-                R.string.checkout_drop_in_payment_method_list_description
+            CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_PAYMENT_OPTIONS ->
+                R.string.adyen_checkout_dropin_payment_method_list_title_payment_options
+
+            CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_SAVE_DETAILS ->
+                R.string.adyen_checkout_dropin_payment_method_list_title_save_details
+
+            CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT ->
+                R.string.adyen_checkout_dropin_payment_method_list_description_complete_payment
+
+            CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_SAVE_DETAILS ->
+                R.string.adyen_checkout_dropin_payment_method_list_description_save_details
 
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION ->
                 R.string.checkout_drop_in_payment_method_list_favorites_section_action
@@ -208,8 +217,17 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_CARD_DESCRIPTION ->
                 R.string.checkout_drop_in_payment_method_screen_card_description
 
+            CheckoutLocalizationKey.DROPIN_PRESELECTED_PAYMENT_METHOD_BUTTON_LABEL ->
+                R.string.adyen_checkout_dropin_preselected_payment_method_button_label
+
             CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION ->
-                R.string.checkout_dropin_stored_payment_method_description
+                R.string.adyen_checkout_dropin_stored_payment_method_description
+
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS ->
+                R.string.adyen_checkout_dropin_stored_payment_method_description_save_details
+
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT ->
+                R.string.adyen_checkout_dropin_stored_payment_method_description_with_amount
 
             CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_STATUS_EXPIRED ->
                 R.string.adyen_checkout_dropin_stored_payment_method_status_expired

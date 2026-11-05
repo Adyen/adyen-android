@@ -90,7 +90,9 @@ private fun PaymentMethodListContent(
         ) {
             item {
                 Body(
-                    text = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
+                    text = resolveString(
+                        CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT,
+                    ),
                     color = CheckoutThemeProvider.colors.textSecondary,
                     modifier = Modifier
                         .padding(

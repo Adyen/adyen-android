@@ -8,12 +8,17 @@
 
 package com.adyen.checkout.dropin.internal.helper
 
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.data.model.format
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.dropin.internal.ui.UiText
+import java.util.Locale
 
 internal object StoredPaymentMethodFormatter {
 
@@ -59,6 +64,26 @@ internal object StoredPaymentMethodFormatter {
             is StoredCardPaymentMethod -> "${storedPaymentMethod.name} ${getTitle(storedPaymentMethod)}"
 
             else -> storedPaymentMethod.name
+        }
+    }
+
+    fun getDescription(storedPaymentMethod: StoredPaymentMethod, amount: Amount?, locale: Locale): UiText {
+        val name = storedPaymentMethod.name
+        return when {
+            amount == null -> UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION,
+                listOf(name),
+            )
+
+            amount.value == 0L -> UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS,
+                listOf(name),
+            )
+
+            else -> UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+                listOf(name, amount.format(locale)),
+            )
         }
     }
 }
