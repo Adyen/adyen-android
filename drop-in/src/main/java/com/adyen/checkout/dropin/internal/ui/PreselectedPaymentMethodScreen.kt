@@ -62,12 +62,12 @@ private fun PreselectedPaymentMethodContent(
         IconHeaderContent(
             logoTxVariant = viewState.logoTxVariant,
             title = viewState.title,
-            description = viewState.subtitle,
+            description = viewState.subtitle.resolve(),
             modifier = Modifier.padding(horizontal = Dimensions.Spacing.Large),
         ) {
             PrimaryButton(
                 onClick = onPayClicked,
-                text = viewState.payButtonText,
+                text = viewState.payButtonText.resolve(),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -87,12 +87,61 @@ private fun PreselectedPaymentMethodContent(
 private fun PreselectedPaymentMethodScreenPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
+    PreselectedPaymentMethodContentPreview(
+        theme = theme,
+        subtitle = UiText.Localized(
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+            listOf("Visa", "$9.99"),
+        ),
+        payButtonText = UiText.Localized(
+            CheckoutLocalizationKey.DROPIN_PRESELECTED_PAYMENT_METHOD_BUTTON_LABEL,
+            listOf("Visa"),
+        ),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreselectedPaymentMethodScreenZeroAmountPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    PreselectedPaymentMethodContentPreview(
+        theme = theme,
+        subtitle = UiText.Localized(
+            CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS,
+            listOf("Visa"),
+        ),
+        payButtonText = UiText.Localized(CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreselectedPaymentMethodScreenNoAmountPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
+) {
+    PreselectedPaymentMethodContentPreview(
+        theme = theme,
+        subtitle = UiText.Localized(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION, listOf("Visa")),
+        payButtonText = UiText.Localized(
+            CheckoutLocalizationKey.DROPIN_PRESELECTED_PAYMENT_METHOD_BUTTON_LABEL,
+            listOf("Visa"),
+        ),
+    )
+}
+
+@Composable
+private fun PreselectedPaymentMethodContentPreview(
+    theme: CheckoutTheme,
+    subtitle: UiText,
+    payButtonText: UiText,
+) {
     CheckoutThemePreviewWrapper(theme) {
         val viewState = PreselectedPaymentMethodViewState(
             logoTxVariant = "visa",
             title = "•••• 1234",
-            subtitle = "Use Visa to pay $9.99",
-            payButtonText = "Pay $9.99",
+            subtitle = subtitle,
+            payButtonText = payButtonText,
         )
         PreselectedPaymentMethodContent(
             viewState = viewState,

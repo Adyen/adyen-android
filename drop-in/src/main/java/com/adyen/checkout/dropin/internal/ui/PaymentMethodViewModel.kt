@@ -93,8 +93,7 @@ internal class PaymentMethodViewModel(
             isStored -> PaymentMethodViewState.Stored(
                 logoTxVariant = paymentMethod.getLogoTxVariant(),
                 title = paymentMethod.getStoredTitle(),
-                paymentMethodName = paymentMethod.name,
-                formattedAmount = formattedAmount,
+                description = paymentMethod.getStoredDescription(),
             )
 
             controller.requiresUserInteraction() -> PaymentMethodViewState.Regular(
@@ -113,6 +112,16 @@ internal class PaymentMethodViewModel(
     private fun PaymentMethodResponse.getStoredTitle(): String = when (this) {
         is StoredPaymentMethod -> StoredPaymentMethodFormatter.getTitle(this)
         else -> name
+    }
+
+    private fun PaymentMethodResponse.getStoredDescription(): UiText = when (this) {
+        is StoredPaymentMethod -> StoredPaymentMethodFormatter.getDescription(
+            storedPaymentMethod = this,
+            amount = checkoutParams.amount,
+            locale = checkoutParams.shopperLocale,
+        )
+
+        else -> UiText.Raw(name)
     }
 
     private fun PaymentMethodResponse.getLogoTxVariant() = when (this) {

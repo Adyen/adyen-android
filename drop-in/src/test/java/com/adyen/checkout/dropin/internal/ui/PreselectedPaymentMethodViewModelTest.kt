@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.internal.AnalyticsParams
@@ -141,11 +142,70 @@ internal class PreselectedPaymentMethodViewModelTest {
         assertEquals(listOf(EmptyNavKey, PaymentMethodListNavKey), navigator.backStack)
     }
 
+    @Test
+    fun `when there is an amount, then the shopper is asked to pay that amount with the stored payment method`() {
+        val repository = TestPaymentMethodRepository(listOf(storedPaymentMethod))
+
+        val viewModel = createViewModel(repository, storedPaymentMethodId = "stored-id-1")
+
+        val viewState = viewModel.viewState.value
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+                listOf("Visa", "$9.99"),
+            ),
+            viewState?.subtitle,
+        )
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_PRESELECTED_PAYMENT_METHOD_BUTTON_LABEL, listOf("Visa")),
+            viewState?.payButtonText,
+        )
+    }
+
+    @Test
+    fun `when the amount is zero, then the shopper is asked to save details`() {
+        val repository = TestPaymentMethodRepository(listOf(storedPaymentMethod))
+
+        val viewModel = createViewModel(
+            repository,
+            storedPaymentMethodId = "stored-id-1",
+            amount = Amount(currency = "USD", value = 0L),
+        )
+
+        val viewState = viewModel.viewState.value
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS,
+                listOf("Visa"),
+            ),
+            viewState?.subtitle,
+        )
+        assertEquals(UiText.Localized(CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT), viewState?.payButtonText)
+    }
+
+    @Test
+    fun `when there is no amount, then the shopper is asked to pay with the stored payment method`() {
+        val repository = TestPaymentMethodRepository(listOf(storedPaymentMethod))
+
+        val viewModel = createViewModel(repository, storedPaymentMethodId = "stored-id-1", amount = null)
+
+        val viewState = viewModel.viewState.value
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION, listOf("Visa")),
+            viewState?.subtitle,
+        )
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_PRESELECTED_PAYMENT_METHOD_BUTTON_LABEL, listOf("Visa")),
+            viewState?.payButtonText,
+        )
+    }
+
     private fun createViewModel(
         repository: TestPaymentMethodRepository,
         storedPaymentMethodId: String,
+        amount: Amount? = checkoutParams.amount,
     ) = PreselectedPaymentMethodViewModel(
-        checkoutParams = checkoutParams,
+        checkoutParams = checkoutParams.copy(amount = amount),
         paymentMethodRepository = repository,
         storedPaymentMethodId = storedPaymentMethodId,
         navigator = navigator,

@@ -24,8 +24,7 @@ internal sealed interface PaymentMethodViewState {
     data class Stored(
         val logoTxVariant: String,
         val title: String,
-        val paymentMethodName: String,
-        val formattedAmount: String,
+        val description: UiText,
     ) : PaymentMethodViewState
 
     data class Progress(

@@ -295,6 +295,48 @@ internal class PaymentMethodListViewModelTest {
         }
     }
 
+    @Test
+    fun `when there is no amount, then the list is titled as payment options`() {
+        val viewModel = createViewModel(listOf(CARD), amount = null)
+
+        val viewState = viewModel.viewState.value
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_PAYMENT_OPTIONS),
+            viewState.title,
+        )
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT),
+            viewState.description,
+        )
+    }
+
+    @Test
+    fun `when the amount is zero, then the list asks to save details`() {
+        val viewModel = createViewModel(listOf(CARD), amount = Amount(currency = "USD", value = 0L))
+
+        val viewState = viewModel.viewState.value
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_TITLE_SAVE_DETAILS),
+            viewState.title,
+        )
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_SAVE_DETAILS),
+            viewState.description,
+        )
+    }
+
+    @Test
+    fun `when there is an amount, then the list is titled with the formatted amount`() {
+        val viewModel = createViewModel(listOf(CARD))
+
+        val viewState = viewModel.viewState.value
+        assertEquals(UiText.Raw("$9.99"), viewState.title)
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_PAYMENT_METHOD_LIST_DESCRIPTION_COMPLETE_PAYMENT),
+            viewState.description,
+        )
+    }
+
     private fun PaymentMethodListViewModel.listedPaymentMethodIds(): List<String> =
         viewState.value.listedPaymentMethodIds()
 
@@ -305,8 +347,9 @@ internal class PaymentMethodListViewModelTest {
         paymentMethods: List<PaymentMethod>,
         storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),
         dropInParams: DropInParams = createDropInParams(),
+        amount: Amount? = checkoutParams.amount,
     ) = PaymentMethodListViewModel(
-        checkoutParams = checkoutParams,
+        checkoutParams = checkoutParams.copy(amount = amount),
         dropInParams = dropInParams,
         paymentMethodRepository = TestPaymentMethodRepository(
             storedMethods = storedPaymentMethods,

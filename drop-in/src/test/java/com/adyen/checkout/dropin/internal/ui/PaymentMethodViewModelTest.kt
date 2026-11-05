@@ -116,8 +116,13 @@ internal class PaymentMethodViewModelTest {
         val stored = assertInstanceOf<PaymentMethodViewState.Stored>(viewModel.paymentMethodViewState)
         assertEquals("\u2022\u2022\u2022\u2022 1234", stored.title)
         assertEquals("visa", stored.logoTxVariant)
-        assertEquals("Visa", stored.paymentMethodName)
-        assertEquals("$9.99", stored.formattedAmount)
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+                listOf("Visa", "$9.99"),
+            ),
+            stored.description,
+        )
     }
 
     @Test
@@ -131,8 +136,13 @@ internal class PaymentMethodViewModelTest {
         val stored = assertInstanceOf<PaymentMethodViewState.Stored>(viewModel.paymentMethodViewState)
         assertEquals("\u2022\u2022\u2022\u2022 1234", stored.title)
         assertEquals("visa", stored.logoTxVariant)
-        assertEquals("Visa", stored.paymentMethodName)
-        assertEquals("$9.99", stored.formattedAmount)
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_WITH_AMOUNT,
+                listOf("Visa", "$9.99"),
+            ),
+            stored.description,
+        )
     }
 
     @Test
@@ -268,15 +278,43 @@ internal class PaymentMethodViewModelTest {
         )
     }
 
+    @Test
+    fun `when a stored payment method is used for a zero amount, then the screen asks to save details`() {
+        val viewModel = createViewModel(STORED_TYPE, amount = Amount(currency = "USD", value = 0L))
+
+        val stored = assertInstanceOf<PaymentMethodViewState.Stored>(viewModel.paymentMethodViewState)
+        assertEquals(
+            UiText.Localized(
+                CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION_SAVE_DETAILS,
+                listOf("Visa"),
+            ),
+            stored.description,
+        )
+    }
+
+    @Test
+    fun `when a stored payment method is used without an amount, then the screen asks to pay`() {
+        val viewModel = createViewModel(STORED_TYPE, amount = null)
+
+        val stored = assertInstanceOf<PaymentMethodViewState.Stored>(viewModel.paymentMethodViewState)
+        assertEquals(
+            UiText.Localized(CheckoutLocalizationKey.DROPIN_STORED_PAYMENT_METHOD_DESCRIPTION, listOf("Visa")),
+            stored.description,
+        )
+    }
+
     /** Puts the screen under test on the back stack the way the payment method list does, with the list below it. */
     private fun navigateToPaymentMethod(paymentFlowType: DropInPaymentFlowType) {
         navigator.navigateTo(StoredPaymentMethodsNavKey)
         navigator.navigateTo(PaymentMethodNavKey(paymentFlowType))
     }
 
-    private fun createViewModel(paymentFlowType: DropInPaymentFlowType) = PaymentMethodViewModel(
+    private fun createViewModel(
+        paymentFlowType: DropInPaymentFlowType,
+        amount: Amount? = checkoutParams.amount,
+    ) = PaymentMethodViewModel(
         paymentFlowType = paymentFlowType,
-        checkoutParams = checkoutParams,
+        checkoutParams = checkoutParams.copy(amount = amount),
         paymentMethodRepository = paymentMethodRepository,
         navigator = navigator,
         controllerProvider = controllerProvider,
