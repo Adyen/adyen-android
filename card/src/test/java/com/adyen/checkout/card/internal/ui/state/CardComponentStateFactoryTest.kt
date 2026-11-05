@@ -119,7 +119,7 @@ internal class CardComponentStateFactoryTest {
     // region postalCode
     @Test
     fun `when the billing address mode is postal code, then postalCode is Required`() {
-        val billingAddressParams = BillingAddressParams.PostalCode(hideForCardBrands = emptySet())
+        val billingAddressParams = BillingAddressParams.PostalCode(hideForCardBrands = setOf(CardBrand.JCB))
         val state = createFactory(billingAddressParams = billingAddressParams).createInitialState()
 
         assertEquals(RequirementPolicy.Required, state.postalCode.requirementPolicy)
@@ -144,7 +144,7 @@ internal class CardComponentStateFactoryTest {
     // region billingAddress
     @Test
     fun `when the billing address mode is full, then the billing address row is visible`() {
-        val billingAddressParams = BillingAddressParams.Full(emptySet(), emptySet())
+        val billingAddressParams = BillingAddressParams.Full(emptySet(), setOf(CardBrand.JCB))
         val state = createFactory(billingAddressParams = billingAddressParams).createInitialState()
 
         assertTrue(state.billingAddress.isVisible)

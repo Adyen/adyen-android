@@ -62,12 +62,7 @@ internal class CardConfigDataGenerator(
     }
 
     private fun CardComponentParams.getBillingAddressHideForCardBrands(): String {
-        val hideForCardBrands = when (billingAddressParams) {
-            BillingAddressParams.None -> emptySet()
-            is BillingAddressParams.PostalCode -> billingAddressParams.hideForCardBrands
-            is BillingAddressParams.Full -> billingAddressParams.hideForCardBrands
-        }
-        return hideForCardBrands.map { it.txVariant }.sorted().joinToString(",")
+        return billingAddressParams.hideForCardBrands.map { it.txVariant }.sorted().joinToString(",")
     }
 
     private fun CardComponentParams.getHideCVC(isStored: Boolean): String {

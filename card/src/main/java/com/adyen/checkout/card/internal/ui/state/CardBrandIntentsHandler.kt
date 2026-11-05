@@ -15,15 +15,15 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.card.internal.helper.toCardBrandData
 import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
-import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.getPostalCodeRequirementPolicy
+import com.adyen.checkout.card.internal.ui.model.isBillingAddressVisible
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 
-@Suppress("TooManyFunctions")
 internal class CardBrandIntentsHandler(
     private val componentParams: CardComponentParams,
     private val detectCardTypeBinHelper: DetectCardTypeBinHelper,
@@ -189,30 +189,16 @@ internal class CardBrandIntentsHandler(
             ),
             installmentState = getUpdatedInstallmentState(state, reliableCardBrandData?.cardBrand),
             postalCode = state.postalCode.copy(
-                requirementPolicy = getPostalCodeRequirementPolicy(reliableCardBrandData?.cardBrand),
+                requirementPolicy = componentParams.billingAddressParams.getPostalCodeRequirementPolicy(
+                    cardBrand = reliableCardBrandData?.cardBrand,
+                ),
             ),
             billingAddress = state.billingAddress.copy(
-                isVisible = isBillingAddressVisible(reliableCardBrandData?.cardBrand),
+                isVisible = componentParams.billingAddressParams.isBillingAddressVisible(
+                    cardBrand = reliableCardBrandData?.cardBrand,
+                ),
             ),
         )
-    }
-
-    private fun getPostalCodeRequirementPolicy(cardBrand: CardBrand?): RequirementPolicy {
-        val billingAddressParams = componentParams.billingAddressParams
-        return if (
-            billingAddressParams is BillingAddressParams.PostalCode &&
-            cardBrand !in billingAddressParams.hideForCardBrands
-        ) {
-            RequirementPolicy.Required
-        } else {
-            RequirementPolicy.Hidden
-        }
-    }
-
-    private fun isBillingAddressVisible(cardBrand: CardBrand?): Boolean {
-        val billingAddressParams = componentParams.billingAddressParams
-        return billingAddressParams is BillingAddressParams.Full &&
-            cardBrand !in billingAddressParams.hideForCardBrands
     }
 
     private fun getExpiryDateRequirementPolicy(expiryDatePolicy: Brand.FieldPolicy?): RequirementPolicy {
