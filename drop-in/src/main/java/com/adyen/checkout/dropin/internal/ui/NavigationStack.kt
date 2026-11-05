@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -30,7 +28,6 @@ internal fun NavigationStack(
 ) {
     NavDisplay(
         backStack = viewModel.navigator.backStack,
-        sceneStrategies = remember { listOf(BottomSheetSceneStrategy()) },
         onBack = { viewModel.navigator.back() },
         // Without a view model decorator every view model would go into the activity's store and only be cleared when
         // the activity is destroyed, so a payment flow would outlive the screen that started it. The saveable
@@ -58,14 +55,10 @@ internal fun NavigationStack(
 // This empty entry makes sure a bottom sheet can be rendered on top of nothing
 private fun emptyNavEntry(key: EmptyNavKey): NavEntry<NavKey> = NavEntry(key) {}
 
-@OptIn(ExperimentalMaterial3Api::class)
 private fun preselectedPaymentMethodNavEntry(
     key: PreselectedPaymentMethodNavKey,
     viewModel: DropInViewModel,
-): NavEntry<NavKey> = NavEntry(
-    key = key,
-    metadata = BottomSheetSceneStrategy.bottomSheet(),
-) {
+): NavEntry<NavKey> = NavEntry(key) {
     PreselectedPaymentMethodScreen(
         viewModel(
             factory = PreselectedPaymentMethodViewModel.Factory(

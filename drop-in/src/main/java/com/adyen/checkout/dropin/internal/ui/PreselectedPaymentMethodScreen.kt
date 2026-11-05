@@ -8,17 +8,31 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.BottomSheet
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scrim
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.currentStateAsState
 import com.adyen.checkout.core.common.internal.ui.IconHeaderContent
 import com.adyen.checkout.core.common.internal.ui.NavigationCloseButton
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
@@ -27,8 +41,10 @@ import com.adyen.checkout.ui.internal.element.button.PrimaryButton
 import com.adyen.checkout.ui.internal.element.button.SecondaryButton
 import com.adyen.checkout.ui.internal.helper.CheckoutThemePreviewWrapper
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.theme.CheckoutTheme
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun PreselectedPaymentMethodScreen(
@@ -36,12 +52,76 @@ internal fun PreselectedPaymentMethodScreen(
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     viewState?.let {
-        PreselectedPaymentMethodContent(
-            it,
-            onBackClicked = { viewModel.onBackClicked() },
-            onPayClicked = { viewModel.onPayClicked() },
-            onOtherPaymentMethodClicked = { viewModel.onOtherPaymentMethodClicked() },
+        PreselectedPaymentMethodBottomSheet(onDismissed = { viewModel.onBackClicked() }) { dismiss ->
+            PreselectedPaymentMethodContent(
+                it,
+                onBackClicked = dismiss,
+                onPayClicked = { viewModel.onPayClicked() },
+                onOtherPaymentMethodClicked = { viewModel.onOtherPaymentMethodClicked() },
+            )
+        }
+    }
+}
+
+/**
+ * Renders the sheet in the composition rather than in a window of its own, so it takes part in the transitions and the
+ * predictive back animations of the screens around it.
+ *
+ * @param onDismissed Called once the sheet is fully hidden.
+ * @param content Receives a callback that hides the sheet before calling [onDismissed].
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PreselectedPaymentMethodBottomSheet(
+    onDismissed: () -> Unit,
+    content: @Composable (dismiss: () -> Unit) -> Unit,
+) {
+    val sheetState = rememberBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded),
+    )
+
+    // NavDisplay only resumes this entry once no screen is animating over it, or away from it. Until then, the sheet
+    // cannot be dismissed, so a back press, swipe or click while the next screen slides in does not hide the sheet
+    // underneath it.
+    val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateAsState()
+    val isResumed = lifecycleState.isAtLeast(Lifecycle.State.RESUMED)
+
+    val scope = rememberCoroutineScope()
+    val dismiss: () -> Unit = {
+        if (isResumed) {
+            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                if (!sheetState.isVisible) onDismissed()
+            }
+        }
+    }
+
+    // The state is saveable, so coming back to this screen restores it expanded and this does not animate again
+    LaunchedEffect(sheetState) { sheetState.show() }
+
+    val scrimAlpha by animateFloatAsState(if (sheetState.targetValue == SheetValue.Hidden) 0f else 1f)
+
+    Box(Modifier.fillMaxSize()) {
+        Scrim(
+            contentDescription = null,
+            onClick = null,
+            alpha = { scrimAlpha },
         )
+
+        // Aligned to the top, because the sheet offsets itself from the top of the available height
+        BottomSheet(
+            state = sheetState,
+            onDismissRequest = onDismissed,
+            gesturesEnabled = isResumed,
+            backHandlerEnabled = isResumed,
+            dragHandle = null,
+            containerColor = CheckoutThemeProvider.colors.background,
+            modifier = Modifier.align(Alignment.TopCenter),
+        ) {
+            Spacer(Modifier.size(Dimensions.Spacing.Small))
+            content(dismiss)
+            Spacer(Modifier.size(Dimensions.Spacing.Large))
+        }
     }
 }
 
