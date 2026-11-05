@@ -32,8 +32,8 @@ sealed class BillingAddressMode : Parcelable {
     /**
      * Full Address Form will be requested as part of the card component.
      *
-     * @param supportedCountryCodes ISO country codes supported for the billing address.
-     *                              When empty, all countries are available.
+     * @param supportedCountryCodes ISO country codes supported for the billing address, as uppercase ISO 3166-1 alpha-2
+     *                              codes such as `NL`. When empty, all countries are available.
      * @param hideForCardBrands The [CardBrand]s for which the address form will be hidden.
      */
     @Parcelize
