@@ -21,6 +21,7 @@ internal class CardConfigDataGenerator(
 
     fun generate(params: CardComponentParams, isStored: Boolean): Map<String, String> {
         return buildMap {
+            params.getBillingAddressAllowedCountries()?.let { put("billingAddressAllowedCountries", it) }
             put("billingAddressMode", params.getBillingAddressMode())
             put("billingAddressRequired", params.getBillingAddressRequired())
             put("brands", params.supportedCardBrands.joinToString(",") { it.txVariant })
@@ -40,6 +41,11 @@ internal class CardConfigDataGenerator(
             put("socialSecurityNumberMode", params.socialSecurityNumberVisibility.toTrackableValue())
             put("showCardScanner", params.showCardScanner.toString())
         }
+    }
+
+    private fun CardComponentParams.getBillingAddressAllowedCountries(): String? {
+        val supportedCountryCodes = (billingAddressParams as? BillingAddressParams.Full)?.supportedCountryCodes
+        return supportedCountryCodes?.takeIf { it.isNotEmpty() }?.joinToString(",")
     }
 
     private fun CardComponentParams.getBillingAddressMode(): String {
