@@ -77,7 +77,8 @@ private fun paymentMethodListNavEntry(
 ): NavEntry<NavKey> = NavEntry(
     key = key,
     contentKey = PAYMENT_METHOD_LIST_CONTENT_KEY,
-    metadata = DropInTransitions.slideInAndOutVertically(),
+    // The list is only ever the first entry, either from the start or replacing the preselected bottom sheet
+    metadata = DropInTransitions.slideUpOverPrevious(),
 ) {
     PaymentMethodListScreen(
         navigator = viewModel.navigator,
@@ -107,10 +108,11 @@ private fun paymentMethodNavEntry(
     key: PaymentMethodNavKey,
     viewModel: DropInViewModel,
 ): NavEntry<NavKey> {
-    val transitions = if (viewModel.navigator.isEmptyAfterCurrent()) {
-        DropInTransitions.slideInAndOutVertically()
-    } else {
-        DropInTransitions.slideInAndOutHorizontally()
+    val navigator = viewModel.navigator
+    val transitions = when {
+        navigator.isEmptyAfterCurrent() -> DropInTransitions.slideInAndOutVertically()
+        navigator.keyBelowCurrent() is PreselectedPaymentMethodNavKey -> DropInTransitions.slideUpOverPrevious()
+        else -> DropInTransitions.slideInAndOutHorizontally()
     }
 
     return NavEntry(

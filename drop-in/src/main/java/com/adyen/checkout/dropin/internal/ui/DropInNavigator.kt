@@ -62,6 +62,11 @@ internal class DropInNavigator(
         return backStack.filterNot { it is EmptyNavKey }.size <= 1
     }
 
+    fun keyBelowCurrent(): NavKey? {
+        val keys = backStack.filterNot { it is EmptyNavKey }
+        return keys.getOrNull(keys.lastIndex - 1)
+    }
+
     private fun persist() {
         backStackPersister.store(backStack)
     }
