@@ -41,41 +41,21 @@ internal object DropInTransitions {
             slideOutHorizontally(targetOffsetX = { it })
     }
 
+    /**
+     * The screen slides in horizontally over the screen it replaces, and slides down when it is the last one to go.
+     * The entry it reveals then stays in place, so the scrim of the dismissed entry does not move.
+     */
     @Stable
     fun slideInHorizontallyAndOutVertically(): Map<String, Any> {
         return NavDisplay.transitionSpec { addSlideInAndOutHorizontally() } +
-            NavDisplay.popTransitionSpec { popSlideInHorizontallyAndOutVertically() } +
-            NavDisplay.predictivePopTransitionSpec { popSlideInHorizontallyAndOutVertically() }
-    }
-
-    @Stable
-    private fun popSlideInHorizontallyAndOutVertically(): ContentTransform {
-        return slideInHorizontally(initialOffsetX = { -it }) togetherWith
-            slideOutVertically(targetOffsetY = { it })
-    }
-
-    @Stable
-    fun slideInAndOutVertically(): Map<String, Any> {
-        return NavDisplay.transitionSpec { addSlideInAndOutVertically() } +
-            NavDisplay.popTransitionSpec { popSlideInAndOutVertically() } +
-            NavDisplay.predictivePopTransitionSpec { popSlideInAndOutVertically() }
-    }
-
-    @Stable
-    private fun addSlideInAndOutVertically(): ContentTransform {
-        return slideInVertically(initialOffsetY = { it }) togetherWith
-            slideOutVertically(targetOffsetY = { -it })
-    }
-
-    @Stable
-    private fun popSlideInAndOutVertically(): ContentTransform {
-        return slideInVertically(initialOffsetY = { -it }) togetherWith
-            slideOutVertically(targetOffsetY = { it })
+            NavDisplay.popTransitionSpec { popSlideDownOffPrevious() } +
+            NavDisplay.predictivePopTransitionSpec { popSlideDownOffPrevious() }
     }
 
     /**
-     * The screen slides up over the one below it, which stays in place until it is covered. Used on top of the
-     * preselected bottom sheet, so the sheet and its scrim do not move.
+     * The screen slides up over the one below it, which stays in place until it is covered. Used for the first screen
+     * and on top of the preselected bottom sheet, so the scrim of the dismissed entry, or the sheet and its scrim, do
+     * not move.
      */
     // The KeepUntilTransitionsFinished member is internal to Compose, so the public extension on the transition scope
     // is the one that resolves here. Both return the same transition.

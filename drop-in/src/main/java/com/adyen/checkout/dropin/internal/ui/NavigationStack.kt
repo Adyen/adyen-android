@@ -8,13 +8,20 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.togetherWith
+import androidx.compose.material3.Scrim
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModelStoreOwner
@@ -26,6 +33,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -46,6 +54,11 @@ internal fun NavigationStack(
     var isBackStackShown by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(Unit) { isBackStackShown = true }
 
+    // The first screen is the one covering the dismissed entry. It is kept once the back stack is empty, because it is
+    // then the screen that is leaving.
+    var firstKey by remember { mutableStateOf<NavKey?>(null) }
+    SideEffect { navigator.backStack.firstOrNull()?.let { firstKey = it } }
+
     val entries = rememberDecoratedNavEntries(
         // NavDisplay only handles back, and animates it, when there is an entry to go back to. The dismissed entry is
         // that entry for the first screen.
@@ -61,7 +74,9 @@ internal fun NavigationStack(
         ),
         entryProvider = { key ->
             when (key) {
-                is DismissedNavKey -> dismissedNavEntry(key, viewModel)
+                is DismissedNavKey -> dismissedNavEntry(key, viewModel, isCoveredBySheet = {
+                    (navigator.backStack.firstOrNull() ?: firstKey) is PreselectedPaymentMethodNavKey
+                })
                 is PreselectedPaymentMethodNavKey -> preselectedPaymentMethodNavEntry(key, viewModel)
                 is PaymentMethodListNavKey -> paymentMethodListNavEntry(key, viewModel)
                 is StoredPaymentMethodsNavKey -> storedPaymentMethodsNavEntry(key, viewModel)
@@ -93,15 +108,35 @@ private data object DismissedNavKey : NavKey
  * Shown on the first frame and once the back stack is empty. NavDisplay only resumes an entry once its transition has
  * settled, so this entry being resumed with an empty back stack means the last screen has finished animating away and
  * Drop-in can close.
+ *
+ * It draws the scrim between Drop-in and the app behind it while a screen covers it, so the scrim fades in as the
+ * first screen slides in, and out as the last one slides away. The transitions of those screens keep this entry in
+ * place.
+ *
+ * @param isCoveredBySheet Whether the screen covering this entry is the preselected sheet, which has a scrim of its
+ * own.
  */
 private fun dismissedNavEntry(
     key: DismissedNavKey,
     viewModel: DropInViewModel,
+    isCoveredBySheet: () -> Boolean,
 ): NavEntry<NavKey> = NavEntry(key) {
     LifecycleResumeEffect(Unit) {
         viewModel.onDismissed()
         onPauseOrDispose {}
     }
+
+    val coveredAlpha = if (isCoveredBySheet()) 0f else 1f
+    val scrimAlpha by LocalNavAnimatedContentScope.current.transition.animateFloat(
+        // The same spring the screens slide with
+        transitionSpec = { spring(stiffness = Spring.StiffnessMediumLow) },
+        label = "DismissedScrimAlpha",
+    ) { state -> if (state == EnterExitState.Visible) 0f else coveredAlpha }
+    Scrim(
+        contentDescription = null,
+        onClick = null,
+        alpha = { scrimAlpha },
+    )
 }
 
 private fun preselectedPaymentMethodNavEntry(
@@ -164,8 +199,9 @@ private fun paymentMethodNavEntry(
 ): NavEntry<NavKey> {
     val navigator = viewModel.navigator
     val transitions = when {
-        navigator.isEmptyAfterCurrent() -> DropInTransitions.slideInAndOutVertically()
-        navigator.keyBelowCurrent() is PreselectedPaymentMethodNavKey -> DropInTransitions.slideUpOverPrevious()
+        navigator.isEmptyAfterCurrent() ||
+            navigator.keyBelowCurrent() is PreselectedPaymentMethodNavKey -> DropInTransitions.slideUpOverPrevious()
+
         else -> DropInTransitions.slideInAndOutHorizontally()
     }
 
