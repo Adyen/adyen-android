@@ -27,6 +27,9 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodManagementScreen
@@ -67,6 +70,14 @@ internal fun NavigationStack(
                 else -> error("Unknown key: $key")
             }
         },
+    )
+
+    // With only the dismissed entry shown, NavDisplay does not handle back, so the activity would finish before Drop-in
+    // sends its result. Back does nothing until Drop-in is dismissed instead.
+    NavigationBackHandler(
+        state = rememberNavigationEventState(currentInfo = NavigationEventInfo.None),
+        isBackEnabled = !isBackStackShown || navigator.backStack.isEmpty(),
+        onBackCompleted = {},
     )
 
     NavDisplay(
