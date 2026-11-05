@@ -19,6 +19,7 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentOptionsParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentPlan
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -1176,6 +1177,7 @@ internal class CardBrandIntentsHandlerTest(
         kcpCardPassword = TextInputComponentState(),
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
         postalCode = TextInputComponentState(),
+        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

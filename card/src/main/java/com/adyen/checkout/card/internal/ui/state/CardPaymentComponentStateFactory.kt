@@ -79,18 +79,21 @@ internal class CardPaymentComponentStateFactory(
         )
     }
 
-    private fun CardComponentState.getBillingAddress(): Address? {
-        return postalCode.getPaymentDataValue()?.let {
-            Address(
-                city = Address.ADDRESS_NULL_PLACEHOLDER,
-                country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER,
-                houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER,
-                postalCode = it,
-                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
-                street = Address.ADDRESS_NULL_PLACEHOLDER,
-            )
+    private fun CardComponentState.getBillingAddress(): Address? =
+        if (billingAddress.isVisible) {
+            billingAddress.address.selected?.toPaymentAddress()
+        } else {
+            postalCode.getPaymentDataValue()?.let {
+                Address(
+                    city = Address.ADDRESS_NULL_PLACEHOLDER,
+                    country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER,
+                    houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER,
+                    postalCode = it,
+                    stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
+                    street = Address.ADDRESS_NULL_PLACEHOLDER,
+                )
+            }
         }
-    }
 
     private fun createPaymentComponentData(
         cardDetails: CardDetails,

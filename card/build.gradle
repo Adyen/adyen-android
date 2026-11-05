@@ -39,6 +39,7 @@ dependencies {
     api project(':cse')
     api project(':ui-core')
     api project(':sessions-core')
+    implementation project(':address')
     implementation project(':card-scanning')
 
     // Dependencies

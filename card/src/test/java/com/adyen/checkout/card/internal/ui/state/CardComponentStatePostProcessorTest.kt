@@ -13,6 +13,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.form.FocusRequest
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.isErrorVisible
@@ -156,6 +157,25 @@ internal class CardComponentStatePostProcessorTest {
         )
 
         assertEquals(FocusRequest(CardFormElementId.EXPIRY_DATE, showErrorIfPresent = true), actual.focusRequest)
+    }
+
+    @Test
+    fun `when validation errors are highlighted then the billing address error is shown`() {
+        // GIVEN
+        val state = createInitialState().copy(
+            billingAddress = BillingAddressState(
+                isVisible = true,
+                address = PickerInputComponentState(
+                    error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR),
+                ),
+            ),
+        )
+
+        // WHEN
+        val actual = process(state, CardIntent.HighlightValidationErrors)
+
+        // THEN
+        assertTrue(actual.billingAddress.address.error?.isVisible == true)
     }
 
     @Nested
@@ -503,6 +523,7 @@ internal class CardComponentStatePostProcessorTest {
         kcpCardPassword = TextInputComponentState(),
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
         postalCode = TextInputComponentState(),
+        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

@@ -8,8 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -284,6 +288,59 @@ internal class CardComponentStateValidatorTest {
         assertNotNull(validatedState.cardNumber.error?.message)
     }
 
+    @Test
+    fun `when the billing address row is visible and nothing is confirmed then it has an error`() {
+        // GIVEN
+        val state = createValidState().copy(
+            billingAddress = BillingAddressState(isVisible = true, address = PickerInputComponentState()),
+        )
+
+        // WHEN
+        val validatedState = validator.validate(state)
+
+        // THEN
+        assertEquals(
+            CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR,
+            validatedState.billingAddress.address.error?.message,
+        )
+    }
+
+    @Test
+    fun `when an address is confirmed then the billing address row is valid`() {
+        // GIVEN
+        val address = AddressModel(
+            country = "NL",
+            street = "Simon Carmiggeltstraat",
+            houseNumberOrName = "6",
+            postalCode = "1011 DJ",
+            city = "Amsterdam",
+            stateOrProvince = null,
+        )
+        val state = createValidState().copy(
+            billingAddress = BillingAddressState(isVisible = true, address = PickerInputComponentState(address)),
+        )
+
+        // WHEN
+        val validatedState = validator.validate(state)
+
+        // THEN
+        assertNull(validatedState.billingAddress.address.error)
+    }
+
+    @Test
+    fun `when the billing address row is hidden then it has no error`() {
+        // GIVEN
+        val state = createValidState().copy(
+            billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
+        )
+
+        // WHEN
+        val validatedState = validator.validate(state)
+
+        // THEN
+        assertNull(validatedState.billingAddress.address.error)
+    }
+
     private fun createValidState() = CardComponentState(
         cardNumber = TextInputComponentState(text = "4111111111111111"),
         expiryDate = TextInputComponentState(text = "1230"),
@@ -296,6 +353,7 @@ internal class CardComponentStateValidatorTest {
         kcpBirthDateOrTaxNumber = TextInputComponentState(text = "260403"),
         kcpCardPassword = TextInputComponentState(text = "12"),
         postalCode = TextInputComponentState(text = "1234 AB", requirementPolicy = RequirementPolicy.Required),
+        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),

@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
@@ -61,6 +62,7 @@ internal class CardComponentStateTest {
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
         kcpCardPassword = TextInputComponentState(),
         postalCode = TextInputComponentState(),
+        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList<CardBrand>(),

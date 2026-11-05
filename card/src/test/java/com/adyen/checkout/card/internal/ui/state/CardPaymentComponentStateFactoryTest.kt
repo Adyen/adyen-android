@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.FieldVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
@@ -18,6 +19,7 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.data.Address
 import com.adyen.checkout.core.components.data.Installments
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
+import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.paymentmethod.CardDetails
@@ -335,6 +337,87 @@ internal class CardPaymentComponentStateFactoryTest(
         }
 
         @Test
+        fun `and a billing address is confirmed then it is sent as the billing address`() {
+            // GIVEN
+            val factory = createFactory()
+            val address = AddressModel(
+                country = "NL",
+                street = "Simon Carmiggeltstraat",
+                houseNumberOrName = "6",
+                postalCode = "1011 DJ",
+                city = "Amsterdam",
+                stateOrProvince = null,
+            )
+            val cardComponentState = createCardComponentState().copy(
+                billingAddress = BillingAddressState(isVisible = true, address = PickerInputComponentState(address)),
+            )
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            val expected = Address(
+                city = "Amsterdam",
+                country = "NL",
+                houseNumberOrName = "6",
+                postalCode = "1011 DJ",
+                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
+                street = "Simon Carmiggeltstraat",
+            )
+            assertEquals(expected, state.data.billingAddress)
+        }
+
+        @Test
+        fun `and the billing address row is hidden then a confirmed address is not sent`() {
+            // GIVEN
+            val factory = createFactory()
+            val address = AddressModel(
+                country = "NL",
+                street = "Simon Carmiggeltstraat",
+                houseNumberOrName = "6",
+                postalCode = "1011 DJ",
+                city = "Amsterdam",
+                stateOrProvince = null,
+            )
+            val cardComponentState = createCardComponentState().copy(
+                billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState(address)),
+            )
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            assertNull(state.data.billingAddress)
+        }
+
+        @Test
+        fun `and the billing address row is visible and nothing is confirmed then there is no billing address`() {
+            // GIVEN
+            val factory = createFactory()
+            val cardComponentState = createCardComponentState().copy(
+                billingAddress = BillingAddressState(isVisible = true, address = PickerInputComponentState()),
+            )
+
+            // WHEN
+            val state = factory.createPaymentComponentState(
+                cardComponentState = cardComponentState,
+                encryptedCard = createEncryptedCard(),
+                encryptedKcpCardPassword = null,
+            )
+
+            // THEN
+            assertNull(state.data.billingAddress)
+        }
+
+        @Test
         fun `and social security number is required then it is part of the payment data`() {
             // GIVEN
             val factory = createFactory()
@@ -510,6 +593,7 @@ internal class CardPaymentComponentStateFactoryTest(
         kcpBirthDateOrTaxNumber = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden),
         kcpCardPassword = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden),
         postalCode = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden),
+        billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,
         supportedCardBrands = emptyList(),
