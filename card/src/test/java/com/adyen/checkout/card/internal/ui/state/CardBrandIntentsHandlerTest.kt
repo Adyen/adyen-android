@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.address.internal.ui.model.AddressModel
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
+import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
@@ -23,6 +25,8 @@ import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputCom
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -44,6 +48,7 @@ internal class CardBrandIntentsHandlerTest(
     @BeforeEach
     fun beforeEach() {
         whenever(cardComponentParams.cvcVisibility).thenReturn(CVCVisibility.ALWAYS_SHOW)
+        whenever(cardComponentParams.billingAddressParams).thenReturn(BillingAddressParams.None)
         cardBrandIntentsHandler = CardBrandIntentsHandler(cardComponentParams, detectCardTypeBinHelper)
     }
 
@@ -1153,6 +1158,369 @@ internal class CardBrandIntentsHandlerTest(
         }
     }
 
+    @Nested
+    @DisplayName("when the billing address mode is full")
+    inner class FullBillingAddressTest {
+
+        @BeforeEach
+        fun beforeEach() {
+            whenever(cardComponentParams.billingAddressParams).thenReturn(
+                BillingAddressParams.Full(
+                    supportedCountryCodes = emptySet(),
+                    hideForCardBrands = setOf(CardBrand("cup"), CardBrand.JCB),
+                ),
+            )
+        }
+
+        @Test
+        fun `and a hidden brand is detected then the postal code stays hidden`() {
+            // GIVEN
+            val state = createFullState(isVisible = true)
+            val cardBrandState = createReliableState(CardBrand.JCB)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertEquals(RequirementPolicy.Hidden, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and a hidden brand is detected then the billing address row is not shown`() {
+            // GIVEN
+            val state = createFullState(isVisible = true)
+            val cardBrandState = createReliableState(CardBrand.JCB)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertFalse(actual.billingAddress.isVisible)
+        }
+
+        @Test
+        fun `and a hidden brand is detected then the billing address is not validated`() {
+            // GIVEN
+            val state = createFullState(isVisible = true)
+            val cardBrandState = createReliableState(CardBrand.JCB)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertTrue(actual.form.elements.none { it.id == CardFormElementId.BILLING_ADDRESS })
+        }
+
+        @Test
+        fun `and a brand outside the set is detected then the billing address row is still shown`() {
+            // GIVEN
+            val state = createFullState(isVisible = true)
+            val cardBrandState = createReliableState(CardBrand.VISA)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertTrue(actual.billingAddress.isVisible)
+        }
+
+        @Test
+        fun `and the brand changes back then the billing address row is shown again`() {
+            // GIVEN
+            val state = createFullState(isVisible = false).copy(cardBrandState = createReliableState(CardBrand.JCB))
+            val cardBrandState = createReliableState(CardBrand.VISA)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertTrue(actual.billingAddress.isVisible)
+        }
+
+        @Test
+        fun `and the brand is no longer detected then the billing address row is shown again`() {
+            // GIVEN
+            val state = createFullState(isVisible = false).copy(cardBrandState = createReliableState(CardBrand.JCB))
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, CardBrandState.NoBrandsDetected)
+
+            // THEN
+            assertTrue(actual.billingAddress.isVisible)
+        }
+
+        @Test
+        fun `and the row is shown again then the confirmed address is still there`() {
+            // GIVEN
+            val address = createAddress()
+            val state = createFullState(isVisible = true, address = address)
+            val hiddenState = cardBrandIntentsHandler.getUpdatedCardComponentState(
+                state,
+                createReliableState(CardBrand.JCB),
+            )
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(
+                hiddenState,
+                createReliableState(CardBrand.VISA),
+            )
+
+            // THEN
+            assertEquals(address, actual.billingAddress.address.selected)
+        }
+
+        @Test
+        fun `and a hidden brand is only guessed locally then the billing address row is still shown`() {
+            // GIVEN
+            val state = createFullState(isVisible = true)
+            val cardBrandState = CardBrandState.SingleUnreliableBrand(
+                createCardBrandData().copy(cardBrand = CardBrand.JCB),
+            )
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertTrue(actual.billingAddress.isVisible)
+        }
+
+        @Test
+        fun `and the shopper selects a hidden brand of a dual branded card then the billing address row is not shown`() {
+            // GIVEN
+            val state = createFullState(isVisible = true).copy(cardBrandState = createDualBrandState(CardBrand.VISA))
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.onBrandSelected(state, CardIntent.SelectBrand(CardBrand.JCB))
+
+            // THEN
+            assertFalse(actual.billingAddress.isVisible)
+        }
+
+        @Test
+        fun `and the shopper selects the other brand of a dual branded card then the billing address row is shown`() {
+            // GIVEN
+            val state = createFullState(isVisible = false).copy(cardBrandState = createDualBrandState(CardBrand.JCB))
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.onBrandSelected(state, CardIntent.SelectBrand(CardBrand.VISA))
+
+            // THEN
+            assertTrue(actual.billingAddress.isVisible)
+        }
+
+        @Test
+        fun `and a brand outside the set is detected then the postal code stays hidden`() {
+            // GIVEN
+            val state = createFullState(isVisible = true)
+            val cardBrandState = createReliableState(CardBrand.VISA)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertEquals(RequirementPolicy.Hidden, actual.postalCode.requirementPolicy)
+        }
+
+        private fun createFullState(
+            isVisible: Boolean,
+            address: AddressModel? = null,
+        ) = createInitialState().copy(
+            billingAddress = BillingAddressState(isVisible = isVisible, address = PickerInputComponentState(address)),
+        )
+
+        private fun createAddress() = AddressModel(
+            country = "NL",
+            street = "Simon Carmiggeltstraat",
+            houseNumberOrName = "6",
+            postalCode = "1011 DJ",
+            city = "Amsterdam",
+            stateOrProvince = null,
+        )
+    }
+
+    @Nested
+    @DisplayName("when the billing address mode is postal code")
+    inner class PostalCodeBillingAddressTest {
+
+        @BeforeEach
+        fun beforeEach() {
+            whenever(cardComponentParams.billingAddressParams).thenReturn(
+                BillingAddressParams.PostalCode(hideForCardBrands = setOf(CardBrand("cup"), CardBrand.JCB)),
+            )
+        }
+
+        @Test
+        fun `and a hidden brand is detected then the postal code is not shown`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Required)
+            val cardBrandState = createReliableState(CardBrand.JCB)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertEquals(RequirementPolicy.Hidden, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and a hidden brand is detected then the postal code is not validated`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Required)
+            val cardBrandState = createReliableState(CardBrand.JCB)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertTrue(actual.form.elements.none { it.id == CardFormElementId.POSTAL_CODE })
+        }
+
+        @Test
+        fun `and a brand outside the set is detected then the postal code is still shown`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Required)
+            val cardBrandState = createReliableState(CardBrand.VISA)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertEquals(RequirementPolicy.Required, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and the brand changes back then the postal code is shown again`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Hidden)
+                .copy(cardBrandState = createReliableState(CardBrand.JCB))
+            val cardBrandState = createReliableState(CardBrand.VISA)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertEquals(RequirementPolicy.Required, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and the brand is no longer detected then the postal code is shown again`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Hidden)
+                .copy(cardBrandState = createReliableState(CardBrand.JCB))
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, CardBrandState.NoBrandsDetected)
+
+            // THEN
+            assertEquals(RequirementPolicy.Required, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and the postal code is shown again then the entered postal code is still there`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Required, text = "1011 DJ")
+            val hiddenState = cardBrandIntentsHandler.getUpdatedCardComponentState(
+                state,
+                createReliableState(CardBrand.JCB),
+            )
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(
+                hiddenState,
+                createReliableState(CardBrand.VISA),
+            )
+
+            // THEN
+            assertEquals("1011 DJ", actual.postalCode.text)
+        }
+
+        @Test
+        fun `and a hidden brand is only guessed locally then the postal code is still shown`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Required)
+            val cardBrandState = CardBrandState.SingleUnreliableBrand(
+                createCardBrandData().copy(cardBrand = CardBrand.JCB),
+            )
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertEquals(RequirementPolicy.Required, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and the shopper selects a hidden brand of a dual branded card then the postal code is not shown`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Required)
+                .copy(cardBrandState = createDualBrandState(CardBrand.VISA))
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.onBrandSelected(state, CardIntent.SelectBrand(CardBrand.JCB))
+
+            // THEN
+            assertEquals(RequirementPolicy.Hidden, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and the shopper selects the other brand of a dual branded card then the postal code is shown`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Hidden)
+                .copy(cardBrandState = createDualBrandState(CardBrand.JCB))
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.onBrandSelected(state, CardIntent.SelectBrand(CardBrand.VISA))
+
+            // THEN
+            assertEquals(RequirementPolicy.Required, actual.postalCode.requirementPolicy)
+        }
+
+        @Test
+        fun `and a brand outside the set is detected then the billing address row stays hidden`() {
+            // GIVEN
+            val state = createPostalCodeState(RequirementPolicy.Required)
+            val cardBrandState = createReliableState(CardBrand.VISA)
+
+            // WHEN
+            val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+            // THEN
+            assertFalse(actual.billingAddress.isVisible)
+        }
+
+        private fun createPostalCodeState(
+            requirementPolicy: RequirementPolicy,
+            text: String = "",
+        ) = createInitialState().copy(
+            postalCode = TextInputComponentState(text = text, requirementPolicy = requirementPolicy),
+        )
+    }
+
+    @Test
+    fun `when the billing address mode is none then a detected brand shows neither the postal code nor the billing address row`() {
+        // GIVEN
+        val state = createInitialState()
+        val cardBrandState = createReliableState(CardBrand.VISA)
+
+        // WHEN
+        val actual = cardBrandIntentsHandler.getUpdatedCardComponentState(state, cardBrandState)
+
+        // THEN
+        assertEquals(RequirementPolicy.Hidden, actual.postalCode.requirementPolicy)
+        assertFalse(actual.billingAddress.isVisible)
+    }
+
+    private fun createReliableState(cardBrand: CardBrand) =
+        CardBrandState.SingleReliableBrand(createCardBrandData().copy(cardBrand = cardBrand))
+
+    private fun createDualBrandState(selectedCardBrand: CardBrand): CardBrandState.DualBrandWithShopperSelection {
+        val cardBrandDataList = listOf(CardBrand.VISA, CardBrand.JCB).map { createCardBrandData().copy(cardBrand = it) }
+        return CardBrandState.DualBrandWithShopperSelection(
+            cardBrandDataList = cardBrandDataList,
+            shopperSelectedCardBrandData = cardBrandDataList.first { it.cardBrand == selectedCardBrand },
+        )
+    }
+
     private fun createDetectedCardType(): DetectedCardType {
         return DetectedCardType(
             cardBrand = CardBrand("visa"),
@@ -1176,7 +1544,7 @@ internal class CardBrandIntentsHandlerTest(
         socialSecurityNumber = TextInputComponentState(),
         kcpCardPassword = TextInputComponentState(),
         kcpBirthDateOrTaxNumber = TextInputComponentState(),
-        postalCode = TextInputComponentState(),
+        postalCode = TextInputComponentState(requirementPolicy = RequirementPolicy.Hidden),
         billingAddress = BillingAddressState(isVisible = false, address = PickerInputComponentState()),
         storePaymentMethod = false,
         isStorePaymentFieldVisible = false,

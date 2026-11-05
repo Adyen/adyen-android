@@ -18,6 +18,8 @@ import com.adyen.checkout.card.internal.helper.toNetworkBinLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.getPostalCodeRequirementPolicy
+import com.adyen.checkout.card.internal.ui.model.isBillingAddressVisible
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
@@ -186,6 +188,16 @@ internal class CardBrandIntentsHandler(
                 requirementPolicy = getExpiryDateRequirementPolicy(expiryDatePolicy),
             ),
             installmentState = getUpdatedInstallmentState(state, reliableCardBrandData?.cardBrand),
+            postalCode = state.postalCode.copy(
+                requirementPolicy = componentParams.billingAddressParams.getPostalCodeRequirementPolicy(
+                    cardBrand = reliableCardBrandData?.cardBrand,
+                ),
+            ),
+            billingAddress = state.billingAddress.copy(
+                isVisible = componentParams.billingAddressParams.isBillingAddressVisible(
+                    cardBrand = reliableCardBrandData?.cardBrand,
+                ),
+            ),
         )
     }
 

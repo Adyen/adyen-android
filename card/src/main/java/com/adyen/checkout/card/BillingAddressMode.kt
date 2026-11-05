@@ -20,21 +20,23 @@ sealed class BillingAddressMode : Parcelable {
     }
 
     /**
-     * Only postal code will be shown as part of the card component
+     * Only postal code will be shown as part of the card component.
+     *
+     * @param hideForCardBrands The [CardBrand]s for which the postal code field will be hidden, once BIN lookup
+     *                          identifies one of them or the shopper selects one on a dual-branded card.
      */
     @Parcelize
-    class PostalCode : BillingAddressMode() {
-        override fun equals(other: Any?) = other is PostalCode
-
-        override fun hashCode() = javaClass.hashCode()
-    }
+    data class PostalCode(
+        val hideForCardBrands: Set<CardBrand> = emptySet()
+    ) : BillingAddressMode()
 
     /**
      * Full Address Form will be requested as part of the card component.
      *
      * @param supportedCountryCodes ISO country codes supported for the billing address, as uppercase ISO 3166-1 alpha-2
      *                              codes such as `NL`. When empty, all countries are available.
-     * @param hideForCardBrands The [CardBrand]s for which the address form will be hidden.
+     * @param hideForCardBrands The [CardBrand]s for which the address form will be hidden, once BIN lookup identifies
+     *                          one of them or the shopper selects one on a dual-branded card.
      */
     @Parcelize
     data class Full(

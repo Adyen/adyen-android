@@ -9,10 +9,11 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.FieldVisibility
-import com.adyen.checkout.card.internal.ui.model.BillingAddressParams
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentModel
+import com.adyen.checkout.card.internal.ui.model.getPostalCodeRequirementPolicy
+import com.adyen.checkout.card.internal.ui.model.isBillingAddressVisible
 import com.adyen.checkout.card.internal.ui.model.mapToInstallmentModels
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputComponentState
@@ -47,10 +48,10 @@ internal class CardComponentStateFactory(
                 requirementPolicy = getKcpCardPasswordRequirementPolicy(),
             ),
             postalCode = TextInputComponentState(
-                requirementPolicy = getPostalCodeRequirementPolicy(),
+                requirementPolicy = componentParams.billingAddressParams.getPostalCodeRequirementPolicy(),
             ),
             billingAddress = BillingAddressState(
-                isVisible = componentParams.billingAddressParams is BillingAddressParams.Full,
+                isVisible = componentParams.billingAddressParams.isBillingAddressVisible(),
                 address = PickerInputComponentState(),
             ),
             storePaymentMethod = false,
@@ -97,13 +98,6 @@ internal class CardComponentStateFactory(
         when (componentParams.koreanAuthenticationVisibility) {
             FieldVisibility.SHOW -> RequirementPolicy.Required
             FieldVisibility.HIDE -> RequirementPolicy.Hidden
-        }
-
-    private fun getPostalCodeRequirementPolicy(): RequirementPolicy =
-        when (componentParams.billingAddressParams) {
-            BillingAddressParams.PostalCode -> RequirementPolicy.Required
-            BillingAddressParams.None,
-            is BillingAddressParams.Full -> RequirementPolicy.Hidden
         }
 
     private fun getPreselectedInstallment(installmentOptions: List<InstallmentModel>): InstallmentModel? {

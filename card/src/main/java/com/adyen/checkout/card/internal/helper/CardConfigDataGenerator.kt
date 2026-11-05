@@ -24,6 +24,7 @@ internal class CardConfigDataGenerator(
             params.getBillingAddressAllowedCountries()?.let { put("billingAddressAllowedCountries", it) }
             put("billingAddressMode", params.getBillingAddressMode())
             put("billingAddressRequired", params.getBillingAddressRequired())
+            put("billingAddressHideForCardBrands", params.getBillingAddressHideForCardBrands())
             put("brands", params.supportedCardBrands.joinToString(",") { it.txVariant })
             put("showSupportedCardBrandLogos", params.showSupportedCardBrandLogos.toString())
             put("enableStoreDetails", params.showStorePaymentMethod.toString())
@@ -51,13 +52,17 @@ internal class CardConfigDataGenerator(
     private fun CardComponentParams.getBillingAddressMode(): String {
         return when (billingAddressParams) {
             BillingAddressParams.None -> "None"
-            BillingAddressParams.PostalCode -> "PostalCode"
+            is BillingAddressParams.PostalCode -> "PostalCode"
             is BillingAddressParams.Full -> "Full"
         }
     }
 
     private fun CardComponentParams.getBillingAddressRequired(): String {
         return (billingAddressParams != BillingAddressParams.None).toString()
+    }
+
+    private fun CardComponentParams.getBillingAddressHideForCardBrands(): String {
+        return billingAddressParams.hideForCardBrands.map { it.txVariant }.sorted().joinToString(",")
     }
 
     private fun CardComponentParams.getHideCVC(isStored: Boolean): String {

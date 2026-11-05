@@ -59,8 +59,8 @@ internal class CardComponentParamsMapper {
     }
 
     private fun BillingAddressMode?.toBillingAddressParams(): BillingAddressParams = when (this) {
-        is BillingAddressMode.Full -> BillingAddressParams.Full(supportedCountryCodes)
-        is BillingAddressMode.PostalCode -> BillingAddressParams.PostalCode
+        is BillingAddressMode.Full -> BillingAddressParams.Full(supportedCountryCodes, hideForCardBrands)
+        is BillingAddressMode.PostalCode -> BillingAddressParams.PostalCode(hideForCardBrands)
         is BillingAddressMode.None, null -> BillingAddressParams.None
     }
 
