@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.PayButtonViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.visibleErrorMessage
 
 internal class CardViewStateProducer(
     private val amount: Amount?,
@@ -84,6 +85,11 @@ internal class CardViewStateProducer(
         )
 
         CardFormElementId.POSTAL_CODE -> CardFormElement.PostalCode(postalCode.toViewState(form, focusRequest, id))
+
+        CardFormElementId.BILLING_ADDRESS -> CardFormElement.BillingAddress(
+            address = billingAddress.address.selected,
+            errorMessage = billingAddress.address.visibleErrorMessage,
+        )
 
         CardFormElementId.STORE_PAYMENT_METHOD -> CardFormElement.StorePaymentMethod(isSelected = storePaymentMethod)
 

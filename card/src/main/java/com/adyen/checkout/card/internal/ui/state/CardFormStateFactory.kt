@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.components.internal.ui.state.form.FormElementState
 import com.adyen.checkout.core.components.internal.ui.state.form.FormState
+import com.adyen.checkout.core.components.internal.ui.state.form.toFormElement
 import com.adyen.checkout.core.components.internal.ui.state.form.toFormElementIfVisible
 
 /**
@@ -26,6 +27,7 @@ internal class CardFormStateFactory(
         elements = CANONICAL_ORDER.mapNotNull { id -> getFormElement(id) },
     )
 
+    @Suppress("CyclomaticComplexMethod")
     private fun getFormElement(id: CardFormElementId): FormElementState<CardFormElementId>? = with(state) {
         when (id) {
             CardFormElementId.CARD_NUMBER -> cardNumber.toFormElementIfVisible(id)
@@ -36,6 +38,8 @@ internal class CardFormStateFactory(
             CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> kcpBirthDateOrTaxNumber.toFormElementIfVisible(id)
             CardFormElementId.KCP_CARD_PASSWORD -> kcpCardPassword.toFormElementIfVisible(id)
             CardFormElementId.POSTAL_CODE -> postalCode.toFormElementIfVisible(id)
+            CardFormElementId.BILLING_ADDRESS ->
+                if (billingAddress.isVisible) billingAddress.address.toFormElement(id) else null
 
             // Neither of these can hold up a payment: the switch always holds a value, and an installment is only
             // offered when there is something to choose from.
@@ -63,6 +67,7 @@ internal class CardFormStateFactory(
             CardFormElementId.KCP_BIRTH_DATE_OR_TAX_NUMBER,
             CardFormElementId.KCP_CARD_PASSWORD,
             CardFormElementId.POSTAL_CODE,
+            CardFormElementId.BILLING_ADDRESS,
             CardFormElementId.STORE_PAYMENT_METHOD,
             CardFormElementId.INSTALLMENTS,
         )

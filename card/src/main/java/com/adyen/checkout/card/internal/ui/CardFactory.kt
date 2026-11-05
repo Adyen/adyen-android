@@ -124,6 +124,7 @@ internal class CardFactory :
             publicKey = params.publicKey,
             environment = params.environment,
             cardConfigDataGenerator = CardConfigDataGenerator(params),
+            addressComponent = null,
         )
     }
 
