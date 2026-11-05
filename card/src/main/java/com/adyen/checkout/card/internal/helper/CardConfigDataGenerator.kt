@@ -23,7 +23,6 @@ internal class CardConfigDataGenerator(
         return buildMap {
             params.getBillingAddressAllowedCountries()?.let { put("billingAddressAllowedCountries", it) }
             put("billingAddressMode", params.getBillingAddressMode())
-            put("billingAddressRequired", params.getBillingAddressRequired())
             put("billingAddressHideForCardBrands", params.getBillingAddressHideForCardBrands())
             put("brands", params.supportedCardBrands.joinToString(",") { it.txVariant })
             put("showSupportedCardBrandLogos", params.showSupportedCardBrandLogos.toString())
@@ -51,14 +50,10 @@ internal class CardConfigDataGenerator(
 
     private fun CardComponentParams.getBillingAddressMode(): String {
         return when (billingAddressParams) {
-            BillingAddressParams.None -> "None"
-            is BillingAddressParams.PostalCode -> "PostalCode"
-            is BillingAddressParams.Full -> "Full"
+            BillingAddressParams.None -> "none"
+            is BillingAddressParams.PostalCode -> "partial"
+            is BillingAddressParams.Full -> "full"
         }
-    }
-
-    private fun CardComponentParams.getBillingAddressRequired(): String {
-        return (billingAddressParams != BillingAddressParams.None).toString()
     }
 
     private fun CardComponentParams.getBillingAddressHideForCardBrands(): String {
