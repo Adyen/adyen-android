@@ -9,6 +9,7 @@
 package com.adyen.checkout.cse
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -36,6 +37,15 @@ internal class EncryptorTest {
         assertEquals(Encryptor.Error.Code.ENCRYPTION_FAILED, error.code)
         assertEquals("message", error.message)
         assertSame(cause, error.cause)
+    }
+
+    @Test
+    fun `when card is encrypted with an invalid public key then failure is returned`() {
+        // WHEN
+        val result = Encryptor.encrypt(Card(securityCode = "737"), "invalid")
+
+        // THEN
+        assertInstanceOf(Encryptor.Error::class.java, result.exceptionOrNull())
     }
 
     companion object {

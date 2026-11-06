@@ -8,10 +8,28 @@
 
 package com.adyen.checkout.cse
 
+import com.adyen.checkout.cse.internal.CheckoutEncryptorFactory
+
 /**
  * Encrypts data to be sent to Adyen's APIs.
  */
 object Encryptor {
+
+    private val checkoutEncryptor = CheckoutEncryptorFactory.provide()
+
+    /**
+     * Encrypts the fields set in [card] individually.
+     *
+     * The values are encrypted as they are. At least one field must be set. Fields that are not set are not encrypted
+     * and remain `null` in the result.
+     *
+     * @param card The card data to be encrypted.
+     * @param publicKey The key to be used for encryption.
+     * @return An [EncryptedCard] with the encrypted values of the fields set in [card], or a failure with [Error].
+     */
+    fun encrypt(card: Card, publicKey: String): Result<EncryptedCard> {
+        return checkoutEncryptor.encrypt(card, publicKey)
+    }
 
     /**
      * A single value that can be encrypted.
