@@ -16,6 +16,7 @@ import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -104,6 +105,23 @@ internal class DropInNavigatorTest {
         navigator.navigateTo(TestNavKey("second"))
 
         assertEquals(false, navigator.isEmptyAfterCurrent())
+    }
+
+    @Test
+    fun `when keys are stacked then the one directly below the current key is returned`() {
+        navigator.navigateTo(TestNavKey("first"))
+        val second = TestNavKey("second")
+        navigator.navigateTo(second)
+        navigator.navigateTo(TestNavKey("third"))
+
+        assertEquals(second, navigator.keyBelowCurrent())
+    }
+
+    @Test
+    fun `when the current key is the only one then nothing is below it`() {
+        navigator.navigateTo(TestNavKey("only"))
+
+        assertNull(navigator.keyBelowCurrent())
     }
 
     @Test

@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -68,5 +71,26 @@ internal object DropInTransitions {
     private fun popSlideInAndOutVertically(): ContentTransform {
         return slideInVertically(initialOffsetY = { -it }) togetherWith
             slideOutVertically(targetOffsetY = { it })
+    }
+
+    /**
+     * The screen slides up over the one below it, which stays in place until it is covered. Used on top of the
+     * preselected bottom sheet, so the sheet and its scrim do not move.
+     */
+    // The KeepUntilTransitionsFinished member is internal to Compose, so the public extension on the transition scope
+    // is the one that resolves here. Both return the same transition.
+    @SuppressLint("MemberExtensionConflict")
+    @Stable
+    fun slideUpOverPrevious(): Map<String, Any> {
+        return NavDisplay.transitionSpec {
+            slideInVertically(initialOffsetY = { it }) togetherWith ExitTransition.KeepUntilTransitionsFinished
+        } +
+            NavDisplay.popTransitionSpec { popSlideDownOffPrevious() } +
+            NavDisplay.predictivePopTransitionSpec { popSlideDownOffPrevious() }
+    }
+
+    @Stable
+    private fun popSlideDownOffPrevious(): ContentTransform {
+        return EnterTransition.None togetherWith slideOutVertically(targetOffsetY = { it })
     }
 }
