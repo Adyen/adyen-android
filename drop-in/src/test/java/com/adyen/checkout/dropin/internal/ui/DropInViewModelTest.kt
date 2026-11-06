@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
+import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParams
@@ -25,6 +26,8 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import com.adyen.checkout.core.error.CheckoutError
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.dropin.internal.DropInResultContract
@@ -33,12 +36,15 @@ import com.adyen.checkout.dropin.internal.helper.InMemoryBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -179,6 +185,38 @@ internal class DropInViewModelTest {
         assertSame(createdScopes.single().coroutineContext[Job], viewModel.viewModelScope.coroutineContext[Job])
     }
 
+    @Test
+    fun `when a payment is completed before the result is collected, then the result is still sent`() = runTest {
+        val dropInServiceManager = DropInServiceManager(DropInService::class.java)
+        val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
+
+        dropInServiceManager.onPaymentCompleted(CheckoutResultCode.AUTHORISED)
+
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+        assertEquals(listOf(DropInResult.Completed(CheckoutResultCode.AUTHORISED)), resultFlow.values)
+    }
+
+    @Test
+    fun `when an error occurs before the result is collected, then the failed result is still sent`() = runTest {
+        val dropInServiceManager = DropInServiceManager(DropInService::class.java)
+        val viewModel = createViewModel(dropInServiceManager = dropInServiceManager)
+
+        dropInServiceManager.onFailure(CheckoutError(code = "test", message = "Test error"))
+
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+        assertEquals(listOf(DropInResult.Failed("Test error")), resultFlow.values)
+    }
+
+    @Test
+    fun `when Drop-in is closed before the result is collected, then the cancelled result is still sent`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.navigator.back()
+
+        val resultFlow = viewModel.resultFlow.test(testScheduler)
+        assertInstanceOf(DropInResult.Cancelled::class.java, resultFlow.values.single())
+    }
+
     private fun createInput() = DropInResultContract.Input(
         checkoutContext = TestCheckoutContext.advanced(
             paymentMethods = PaymentMethods(
@@ -200,6 +238,7 @@ internal class DropInViewModelTest {
             GenericPaymentMethod(type = PaymentMethodTypes.SCHEME, name = "Cards"),
         ),
         persister: BackStackPersister = InMemoryBackStackPersister(),
+        dropInServiceManager: DropInServiceManager = DropInServiceManager(DropInService::class.java),
         configureCheckoutConfiguration: CheckoutConfigurationScope.() -> Unit = {},
     ): DropInViewModel {
         val checkoutContext = TestCheckoutContext.advanced(
@@ -224,7 +263,7 @@ internal class DropInViewModelTest {
             checkoutParams = CheckoutParamsFactory().create(checkoutContext),
             navigator = DropInNavigator(persister),
             controllerProvider = controllerProvider,
-            dropInServiceManager = DropInServiceManager(DropInService::class.java),
+            dropInServiceManager = dropInServiceManager,
             storedPaymentMethodRemover = { Result.success(Unit) },
             analyticsManager = TestAnalyticsManager(),
             coroutineScope = CoroutineScope(Dispatchers.Main),

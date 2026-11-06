@@ -25,6 +25,7 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
 import com.adyen.checkout.dropin.DropInResult
@@ -41,8 +42,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.reflect.KClass
 
 /**
@@ -66,15 +70,25 @@ internal class DropInViewModel(
 
     lateinit var paymentMethodRepository: PaymentMethodRepository
 
-    val resultFlow: Flow<DropInResult> = merge(
-        dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
-        dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },
-        navigator.finishFlow.filter { it }.map { DropInResult.Cancelled() },
-    )
+    // The service only emits its results to whoever is collecting at that moment, so they are collected here for as
+    // long as Drop-in lives and kept until the activity is started to receive them
+    private val resultChannel = bufferedChannel<DropInResult>()
+    val resultFlow: Flow<DropInResult> = resultChannel.receiveAsFlow()
 
     init {
         initializePaymentMethods()
         initializeBackStack()
+        observeResults()
+    }
+
+    private fun observeResults() {
+        merge(
+            dropInServiceManager.paymentResultFlow.map { DropInResult.Completed(it) },
+            dropInServiceManager.errorFlow.map { DropInResult.Failed(it.message ?: "Something went wrong") },
+            navigator.finishFlow.filter { it }.map { DropInResult.Cancelled() },
+        )
+            .onEach { resultChannel.send(it) }
+            .launchIn(viewModelScope)
     }
 
     private fun initializePaymentMethods() {
