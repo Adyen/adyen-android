@@ -66,8 +66,7 @@ internal class CardConfigDataGeneratorTest {
                 false,
                 createCheckoutParams(showSubmitButton = true),
                 mapOf(
-                    "billingAddressMode" to "PostalCode",
-                    "billingAddressRequired" to "true",
+                    "billingAddressMode" to "partial",
                     "billingAddressHideForCardBrands" to "jcb,visa",
                     "brands" to "mc,visa",
                     "showSupportedCardBrandLogos" to "true",
@@ -101,8 +100,7 @@ internal class CardConfigDataGeneratorTest {
                 false,
                 createCheckoutParams(showSubmitButton = false),
                 mapOf(
-                    "billingAddressMode" to "None",
-                    "billingAddressRequired" to "false",
+                    "billingAddressMode" to "none",
                     "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
@@ -136,8 +134,7 @@ internal class CardConfigDataGeneratorTest {
                 false,
                 createCheckoutParams(showSubmitButton = false),
                 mapOf(
-                    "billingAddressMode" to "None",
-                    "billingAddressRequired" to "false",
+                    "billingAddressMode" to "none",
                     "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
@@ -170,8 +167,7 @@ internal class CardConfigDataGeneratorTest {
                 true,
                 createCheckoutParams(showSubmitButton = false),
                 mapOf(
-                    "billingAddressMode" to "None",
-                    "billingAddressRequired" to "false",
+                    "billingAddressMode" to "none",
                     "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
@@ -204,8 +200,7 @@ internal class CardConfigDataGeneratorTest {
                 true,
                 createCheckoutParams(showSubmitButton = false),
                 mapOf(
-                    "billingAddressMode" to "None",
-                    "billingAddressRequired" to "false",
+                    "billingAddressMode" to "none",
                     "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
@@ -242,8 +237,7 @@ internal class CardConfigDataGeneratorTest {
                 createCheckoutParams(showSubmitButton = false),
                 mapOf(
                     "billingAddressAllowedCountries" to "NL,US",
-                    "billingAddressMode" to "Full",
-                    "billingAddressRequired" to "true",
+                    "billingAddressMode" to "full",
                     "billingAddressHideForCardBrands" to "jcb",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
@@ -279,8 +273,7 @@ internal class CardConfigDataGeneratorTest {
                 false,
                 createCheckoutParams(showSubmitButton = false),
                 mapOf(
-                    "billingAddressMode" to "Full",
-                    "billingAddressRequired" to "true",
+                    "billingAddressMode" to "full",
                     "billingAddressHideForCardBrands" to "",
                     "brands" to "",
                     "showSupportedCardBrandLogos" to "false",
