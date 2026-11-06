@@ -18,6 +18,7 @@ import com.adyen.checkout.cse.Encryptor
 class TestCheckoutEncryptor : CheckoutEncryptor {
 
     var shouldFailCardEncryption = false
+    var shouldFailFieldEncryption = false
 
     override fun encrypt(card: Card, publicKey: String): Result<EncryptedCard> = result(shouldFailCardEncryption) {
         EncryptedCard(
@@ -27,6 +28,12 @@ class TestCheckoutEncryptor : CheckoutEncryptor {
             encryptedSecurityCode = card.securityCode,
         )
     }
+
+    override fun encrypt(
+        field: Encryptor.Field,
+        value: String,
+        publicKey: String
+    ): Result<String> = result(shouldFailFieldEncryption) { value }
 
     private fun <T> result(shouldFail: Boolean, value: () -> T): Result<T> {
         return if (shouldFail) {

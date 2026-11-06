@@ -33,6 +33,15 @@ internal class DefaultCheckoutEncryptor(
         )
     }
 
+    override fun encrypt(
+        field: Encryptor.Field,
+        value: String,
+        publicKey: String
+    ): Result<String> = runCatching {
+        ensurePublicKeyValid(publicKey)
+        encryptValue(field, value, publicKey)
+    }
+
     private fun ensurePublicKeyValid(publicKey: String) {
         if (!ValidationUtils.isPublicKeyValid(publicKey)) {
             throw Encryptor.Error(

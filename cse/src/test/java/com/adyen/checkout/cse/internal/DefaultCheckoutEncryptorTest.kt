@@ -166,6 +166,66 @@ internal class DefaultCheckoutEncryptorTest(
         }
     }
 
+    @Nested
+    inner class EncryptFieldTest {
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.cse.internal.DefaultCheckoutEncryptorTest#fieldKeySource")
+        fun `when field is encrypted then its payload key is used`(field: Encryptor.Field, expectedKey: String) {
+            // GIVEN
+            givenEncryptionSucceeds()
+
+            // WHEN
+            val result = checkoutEncryptor.encrypt(field, "1234", PUBLIC_KEY)
+
+            // THEN
+            assertEquals(expectedEncryptedValue(expectedKey, "1234"), result.getOrThrow())
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.cse.internal.DefaultCheckoutEncryptorTest#unnormalizedValueSource")
+        fun `when value contains whitespace, is empty or is not numeric then it is encrypted as it is`(
+            value: String
+        ) {
+            // GIVEN
+            givenEncryptionSucceeds()
+
+            // WHEN
+            val result = checkoutEncryptor.encrypt(Encryptor.Field.Bin, value, PUBLIC_KEY)
+
+            // THEN
+            assertEquals(expectedEncryptedValue("binValue", value), result.getOrThrow())
+        }
+
+        @Test
+        fun `when public key is invalid then failure is returned without encrypting`() {
+            // WHEN
+            val result = checkoutEncryptor.encrypt(Encryptor.Field.Bin, "411111", "invalid")
+
+            // THEN
+            assertError(
+                Encryptor.Error.Code.INVALID_PUBLIC_KEY,
+                "Encryption failed because the public key is invalid.",
+                result,
+            )
+            verifyNoInteractions(jsonWebEncryptor)
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.cse.internal.DefaultCheckoutEncryptorTest#encryptionExceptionSource")
+        fun `when encryption throws then failure wrapping the cause is returned`(exception: Exception) {
+            // GIVEN
+            givenEncryptionThrows(exception)
+
+            // WHEN
+            val result = checkoutEncryptor.encrypt(Encryptor.Field.Bin, "411111", PUBLIC_KEY)
+
+            // THEN
+            val error = assertError(Encryptor.Error.Code.ENCRYPTION_FAILED, "Encryption failed.", result)
+            assertSame(exception, error.cause)
+        }
+    }
+
     private fun assertError(expectedCode: String, expectedMessage: String, result: Result<*>): Encryptor.Error {
         val error = assertInstanceOf(Encryptor.Error::class.java, result.exceptionOrNull())
         assertEquals(expectedCode, error.code)
@@ -243,6 +303,26 @@ internal class DefaultCheckoutEncryptorTest(
         fun encryptionExceptionSource() = listOf(
             arguments(EncryptionException("Problem reading public key", null)),
             arguments(IllegalStateException("Unexpected")),
+        )
+
+        @JvmStatic
+        fun fieldKeySource() = listOf(
+            arguments(Encryptor.Field.CardNumber, "number"),
+            arguments(Encryptor.Field.ExpiryMonth, "expiryMonth"),
+            arguments(Encryptor.Field.ExpiryYear, "expiryYear"),
+            arguments(Encryptor.Field.SecurityCode, "cvc"),
+            arguments(Encryptor.Field.Bin, "binValue"),
+            arguments(Encryptor.Field.KcpPassword, "password"),
+            arguments(Encryptor.Field.BankAccountNumber, "bankAccountNumber"),
+            arguments(Encryptor.Field.BankRoutingNumber, "bankLocationId"),
+        )
+
+        @JvmStatic
+        fun unnormalizedValueSource() = listOf(
+            arguments(" 4111 11 "),
+            arguments(""),
+            arguments(" "),
+            arguments("41a1"),
         )
     }
 }

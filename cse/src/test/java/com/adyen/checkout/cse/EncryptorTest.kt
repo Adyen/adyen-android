@@ -48,6 +48,15 @@ internal class EncryptorTest {
         assertInstanceOf(Encryptor.Error::class.java, result.exceptionOrNull())
     }
 
+    @Test
+    fun `when field is encrypted with an invalid public key then failure is returned`() {
+        // WHEN
+        val result = Encryptor.encrypt(Encryptor.Field.Bin, "411111", "invalid")
+
+        // THEN
+        assertInstanceOf(Encryptor.Error::class.java, result.exceptionOrNull())
+    }
+
     companion object {
 
         @JvmStatic
