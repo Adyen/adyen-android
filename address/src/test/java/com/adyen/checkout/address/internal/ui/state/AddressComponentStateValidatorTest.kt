@@ -38,10 +38,10 @@ internal class AddressComponentStateValidatorTest {
         val result = validator.validate(state)
 
         // THEN
-        assertEquals(CheckoutLocalizationKey.ADDRESS_STREET_ERROR, result.street.error?.message)
-        assertEquals(CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_ERROR, result.houseNumberOrName.error?.message)
-        assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
-        assertEquals(CheckoutLocalizationKey.ADDRESS_CITY_ERROR, result.city.error?.message)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, result.street.error?.message)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, result.houseNumberOrName.error?.message)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, result.postalCode.error?.message)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, result.city.error?.message)
     }
 
     @Test
@@ -169,7 +169,7 @@ internal class AddressComponentStateValidatorTest {
     @Test
     fun `when an error is already visible then revalidating keeps it visible`() {
         // GIVEN
-        val visibleError = InputError(CheckoutLocalizationKey.ADDRESS_STREET_ERROR, isVisible = true)
+        val visibleError = InputError(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, isVisible = true)
         val state = createState(US_ADDRESS).copy(
             street = TextInputComponentState(error = visibleError),
             states = STATES,
@@ -226,7 +226,7 @@ internal class AddressComponentStateValidatorTest {
         val result = validator.validate(state)
 
         // THEN
-        assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, result.postalCode.error?.message)
     }
 
     @Test
@@ -250,7 +250,7 @@ internal class AddressComponentStateValidatorTest {
         val result = validator.validate(state)
 
         // THEN
-        assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, result.postalCode.error?.message)
     }
 
     @ParameterizedTest
@@ -277,7 +277,7 @@ internal class AddressComponentStateValidatorTest {
 
         // THEN
         assertNull(state.postalCode.error)
-        assertEquals(CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR, result.postalCode.error?.message)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, result.postalCode.error?.message)
     }
 
     @Test

@@ -31,12 +31,14 @@ internal data class AddressViewState(
  * What a picker screen shows.
  *
  * @param title The label of the field that opens the picker.
+ * @param description The subtitle under the title, or null when the picker has none.
  * @param regions The countries or states the shopper can pick, in the order they are shown.
  * @param selected The current choice, or null when there is none.
  */
 @Immutable
 internal data class PickerViewState(
     val title: CheckoutLocalizationKey,
+    val description: CheckoutLocalizationKey?,
     val regions: List<AddressRegion>,
     val selected: AddressRegion?,
 )

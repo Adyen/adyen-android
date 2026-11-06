@@ -29,7 +29,6 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.ADDRESS_STREET_LABEL_NAME_AND_BLOCK_NUMBER ->
                 R.string.adyen_checkout_address_street_label_name_and_block_number
 
-            CheckoutLocalizationKey.ADDRESS_STREET_ERROR -> R.string.adyen_checkout_address_street_error
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL -> R.string.adyen_checkout_address_house_number_label
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_APARTMENT_SUITE ->
                 R.string.adyen_checkout_address_house_number_label_apartment_suite
@@ -37,15 +36,12 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL_BUILDING_NAME_ROOM_NUMBER ->
                 R.string.adyen_checkout_address_house_number_label_building_name_room_number
 
-            CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_ERROR -> R.string.adyen_checkout_address_house_number_error
             CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL -> R.string.adyen_checkout_address_postal_code_label
             CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_LABEL_ZIP_CODE ->
                 R.string.adyen_checkout_address_postal_code_label_zip_code
 
-            CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR -> R.string.adyen_checkout_address_postal_code_error
             CheckoutLocalizationKey.ADDRESS_CITY_LABEL -> R.string.adyen_checkout_address_city_label
             CheckoutLocalizationKey.ADDRESS_CITY_LABEL_CITY_TOWN -> R.string.adyen_checkout_address_city_label_city_town
-            CheckoutLocalizationKey.ADDRESS_CITY_ERROR -> R.string.adyen_checkout_address_city_error
             CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL ->
                 R.string.adyen_checkout_address_state_or_province_label
 
@@ -122,6 +118,7 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_POSTAL_CODE -> R.string.checkout_card_postal_code
             CheckoutLocalizationKey.CARD_POSTAL_CODE_INVALID -> R.string.checkout_card_postal_code_invalid
+            CheckoutLocalizationKey.CARD_BILLING_ADDRESS_TITLE -> R.string.adyen_checkout_card_billing_address_title
             CheckoutLocalizationKey.CARD_BILLING_ADDRESS_ERROR -> R.string.adyen_checkout_card_billing_address_error
 
             CheckoutLocalizationKey.CARD_INSTALLMENTS_TITLE -> R.string.checkout_card_installments_title
@@ -151,6 +148,9 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_INSTALLMENTS_REGULAR_DESCRIPTION_WITH_PRICE ->
                 R.string.checkout_card_installments_option_regular_description_with_price
+
+            // Country picker
+            CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION -> R.string.adyen_checkout_country_picker_description
 
             // Drop-in
             CheckoutLocalizationKey.DROPIN_GENERIC_PAYMENT_METHOD_DESCRIPTION ->
@@ -236,6 +236,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.GENERAL_BACK -> R.string.checkout_general_back
             CheckoutLocalizationKey.GENERAL_CANCEL -> R.string.checkout_general_cancel
             CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close
+            CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID -> R.string.adyen_checkout_general_field_error_invalid
             CheckoutLocalizationKey.GENERAL_OPTIONAL -> R.string.checkout_general_optional
             CheckoutLocalizationKey.GENERAL_SEARCH_HINT -> R.string.checkout_general_search_hint
 

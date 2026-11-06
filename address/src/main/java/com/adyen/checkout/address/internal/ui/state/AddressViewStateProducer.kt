@@ -11,6 +11,7 @@ package com.adyen.checkout.address.internal.ui.state
 import com.adyen.checkout.address.internal.ui.model.AddressRegion
 import com.adyen.checkout.address.internal.ui.properties.PostalCodeProperties
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.visibleErrorMessage
@@ -33,12 +34,14 @@ internal class AddressViewStateProducer(
             elements = state.form.elements.map { state.toElement(it.id, selectedCountry, selectedState) },
             countryPickerViewState = PickerViewState(
                 title = state.getLabel(AddressFormElementId.COUNTRY),
+                description = CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION,
                 regions = state.countries,
                 selected = selectedCountry,
             ),
             statePickerViewState = if (state.spec.hasStates) {
                 PickerViewState(
                     title = state.getLabel(AddressFormElementId.STATE_OR_PROVINCE),
+                    description = null,
                     regions = state.states,
                     selected = selectedState,
                 )

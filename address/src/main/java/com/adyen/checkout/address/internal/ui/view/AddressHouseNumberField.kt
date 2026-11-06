@@ -59,7 +59,7 @@ private fun AddressHouseNumberFieldPreview(
         AddressHouseNumberField(
             label = CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_LABEL,
             houseNumberState = TextInputViewState(
-                supportingText = CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_ERROR,
+                supportingText = CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID,
                 isError = true,
             ),
             onValueChange = {},

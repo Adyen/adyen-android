@@ -27,16 +27,10 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
                 error = CheckoutLocalizationKey.ADDRESS_COUNTRY_ERROR,
             ),
         ),
-        street = state.street.updateError(
-            validateAddressLine(state.street, CheckoutLocalizationKey.ADDRESS_STREET_ERROR),
-        ),
-        houseNumberOrName = state.houseNumberOrName.updateError(
-            validateAddressLine(state.houseNumberOrName, CheckoutLocalizationKey.ADDRESS_HOUSE_NUMBER_ERROR),
-        ),
+        street = state.street.updateError(validateAddressLine(state.street)),
+        houseNumberOrName = state.houseNumberOrName.updateError(validateAddressLine(state.houseNumberOrName)),
         postalCode = state.postalCode.updateError(validatePostalCode(state.postalCode, state.country.selected)),
-        city = state.city.updateError(
-            validateAddressLine(state.city, CheckoutLocalizationKey.ADDRESS_CITY_ERROR),
-        ),
+        city = state.city.updateError(validateAddressLine(state.city)),
         stateOrProvince = state.stateOrProvince.updateError(
             state.validateSelection(
                 id = AddressFormElementId.STATE_OR_PROVINCE,
@@ -63,7 +57,7 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
             pattern == null -> true
             else -> pattern.containsMatchIn(postalCode.text.trim())
         }
-        return CheckoutLocalizationKey.ADDRESS_POSTAL_CODE_ERROR.takeUnless { isValid }
+        return CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID.takeUnless { isValid }
     }
 
     /** A picker the spec requires needs a selection; an optional or hidden one never has an error. */
@@ -80,17 +74,15 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
      * The street, the house number and the city: required as their spec says, and free of emoji and control
      * characters. An empty value only gets the required error.
      */
-    private fun validateAddressLine(
-        input: TextInputComponentState,
-        requiredError: CheckoutLocalizationKey,
-    ): CheckoutLocalizationKey? = validateRequiredText(input, requiredError)
-        ?: CheckoutLocalizationKey.ADDRESS_INVALID_CHARACTERS_ERROR.takeIf {
-            AddressCharacters.containsInvalidCharacters(input.text)
-        }
+    private fun validateAddressLine(input: TextInputComponentState): CheckoutLocalizationKey? =
+        validateRequiredText(input)
+            ?: CheckoutLocalizationKey.ADDRESS_INVALID_CHARACTERS_ERROR.takeIf {
+                AddressCharacters.containsInvalidCharacters(input.text)
+            }
 
     /** An optional field is only validated when it has content, so a blank optional field is valid. */
-    private fun validateRequiredText(
-        input: TextInputComponentState,
-        error: CheckoutLocalizationKey,
-    ): CheckoutLocalizationKey? = error.takeIf { input.requiresValidation() && input.text.isBlank() }
+    private fun validateRequiredText(input: TextInputComponentState): CheckoutLocalizationKey? =
+        CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID.takeIf {
+            input.requiresValidation() && input.text.isBlank()
+        }
 }

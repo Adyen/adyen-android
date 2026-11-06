@@ -46,7 +46,7 @@ internal class AddressViewStateProducerTest {
     @Test
     fun `when a field has a visible error then its view state is an error`() {
         // GIVEN
-        val visibleError = InputError(CheckoutLocalizationKey.ADDRESS_CITY_ERROR, isVisible = true)
+        val visibleError = InputError(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, isVisible = true)
         val state = createState().copy(city = TextInputComponentState(error = visibleError))
 
         // WHEN
@@ -55,7 +55,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val city = viewState.elements.filterIsInstance<AddressFormElement.City>().single()
         assertTrue(city.textInputViewState.isError)
-        assertEquals(CheckoutLocalizationKey.ADDRESS_CITY_ERROR, city.textInputViewState.supportingText)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, city.textInputViewState.supportingText)
     }
 
     @Test
@@ -173,6 +173,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val expected = PickerViewState(
             title = CheckoutLocalizationKey.ADDRESS_COUNTRY_LABEL,
+            description = CheckoutLocalizationKey.COUNTRY_PICKER_DESCRIPTION,
             regions = COUNTRIES,
             selected = AddressRegion(code = "US", name = "United States"),
         )
@@ -190,6 +191,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val expected = PickerViewState(
             title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+            description = null,
             regions = US_STATES,
             selected = CALIFORNIA,
         )
@@ -237,6 +239,7 @@ internal class AddressViewStateProducerTest {
         // THEN
         val expected = PickerViewState(
             title = CheckoutLocalizationKey.ADDRESS_STATE_OR_PROVINCE_LABEL_STATE,
+            description = null,
             regions = emptyList(),
             selected = null,
         )

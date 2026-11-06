@@ -20,6 +20,7 @@ import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import com.adyen.checkout.core.common.internal.helper.LocalLocale
 import com.adyen.checkout.core.common.internal.ui.CheckoutTextFieldTrailingIcon
 import com.adyen.checkout.core.common.internal.ui.resolveTextFieldLabel
 import com.adyen.checkout.core.common.internal.ui.toImeAction
@@ -41,7 +42,8 @@ internal val AddressLineKeyboardOptions = KeyboardOptions(
 
 /**
  * A text field of the address form. The label is the selected country's, and an optional field appends
- * [CheckoutLocalizationKey.GENERAL_OPTIONAL] to it, as card's fields do.
+ * [CheckoutLocalizationKey.GENERAL_OPTIONAL] to it, as card's fields do. The error is formatted with the label in lower
+ * case, as on Web ("Enter a valid zip code").
  *
  * @param maxLength The most characters the field takes. Every field also turns line breaks into spaces.
  */
@@ -58,6 +60,7 @@ internal fun AddressTextField(
     modifier: Modifier = Modifier,
 ) {
     val inputTransformation = remember(maxLength) { addressInputTransformation(maxLength) }
+    val fieldName = resolveString(label).lowercase(LocalLocale.current)
 
     CheckoutTextField(
         modifier = modifier
@@ -69,7 +72,7 @@ internal fun AddressTextField(
         state = rememberTextFieldStateWithCurrentValue(textInputViewState.text),
         contentType = contentType,
         isError = textInputViewState.isError,
-        supportingText = textInputViewState.supportingText?.let { resolveString(it) },
+        supportingText = textInputViewState.supportingText?.let { resolveString(it, fieldName) },
         onValueChange = onValueChange,
         inputTransformation = inputTransformation,
         keyboardOptions = keyboardOptions,
