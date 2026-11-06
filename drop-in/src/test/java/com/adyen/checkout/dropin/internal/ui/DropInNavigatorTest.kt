@@ -108,12 +108,13 @@ internal class DropInNavigatorTest {
     }
 
     @Test
-    fun `when a key is stacked on another then that one is below the current key`() {
-        val first = TestNavKey("first")
-        navigator.navigateTo(first)
-        navigator.navigateTo(TestNavKey("second"))
+    fun `when keys are stacked then the one directly below the current key is returned`() {
+        navigator.navigateTo(TestNavKey("first"))
+        val second = TestNavKey("second")
+        navigator.navigateTo(second)
+        navigator.navigateTo(TestNavKey("third"))
 
-        assertEquals(first, navigator.keyBelowCurrent())
+        assertEquals(second, navigator.keyBelowCurrent())
     }
 
     @Test
