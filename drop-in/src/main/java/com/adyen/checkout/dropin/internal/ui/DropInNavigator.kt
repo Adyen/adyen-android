@@ -19,7 +19,8 @@ internal class DropInNavigator(
     private val backStackPersister: BackStackPersister,
 ) {
 
-    // Initialized with an empty key to make the preselected bottom sheet possible
+    // Initialized with an empty key that stays below every screen. back() finishes Drop-in once only that key is left,
+    // and it gives the last screen an entry to animate away over.
     val backStack: List<NavKey>
         field: SnapshotStateList<NavKey> = mutableStateListOf(EmptyNavKey)
 

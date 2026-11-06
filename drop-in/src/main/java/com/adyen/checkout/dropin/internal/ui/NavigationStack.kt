@@ -52,7 +52,8 @@ internal fun NavigationStack(
     )
 }
 
-// This empty entry makes sure a bottom sheet can be rendered on top of nothing
+// Stays below the first screen, so that screen has an entry to animate away over, including with predictive back.
+// Going back to it finishes Drop-in.
 private fun emptyNavEntry(key: EmptyNavKey): NavEntry<NavKey> = NavEntry(key) {}
 
 private fun preselectedPaymentMethodNavEntry(
