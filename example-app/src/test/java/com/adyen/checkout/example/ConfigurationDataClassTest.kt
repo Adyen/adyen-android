@@ -8,9 +8,12 @@
 
 package com.adyen.checkout.example
 
+import com.adyen.checkout.core.components.internal.Configuration
 import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.ext.list.modifierprovider.withoutAbstractModifier
 import com.lemonappdev.konsist.api.ext.list.withName
 import com.lemonappdev.konsist.api.ext.list.withPackage
+import com.lemonappdev.konsist.api.ext.list.withParentInterfaceOf
 import com.lemonappdev.konsist.api.verify.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -25,14 +28,14 @@ internal class ConfigurationDataClassTest {
         Konsist
             .scopeFromProduction()
             .classes()
-            .filter {
-                // v5 configurations implement a Configuration interface with the same name in another package.
-                it.hasParentInterfaceWithName(CONFIGURATION_NAME) && it.containingFile.hasImportWithName(CONFIGURATION)
-            }
+            .withParentInterfaceOf(Configuration::class, indirectParents = true)
+            // A shared abstract base can't be a data class, so only the configurations extending it are checked.
+            .withoutAbstractModifier()
             .assertTrue(
                 strict = true,
-                additionalMessage = "Configurations must be data classes so they compare by value. Nested types " +
-                    "need value equality as well.",
+                additionalMessage = "Configurations must be data classes so they compare by value. A shared abstract " +
+                    "base is allowed, but the configurations extending it must be data classes. Nested types need " +
+                    "value equality as well.",
             ) {
                 it.hasDataModifier
             }
@@ -54,9 +57,6 @@ internal class ConfigurationDataClassTest {
     }
 
     companion object {
-        private const val CONFIGURATION_NAME = "Configuration"
-        private const val CONFIGURATION_PACKAGE = "com.adyen.checkout.core.components.internal"
-        private const val CONFIGURATION = "$CONFIGURATION_PACKAGE.$CONFIGURATION_NAME"
         private const val CHECKOUT_CONFIGURATION_NAME = "CheckoutConfiguration"
         private const val CHECKOUT_CONFIGURATION_PACKAGE = "com.adyen.checkout.core.components"
     }
