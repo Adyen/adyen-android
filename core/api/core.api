@@ -584,7 +584,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field GENERAL_BACK Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CANCEL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CLOSE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field GENERAL_FIELD_ERROR Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field GENERAL_FIELD_ERROR_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_OPTIONAL Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_SEARCH_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

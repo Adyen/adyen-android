@@ -57,7 +57,7 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
             pattern == null -> true
             else -> pattern.containsMatchIn(postalCode.text.trim())
         }
-        return CheckoutLocalizationKey.GENERAL_FIELD_ERROR.takeUnless { isValid }
+        return CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID.takeUnless { isValid }
     }
 
     /** A picker the spec requires needs a selection; an optional or hidden one never has an error. */
@@ -82,5 +82,7 @@ internal class AddressComponentStateValidator : ComponentStateValidator<AddressC
 
     /** An optional field is only validated when it has content, so a blank optional field is valid. */
     private fun validateRequiredText(input: TextInputComponentState): CheckoutLocalizationKey? =
-        CheckoutLocalizationKey.GENERAL_FIELD_ERROR.takeIf { input.requiresValidation() && input.text.isBlank() }
+        CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID.takeIf {
+            input.requiresValidation() && input.text.isBlank()
+        }
 }

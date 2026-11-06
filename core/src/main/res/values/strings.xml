@@ -110,7 +110,7 @@
     <string name="checkout_general_back" translatable="false">Back</string>
     <string name="checkout_general_cancel" translatable="false">Cancel</string>
     <string name="checkout_general_close" translatable="false">Close</string>
-    <string name="adyen_checkout_general_field_error" translatable="false">Enter a valid %s</string>
+    <string name="adyen_checkout_general_field_error_invalid" translatable="false">Enter a valid %s</string>
     <string name="checkout_general_optional" translatable="false">(Optional)</string>
     <string name="checkout_general_search_hint" translatable="false">Search...</string>
     <string name="checkout_blik_code" translatable="false">Code</string>

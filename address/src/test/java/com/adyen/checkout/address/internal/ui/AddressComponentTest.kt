@@ -399,7 +399,7 @@ internal class AddressComponentTest {
 
         // THEN
         val street = component.viewState.value.elements.element<AddressFormElement.Street>()
-        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR, street.textInputViewState.supportingText)
+        assertEquals(CheckoutLocalizationKey.GENERAL_FIELD_ERROR_INVALID, street.textInputViewState.supportingText)
         assertTrue(events.values.isEmpty())
         assertFalse(navigation.values.any { it is SecondaryNavigationEvent.Close })
     }
