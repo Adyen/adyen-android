@@ -16,7 +16,7 @@ dokka = "2.2.0"
 hilt = "2.60.1"
 
 # Code quality
-compose-rules = "0.6.6"
+compose-rules = "0.6.8"
 detekt = "1.23.8"
 kover = "0.9.11"
 ktlint = "1.8.0"
