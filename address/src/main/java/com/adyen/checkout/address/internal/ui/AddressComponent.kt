@@ -86,7 +86,6 @@ internal constructor(
 
     init {
         fetchCountries()
-        fetchStates()
     }
 
     @Composable
@@ -116,8 +115,8 @@ internal constructor(
      */
     fun show(address: AddressModel?) {
         onIntent(AddressIntent.Reset(address))
-        fetchCountries()
         fetchStates()
+        fetchCountries()
         navigationChannel.trySend(SecondaryNavigationEvent.Open(AddressSecondaryContentEntry.FORM.key))
     }
 
@@ -156,9 +155,13 @@ internal constructor(
         componentState.handleIntent(intent)
     }
 
+    /** Requests the countries, then the states of the selected country when loading the countries changed it. */
     private fun fetchCountries() {
         coroutineScope.launch {
-            onIntent(AddressIntent.CountriesLoaded(addressRepository.getCountries()))
+            val result = addressRepository.getCountries()
+            val previousCountryCode = componentState.value.country.selected
+            onIntent(AddressIntent.CountriesLoaded(result))
+            if (componentState.value.country.selected != previousCountryCode) fetchStates()
         }
     }
 

@@ -15,36 +15,21 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.Locale
 
 internal class AddressComponentStateFactoryTest {
 
+    /** The first loaded country is only known once the countries load, so the reducer selects it. */
     @Test
-    fun `when there is no address then the shopper locale country is selected before the countries load`() {
+    fun `when there is no address then no country is selected before the countries load`() {
         // GIVEN
-        val factory = createFactory(shopperLocale = Locale.forLanguageTag("nl-NL"))
-
-        // WHEN
-        val state = factory.createInitialState()
-
-        // THEN
-        assertEquals("NL", state.country.selected)
-        assertEquals(AddressSpec.DEFAULT, state.spec)
-    }
-
-    @Test
-    fun `when the shopper locale country is not supported then no country is selected`() {
-        // GIVEN
-        val factory = createFactory(
-            shopperLocale = Locale.forLanguageTag("nl-NL"),
-            supportedCountryCodes = setOf("US", "CA"),
-        )
+        val factory = createFactory()
 
         // WHEN
         val state = factory.createInitialState()
 
         // THEN
         assertNull(state.country.selected)
+        assertEquals(AddressSpec.DEFAULT, state.spec)
     }
 
     @Test
@@ -119,14 +104,8 @@ internal class AddressComponentStateFactoryTest {
     }
 
     private fun createFactory(
-        shopperLocale: Locale = Locale.US,
         supportedCountryCodes: Set<String> = emptySet(),
-    ) = AddressComponentStateFactory(
-        AddressComponentParams(
-            shopperLocale = shopperLocale,
-            supportedCountryCodes = supportedCountryCodes,
-        ),
-    )
+    ) = AddressComponentStateFactory(AddressComponentParams(supportedCountryCodes = supportedCountryCodes))
 
     companion object {
         private val US_ADDRESS = AddressModel(

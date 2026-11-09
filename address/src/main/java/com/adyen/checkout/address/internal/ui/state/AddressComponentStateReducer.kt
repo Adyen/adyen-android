@@ -56,7 +56,7 @@ internal class AddressComponentStateReducer(
      * the state or province is reset, because the states belong to the previous country. The text fields take their
      * requirement policy from the new spec.
      */
-    private fun AddressComponentState.selectCountry(countryCode: String?): AddressComponentState {
+    private fun AddressComponentState.selectCountry(countryCode: String): AddressComponentState {
         val newSpec = AddressSpec.fromCountryCode(countryCode)
         return copy(
             country = country.copy(selected = countryCode),
@@ -74,11 +74,11 @@ internal class AddressComponentStateReducer(
 
     /**
      * Replaces the whole state with the form for [address]. The loaded countries do not depend on the address, so they
-     * survive a reset. So do the loaded states while the country stays the same; the state of [address] is cleared when
-     * they do not contain it.
+     * survive a reset, and the first of them is selected when [address] has none of them. The loaded states survive
+     * while the country stays the same; the state of [address] is cleared when they do not contain it.
      */
     private fun AddressComponentState.reset(address: AddressModel?): AddressComponentState {
-        val resetState = componentStateFactory.createState(address).copy(countries = countries)
+        val resetState = componentStateFactory.createState(address).copy(countries = countries).selectLoadedCountry()
         if (resetState.country.selected != country.selected) return resetState
         return resetState.copy(states = states).clearUnlistedState()
     }
@@ -93,8 +93,8 @@ internal class AddressComponentStateReducer(
         copy(requirementPolicy = spec.getFieldSpec(id).requirementPolicy)
 
     /**
-     * A failure changes nothing, so a prefilled or default country still works offline and a list loaded earlier is
-     * kept. Clears the selected country when a non-empty list leaves it out.
+     * Keeps the countries in the order of the backend, leaving out the unsupported ones. A failure changes nothing, so
+     * a prefilled country still works offline and a list loaded earlier is kept.
      */
     private fun AddressComponentState.onCountriesLoaded(result: Result<List<AddressItem>>): AddressComponentState {
         val items = result.getOrNull() ?: return this
@@ -102,8 +102,17 @@ internal class AddressComponentStateReducer(
         val countries = items.toAddressRegions().filter { region ->
             supportedCountryCodes.isEmpty() || region.code in supportedCountryCodes
         }
-        val loadedState = copy(countries = countries)
-        return if (countries.isMissing(country.selected)) loadedState.selectCountry(null) else loadedState
+        return copy(countries = countries).selectLoadedCountry()
+    }
+
+    /**
+     * Selects the first loaded country when no loaded country is selected. Without loaded countries the selection is
+     * kept as it is.
+     */
+    private fun AddressComponentState.selectLoadedCountry(): AddressComponentState {
+        val firstCountry = countries.firstOrNull() ?: return this
+        val isLoadedCountrySelected = countries.findCode(country.selected) != null
+        return if (isLoadedCountrySelected) this else selectCountry(firstCountry.code)
     }
 
     /**
@@ -122,16 +131,16 @@ internal class AddressComponentStateReducer(
         return copy(states = result.getOrNull().orEmpty().toAddressRegions()).clearUnlistedState()
     }
 
-    /** Clears the selected state when the loaded states leave it out, as [onCountriesLoaded] does for the country. */
+    /** Clears the selected state when the loaded states leave it out. */
     private fun AddressComponentState.clearUnlistedState(): AddressComponentState {
         if (!states.isMissing(stateOrProvince.selected)) return this
         return copy(stateOrProvince = stateOrProvince.copy(selected = null))
     }
-
-    /** The [code] when this list contains it, otherwise null. */
-    private fun List<AddressRegion>.findCode(code: String?): String? = code?.takeIf { any { it.code == code } }
-
-    /** Whether this loaded list leaves out the selected [code]. An empty list leaves nothing out. */
-    private fun List<AddressRegion>.isMissing(code: String?): Boolean =
-        code != null && isNotEmpty() && none { it.code == code }
 }
+
+/** The [code] when this list contains it, otherwise null. */
+private fun List<AddressRegion>.findCode(code: String?): String? = code?.takeIf { any { it.code == code } }
+
+/** Whether this loaded list leaves out the selected [code]. An empty list leaves nothing out. */
+private fun List<AddressRegion>.isMissing(code: String?): Boolean =
+    code != null && isNotEmpty() && none { it.code == code }

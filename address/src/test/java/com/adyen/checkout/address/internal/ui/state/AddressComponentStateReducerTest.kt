@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import java.io.IOException
-import java.util.Locale
 
 internal class AddressComponentStateReducerTest {
 
@@ -107,7 +106,67 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
-    fun `when the countries are loaded without the selected country then the selection is cleared`() {
+    fun `when the countries are loaded then they keep the order of the backend`() {
+        // GIVEN
+        val items = listOf(
+            AddressItem(id = "US", name = "United States"),
+            AddressItem(id = "DE", name = "Germany"),
+            AddressItem(id = "NL", name = "Netherlands"),
+        )
+
+        // WHEN
+        val result = createReducer().reduce(
+            createState(address = null),
+            AddressIntent.CountriesLoaded(Result.success(items)),
+        )
+
+        // THEN
+        assertEquals(listOf("US", "DE", "NL"), result.countries.map { it.code })
+    }
+
+    @Test
+    fun `when the countries are loaded without a selected country then the first country is selected`() {
+        // GIVEN
+        val state = createState(address = null)
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
+
+        // THEN
+        assertEquals("DE", result.country.selected)
+    }
+
+    /** The order of the backend decides, not the order of the supported country codes. */
+    @Test
+    fun `when the countries are loaded with supported country codes then the first supported country is selected`() {
+        // GIVEN
+        val params = createParams(supportedCountryCodes = linkedSetOf("US", "NL"))
+        val state = createState(address = null, params)
+
+        // WHEN
+        val result = createReducer(params).reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
+
+        // THEN
+        assertEquals("NL", result.country.selected)
+    }
+
+    /** The countries are requested again on every show, so a reload must not drop the loaded states. */
+    @Test
+    fun `when the countries are loaded with the selected country then it stays selected with its states`() {
+        // GIVEN
+        val state = createState(US_ADDRESS).withStates(US_STATES)
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
+
+        // THEN
+        assertEquals("US", result.country.selected)
+        assertEquals(US_STATES, result.states)
+        assertEquals("CA", result.stateOrProvince.selected)
+    }
+
+    @Test
+    fun `when the loaded countries leave out the selected country then the first country is selected`() {
         // GIVEN
         val state = createState(US_ADDRESS.copy(country = "XX"))
 
@@ -115,26 +174,60 @@ internal class AddressComponentStateReducerTest {
         val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
 
         // THEN
-        assertNull(result.country.selected)
+        assertEquals("DE", result.country.selected)
         assertEquals(AddressSpec.DEFAULT, result.spec)
         assertNull(result.stateOrProvince.selected)
     }
 
     @Test
-    fun `when the countries are loaded without a selected country then the fields are kept`() {
+    fun `when the first country is selected then the fields are kept`() {
         // GIVEN
-        val params = createParams(shopperLocale = Locale.ROOT)
-        val state = createReducer(params).reduce(
-            createState(address = null, params),
-            AddressIntent.UpdateStreet("Main Street 1"),
-        )
+        val state = createReducer().reduce(createState(address = null), AddressIntent.UpdateStreet("Main Street 1"))
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
+
+        // THEN
+        assertEquals("Main Street 1", result.street.text)
+    }
+
+    @Test
+    fun `when the first country has states then it gets their layout`() {
+        // GIVEN
+        val params = createParams(supportedCountryCodes = setOf("US"))
+        val state = createState(address = null, params)
+
+        // WHEN
+        val result = createReducer(params).reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
+
+        // THEN
+        assertEquals(AddressSpec.US, result.spec)
+        assertEquals(RequirementPolicy.Optional, result.houseNumberOrName.requirementPolicy)
+    }
+
+    @Test
+    fun `when no loaded country is supported then no country is selected`() {
+        // GIVEN
+        val params = createParams(supportedCountryCodes = setOf("XX"))
+        val state = createState(address = null, params)
 
         // WHEN
         val result = createReducer(params).reduce(state, AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)))
 
         // THEN
         assertNull(result.country.selected)
-        assertEquals("Main Street 1", result.street.text)
+    }
+
+    @Test
+    fun `when loading the countries fails without a selected country then no country is selected`() {
+        // GIVEN
+        val state = createState(address = null)
+
+        // WHEN
+        val result = createReducer().reduce(state, AddressIntent.CountriesLoaded(Result.failure(IOException())))
+
+        // THEN
+        assertNull(result.country.selected)
     }
 
     @Test
@@ -270,17 +363,50 @@ internal class AddressComponentStateReducerTest {
     }
 
     @Test
-    fun `when reset without a country then no state is selected`() {
+    fun `when reset without an address before the countries load then no country is selected`() {
         // GIVEN
-        val params = createParams(shopperLocale = Locale.ROOT)
-        val state = createState(US_ADDRESS, params)
+        val state = createState(US_ADDRESS)
 
         // WHEN
-        val result = createReducer(params).reduce(state, AddressIntent.Reset(address = null))
+        val result = createReducer().reduce(state, AddressIntent.Reset(address = null))
 
         // THEN
         assertNull(result.country.selected)
         assertNull(result.stateOrProvince.selected)
+    }
+
+    @Test
+    fun `when reset without an address after the countries loaded then the first country is selected`() {
+        // GIVEN
+        val reducer = createReducer()
+        val state = reducer.reduce(
+            createState(US_ADDRESS),
+            AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)),
+        )
+
+        // WHEN
+        val result = reducer.reduce(state, AddressIntent.Reset(address = null))
+
+        // THEN
+        assertEquals("DE", result.country.selected)
+        assertNull(result.stateOrProvince.selected)
+    }
+
+    @Test
+    fun `when reset with an unsupported country after the countries loaded then the first country is selected`() {
+        // GIVEN
+        val params = createParams(supportedCountryCodes = setOf("NL", "US"))
+        val reducer = createReducer(params)
+        val state = reducer.reduce(
+            createState(US_ADDRESS, params),
+            AddressIntent.CountriesLoaded(Result.success(COUNTRY_ITEMS)),
+        )
+
+        // WHEN
+        val result = reducer.reduce(state, AddressIntent.Reset(US_ADDRESS.copy(country = "DE")))
+
+        // THEN
+        assertEquals("NL", result.country.selected)
     }
 
     @Test
@@ -393,12 +519,8 @@ internal class AddressComponentStateReducerTest {
     }
 
     private fun createParams(
-        shopperLocale: Locale = Locale.US,
         supportedCountryCodes: Set<String> = emptySet(),
-    ) = AddressComponentParams(
-        shopperLocale = shopperLocale,
-        supportedCountryCodes = supportedCountryCodes,
-    )
+    ) = AddressComponentParams(supportedCountryCodes = supportedCountryCodes)
 
     private fun createState(
         address: AddressModel?,
