@@ -48,9 +48,10 @@ data class GooglePayConfiguration internal constructor(
  * @param googlePayEnvironment The Google Pay environment, either `WalletConstants.ENVIRONMENT_TEST` or
  * `WalletConstants.ENVIRONMENT_PRODUCTION`. Defaults to the value of the Adyen environment.
  * @param totalPriceStatus The status of the total price used. Defaults to `"FINAL"`.
- * @param countryCode The ISO 3166-1 alpha-2 country code where the transaction is processed. Google Pay requires it
- * for merchants that process transactions in the European Economic Area (EEA) or other countries subject to Strong
- * Customer Authentication (SCA). Not sent when not set.
+ * @param countryCode The ISO 3166-1 alpha-2 country code of the acquirer bank that processes the transaction. This is
+ * not the shopper's country. Set it if you process transactions in the European Economic Area (EEA) or other countries
+ * subject to Strong Customer Authentication (SCA). Without it, issuers may decline payments or the liability shift may
+ * not apply. Not sent when not set.
  * @param merchantInfo Information about the merchant requesting the payment.
  * @param allowedPaymentMethods The payment methods offered through Google Pay and their parameters. See
  * [GooglePayAllowedPaymentMethods]. Defaults to a single card payment method when null.
