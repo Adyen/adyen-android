@@ -21,14 +21,12 @@ internal class AddressComponentStateFactory(
     override fun createInitialState() = createState(address = null)
 
     /**
-     * Creates the form for [address]. Without an address, the country of the shopper locale is preselected. Either
-     * country is only selected when the shopper can pick it. The countries are not loaded yet, so the selection is kept
-     * as a code. So is the state of [address], for a country that has states.
+     * Creates the form for [address]. Its country is only selected when the shopper can pick it. Selections are kept
+     * as codes, so the country is selected before the countries load and the view state names it. So is the state of
+     * [address], for a country that has states. Without a country, the reducer selects the first loaded country.
      */
     fun createState(address: AddressModel?): AddressComponentState {
-        // TODO - Address: The default country is internal only. Align it with the other platforms if the team asks for
-        //  a merchant-facing default country.
-        val countryCode = (address?.country ?: componentParams.shopperLocale.country).takeIf { isSupported(it) }
+        val countryCode = address?.country?.takeIf { isSupported(it) }
         val spec = AddressSpec.fromCountryCode(countryCode)
         return AddressComponentState(
             countries = emptyList(),

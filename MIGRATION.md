@@ -221,7 +221,7 @@ val configuration = CheckoutConfiguration(
 - `AddressConfiguration.PostalCode()` becomes `BillingAddressMode.PostalCode()`.
 - `AddressConfiguration.FullAddress(supportedCountryCodes = ...)` becomes `BillingAddressMode.Full(supportedCountryCodes = ...)`, which takes a `Set` of uppercase ISO 3166-1 alpha-2 codes.
 - `CardAddressFieldPolicy.OptionalForCardTypes(brands)` becomes `hideForCardBrands` on `BillingAddressMode.PostalCode()` or `BillingAddressMode.Full()`, which takes a `Set` of `CardBrand`: `OptionalForCardTypes(brands = listOf("jcb"))` becomes `hideForCardBrands = setOf(CardBrand.JCB)`. For these brands the billing address is hidden instead of optional.
-- `defaultCountryCode` and `CardAddressFieldPolicy.Optional` have no v6 equivalent. The country of the shopper locale is preselected when the shopper can pick it, and the selected country's form decides which fields are required.
+- `defaultCountryCode` and `CardAddressFieldPolicy.Optional` have no v6 equivalent. The first country the shopper can pick is preselected, in the order the backend lists them, and the selected country's form decides which fields are required.
 
 #### Callback migration
 

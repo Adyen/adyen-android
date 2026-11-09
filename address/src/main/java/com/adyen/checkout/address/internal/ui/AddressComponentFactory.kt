@@ -38,10 +38,7 @@ class AddressComponentFactory {
         supportedCountryCodes: Set<String>,
         coroutineScope: CoroutineScope,
     ): AddressComponent {
-        val componentParams = AddressComponentParams(
-            shopperLocale = params.shopperLocale,
-            supportedCountryCodes = supportedCountryCodes,
-        )
+        val componentParams = AddressComponentParams(supportedCountryCodes)
         val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val componentStateFactory = AddressComponentStateFactory(componentParams)
         return AddressComponent(

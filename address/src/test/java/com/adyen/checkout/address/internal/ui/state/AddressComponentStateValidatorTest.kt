@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.util.Locale
 
 internal class AddressComponentStateValidatorTest {
 
@@ -348,7 +347,7 @@ internal class AddressComponentStateValidatorTest {
     )
 
     companion object {
-        private val PARAMS = AddressComponentParams(shopperLocale = Locale.ROOT, supportedCountryCodes = emptySet())
+        private val PARAMS = AddressComponentParams(supportedCountryCodes = emptySet())
 
         private val NL_ADDRESS = AddressModel(
             country = "NL",
