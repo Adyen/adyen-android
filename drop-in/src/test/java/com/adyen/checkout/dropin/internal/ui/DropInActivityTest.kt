@@ -11,9 +11,9 @@ package com.adyen.checkout.dropin.internal.ui
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
