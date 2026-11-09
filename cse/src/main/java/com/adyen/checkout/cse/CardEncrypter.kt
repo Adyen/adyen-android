@@ -14,6 +14,10 @@ import com.adyen.checkout.cse.internal.CardEncryptorFactory
  * Allows the encryption of card data to be sent to Adyen's APIs.
  * Use this class with the custom card integration.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object CardEncrypter {
 
     private val encryptor = CardEncryptorFactory.provide()
