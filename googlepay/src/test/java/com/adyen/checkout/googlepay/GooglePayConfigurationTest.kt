@@ -38,7 +38,6 @@ internal class GooglePayConfigurationTest {
         countryCode = countryCode,
         merchantInfo = MerchantInfo(
             merchantName = "Merchant",
-            merchantId = "merchant_id",
             softwareInfo = SoftwareInfo(id = "software_id", version = "1.0.0"),
         ),
         allowedPaymentMethods = GooglePayAllowedPaymentMethods(

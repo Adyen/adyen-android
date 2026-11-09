@@ -60,7 +60,7 @@ internal class GooglePayComponentParamsMapperTest {
     @Test
     fun `when custom google pay configuration fields are set then all fields should match`() {
         val amount = Amount("EUR", 1337)
-        val merchantInfo = MerchantInfo("MERCHANT_NAME", "MERCHANT_ID")
+        val merchantInfo = MerchantInfo(merchantName = "MERCHANT_NAME")
         val allowedAuthMethods = listOf("AUTH1", "AUTH2", "AUTH3")
         val allowedCardNetworks = listOf("CARD1", "CARD2")
         val shippingAddressParameters = ShippingAddressParameters(listOf("ZZ", "AA"), true)

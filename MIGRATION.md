@@ -308,6 +308,8 @@ val configuration = CheckoutConfiguration(
 
 Prepaid cards are now allowed by default. In v5 they were blocked unless you called `setAllowPrepaidCards(true)`. To keep blocking them, pass `GooglePayAllowedPaymentMethods(card = GooglePayAllowedPaymentMethods.Card(allowPrepaidCards = false))` as `allowedPaymentMethods`.
 
+`MerchantInfo.merchantId` was removed. Google Pay on Android does not use it: production access is tied to your app's registration and signing key. Remove it from your `MerchantInfo`.
+
 #### Flow migration
 
 Google Pay now follows the same `Checkout.setup(...)` + `CheckoutController(...)` + `CheckoutPaymentMethod(...)` host pattern as the other public v6 payment methods.

@@ -19,19 +19,16 @@ import org.json.JSONObject
  * payment.
  *
  * @param merchantName The name of the merchant.
- * @param merchantId The id of the merchant.
  * @param softwareInfo Information associated with the caller of the request.
  */
 @Parcelize
 data class MerchantInfo(
     val merchantName: String? = null,
-    val merchantId: String? = null,
     val softwareInfo: SoftwareInfo? = null,
 ) : ModelObject() {
 
     companion object {
         private const val MERCHANT_NAME = "merchantName"
-        private const val MERCHANT_ID = "merchantId"
         private const val SOFTWARE_INFO = "softwareInfo"
 
         @JvmField
@@ -41,7 +38,6 @@ data class MerchantInfo(
                 return try {
                     JSONObject().apply {
                         putOpt(MERCHANT_NAME, modelObject.merchantName)
-                        putOpt(MERCHANT_ID, modelObject.merchantId)
                         putOpt(
                             SOFTWARE_INFO,
                             ModelUtils.serializeOpt(modelObject.softwareInfo, SoftwareInfo.SERIALIZER),
@@ -56,7 +52,6 @@ data class MerchantInfo(
 
             override fun deserialize(jsonObject: JSONObject) = MerchantInfo(
                 merchantName = jsonObject.getStringOrNull(MERCHANT_NAME),
-                merchantId = jsonObject.getStringOrNull(MERCHANT_ID),
                 softwareInfo = ModelUtils.deserializeOpt(
                     jsonObject.optJSONObject(SOFTWARE_INFO),
                     SoftwareInfo.SERIALIZER,
