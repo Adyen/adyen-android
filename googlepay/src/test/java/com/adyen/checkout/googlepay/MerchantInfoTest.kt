@@ -23,16 +23,11 @@ internal class MerchantInfoTest {
 
         val actual = MerchantInfo.SERIALIZER.serialize(merchantInfo)
 
-        val expected = JSONObject()
-            .put("merchantName", "Merchant")
-            .put(
-                "softwareInfo",
-                JSONObject()
-                    .put("id", "software_id")
-                    .put("version", "1.0.0"),
-            )
-
-        assertEquals(expected.toString(), actual.toString())
+        assertEquals(setOf("merchantName", "softwareInfo"), actual.keys().asSequence().toSet())
+        assertEquals("Merchant", actual.getString("merchantName"))
+        val softwareInfoJson = actual.getJSONObject("softwareInfo")
+        assertEquals("software_id", softwareInfoJson.getString("id"))
+        assertEquals("1.0.0", softwareInfoJson.getString("version"))
     }
 
     @Test
