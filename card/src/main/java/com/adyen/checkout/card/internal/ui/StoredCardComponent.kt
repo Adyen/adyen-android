@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.card.internal.helper.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.state.StoredCardComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStatePostProcessor
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
@@ -38,10 +38,8 @@ import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.paymentmethod.StoredCardDetails
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
-import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.Encryptor
+import com.adyen.checkout.cse.internal.CheckoutEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -53,7 +51,7 @@ internal class StoredCardComponent
 constructor(
     private val storedPaymentMethod: StoredCardPaymentMethod,
     private val analyticsManager: AnalyticsManager,
-    private val cardEncryptor: BaseCardEncryptor,
+    private val checkoutEncryptor: CheckoutEncryptor,
     private val componentStateValidator: StoredCardComponentStateValidator,
     componentStateFactory: StoredCardComponentStateFactory,
     componentStateReducer: StoredCardComponentStateReducer,
@@ -104,9 +102,15 @@ constructor(
 
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
-            val encryptedCard = componentState.value.encryptCard() ?: return
+            val publicKey = publicKey ?: run {
+                onPublicKeyNotFound()
+                return
+            }
+            val encryptedSecurityCode = componentState.value.securityCode.getPaymentDataValue()?.let { securityCode ->
+                encryptSecurityCode(securityCode, publicKey) ?: return
+            }
             val paymentComponentState = createPaymentComponentState(
-                encryptedCard = encryptedCard,
+                encryptedSecurityCode = encryptedSecurityCode,
                 sdkDataProvider = sdkDataProvider,
                 storedPaymentMethodId = storedPaymentMethod.id,
                 paymentMethodType = storedPaymentMethod.type,
@@ -118,25 +122,14 @@ constructor(
         }
     }
 
-    private fun StoredCardComponentState.encryptCard(): EncryptedCard? {
-        publicKey ?: run {
-            onPublicKeyNotFound()
-            return null
-        }
-        return try {
-            val unencryptedCardBuilder = UnencryptedCard.Builder()
-            securityCode.getPaymentDataValue()?.let {
-                unencryptedCardBuilder.setCvc(it)
-            }
-            cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
-        } catch (e: EncryptionException) {
-            onEncryptionError(e)
-            null
-        }
+    private fun encryptSecurityCode(securityCode: String, publicKey: String): String? {
+        return checkoutEncryptor.encrypt(Encryptor.Field.SecurityCode, securityCode, publicKey)
+            .onFailure(::onEncryptionError)
+            .getOrNull()
     }
 
     private fun createPaymentComponentState(
-        encryptedCard: EncryptedCard,
+        encryptedSecurityCode: String?,
         sdkDataProvider: SdkDataProvider,
         storedPaymentMethodId: String,
         paymentMethodType: String,
@@ -147,7 +140,7 @@ constructor(
                 threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }.getOrNull(),
             ),
             storedPaymentMethodId = storedPaymentMethodId,
-            encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+            encryptedSecurityCode = encryptedSecurityCode,
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -174,11 +167,12 @@ constructor(
         onIntent(StoredCardIntent.UpdateLoading(isLoading))
     }
 
-    private fun onIntent(intent: StoredCardIntent) {
+    @VisibleForTesting
+    internal fun onIntent(intent: StoredCardIntent) {
         componentState.handleIntent(intent)
     }
 
-    private fun onEncryptionError(e: EncryptionException) {
+    private fun onEncryptionError(e: Throwable) {
         val event = GenericEvents.error(storedPaymentMethod.type, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
         emitError(GenericError("Encryption error", e))

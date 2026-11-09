@@ -48,8 +48,7 @@ import com.adyen.checkout.core.components.getAdditionalCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
-import com.adyen.checkout.cse.internal.CardEncryptorFactory
-import com.adyen.checkout.cse.internal.GenericEncryptorFactory
+import com.adyen.checkout.cse.internal.CheckoutEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
 
 internal class CardFactory :
@@ -80,15 +79,14 @@ internal class CardFactory :
         val componentStateValidator = CardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = CardViewStateProducer(params.amount, params.showSubmitButton)
 
-        val cardEncryptor = CardEncryptorFactory.provide()
-        val genericEncryptor = GenericEncryptorFactory.provide()
+        val checkoutEncryptor = CheckoutEncryptorFactory.provide()
         val httpClient = HttpClientFactory.getHttpClient(params.environment)
         val binLookupService = BinLookupService(httpClient, params.clientKey)
         val binLookupCache = BinLookupCache()
         val localCardBrandDetectionService = LocalCardBrandDetectionService(cardComponentParams.supportedCardBrands)
         val paymentMethodType = paymentMethod.type
         val networkCardBrandDetectionService = NetworkCardBrandDetectionService(
-            cardEncryptor = cardEncryptor,
+            checkoutEncryptor = checkoutEncryptor,
             binLookupService = binLookupService,
             publicKey = params.publicKey,
             supportedCardBrands = cardComponentParams.supportedCardBrands,
@@ -110,8 +108,7 @@ internal class CardFactory :
 
         return CardComponent(
             analyticsManager = analyticsManager,
-            cardEncryptor = cardEncryptor,
-            genericEncryptor = genericEncryptor,
+            checkoutEncryptor = checkoutEncryptor,
             componentParams = cardComponentParams,
             detectCardTypeRepository = detectCardTypeRepository,
             componentStateValidator = componentStateValidator,
@@ -169,12 +166,12 @@ internal class CardFactory :
         val componentStateValidator = StoredCardComponentStateValidator(cardValidationMapper)
         val viewStateProducer = StoredCardViewStateProducer(params.amount, params.showSubmitButton)
 
-        val cardEncryptor = CardEncryptorFactory.provide()
+        val checkoutEncryptor = CheckoutEncryptorFactory.provide()
 
         return StoredCardComponent(
             storedPaymentMethod = storedCardPaymentMethod,
             analyticsManager = analyticsManager,
-            cardEncryptor = cardEncryptor,
+            checkoutEncryptor = checkoutEncryptor,
             componentStateValidator = componentStateValidator,
             componentStateFactory = componentStateFactory,
             componentStateReducer = componentStateReducer,

@@ -14,11 +14,13 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.cse.internal.TestCardEncryptor
+import com.adyen.checkout.cse.Encryptor
+import com.adyen.checkout.cse.internal.TestCheckoutEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -42,7 +44,7 @@ internal class NetworkCardBrandDetectionServiceTest(
     @param:Mock private val binLookupService: BinLookupService,
 ) {
 
-    private lateinit var cardEncryptor: TestCardEncryptor
+    private lateinit var checkoutEncryptor: TestCheckoutEncryptor
     private lateinit var networkCardBrandDetectionService: NetworkCardBrandDetectionService
 
     @BeforeEach
@@ -72,6 +74,16 @@ internal class NetworkCardBrandDetectionServiceTest(
     }
 
     @Test
+    fun `when bin encryption fails then bin lookup is not called and error is returned`() = runTest {
+        checkoutEncryptor.shouldFailFieldEncryption = true
+
+        val result = networkCardBrandDetectionService.getCardBrands("411111")
+
+        assertInstanceOf(Encryptor.Error::class.java, result.exceptionOrNull())
+        verify(binLookupService, never()).makeBinLookup(any())
+    }
+
+    @Test
     fun `when bin lookup is called the correct params are passed to it`() = runTest {
         whenever(binLookupService.makeBinLookup(any()))
             .doReturn(BinLookupResponse(brands = listOf(mockBrand())))
@@ -88,7 +100,7 @@ internal class NetworkCardBrandDetectionServiceTest(
         verify(binLookupService, times(1)).makeBinLookup(binLookupRequestCaptor.capture())
         val binLookupRequest: BinLookupRequest = binLookupRequestCaptor.lastValue
 
-        val expectedEncryptedBin = cardEncryptor.encryptBin(bin, publicKey)
+        val expectedEncryptedBin = checkoutEncryptor.encrypt(Encryptor.Field.Bin, bin, publicKey).getOrThrow()
         assertEquals(expectedEncryptedBin, binLookupRequest.encryptedBin)
 
         // validate requestId is a valid UUID
@@ -119,9 +131,9 @@ internal class NetworkCardBrandDetectionServiceTest(
         paymentMethodType: String? = "",
         supportedCardBrands: List<CardBrand> = emptyList()
     ) {
-        cardEncryptor = TestCardEncryptor()
+        checkoutEncryptor = TestCheckoutEncryptor()
         networkCardBrandDetectionService = NetworkCardBrandDetectionService(
-            cardEncryptor = cardEncryptor,
+            checkoutEncryptor = checkoutEncryptor,
             binLookupService = binLookupService,
             publicKey = publicKey,
             supportedCardBrands = supportedCardBrands,
