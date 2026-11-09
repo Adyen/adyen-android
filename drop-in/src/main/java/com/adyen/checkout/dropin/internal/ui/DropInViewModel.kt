@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.content.Context
+import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -25,6 +27,7 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
@@ -75,6 +78,14 @@ internal class DropInViewModel(
     private val resultChannel = bufferedChannel<DropInResult>()
     val resultFlow: Flow<DropInResult> = resultChannel.receiveAsFlow()
 
+    // Buffered, because after a recreation the return can arrive before the action screen is composed to collect it
+    private val returnChannel = bufferedChannel<Intent>()
+
+    /**
+     * Returns from a redirect, for the action screen to continue its flow with.
+     */
+    val returnFlow: Flow<Intent> = returnChannel.receiveAsFlow()
+
     init {
         initializePaymentMethods()
         initializeBackStack()
@@ -121,6 +132,24 @@ internal class DropInViewModel(
 
     fun stopDropInService(context: Context) {
         dropInServiceManager.stop(context)
+    }
+
+    /**
+     * Passes the return from a redirect to the action that is shown. Anything else, or a return while no action is
+     * shown, is logged and dropped, so a stray return does not end a checkout that is still valid.
+     */
+    fun handleReturn(intent: Intent) {
+        if (intent.action != Intent.ACTION_VIEW || intent.data == null) {
+            adyenLog(AdyenLogLevel.DEBUG) { "Ignoring intent that is not a redirect return: action=${intent.action}" }
+            return
+        }
+
+        if (navigator.backStack.lastOrNull() !is ActionNavKey) {
+            adyenLog(AdyenLogLevel.ERROR) { "Received a redirect return, but no action is shown. Ignoring it." }
+            return
+        }
+
+        returnChannel.trySend(intent)
     }
 
     /**
