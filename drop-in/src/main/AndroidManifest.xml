@@ -3,10 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application android:supportsRtl="true">
+        <!--
+          The explicit affinity is the platform default, so it changes nothing for most apps. It lets a redirect find
+          Drop-in again when the app sets android:taskAffinity="" on <application>: that works once the root activity
+          of the task that launches Drop-in declares this same affinity.
+        -->
         <activity
             android:name=".internal.ui.DropInActivity"
             android:exported="false"
             android:launchMode="singleTask"
+            android:taskAffinity="${applicationId}"
+            android:theme="@style/AdyenCheckout.Translucent" />
+
+        <!--
+          Not exported and no intent filter, so it is only reachable once the merchant declares it with
+          android:exported="true" and their own filter. A filter here would be added to the merchant's,
+          and exported="false" would conflict with their declaration.
+        -->
+        <activity
+            android:name=".DropInRedirectHandlingActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity="${applicationId}"
             android:theme="@style/AdyenCheckout.Translucent" />
 
         <activity

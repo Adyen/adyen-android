@@ -10,6 +10,7 @@ public final class com/adyen/checkout/dropin/DropIn {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/adyen/checkout/dropin/DropIn;
 	public final fun registerForResult (Landroidx/activity/result/ActivityResultCaller;Lcom/adyen/checkout/dropin/DropInResultCallback;)Lcom/adyen/checkout/dropin/DropInLauncher;
+	public final fun setRedirectHandlingEnabled (Landroid/content/Context;Z)V
 	public final fun start (Lcom/adyen/checkout/dropin/DropInLauncher;Lcom/adyen/checkout/core/common/CheckoutContext$Advanced;Ljava/lang/Class;)V
 	public final fun start (Lcom/adyen/checkout/dropin/DropInLauncher;Lcom/adyen/checkout/core/common/CheckoutContext$Advanced;Ljava/lang/Class;Lcom/adyen/checkout/ui/theme/CheckoutTheme;)V
 	public final fun start (Lcom/adyen/checkout/dropin/DropInLauncher;Lcom/adyen/checkout/core/common/CheckoutContext$Sessions;)V
@@ -44,6 +45,11 @@ public final class com/adyen/checkout/dropin/DropInKt {
 
 public final class com/adyen/checkout/dropin/DropInLauncher {
 	public static final field $stable I
+}
+
+public final class com/adyen/checkout/dropin/DropInRedirectHandlingActivity : androidx/activity/ComponentActivity {
+	public static final field $stable I
+	public fun <init> ()V
 }
 
 public abstract interface class com/adyen/checkout/dropin/DropInResult : android/os/Parcelable {

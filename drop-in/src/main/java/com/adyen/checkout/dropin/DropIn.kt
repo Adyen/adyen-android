@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.dropin
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.compose.runtime.Composable
@@ -47,6 +50,29 @@ object DropIn {
         theme: CheckoutTheme = CheckoutTheme(),
     ) {
         launcher.launch(dropInContext, serviceClass, theme)
+    }
+
+    /**
+     * Turns the handling of redirect returns by [DropInRedirectHandlingActivity] on or off, together with every
+     * intent filter declared on it.
+     *
+     * The system keeps this setting across app restarts and updates, and it takes precedence over `android:enabled`
+     * in your manifest. While it is off, a redirect started by Drop-in can't return to it.
+     *
+     * @param context Any context of your app.
+     * @param enabled Whether redirect returns are handled.
+     */
+    fun setRedirectHandlingEnabled(context: Context, enabled: Boolean) {
+        val state = if (enabled) {
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        } else {
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+        }
+        context.packageManager.setComponentEnabledSetting(
+            ComponentName(context, DropInRedirectHandlingActivity::class.java),
+            state,
+            PackageManager.DONT_KILL_APP,
+        )
     }
 }
 
