@@ -15,7 +15,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.error.internal.HttpError
-import com.adyen.checkout.cse.internal.TestCardEncryptor
+import com.adyen.checkout.cse.internal.TestCheckoutEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -310,7 +310,7 @@ internal class DefaultDetectCardTypeRepositoryTest(
         detectCardTypeBinHelper = DetectCardTypeBinHelper()
         localCardBrandDetectionService = LocalCardBrandDetectionService(supportedCardBrands)
         networkCardBrandDetectionService = NetworkCardBrandDetectionService(
-            cardEncryptor = TestCardEncryptor(),
+            checkoutEncryptor = TestCheckoutEncryptor(),
             binLookupService = binLookupService,
             publicKey = "",
             supportedCardBrands = supportedCardBrands,

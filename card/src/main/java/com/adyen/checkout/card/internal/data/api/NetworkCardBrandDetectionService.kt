@@ -18,11 +18,12 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.error.internal.GenericError
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.Encryptor
+import com.adyen.checkout.cse.internal.CheckoutEncryptor
 import java.util.UUID
 
 internal class NetworkCardBrandDetectionService(
-    private val cardEncryptor: BaseCardEncryptor,
+    private val checkoutEncryptor: CheckoutEncryptor,
     private val binLookupService: BinLookupService,
     private val publicKey: String?,
     private val supportedCardBrands: List<CardBrand>,
@@ -38,7 +39,7 @@ internal class NetworkCardBrandDetectionService(
             return Result.failure(GenericError("Public key is missing."))
         }
         val binLookupResult = runSuspendCatching {
-            val encryptedBin = cardEncryptor.encryptBin(bin, publicKey)
+            val encryptedBin = checkoutEncryptor.encrypt(Encryptor.Field.Bin, bin, publicKey).getOrThrow()
             val stringCardBrands = supportedCardBrands.map { it.txVariant }
             val requestId = UUID.randomUUID().toString()
             val request = BinLookupRequest(encryptedBin, requestId, stringCardBrands, paymentMethodType)

@@ -57,11 +57,10 @@ import com.adyen.checkout.core.components.internal.ui.state.model.getPaymentData
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
+import com.adyen.checkout.cse.Card
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
-import com.adyen.checkout.cse.internal.BaseGenericEncryptor
+import com.adyen.checkout.cse.Encryptor
+import com.adyen.checkout.cse.internal.CheckoutEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -80,8 +79,7 @@ internal class CardComponent
 @Suppress("LongParameterList")
 constructor(
     private val analyticsManager: AnalyticsManager,
-    private val cardEncryptor: BaseCardEncryptor,
-    private val genericEncryptor: BaseGenericEncryptor,
+    private val checkoutEncryptor: CheckoutEncryptor,
     private val componentParams: CardComponentParams,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val componentStateValidator: CardComponentStateValidator,
@@ -177,17 +175,10 @@ constructor(
                 return
             }
 
-            val encryptedCard = currentState.encryptCard(
-                cardEncryptor = cardEncryptor,
-                publicKey = publicKey,
-            ) ?: return
+            val encryptedCard = currentState.encryptCard(publicKey) ?: return
 
             val encryptedKcpCardPassword = currentState.kcpCardPassword.getPaymentDataValue()?.let { password ->
-                encryptKcpCardPassword(
-                    genericEncryptor = genericEncryptor,
-                    publicKey = publicKey,
-                    kcpCardPassword = password,
-                ) ?: return
+                encryptKcpCardPassword(publicKey, password) ?: return
             }
 
             val paymentComponentState = cardPaymentComponentStateFactory.createPaymentComponentState(
@@ -202,51 +193,25 @@ constructor(
         }
     }
 
-    private fun CardComponentState.encryptCard(
-        cardEncryptor: BaseCardEncryptor,
-        publicKey: String,
-    ): EncryptedCard? {
-        return try {
-            val unencryptedCardBuilder = UnencryptedCard.Builder()
-            cardNumber.getPaymentDataValue()?.let {
-                unencryptedCardBuilder.setNumber(it)
-            }
-
-            securityCode.getPaymentDataValue()?.let {
-                unencryptedCardBuilder.setCvc(it)
-            }
-
-            expiryDate.getPaymentDataValue()?.let {
-                ExpiryDateParser.parseToMonthAndYear(it, returnFullYear = true)
-            }?.let { (expiryMonth, expiryYear) ->
-                unencryptedCardBuilder.setExpiryDate(
-                    expiryMonth = expiryMonth,
-                    expiryYear = expiryYear,
-                )
-            }
-
-            cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
-        } catch (e: EncryptionException) {
-            onEncryptionError(e)
-            null
+    private fun CardComponentState.encryptCard(publicKey: String): EncryptedCard? {
+        val expiryDate = expiryDate.getPaymentDataValue()?.let {
+            ExpiryDateParser.parseToMonthAndYear(it, returnFullYear = true)
         }
+        val card = Card(
+            number = cardNumber.getPaymentDataValue(),
+            expiryMonth = expiryDate?.first,
+            expiryYear = expiryDate?.second,
+            securityCode = securityCode.getPaymentDataValue(),
+        )
+        return checkoutEncryptor.encrypt(card, publicKey)
+            .onFailure(::onEncryptionError)
+            .getOrNull()
     }
 
-    private fun encryptKcpCardPassword(
-        genericEncryptor: BaseGenericEncryptor,
-        publicKey: String,
-        kcpCardPassword: String,
-    ): String? {
-        return try {
-            genericEncryptor.encryptField(
-                fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_KCP_PASSWORD,
-                fieldValueToEncrypt = kcpCardPassword,
-                publicKey = publicKey,
-            )
-        } catch (e: EncryptionException) {
-            onEncryptionError(e)
-            null
-        }
+    private fun encryptKcpCardPassword(publicKey: String, kcpCardPassword: String): String? {
+        return checkoutEncryptor.encrypt(Encryptor.Field.KcpPassword, kcpCardPassword, publicKey)
+            .onFailure(::onEncryptionError)
+            .getOrNull()
     }
 
     override fun requiresUserInteraction(): Boolean = true
@@ -435,7 +400,7 @@ constructor(
             ?.launchIn(coroutineScope)
     }
 
-    private fun onEncryptionError(e: EncryptionException) {
+    private fun onEncryptionError(e: Throwable) {
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
 
@@ -454,9 +419,5 @@ constructor(
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.API_PUBLIC_KEY)
         analyticsManager.trackEvent(event)
         emitError(e)
-    }
-
-    companion object {
-        private const val ENCRYPTION_KEY_FOR_KCP_PASSWORD = "password"
     }
 }

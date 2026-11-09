@@ -45,8 +45,7 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.internal.TestCardEncryptor
-import com.adyen.checkout.cse.internal.TestGenericEncryptor
+import com.adyen.checkout.cse.internal.TestCheckoutEncryptor
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -81,15 +80,13 @@ internal class CardComponentTest(
     @param:Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) {
 
-    private lateinit var cardEncryptor: TestCardEncryptor
-    private lateinit var genericEncryptor: TestGenericEncryptor
+    private lateinit var checkoutEncryptor: TestCheckoutEncryptor
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var component: CardComponent
 
     @BeforeEach
     fun beforeEach() {
-        cardEncryptor = TestCardEncryptor()
-        genericEncryptor = TestGenericEncryptor()
+        checkoutEncryptor = TestCheckoutEncryptor()
         analyticsManager = TestAnalyticsManager()
         component = createComponent()
     }
@@ -382,7 +379,7 @@ internal class CardComponentTest(
         @Test
         fun `and card encryption fails then an Error event is emitted and nothing is submitted`() = runTest {
             // GIVEN
-            cardEncryptor.shouldThrowException = true
+            checkoutEncryptor.shouldFailCardEncryption = true
             val component = createValidComponent()
             val eventFlow = component.eventFlow.test(testScheduler)
 
@@ -397,7 +394,7 @@ internal class CardComponentTest(
         @Test
         fun `and card encryption fails then ENCRYPTION analytics error is tracked`() = runTest {
             // GIVEN
-            cardEncryptor.shouldThrowException = true
+            checkoutEncryptor.shouldFailCardEncryption = true
             val component = createValidComponent()
 
             // WHEN
@@ -410,7 +407,7 @@ internal class CardComponentTest(
 
         @Test
         fun `and the kcp card password is filled in then it is encrypted and passed to the factory`() = runTest {
-            // GIVEN - TestGenericEncryptor echoes the value it encrypts
+            // GIVEN - TestCheckoutEncryptor echoes the value it encrypts
             mockCreatedPaymentComponentState()
             val component = createKoreanAuthenticationComponent()
 
@@ -446,7 +443,7 @@ internal class CardComponentTest(
         fun `and the kcp password encryption fails then an Error event is emitted and nothing is submitted`() =
             runTest {
                 // GIVEN
-                genericEncryptor.shouldThrowException = true
+                checkoutEncryptor.shouldFailFieldEncryption = true
                 val component = createKoreanAuthenticationComponent()
                 val eventFlow = component.eventFlow.test(testScheduler)
 
@@ -461,7 +458,7 @@ internal class CardComponentTest(
         @Test
         fun `and the kcp card password encryption fails then ENCRYPTION analytics error is tracked`() = runTest {
             // GIVEN
-            genericEncryptor.shouldThrowException = true
+            checkoutEncryptor.shouldFailFieldEncryption = true
             val component = createKoreanAuthenticationComponent()
 
             // WHEN
@@ -473,7 +470,7 @@ internal class CardComponentTest(
         }
 
         /**
-         * [TestCardEncryptor] echoes the values it encrypts, so the expected result mirrors the filled in card.
+         * [TestCheckoutEncryptor] echoes the values it encrypts, so the expected result mirrors the filled in card.
          */
         private fun createExpectedEncryptedCard(securityCode: String?) = EncryptedCard(
             encryptedCardNumber = TEST_CARD_NUMBER,
@@ -662,8 +659,7 @@ internal class CardComponentTest(
     ): CardComponent {
         return CardComponent(
             analyticsManager = analyticsManager,
-            cardEncryptor = cardEncryptor,
-            genericEncryptor = genericEncryptor,
+            checkoutEncryptor = checkoutEncryptor,
             componentParams = cardComponentParams,
             detectCardTypeRepository = detectCardTypeRepository,
             componentStateValidator = CardComponentStateValidator(CardValidationMapper()),
