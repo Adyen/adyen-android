@@ -10,6 +10,7 @@ package com.adyen.checkout.example
 
 import com.adyen.checkout.core.components.internal.Configuration
 import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.ext.list.modifierprovider.withAbstractModifier
 import com.lemonappdev.konsist.api.ext.list.modifierprovider.withoutAbstractModifier
 import com.lemonappdev.konsist.api.ext.list.withName
 import com.lemonappdev.konsist.api.ext.list.withPackage
@@ -38,6 +39,23 @@ internal class ConfigurationDataClassTest {
                     "value equality as well.",
             ) {
                 it.hasDataModifier
+            }
+    }
+
+    @Test
+    fun `when class is a shared configuration base, then it only declares abstract properties`() {
+        Konsist
+            .scopeFromProduction()
+            .classes()
+            .withParentInterfaceOf(Configuration::class, indirectParents = true)
+            .withAbstractModifier()
+            .assertTrue(
+                additionalMessage = "A data class only compares the properties in its own primary constructor, so " +
+                    "a value held by a shared base is ignored by equality. Declare only abstract properties in the " +
+                    "base and override them in the primary constructor of each configuration.",
+            ) { base ->
+                base.constructors.all { it.parameters.isEmpty() } &&
+                    base.properties(includeNested = false).all { it.hasAbstractModifier }
             }
     }
 
