@@ -30,7 +30,11 @@ internal class RedirectConfigurationChecker(context: Context) {
     private val context = context.applicationContext
 
     fun check() {
-        findProblems().forEach { problem ->
+        // Only a diagnostic, so a system call failing here must not break the checkout
+        val problems = runCatching { findProblems() }
+            .onFailure { adyenLog(AdyenLogLevel.WARN, it) { "Could not check the redirect configuration" } }
+            .getOrDefault(emptyList())
+        problems.forEach { problem ->
             adyenLog(AdyenLogLevel.ERROR) { "${problem.message()} See $DOCS for how to fix this." }
         }
     }

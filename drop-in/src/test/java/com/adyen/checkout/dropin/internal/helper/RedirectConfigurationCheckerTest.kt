@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.helper
 import android.app.ActivityManager
 import android.app.Application
 import android.content.ComponentName
+import android.content.Context
 import android.content.pm.ActivityInfo
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInRedirectHandlingActivity
@@ -22,6 +23,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
@@ -103,6 +107,20 @@ internal class RedirectConfigurationCheckerTest {
         DropIn.setRedirectHandlingEnabled(context, true)
 
         assertEquals(emptyList<RedirectConfigurationProblem>(), checker.findProblems())
+    }
+
+    @Test
+    fun `when the system fails to answer, then the check does not crash`() {
+        val activityManager = mock<ActivityManager> {
+            on { appTasks } doThrow SecurityException("Not allowed")
+        }
+        val failingContext = mock<Context> {
+            on { applicationContext } doReturn mock
+            on { packageName } doReturn context.packageName
+            on { getSystemService(ActivityManager::class.java) } doReturn activityManager
+        }
+
+        RedirectConfigurationChecker(failingContext).check()
     }
 
     private fun addActivity(
