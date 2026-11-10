@@ -214,10 +214,11 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
 
+        <!-- singleTask, so the return from a redirect clears the Custom Tab opened above this activity -->
         <activity
             android:name=".ui.v6.V6Activity"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
 
             <!-- Use a different intent filter then the one used to handle the Drop-In result
             (if you have both Drop-In and standalone components in your app). If you don't do this
@@ -240,10 +241,11 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
 
+        <!-- singleTask, so the return from a redirect clears the Custom Tab opened above this activity -->
         <activity
             android:name=".ui.v6.V6SessionsActivity"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
 
             <!-- Use a different intent filter then the one used to handle the Drop-In result
             (if you have both Drop-In and standalone components in your app). If you don't do this
@@ -264,6 +266,24 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
+        </activity>
+
+        <!-- Receives the returns from redirects started by v6 Drop-in. The /dropin path keeps it apart from the
+        filter that v5 Drop-in declares for the paths "" and "/". -->
+        <activity
+            android:name="com.adyen.checkout.dropin.DropInRedirectHandlingActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/dropin"
+                    android:scheme="adyencheckout" />
+            </intent-filter>
         </activity>
 
         <service
