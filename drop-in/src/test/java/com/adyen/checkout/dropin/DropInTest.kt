@@ -9,10 +9,15 @@
 package com.adyen.checkout.dropin
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.pm.PackageManager
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
@@ -45,5 +50,19 @@ internal class DropInTest {
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             context.packageManager.getComponentEnabledSetting(redirectHandlingActivity),
         )
+    }
+
+    @Test
+    fun `when the redirect handling activity was removed from the manifest, then the call does not crash`() {
+        // What Android throws for a component that the merged manifest does not contain
+        val packageManager = mock<PackageManager> {
+            on { setComponentEnabledSetting(any(), any(), any()) } doThrow IllegalArgumentException("Unknown component")
+        }
+        val context = mock<Context> {
+            on { packageName } doReturn context.packageName
+            on { this.packageManager } doReturn packageManager
+        }
+
+        DropIn.setRedirectHandlingEnabled(context, false)
     }
 }
