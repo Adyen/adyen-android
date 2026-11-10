@@ -23,6 +23,7 @@ import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.DateUtils
+import com.adyen.checkout.core.common.internal.helper.StringUtil
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.requiresValidation
 
@@ -121,7 +122,13 @@ internal object CardValidationUtils {
         if (!securityCode.requiresValidation()) return CardSecurityCodeValidation.VALID
         val result = CardSecurityCodeValidator.validateSecurityCode(securityCode.text, cardBrand)
         return when (result) {
-            is CardSecurityCodeValidationResult.Invalid -> CardSecurityCodeValidation.INVALID
+            is CardSecurityCodeValidationResult.Invalid ->
+                if (StringUtil.normalize(securityCode.text).isEmpty()) {
+                    CardSecurityCodeValidation.INVALID_EMPTY
+                } else {
+                    CardSecurityCodeValidation.INVALID_INCOMPLETE
+                }
+
             is CardSecurityCodeValidationResult.Valid -> CardSecurityCodeValidation.VALID
         }
     }
@@ -225,7 +232,8 @@ internal enum class CardExpiryDateValidation {
 
 internal enum class CardSecurityCodeValidation {
     VALID,
-    INVALID,
+    INVALID_EMPTY,
+    INVALID_INCOMPLETE,
 }
 
 internal enum class CardPostalCodeValidation {

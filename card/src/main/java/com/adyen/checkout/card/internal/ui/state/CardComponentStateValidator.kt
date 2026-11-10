@@ -96,6 +96,7 @@ internal class CardComponentStateValidator(
                 securityCode = securityCode,
                 cardBrand = cardBrand,
             ),
+            cardNumberFormat = cardBrand.toCardNumberFormat(),
         )
     }
 

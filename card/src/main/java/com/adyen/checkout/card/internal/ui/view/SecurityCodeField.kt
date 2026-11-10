@@ -58,8 +58,8 @@ internal fun SecurityCodeField(
     val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
         ?: resolveString(
             when (cardNumberFormat) {
-                CardNumberFormat.AMEX -> CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
-                CardNumberFormat.DEFAULT -> CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
+                CardNumberFormat.AMEX -> CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_FOUR_DIGITS
+                CardNumberFormat.DEFAULT -> CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_THREE_DIGITS
             },
         )
 

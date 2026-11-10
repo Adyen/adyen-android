@@ -40,11 +40,25 @@ internal class CardValidationMapper {
     }
 
     fun mapSecurityCodeValidation(
-        validation: CardSecurityCodeValidation
+        validation: CardSecurityCodeValidation,
+        cardNumberFormat: CardNumberFormat,
     ): CheckoutLocalizationKey? {
+        val isAmex = cardNumberFormat == CardNumberFormat.AMEX
         return when (validation) {
             CardSecurityCodeValidation.VALID -> null
-            CardSecurityCodeValidation.INVALID -> CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID
+            CardSecurityCodeValidation.INVALID_EMPTY ->
+                if (isAmex) {
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_EMPTY_FOUR_DIGITS
+                } else {
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_EMPTY_THREE_DIGITS
+                }
+
+            CardSecurityCodeValidation.INVALID_INCOMPLETE ->
+                if (isAmex) {
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_FOUR_DIGITS
+                } else {
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_THREE_DIGITS
+                }
         }
     }
 

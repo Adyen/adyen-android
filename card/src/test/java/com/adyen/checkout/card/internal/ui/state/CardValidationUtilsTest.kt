@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -76,6 +77,27 @@ internal class CardValidationUtilsTest {
     }
 
     @ParameterizedTest
+    @MethodSource("securityCodeSource")
+    fun `when validating security code then result should match expected value`(
+        securityCode: String,
+        requirementPolicy: RequirementPolicy,
+        cardBrand: CardBrand?,
+        expectedValidation: CardSecurityCodeValidation,
+    ) {
+        // GIVEN
+        val textInputComponentState = TextInputComponentState(
+            text = securityCode,
+            requirementPolicy = requirementPolicy,
+        )
+
+        // WHEN
+        val validation = CardValidationUtils.validateSecurityCode(textInputComponentState, cardBrand)
+
+        // THEN
+        assertEquals(expectedValidation, validation)
+    }
+
+    @ParameterizedTest
     @MethodSource("socialSecurityNumberSource")
     fun `when validating social security number then result should match expected value`(
         socialSecurityNumber: String,
@@ -136,6 +158,37 @@ internal class CardValidationUtilsTest {
     }
 
     companion object {
+
+        @JvmStatic
+        fun securityCodeSource() = listOf(
+            // securityCode, requirementPolicy, cardBrand, expectedValidation
+            // required and empty (normalized whitespace counts as empty)
+            arguments("", RequirementPolicy.Required, null, CardSecurityCodeValidation.INVALID_EMPTY),
+            arguments("   ", RequirementPolicy.Required, null, CardSecurityCodeValidation.INVALID_EMPTY),
+            // required and incomplete: too short, too long, or illegal characters
+            arguments("1", RequirementPolicy.Required, null, CardSecurityCodeValidation.INVALID_INCOMPLETE),
+            arguments("12", RequirementPolicy.Required, null, CardSecurityCodeValidation.INVALID_INCOMPLETE),
+            arguments("12345", RequirementPolicy.Required, null, CardSecurityCodeValidation.INVALID_INCOMPLETE),
+            arguments("12a", RequirementPolicy.Required, null, CardSecurityCodeValidation.INVALID_INCOMPLETE),
+            // valid lengths depend on the brand
+            arguments("123", RequirementPolicy.Required, null, CardSecurityCodeValidation.VALID),
+            arguments("123", RequirementPolicy.Required, CardBrand("visa"), CardSecurityCodeValidation.VALID),
+            arguments(
+                "123",
+                RequirementPolicy.Required,
+                CardBrand("amex"),
+                CardSecurityCodeValidation.INVALID_INCOMPLETE,
+            ),
+            arguments("1234", RequirementPolicy.Required, CardBrand("amex"), CardSecurityCodeValidation.VALID),
+            // hidden fields are never validated, even with bad content
+            arguments("", RequirementPolicy.Hidden, null, CardSecurityCodeValidation.VALID),
+            arguments("xyz", RequirementPolicy.Hidden, null, CardSecurityCodeValidation.VALID),
+            // optional empty is valid, optional partial input is validated
+            arguments("", RequirementPolicy.Optional, null, CardSecurityCodeValidation.VALID),
+            arguments("   ", RequirementPolicy.Optional, null, CardSecurityCodeValidation.VALID),
+            arguments("1", RequirementPolicy.Optional, null, CardSecurityCodeValidation.INVALID_INCOMPLETE),
+            arguments("123", RequirementPolicy.Optional, null, CardSecurityCodeValidation.VALID),
+        )
 
         @JvmStatic
         fun socialSecurityNumberSource() = listOf(
