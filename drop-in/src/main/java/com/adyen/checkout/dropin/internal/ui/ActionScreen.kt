@@ -8,20 +8,31 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.common.internal.ui.NavigationCloseButton
 import com.adyen.checkout.core.components.CheckoutAction
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import kotlinx.coroutines.flow.Flow
 
+/**
+ * @param returnFlow Returns from a redirect, continued on [controller], which owns the action shown here.
+ */
 @Composable
 internal fun ActionScreen(
     navigator: DropInNavigator,
     controller: CheckoutController,
+    returnFlow: Flow<Intent>,
 ) {
+    LaunchedEffect(controller, returnFlow) {
+        returnFlow.collect { intent -> controller.handleReturn(intent) }
+    }
+
     DropInScaffold(
         navigationIcon = {
             NavigationCloseButton(onClick = { navigator.back() })

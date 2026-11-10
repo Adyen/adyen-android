@@ -153,6 +153,7 @@ private fun actionNavEntry(
                 ActionScreen(
                     navigator = viewModel.navigator,
                     controller = paymentMethodViewModel.controller,
+                    returnFlow = viewModel.returnFlow,
                 )
             }
 
@@ -174,6 +175,7 @@ private fun actionNavEntry(
                     ActionScreen(
                         navigator = viewModel.navigator,
                         controller = instantPaymentMethod.controller,
+                        returnFlow = viewModel.returnFlow,
                     )
                 }
             }

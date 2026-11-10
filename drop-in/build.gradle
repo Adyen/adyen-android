@@ -94,4 +94,5 @@ dependencies {
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.mockito
     testImplementation libs.bundles.kotlin.coroutines.test
+    testImplementation libs.robolectric
 }

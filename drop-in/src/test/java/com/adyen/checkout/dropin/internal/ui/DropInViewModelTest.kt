@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -48,6 +50,7 @@ import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import java.util.Locale
 
@@ -217,6 +220,60 @@ internal class DropInViewModelTest {
         assertInstanceOf(DropInResult.Cancelled::class.java, resultFlow.values.single())
     }
 
+    @Test
+    fun `when a redirect returns while an action is shown, then the return is passed on`() = runTest {
+        val viewModel = createViewModel()
+        viewModel.navigator.clearAndNavigateTo(ACTION_NAV_KEY)
+        val intent = redirectIntent()
+
+        viewModel.handleReturn(intent)
+
+        val returnFlow = viewModel.returnFlow.test(testScheduler)
+        assertEquals(listOf(intent), returnFlow.values)
+    }
+
+    @Test
+    fun `when a redirect returns while no action is shown, then it is dropped`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.handleReturn(redirectIntent())
+        // A later action must not pick up the earlier return
+        viewModel.navigator.clearAndNavigateTo(ACTION_NAV_KEY)
+
+        val returnFlow = viewModel.returnFlow.test(testScheduler)
+        assertEquals(emptyList<Intent>(), returnFlow.values)
+    }
+
+    @Test
+    fun `when an intent that is not a redirect arrives, then it is dropped`() = runTest {
+        val viewModel = createViewModel()
+        viewModel.navigator.clearAndNavigateTo(ACTION_NAV_KEY)
+
+        viewModel.handleReturn(redirectIntent(action = null))
+
+        val returnFlow = viewModel.returnFlow.test(testScheduler)
+        assertEquals(emptyList<Intent>(), returnFlow.values)
+    }
+
+    @Test
+    fun `when a redirect without data arrives, then it is dropped`() = runTest {
+        val viewModel = createViewModel()
+        viewModel.navigator.clearAndNavigateTo(ACTION_NAV_KEY)
+
+        viewModel.handleReturn(redirectIntent(data = null))
+
+        val returnFlow = viewModel.returnFlow.test(testScheduler)
+        assertEquals(emptyList<Intent>(), returnFlow.values)
+    }
+
+    private fun redirectIntent(
+        action: String? = Intent.ACTION_VIEW,
+        data: Uri? = mock(),
+    ) = mock<Intent> {
+        on { this.action } doReturn action
+        on { this.data } doReturn data
+    }
+
     private fun createInput() = DropInResultContract.Input(
         checkoutContext = TestCheckoutContext.advanced(
             paymentMethods = PaymentMethods(
@@ -285,6 +342,10 @@ internal class DropInViewModelTest {
 
     private companion object {
         private const val STORED_ID = "stored-id-1"
+        private val ACTION_NAV_KEY = ActionNavKey(
+            paymentFlowType = DropInPaymentFlowType.RegularPaymentMethod(PaymentMethodTypes.SCHEME),
+            owner = ActionFlowOwner.PAYMENT_METHOD,
+        )
         private const val CLIENT_KEY = "test_client_key"
     }
 }

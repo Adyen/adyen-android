@@ -38,8 +38,12 @@ class DropInActivity : ComponentActivity() {
 
         val parsedInput = DropInResultContract.Input.from(intent)
         if (parsedInput == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Input is null. Closing drop-in." }
-            // TODO - Return DropInResult.Failed and close drop-in
+            if (intent.action == Intent.ACTION_VIEW) {
+                adyenLog(AdyenLogLevel.ERROR) { "Received a redirect return, but Drop-in is not running. Ignoring it." }
+            } else {
+                adyenLog(AdyenLogLevel.ERROR) { "Input is null. Closing drop-in." }
+                // TODO - Return DropInResult.Failed and close drop-in
+            }
             finish()
             return
         }
@@ -65,6 +69,16 @@ class DropInActivity : ComponentActivity() {
         }
     }
 
+    // Does not call setIntent: onCreate reads the input from the launch intent, which a recreation must still find.
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (!::input.isInitialized) {
+            adyenLog(AdyenLogLevel.DEBUG) { "Ignoring new intent, Drop-in closed without input" }
+            return
+        }
+        viewModel.handleReturn(intent)
+    }
+
     private fun sendResult(dropInResult: DropInResult) {
         adyenLog(AdyenLogLevel.DEBUG) { "sendResult: $dropInResult" }
         val resultIntent = Intent().putExtra(
@@ -82,7 +96,8 @@ class DropInActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        if (isFinishing) {
+        // Without input the view model can't be created, and the service was never started
+        if (isFinishing && ::input.isInitialized) {
             viewModel.stopDropInService(this)
         }
         super.onDestroy()
