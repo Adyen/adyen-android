@@ -26,13 +26,15 @@ import com.adyen.checkout.googlepay.googlePay
 
 Google Pay works without any Google Pay configuration. The amount comes from the session, and the merchant account comes with the Google Pay payment method in the session.
 
+Create the controller in a `ViewModel`, and pass its `viewModelScope` and `SavedStateHandle` so the checkout flow can be restored after process death:
+
 ```kotlin
 val configuration = CheckoutConfiguration(
     environment = Environment.TEST,
     clientKey = clientKey,
 )
 
-lifecycleScope.launch {
+viewModelScope.launch {
     when (val result = Checkout.setup(sessionResponse = sessionResponse, configuration = configuration)) {
         is Checkout.Result.Error -> {
             showError(result.error.message.orEmpty())
@@ -52,7 +54,8 @@ lifecycleScope.launch {
                         showError(error.message.orEmpty())
                     },
                 ),
-                coroutineScope = lifecycleScope,
+                coroutineScope = viewModelScope,
+                savedStateHandle = savedStateHandle,
             )
         }
     }
