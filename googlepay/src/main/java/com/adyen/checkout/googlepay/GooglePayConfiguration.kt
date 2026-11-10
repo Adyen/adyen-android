@@ -40,21 +40,29 @@ data class GooglePayConfiguration internal constructor(
  * Most parameters map to fields of the Google Pay request objects. See the
  * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects) for more details.
  *
+ * All parameters are optional. The merchant account is the only value Google Pay needs that has no default, and it
+ * is normally taken from the `/paymentMethods` response.
+ *
  * @param merchantAccount The merchant account to be put in the payment token from Google to Adyen. If not set, the
- * value from the `/paymentMethods` response is used.
+ * value from the `/paymentMethods` response is used. If neither is available, creating the component fails.
  * @param googlePayEnvironment The Google Pay environment, either `WalletConstants.ENVIRONMENT_TEST` or
  * `WalletConstants.ENVIRONMENT_PRODUCTION`. Defaults to the value of the Adyen environment.
  * @param totalPriceStatus The status of the total price used. Defaults to `"FINAL"`.
- * @param countryCode The ISO 3166-1 alpha-2 country code where the transaction is processed.
+ * @param countryCode The ISO 3166-1 alpha-2 country code of the acquirer bank that processes the transaction. This is
+ * not the shopper's country. Set it if you process transactions in the European Economic Area (EEA) or other countries
+ * subject to Strong Customer Authentication (SCA). Without it, issuers may decline payments or the liability shift may
+ * not apply. Not sent when not set.
  * @param merchantInfo Information about the merchant requesting the payment.
  * @param allowedPaymentMethods The payment methods offered through Google Pay and their parameters. See
  * [GooglePayAllowedPaymentMethods]. Defaults to a single card payment method when null.
- * @param isEmailRequired Whether an email address is required.
+ * @param isEmailRequired Whether an email address is required. Defaults to `false`.
  * @param isExistingPaymentMethodRequired Whether an existing payment method is required for the shopper to be
- * considered ready to pay.
- * @param isShippingAddressRequired Whether a shipping address is required.
- * @param shippingAddressParameters The required shipping address details.
+ * considered ready to pay. Defaults to `false`.
+ * @param isShippingAddressRequired Whether a shipping address is required. Defaults to `false`.
+ * @param shippingAddressParameters The required shipping address details. Only applies when
+ * [isShippingAddressRequired] is `true`.
  * @param checkoutOption The checkout option, which affects the submit button text shown in the Google Pay sheet.
+ * When not set, Google Pay decides the button text.
  * @param appearance The appearance of the Google Pay button.
  */
 @Suppress("LongParameterList")

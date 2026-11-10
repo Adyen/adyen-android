@@ -38,14 +38,16 @@ data class GooglePayAllowedPaymentMethods(
      * @param allowedAuthMethods Fields supported to authenticate a card transaction. See
      * [AllowedAuthMethods] for the possible values. Defaults to all supported values when null.
      * @param allowedCardNetworks The card networks you support. See [AllowedCardNetworks] for the
-     * possible values. Defaults to the networks returned by the Adyen API when null.
-     * @param allowPrepaidCards Set to false if you don't support prepaid cards.
-     * @param allowCreditCards Set to false if you don't support credit cards.
+     * possible values. Defaults to the networks returned by the Adyen API when null, or to all supported networks
+     * if the API returns none.
+     * @param allowPrepaidCards Set to false if you don't support prepaid cards. Defaults to `true`.
+     * @param allowCreditCards Set to false if you don't support credit cards. Defaults to `true`.
      * @param issuerCountryCodes Restricts the supported issuers by country. Leaves the decision to Google Pay
      * when null.
-     * @param assuranceDetailsRequired Set to true to request assurance details.
-     * @param billingAddressRequired Set to true if you require a billing address.
-     * @param billingAddressParameters The billing address parameters. See [BillingAddressParameters].
+     * @param assuranceDetailsRequired Set to true to request assurance details. Defaults to `false`.
+     * @param billingAddressRequired Set to true if you require a billing address. Defaults to `false`.
+     * @param billingAddressParameters The billing address parameters. See [BillingAddressParameters]. Only applies
+     * when [billingAddressRequired] is `true`.
      */
     @Parcelize
     data class Card(

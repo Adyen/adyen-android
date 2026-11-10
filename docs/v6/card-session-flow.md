@@ -10,6 +10,8 @@ Use session flow when you want the SDK to manage the checkout flow from a `Sessi
 
 ## Example
 
+Create the controller in a `ViewModel`, and pass its `viewModelScope` and `SavedStateHandle` so the checkout flow can be restored after process death:
+
 ```kotlin
 val configuration = CheckoutConfiguration(
     environment = Environment.TEST,
@@ -23,7 +25,7 @@ val configuration = CheckoutConfiguration(
     authentication(threeDSRequestorAppURL = "https://your-app.example/adyen")
 }
 
-lifecycleScope.launch {
+viewModelScope.launch {
     when (val result = Checkout.setup(sessionResponse = sessionResponse, configuration = configuration)) {
         is Checkout.Result.Error -> {
             showError(result.error.message.orEmpty())
@@ -52,7 +54,8 @@ lifecycleScope.launch {
                         },
                     )
                 },
-                coroutineScope = lifecycleScope,
+                coroutineScope = viewModelScope,
+                savedStateHandle = savedStateHandle,
             )
         }
     }
