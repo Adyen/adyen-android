@@ -8,6 +8,10 @@
 
 package com.adyen.checkout.example.ui.settings.viewmodel
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.pm.PackageManager
+import com.adyen.checkout.dropin.DropInRedirectHandlingActivity
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.IntegrationRegion
@@ -22,6 +26,7 @@ import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.settings.model.SettingsItem
 import com.adyen.checkout.example.ui.settings.model.SettingsLists
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -30,6 +35,7 @@ internal class SettingsUIMapper @Inject constructor(
     private val uiThemeRepository: UIThemeRepository,
     private val localeProvider: LocaleProvider,
     private val integrationRegionUIMapper: IntegrationRegionUIMapper,
+    @ApplicationContext private val context: Context,
 ) {
 
     fun getSettingsCategories(): List<SettingsCategory> {
@@ -66,6 +72,7 @@ internal class SettingsUIMapper @Inject constructor(
                 listOf(
                     getRemoveStoredPaymentMethodEnabled(),
                     getSplitCardFundingSources(),
+                    getDropInRedirectHandlingEnabled(),
                 ),
             ),
             SettingsCategory(
@@ -222,6 +229,17 @@ internal class SettingsUIMapper @Inject constructor(
             identifier = SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD,
             titleResId = R.string.settings_title_remove_stored_payment_method,
             checked = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
+        )
+    }
+
+    // Read from the system, which keeps the state set by DropIn.setRedirectHandlingEnabled
+    private fun getDropInRedirectHandlingEnabled(): SettingsItem {
+        val component = ComponentName(context, DropInRedirectHandlingActivity::class.java)
+        val state = context.packageManager.getComponentEnabledSetting(component)
+        return SettingsItem.Switch(
+            identifier = SettingsIdentifier.DROP_IN_REDIRECT_HANDLING,
+            titleResId = R.string.settings_title_drop_in_redirect_handling,
+            checked = state != PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
         )
     }
 
@@ -433,7 +451,8 @@ internal class SettingsUIMapper @Inject constructor(
 
             SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
             SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES,
-            SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD -> {
+            SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD,
+            SettingsIdentifier.DROP_IN_REDIRECT_HANDLING -> {
                 error("Edit mode is not applicable with boolean settings")
             }
         }

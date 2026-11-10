@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.example.ui.settings.viewmodel
 
+import android.content.Context
+import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.example.data.storage.AnalyticsMode
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
@@ -20,11 +22,13 @@ import com.adyen.checkout.example.ui.settings.model.EditSettingData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.theme.UITheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 internal class SettingsEditor @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     private val uiThemeRepository: UIThemeRepository,
+    @ApplicationContext private val context: Context,
 ) {
 
     fun editSetting(editSettingData: EditSettingData) {
@@ -125,6 +129,11 @@ internal class SettingsEditor @Inject constructor(
 
             SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD -> {
                 keyValueStorage.setRemoveStoredPaymentMethodEnabled(newValue)
+            }
+
+            // Not stored here: the system keeps the state of the component
+            SettingsIdentifier.DROP_IN_REDIRECT_HANDLING -> {
+                DropIn.setRedirectHandlingEnabled(context, newValue)
             }
 
             else -> error("This edit mode is only supported with boolean type settings")
