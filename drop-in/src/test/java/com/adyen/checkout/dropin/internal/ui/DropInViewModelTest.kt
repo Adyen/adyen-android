@@ -128,7 +128,7 @@ internal class DropInViewModelTest {
             analyticsManagerFactory = { _, _, _ -> TestAnalyticsManager() },
         )
 
-        val viewModel = factory.create(createInput(), SavedStateHandle())
+        val viewModel = factory.create(createInput(), SavedStateHandle(), mock())
 
         assertEquals(Locale.US, viewModel.checkoutParams.shopperLocale)
         assertEquals(Environment.TEST, viewModel.checkoutParams.environment)
@@ -180,7 +180,7 @@ internal class DropInViewModelTest {
             },
         )
 
-        val viewModel = factory.create(createInput(), SavedStateHandle())
+        val viewModel = factory.create(createInput(), SavedStateHandle(), mock())
 
         assertEquals(1, createdScopes.size)
         assertSame(analyticsManager, viewModel.analyticsManager)

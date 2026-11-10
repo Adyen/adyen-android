@@ -79,6 +79,7 @@ internal class DropInControllerProviderTest {
             checkoutContext = createCheckoutContext(showSubmitButton = null),
             dropInServiceManager = DropInServiceManager(DropInService::class.java),
             controllerFactory = controllerFactory,
+            redirectConfigurationChecker = mock(),
         )
 
         val result = provider.provide(
@@ -114,6 +115,7 @@ internal class DropInControllerProviderTest {
             ),
             dropInServiceManager = DropInServiceManager(DropInService::class.java),
             controllerFactory = controllerFactory,
+            redirectConfigurationChecker = mock(),
         )
 
         val result = provider.provide(
