@@ -139,6 +139,8 @@ internal class DropInViewModel(
      * shown, is logged and dropped, so a stray return does not end a checkout that is still valid.
      */
     fun handleReturn(intent: Intent) {
+        // TODO - WeChat Pay returns its result through onNewIntent without ACTION_VIEW. Handle it here once WeChat Pay
+        //  is migrated to v6.
         if (intent.action != Intent.ACTION_VIEW || intent.data == null) {
             adyenLog(AdyenLogLevel.DEBUG) { "Ignoring intent that is not a redirect return: action=${intent.action}" }
             return

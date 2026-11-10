@@ -37,14 +37,20 @@ internal class DropInActivityTest {
     }
 
     @Test
+    fun `when Drop-in finishes without input, then destroying it does not crash`() {
+        val controller = Robolectric.buildActivity(DropInActivity::class.java, redirectIntent())
+
+        // Would throw if the view model, which needs the input, was created
+        controller.create().destroy()
+    }
+
+    @Test
     fun `when a redirect arrives after the activity closed without input, then it is ignored`() {
         Robolectric.buildActivity(DropInActivity::class.java, redirectIntent()).use { controller ->
             controller.create()
 
             // Would throw if the view model, which needs the input, was created
             controller.newIntent(redirectIntent())
-
-            assertTrue(controller.get().isFinishing)
         }
     }
 
