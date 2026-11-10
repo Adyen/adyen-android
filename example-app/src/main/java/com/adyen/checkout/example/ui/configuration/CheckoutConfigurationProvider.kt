@@ -127,7 +127,6 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             )
 
             googlePay(
-                countryCode = keyValueStorage.getCountry(),
                 checkoutOption = "COMPLETE_IMMEDIATE_PURCHASE",
             )
 
