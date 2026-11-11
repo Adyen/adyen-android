@@ -29,7 +29,7 @@ Renovate handles routine version bumps. This skill is for dependency changes mad
 
 > **Impact of `<group:name:version>`**
 > - **Scope** — which modules, and which configuration (`api`, `implementation`, `compileOnly`, `testImplementation`, `androidTestImplementation`)
-> - **Merchants** — does it end up in merchant builds? Cover version conflicts with libraries merchants commonly use, `minSdk` (ours is 23), download size and method count, and the transitive artifacts it drags in
+> - **Merchants** — does it end up in merchant builds? Cover version conflicts with libraries merchants commonly use, `minSdk` (ours is 24), download size and method count, and the transitive artifacts it drags in
 > - **Public API** — do its types appear in our public API? If so its version becomes part of our contract and later upgrades turn into breaking changes. Prefer keeping it out of signatures and off `api`
 > - **R8 / ProGuard** — consumer rules or `dontwarn` needed? If it is an optional external SDK, does it need the `compileOnly` + `runCompileOnly` treatment described in the `android-add-module` skill (`.agents/skills/android-add-module/SKILL.md`)?
 > - **Release notes** — `[included]` or `[excluded]`, and why (step 4 works out the exact entry)
