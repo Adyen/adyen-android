@@ -23,7 +23,6 @@ import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.DateUtils
-import com.adyen.checkout.core.common.internal.helper.StringUtil
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.requiresValidation
 
@@ -123,7 +122,7 @@ internal object CardValidationUtils {
         val result = CardSecurityCodeValidator.validateSecurityCode(securityCode.text, cardBrand)
         return when (result) {
             is CardSecurityCodeValidationResult.Invalid ->
-                if (StringUtil.normalize(securityCode.text).isEmpty()) {
+                if (securityCode.text.isBlank()) {
                     CardSecurityCodeValidation.INVALID_EMPTY
                 } else {
                     CardSecurityCodeValidation.INVALID_INCOMPLETE
