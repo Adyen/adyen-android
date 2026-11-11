@@ -156,7 +156,7 @@ If the return still doesn't arrive:
    ```
 
 2. **Check the declaration.** The intent filter needs the `VIEW` action and the `DEFAULT` and `BROWSABLE` categories, and the activity needs `android:exported="true"`.
-3. **Check the task.** While Drop-in is open, run `adb shell dumpsys activity activities` and find the task that contains `DropInActivity`. Its affinity, the `A=` value, must end in your application ID. Otherwise, see [Task affinity](#task-affinity).
+3. **Check the task.** While Drop-in is open, run `adb shell dumpsys activity activities` and find the task that contains `DropInActivity`. Its line must show `A=<uid>:<your application ID>`. If it shows another affinity, or `I=` instead of `A=` because the task has no affinity, see [Task affinity](#task-affinity). A task keeps the affinity it was created with, so after changing your manifest, test in a new task, for example after removing the app from Recents.
 4. **Check for a second handler.** If Android shows a chooser, another app or another activity in your app claims the same URL. Use a different path, or an `https` App Link.
 
 ## Complete working example
