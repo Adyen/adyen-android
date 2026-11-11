@@ -8,60 +8,52 @@
 
 package com.adyen.checkout.dropin
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
-@RunWith(RobolectricTestRunner::class)
-@Config(manifest = Config.NONE)
 internal class DropInTest {
 
-    private val context = RuntimeEnvironment.getApplication()
+    private val packageManager = mock<PackageManager>()
 
-    private val redirectHandlingActivity = ComponentName(context, DropInRedirectHandlingActivity::class.java)
+    private val context = mock<Context> {
+        on { this.packageManager } doReturn packageManager
+    }
 
     @Test
-    fun `when redirect handling is disabled, then the redirect handling activity is disabled`() {
+    fun `when redirect handling is disabled, then the redirect handling activity is disabled without killing the app`() {
         DropIn.setRedirectHandlingEnabled(context, false)
 
-        assertEquals(
-            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-            context.packageManager.getComponentEnabledSetting(redirectHandlingActivity),
+        verify(packageManager).setComponentEnabledSetting(
+            any(),
+            eq(PackageManager.COMPONENT_ENABLED_STATE_DISABLED),
+            eq(PackageManager.DONT_KILL_APP),
         )
     }
 
     @Test
-    fun `when redirect handling is enabled again, then the redirect handling activity is enabled`() {
-        DropIn.setRedirectHandlingEnabled(context, false)
-
+    fun `when redirect handling is enabled, then the redirect handling activity is enabled without killing the app`() {
         DropIn.setRedirectHandlingEnabled(context, true)
 
-        assertEquals(
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            context.packageManager.getComponentEnabledSetting(redirectHandlingActivity),
+        verify(packageManager).setComponentEnabledSetting(
+            any(),
+            eq(PackageManager.COMPONENT_ENABLED_STATE_ENABLED),
+            eq(PackageManager.DONT_KILL_APP),
         )
     }
 
     @Test
     fun `when the redirect handling activity was removed from the manifest, then the call does not crash`() {
         // What Android throws for a component that the merged manifest does not contain
-        val packageManager = mock<PackageManager> {
-            on { setComponentEnabledSetting(any(), any(), any()) } doThrow IllegalArgumentException("Unknown component")
-        }
-        val context = mock<Context> {
-            on { packageName } doReturn context.packageName
-            on { this.packageManager } doReturn packageManager
-        }
+        doThrow(IllegalArgumentException("Unknown component"))
+            .whenever(packageManager).setComponentEnabledSetting(any(), any(), any())
 
         DropIn.setRedirectHandlingEnabled(context, false)
     }
