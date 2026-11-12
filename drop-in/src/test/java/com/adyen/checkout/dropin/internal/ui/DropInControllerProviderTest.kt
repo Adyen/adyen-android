@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import com.adyen.checkout.core.action.data.ActionData
+import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
@@ -22,6 +24,7 @@ import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.dropIn
+import com.adyen.checkout.dropin.internal.helper.RedirectConfigurationChecker
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +33,10 @@ import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 
 internal class DropInControllerProviderTest {
 
@@ -125,6 +131,34 @@ internal class DropInControllerProviderTest {
         )
 
         assertSame(controller, result)
+    }
+
+    @Test
+    fun `when a redirect starts, then the redirect configuration is checked before the action is passed on`() {
+        listOf(ActionTypes.REDIRECT, ActionTypes.NATIVE_REDIRECT).forEach { type ->
+            val checker = mock<RedirectConfigurationChecker>()
+            val onAction = mock<(ActionData) -> Unit>()
+            val actionData = ActionData(type)
+
+            withRedirectConfigurationCheck(checker, onAction)(actionData)
+
+            inOrder(checker, onAction) {
+                verify(checker).check()
+                verify(onAction).invoke(actionData)
+            }
+        }
+    }
+
+    @Test
+    fun `when another action starts, then the redirect configuration is not checked and the action is passed on`() {
+        val checker = mock<RedirectConfigurationChecker>()
+        val onAction = mock<(ActionData) -> Unit>()
+        val actionData = ActionData(ActionTypes.THREEDS2)
+
+        withRedirectConfigurationCheck(checker, onAction)(actionData)
+
+        verify(checker, never()).check()
+        verify(onAction).invoke(actionData)
     }
 
     // Creates every value again on each call, so equality can't rely on shared instances.

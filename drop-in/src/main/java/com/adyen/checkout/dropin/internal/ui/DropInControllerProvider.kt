@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.annotation.SuppressLint
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.ActionData
@@ -70,10 +71,7 @@ internal class DefaultDropInControllerProvider(
         onAction: (ActionData) -> Unit,
     ): CheckoutController {
         val target = createTarget(paymentFlowType)
-        val onFlowAction: (ActionData) -> Unit = { actionData ->
-            if (actionData.type in REDIRECT_ACTION_TYPES) redirectConfigurationChecker.check()
-            onAction(actionData)
-        }
+        val onFlowAction = withRedirectConfigurationCheck(redirectConfigurationChecker, onAction)
 
         return when (checkoutContext) {
             is CheckoutContext.Advanced -> {
@@ -152,12 +150,19 @@ internal class DefaultDropInControllerProvider(
             dropInServiceManager.onPaymentCompleted(result.resultCode)
         }
     }
-
-    private companion object {
-        private val REDIRECT_ACTION_TYPES = setOf(ActionTypes.REDIRECT, ActionTypes.NATIVE_REDIRECT)
-    }
 }
 
 internal fun CheckoutContext.withSubmitButtonEnforced(): CheckoutContext {
     return withCheckoutConfiguration(checkoutConfiguration.withShowSubmitButton(true))
 }
+
+@VisibleForTesting
+internal fun withRedirectConfigurationCheck(
+    redirectConfigurationChecker: RedirectConfigurationChecker,
+    onAction: (ActionData) -> Unit,
+): (ActionData) -> Unit = { actionData ->
+    if (actionData.type in REDIRECT_ACTION_TYPES) redirectConfigurationChecker.check()
+    onAction(actionData)
+}
+
+private val REDIRECT_ACTION_TYPES = setOf(ActionTypes.REDIRECT, ActionTypes.NATIVE_REDIRECT)
