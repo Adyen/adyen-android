@@ -8,82 +8,42 @@
 
 package com.adyen.checkout.core.common
 
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.internal.helper.LogcatLogger
+import com.adyen.checkout.core.common.internal.helper.AdyenLogDispatcher
 
 /**
- * Utility class to configure the Adyen logger.
+ * Configures the logging of the Adyen SDK. Logs are written to Logcat.
  */
-interface AdyenLogger {
+object AdyenLogger {
 
     /**
-     * Returns whether a message logged at the given [level] should be emitted, based on the
-     * currently configured minimum log level.
+     * Sets the minimum [LogLevel] to be logged. Messages below this level are ignored.
      *
-     * @param level The level of the message to be logged.
-     * @return `true` if the message should be logged, `false` otherwise.
-     */
-    fun shouldLog(level: AdyenLogLevel): Boolean
-
-    /**
-     * Sets the minimum [AdyenLogLevel] to be logged. Messages below this level are ignored.
+     * The default is [LogLevel.OFF], so nothing is logged unless a level is set.
+     *
+     * [LogLevel.VERBOSE] includes request and response bodies and response headers, which can contain sensitive data.
+     * Only use it during development.
      *
      * @param level The minimum level to be logged.
      */
-    fun setLogLevel(level: AdyenLogLevel)
+    @JvmStatic
+    fun setLogLevel(level: LogLevel) {
+        AdyenLogDispatcher.logLevel = level
+    }
 
     /**
-     * Logs a message with the given [level].
+     * The severity levels used by the Adyen logger, ordered from most to least verbose.
      *
-     * @param level The severity level of the message.
-     * @param tag The tag identifying the source of the message.
-     * @param message The message to be logged.
-     * @param throwable An optional [Throwable] to log alongside the message.
+     * [OFF] disables logging entirely.
      */
-    fun log(
-        level: AdyenLogLevel,
-        tag: String,
-        message: String,
-        throwable: Throwable?,
-    )
-
-    companion object {
-
-        @PublishedApi
-        @Volatile
-        internal var logger: AdyenLogger = LogcatLogger()
-            private set
-
-        private var didSetLogLevelManually = false
-
-        /**
-         * Sets the minimum level to be logged.
-         */
-        fun setLogLevel(level: AdyenLogLevel) {
-            didSetLogLevelManually = true
-            logger.setLogLevel(level)
-        }
-
-        /**
-         * Set your own custom instance of [AdyenLogger].
-         */
-        fun setLogger(logger: AdyenLogger) {
-            Companion.logger = logger
-        }
-
-        /**
-         * Reset the logger instance back to the default.
-         */
-        fun resetLogger() {
-            logger = LogcatLogger()
-            didSetLogLevelManually = false
-        }
-
-        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-        fun setInitialLogLevel(level: AdyenLogLevel) {
-            if (!didSetLogLevelManually) {
-                logger.setLogLevel(level)
-            }
-        }
+    enum class LogLevel {
+        VERBOSE,
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR,
+        ASSERT,
+        OFF,
     }
 }
+
+typealias AdyenLogLevel = AdyenLogger.LogLevel

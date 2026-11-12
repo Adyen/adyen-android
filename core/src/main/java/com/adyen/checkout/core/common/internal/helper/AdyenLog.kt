@@ -9,25 +9,27 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.AdyenLogger
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 inline fun Any.adyenLog(
-    level: AdyenLogLevel,
+    level: LogLevel,
     throwable: Throwable? = null,
     log: () -> String,
 ) {
-    if (AdyenLogger.logger.shouldLog(level)) {
-        val fullClassName = this::class.java.name
-        val outerClassName = fullClassName.substringBefore('$').substringAfterLast('.')
-        val tag = "CO." + if (outerClassName.isEmpty()) {
-            fullClassName
-        } else {
-            outerClassName.removeSuffix("Kt")
-        }
+    if (AdyenLogDispatcher.isLoggable(level)) {
+        AdyenLogDispatcher.write(level, adyenLogTag(this), log(), throwable)
+    }
+}
 
-        AdyenLogger.logger.log(level, tag, log(), throwable)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun adyenLogTag(source: Any): String {
+    val fullClassName = source.javaClass.name
+    val outerClassName = fullClassName.substringBefore('$').substringAfterLast('.')
+    return "CO." + if (outerClassName.isEmpty()) {
+        fullClassName
+    } else {
+        outerClassName.removeSuffix("Kt")
     }
 }
 
@@ -36,12 +38,12 @@ inline fun Any.adyenLog(
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 inline fun adyenLog(
-    level: AdyenLogLevel,
+    level: LogLevel,
     tag: String,
     throwable: Throwable? = null,
     log: () -> String,
 ) {
-    if (AdyenLogger.logger.shouldLog(level)) {
-        AdyenLogger.logger.log(level, "CO.$tag", log(), throwable)
+    if (AdyenLogDispatcher.isLoggable(level)) {
+        AdyenLogDispatcher.write(level, "CO.$tag", log(), throwable)
     }
 }
