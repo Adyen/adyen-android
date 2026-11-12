@@ -14,8 +14,9 @@ package com.adyen.checkout.address.internal.ui.properties
  * symbols, keycap sequences, control characters and format characters. A value containing one is rejected, never
  * stripped.
  *
- * `java.util.regex` supports neither `Extended_Pictographic` nor `Regional_Indicator`, and
- * `android.icu.lang.UCharacter` needs API 24, so those two are code-point ranges (https://unicode.org/reports/tr51/).
+ * `java.util.regex` supports neither `Extended_Pictographic` nor `Regional_Indicator`, and in
+ * `android.icu.lang.UProperty` `REGIONAL_INDICATOR` needs API 28 and `EXTENDED_PICTOGRAPHIC` needs API 29, so those two
+ * are code-point ranges (https://unicode.org/reports/tr51/).
  * Control and format characters come from [Character.getType].
  */
 internal object AddressCharacters {
@@ -109,19 +110,9 @@ internal object AddressCharacters {
     // A digit, # or * followed by the combining enclosing keycap, which turns it into an emoji: 1️⃣, #️⃣, *️⃣.
     private val KEYCAP_SEQUENCE = Regex("""[0-9#*]\uFE0F?\u20E3""")
 
-    fun containsInvalidCharacters(value: String): Boolean =
-        KEYCAP_SEQUENCE.containsMatchIn(value) || value.codePointSequence().any(::isInvalid)
-
     // Read by code point rather than by char, so characters outside the basic plane, like 🏠, are found.
-    // String.codePoints() would do the same but needs API 24.
-    private fun String.codePointSequence(): Sequence<Int> = sequence {
-        var index = 0
-        while (index < length) {
-            val codePoint = codePointAt(index)
-            yield(codePoint)
-            index += Character.charCount(codePoint)
-        }
-    }
+    fun containsInvalidCharacters(value: String): Boolean =
+        KEYCAP_SEQUENCE.containsMatchIn(value) || value.codePoints().anyMatch(::isInvalid)
 
     private fun isInvalid(codePoint: Int): Boolean {
         val type = Character.getType(codePoint)
