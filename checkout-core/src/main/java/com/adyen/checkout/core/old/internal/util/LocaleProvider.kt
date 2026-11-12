@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.old.internal.util
 
 import android.content.Context
-import android.os.Build
 import androidx.annotation.RestrictTo
 import java.util.Locale
 
@@ -17,11 +16,6 @@ import java.util.Locale
 class LocaleProvider {
 
     fun getLocale(context: Context): Locale {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            context.resources.configuration.locales[0]
-        } else {
-            @Suppress("DEPRECATION")
-            context.resources.configuration.locale
-        }
+        return context.resources.configuration.locales[0]
     }
 }

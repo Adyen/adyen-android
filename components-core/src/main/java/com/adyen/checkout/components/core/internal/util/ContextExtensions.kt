@@ -12,7 +12,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import android.os.LocaleList
 import android.widget.Toast
 import androidx.annotation.RestrictTo
@@ -37,11 +36,9 @@ fun Context.createLocalizedContext(locale: Locale): Context {
     val newConfig = Configuration(configuration)
     newConfig.setLocale(locale)
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        val localeList = LocaleList(locale)
-        LocaleList.setDefault(localeList)
-        newConfig.setLocales(localeList)
-    }
+    val localeList = LocaleList(locale)
+    LocaleList.setDefault(localeList)
+    newConfig.setLocales(localeList)
 
     return createConfigurationContext(newConfig) ?: this
 }
