@@ -50,7 +50,7 @@ compose-viewmodel = "2.11.0"
 adyen3ds2 = "2.2.28"
 
 # External dependencies
-cash-app-pay = "2.5.0"
+cash-app-pay = "3.4.0"
 compose-pay-button = "1.2.0"
 okhttp = "5.5.1"
 play-services-wallet = "20.0.0"
