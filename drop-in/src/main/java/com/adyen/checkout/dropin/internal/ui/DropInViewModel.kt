@@ -39,6 +39,7 @@ import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.data.StoredPaymentMethodRemover
 import com.adyen.checkout.dropin.internal.data.api.DisableTokenRepository
 import com.adyen.checkout.dropin.internal.data.api.DisableTokenService
+import com.adyen.checkout.dropin.internal.helper.RedirectConfigurationChecker
 import com.adyen.checkout.dropin.internal.helper.SavedStateBackStackPersister
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
@@ -159,6 +160,7 @@ internal class DropInViewModel(
      * controller Drop-in creates, so the session makes a single analytics setup call.
      */
     class Factory(
+        private val context: Context,
         private val inputProvider: () -> DropInResultContract.Input,
         private val analyticsManagerFactory: (CheckoutContext, CheckoutParams, CoroutineScope) -> AnalyticsManager =
             ::createDropInAnalyticsManager,
@@ -166,11 +168,15 @@ internal class DropInViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            return create(inputProvider(), extras.createSavedStateHandle()) as T
+            return create(inputProvider(), extras.createSavedStateHandle(), RedirectConfigurationChecker(context)) as T
         }
 
         @VisibleForTesting
-        internal fun create(input: DropInResultContract.Input, savedStateHandle: SavedStateHandle): DropInViewModel {
+        internal fun create(
+            input: DropInResultContract.Input,
+            savedStateHandle: SavedStateHandle,
+            redirectConfigurationChecker: RedirectConfigurationChecker,
+        ): DropInViewModel {
             val checkoutParams = CheckoutParamsFactory().create(input.checkoutContext)
             val dropInServiceManager = DropInServiceManager(input.serviceClass)
             val coroutineScope = CoroutineScope(SupervisorJob() + DispatcherProvider.Main.immediate)
@@ -187,6 +193,7 @@ internal class DropInViewModel(
                     checkoutContext = input.checkoutContext,
                     dropInServiceManager = dropInServiceManager,
                     controllerFactory = CheckoutControllerFactory(analyticsManager),
+                    redirectConfigurationChecker = redirectConfigurationChecker,
                 ),
                 dropInServiceManager = dropInServiceManager,
                 storedPaymentMethodRemover = createStoredPaymentMethodRemover(input.checkoutContext, checkoutParams),

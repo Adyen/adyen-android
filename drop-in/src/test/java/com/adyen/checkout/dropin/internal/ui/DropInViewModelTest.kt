@@ -124,11 +124,12 @@ internal class DropInViewModelTest {
     @Test
     fun `when the factory creates Drop-in, then the checkout params are mapped from the checkout configuration`() {
         val factory = DropInViewModel.Factory(
+            context = mock(),
             inputProvider = { createInput() },
             analyticsManagerFactory = { _, _, _ -> TestAnalyticsManager() },
         )
 
-        val viewModel = factory.create(createInput(), SavedStateHandle())
+        val viewModel = factory.create(createInput(), SavedStateHandle(), mock())
 
         assertEquals(Locale.US, viewModel.checkoutParams.shopperLocale)
         assertEquals(Environment.TEST, viewModel.checkoutParams.environment)
@@ -172,6 +173,7 @@ internal class DropInViewModelTest {
         val receivedParams = mutableListOf<CheckoutParams>()
         val createdScopes = mutableListOf<CoroutineScope>()
         val factory = DropInViewModel.Factory(
+            context = mock(),
             inputProvider = { createInput() },
             analyticsManagerFactory = { _, checkoutParams, coroutineScope ->
                 receivedParams += checkoutParams
@@ -180,7 +182,7 @@ internal class DropInViewModelTest {
             },
         )
 
-        val viewModel = factory.create(createInput(), SavedStateHandle())
+        val viewModel = factory.create(createInput(), SavedStateHandle(), mock())
 
         assertEquals(1, createdScopes.size)
         assertSame(analyticsManager, viewModel.analyticsManager)

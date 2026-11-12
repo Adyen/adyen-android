@@ -9,9 +9,11 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.annotation.SuppressLint
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.ActionData
+import com.adyen.checkout.core.action.data.ActionTypes
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.withCheckoutConfiguration
 import com.adyen.checkout.core.components.AdditionalDetailsResult
@@ -27,6 +29,7 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.components.internal.withShowSubmitButton
 import com.adyen.checkout.core.error.CheckoutError
+import com.adyen.checkout.dropin.internal.helper.RedirectConfigurationChecker
 import com.adyen.checkout.dropin.internal.service.DropInServiceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -51,11 +54,13 @@ internal fun interface DropInControllerProvider {
 /**
  * @param controllerFactory Shares Drop-in's analytics manager between every controller, so that a Drop-in session
  * makes a single analytics setup call.
+ * @param redirectConfigurationChecker Runs when a flow starts a redirect, to log why it could not return.
  */
 internal class DefaultDropInControllerProvider(
     checkoutContext: CheckoutContext,
     private val dropInServiceManager: DropInServiceManager,
     private val controllerFactory: CheckoutControllerFactory,
+    private val redirectConfigurationChecker: RedirectConfigurationChecker,
 ) : DropInControllerProvider {
 
     private val checkoutContext = checkoutContext.withSubmitButtonEnforced()
@@ -66,6 +71,7 @@ internal class DefaultDropInControllerProvider(
         onAction: (ActionData) -> Unit,
     ): CheckoutController {
         val target = createTarget(paymentFlowType)
+        val onFlowAction = withRedirectConfigurationCheck(redirectConfigurationChecker, onAction)
 
         return when (checkoutContext) {
             is CheckoutContext.Advanced -> {
@@ -74,7 +80,7 @@ internal class DefaultDropInControllerProvider(
                     context = checkoutContext,
                     callbacks = AdvancedCheckoutCallbacks(
                         onSubmit = ::onSubmit,
-                        onAction = onAction,
+                        onAction = onFlowAction,
                         onAdditionalDetails = ::onAdditionalDetails,
                         onFailure = { error -> onFailure(coroutineScope, error) },
                     ),
@@ -88,7 +94,7 @@ internal class DefaultDropInControllerProvider(
                     target = target,
                     context = checkoutContext,
                     callbacks = SessionCheckoutCallbacks(
-                        onAction = onAction,
+                        onAction = onFlowAction,
                         onComplete = { result -> onComplete(coroutineScope, result) },
                         onFailure = { error -> onFailure(coroutineScope, error) },
                         onBeforeSubmit = ::onBeforeSubmit,
@@ -149,3 +155,14 @@ internal class DefaultDropInControllerProvider(
 internal fun CheckoutContext.withSubmitButtonEnforced(): CheckoutContext {
     return withCheckoutConfiguration(checkoutConfiguration.withShowSubmitButton(true))
 }
+
+@VisibleForTesting
+internal fun withRedirectConfigurationCheck(
+    redirectConfigurationChecker: RedirectConfigurationChecker,
+    onAction: (ActionData) -> Unit,
+): (ActionData) -> Unit = { actionData ->
+    if (actionData.type in REDIRECT_ACTION_TYPES) redirectConfigurationChecker.check()
+    onAction(actionData)
+}
+
+private val REDIRECT_ACTION_TYPES = setOf(ActionTypes.REDIRECT, ActionTypes.NATIVE_REDIRECT)
