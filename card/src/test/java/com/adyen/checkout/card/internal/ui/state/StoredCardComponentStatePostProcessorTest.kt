@@ -122,7 +122,7 @@ internal class StoredCardComponentStatePostProcessorTest {
 
     private fun invalidField(isErrorVisible: Boolean = false) = TextInputComponentState(
         error = TextInputComponentState.InputError(
-            CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_EMPTY_THREE_DIGITS,
             isErrorVisible,
         ),
     )

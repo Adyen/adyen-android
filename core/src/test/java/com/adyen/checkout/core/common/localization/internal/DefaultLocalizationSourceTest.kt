@@ -9,14 +9,19 @@
 package com.adyen.checkout.core.common.localization.internal
 
 import android.content.Context
+import com.adyen.checkout.core.R
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 
 // The Context is mocked instead of using Robolectric because string resources are not packaged into unit
@@ -39,5 +44,60 @@ internal class DefaultLocalizationSourceTest(
         val keysByResource = CheckoutLocalizationKey.entries.groupBy { source.getString(context, it) }
 
         assertEquals(emptyList<List<CheckoutLocalizationKey>>(), keysByResource.values.filter { it.size > 1 })
+    }
+
+    // The security code keys share their canonical names with iOS; pin each one to its exact resource so a
+    // copy-paste mistake in the mapping cannot swap e.g. the empty and incomplete variants.
+    @ParameterizedTest
+    @MethodSource("securityCodeKeySource")
+    fun `when a card security code key is resolved then its canonical resource is returned`(
+        key: CheckoutLocalizationKey,
+        expectedResId: Int,
+    ) {
+        // GIVEN
+        whenever(context.getString(expectedResId)) doReturn "expected:$expectedResId"
+        val source = DefaultLocalizationSource()
+
+        // WHEN
+        val resolved = source.getString(context, key)
+
+        // THEN
+        assertEquals("expected:$expectedResId", resolved)
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun securityCodeKeySource() = listOf(
+            // key, expectedResId
+            arguments(
+                CheckoutLocalizationKey.CARD_SECURITY_CODE,
+                R.string.adyen_checkout_card_security_code_label,
+            ),
+            arguments(
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_THREE_DIGITS,
+                R.string.adyen_checkout_card_security_code_hint_three_digits,
+            ),
+            arguments(
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_FOUR_DIGITS,
+                R.string.adyen_checkout_card_security_code_hint_four_digits,
+            ),
+            arguments(
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_EMPTY_THREE_DIGITS,
+                R.string.adyen_checkout_card_security_code_error_empty_three_digits,
+            ),
+            arguments(
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_EMPTY_FOUR_DIGITS,
+                R.string.adyen_checkout_card_security_code_error_empty_four_digits,
+            ),
+            arguments(
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_THREE_DIGITS,
+                R.string.adyen_checkout_card_security_code_error_incomplete_three_digits,
+            ),
+            arguments(
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_FOUR_DIGITS,
+                R.string.adyen_checkout_card_security_code_error_incomplete_four_digits,
+            ),
+        )
     }
 }

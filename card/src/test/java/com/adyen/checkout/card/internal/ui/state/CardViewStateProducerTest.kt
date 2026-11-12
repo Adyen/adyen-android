@@ -671,7 +671,9 @@ internal class CardViewStateProducerTest {
         val componentState = createComponentState(
             securityCode = TextInputComponentState(
                 text = "12",
-                error = TextInputComponentState.InputError(CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID)
+                error = TextInputComponentState.InputError(
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_THREE_DIGITS,
+                )
             ),
             cardBrandState = CardBrandState.SingleReliableBrand(getCardBrandData(CardBrand("visa"))),
         )
@@ -708,7 +710,7 @@ internal class CardViewStateProducerTest {
             securityCode = TextInputComponentState(
                 text = "12",
                 error = TextInputComponentState.InputError(
-                    CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID,
+                    CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_THREE_DIGITS,
                     isVisible = true
                 )
             ),

@@ -121,7 +121,13 @@ internal object CardValidationUtils {
         if (!securityCode.requiresValidation()) return CardSecurityCodeValidation.VALID
         val result = CardSecurityCodeValidator.validateSecurityCode(securityCode.text, cardBrand)
         return when (result) {
-            is CardSecurityCodeValidationResult.Invalid -> CardSecurityCodeValidation.INVALID
+            is CardSecurityCodeValidationResult.Invalid ->
+                if (securityCode.text.isBlank()) {
+                    CardSecurityCodeValidation.INVALID_EMPTY
+                } else {
+                    CardSecurityCodeValidation.INVALID_INCOMPLETE
+                }
+
             is CardSecurityCodeValidationResult.Valid -> CardSecurityCodeValidation.VALID
         }
     }
@@ -225,7 +231,8 @@ internal enum class CardExpiryDateValidation {
 
 internal enum class CardSecurityCodeValidation {
     VALID,
-    INVALID,
+    INVALID_EMPTY,
+    INVALID_INCOMPLETE,
 }
 
 internal enum class CardPostalCodeValidation {

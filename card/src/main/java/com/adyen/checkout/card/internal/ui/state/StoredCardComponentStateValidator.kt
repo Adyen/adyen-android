@@ -40,6 +40,7 @@ internal class StoredCardComponentStateValidator(
                 securityCode = securityCode,
                 cardBrand = selectedOrFirstCardType?.cardBrand,
             ),
+            cardNumberFormat = selectedOrFirstCardType?.cardBrand.toCardNumberFormat(),
         )
     }
 }

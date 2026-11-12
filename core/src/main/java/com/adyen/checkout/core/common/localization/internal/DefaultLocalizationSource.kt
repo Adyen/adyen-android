@@ -84,13 +84,24 @@ internal class DefaultLocalizationSource {
                 R.string.checkout_card_expiry_date_invalid_too_far_in_the_future
 
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT -> R.string.checkout_card_expiry_date_hint
-            CheckoutLocalizationKey.CARD_SECURITY_CODE -> R.string.checkout_card_security_code
-            CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID -> R.string.checkout_card_security_code_invalid
-            CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS ->
-                R.string.checkout_card_security_code_hint_3_digits
+            CheckoutLocalizationKey.CARD_SECURITY_CODE -> R.string.adyen_checkout_card_security_code_label
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_THREE_DIGITS ->
+                R.string.adyen_checkout_card_security_code_hint_three_digits
 
-            CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS ->
-                R.string.checkout_card_security_code_hint_4_digits
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_FOUR_DIGITS ->
+                R.string.adyen_checkout_card_security_code_hint_four_digits
+
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_EMPTY_THREE_DIGITS ->
+                R.string.adyen_checkout_card_security_code_error_empty_three_digits
+
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_EMPTY_FOUR_DIGITS ->
+                R.string.adyen_checkout_card_security_code_error_empty_four_digits
+
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_THREE_DIGITS ->
+                R.string.adyen_checkout_card_security_code_error_incomplete_three_digits
+
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_ERROR_INCOMPLETE_FOUR_DIGITS ->
+                R.string.adyen_checkout_card_security_code_error_incomplete_four_digits
 
             CheckoutLocalizationKey.CARD_HOLDER_NAME -> R.string.checkout_card_holder_name
             CheckoutLocalizationKey.CARD_HOLDER_NAME_INVALID -> R.string.checkout_card_holder_name_invalid
