@@ -20,8 +20,9 @@ object AdyenLogger {
      *
      * The default is [LogLevel.OFF], so nothing is logged unless a level is set.
      *
-     * [LogLevel.VERBOSE] includes request and response bodies and response headers, which can contain sensitive data.
-     * Only use it during development.
+     * [LogLevel.DEBUG] and [LogLevel.VERBOSE] can include sensitive data: [LogLevel.DEBUG] logs redirect URLs and
+     * redirect results, and [LogLevel.VERBOSE] also logs request and response bodies and response headers. Only use
+     * these levels during development.
      *
      * @param level The minimum level to be logged.
      */
