@@ -124,6 +124,7 @@ internal class DropInViewModelTest {
     @Test
     fun `when the factory creates Drop-in, then the checkout params are mapped from the checkout configuration`() {
         val factory = DropInViewModel.Factory(
+            context = mock(),
             inputProvider = { createInput() },
             analyticsManagerFactory = { _, _, _ -> TestAnalyticsManager() },
         )
@@ -172,6 +173,7 @@ internal class DropInViewModelTest {
         val receivedParams = mutableListOf<CheckoutParams>()
         val createdScopes = mutableListOf<CoroutineScope>()
         val factory = DropInViewModel.Factory(
+            context = mock(),
             inputProvider = { createInput() },
             analyticsManagerFactory = { _, checkoutParams, coroutineScope ->
                 receivedParams += checkoutParams

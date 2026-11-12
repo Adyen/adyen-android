@@ -160,6 +160,7 @@ internal class DropInViewModel(
      * controller Drop-in creates, so the session makes a single analytics setup call.
      */
     class Factory(
+        private val context: Context,
         private val inputProvider: () -> DropInResultContract.Input,
         private val analyticsManagerFactory: (CheckoutContext, CheckoutParams, CoroutineScope) -> AnalyticsManager =
             ::createDropInAnalyticsManager,
@@ -167,9 +168,7 @@ internal class DropInViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-            return create(inputProvider(), extras.createSavedStateHandle(), RedirectConfigurationChecker(application))
-                as T
+            return create(inputProvider(), extras.createSavedStateHandle(), RedirectConfigurationChecker(context)) as T
         }
 
         @VisibleForTesting
