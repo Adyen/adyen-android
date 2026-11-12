@@ -31,8 +31,9 @@ Provide a clear and concise description of the bug you're experiencing. Include 
 ## Logs and Crash Reports
 <!--
 Enable verbose logging and attach the logs here.
-    - Call `AdyenLogger.setLogLevel(Log.VERBOSE)` in your application class.
+    - Call `AdyenLogger.setLogLevel(AdyenLogger.LogLevel.VERBOSE)` (v6) or `AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)` (v5) in your application class.
     - Filter your logs by `CO.` to see the checkout logs only.
+    - Remove any personal or payment data from the logs before attaching them.
 -->
 
 <details>
