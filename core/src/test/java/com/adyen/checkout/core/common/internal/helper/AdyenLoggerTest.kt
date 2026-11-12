@@ -42,14 +42,17 @@ internal class AdyenLoggerTest {
 
     @Test
     fun `when no level is set, then nothing is written`() {
+        // WHEN
         logAtAllLevels()
 
+        // THEN
         assertEquals(LogLevel.OFF, AdyenLogDispatcher.logLevel)
         assertTrue(writer.logs.isEmpty())
     }
 
     @Test
     fun `when log levels are listed, then they are ordered from most to least verbose`() {
+        // GIVEN
         val expected = listOf(
             LogLevel.VERBOSE,
             LogLevel.DEBUG,
@@ -60,7 +63,11 @@ internal class AdyenLoggerTest {
             LogLevel.OFF,
         )
 
-        assertEquals(expected, LogLevel.entries)
+        // WHEN
+        val levels = LogLevel.entries
+
+        // THEN
+        assertEquals(expected, levels)
     }
 
     @ParameterizedTest
@@ -69,41 +76,52 @@ internal class AdyenLoggerTest {
         level: LogLevel,
         expectedLevels: List<LogLevel>,
     ) {
+        // GIVEN
         AdyenLogger.setLogLevel(level)
 
+        // WHEN
         logAtAllLevels()
 
+        // THEN
         assertEquals(expectedLevels, writer.logs.map { it.level })
     }
 
     @Test
     fun `when a message is logged at OFF, then it is never written`() {
+        // GIVEN
         AdyenLogger.setLogLevel(LogLevel.VERBOSE)
 
+        // WHEN
         adyenLog(LogLevel.OFF) { "test" }
         adyenLog(LogLevel.OFF, "Tag") { "test" }
 
+        // THEN
         assertTrue(writer.logs.isEmpty())
     }
 
     @Test
     fun `when the writer is replaced, then the log level is kept`() {
+        // GIVEN
         AdyenLogger.setLogLevel(LogLevel.WARN)
         val newWriter = RecordingLogWriter()
 
+        // WHEN
         AdyenLogDispatcher.writer = newWriter
         adyenLog(LogLevel.INFO) { "info" }
         adyenLog(LogLevel.WARN) { "warn" }
 
+        // THEN
         assertEquals(LogLevel.WARN, AdyenLogDispatcher.logLevel)
         assertEquals(listOf(LogLevel.WARN), newWriter.logs.map { it.level })
     }
 
     @Test
     fun `when a message is filtered out, then its message is not built`() {
+        // GIVEN
         AdyenLogger.setLogLevel(LogLevel.ERROR)
         var isEvaluated = false
 
+        // WHEN
         adyenLog(LogLevel.DEBUG) {
             isEvaluated = true
             "test"
@@ -113,36 +131,36 @@ internal class AdyenLoggerTest {
             "test"
         }
 
+        // THEN
         assertFalse(isEvaluated)
     }
 
     @Test
     fun `when a message is logged, then it is written with the outer class name as tag`() {
+        // GIVEN
         AdyenLogger.setLogLevel(LogLevel.VERBOSE)
         val exception = RuntimeException("Test")
 
+        // WHEN
         adyenLog(LogLevel.INFO, exception) { "test" }
 
+        // THEN
         val expected = LogData(LogLevel.INFO, "CO.AdyenLoggerTest", "test", exception)
         assertEquals(listOf(expected), writer.logs)
     }
 
     @Test
     fun `when a message is logged with a tag, then it is written with the prefixed tag`() {
+        // GIVEN
         AdyenLogger.setLogLevel(LogLevel.VERBOSE)
         val exception = RuntimeException("Test")
 
+        // WHEN
         adyenLog(LogLevel.ERROR, "SomeTag", exception) { "test" }
 
+        // THEN
         val expected = LogData(LogLevel.ERROR, "CO.SomeTag", "test", exception)
         assertEquals(listOf(expected), writer.logs)
-    }
-
-    @Test
-    fun `when log level is set, then the dispatcher uses it`() {
-        AdyenLogger.setLogLevel(LogLevel.DEBUG)
-
-        assertEquals(LogLevel.DEBUG, AdyenLogDispatcher.logLevel)
     }
 
     private fun logAtAllLevels() {
