@@ -43,7 +43,7 @@ class ExampleV6DropInService : DropInService() {
             countryCode = keyValueStorage.getCountry(),
             merchantAccount = keyValueStorage.getMerchantAccount(),
             // TODO - Move return url creation to the new redirect component
-            redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
+            redirectUrl = RedirectComponent.getReturnUrl(applicationContext) + RETURN_URL_PATH,
             threeDSMode = keyValueStorage.getThreeDSMode(),
             shopperEmail = keyValueStorage.getShopperEmail(),
         )
@@ -110,5 +110,8 @@ class ExampleV6DropInService : DropInService() {
     companion object {
         private val TAG = getLogTag()
         private const val RESULT_CODE_ERROR = "Error"
+
+        // Matches the intent filter on DropInRedirectHandlingActivity in the manifest
+        internal const val RETURN_URL_PATH = "/dropin"
     }
 }

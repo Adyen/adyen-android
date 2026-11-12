@@ -19,6 +19,7 @@ import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
+import com.adyen.checkout.example.service.ExampleV6DropInService
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
@@ -206,7 +207,9 @@ internal class MainViewModel @Inject constructor(
 
             val configuration = checkoutConfigurationProvider.checkoutConfig
 
-            val sessionResponse = paymentsRepository.createSession(createSessionRequest())
+            val sessionResponse = paymentsRepository.createSession(
+                createSessionRequest(returnUrlPath = ExampleV6DropInService.RETURN_URL_PATH),
+            )
 
             val result = sessionResponse?.let {
                 Checkout.setup(
@@ -235,7 +238,7 @@ internal class MainViewModel @Inject constructor(
         splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
     )
 
-    private fun createSessionRequest() = getSessionRequest(
+    private fun createSessionRequest(returnUrlPath: String = "") = getSessionRequest(
         merchantAccount = keyValueStorage.getMerchantAccount(),
         shopperReference = keyValueStorage.getShopperReference(),
         amount = keyValueStorage.getOldAmount(),
@@ -243,13 +246,16 @@ internal class MainViewModel @Inject constructor(
         shopperLocale = keyValueStorage.getShopperLocale(),
         splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
         threeDSMode = keyValueStorage.getThreeDSMode(),
-        redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
-            ?: error("Return url should be set"),
+        redirectUrl = getReturnUrl() + returnUrlPath,
         shopperEmail = keyValueStorage.getShopperEmail(),
         installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
         showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
         showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
     )
+
+    private fun getReturnUrl(): String {
+        return savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA) ?: error("Return url should be set")
+    }
 
     private suspend fun getSessionOld(checkoutConfiguration: OldCheckoutConfiguration): CheckoutSession? {
         val sessionModel = paymentsRepository.createSessionOld(createSessionRequest()) ?: return null

@@ -26,6 +26,7 @@
     <string name="settings_title_card_installment_show_amount">Show installment amount</string>
     <string name="settings_title_address_mode">Address mode</string>
     <string name="settings_title_remove_stored_payment_method">Enable removing stored payment methods</string>
+    <string name="settings_title_drop_in_redirect_handling">Handle redirect returns (v6)</string>
     <string name="settings_title_instant_payment_method_type">Instant payment method type</string>
     <string name="settings_title_analytics_mode">Level</string>
     <string name="settings_title_ui_theme">Theme</string>
