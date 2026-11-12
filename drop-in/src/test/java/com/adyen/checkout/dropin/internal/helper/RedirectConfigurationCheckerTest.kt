@@ -88,6 +88,13 @@ internal class RedirectConfigurationCheckerTest {
     }
 
     @Test
+    fun `when the redirect handling activity is removed from the manifest, then it is reported as not declared`() {
+        shadowOf(context.packageManager).removeActivity(redirectHandlingActivity)
+
+        assertEquals(listOf(RedirectHandlingNotDeclared), checker.findProblems())
+    }
+
+    @Test
     fun `when redirect handling is turned off at runtime, then it is reported as disabled`() {
         DropIn.setRedirectHandlingEnabled(context, false)
 
