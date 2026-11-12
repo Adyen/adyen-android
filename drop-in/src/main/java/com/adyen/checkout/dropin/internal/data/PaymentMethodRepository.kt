@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.data
 
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
@@ -94,7 +94,7 @@ internal class DefaultPaymentMethodRepository(
                 _storedPaymentMethods.update { current -> current.filterNot { it.id == storedPaymentMethod.id } }
             }
             .onFailure { e ->
-                adyenLog(AdyenLogLevel.ERROR, e) { "Failed to remove the stored payment method." }
+                adyenLog(LogLevel.ERROR, e) { "Failed to remove the stored payment method." }
                 _storedPaymentMethodRemovalFailures.tryEmit(storedPaymentMethod.id)
             }
     } finally {

@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.components.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.AmountFormat
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ModelObject
@@ -62,7 +62,7 @@ fun Amount.format(locale: Locale): String {
         val value = BigDecimal.valueOf(value, fractionDigits)
         currencyFormat.format(value)
     }.getOrElse { e ->
-        adyenLog(AdyenLogLevel.WARN, e) { "Failed to format amount: $this" }
+        adyenLog(LogLevel.WARN, e) { "Failed to format amount: $this" }
         ""
     }
 }

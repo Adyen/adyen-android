@@ -11,7 +11,7 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
@@ -82,7 +82,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
         return runSuspendCatching {
             availabilityCheck.isAvailable(paymentMethod, params)
         }.getOrElse { e ->
-            adyenLog(AdyenLogLevel.ERROR, e) { "Availability check failed for payment method ${paymentMethod.type}." }
+            adyenLog(LogLevel.ERROR, e) { "Availability check failed for payment method ${paymentMethod.type}." }
             false
         }
     }

@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin
 import android.content.Intent
 import androidx.lifecycle.LifecycleService
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.SubmitResult
@@ -22,13 +22,13 @@ abstract class DropInService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
+        adyenLog(LogLevel.DEBUG) { "onCreate" }
         DropInServiceRegistry.register(this)
     }
 
     override fun onDestroy() {
         DropInServiceRegistry.unregister()
-        adyenLog(AdyenLogLevel.DEBUG) { "onDestroy" }
+        adyenLog(LogLevel.DEBUG) { "onDestroy" }
         super.onDestroy()
     }
 

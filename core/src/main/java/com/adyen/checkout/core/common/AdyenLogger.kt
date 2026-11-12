@@ -46,5 +46,3 @@ object AdyenLogger {
         OFF,
     }
 }
-
-typealias AdyenLogLevel = AdyenLogger.LogLevel

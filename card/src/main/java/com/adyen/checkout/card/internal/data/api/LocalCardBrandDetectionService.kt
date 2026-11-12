@@ -10,7 +10,7 @@ package com.adyen.checkout.card.internal.data.api
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.LocalCardBrandMapper
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.helper.CardBrandDetector
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -20,7 +20,7 @@ internal class LocalCardBrandDetectionService(
 ) {
 
     fun getCardBrands(cardNumber: String): List<DetectedCardType> {
-        adyenLog(AdyenLogLevel.DEBUG) { "getting local card brands" }
+        adyenLog(LogLevel.DEBUG) { "getting local card brands" }
         if (cardNumber.isEmpty()) {
             return emptyList()
         }

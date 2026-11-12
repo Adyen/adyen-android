@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -35,7 +35,7 @@ internal object PaymentMethodResolver {
             )
 
             else -> {
-                adyenLog(AdyenLogLevel.WARN) { "Invalid target: $target" }
+                adyenLog(LogLevel.WARN) { "Invalid target: $target" }
                 null
             }
         }

@@ -15,7 +15,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.core.net.toUri
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.CustomTabsLauncher
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.error.internal.GenericError
@@ -29,7 +29,7 @@ class DefaultRedirectHandler : RedirectHandler {
     private var onRedirectListener: WeakReference<(() -> Unit)>? = null
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
-        adyenLog(AdyenLogLevel.DEBUG) { "parseRedirectResult - $data" }
+        adyenLog(LogLevel.DEBUG) { "parseRedirectResult - $data" }
 
         data ?: throw GenericError("Received a null redirect Uri")
 
@@ -80,7 +80,7 @@ class DefaultRedirectHandler : RedirectHandler {
             return
         }
 
-        adyenLog(AdyenLogLevel.ERROR) { "Could not launch url" }
+        adyenLog(LogLevel.ERROR) { "Could not launch url" }
 
         throw GenericError("Launching redirect failed.")
     }
@@ -122,7 +122,7 @@ class DefaultRedirectHandler : RedirectHandler {
 
         // If the list is empty, no native app handlers were found.
         if (resolvedSpecializedSet.isEmpty()) {
-            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeBeforeApi30 - could not find native app to redirect with" }
+            adyenLog(LogLevel.DEBUG) { "launchNativeBeforeApi30 - could not find native app to redirect with" }
             return false
         }
 
@@ -132,10 +132,10 @@ class DefaultRedirectHandler : RedirectHandler {
         @Suppress("SwallowedException")
         return try {
             context.startActivity(specializedActivityIntent)
-            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeBeforeApi30 - redirect successful with native app" }
+            adyenLog(LogLevel.DEBUG) { "launchNativeBeforeApi30 - redirect successful with native app" }
             true
         } catch (e: ActivityNotFoundException) {
-            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeBeforeApi30 - could not find native app to redirect with" }
+            adyenLog(LogLevel.DEBUG) { "launchNativeBeforeApi30 - could not find native app to redirect with" }
             false
         }
     }
@@ -151,10 +151,10 @@ class DefaultRedirectHandler : RedirectHandler {
         @Suppress("SwallowedException")
         return try {
             context.startActivity(nativeAppIntent)
-            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeApi30 - redirect successful with native app" }
+            adyenLog(LogLevel.DEBUG) { "launchNativeApi30 - redirect successful with native app" }
             true
         } catch (e: ActivityNotFoundException) {
-            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeApi30 - could not find native app to redirect with" }
+            adyenLog(LogLevel.DEBUG) { "launchNativeApi30 - could not find native app to redirect with" }
             false
         }
     }
@@ -163,9 +163,9 @@ class DefaultRedirectHandler : RedirectHandler {
         // open in custom tabs if there's no native app for the target uri
         val isLaunched = CustomTabsLauncher.launchCustomTab(context, uri)
         if (isLaunched) {
-            adyenLog(AdyenLogLevel.DEBUG) { "launchWithCustomTabs - redirect successful with custom tabs" }
+            adyenLog(LogLevel.DEBUG) { "launchWithCustomTabs - redirect successful with custom tabs" }
         } else {
-            adyenLog(AdyenLogLevel.DEBUG) {
+            adyenLog(LogLevel.DEBUG) {
                 "launchWithCustomTabs - device doesn't support custom tabs or chrome is disabled"
             }
         }
@@ -184,10 +184,10 @@ class DefaultRedirectHandler : RedirectHandler {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .setData(uri)
             context.startActivity(browserActivityIntent)
-            adyenLog(AdyenLogLevel.DEBUG) { "launchBrowser - redirect successful with browser" }
+            adyenLog(LogLevel.DEBUG) { "launchBrowser - redirect successful with browser" }
             true
         } catch (e: ActivityNotFoundException) {
-            adyenLog(AdyenLogLevel.DEBUG) { "launchBrowser - could not do redirect on browser or there's no browser" }
+            adyenLog(LogLevel.DEBUG) { "launchBrowser - could not do redirect on browser or there's no browser" }
             false
         }
     }

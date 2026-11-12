@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
 
@@ -31,7 +31,7 @@ class DropInRedirectHandlingActivity : ComponentActivity() {
 
         val data = intent.data
         if (intent.action != Intent.ACTION_VIEW || data == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Ignoring intent that is not a redirect return: action=${intent.action}" }
+            adyenLog(LogLevel.ERROR) { "Ignoring intent that is not a redirect return: action=${intent.action}" }
         } else {
             // A new intent rather than the incoming one, so no extras or flags from outside reach Drop-in
             startActivity(Intent(this, DropInActivity::class.java).setAction(Intent.ACTION_VIEW).setData(data))
