@@ -49,7 +49,10 @@ override fun onNewIntent(intent: Intent) {
 
 With other launch modes, the return can open a new instance of your activity, which doesn't have your controller, or the browser tab can stay on top of your activity until the shopper closes it.
 
-Unlike Drop-in, standalone components need no [task affinity](#task-affinity) changes. If your app sets `<application android:taskAffinity="">`, the `singleTask` activity starts in a task of its own, and the return still finds it there.
+If your app sets `<application android:taskAffinity="">`, how you start the activity matters:
+
+- With `startActivity`, it starts in a task of its own, and the return finds it there. You don't need to do anything else.
+- For a result, for example with `registerForActivityResult`, it joins the caller's task, and the return can only find that task by its affinity. Set `android:taskAffinity="${applicationId}"` on the activity and on the root activity of the caller's task, as described in [Task affinity](#task-affinity).
 
 ## Drop-in
 
