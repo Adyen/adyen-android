@@ -49,6 +49,8 @@ override fun onNewIntent(intent: Intent) {
 
 With other launch modes, the return can open a new instance of your activity, which doesn't have your controller, or the browser tab can stay on top of your activity until the shopper closes it.
 
+Unlike Drop-in, standalone components need no [task affinity](#task-affinity) changes. If your app sets `<application android:taskAffinity="">`, the `singleTask` activity starts in a task of its own, and the return still finds it there.
+
 ## Drop-in
 
 Drop-in receives returns through `com.adyen.checkout.dropin.DropInRedirectHandlingActivity`. Drop-in declares it without an intent filter and does not export it, so nothing can open it until you declare it yourself.
@@ -79,7 +81,7 @@ You can declare several intent filters on it, for example a custom scheme and an
 
 ### Turn redirect handling on and off
 
-Use `DropIn.setRedirectHandlingEnabled(context, enabled)` to turn the redirect handling activity on or off at runtime, for example behind a feature flag:
+Use `DropIn.setRedirectHandlingEnabled(context, enabled)` to turn the redirect handling activity on or off at runtime. This is for apps where Drop-in and a standalone components screen share one return URL, for example in cross-platform plugins. Turn redirect handling on before starting Drop-in and off before starting the components screen, so each return reaches the right screen without the shopper seeing a chooser:
 
 ```kotlin
 DropIn.setRedirectHandlingEnabled(context, enabled = false)
@@ -143,7 +145,7 @@ When a return arrives that Drop-in can't use, it logs one of these and ignores t
 
 | Message | Meaning |
 | --- | --- |
-| `Received a redirect return, but Drop-in is not running. Ignoring it.` | Drop-in was closed, or the app was killed while the shopper was away. |
+| `Received a redirect return, but Drop-in is not running. Ignoring it.` | Drop-in was closed, or the app's task was removed while the shopper was away, for example by swiping it away from Recents. |
 | `Received a redirect return, but no action is shown. Ignoring it.` | The return arrived while Drop-in was not handling an action, for example an old browser tab returning a second time. |
 | `Ignoring intent that is not a redirect return: ...` | Something started the redirect handling activity without `ACTION_VIEW` or without a URL. |
 

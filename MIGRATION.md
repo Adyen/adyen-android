@@ -358,6 +358,7 @@ If your payment-method response still returns `googlepay_legacy`, target `Paymen
 v5 Drop-in declared a default intent filter for `adyencheckout://<applicationId>` on `com.adyen.checkout.dropin.internal.ui.DropInActivity`, and `RedirectComponent.getReturnUrl(context)` returned that URL. v6 Drop-in has no default return URL and declares no intent filter:
 
 - Declare `com.adyen.checkout.dropin.DropInRedirectHandlingActivity` in your manifest with `android:exported="true"` and an intent filter, and send a matching `returnUrl` for Drop-in payments.
+- If you declared your own intent filter on `com.adyen.checkout.dropin.internal.ui.DropInActivity` in v5, remove that declaration, including any `android:exported` or `tools:replace` override, and move the filter to `DropInRedirectHandlingActivity`. v6 doesn't export `DropInActivity`, so keeping the v5 declaration causes a manifest merge conflict, or, with `tools:replace`, an exported `DropInActivity` that bypasses the redirect handling activity.
 - `DropIn.setRedirectHandlingEnabled(context, enabled)` turns the redirect handling activity on or off at runtime.
 - `DropInActivity` and `DropInRedirectHandlingActivity` declare `android:taskAffinity="${applicationId}"`. If your app sets `android:taskAffinity`, for example `taskAffinity=""` on `<application>`, give the root activity of the task that launches Drop-in the same affinity.
 
