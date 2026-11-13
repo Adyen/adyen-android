@@ -14,6 +14,10 @@ import com.adyen.checkout.cse.internal.GenericEncryptorFactory
  * Allows the encryption of any type of data to be sent to Adyen's APIs.
  * Use this class with custom component integrations.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 object GenericEncrypter {
 
     private val encryptor = GenericEncryptorFactory.provide()
