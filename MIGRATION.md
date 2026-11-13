@@ -7,6 +7,7 @@ See also:
 - [docs/v6/README.md](docs/v6/README.md)
 - [docs/v6/card.md](docs/v6/card.md)
 - [docs/v6/theme.md](docs/v6/theme.md)
+- [docs/v6/redirects.md](docs/v6/redirects.md)
 
 ### Core objects
 
@@ -344,6 +345,24 @@ lifecycleScope.launch {
 ```
 
 If your payment-method response still returns `googlepay_legacy`, target `PaymentMethodTypes.GOOGLE_PAY_LEGACY` instead.
+
+### Redirects
+
+#### Standalone components
+
+- `RedirectComponent.handleIntent(intent)` becomes `CheckoutController.handleReturn(intent)`, called from `onNewIntent` of the activity that hosts the controller.
+- Make that activity `singleTask`, so the return closes the browser tab opened above it.
+
+#### Drop-in
+
+v5 Drop-in declared a default intent filter for `adyencheckout://<applicationId>` on `com.adyen.checkout.dropin.internal.ui.DropInActivity`, and `RedirectComponent.getReturnUrl(context)` returned that URL. v6 Drop-in has no default return URL and declares no intent filter:
+
+- Declare `com.adyen.checkout.dropin.DropInRedirectHandlingActivity` in your manifest with `android:exported="true"` and an intent filter, and send a matching `returnUrl` for Drop-in payments.
+- If you declared your own intent filter on `com.adyen.checkout.dropin.internal.ui.DropInActivity` in v5, remove that declaration, including any `android:exported` or `tools:replace` override, and move the filter to `DropInRedirectHandlingActivity`. v6 doesn't export `DropInActivity`, so keeping the v5 declaration causes a manifest merge conflict, or, with `tools:replace`, an exported `DropInActivity` that bypasses the redirect handling activity.
+- `DropIn.setRedirectHandlingEnabled(context, enabled)` turns the redirect handling activity on or off at runtime.
+- `DropInActivity` and `DropInRedirectHandlingActivity` declare `android:taskAffinity="${applicationId}"`. If your app sets `android:taskAffinity`, for example `taskAffinity=""` on `<application>`, give the root activity of the task that launches Drop-in the same affinity.
+
+For the manifest snippets, task affinity, and troubleshooting, see [docs/v6/redirects.md](docs/v6/redirects.md).
 
 #### Package migration guide
 
