@@ -8,20 +8,15 @@
 
 package com.adyen.checkout.cse.internal
 
-import com.adyen.checkout.cse.EncryptionException
 import org.json.JSONObject
 import java.math.BigInteger
 import java.security.AlgorithmParameters
 import java.security.KeyFactory
-import java.security.NoSuchAlgorithmException
 import java.security.PublicKey
 import java.security.SecureRandom
-import java.security.spec.InvalidKeySpecException
 import java.security.spec.MGF1ParameterSpec
 import java.security.spec.RSAPublicKeySpec
 import javax.crypto.Cipher
-import javax.crypto.IllegalBlockSizeException
-import javax.crypto.NoSuchPaddingException
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.OAEPParameterSpec
@@ -31,17 +26,9 @@ import javax.crypto.spec.SecretKeySpec
 @Suppress("TooManyFunctions")
 internal class JSONWebEncryptor {
 
-    private val keyFactory: KeyFactory = try {
-        KeyFactory.getInstance(RSA_ALGORITHM)
-    } catch (e: NoSuchAlgorithmException) {
-        throw EncryptionException("RSA KeyFactory not found", e)
-    }
+    private val keyFactory: KeyFactory = KeyFactory.getInstance(RSA_ALGORITHM)
 
     fun encrypt(publicKey: String, payload: String): String {
-        if (!ValidationUtils.isPublicKeyValid(publicKey)) {
-            throw EncryptionException("Invalid public key", null)
-        }
-
         val pubKey = generatePublicKey(publicKey)
         val contentKey = generateContentEncryptionKey()
         val encryptedKey = Base64String(encryptContentEncryptionKey(pubKey, contentKey))
@@ -57,11 +44,7 @@ internal class JSONWebEncryptor {
             BigInteger(keyComponents[0], RADIX),
         )
 
-        return try {
-            keyFactory.generatePublic(publicKeySpec)
-        } catch (e: InvalidKeySpecException) {
-            throw EncryptionException("Problem reading public key", e)
-        }
+        return keyFactory.generatePublic(publicKeySpec)
     }
 
     private fun generateContentEncryptionKey(): SecretKey {
@@ -74,11 +57,7 @@ internal class JSONWebEncryptor {
     private fun encryptContentEncryptionKey(publicKey: PublicKey, contentKey: SecretKey): ByteArray {
         val cipher = getRSACipher(publicKey)
 
-        return try {
-            cipher.doFinal(contentKey.encoded)
-        } catch (e: IllegalBlockSizeException) {
-            throw EncryptionException("The RSA key is invalid", e)
-        }
+        return cipher.doFinal(contentKey.encoded)
     }
 
     private fun getRSACipher(publicKey: PublicKey): Cipher {
@@ -92,13 +71,7 @@ internal class JSONWebEncryptor {
         )
         algorithmParams.init(paramSpec)
 
-        val cipher = try {
-            Cipher.getInstance(RSA_OAEP_CIPHER)
-        } catch (e: NoSuchAlgorithmException) {
-            throw EncryptionException("Problem instantiating $RSA_OAEP_CIPHER Algorithm", e)
-        } catch (e: NoSuchPaddingException) {
-            throw EncryptionException("Problem instantiating $RSA_OAEP_CIPHER Padding", e)
-        }
+        val cipher = Cipher.getInstance(RSA_OAEP_CIPHER)
         cipher.init(Cipher.ENCRYPT_MODE, publicKey, algorithmParams)
         return cipher
     }
@@ -137,13 +110,7 @@ internal class JSONWebEncryptor {
         val keySpec = SecretKeySpec(secretKey.encoded, AES_ALGORITHM)
         val ivSpec = GCMParameterSpec(AUTH_TAG_LENGTH * BITES_IN_BYTE, iv)
 
-        val cipher = try {
-            Cipher.getInstance(AES_GCM_CIPHER)
-        } catch (e: NoSuchAlgorithmException) {
-            throw EncryptionException("Problem instantiating $AES_GCM_CIPHER Algorithm", e)
-        } catch (e: NoSuchPaddingException) {
-            throw EncryptionException("Problem instantiating $AES_GCM_CIPHER Padding", e)
-        }
+        val cipher = Cipher.getInstance(AES_GCM_CIPHER)
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
         return cipher
     }

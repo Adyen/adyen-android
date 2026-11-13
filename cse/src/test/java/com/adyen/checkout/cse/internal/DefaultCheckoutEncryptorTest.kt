@@ -10,7 +10,6 @@ package com.adyen.checkout.cse.internal
 
 import com.adyen.checkout.cse.Card
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.Encryptor
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -301,7 +300,7 @@ internal class DefaultCheckoutEncryptorTest(
 
         @JvmStatic
         fun encryptionExceptionSource() = listOf(
-            arguments(EncryptionException("Problem reading public key", null)),
+            arguments(IllegalArgumentException("Invalid public key")),
             arguments(IllegalStateException("Unexpected")),
         )
 

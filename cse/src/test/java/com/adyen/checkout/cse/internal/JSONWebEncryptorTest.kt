@@ -1,12 +1,10 @@
 package com.adyen.checkout.cse.internal
 
-import com.adyen.checkout.cse.EncryptionException
 import org.jose4j.jwa.AlgorithmConstraints
 import org.jose4j.jwe.JsonWebEncryption
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
@@ -18,17 +16,6 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 internal class JSONWebEncryptorTest {
 
     private val encryptor = JSONWebEncryptor()
-
-    @Test
-    fun `when public key is incorrect, then an exception will be thrown`() {
-        val publicKey = "incorrect format"
-        val input = "random input"
-
-        val exception = assertThrows<EncryptionException> {
-            encryptor.encrypt(publicKey, input)
-        }
-        assertEquals("Invalid public key", exception.message)
-    }
 
     @Test
     fun `when encryption succeeds, then encryption string consists of 5 parts`() {
