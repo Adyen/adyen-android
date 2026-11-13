@@ -178,6 +178,35 @@ For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-ad
 - `CheckoutController(...)` binds a checkout target and callbacks for rendering.
 - `CheckoutPaymentMethod(...)` and `CheckoutAction(...)` become the Compose rendering entry points, switched by the required `onAction` callback.
 
+### Logging
+
+#### Logger API
+
+##### Before (v5)
+
+```kotlin
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.AdyenLogger
+
+AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)
+```
+
+##### After (v6)
+
+```kotlin
+import com.adyen.checkout.core.common.AdyenLogger
+
+AdyenLogger.setLogLevel(AdyenLogger.LogLevel.VERBOSE)
+```
+
+- `AdyenLogger` moves to `com.adyen.checkout.core.common`, and `AdyenLogLevel` becomes the nested `AdyenLogger.LogLevel`.
+- `AdyenLogLevel.NONE` becomes `AdyenLogger.LogLevel.OFF`.
+- The deprecated `AdyenLogger.setLogLevel(Int)`, which took `android.util.Log` priorities, was removed. Use `AdyenLogger.LogLevel` instead.
+- Logging is off by default. In v5, Drop-in enabled `DEBUG` logging in debuggable apps unless you had set a level yourself. In v6, call `AdyenLogger.setLogLevel(...)` to enable logging.
+- Custom loggers are no longer supported: `AdyenLogger.setLogger(...)`, `AdyenLogger.resetLogger()` and implementing the `AdyenLogger` interface were removed. The SDK writes its logs to Logcat, with tags that start with `CO.`.
+
+For more details, see [Logging](docs/v6/README.md#logging).
+
 ### Card component
 
 #### Configuration object
