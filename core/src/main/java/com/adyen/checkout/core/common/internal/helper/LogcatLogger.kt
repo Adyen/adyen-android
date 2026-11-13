@@ -11,22 +11,13 @@ package com.adyen.checkout.core.common.internal.helper
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.AdyenLogger
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 
-internal class LogcatLogger : AdyenLogger {
+internal class LogcatLogger : LogWriter {
 
-    private var minLogLevel: AdyenLogLevel = AdyenLogLevel.NONE
+    override fun write(level: LogLevel, tag: String, message: String, throwable: Throwable?) {
+        val priority = level.toLogcatPriority() ?: return
 
-    override fun shouldLog(level: AdyenLogLevel): Boolean {
-        return level.priority >= minLogLevel.priority
-    }
-
-    override fun setLogLevel(level: AdyenLogLevel) {
-        minLogLevel = level
-    }
-
-    override fun log(level: AdyenLogLevel, tag: String, message: String, throwable: Throwable?) {
         // Before API 26 tags have a max length
         val trimmedTag = if (tag.length <= MAX_TAG_LENGTH || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             tag
@@ -37,7 +28,7 @@ internal class LogcatLogger : AdyenLogger {
         val fullMessage = concatThrowable(message, throwable)
 
         if (fullMessage.length < MAX_LOG_LENGTH) {
-            logToLogcat(level.priority, trimmedTag, fullMessage)
+            logToLogcat(priority, trimmedTag, fullMessage)
             return
         }
 
@@ -48,7 +39,7 @@ internal class LogcatLogger : AdyenLogger {
             } else {
                 fullMessage.substring(i * MAX_LOG_LENGTH)
             }
-            logToLogcat(level.priority, "$trimmedTag-$i", newMessage)
+            logToLogcat(priority, "$trimmedTag-$i", newMessage)
         }
     }
 
@@ -67,8 +58,6 @@ internal class LogcatLogger : AdyenLogger {
         message: String,
     ) {
         when (priority) {
-            AdyenLogLevel.NONE.priority -> Unit
-
             Log.ASSERT -> {
                 Log.wtf(tag, message)
             }
@@ -83,4 +72,14 @@ internal class LogcatLogger : AdyenLogger {
         private const val MAX_TAG_LENGTH = 23
         private const val MAX_LOG_LENGTH = 2048
     }
+}
+
+internal fun LogLevel.toLogcatPriority(): Int? = when (this) {
+    LogLevel.VERBOSE -> Log.VERBOSE
+    LogLevel.DEBUG -> Log.DEBUG
+    LogLevel.INFO -> Log.INFO
+    LogLevel.WARN -> Log.WARN
+    LogLevel.ERROR -> Log.ERROR
+    LogLevel.ASSERT -> Log.ASSERT
+    LogLevel.OFF -> null
 }

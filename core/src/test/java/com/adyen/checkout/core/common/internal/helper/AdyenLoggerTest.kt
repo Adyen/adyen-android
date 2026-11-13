@@ -8,127 +8,178 @@
 
 package com.adyen.checkout.core.common.internal.helper
 
-import android.util.Log
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.AdyenLogger
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertInstanceOf
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 internal class AdyenLoggerTest {
 
-    private lateinit var logger: TestLogger
+    private lateinit var originalWriter: LogWriter
+    private lateinit var originalLevel: LogLevel
+    private lateinit var writer: RecordingLogWriter
 
     @BeforeEach
     fun setup() {
-        AdyenLogger.resetLogger()
-        logger = TestLogger()
+        originalWriter = AdyenLogDispatcher.writer
+        originalLevel = AdyenLogDispatcher.logLevel
+        writer = RecordingLogWriter()
+        AdyenLogDispatcher.writer = writer
+    }
+
+    @AfterEach
+    fun tearDown() {
+        AdyenLogDispatcher.writer = originalWriter
+        AdyenLogDispatcher.logLevel = originalLevel
     }
 
     @Test
-    fun `when logger is set, then logger instance is of correct type`() {
-        AdyenLogger.setLogger(logger)
+    fun `when no level is set, then nothing is written`() {
+        // WHEN
+        logAtAllLevels()
 
-        assertEquals(logger, AdyenLogger.logger)
+        // THEN
+        assertEquals(LogLevel.OFF, AdyenLogDispatcher.logLevel)
+        assertTrue(writer.logs.isEmpty())
     }
 
     @Test
-    fun `when logger is set, then logging is correctly propagated`() {
-        AdyenLogger.setLogger(logger)
-        AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)
+    fun `when log levels are listed, then they are ordered from most to least verbose`() {
+        // GIVEN
+        val expected = listOf(
+            LogLevel.VERBOSE,
+            LogLevel.DEBUG,
+            LogLevel.INFO,
+            LogLevel.WARN,
+            LogLevel.ERROR,
+            LogLevel.ASSERT,
+            LogLevel.OFF,
+        )
 
-        // TODO - Error Propagation
+        // WHEN
+        val levels = LogLevel.entries
+
+        // THEN
+        assertEquals(expected, levels)
+    }
+
+    @ParameterizedTest
+    @MethodSource("writtenLevelsSource")
+    fun `when log level is set, then only messages at that level and above are written`(
+        level: LogLevel,
+        expectedLevels: List<LogLevel>,
+    ) {
+        // GIVEN
+        AdyenLogger.setLogLevel(level)
+
+        // WHEN
+        logAtAllLevels()
+
+        // THEN
+        assertEquals(expectedLevels, writer.logs.map { it.level })
+    }
+
+    @Test
+    fun `when a message is logged at OFF, then it is never written`() {
+        // GIVEN
+        AdyenLogger.setLogLevel(LogLevel.VERBOSE)
+
+        // WHEN
+        adyenLog(LogLevel.OFF) { "test" }
+        adyenLog(LogLevel.OFF, "Tag") { "test" }
+
+        // THEN
+        assertTrue(writer.logs.isEmpty())
+    }
+
+    @Test
+    fun `when the writer is replaced, then the log level is kept`() {
+        // GIVEN
+        AdyenLogger.setLogLevel(LogLevel.WARN)
+        val newWriter = RecordingLogWriter()
+
+        // WHEN
+        AdyenLogDispatcher.writer = newWriter
+        adyenLog(LogLevel.INFO) { "info" }
+        adyenLog(LogLevel.WARN) { "warn" }
+
+        // THEN
+        assertEquals(LogLevel.WARN, AdyenLogDispatcher.logLevel)
+        assertEquals(listOf(LogLevel.WARN), newWriter.logs.map { it.level })
+    }
+
+    @Test
+    fun `when a message is filtered out, then its message is not built`() {
+        // GIVEN
+        AdyenLogger.setLogLevel(LogLevel.ERROR)
+        var isEvaluated = false
+
+        // WHEN
+        adyenLog(LogLevel.DEBUG) {
+            isEvaluated = true
+            "test"
+        }
+        adyenLog(LogLevel.DEBUG, "Tag") {
+            isEvaluated = true
+            "test"
+        }
+
+        // THEN
+        assertFalse(isEvaluated)
+    }
+
+    @Test
+    fun `when a message is logged, then it is written with the outer class name as tag`() {
+        // GIVEN
+        AdyenLogger.setLogLevel(LogLevel.VERBOSE)
         val exception = RuntimeException("Test")
 
-        adyenLog(AdyenLogLevel.INFO, exception) { "test" }
+        // WHEN
+        adyenLog(LogLevel.INFO, exception) { "test" }
 
-        val expected = LogData(AdyenLogLevel.INFO, "CO.AdyenLoggerTest", "test", exception)
-        logger.assertLogCalled(expected)
+        // THEN
+        val expected = LogData(LogLevel.INFO, "CO.AdyenLoggerTest", "test", exception)
+        assertEquals(listOf(expected), writer.logs)
     }
 
     @Test
-    fun `when logger is reset, then logger is back to default type`() {
-        AdyenLogger.setLogger(logger)
+    fun `when a message is logged with a tag, then it is written with the prefixed tag`() {
+        // GIVEN
+        AdyenLogger.setLogLevel(LogLevel.VERBOSE)
+        val exception = RuntimeException("Test")
 
-        AdyenLogger.resetLogger()
+        // WHEN
+        adyenLog(LogLevel.ERROR, "SomeTag", exception) { "test" }
 
-        assertInstanceOf(LogcatLogger::class.java, AdyenLogger.logger)
+        // THEN
+        val expected = LogData(LogLevel.ERROR, "CO.SomeTag", "test", exception)
+        assertEquals(listOf(expected), writer.logs)
     }
 
-    @Test
-    fun `when log level is set, then it is correctly propagated`() {
-        AdyenLogger.setLogger(logger)
-
-        AdyenLogger.setLogLevel(AdyenLogLevel.ASSERT)
-
-        logger.assertLogLevel(AdyenLogLevel.ASSERT)
+    private fun logAtAllLevels() {
+        LogLevel.entries
+            .filter { it != LogLevel.OFF }
+            .forEach { level -> adyenLog(level) { level.name } }
     }
 
-    @Test
-    fun `when log level is set, then log is not executed`() {
-        AdyenLogger.setLogger(logger)
-        AdyenLogger.setLogLevel(AdyenLogLevel.ERROR)
+    private class RecordingLogWriter : LogWriter {
 
-        adyenLog(AdyenLogLevel.VERBOSE) { "test" }
+        val logs = mutableListOf<LogData>()
 
-        logger.assertLogNotCalled()
-    }
-
-    @Test
-    fun `when log level is set manually, then setting the initial level has no effect`() {
-        AdyenLogger.setLogger(logger)
-        AdyenLogger.setLogLevel(AdyenLogLevel.ASSERT)
-
-        AdyenLogger.setInitialLogLevel(AdyenLogLevel.ERROR)
-
-        logger.assertLogLevel(AdyenLogLevel.ASSERT)
-    }
-
-    @Test
-    fun `when log level is not set manually, then setting the initial level has effect`() {
-        AdyenLogger.setLogger(logger)
-
-        AdyenLogger.setInitialLogLevel(AdyenLogLevel.ERROR)
-
-        logger.assertLogLevel(AdyenLogLevel.ERROR)
-    }
-
-    private class TestLogger : AdyenLogger {
-
-        private var minLogLevel: AdyenLogLevel = AdyenLogLevel.NONE
-
-        private var lastLog: LogData? = null
-
-        override fun shouldLog(level: AdyenLogLevel): Boolean {
-            return level.priority >= minLogLevel.priority
-        }
-
-        override fun setLogLevel(level: AdyenLogLevel) {
-            this.minLogLevel = level
-        }
-
-        override fun log(level: AdyenLogLevel, tag: String, message: String, throwable: Throwable?) {
-            lastLog = LogData(level, tag, message, throwable)
-        }
-
-        fun assertLogLevel(expected: AdyenLogLevel) {
-            assertEquals(expected, minLogLevel)
-        }
-
-        fun assertLogCalled(expected: LogData) {
-            assertEquals(expected, lastLog)
-        }
-
-        fun assertLogNotCalled() {
-            assertNull(lastLog)
+        override fun write(level: LogLevel, tag: String, message: String, throwable: Throwable?) {
+            logs.add(LogData(level, tag, message, throwable))
         }
     }
 
     private data class LogData(
-        val level: AdyenLogLevel,
+        val level: LogLevel,
         val tag: String,
         val message: String,
         val throwable: Throwable?,
@@ -136,15 +187,21 @@ internal class AdyenLoggerTest {
 
     companion object {
 
-        @Suppress("DEPRECATION")
         @JvmStatic
-        fun logLevelSource() = listOf(
-            arguments(Log.VERBOSE, AdyenLogLevel.VERBOSE),
-            arguments(Log.DEBUG, AdyenLogLevel.DEBUG),
-            arguments(Log.INFO, AdyenLogLevel.INFO),
-            arguments(Log.WARN, AdyenLogLevel.WARN),
-            arguments(Log.ERROR, AdyenLogLevel.ERROR),
-            arguments(Log.ASSERT, AdyenLogLevel.NONE),
+        fun writtenLevelsSource() = listOf(
+            arguments(
+                LogLevel.VERBOSE,
+                listOf(LogLevel.VERBOSE, LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT),
+            ),
+            arguments(
+                LogLevel.DEBUG,
+                listOf(LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT),
+            ),
+            arguments(LogLevel.INFO, listOf(LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT)),
+            arguments(LogLevel.WARN, listOf(LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT)),
+            arguments(LogLevel.ERROR, listOf(LogLevel.ERROR, LogLevel.ASSERT)),
+            arguments(LogLevel.ASSERT, listOf(LogLevel.ASSERT)),
+            arguments(LogLevel.OFF, emptyList<LogLevel>()),
         )
     }
 }
