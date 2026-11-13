@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.common.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.core.common.internal.data.api.PublicKeyService
@@ -70,11 +70,11 @@ object CheckoutInitializer {
             clientKey = checkoutConfiguration.clientKey,
         ).fold(
             onSuccess = { key ->
-                adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
+                adyenLog(LogLevel.DEBUG) { "Public key fetched" }
                 return key
             },
             onFailure = {
-                adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
+                adyenLog(LogLevel.ERROR) { "Unable to fetch public key" }
                 return null
             },
         )
@@ -91,11 +91,11 @@ object CheckoutInitializer {
             clientKey = checkoutConfiguration.clientKey,
         ).fold(
             onSuccess = { response ->
-                adyenLog(AdyenLogLevel.DEBUG) { "Checkout attempt ID fetched" }
+                adyenLog(LogLevel.DEBUG) { "Checkout attempt ID fetched" }
                 response.checkoutAttemptId
             },
             onFailure = {
-                adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch checkout attempt ID" }
+                adyenLog(LogLevel.ERROR) { "Unable to fetch checkout attempt ID" }
                 null
             },
         ) ?: FAILED_CHECKOUT_ATTEMPT_ID

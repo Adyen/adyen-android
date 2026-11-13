@@ -10,7 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.error.CheckoutError
@@ -33,11 +33,11 @@ internal class FailureCheckoutFlow(
     }
 
     override fun submit() {
-        adyenLog(AdyenLogLevel.WARN) { "Ignoring submit() call, flow has already failed" }
+        adyenLog(LogLevel.WARN) { "Ignoring submit() call, flow has already failed" }
     }
 
     override fun handleReturn(intent: Intent) {
-        adyenLog(AdyenLogLevel.WARN) { "Ignoring handleReturn() call, flow has already failed" }
+        adyenLog(LogLevel.WARN) { "Ignoring handleReturn() call, flow has already failed" }
     }
 
     override fun requiresUserInteraction(): Boolean {

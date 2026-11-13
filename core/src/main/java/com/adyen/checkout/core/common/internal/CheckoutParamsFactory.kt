@@ -11,7 +11,7 @@ package com.adyen.checkout.core.common.internal
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -71,7 +71,7 @@ class CheckoutParamsFactory @VisibleForTesting internal constructor(
         val shopperLocaleString = sessionSetupResponse.shopperLocale ?: return null
         return LocaleUtil.fromLanguageTagOrNull(shopperLocaleString) ?: run {
             // if we cannot parse the locale coming from the API we should not fail the payment
-            adyenLog(AdyenLogLevel.ERROR) { "Failed to parse sessions locale $shopperLocaleString" }
+            adyenLog(LogLevel.ERROR) { "Failed to parse sessions locale $shopperLocaleString" }
             null
         }
     }

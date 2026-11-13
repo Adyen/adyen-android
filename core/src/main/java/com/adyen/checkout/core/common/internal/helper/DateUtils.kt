@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -60,7 +60,7 @@ object DateUtils {
         return try {
             formatter.parse(date)
         } catch (_: ParseException) {
-            adyenLog(AdyenLogLevel.VERBOSE) {
+            adyenLog(LogLevel.VERBOSE) {
                 "Provided date $date does not match the given format ${formatter.toPattern()}"
             }
             null

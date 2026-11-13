@@ -17,7 +17,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.dropin.DropInResult
@@ -41,9 +41,9 @@ class DropInActivity : ComponentActivity() {
         val parsedInput = DropInResultContract.Input.from(intent)
         if (parsedInput == null) {
             if (intent.action == Intent.ACTION_VIEW) {
-                adyenLog(AdyenLogLevel.ERROR) { "Received a redirect return, but Drop-in is not running. Ignoring it." }
+                adyenLog(LogLevel.ERROR) { "Received a redirect return, but Drop-in is not running. Ignoring it." }
             } else {
-                adyenLog(AdyenLogLevel.ERROR) { "Input is null. Closing drop-in." }
+                adyenLog(LogLevel.ERROR) { "Input is null. Closing drop-in." }
                 // TODO - Return DropInResult.Failed and close drop-in
             }
             finish()
@@ -75,14 +75,14 @@ class DropInActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (!::input.isInitialized) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Ignoring new intent, Drop-in closed without input" }
+            adyenLog(LogLevel.DEBUG) { "Ignoring new intent, Drop-in closed without input" }
             return
         }
         viewModel.handleReturn(intent)
     }
 
     private fun sendResult(dropInResult: DropInResult) {
-        adyenLog(AdyenLogLevel.DEBUG) { "sendResult: $dropInResult" }
+        adyenLog(LogLevel.DEBUG) { "sendResult: $dropInResult" }
         val resultIntent = Intent().putExtra(
             DropInResultContract.EXTRA_RESULT,
             DropInResultContract.Result(dropInResult),
@@ -92,7 +92,7 @@ class DropInActivity : ComponentActivity() {
     }
 
     private fun terminate() {
-        adyenLog(AdyenLogLevel.DEBUG) { "terminate" }
+        adyenLog(LogLevel.DEBUG) { "terminate" }
         viewModel.stopDropInService(this)
         finish()
     }

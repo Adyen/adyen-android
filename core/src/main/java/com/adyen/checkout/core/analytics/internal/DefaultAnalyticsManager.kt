@@ -10,7 +10,7 @@ package com.adyen.checkout.core.analytics.internal
 
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.data.AnalyticsRepository
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
@@ -43,7 +43,7 @@ internal class DefaultAnalyticsManager(
                     startTimer()
                 },
                 onFailure = {
-                    adyenLog(AdyenLogLevel.WARN, it) { "Failed analytics setup." }
+                    adyenLog(LogLevel.WARN, it) { "Failed analytics setup." }
                     startTimer()
                 },
             )
@@ -52,7 +52,7 @@ internal class DefaultAnalyticsManager(
 
     override fun trackEvent(event: AnalyticsEvent) {
         if (!canTrackEvents()) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
+            adyenLog(LogLevel.DEBUG) { "Not allowed to track events, ignoring." }
             return
         }
         coroutineScope.launch(coroutineDispatcher) {
@@ -66,7 +66,7 @@ internal class DefaultAnalyticsManager(
             }.fold(
                 onSuccess = { /* Not necessary */ },
                 onFailure = { throwable ->
-                    adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" }
+                    adyenLog(LogLevel.WARN, throwable) { "Storing event failed" }
                 },
             )
         }
@@ -92,7 +92,7 @@ internal class DefaultAnalyticsManager(
         }.fold(
             onSuccess = { /* Not necessary */ },
             onFailure = { throwable ->
-                adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" }
+                adyenLog(LogLevel.WARN, throwable) { "Failed sending analytics events" }
             },
         )
     }

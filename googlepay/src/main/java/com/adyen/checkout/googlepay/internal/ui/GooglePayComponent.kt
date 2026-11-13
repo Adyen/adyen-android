@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -134,7 +134,7 @@ internal class GooglePayComponent(
             setLoading(true)
             viewEventChannel.trySend(GooglePayViewEvent.Pay)
         } else {
-            adyenLog(AdyenLogLevel.ERROR) { "Unable to trigger submit, GooglePay is not available" }
+            adyenLog(LogLevel.ERROR) { "Unable to trigger submit, GooglePay is not available" }
         }
     }
 
@@ -144,13 +144,13 @@ internal class GooglePayComponent(
             CommonStatusCodes.SUCCESS -> handleSuccessResult(result.result)
 
             CommonStatusCodes.CANCELED -> {
-                adyenLog(AdyenLogLevel.INFO) { "GooglePay payment canceled" }
+                adyenLog(LogLevel.INFO) { "GooglePay payment canceled" }
                 setLoading(false)
             }
 
             else -> {
                 val statusMessage = result.status.statusMessage?.let { ": $it" }.orEmpty()
-                adyenLog(AdyenLogLevel.ERROR) {
+                adyenLog(LogLevel.ERROR) {
                     "GooglePay encountered an error$statusMessage, statusCode: $statusCode"
                 }
                 trackThirdPartyErrorEvent("Result is error$statusMessage")
@@ -161,12 +161,12 @@ internal class GooglePayComponent(
 
     private fun handleSuccessResult(paymentData: PaymentData?) {
         if (paymentData == null || GooglePayUtils.findToken(paymentData).isNullOrEmpty()) {
-            adyenLog(AdyenLogLevel.ERROR) { "GooglePay payment data is null or invalid" }
+            adyenLog(LogLevel.ERROR) { "GooglePay payment data is null or invalid" }
             trackThirdPartyErrorEvent("Result is success, but data is missing or invalid")
             emitError(GenericError("GooglePay encountered an unexpected error"))
             return
         }
-        adyenLog(AdyenLogLevel.INFO) { "GooglePay payment result successful" }
+        adyenLog(LogLevel.INFO) { "GooglePay payment result successful" }
 
         analyticsManager.trackEvent(GenericEvents.submit(paymentMethodType))
 

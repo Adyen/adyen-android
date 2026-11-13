@@ -14,7 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
@@ -34,10 +34,10 @@ fun RedirectEventEffect(
             when (event) {
                 is RedirectViewEvent.Redirect -> {
                     try {
-                        adyenLog(AdyenLogLevel.DEBUG) { "Attempting to launch redirect." }
+                        adyenLog(LogLevel.DEBUG) { "Attempting to launch redirect." }
                         redirectHandler.launchUriRedirect(context, event.url)
                     } catch (e: InternalCheckoutError) {
-                        adyenLog(AdyenLogLevel.ERROR, e) { "Redirect failed." }
+                        adyenLog(LogLevel.ERROR, e) { "Redirect failed." }
                         onError(e)
                     }
                 }

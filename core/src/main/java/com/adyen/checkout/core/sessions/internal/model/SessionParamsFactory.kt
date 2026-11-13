@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.sessions.internal.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.sessions.CheckoutSession
@@ -57,7 +57,7 @@ object SessionParamsFactory {
         if (shopperLocaleString == null) return null
         return LocaleUtil.fromLanguageTagOrNull(shopperLocaleString) ?: run {
             // if we cannot parse the locale coming from the API we should not fail the payment
-            adyenLog(AdyenLogLevel.ERROR) { "Failed to parse sessions locale $shopperLocaleString" }
+            adyenLog(LogLevel.ERROR) { "Failed to parse sessions locale $shopperLocaleString" }
             null
         }
     }

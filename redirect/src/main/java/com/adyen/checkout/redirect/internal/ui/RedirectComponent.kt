@@ -23,7 +23,7 @@ import com.adyen.checkout.core.action.internal.ui.ActionFormatter
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
@@ -113,7 +113,7 @@ constructor(
     }
 
     private fun launchAction(url: String?) {
-        adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+        adyenLog(LogLevel.DEBUG) { "makeRedirect - $url" }
         // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
         //  status when the app resumes. Currently we have no way of doing that but we can create something like
         //  PaymentComponentState for actions.
@@ -121,7 +121,7 @@ constructor(
     }
 
     override fun handleReturn(intent: Intent) {
-        adyenLog(AdyenLogLevel.DEBUG) { "redirect component handle intent" }
+        adyenLog(LogLevel.DEBUG) { "redirect component handle intent" }
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
             when {

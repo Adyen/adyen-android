@@ -12,7 +12,7 @@ import com.adyen.checkout.authentication.internal.data.model.SubmitFingerprintRe
 import com.adyen.checkout.authentication.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.data.Threeds2Action
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import org.json.JSONObject
@@ -26,7 +26,7 @@ internal class SubmitFingerprintRepository(
         clientKey: String,
         paymentData: String?
     ): Result<SubmitFingerprintResult> = runSuspendCatching {
-        adyenLog(AdyenLogLevel.DEBUG) { "Submitting fingerprint automatically" }
+        adyenLog(LogLevel.DEBUG) { "Submitting fingerprint automatically" }
 
         val request = SubmitFingerprintRequest(
             encodedFingerprint = encodedFingerprint,
@@ -37,19 +37,19 @@ internal class SubmitFingerprintRepository(
 
         when (response.type) {
             RESPONSE_TYPE_COMPLETED if response.details != null -> {
-                adyenLog(AdyenLogLevel.DEBUG) { "submitFingerprint: challenge completed" }
+                adyenLog(LogLevel.DEBUG) { "submitFingerprint: challenge completed" }
                 SubmitFingerprintResult.Completed(JSONObject(response.details))
             }
             RESPONSE_TYPE_ACTION if response.action is RedirectAction -> {
-                adyenLog(AdyenLogLevel.DEBUG) { "submitFingerprint: received new RedirectAction" }
+                adyenLog(LogLevel.DEBUG) { "submitFingerprint: received new RedirectAction" }
                 SubmitFingerprintResult.Redirect(response.action)
             }
             RESPONSE_TYPE_ACTION if response.action is Threeds2Action -> {
-                adyenLog(AdyenLogLevel.DEBUG) { "submitFingerprint: received new Threeds2Action" }
+                adyenLog(LogLevel.DEBUG) { "submitFingerprint: received new Threeds2Action" }
                 SubmitFingerprintResult.Threeds2(response.action)
             }
             else -> {
-                adyenLog(AdyenLogLevel.DEBUG) { "submitFingerprint: unexpected response $response" }
+                adyenLog(LogLevel.DEBUG) { "submitFingerprint: unexpected response $response" }
                 error("Failed to retrieve 3DS2 fingerprint result")
             }
         }

@@ -10,7 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.ActionData
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
@@ -112,9 +112,9 @@ internal class SessionComponentRequestDispatcher(
         val isSessionResultExpectedToBeMissing = resultCode == CheckoutResultCode.CANCELLED ||
             resultCode == CheckoutResultCode.ERROR
         if (sessionId.isBlank()) {
-            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionId." }
+            adyenLog(LogLevel.ERROR) { "Session completion called without a sessionId." }
         } else if (sessionResult.isBlank() && !isSessionResultExpectedToBeMissing) {
-            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionResult." }
+            adyenLog(LogLevel.ERROR) { "Session completion called without a sessionResult." }
         }
 
         val result = SessionCheckoutResult(

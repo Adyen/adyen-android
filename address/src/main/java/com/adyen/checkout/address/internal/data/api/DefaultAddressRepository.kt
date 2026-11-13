@@ -9,7 +9,7 @@
 package com.adyen.checkout.address.internal.data.api
 
 import com.adyen.checkout.address.internal.data.model.AddressItem
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.error.internal.HttpError
@@ -29,7 +29,7 @@ internal class DefaultAddressRepository(
         cachedCountries?.let { return Result.success(it) }
 
         return runSuspendCatching {
-            adyenLog(AdyenLogLevel.DEBUG) { "getting country list" }
+            adyenLog(LogLevel.DEBUG) { "getting country list" }
             addressService.getCountries(shopperLocale)
         }.onSuccess { cachedCountries = it }
     }
@@ -42,7 +42,7 @@ internal class DefaultAddressRepository(
     }
 
     private suspend fun fetchStates(countryCode: String) = runSuspendCatching {
-        adyenLog(AdyenLogLevel.DEBUG) { "getting state list for $countryCode" }
+        adyenLog(LogLevel.DEBUG) { "getting state list for $countryCode" }
         try {
             addressService.getStates(shopperLocale, countryCode)
         } catch (e: HttpError) {

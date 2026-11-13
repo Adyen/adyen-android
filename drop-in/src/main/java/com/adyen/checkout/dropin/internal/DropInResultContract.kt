@@ -12,7 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import androidx.activity.result.contract.ActivityResultContract
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.dropin.DropInResult
@@ -31,7 +31,7 @@ internal class DropInResultContract : ActivityResultContract<DropInResultContrac
     override fun parseResult(resultCode: Int, intent: Intent?): DropInResult {
         @Suppress("DEPRECATION")
         return intent?.getParcelableExtra<Result>(EXTRA_RESULT)?.dropInResult ?: run {
-            adyenLog(AdyenLogLevel.ERROR) { "No result extra found" }
+            adyenLog(LogLevel.ERROR) { "No result extra found" }
             // TODO - check if it's okay to return Failed, because this state does not mean the payment failed
             DropInResult.Failed("No DropInResult available")
         }

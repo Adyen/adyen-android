@@ -8,7 +8,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.components.data.model.Amount
 import java.math.BigDecimal
 import java.util.Currency
@@ -48,7 +48,7 @@ object AmountFormat {
             val currency = Currency.getInstance(normalizedCurrencyCode)
             currency.defaultFractionDigits.coerceAtLeast(0)
         } catch (e: IllegalArgumentException) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Could not determine fraction digits for $normalizedCurrencyCode" }
+            adyenLog(LogLevel.ERROR, e) { "Could not determine fraction digits for $normalizedCurrencyCode" }
             0
         }
     }

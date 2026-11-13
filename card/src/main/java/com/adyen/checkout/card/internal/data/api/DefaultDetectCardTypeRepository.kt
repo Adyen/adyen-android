@@ -12,7 +12,7 @@ import com.adyen.checkout.card.internal.data.model.BinLookupCacheResult
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardTypeList
 import com.adyen.checkout.card.internal.helper.DetectCardTypeBinHelper
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -28,7 +28,7 @@ internal class DefaultDetectCardTypeRepository(
         // if we remove this@DefaultDetectCardTypeRepository the tag gets resolved as SafeCollector since we're inside
         // a flow block
         // TODO fix logger to resolve the correct tag
-        this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.VERBOSE) { "detectCardTypes" }
+        this@DefaultDetectCardTypeRepository.adyenLog(LogLevel.VERBOSE) { "detectCardTypes" }
         val bin = detectCardTypeBinHelper.getCardDetectionBin(cardNumber)
 
         when (val cachedResult = binLookupCache.getResult(bin)) {
@@ -42,14 +42,14 @@ internal class DefaultDetectCardTypeRepository(
                         issuingCountryCode = cachedResult.issuingCountryCode,
                     ),
                 )
-                this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
+                this@DefaultDetectCardTypeRepository.adyenLog(LogLevel.DEBUG) {
                     "card types returned from cache: ${cachedResult.detectedCardTypes.toLogString()}"
                 }
             }
 
             is BinLookupCacheResult.Fetching -> {
                 // do nothing, a previous call/flow will emit the results when finished
-                this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
+                this@DefaultDetectCardTypeRepository.adyenLog(LogLevel.DEBUG) {
                     "request already in progress, will not emit results"
                 }
             }
@@ -65,7 +65,7 @@ internal class DefaultDetectCardTypeRepository(
                         issuingCountryCode = null,
                     ),
                 )
-                this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
+                this@DefaultDetectCardTypeRepository.adyenLog(LogLevel.DEBUG) {
                     "card types detected locally: ${localDetectedCardTypes.toLogString()}"
                 }
 
@@ -81,7 +81,7 @@ internal class DefaultDetectCardTypeRepository(
                                 issuingCountryCode = networkResult.issuingCountryCode,
                             ),
                         )
-                        this@DefaultDetectCardTypeRepository.adyenLog(AdyenLogLevel.DEBUG) {
+                        this@DefaultDetectCardTypeRepository.adyenLog(LogLevel.DEBUG) {
                             "card types fetched from network: ${networkResult.detectedCardTypes.toLogString()}"
                         }
                     }
@@ -91,7 +91,7 @@ internal class DefaultDetectCardTypeRepository(
     }
 
     private suspend fun detectCardTypesFromNetwork(bin: String): BinLookupNetworkResult? {
-        adyenLog(AdyenLogLevel.VERBOSE) { "detectCardTypesFromNetwork" }
+        adyenLog(LogLevel.VERBOSE) { "detectCardTypesFromNetwork" }
 
         // ensure we don't call bin lookup again while another call for the same bin is in progress
         binLookupCache.setFetching(bin)

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.test.R
 
@@ -55,7 +55,7 @@ internal fun NetworkImage(
         value = ImageLoaderProvider.instance.load(url).fold(
             onSuccess = { ImageLoadState.Success(it) },
             onFailure = { error ->
-                adyenLog(AdyenLogLevel.WARN) { "Failed to load image from $url: ${error.message}" }
+                adyenLog(LogLevel.WARN) { "Failed to load image from $url: ${error.message}" }
                 ImageLoadState.Error
             },
         )

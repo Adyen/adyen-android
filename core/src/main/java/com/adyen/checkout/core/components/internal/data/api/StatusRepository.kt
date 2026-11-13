@@ -10,7 +10,7 @@ package com.adyen.checkout.core.components.internal.data.api
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -89,18 +89,18 @@ class DefaultStatusRepository(
                         if (response.isFinalResult()) currentCoroutineContext().cancel()
                     },
                     onFailure = {
-                        adyenLog(AdyenLogLevel.WARN, it) { "Fetching the status failed, polling continues" }
+                        adyenLog(LogLevel.WARN, it) { "Fetching the status failed, polling continues" }
                     },
                 )
 
                 if (!updateDelay(startTime, maxPollingDuration)) {
-                    adyenLog(AdyenLogLevel.DEBUG) { "Max polling time exceeded" }
+                    adyenLog(LogLevel.DEBUG) { "Max polling time exceeded" }
                     emit(Result.failure(IllegalStateException("Max polling time exceeded.")))
                     currentCoroutineContext().cancel()
                 }
             }
             .onEach {
-                adyenLog(AdyenLogLevel.DEBUG) { "Emitting status: ${it.getOrNull()?.resultCode}" }
+                adyenLog(LogLevel.DEBUG) { "Emitting status: ${it.getOrNull()?.resultCode}" }
             }
     }
 
@@ -131,7 +131,7 @@ class DefaultStatusRepository(
     }
 
     override fun refreshStatus(paymentData: String) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "refreshStatus" }
+        adyenLog(LogLevel.VERBOSE) { "refreshStatus" }
         refreshFlow.trySend(paymentData)
     }
 

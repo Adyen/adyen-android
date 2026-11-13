@@ -30,7 +30,7 @@ import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.error.internal.GenericError
@@ -199,7 +199,7 @@ constructor(
         submitFingerprintAutomatically: Boolean,
         uiCustomization: UiCustomization,
     ) {
-        adyenLog(AdyenLogLevel.DEBUG) {
+        adyenLog(LogLevel.DEBUG) {
             "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically"
         }
 
@@ -228,7 +228,7 @@ constructor(
         }
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            adyenLog(AdyenLogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
+            adyenLog(LogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
             trackFingerprintErrorEvent(
                 errorEvent = ErrorEvent.THREEDS2_FINGERPRINT_HANDLING,
                 message = "Fingerprint handling failed because of uncaught exception",
@@ -245,7 +245,7 @@ constructor(
             // This makes sure the 3DS2 SDK doesn't re-use any state from previous transactions
             closeTransaction()
 
-            adyenLog(AdyenLogLevel.DEBUG) { "initialize 3DS2 SDK" }
+            adyenLog(LogLevel.DEBUG) { "initialize 3DS2 SDK" }
             val initializeResult =
                 threeDS2Service.initialize(
                     activity,
@@ -305,7 +305,7 @@ constructor(
         val (directoryServerId, directoryServerPublicKey, directoryServerRootCertificates, _, _) = fingerprintToken
 
         if (directoryServerId == null || directoryServerPublicKey == null || directoryServerRootCertificates == null) {
-            adyenLog(AdyenLogLevel.DEBUG) {
+            adyenLog(LogLevel.DEBUG) {
                 "directoryServerId, directoryServerPublicKey or directoryServerRootCertificates is null."
             }
             return null
@@ -341,7 +341,7 @@ constructor(
         analyticsManager.trackEvent(event)
 
         return try {
-            adyenLog(AdyenLogLevel.DEBUG) { "create transaction" }
+            adyenLog(LogLevel.DEBUG) { "create transaction" }
             val result =
                 threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)
             when (result) {
@@ -460,7 +460,7 @@ constructor(
     @OptIn(ExperimentalEncodingApi::class)
     @VisibleForTesting
     internal fun challengeShopper(activity: Activity, encodedChallengeToken: String) {
-        adyenLog(AdyenLogLevel.DEBUG) { "challengeShopper" }
+        adyenLog(LogLevel.DEBUG) { "challengeShopper" }
 
         if (currentTransaction == null) {
             trackChallengeErrorEvent(ErrorEvent.THREEDS2_TRANSACTION_MISSING)
@@ -534,7 +534,7 @@ constructor(
     private fun makeRedirect(activity: Activity, action: RedirectAction) {
         val url = action.url
         try {
-            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+            adyenLog(LogLevel.DEBUG) { "makeRedirect - $url" }
             redirectHandler.launchUriRedirect(activity, url.orEmpty())
         } catch (e: InternalCheckoutError) {
             emitError(
@@ -547,7 +547,7 @@ constructor(
     }
 
     private fun onCompleted(transactionStatus: String) {
-        adyenLog(AdyenLogLevel.DEBUG) { "challenge completed" }
+        adyenLog(LogLevel.DEBUG) { "challenge completed" }
         try {
             val details = makeDetails(transactionStatus)
             emitDetails(details)
@@ -567,7 +567,7 @@ constructor(
 
     @Suppress("SwallowedException")
     private fun onCancelled(result: ChallengeResult.Cancelled) {
-        adyenLog(AdyenLogLevel.DEBUG) { "challenge cancelled" }
+        adyenLog(LogLevel.DEBUG) { "challenge cancelled" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
@@ -586,7 +586,7 @@ constructor(
     }
 
     private fun onTimeout(result: ChallengeResult.Timeout) {
-        adyenLog(AdyenLogLevel.DEBUG) { "challenge timed out" }
+        adyenLog(LogLevel.DEBUG) { "challenge timed out" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
@@ -605,7 +605,7 @@ constructor(
     }
 
     private fun onError(result: ChallengeResult.Error) {
-        adyenLog(AdyenLogLevel.DEBUG) { "challenge error" }
+        adyenLog(LogLevel.DEBUG) { "challenge error" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)

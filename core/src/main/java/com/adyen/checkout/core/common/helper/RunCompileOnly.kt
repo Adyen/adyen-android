@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.common.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -17,9 +17,9 @@ inline fun <R> runCompileOnly(block: () -> R): CompileOnlyResult<R> {
     try {
         return CompileOnlyResult.Available(block())
     } catch (e: ClassNotFoundException) {
-        adyenLog(AdyenLogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
+        adyenLog(LogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
     } catch (e: NoClassDefFoundError) {
-        adyenLog(AdyenLogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
+        adyenLog(LogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
     }
 
     return CompileOnlyResult.Unavailable
