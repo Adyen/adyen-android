@@ -49,6 +49,8 @@ public final class com/adyen/checkout/cse/EncryptionException : com/adyen/checko
 
 public final class com/adyen/checkout/cse/Encryptor {
 	public static final field INSTANCE Lcom/adyen/checkout/cse/Encryptor;
+	public final fun encrypt-0E7RQCE (Lcom/adyen/checkout/cse/Encryptor$Field;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+	public final fun encrypt-gIAlu-s (Lcom/adyen/checkout/cse/Card;Ljava/lang/String;)Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/cse/Encryptor$Error : java/lang/RuntimeException {
