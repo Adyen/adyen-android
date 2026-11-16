@@ -17,7 +17,7 @@ internal class DefaultCheckoutEncryptor(
 ) : CheckoutEncryptor {
 
     @Suppress("ComplexCondition")
-    override fun encrypt(card: Card, publicKey: String): Result<EncryptedCard> = runCatching {
+    override fun encrypt(card: Card, publicKey: String): Result<EncryptedCard> = runEncryptionCatching {
         if (card.number == null && card.expiryMonth == null && card.expiryYear == null && card.securityCode == null) {
             throw Encryptor.Error(Encryptor.Error.Code.INVALID_CARD, "Cannot encrypt a card without any fields set.")
         }
@@ -37,7 +37,7 @@ internal class DefaultCheckoutEncryptor(
         field: Encryptor.Field,
         value: String,
         publicKey: String
-    ): Result<String> = runCatching {
+    ): Result<String> = runEncryptionCatching {
         ensurePublicKeyValid(publicKey)
         encryptValue(field, value, publicKey)
     }
@@ -51,12 +51,18 @@ internal class DefaultCheckoutEncryptor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun encryptValue(field: Encryptor.Field, value: String, publicKey: String): String {
+        return genericEncryptor.encryptField(field.key, value, publicKey)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private inline fun <T> runEncryptionCatching(block: () -> T): Result<T> {
         return try {
-            genericEncryptor.encryptField(field.key, value, publicKey)
-        } catch (e: Exception) {
-            throw Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "Encryption failed.", e)
+            Result.success(block())
+        } catch (e: Encryptor.Error) {
+            Result.failure(e)
+        } catch (e: Throwable) {
+            Result.failure(Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "Encryption failed.", e))
         }
     }
 }

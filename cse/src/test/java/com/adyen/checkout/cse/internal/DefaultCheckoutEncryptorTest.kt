@@ -153,7 +153,7 @@ internal class DefaultCheckoutEncryptorTest(
 
         @ParameterizedTest
         @MethodSource("com.adyen.checkout.cse.internal.DefaultCheckoutEncryptorTest#encryptionExceptionSource")
-        fun `when encryption throws then failure wrapping the cause is returned`(exception: Exception) {
+        fun `when encryption throws then failure wrapping the cause is returned`(exception: Throwable) {
             // GIVEN
             givenEncryptionThrows(exception)
 
@@ -213,7 +213,7 @@ internal class DefaultCheckoutEncryptorTest(
 
         @ParameterizedTest
         @MethodSource("com.adyen.checkout.cse.internal.DefaultCheckoutEncryptorTest#encryptionExceptionSource")
-        fun `when encryption throws then failure wrapping the cause is returned`(exception: Exception) {
+        fun `when encryption throws then failure wrapping the cause is returned`(exception: Throwable) {
             // GIVEN
             givenEncryptionThrows(exception)
 
@@ -240,7 +240,7 @@ internal class DefaultCheckoutEncryptorTest(
         }
     }
 
-    private fun givenEncryptionThrows(exception: Exception) {
+    private fun givenEncryptionThrows(exception: Throwable) {
         whenever(dateGenerator.getCurrentDate()) doReturn DATE
         whenever(jsonWebEncryptor.encrypt(any(), any())).thenThrow(exception)
     }
@@ -303,6 +303,7 @@ internal class DefaultCheckoutEncryptorTest(
         fun encryptionExceptionSource() = listOf(
             arguments(EncryptionException("Problem reading public key", null)),
             arguments(IllegalStateException("Unexpected")),
+            arguments(OutOfMemoryError("Unexpected")),
         )
 
         @JvmStatic
