@@ -14,8 +14,8 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.dropin.DropInRedirectHandlingActivity
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
 
@@ -32,10 +32,10 @@ internal class RedirectConfigurationChecker(context: Context) {
     fun check() {
         // Only a diagnostic, so a system call failing here must not break the checkout
         val problems = runCatching { findProblems() }
-            .onFailure { adyenLog(AdyenLogLevel.WARN, it) { "Could not check the redirect configuration" } }
+            .onFailure { adyenLog(CheckoutLogLevel.WARN, it) { "Could not check the redirect configuration" } }
             .getOrDefault(emptyList())
         problems.forEach { problem ->
-            adyenLog(AdyenLogLevel.ERROR) { "${problem.message()} See $DOCS for how to fix this." }
+            adyenLog(CheckoutLogLevel.ERROR) { "${problem.message()} See $DOCS for how to fix this." }
         }
     }
 

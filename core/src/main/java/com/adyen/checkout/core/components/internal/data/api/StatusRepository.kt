@@ -10,11 +10,11 @@ package com.adyen.checkout.core.components.internal.data.api
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusRequest
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
@@ -89,18 +89,18 @@ class DefaultStatusRepository(
                         if (response.isFinalResult()) currentCoroutineContext().cancel()
                     },
                     onFailure = {
-                        adyenLog(AdyenLogLevel.WARN, it) { "Fetching the status failed, polling continues" }
+                        adyenLog(CheckoutLogLevel.WARN, it) { "Fetching the status failed, polling continues" }
                     },
                 )
 
                 if (!updateDelay(startTime, maxPollingDuration)) {
-                    adyenLog(AdyenLogLevel.DEBUG) { "Max polling time exceeded" }
+                    adyenLog(CheckoutLogLevel.DEBUG) { "Max polling time exceeded" }
                     emit(Result.failure(IllegalStateException("Max polling time exceeded.")))
                     currentCoroutineContext().cancel()
                 }
             }
             .onEach {
-                adyenLog(AdyenLogLevel.DEBUG) { "Emitting status: ${it.getOrNull()?.resultCode}" }
+                adyenLog(CheckoutLogLevel.DEBUG) { "Emitting status: ${it.getOrNull()?.resultCode}" }
             }
     }
 
@@ -131,7 +131,7 @@ class DefaultStatusRepository(
     }
 
     override fun refreshStatus(paymentData: String) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "refreshStatus" }
+        adyenLog(CheckoutLogLevel.VERBOSE) { "refreshStatus" }
         refreshFlow.trySend(paymentData)
     }
 

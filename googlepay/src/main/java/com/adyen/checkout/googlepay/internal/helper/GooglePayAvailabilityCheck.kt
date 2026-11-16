@@ -9,8 +9,8 @@
 package com.adyen.checkout.googlepay.internal.helper
 
 import android.content.Context
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -25,7 +25,7 @@ internal class GooglePayAvailabilityCheck(
         val playServicesAvailable = GoogleApiAvailability.getInstance()
             .isGooglePlayServicesAvailable(applicationContext) == ConnectionResult.SUCCESS
         if (!playServicesAvailable) {
-            adyenLog(AdyenLogLevel.ERROR) { "GooglePay is not available, Google Play Services are missing." }
+            adyenLog(CheckoutLogLevel.ERROR) { "GooglePay is not available, Google Play Services are missing." }
             return false
         }
 
@@ -35,7 +35,7 @@ internal class GooglePayAvailabilityCheck(
         return if (task.isSuccessful) {
             task.result == true
         } else {
-            adyenLog(AdyenLogLevel.ERROR, task.exception) { "GooglePay isReadyToPay task failed." }
+            adyenLog(CheckoutLogLevel.ERROR, task.exception) { "GooglePay isReadyToPay task failed." }
             false
         }
     }

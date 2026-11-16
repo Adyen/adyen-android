@@ -10,8 +10,8 @@ package com.adyen.checkout.core.components.internal.data.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.internal.data.model.sdkData.Analytics
 import com.adyen.checkout.core.components.internal.data.model.sdkData.Authentication
 import com.adyen.checkout.core.components.internal.data.model.sdkData.DirectSdkDataCreation
@@ -42,7 +42,7 @@ class DefaultSdkDataProvider(
             val jsonObject = sdkData.serialize()
             return Base64.encode(jsonObject.toString().toByteArray(Charsets.UTF_8))
         } catch (e: JSONException) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Unable to serialize SdkData" }
+            adyenLog(CheckoutLogLevel.ERROR, e) { "Unable to serialize SdkData" }
             return null
         }
     }

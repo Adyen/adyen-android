@@ -17,8 +17,8 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodManagementScreen
 import com.adyen.checkout.dropin.internal.manage.StoredPaymentMethodManagementViewModel
 
@@ -168,7 +168,7 @@ private fun actionNavEntry(
                     ?.takeIf { it.paymentFlowType == key.paymentFlowType }
 
                 if (instantPaymentMethod == null) {
-                    adyenLog(AdyenLogLevel.DEBUG, "actionNavEntry") {
+                    adyenLog(CheckoutLogLevel.DEBUG, "actionNavEntry") {
                         "No instant payment method for ${key.paymentFlowType}, the action cannot be displayed."
                     }
                 } else {

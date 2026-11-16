@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.core.common.internal.data.api
 
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.components.CheckoutLogLevel
 
 internal class DefaultPublicKeyRepository(
     private val publicKeyService: PublicKeyService,
@@ -21,7 +21,7 @@ internal class DefaultPublicKeyRepository(
         environment: Environment,
         clientKey: String
     ): Result<String> = runSuspendCatching {
-        adyenLog(AdyenLogLevel.DEBUG) { "fetching publicKey from API" }
+        adyenLog(CheckoutLogLevel.DEBUG) { "fetching publicKey from API" }
 
         publicKeyService.getPublicKey(clientKey).publicKey
     }

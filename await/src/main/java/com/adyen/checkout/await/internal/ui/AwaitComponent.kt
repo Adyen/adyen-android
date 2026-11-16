@@ -19,9 +19,9 @@ import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ui.ActionFormatter
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.GenericEvents
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusRepository
 import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
@@ -99,7 +99,7 @@ internal class AwaitComponent(
     private fun makeRedirect(redirectUrl: String) {
         redirectEventChannel.trySend(RedirectViewEvent.Redirect(redirectUrl))
         try {
-            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $redirectUrl" }
+            adyenLog(CheckoutLogLevel.DEBUG) { "makeRedirect - $redirectUrl" }
             val paymentData = paymentDataRepository.paymentData
                 ?: throw GenericError("Payment data should not be null")
             startStatusPolling(paymentData)
@@ -111,7 +111,7 @@ internal class AwaitComponent(
     private fun initState(action: AwaitAction) {
         val paymentData = action.paymentData
         if (paymentData == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
+            adyenLog(CheckoutLogLevel.ERROR) { "Payment data is null" }
             // TODO - Throw exception?
             return
         }
@@ -133,13 +133,13 @@ internal class AwaitComponent(
     private fun onStatus(result: Result<StatusResponse>) {
         result.fold(
             onSuccess = { response ->
-                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
+                adyenLog(CheckoutLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
                 if (response.isFinalResult()) {
                     onPollingSuccessful(response)
                 }
             },
             onFailure = {
-                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
+                adyenLog(CheckoutLogLevel.ERROR, it) { "Error while polling status" }
                 // TODO - Throw exception?
             },
         )

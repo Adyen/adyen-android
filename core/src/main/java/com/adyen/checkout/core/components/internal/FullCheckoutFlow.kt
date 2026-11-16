@@ -10,9 +10,9 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
 import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.error.CheckoutError
@@ -42,7 +42,7 @@ internal class FullCheckoutFlow(
                 when (event) {
                     is PaymentComponentEvent.Submit -> {
                         if (!canSubmit.compareAndSet(true, false)) {
-                            adyenLog(AdyenLogLevel.WARN) {
+                            adyenLog(CheckoutLogLevel.WARN) {
                                 "Component was already submitted, ignoring subsequent submit request"
                             }
                             return@onEach
