@@ -10,4 +10,5 @@ package com.adyen.checkout.core.common
 
 import com.adyen.checkout.core.components.CheckoutLogLevel
 
+// TODO - Temporary, remove once all call sites use CheckoutLogLevel (COSDK-1706).
 typealias AdyenLogLevel = CheckoutLogLevel
