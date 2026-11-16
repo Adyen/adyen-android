@@ -2,7 +2,7 @@
 
 This guide covers the v6 checkout entry points and the shared concepts used by the Android v6 alpha documentation set.
 
-For card-specific configuration and flow guides, see [card.md](card.md), [card-session-flow.md](card-session-flow.md), and [card-advanced-flow.md](card-advanced-flow.md). For Google Pay, see [google-pay.md](google-pay.md). For Compose theme customization, see [theme.md](theme.md). For migration notes, including Google Pay migration notes, see [../../MIGRATION.md](../../MIGRATION.md).
+For card-specific configuration and flow guides, see [card.md](card.md), [card-session-flow.md](card-session-flow.md), and [card-advanced-flow.md](card-advanced-flow.md). For Google Pay, see [google-pay.md](google-pay.md). For Compose theme customization, see [theme.md](theme.md). For returning to your app after a redirect, see [redirects.md](redirects.md). For migration notes, including Google Pay migration notes, see [../../MIGRATION.md](../../MIGRATION.md).
 
 ## Alpha status
 
@@ -218,4 +218,5 @@ Use `shopperLocale` when you want the checkout flow to follow a specific shopper
 - [Card component: advanced flow](card-advanced-flow.md)
 - [Google Pay component](google-pay.md)
 - [Checkout theme](theme.md)
+- [Redirects](redirects.md)
 - [Migration notes](../../MIGRATION.md)
