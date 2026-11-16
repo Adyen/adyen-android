@@ -11,7 +11,7 @@ package com.adyen.checkout.core.common.internal.helper
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
-import com.adyen.checkout.core.common.AdyenLogger.LogLevel
+import com.adyen.checkout.core.components.Checkout.LogLevel
 
 internal class LogcatLogger : LogWriter {
 

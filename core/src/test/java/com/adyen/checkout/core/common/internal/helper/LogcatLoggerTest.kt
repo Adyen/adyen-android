@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import android.util.Log
-import com.adyen.checkout.core.common.AdyenLogger.LogLevel
+import com.adyen.checkout.core.components.Checkout.LogLevel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.common.internal.helper
 
-import com.adyen.checkout.core.common.AdyenLogger
-import com.adyen.checkout.core.common.AdyenLogger.LogLevel
+import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.Checkout.LogLevel
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -20,7 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 
-internal class AdyenLoggerTest {
+internal class AdyenLogDispatcherTest {
 
     private lateinit var originalWriter: LogWriter
     private lateinit var originalLevel: LogLevel
@@ -77,7 +77,7 @@ internal class AdyenLoggerTest {
         expectedLevels: List<LogLevel>,
     ) {
         // GIVEN
-        AdyenLogger.setLogLevel(level)
+        Checkout.setLogLevel(level)
 
         // WHEN
         logAtAllLevels()
@@ -89,7 +89,7 @@ internal class AdyenLoggerTest {
     @Test
     fun `when a message is logged at OFF, then it is never written`() {
         // GIVEN
-        AdyenLogger.setLogLevel(LogLevel.VERBOSE)
+        Checkout.setLogLevel(LogLevel.VERBOSE)
 
         // WHEN
         adyenLog(LogLevel.OFF) { "test" }
@@ -102,7 +102,7 @@ internal class AdyenLoggerTest {
     @Test
     fun `when the writer is replaced, then the log level is kept`() {
         // GIVEN
-        AdyenLogger.setLogLevel(LogLevel.WARN)
+        Checkout.setLogLevel(LogLevel.WARN)
         val newWriter = RecordingLogWriter()
 
         // WHEN
@@ -118,7 +118,7 @@ internal class AdyenLoggerTest {
     @Test
     fun `when a message is filtered out, then its message is not built`() {
         // GIVEN
-        AdyenLogger.setLogLevel(LogLevel.ERROR)
+        Checkout.setLogLevel(LogLevel.ERROR)
         var isEvaluated = false
 
         // WHEN
@@ -138,21 +138,21 @@ internal class AdyenLoggerTest {
     @Test
     fun `when a message is logged, then it is written with the outer class name as tag`() {
         // GIVEN
-        AdyenLogger.setLogLevel(LogLevel.VERBOSE)
+        Checkout.setLogLevel(LogLevel.VERBOSE)
         val exception = RuntimeException("Test")
 
         // WHEN
         adyenLog(LogLevel.INFO, exception) { "test" }
 
         // THEN
-        val expected = LogData(LogLevel.INFO, "CO.AdyenLoggerTest", "test", exception)
+        val expected = LogData(LogLevel.INFO, "CO.AdyenLogDispatcherTest", "test", exception)
         assertEquals(listOf(expected), writer.logs)
     }
 
     @Test
     fun `when a message is logged with a tag, then it is written with the prefixed tag`() {
         // GIVEN
-        AdyenLogger.setLogLevel(LogLevel.VERBOSE)
+        Checkout.setLogLevel(LogLevel.VERBOSE)
         val exception = RuntimeException("Test")
 
         // WHEN

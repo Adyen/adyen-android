@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.core.common
 
-import com.adyen.checkout.core.common.AdyenLogger.LogLevel
 import com.adyen.checkout.core.common.internal.helper.AdyenLogDispatcher
 import com.adyen.checkout.core.common.internal.helper.LogWriter
+import com.adyen.checkout.core.components.Checkout.LogLevel
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext

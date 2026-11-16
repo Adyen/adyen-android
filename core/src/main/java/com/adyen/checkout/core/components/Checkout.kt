@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
+import com.adyen.checkout.core.common.internal.helper.AdyenLogDispatcher
 import com.adyen.checkout.core.components.Checkout.setup
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
@@ -21,7 +22,7 @@ import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.sessions.SessionResponse
 
 /**
- * Entry point to set up a checkout.
+ * Entry point to set up a checkout and to configure SDK-wide settings such as logging.
  *
  * Use one of the [setup] methods to initialize the SDK for a specific integration flow and obtain a
  * [CheckoutContext] that can then be passed to a [CheckoutController].
@@ -157,6 +158,37 @@ object Checkout {
         val paymentMethod = PaymentMethodResolver.resolve(CheckoutTarget.PaymentMethod(type), context) ?: return false
         val params = CheckoutParamsFactory().create(context)
         return PaymentMethodProvider.isAvailable(paymentMethod, params)
+    }
+
+    /**
+     * Sets the minimum [LogLevel] to be logged. Messages below this level are ignored.
+     *
+     * The default is [LogLevel.OFF], so nothing is logged unless a level is set.
+     *
+     * [LogLevel.DEBUG] and [LogLevel.VERBOSE] can include sensitive data: [LogLevel.DEBUG] logs redirect URLs and
+     * redirect results, and [LogLevel.VERBOSE] also logs request and response bodies and response headers. Only use
+     * these levels during development.
+     *
+     * @param level The minimum level to be logged.
+     */
+    @JvmStatic
+    fun setLogLevel(level: LogLevel) {
+        AdyenLogDispatcher.logLevel = level
+    }
+
+    /**
+     * The severity levels of the SDK logs, ordered from most to least verbose. Used with [setLogLevel].
+     *
+     * [OFF] disables logging entirely.
+     */
+    enum class LogLevel {
+        VERBOSE,
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR,
+        ASSERT,
+        OFF,
     }
 
     /**
