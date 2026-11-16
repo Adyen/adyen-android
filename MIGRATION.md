@@ -201,7 +201,7 @@ import com.adyen.checkout.core.components.CheckoutLogLevel
 Checkout.setLogLevel(CheckoutLogLevel.VERBOSE)
 ```
 
-- `AdyenLogger.setLogLevel(...)` moves to `Checkout.setLogLevel(...)`, and `AdyenLogLevel` becomes `CheckoutLogLevel`. Both are in `com.adyen.checkout.core.components`.
+- `AdyenLogger.setLogLevel(...)` moves to `Checkout.setLogLevel(...)`, and `AdyenLogLevel` becomes `CheckoutLogLevel`. `Checkout` and `CheckoutLogLevel` are both in `com.adyen.checkout.core.components`.
 - `AdyenLogLevel.NONE` becomes `CheckoutLogLevel.OFF`.
 - The deprecated `AdyenLogger.setLogLevel(Int)`, which took `android.util.Log` priorities, was removed. Use `CheckoutLogLevel` instead.
 - Logging is off by default. In v5, Drop-in enabled `DEBUG` logging in debuggable apps unless you had set a level yourself. In v6, call `Checkout.setLogLevel(...)` to enable logging.
