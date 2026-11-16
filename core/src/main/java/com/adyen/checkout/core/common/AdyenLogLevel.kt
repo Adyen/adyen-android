@@ -8,6 +8,6 @@
 
 package com.adyen.checkout.core.common
 
-import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.CheckoutLogLevel
 
-typealias AdyenLogLevel = Checkout.LogLevel
+typealias AdyenLogLevel = CheckoutLogLevel

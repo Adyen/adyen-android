@@ -9,11 +9,11 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.Checkout.LogLevel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 inline fun Any.adyenLog(
-    level: LogLevel,
+    level: CheckoutLogLevel,
     throwable: Throwable? = null,
     log: () -> String,
 ) {
@@ -38,7 +38,7 @@ fun adyenLogTag(source: Any): String {
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 inline fun adyenLog(
-    level: LogLevel,
+    level: CheckoutLogLevel,
     tag: String,
     throwable: Throwable? = null,
     log: () -> String,

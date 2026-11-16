@@ -11,11 +11,11 @@ package com.adyen.checkout.core.common.internal.helper
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
-import com.adyen.checkout.core.components.Checkout.LogLevel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 
 internal class LogcatLogger : LogWriter {
 
-    override fun write(level: LogLevel, tag: String, message: String, throwable: Throwable?) {
+    override fun write(level: CheckoutLogLevel, tag: String, message: String, throwable: Throwable?) {
         val priority = level.toLogcatPriority() ?: return
 
         // Before API 26 tags have a max length
@@ -74,12 +74,12 @@ internal class LogcatLogger : LogWriter {
     }
 }
 
-internal fun LogLevel.toLogcatPriority(): Int? = when (this) {
-    LogLevel.VERBOSE -> Log.VERBOSE
-    LogLevel.DEBUG -> Log.DEBUG
-    LogLevel.INFO -> Log.INFO
-    LogLevel.WARN -> Log.WARN
-    LogLevel.ERROR -> Log.ERROR
-    LogLevel.ASSERT -> Log.ASSERT
-    LogLevel.OFF -> null
+internal fun CheckoutLogLevel.toLogcatPriority(): Int? = when (this) {
+    CheckoutLogLevel.VERBOSE -> Log.VERBOSE
+    CheckoutLogLevel.DEBUG -> Log.DEBUG
+    CheckoutLogLevel.INFO -> Log.INFO
+    CheckoutLogLevel.WARN -> Log.WARN
+    CheckoutLogLevel.ERROR -> Log.ERROR
+    CheckoutLogLevel.ASSERT -> Log.ASSERT
+    CheckoutLogLevel.OFF -> null
 }

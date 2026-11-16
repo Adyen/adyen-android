@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import com.adyen.checkout.core.components.Checkout
-import com.adyen.checkout.core.components.Checkout.LogLevel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.MethodSource
 internal class AdyenLogDispatcherTest {
 
     private lateinit var originalWriter: LogWriter
-    private lateinit var originalLevel: LogLevel
+    private lateinit var originalLevel: CheckoutLogLevel
     private lateinit var writer: RecordingLogWriter
 
     @BeforeEach
@@ -46,7 +46,7 @@ internal class AdyenLogDispatcherTest {
         logAtAllLevels()
 
         // THEN
-        assertEquals(LogLevel.OFF, AdyenLogDispatcher.logLevel)
+        assertEquals(CheckoutLogLevel.OFF, AdyenLogDispatcher.logLevel)
         assertTrue(writer.logs.isEmpty())
     }
 
@@ -54,17 +54,17 @@ internal class AdyenLogDispatcherTest {
     fun `when log levels are listed, then they are ordered from most to least verbose`() {
         // GIVEN
         val expected = listOf(
-            LogLevel.VERBOSE,
-            LogLevel.DEBUG,
-            LogLevel.INFO,
-            LogLevel.WARN,
-            LogLevel.ERROR,
-            LogLevel.ASSERT,
-            LogLevel.OFF,
+            CheckoutLogLevel.VERBOSE,
+            CheckoutLogLevel.DEBUG,
+            CheckoutLogLevel.INFO,
+            CheckoutLogLevel.WARN,
+            CheckoutLogLevel.ERROR,
+            CheckoutLogLevel.ASSERT,
+            CheckoutLogLevel.OFF,
         )
 
         // WHEN
-        val levels = LogLevel.entries
+        val levels = CheckoutLogLevel.entries
 
         // THEN
         assertEquals(expected, levels)
@@ -73,8 +73,8 @@ internal class AdyenLogDispatcherTest {
     @ParameterizedTest
     @MethodSource("writtenLevelsSource")
     fun `when log level is set, then only messages at that level and above are written`(
-        level: LogLevel,
-        expectedLevels: List<LogLevel>,
+        level: CheckoutLogLevel,
+        expectedLevels: List<CheckoutLogLevel>,
     ) {
         // GIVEN
         Checkout.setLogLevel(level)
@@ -89,11 +89,11 @@ internal class AdyenLogDispatcherTest {
     @Test
     fun `when a message is logged at OFF, then it is never written`() {
         // GIVEN
-        Checkout.setLogLevel(LogLevel.VERBOSE)
+        Checkout.setLogLevel(CheckoutLogLevel.VERBOSE)
 
         // WHEN
-        adyenLog(LogLevel.OFF) { "test" }
-        adyenLog(LogLevel.OFF, "Tag") { "test" }
+        adyenLog(CheckoutLogLevel.OFF) { "test" }
+        adyenLog(CheckoutLogLevel.OFF, "Tag") { "test" }
 
         // THEN
         assertTrue(writer.logs.isEmpty())
@@ -102,31 +102,31 @@ internal class AdyenLogDispatcherTest {
     @Test
     fun `when the writer is replaced, then the log level is kept`() {
         // GIVEN
-        Checkout.setLogLevel(LogLevel.WARN)
+        Checkout.setLogLevel(CheckoutLogLevel.WARN)
         val newWriter = RecordingLogWriter()
 
         // WHEN
         AdyenLogDispatcher.writer = newWriter
-        adyenLog(LogLevel.INFO) { "info" }
-        adyenLog(LogLevel.WARN) { "warn" }
+        adyenLog(CheckoutLogLevel.INFO) { "info" }
+        adyenLog(CheckoutLogLevel.WARN) { "warn" }
 
         // THEN
-        assertEquals(LogLevel.WARN, AdyenLogDispatcher.logLevel)
-        assertEquals(listOf(LogLevel.WARN), newWriter.logs.map { it.level })
+        assertEquals(CheckoutLogLevel.WARN, AdyenLogDispatcher.logLevel)
+        assertEquals(listOf(CheckoutLogLevel.WARN), newWriter.logs.map { it.level })
     }
 
     @Test
     fun `when a message is filtered out, then its message is not built`() {
         // GIVEN
-        Checkout.setLogLevel(LogLevel.ERROR)
+        Checkout.setLogLevel(CheckoutLogLevel.ERROR)
         var isEvaluated = false
 
         // WHEN
-        adyenLog(LogLevel.DEBUG) {
+        adyenLog(CheckoutLogLevel.DEBUG) {
             isEvaluated = true
             "test"
         }
-        adyenLog(LogLevel.DEBUG, "Tag") {
+        adyenLog(CheckoutLogLevel.DEBUG, "Tag") {
             isEvaluated = true
             "test"
         }
@@ -138,34 +138,34 @@ internal class AdyenLogDispatcherTest {
     @Test
     fun `when a message is logged, then it is written with the outer class name as tag`() {
         // GIVEN
-        Checkout.setLogLevel(LogLevel.VERBOSE)
+        Checkout.setLogLevel(CheckoutLogLevel.VERBOSE)
         val exception = RuntimeException("Test")
 
         // WHEN
-        adyenLog(LogLevel.INFO, exception) { "test" }
+        adyenLog(CheckoutLogLevel.INFO, exception) { "test" }
 
         // THEN
-        val expected = LogData(LogLevel.INFO, "CO.AdyenLogDispatcherTest", "test", exception)
+        val expected = LogData(CheckoutLogLevel.INFO, "CO.AdyenLogDispatcherTest", "test", exception)
         assertEquals(listOf(expected), writer.logs)
     }
 
     @Test
     fun `when a message is logged with a tag, then it is written with the prefixed tag`() {
         // GIVEN
-        Checkout.setLogLevel(LogLevel.VERBOSE)
+        Checkout.setLogLevel(CheckoutLogLevel.VERBOSE)
         val exception = RuntimeException("Test")
 
         // WHEN
-        adyenLog(LogLevel.ERROR, "SomeTag", exception) { "test" }
+        adyenLog(CheckoutLogLevel.ERROR, "SomeTag", exception) { "test" }
 
         // THEN
-        val expected = LogData(LogLevel.ERROR, "CO.SomeTag", "test", exception)
+        val expected = LogData(CheckoutLogLevel.ERROR, "CO.SomeTag", "test", exception)
         assertEquals(listOf(expected), writer.logs)
     }
 
     private fun logAtAllLevels() {
-        LogLevel.entries
-            .filter { it != LogLevel.OFF }
+        CheckoutLogLevel.entries
+            .filter { it != CheckoutLogLevel.OFF }
             .forEach { level -> adyenLog(level) { level.name } }
     }
 
@@ -173,13 +173,13 @@ internal class AdyenLogDispatcherTest {
 
         val logs = mutableListOf<LogData>()
 
-        override fun write(level: LogLevel, tag: String, message: String, throwable: Throwable?) {
+        override fun write(level: CheckoutLogLevel, tag: String, message: String, throwable: Throwable?) {
             logs.add(LogData(level, tag, message, throwable))
         }
     }
 
     private data class LogData(
-        val level: LogLevel,
+        val level: CheckoutLogLevel,
         val tag: String,
         val message: String,
         val throwable: Throwable?,
@@ -190,18 +190,37 @@ internal class AdyenLogDispatcherTest {
         @JvmStatic
         fun writtenLevelsSource() = listOf(
             arguments(
-                LogLevel.VERBOSE,
-                listOf(LogLevel.VERBOSE, LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT),
+                CheckoutLogLevel.VERBOSE,
+                listOf(
+                    CheckoutLogLevel.VERBOSE,
+                    CheckoutLogLevel.DEBUG,
+                    CheckoutLogLevel.INFO,
+                    CheckoutLogLevel.WARN,
+                    CheckoutLogLevel.ERROR,
+                    CheckoutLogLevel.ASSERT,
+                ),
             ),
             arguments(
-                LogLevel.DEBUG,
-                listOf(LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT),
+                CheckoutLogLevel.DEBUG,
+                listOf(
+                    CheckoutLogLevel.DEBUG,
+                    CheckoutLogLevel.INFO,
+                    CheckoutLogLevel.WARN,
+                    CheckoutLogLevel.ERROR,
+                    CheckoutLogLevel.ASSERT,
+                ),
             ),
-            arguments(LogLevel.INFO, listOf(LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT)),
-            arguments(LogLevel.WARN, listOf(LogLevel.WARN, LogLevel.ERROR, LogLevel.ASSERT)),
-            arguments(LogLevel.ERROR, listOf(LogLevel.ERROR, LogLevel.ASSERT)),
-            arguments(LogLevel.ASSERT, listOf(LogLevel.ASSERT)),
-            arguments(LogLevel.OFF, emptyList<LogLevel>()),
+            arguments(
+                CheckoutLogLevel.INFO,
+                listOf(CheckoutLogLevel.INFO, CheckoutLogLevel.WARN, CheckoutLogLevel.ERROR, CheckoutLogLevel.ASSERT),
+            ),
+            arguments(
+                CheckoutLogLevel.WARN,
+                listOf(CheckoutLogLevel.WARN, CheckoutLogLevel.ERROR, CheckoutLogLevel.ASSERT),
+            ),
+            arguments(CheckoutLogLevel.ERROR, listOf(CheckoutLogLevel.ERROR, CheckoutLogLevel.ASSERT)),
+            arguments(CheckoutLogLevel.ASSERT, listOf(CheckoutLogLevel.ASSERT)),
+            arguments(CheckoutLogLevel.OFF, emptyList<CheckoutLogLevel>()),
         )
     }
 }

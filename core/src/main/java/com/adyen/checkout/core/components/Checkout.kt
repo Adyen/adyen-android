@@ -161,34 +161,19 @@ object Checkout {
     }
 
     /**
-     * Sets the minimum [LogLevel] to be logged. Messages below this level are ignored.
+     * Sets the minimum [CheckoutLogLevel] to be logged. Messages below this level are ignored.
      *
-     * The default is [LogLevel.OFF], so nothing is logged unless a level is set.
+     * The default is [CheckoutLogLevel.OFF], so nothing is logged unless a level is set.
      *
-     * [LogLevel.DEBUG] and [LogLevel.VERBOSE] can include sensitive data: [LogLevel.DEBUG] logs redirect URLs and
-     * redirect results, and [LogLevel.VERBOSE] also logs request and response bodies and response headers. Only use
-     * these levels during development.
+     * [CheckoutLogLevel.DEBUG] and [CheckoutLogLevel.VERBOSE] can include sensitive data: [CheckoutLogLevel.DEBUG] logs
+     * redirect URLs and redirect results, and [CheckoutLogLevel.VERBOSE] also logs request and response bodies and
+     * response headers. Only use these levels during development.
      *
      * @param level The minimum level to be logged.
      */
     @JvmStatic
-    fun setLogLevel(level: LogLevel) {
+    fun setLogLevel(level: CheckoutLogLevel) {
         AdyenLogDispatcher.logLevel = level
-    }
-
-    /**
-     * The severity levels of the SDK logs, ordered from most to least verbose. Used with [setLogLevel].
-     *
-     * [OFF] disables logging entirely.
-     */
-    enum class LogLevel {
-        VERBOSE,
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR,
-        ASSERT,
-        OFF,
     }
 
     /**

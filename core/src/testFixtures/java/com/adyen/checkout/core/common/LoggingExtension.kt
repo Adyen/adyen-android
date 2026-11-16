@@ -10,7 +10,7 @@ package com.adyen.checkout.core.common
 
 import com.adyen.checkout.core.common.internal.helper.AdyenLogDispatcher
 import com.adyen.checkout.core.common.internal.helper.LogWriter
-import com.adyen.checkout.core.components.Checkout.LogLevel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -20,7 +20,7 @@ class LoggingExtension : BeforeAllCallback, AfterAllCallback {
     override fun beforeAll(context: ExtensionContext) {
         context.getStore(NAMESPACE).put(KEY, LoggingState(AdyenLogDispatcher.writer, AdyenLogDispatcher.logLevel))
         AdyenLogDispatcher.writer = PrintLogger()
-        AdyenLogDispatcher.logLevel = LogLevel.VERBOSE
+        AdyenLogDispatcher.logLevel = CheckoutLogLevel.VERBOSE
     }
 
     override fun afterAll(context: ExtensionContext) {
@@ -31,7 +31,7 @@ class LoggingExtension : BeforeAllCallback, AfterAllCallback {
 
     private data class LoggingState(
         val writer: LogWriter,
-        val logLevel: LogLevel,
+        val logLevel: CheckoutLogLevel,
     )
 
     companion object {

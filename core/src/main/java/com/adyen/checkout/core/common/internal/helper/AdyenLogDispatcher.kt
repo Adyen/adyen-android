@@ -9,19 +9,19 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.Checkout.LogLevel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AdyenLogDispatcher {
 
     @Volatile
-    var logLevel: LogLevel = LogLevel.OFF
+    var logLevel: CheckoutLogLevel = CheckoutLogLevel.OFF
 
     @Volatile
     var writer: LogWriter = LogcatLogger()
 
-    fun isLoggable(level: LogLevel): Boolean = level != LogLevel.OFF && level >= logLevel
+    fun isLoggable(level: CheckoutLogLevel): Boolean = level != CheckoutLogLevel.OFF && level >= logLevel
 
-    fun write(level: LogLevel, tag: String, message: String, throwable: Throwable?) =
+    fun write(level: CheckoutLogLevel, tag: String, message: String, throwable: Throwable?) =
         writer.write(level, tag, message, throwable)
 }

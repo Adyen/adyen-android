@@ -9,9 +9,9 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.Checkout.LogLevel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun interface LogWriter {
-    fun write(level: LogLevel, tag: String, message: String, throwable: Throwable?)
+    fun write(level: CheckoutLogLevel, tag: String, message: String, throwable: Throwable?)
 }

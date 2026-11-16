@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import android.util.Log
-import com.adyen.checkout.core.components.Checkout.LogLevel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -20,7 +20,7 @@ internal class LogcatLoggerTest {
     @ParameterizedTest
     @MethodSource("logcatPrioritySource")
     fun `when a log level is mapped, then the matching Logcat priority is returned`(
-        level: LogLevel,
+        level: CheckoutLogLevel,
         expectedPriority: Int?,
     ) {
         // WHEN
@@ -34,13 +34,13 @@ internal class LogcatLoggerTest {
 
         @JvmStatic
         fun logcatPrioritySource() = listOf(
-            arguments(LogLevel.VERBOSE, Log.VERBOSE),
-            arguments(LogLevel.DEBUG, Log.DEBUG),
-            arguments(LogLevel.INFO, Log.INFO),
-            arguments(LogLevel.WARN, Log.WARN),
-            arguments(LogLevel.ERROR, Log.ERROR),
-            arguments(LogLevel.ASSERT, Log.ASSERT),
-            arguments(LogLevel.OFF, null),
+            arguments(CheckoutLogLevel.VERBOSE, Log.VERBOSE),
+            arguments(CheckoutLogLevel.DEBUG, Log.DEBUG),
+            arguments(CheckoutLogLevel.INFO, Log.INFO),
+            arguments(CheckoutLogLevel.WARN, Log.WARN),
+            arguments(CheckoutLogLevel.ERROR, Log.ERROR),
+            arguments(CheckoutLogLevel.ASSERT, Log.ASSERT),
+            arguments(CheckoutLogLevel.OFF, null),
         )
     }
 }
