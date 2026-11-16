@@ -195,15 +195,16 @@ AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)
 ##### After (v6)
 
 ```kotlin
-import com.adyen.checkout.core.common.AdyenLogger
+import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.CheckoutLogLevel
 
-AdyenLogger.setLogLevel(AdyenLogger.LogLevel.VERBOSE)
+Checkout.setLogLevel(CheckoutLogLevel.VERBOSE)
 ```
 
-- `AdyenLogger` moves to `com.adyen.checkout.core.common`, and `AdyenLogLevel` becomes the nested `AdyenLogger.LogLevel`.
-- `AdyenLogLevel.NONE` becomes `AdyenLogger.LogLevel.OFF`.
-- The deprecated `AdyenLogger.setLogLevel(Int)`, which took `android.util.Log` priorities, was removed. Use `AdyenLogger.LogLevel` instead.
-- Logging is off by default. In v5, Drop-in enabled `DEBUG` logging in debuggable apps unless you had set a level yourself. In v6, call `AdyenLogger.setLogLevel(...)` to enable logging.
+- `AdyenLogger.setLogLevel(...)` moves to `Checkout.setLogLevel(...)`, and `AdyenLogLevel` becomes `CheckoutLogLevel`. Both are in `com.adyen.checkout.core.components`.
+- `AdyenLogLevel.NONE` becomes `CheckoutLogLevel.OFF`.
+- The deprecated `AdyenLogger.setLogLevel(Int)`, which took `android.util.Log` priorities, was removed. Use `CheckoutLogLevel` instead.
+- Logging is off by default. In v5, Drop-in enabled `DEBUG` logging in debuggable apps unless you had set a level yourself. In v6, call `Checkout.setLogLevel(...)` to enable logging.
 - Custom loggers are no longer supported: `AdyenLogger.setLogger(...)`, `AdyenLogger.resetLogger()` and implementing the `AdyenLogger` interface were removed. The SDK writes its logs to Logcat, with tags that start with `CO.`.
 
 For more details, see [Logging](docs/v6/README.md#logging).

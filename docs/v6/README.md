@@ -34,7 +34,6 @@ import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.card
 import com.adyen.checkout.authentication.authentication
-import com.adyen.checkout.core.common.AdyenLogger
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -47,6 +46,7 @@ import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutAction
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.CheckoutPaymentMethod
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import java.util.Locale
@@ -217,7 +217,7 @@ Use `shopperLocale` when you want the checkout flow to follow a specific shopper
 The SDK writes its logs to Logcat, with tags that start with `CO.`. Nothing is logged by default. To enable logging, set a log level, for example, in your `Application` class:
 
 ```kotlin
-AdyenLogger.setLogLevel(AdyenLogger.LogLevel.VERBOSE)
+Checkout.setLogLevel(CheckoutLogLevel.VERBOSE)
 ```
 
 Messages at the given level and above are logged. From most to least verbose, the levels are `VERBOSE`, `DEBUG`, `INFO`, `WARN`, `ERROR` and `ASSERT`. `OFF`, the default, disables logging. The level applies to the whole app and can be set at any time, also before `Checkout.setup(...)`. It does not affect analytics.
