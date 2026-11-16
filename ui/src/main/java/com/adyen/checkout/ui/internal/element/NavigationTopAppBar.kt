@@ -13,7 +13,6 @@
 package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -41,7 +40,6 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * @param title The title of the screen. When provided, it is shown expanded below the navigation icon and collapses
  * into the bar as the content scrolls. When `null`, only the navigation icon is shown.
  * @param scrollBehavior Connects the app bar to the scrolling content, for example to collapse the title.
- * @param windowInsets The insets the app bar respects. Pass empty insets when a parent already applies them.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -51,13 +49,11 @@ fun NavigationTopAppBar(
     modifier: Modifier = Modifier,
     title: String? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
 ) {
     if (title != null) {
         MediumFlexibleTopAppBar(
             title = { Title(title) },
             navigationIcon = navigationIcon,
-            windowInsets = windowInsets,
             colors = topAppBarColors(),
             scrollBehavior = scrollBehavior,
             modifier = modifier,
@@ -66,7 +62,6 @@ fun NavigationTopAppBar(
         TopAppBar(
             title = {},
             navigationIcon = navigationIcon,
-            windowInsets = windowInsets,
             colors = topAppBarColors(),
             scrollBehavior = scrollBehavior,
             modifier = modifier,

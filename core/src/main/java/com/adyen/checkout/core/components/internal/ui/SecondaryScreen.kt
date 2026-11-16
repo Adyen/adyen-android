@@ -10,7 +10,6 @@ package com.adyen.checkout.core.components.internal.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -43,7 +42,6 @@ internal fun SecondaryScreen(
                     NavigationCloseButton(onClick = onNavigationClick)
                 }
             },
-            windowInsets = WindowInsets(0),
         )
 
         Box(
