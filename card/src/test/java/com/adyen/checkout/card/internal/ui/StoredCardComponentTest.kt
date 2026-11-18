@@ -138,12 +138,13 @@ internal class StoredCardComponentTest(
             }
 
         @Test
-        fun `and state is valid but publicKey is null then Error event is emitted`() = runTest {
+        fun `and the security code is shown but publicKey is null then Error event is emitted`() = runTest {
             // GIVEN
             val component = createComponent(
-                storedCVCVisibility = StoredCVCVisibility.HIDE,
+                storedCVCVisibility = StoredCVCVisibility.SHOW,
                 publicKey = null,
             )
+            component.onIntent(StoredCardIntent.UpdateSecurityCode("737"))
             val eventFlow = component.eventFlow.test(testScheduler)
 
             // WHEN
@@ -155,19 +156,39 @@ internal class StoredCardComponentTest(
         }
 
         @Test
-        fun `and state is valid but publicKey is null then API_PUBLIC_KEY analytics error is tracked`() = runTest {
+        fun `and the security code is shown but publicKey is null then API_PUBLIC_KEY analytics error is tracked`() =
+            runTest {
+                // GIVEN
+                val component = createComponent(
+                    storedCVCVisibility = StoredCVCVisibility.SHOW,
+                    publicKey = null,
+                )
+                component.onIntent(StoredCardIntent.UpdateSecurityCode("737"))
+
+                // WHEN
+                component.submit()
+
+                // THEN
+                val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+                analyticsManager.assertHasEventEquals(expected)
+            }
+
+        @Test
+        fun `and the security code is hidden and publicKey is null then Submit event is emitted`() = runTest {
             // GIVEN
+            whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
             val component = createComponent(
                 storedCVCVisibility = StoredCVCVisibility.HIDE,
                 publicKey = null,
             )
+            val eventFlow = component.eventFlow.test(testScheduler)
 
             // WHEN
             component.submit()
 
             // THEN
-            val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
-            analyticsManager.assertHasEventEquals(expected)
+            assertEquals(1, eventFlow.values.size)
+            assertInstanceOf(PaymentComponentEvent.Submit::class.java, eventFlow.latestValue)
         }
 
         @Test

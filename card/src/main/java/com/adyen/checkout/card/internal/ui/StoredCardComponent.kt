@@ -102,11 +102,11 @@ constructor(
 
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
-            val publicKey = publicKey ?: run {
-                onPublicKeyNotFound()
-                return
-            }
             val encryptedSecurityCode = componentState.value.securityCode.getPaymentDataValue()?.let { securityCode ->
+                val publicKey = publicKey ?: run {
+                    onPublicKeyNotFound()
+                    return
+                }
                 encryptSecurityCode(securityCode, publicKey) ?: return
             }
             val paymentComponentState = createPaymentComponentState(
