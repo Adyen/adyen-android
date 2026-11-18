@@ -133,5 +133,5 @@ enum class CheckoutLocalizationKey {
     REDIRECT_TITLE,
     REDIRECT_DESCRIPTION,
     REDIRECT_STATUS,
-    STORE_DETAILS,
+    STORE_DETAILS_LABEL,
 }

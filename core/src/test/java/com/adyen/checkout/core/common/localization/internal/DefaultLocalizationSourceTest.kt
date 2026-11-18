@@ -94,8 +94,8 @@ internal class DefaultLocalizationSourceTest(
                 R.string.checkout_card_store_payment_method,
             ),
             arguments(
-                CheckoutLocalizationKey.STORE_DETAILS,
-                R.string.checkout_store_details,
+                CheckoutLocalizationKey.STORE_DETAILS_LABEL,
+                R.string.adyen_checkout_store_details_label,
             ),
         )
 

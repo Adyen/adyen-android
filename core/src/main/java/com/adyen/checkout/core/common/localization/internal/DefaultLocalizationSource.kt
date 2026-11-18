@@ -276,7 +276,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.REDIRECT_STATUS -> R.string.checkout_redirect_status
 
             // Store details
-            CheckoutLocalizationKey.STORE_DETAILS -> R.string.checkout_store_details
+            CheckoutLocalizationKey.STORE_DETAILS_LABEL -> R.string.adyen_checkout_store_details_label
         }
 
         return context.getString(resId)
