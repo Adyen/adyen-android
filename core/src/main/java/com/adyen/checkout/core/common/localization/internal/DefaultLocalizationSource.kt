@@ -274,6 +274,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.REDIRECT_TITLE -> R.string.checkout_redirect_title
             CheckoutLocalizationKey.REDIRECT_DESCRIPTION -> R.string.checkout_redirect_description
             CheckoutLocalizationKey.REDIRECT_STATUS -> R.string.checkout_redirect_status
+
+            // Store details
+            CheckoutLocalizationKey.STORE_DETAILS -> R.string.checkout_store_details
         }
 
         return context.getString(resId)

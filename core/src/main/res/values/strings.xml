@@ -58,7 +58,7 @@
     <string name="adyen_checkout_card_security_code_error_incomplete_four_digits" translatable="false">Enter a valid security code. 4 digits on front of card</string>
     <string name="checkout_card_holder_name" translatable="false">Name on Card</string>
     <string name="checkout_card_holder_name_invalid" translatable="false">Holder name invalid</string>
-    <string name="checkout_card_store_payment_method" translatable="false">Save details for next time</string>
+    <string name="checkout_card_store_payment_method" translatable="false">Remember my card details for future payments</string>
     <string name="checkout_card_dual_brand_selector_title" translatable="false">Card Brand</string>
     <string name="checkout_card_dual_brand_selector_description" translatable="false">You can select the card brand you prefer to pay with. This is optional.</string>
     <string name="checkout_card_social_security_number" translatable="false">CPF/CNPJ</string>
@@ -126,4 +126,5 @@
     <string name="checkout_redirect_title" translatable="false">Redirection</string>
     <string name="checkout_redirect_description" translatable="false">You are guided to the next step of the process.</string>
     <string name="checkout_redirect_status" translatable="false">Processing..</string>
+    <string name="checkout_store_details" translatable="false">Remember for next time</string>
 </resources>

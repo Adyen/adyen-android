@@ -65,7 +65,39 @@ internal class DefaultLocalizationSourceTest(
         assertEquals("expected:$expectedResId", resolved)
     }
 
+    // The store details copy is split into a card-specific and a generic key, mirroring iOS; pin each one to its
+    // own resource so the card copy cannot leak into other payment methods or the other way around.
+    @ParameterizedTest
+    @MethodSource("storeDetailsKeySource")
+    fun `when a store details key is resolved then its own resource is returned`(
+        key: CheckoutLocalizationKey,
+        expectedResId: Int,
+    ) {
+        // GIVEN
+        whenever(context.getString(expectedResId)) doReturn "expected:$expectedResId"
+        val source = DefaultLocalizationSource()
+
+        // WHEN
+        val resolved = source.getString(context, key)
+
+        // THEN
+        assertEquals("expected:$expectedResId", resolved)
+    }
+
     companion object {
+
+        @JvmStatic
+        fun storeDetailsKeySource() = listOf(
+            // key, expectedResId
+            arguments(
+                CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD,
+                R.string.checkout_card_store_payment_method,
+            ),
+            arguments(
+                CheckoutLocalizationKey.STORE_DETAILS,
+                R.string.checkout_store_details,
+            ),
+        )
 
         @JvmStatic
         fun securityCodeKeySource() = listOf(
