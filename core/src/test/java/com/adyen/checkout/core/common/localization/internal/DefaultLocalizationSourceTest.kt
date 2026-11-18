@@ -90,8 +90,8 @@ internal class DefaultLocalizationSourceTest(
         fun storeDetailsKeySource() = listOf(
             // key, expectedResId
             arguments(
-                CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD,
-                R.string.checkout_card_store_payment_method,
+                CheckoutLocalizationKey.CARD_STORE_DETAILS_LABEL,
+                R.string.adyen_checkout_card_store_details_label,
             ),
             arguments(
                 CheckoutLocalizationKey.STORE_DETAILS_LABEL,
