@@ -403,8 +403,6 @@ constructor(
     private fun onEncryptionError(e: Throwable) {
         val event = GenericEvents.error(paymentMethodType, ErrorEvent.ENCRYPTION)
         analyticsManager.trackEvent(event)
-
-        // TODO - Error propagation. Change after EncryptionException extends from CheckoutError
         emitError(GenericError("Encryption error", e))
     }
 
