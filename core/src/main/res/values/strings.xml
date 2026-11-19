@@ -52,8 +52,8 @@
     <string name="adyen_checkout_card_security_code_label" translatable="false">Security code</string>
     <string name="adyen_checkout_card_security_code_hint_three_digits" translatable="false">3 digits on back of card</string>
     <string name="adyen_checkout_card_security_code_hint_four_digits" translatable="false">4 digits on front of card</string>
-    <string name="adyen_checkout_card_security_code_error_empty_three_digits" translatable="false">Enter a valid security code. 3 digits on back of card</string>
-    <string name="adyen_checkout_card_security_code_error_empty_four_digits" translatable="false">Enter a valid security code. 4 digits on front of card</string>
+    <string name="adyen_checkout_card_security_code_error_empty_three_digits" translatable="false">Enter the security code. 3 digits on back of card</string>
+    <string name="adyen_checkout_card_security_code_error_empty_four_digits" translatable="false">Enter the security code. 4 digits on front of card</string>
     <string name="adyen_checkout_card_security_code_error_incomplete_three_digits" translatable="false">Enter a valid security code. 3 digits on back of card</string>
     <string name="adyen_checkout_card_security_code_error_incomplete_four_digits" translatable="false">Enter a valid security code. 4 digits on front of card</string>
     <string name="checkout_card_holder_name" translatable="false">Name on Card</string>
