@@ -83,7 +83,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE ->
                 R.string.checkout_card_expiry_date_invalid_too_far_in_the_future
 
-            CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT -> R.string.checkout_card_expiry_date_hint
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT -> R.string.adyen_checkout_card_expiry_date_hint
             CheckoutLocalizationKey.CARD_SECURITY_CODE -> R.string.adyen_checkout_card_security_code_label
             CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_THREE_DIGITS ->
                 R.string.adyen_checkout_card_security_code_hint_three_digits

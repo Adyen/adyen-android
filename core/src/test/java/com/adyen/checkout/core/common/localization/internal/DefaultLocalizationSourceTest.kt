@@ -84,6 +84,22 @@ internal class DefaultLocalizationSourceTest(
         assertEquals("expected:$expectedResId", resolved)
     }
 
+    // The v5 card module defines its own checkout_card_expiry_date_hint, which overrides the core resource of the
+    // same name when resources are merged; the v6 hint must resolve to its own resource.
+    @Test
+    fun `when the card expiry date hint key is resolved then its own resource is returned`() {
+        // GIVEN
+        val expectedResId = R.string.adyen_checkout_card_expiry_date_hint
+        whenever(context.getString(expectedResId)) doReturn "expected:$expectedResId"
+        val source = DefaultLocalizationSource()
+
+        // WHEN
+        val resolved = source.getString(context, CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
+
+        // THEN
+        assertEquals("expected:$expectedResId", resolved)
+    }
+
     companion object {
 
         @JvmStatic
