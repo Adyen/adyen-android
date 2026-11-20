@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.cse.internal
 
-import com.adyen.checkout.cse.old.EncryptionException
+import com.adyen.checkout.cse.Encryptor
 import org.json.JSONObject
 import java.math.BigInteger
 import java.security.AlgorithmParameters
@@ -34,12 +34,12 @@ internal class JSONWebEncryptor {
     private val keyFactory: KeyFactory = try {
         KeyFactory.getInstance(RSA_ALGORITHM)
     } catch (e: NoSuchAlgorithmException) {
-        throw EncryptionException("RSA KeyFactory not found", e)
+        throw Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "RSA KeyFactory not found", e)
     }
 
     fun encrypt(publicKey: String, payload: String): String {
         if (!ValidationUtils.isPublicKeyValid(publicKey)) {
-            throw EncryptionException("Invalid public key", null)
+            throw Encryptor.Error(Encryptor.Error.Code.INVALID_PUBLIC_KEY, "Invalid public key")
         }
 
         val pubKey = generatePublicKey(publicKey)
@@ -60,7 +60,7 @@ internal class JSONWebEncryptor {
         return try {
             keyFactory.generatePublic(publicKeySpec)
         } catch (e: InvalidKeySpecException) {
-            throw EncryptionException("Problem reading public key", e)
+            throw Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "Problem reading public key", e)
         }
     }
 
@@ -77,7 +77,7 @@ internal class JSONWebEncryptor {
         return try {
             cipher.doFinal(contentKey.encoded)
         } catch (e: IllegalBlockSizeException) {
-            throw EncryptionException("The RSA key is invalid", e)
+            throw Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "The RSA key is invalid", e)
         }
     }
 
@@ -95,9 +95,17 @@ internal class JSONWebEncryptor {
         val cipher = try {
             Cipher.getInstance(RSA_OAEP_CIPHER)
         } catch (e: NoSuchAlgorithmException) {
-            throw EncryptionException("Problem instantiating $RSA_OAEP_CIPHER Algorithm", e)
+            throw Encryptor.Error(
+                Encryptor.Error.Code.ENCRYPTION_FAILED,
+                "Problem instantiating $RSA_OAEP_CIPHER Algorithm",
+                e,
+            )
         } catch (e: NoSuchPaddingException) {
-            throw EncryptionException("Problem instantiating $RSA_OAEP_CIPHER Padding", e)
+            throw Encryptor.Error(
+                Encryptor.Error.Code.ENCRYPTION_FAILED,
+                "Problem instantiating $RSA_OAEP_CIPHER Padding",
+                e,
+            )
         }
         cipher.init(Cipher.ENCRYPT_MODE, publicKey, algorithmParams)
         return cipher
@@ -140,9 +148,17 @@ internal class JSONWebEncryptor {
         val cipher = try {
             Cipher.getInstance(AES_GCM_CIPHER)
         } catch (e: NoSuchAlgorithmException) {
-            throw EncryptionException("Problem instantiating $AES_GCM_CIPHER Algorithm", e)
+            throw Encryptor.Error(
+                Encryptor.Error.Code.ENCRYPTION_FAILED,
+                "Problem instantiating $AES_GCM_CIPHER Algorithm",
+                e,
+            )
         } catch (e: NoSuchPaddingException) {
-            throw EncryptionException("Problem instantiating $AES_GCM_CIPHER Padding", e)
+            throw Encryptor.Error(
+                Encryptor.Error.Code.ENCRYPTION_FAILED,
+                "Problem instantiating $AES_GCM_CIPHER Padding",
+                e,
+            )
         }
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
         return cipher

@@ -1,16 +1,18 @@
 package com.adyen.checkout.cse.internal
 
-import com.adyen.checkout.cse.old.EncryptionException
+import com.adyen.checkout.cse.Encryptor
 import org.jose4j.jwa.AlgorithmConstraints
 import org.jose4j.jwe.JsonWebEncryption
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
+import java.security.spec.InvalidKeySpecException
 import java.security.spec.RSAPublicKeySpec
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -20,14 +22,28 @@ internal class JSONWebEncryptorTest {
     private val encryptor = JSONWebEncryptor()
 
     @Test
-    fun `when public key is incorrect, then an exception will be thrown`() {
+    fun `when public key is incorrect, then an invalid public key error will be thrown`() {
         val publicKey = "incorrect format"
         val input = "random input"
 
-        val exception = assertThrows<EncryptionException> {
+        val error = assertThrows<Encryptor.Error> {
             encryptor.encrypt(publicKey, input)
         }
-        assertEquals("Invalid public key", exception.message)
+        assertEquals(Encryptor.Error.Code.INVALID_PUBLIC_KEY, error.code)
+        assertEquals("Invalid public key", error.message)
+    }
+
+    @Test
+    fun `when public key cannot be read, then an encryption failed error will be thrown`() {
+        val publicKey = "10001|${"0".repeat(512)}"
+        val input = "random input"
+
+        val error = assertThrows<Encryptor.Error> {
+            encryptor.encrypt(publicKey, input)
+        }
+        assertEquals(Encryptor.Error.Code.ENCRYPTION_FAILED, error.code)
+        assertEquals("Problem reading public key", error.message)
+        assertInstanceOf(InvalidKeySpecException::class.java, error.cause)
     }
 
     @Test

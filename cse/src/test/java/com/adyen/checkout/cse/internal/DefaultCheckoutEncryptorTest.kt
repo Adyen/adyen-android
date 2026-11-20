@@ -11,7 +11,6 @@ package com.adyen.checkout.cse.internal
 import com.adyen.checkout.cse.Card
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.Encryptor
-import com.adyen.checkout.cse.old.EncryptionException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -164,6 +163,19 @@ internal class DefaultCheckoutEncryptorTest(
             val error = assertError(Encryptor.Error.Code.ENCRYPTION_FAILED, "Encryption failed.", result)
             assertSame(exception, error.cause)
         }
+
+        @Test
+        fun `when encryption throws an encryption error then failure with the same error is returned`() {
+            // GIVEN
+            val error = Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "Problem reading public key")
+            givenEncryptionThrows(error)
+
+            // WHEN
+            val result = checkoutEncryptor.encrypt(Card(securityCode = "737"), PUBLIC_KEY)
+
+            // THEN
+            assertSame(error, result.exceptionOrNull())
+        }
     }
 
     @Nested
@@ -223,6 +235,19 @@ internal class DefaultCheckoutEncryptorTest(
             // THEN
             val error = assertError(Encryptor.Error.Code.ENCRYPTION_FAILED, "Encryption failed.", result)
             assertSame(exception, error.cause)
+        }
+
+        @Test
+        fun `when encryption throws an encryption error then failure with the same error is returned`() {
+            // GIVEN
+            val error = Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "Problem reading public key")
+            givenEncryptionThrows(error)
+
+            // WHEN
+            val result = checkoutEncryptor.encrypt(Encryptor.Field.Bin, "411111", PUBLIC_KEY)
+
+            // THEN
+            assertSame(error, result.exceptionOrNull())
         }
     }
 
@@ -301,7 +326,6 @@ internal class DefaultCheckoutEncryptorTest(
 
         @JvmStatic
         fun encryptionExceptionSource() = listOf(
-            arguments(EncryptionException("Problem reading public key", null)),
             arguments(IllegalStateException("Unexpected")),
             arguments(OutOfMemoryError("Unexpected")),
         )
