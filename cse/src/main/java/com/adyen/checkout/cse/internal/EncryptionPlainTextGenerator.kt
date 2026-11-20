@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.cse.internal
 
-import com.adyen.checkout.cse.old.EncryptionException
+import com.adyen.checkout.cse.Encryptor
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -25,7 +25,7 @@ internal object EncryptionPlainTextGenerator {
                 put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(generationTime))
             }.toString()
         } catch (e: JSONException) {
-            throw EncryptionException("Encryption failed.", e)
+            throw Encryptor.Error(Encryptor.Error.Code.ENCRYPTION_FAILED, "Encryption failed.", e)
         }
     }
 
