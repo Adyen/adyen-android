@@ -65,7 +65,47 @@ internal class DefaultLocalizationSourceTest(
         assertEquals("expected:$expectedResId", resolved)
     }
 
+    // Pins keys whose resources were split or renamed to their own resource; see ownResourceKeySource for why each
+    // one is here.
+    @ParameterizedTest
+    @MethodSource("ownResourceKeySource")
+    fun `when a key is resolved then its own resource is returned`(
+        key: CheckoutLocalizationKey,
+        expectedResId: Int,
+    ) {
+        // GIVEN
+        whenever(context.getString(expectedResId)) doReturn "expected:$expectedResId"
+        val source = DefaultLocalizationSource()
+
+        // WHEN
+        val resolved = source.getString(context, key)
+
+        // THEN
+        assertEquals("expected:$expectedResId", resolved)
+    }
+
     companion object {
+
+        @JvmStatic
+        fun ownResourceKeySource() = listOf(
+            // key, expectedResId
+            // The store details copy is split into a card-specific and a generic key, mirroring iOS, so the card copy
+            // cannot leak into other payment methods or the other way around.
+            arguments(
+                CheckoutLocalizationKey.CARD_STORE_DETAILS_LABEL,
+                R.string.adyen_checkout_card_store_details_label,
+            ),
+            arguments(
+                CheckoutLocalizationKey.STORE_DETAILS_LABEL,
+                R.string.adyen_checkout_store_details_label,
+            ),
+            // Pins the hint to its aligned resource name; the old checkout_card_expiry_date_hint was overridden by the
+            // v5 card module.
+            arguments(
+                CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT,
+                R.string.adyen_checkout_card_expiry_date_hint,
+            ),
+        )
 
         @JvmStatic
         fun securityCodeKeySource() = listOf(

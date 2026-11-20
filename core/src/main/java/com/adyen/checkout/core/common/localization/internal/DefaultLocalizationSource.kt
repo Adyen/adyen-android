@@ -83,7 +83,7 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE ->
                 R.string.checkout_card_expiry_date_invalid_too_far_in_the_future
 
-            CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT -> R.string.checkout_card_expiry_date_hint
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT -> R.string.adyen_checkout_card_expiry_date_hint
             CheckoutLocalizationKey.CARD_SECURITY_CODE -> R.string.adyen_checkout_card_security_code_label
             CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_THREE_DIGITS ->
                 R.string.adyen_checkout_card_security_code_hint_three_digits
@@ -105,7 +105,7 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_HOLDER_NAME -> R.string.checkout_card_holder_name
             CheckoutLocalizationKey.CARD_HOLDER_NAME_INVALID -> R.string.checkout_card_holder_name_invalid
-            CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD -> R.string.checkout_card_store_payment_method
+            CheckoutLocalizationKey.CARD_STORE_DETAILS_LABEL -> R.string.adyen_checkout_card_store_details_label
             CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_TITLE ->
                 R.string.checkout_card_dual_brand_selector_title
 
@@ -274,6 +274,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.REDIRECT_TITLE -> R.string.checkout_redirect_title
             CheckoutLocalizationKey.REDIRECT_DESCRIPTION -> R.string.checkout_redirect_description
             CheckoutLocalizationKey.REDIRECT_STATUS -> R.string.checkout_redirect_status
+
+            // Store details
+            CheckoutLocalizationKey.STORE_DETAILS_LABEL -> R.string.adyen_checkout_store_details_label
         }
 
         return context.getString(resId)
