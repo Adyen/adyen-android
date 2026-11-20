@@ -11,6 +11,10 @@ package com.adyen.checkout.cse
  * Class containing raw card data that needs to be encrypted.
  * Use [Builder] to instantiate and [CardEncrypter] to encrypt.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class UnencryptedCard internal constructor(
     val number: String?,
     val expiryMonth: String?,
