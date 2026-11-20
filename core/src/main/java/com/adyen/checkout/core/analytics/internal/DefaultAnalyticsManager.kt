@@ -10,10 +10,10 @@ package com.adyen.checkout.core.analytics.internal
 
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.data.AnalyticsRepository
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -43,7 +43,7 @@ internal class DefaultAnalyticsManager(
                     startTimer()
                 },
                 onFailure = {
-                    adyenLog(AdyenLogLevel.WARN, it) { "Failed analytics setup." }
+                    adyenLog(CheckoutLogLevel.WARN, it) { "Failed analytics setup." }
                     startTimer()
                 },
             )
@@ -52,7 +52,7 @@ internal class DefaultAnalyticsManager(
 
     override fun trackEvent(event: AnalyticsEvent) {
         if (!canTrackEvents()) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
+            adyenLog(CheckoutLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
             return
         }
         coroutineScope.launch(coroutineDispatcher) {
@@ -66,7 +66,7 @@ internal class DefaultAnalyticsManager(
             }.fold(
                 onSuccess = { /* Not necessary */ },
                 onFailure = { throwable ->
-                    adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" }
+                    adyenLog(CheckoutLogLevel.WARN, throwable) { "Storing event failed" }
                 },
             )
         }
@@ -92,7 +92,7 @@ internal class DefaultAnalyticsManager(
         }.fold(
             onSuccess = { /* Not necessary */ },
             onFailure = { throwable ->
-                adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" }
+                adyenLog(CheckoutLogLevel.WARN, throwable) { "Failed sending analytics events" }
             },
         )
     }

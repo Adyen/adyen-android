@@ -11,8 +11,8 @@ package com.adyen.checkout.core.components.internal
 import android.content.Intent
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 
 internal class ActionOnlyCheckoutFlow(
@@ -36,7 +36,7 @@ internal class ActionOnlyCheckoutFlow(
     }
 
     override fun submit() {
-        adyenLog(AdyenLogLevel.WARN) { "submit() is not supported for action-only flows" }
+        adyenLog(CheckoutLogLevel.WARN) { "submit() is not supported for action-only flows" }
     }
 
     // Action only flows do not require user interaction

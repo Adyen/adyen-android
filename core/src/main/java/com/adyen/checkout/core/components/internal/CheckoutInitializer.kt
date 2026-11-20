@@ -12,12 +12,12 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.common.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.core.common.internal.data.api.PublicKeyService
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionResponse
 import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
@@ -70,11 +70,11 @@ object CheckoutInitializer {
             clientKey = checkoutConfiguration.clientKey,
         ).fold(
             onSuccess = { key ->
-                adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
+                adyenLog(CheckoutLogLevel.DEBUG) { "Public key fetched" }
                 return key
             },
             onFailure = {
-                adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
+                adyenLog(CheckoutLogLevel.ERROR) { "Unable to fetch public key" }
                 return null
             },
         )
@@ -91,11 +91,11 @@ object CheckoutInitializer {
             clientKey = checkoutConfiguration.clientKey,
         ).fold(
             onSuccess = { response ->
-                adyenLog(AdyenLogLevel.DEBUG) { "Checkout attempt ID fetched" }
+                adyenLog(CheckoutLogLevel.DEBUG) { "Checkout attempt ID fetched" }
                 response.checkoutAttemptId
             },
             onFailure = {
-                adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch checkout attempt ID" }
+                adyenLog(CheckoutLogLevel.ERROR) { "Unable to fetch checkout attempt ID" }
                 null
             },
         ) ?: FAILED_CHECKOUT_ATTEMPT_ID

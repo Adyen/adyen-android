@@ -7,13 +7,13 @@
  */
 package com.adyen.checkout.googlepay.internal.helper
 
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.internal.helper.AmountFormat
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
 import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ModelUtils
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.paymentmethod.GooglePayDetails
 import com.adyen.checkout.googlepay.IssuerCountryCodes
 import com.adyen.checkout.googlepay.MerchantInfo
@@ -134,7 +134,7 @@ internal object GooglePayUtils {
             val tokenizationDataJson = paymentMethodDataJson.getJSONObject(TOKENIZATION_DATA)
             tokenizationDataJson.getString(TOKEN)
         } catch (e: JSONException) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to find Google Pay token." }
+            adyenLog(CheckoutLogLevel.ERROR, e) { "Failed to find Google Pay token." }
             return null
         }
     }
@@ -164,7 +164,7 @@ internal object GooglePayUtils {
             }
             googlePayToken to googlePayCardNetwork
         } catch (e: JSONException) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to find Google Pay token." }
+            adyenLog(CheckoutLogLevel.ERROR, e) { "Failed to find Google Pay token." }
             null to null
         }
 
