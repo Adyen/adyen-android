@@ -9,8 +9,8 @@
 package com.adyen.checkout.example
 
 import android.app.Application
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.AdyenLogger
+import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class CheckoutExampleApplication : Application() {
 
     init {
         OldAdyenLogger.setLogLevel(OldAdyenLogLevel.VERBOSE)
-        AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)
+        Checkout.setLogLevel(CheckoutLogLevel.VERBOSE)
     }
 
     override fun onCreate() {

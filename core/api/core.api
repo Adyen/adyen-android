@@ -191,34 +191,6 @@ public final class com/adyen/checkout/core/analytics/internal/AnalyticsSource$Pa
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/common/AdyenLogLevel : java/lang/Enum {
-	public static final field ASSERT Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static final field DEBUG Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static final field ERROR Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static final field INFO Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static final field NONE Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static final field VERBOSE Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static final field WARN Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public final fun getPriority ()I
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/common/AdyenLogLevel;
-	public static fun values ()[Lcom/adyen/checkout/core/common/AdyenLogLevel;
-}
-
-public abstract interface class com/adyen/checkout/core/common/AdyenLogger {
-	public static final field Companion Lcom/adyen/checkout/core/common/AdyenLogger$Companion;
-	public abstract fun log (Lcom/adyen/checkout/core/common/AdyenLogLevel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public abstract fun setLogLevel (Lcom/adyen/checkout/core/common/AdyenLogLevel;)V
-	public abstract fun shouldLog (Lcom/adyen/checkout/core/common/AdyenLogLevel;)Z
-}
-
-public final class com/adyen/checkout/core/common/AdyenLogger$Companion {
-	public final fun getLogger ()Lcom/adyen/checkout/core/common/AdyenLogger;
-	public final fun resetLogger ()V
-	public final fun setLogLevel (Lcom/adyen/checkout/core/common/AdyenLogLevel;)V
-	public final fun setLogger (Lcom/adyen/checkout/core/common/AdyenLogger;)V
-}
-
 public final class com/adyen/checkout/core/common/CardBrand : android/os/Parcelable {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -700,6 +672,7 @@ public final class com/adyen/checkout/core/components/Checkout {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/adyen/checkout/core/components/Checkout;
 	public final fun isPaymentMethodAvailable (Ljava/lang/String;Lcom/adyen/checkout/core/common/CheckoutContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun setLogLevel (Lcom/adyen/checkout/core/components/CheckoutLogLevel;)V
 	public final fun setup (Lcom/adyen/checkout/core/action/data/Action;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setup (Lcom/adyen/checkout/core/components/data/model/paymentmethod/PaymentMethods;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setup (Lcom/adyen/checkout/core/sessions/SessionResponse;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -781,6 +754,19 @@ public final class com/adyen/checkout/core/components/CheckoutControllerKt {
 	public static final fun CheckoutController (Lcom/adyen/checkout/core/common/CheckoutContext$ActionOnly;Lcom/adyen/checkout/core/components/ActionOnlyCheckoutCallbacks;Lkotlinx/coroutines/CoroutineScope;Landroidx/lifecycle/SavedStateHandle;)Lcom/adyen/checkout/core/components/CheckoutController;
 	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Advanced;Lcom/adyen/checkout/core/components/AdvancedCheckoutCallbacks;Lkotlinx/coroutines/CoroutineScope;Landroidx/lifecycle/SavedStateHandle;)Lcom/adyen/checkout/core/components/CheckoutController;
 	public static final fun CheckoutController (Lcom/adyen/checkout/core/components/CheckoutTarget;Lcom/adyen/checkout/core/common/CheckoutContext$Sessions;Lcom/adyen/checkout/core/components/SessionCheckoutCallbacks;Lkotlinx/coroutines/CoroutineScope;Landroidx/lifecycle/SavedStateHandle;)Lcom/adyen/checkout/core/components/CheckoutController;
+}
+
+public final class com/adyen/checkout/core/components/CheckoutLogLevel : java/lang/Enum {
+	public static final field ASSERT Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static final field DEBUG Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static final field ERROR Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static final field INFO Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static final field OFF Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static final field VERBOSE Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static final field WARN Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/components/CheckoutLogLevel;
+	public static fun values ()[Lcom/adyen/checkout/core/components/CheckoutLogLevel;
 }
 
 public final class com/adyen/checkout/core/components/CheckoutPaymentMethodKt {
