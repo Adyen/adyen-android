@@ -58,9 +58,9 @@ import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.error.internal.GenericError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.cse.Card
+import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.Encryptor
 import com.adyen.checkout.cse.internal.CheckoutEncryptor
-import com.adyen.checkout.cse.old.EncryptedCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
