@@ -36,7 +36,7 @@ internal class SessionComponentRequestDispatcher(
 
     private val sessionId: String = checkoutSession.sessionSetupResponse.id
 
-    private var sessionResult: String = ""
+    private var sessionResult: String? = null
 
     override suspend fun submit(data: PaymentComponentData<*>): SubmitResult {
         val beforeSubmitResult = handleBeforeSubmit(data)
@@ -53,7 +53,7 @@ internal class SessionComponentRequestDispatcher(
                 ).fold(
                     onSuccess = { response ->
                         sessionStateStore.setSessionData(sessionId, response.sessionData)
-                        sessionResult = response.sessionResult.orEmpty()
+                        sessionResult = response.sessionResult
                         // TODO - Check if we need to support partial payment flow
                         when {
                             response.action != null -> SubmitResult.Action(response.action)
@@ -94,7 +94,7 @@ internal class SessionComponentRequestDispatcher(
         ).fold(
             onSuccess = { response ->
                 sessionStateStore.setSessionData(sessionId, response.sessionData)
-                sessionResult = response.sessionResult.orEmpty()
+                sessionResult = response.sessionResult
                 return AdditionalDetailsResult.Completion(response.resultCode ?: RESULT_CODE_MISSING)
             },
             onFailure = { error ->
@@ -109,12 +109,8 @@ internal class SessionComponentRequestDispatcher(
     }
 
     override fun complete(resultCode: CheckoutResultCode) {
-        val isSessionResultExpectedToBeMissing = resultCode == CheckoutResultCode.CANCELLED ||
-            resultCode == CheckoutResultCode.ERROR
         if (sessionId.isBlank()) {
             adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionId." }
-        } else if (sessionResult.isBlank() && !isSessionResultExpectedToBeMissing) {
-            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionResult." }
         }
 
         val result = SessionCheckoutResult(
