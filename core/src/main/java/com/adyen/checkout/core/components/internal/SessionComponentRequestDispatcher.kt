@@ -10,11 +10,11 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.ActionData
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.BeforeSubmitResult
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.SessionCheckoutCallbacks
 import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.SubmitResult
@@ -110,7 +110,7 @@ internal class SessionComponentRequestDispatcher(
 
     override fun complete(resultCode: CheckoutResultCode) {
         if (sessionId.isBlank()) {
-            adyenLog(AdyenLogLevel.ERROR) { "Session completion called without a sessionId." }
+            adyenLog(CheckoutLogLevel.ERROR) { "Session completion called without a sessionId." }
         }
 
         val result = SessionCheckoutResult(

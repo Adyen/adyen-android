@@ -15,9 +15,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -78,7 +78,7 @@ object DropIn {
             )
         } catch (e: IllegalArgumentException) {
             // Thrown when the merged manifest doesn't contain the activity, for example after tools:node="remove"
-            adyenLog(AdyenLogLevel.ERROR, e) {
+            adyenLog(CheckoutLogLevel.ERROR, e) {
                 "Can't turn redirect handling ${if (enabled) "on" else "off"}, " +
                     "${DropInRedirectHandlingActivity::class.java.name} is not in the manifest"
             }

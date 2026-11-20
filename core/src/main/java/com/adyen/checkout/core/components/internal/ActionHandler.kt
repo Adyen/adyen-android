@@ -18,11 +18,11 @@ import com.adyen.checkout.core.action.internal.ActionComponentProvider
 import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutResultCode
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
@@ -96,7 +96,7 @@ constructor(
                 savedStateHandle = savedStateHandle,
             )
         } catch (e: InternalCheckoutError) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Could not create an action component for action '${action.type}'" }
+            adyenLog(CheckoutLogLevel.ERROR, e) { "Could not create an action component for action '${action.type}'" }
             componentRequestDispatcher.failure(e.toCheckoutError())
             return null
         }
@@ -132,7 +132,7 @@ constructor(
 
     fun handleReturn(intent: Intent) {
         (actionComponent as? ReturningActionComponent)?.handleReturn(intent) ?: run {
-            adyenLog(AdyenLogLevel.WARN) {
+            adyenLog(CheckoutLogLevel.WARN) {
                 "handleReturn called but actionComponent is null or not a ReturningActionComponent"
             }
         }

@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
@@ -35,7 +35,7 @@ internal object PaymentMethodResolver {
             )
 
             else -> {
-                adyenLog(AdyenLogLevel.WARN) { "Invalid target: $target" }
+                adyenLog(CheckoutLogLevel.WARN) { "Invalid target: $target" }
                 null
             }
         }

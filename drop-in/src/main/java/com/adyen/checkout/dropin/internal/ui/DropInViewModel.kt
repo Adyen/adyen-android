@@ -19,7 +19,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.getPaymentMethods
 import com.adyen.checkout.core.common.getStoredPaymentMethods
@@ -29,6 +28,7 @@ import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.internal.CheckoutControllerFactory
 import com.adyen.checkout.core.sessions.internal.DefaultSessionStateStore
 import com.adyen.checkout.dropin.DropInResult
@@ -143,12 +143,14 @@ internal class DropInViewModel(
         // TODO - WeChat Pay returns its result through onNewIntent without ACTION_VIEW. Handle it here once WeChat Pay
         //  is migrated to v6.
         if (intent.action != Intent.ACTION_VIEW || intent.data == null) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Ignoring intent that is not a redirect return: action=${intent.action}" }
+            adyenLog(CheckoutLogLevel.DEBUG) {
+                "Ignoring intent that is not a redirect return: action=${intent.action}"
+            }
             return
         }
 
         if (navigator.backStack.lastOrNull() !is ActionNavKey) {
-            adyenLog(AdyenLogLevel.ERROR) { "Received a redirect return, but no action is shown. Ignoring it." }
+            adyenLog(CheckoutLogLevel.ERROR) { "Received a redirect return, but no action is shown. Ignoring it." }
             return
         }
 

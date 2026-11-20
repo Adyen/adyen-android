@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.dropin.internal.data
 
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
 import kotlinx.coroutines.CoroutineScope
@@ -94,7 +94,7 @@ internal class DefaultPaymentMethodRepository(
                 _storedPaymentMethods.update { current -> current.filterNot { it.id == storedPaymentMethod.id } }
             }
             .onFailure { e ->
-                adyenLog(AdyenLogLevel.ERROR, e) { "Failed to remove the stored payment method." }
+                adyenLog(CheckoutLogLevel.ERROR, e) { "Failed to remove the stored payment method." }
                 _storedPaymentMethodRemovalFailures.tryEmit(storedPaymentMethod.id)
             }
     } finally {
