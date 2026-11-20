@@ -44,8 +44,8 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.SecondaryNavigationEvent
-import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.internal.TestCheckoutEncryptor
+import com.adyen.checkout.cse.old.EncryptedCard
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

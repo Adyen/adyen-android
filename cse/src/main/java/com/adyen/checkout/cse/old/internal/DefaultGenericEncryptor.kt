@@ -6,7 +6,7 @@
  * Created by josephj on 10/8/2022.
  */
 
-package com.adyen.checkout.cse.internal
+package com.adyen.checkout.cse.old.internal
 
 internal class DefaultGenericEncryptor(
     private val dateGenerator: DateGenerator,

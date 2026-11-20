@@ -32,7 +32,7 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
-import com.adyen.checkout.cse.internal.CardEncryptorFactory
+import com.adyen.checkout.cse.old.internal.CardEncryptorFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState

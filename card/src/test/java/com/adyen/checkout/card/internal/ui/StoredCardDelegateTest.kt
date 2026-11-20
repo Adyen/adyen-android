@@ -52,8 +52,8 @@ import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
-import com.adyen.checkout.cse.internal.TestCardEncryptor
+import com.adyen.checkout.cse.old.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.old.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler

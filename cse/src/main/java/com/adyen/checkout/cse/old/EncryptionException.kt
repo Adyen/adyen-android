@@ -5,7 +5,7 @@
  *
  * Created by caiof on 14/1/2021.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.old
 
 import com.adyen.checkout.core.old.exception.CheckoutException
 

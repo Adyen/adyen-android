@@ -6,11 +6,11 @@
  * Created by josephj on 20/2/2023.
  */
 
-package com.adyen.checkout.cse.internal
+package com.adyen.checkout.cse.old.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.UnencryptedCard
+import com.adyen.checkout.cse.old.EncryptedCard
+import com.adyen.checkout.cse.old.UnencryptedCard
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface BaseCardEncryptor {

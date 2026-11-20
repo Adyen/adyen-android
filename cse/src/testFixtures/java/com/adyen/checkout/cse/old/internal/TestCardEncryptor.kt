@@ -6,11 +6,11 @@
  * Created by josephj on 19/7/2024.
  */
 
-package com.adyen.checkout.cse.internal
+package com.adyen.checkout.cse.old.internal
 
-import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.UnencryptedCard
+import com.adyen.checkout.cse.old.EncryptedCard
+import com.adyen.checkout.cse.old.EncryptionException
+import com.adyen.checkout.cse.old.UnencryptedCard
 
 class TestCardEncryptor : BaseCardEncryptor {
 

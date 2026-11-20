@@ -6,17 +6,16 @@
  * Created by oscars on 27/9/2023.
  */
 
-package com.adyen.checkout.cse.internal
+package com.adyen.checkout.cse.old.internal
 
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object CardEncryptorFactory {
+object GenericEncryptorFactory {
 
-    fun provide(): BaseCardEncryptor {
+    fun provide(): BaseGenericEncryptor {
         val dateGenerator = DateGenerator()
-        val jsonWebEncryptor = JSONWebEncryptor()
-        val genericEncryptor = DefaultGenericEncryptor(dateGenerator, jsonWebEncryptor)
-        return DefaultCardEncryptor(genericEncryptor)
+        val jweEncryptor = JSONWebEncryptor()
+        return DefaultGenericEncryptor(dateGenerator, jweEncryptor)
     }
 }
