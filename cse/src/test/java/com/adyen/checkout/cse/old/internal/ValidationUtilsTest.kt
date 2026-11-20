@@ -5,9 +5,9 @@
  *
  * Created by josephj on 16/3/2021.
  */
-package com.adyen.checkout.cse.internal
+package com.adyen.checkout.cse.old.internal
 
-import com.adyen.checkout.cse.internal.ResourceReader.readJsonFileFromResource
+import com.adyen.checkout.cse.old.internal.ResourceReader.readJsonFileFromResource
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertFalse

@@ -6,7 +6,7 @@
  * Created by oscars on 27/9/2023.
  */
 
-package com.adyen.checkout.cse.internal
+package com.adyen.checkout.cse.old.internal
 
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi

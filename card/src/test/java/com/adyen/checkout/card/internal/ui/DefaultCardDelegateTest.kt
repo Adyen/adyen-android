@@ -65,10 +65,10 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
-import com.adyen.checkout.cse.internal.BaseGenericEncryptor
-import com.adyen.checkout.cse.internal.TestCardEncryptor
-import com.adyen.checkout.cse.internal.TestGenericEncryptor
+import com.adyen.checkout.cse.old.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.old.internal.BaseGenericEncryptor
+import com.adyen.checkout.cse.old.internal.TestCardEncryptor
+import com.adyen.checkout.cse.old.internal.TestGenericEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.old.internal.data.api.AddressRepository

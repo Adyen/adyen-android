@@ -21,7 +21,7 @@ import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.internal.util.Sha256
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runSuspendCatching
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.old.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

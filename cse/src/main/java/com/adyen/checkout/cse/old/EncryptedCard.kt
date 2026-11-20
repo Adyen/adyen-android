@@ -5,7 +5,7 @@
  *
  * Created by arman on 6/6/2019.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.old
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
