@@ -178,6 +178,7 @@ For a complete card example, see [docs/v6/card-advanced-flow.md](docs/v6/card-ad
 - `CheckoutContext.getPaymentMethods()` and `getStoredPaymentMethods()` expose non-null method lists across checkout flows.
 - `CheckoutController(...)` binds a checkout target and callbacks for rendering.
 - `CheckoutPaymentMethod(...)` and `CheckoutAction(...)` become the Compose rendering entry points, switched by the required `onAction` callback.
+- `SessionComponentCallback.onFinished(SessionPaymentResult)` moves to `SessionCheckoutCallbacks(onComplete = { ... })`, which receives a `SessionCheckoutResult`. `SessionCheckoutResult.sessionResult` is nullable because the `/sessions/{sessionId}/payments` and `/sessions/{sessionId}/paymentDetails` responses can omit it. Check it for `null` before passing it to the `/sessions/{sessionId}` endpoint.
 
 ### Logging
 

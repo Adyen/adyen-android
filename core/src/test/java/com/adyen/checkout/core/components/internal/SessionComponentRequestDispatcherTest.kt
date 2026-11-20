@@ -33,6 +33,7 @@ import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -239,7 +240,7 @@ internal class SessionComponentRequestDispatcherTest(
             val expected = SessionCheckoutResult(
                 CheckoutResultCode.AUTHORISED,
                 sessionId = "session-id",
-                sessionResult = "",
+                sessionResult = null,
             )
             assertEquals(listOf(expected), capturedResults)
         }
@@ -323,7 +324,7 @@ internal class SessionComponentRequestDispatcherTest(
                 dispatcher.additionalDetails(ActionComponentData())
                 dispatcher.complete(CheckoutResultCode.AUTHORISED)
 
-                assertEquals("", capturedResults.single().sessionResult)
+                assertNull(capturedResults.single().sessionResult)
             }
     }
 
