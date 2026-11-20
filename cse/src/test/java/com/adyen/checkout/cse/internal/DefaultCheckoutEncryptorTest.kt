@@ -9,12 +9,9 @@
 package com.adyen.checkout.cse.internal
 
 import com.adyen.checkout.cse.Card
+import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.Encryptor
-import com.adyen.checkout.cse.old.EncryptedCard
 import com.adyen.checkout.cse.old.EncryptionException
-import com.adyen.checkout.cse.old.internal.DateGenerator
-import com.adyen.checkout.cse.old.internal.DefaultGenericEncryptor
-import com.adyen.checkout.cse.old.internal.JSONWebEncryptor
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf

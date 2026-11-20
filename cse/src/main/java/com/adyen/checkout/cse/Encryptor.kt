@@ -9,7 +9,6 @@
 package com.adyen.checkout.cse
 
 import com.adyen.checkout.cse.internal.CheckoutEncryptorFactory
-import com.adyen.checkout.cse.old.EncryptedCard
 
 /**
  * Encrypts data to be sent to Adyen's APIs.

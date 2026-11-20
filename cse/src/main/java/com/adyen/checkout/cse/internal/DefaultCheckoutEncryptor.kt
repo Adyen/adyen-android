@@ -9,10 +9,8 @@
 package com.adyen.checkout.cse.internal
 
 import com.adyen.checkout.cse.Card
+import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.Encryptor
-import com.adyen.checkout.cse.old.EncryptedCard
-import com.adyen.checkout.cse.old.internal.BaseGenericEncryptor
-import com.adyen.checkout.cse.old.internal.ValidationUtils
 
 internal class DefaultCheckoutEncryptor(
     private val genericEncryptor: BaseGenericEncryptor,

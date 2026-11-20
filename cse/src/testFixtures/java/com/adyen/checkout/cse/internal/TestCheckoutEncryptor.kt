@@ -9,8 +9,8 @@
 package com.adyen.checkout.cse.internal
 
 import com.adyen.checkout.cse.Card
+import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.Encryptor
-import com.adyen.checkout.cse.old.EncryptedCard
 
 /**
  * Echoes the values it encrypts.
