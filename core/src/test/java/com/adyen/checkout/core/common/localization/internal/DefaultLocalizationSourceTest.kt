@@ -65,11 +65,11 @@ internal class DefaultLocalizationSourceTest(
         assertEquals("expected:$expectedResId", resolved)
     }
 
-    // The store details copy is split into a card-specific and a generic key, mirroring iOS; pin each one to its
-    // own resource so the card copy cannot leak into other payment methods or the other way around.
+    // Pins keys whose resources were split or renamed to their own resource; see ownResourceKeySource for why each
+    // one is here.
     @ParameterizedTest
-    @MethodSource("storeDetailsKeySource")
-    fun `when a store details key is resolved then its own resource is returned`(
+    @MethodSource("ownResourceKeySource")
+    fun `when a key is resolved then its own resource is returned`(
         key: CheckoutLocalizationKey,
         expectedResId: Int,
     ) {
@@ -84,27 +84,13 @@ internal class DefaultLocalizationSourceTest(
         assertEquals("expected:$expectedResId", resolved)
     }
 
-    // The v5 card module defines its own checkout_card_expiry_date_hint, which overrides the core resource of the
-    // same name when resources are merged; the v6 hint must resolve to its own resource.
-    @Test
-    fun `when the card expiry date hint key is resolved then its own resource is returned`() {
-        // GIVEN
-        val expectedResId = R.string.adyen_checkout_card_expiry_date_hint
-        whenever(context.getString(expectedResId)) doReturn "expected:$expectedResId"
-        val source = DefaultLocalizationSource()
-
-        // WHEN
-        val resolved = source.getString(context, CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
-
-        // THEN
-        assertEquals("expected:$expectedResId", resolved)
-    }
-
     companion object {
 
         @JvmStatic
-        fun storeDetailsKeySource() = listOf(
+        fun ownResourceKeySource() = listOf(
             // key, expectedResId
+            // The store details copy is split into a card-specific and a generic key, mirroring iOS, so the card copy
+            // cannot leak into other payment methods or the other way around.
             arguments(
                 CheckoutLocalizationKey.CARD_STORE_DETAILS_LABEL,
                 R.string.adyen_checkout_card_store_details_label,
@@ -112,6 +98,12 @@ internal class DefaultLocalizationSourceTest(
             arguments(
                 CheckoutLocalizationKey.STORE_DETAILS_LABEL,
                 R.string.adyen_checkout_store_details_label,
+            ),
+            // Pins the hint to its aligned resource name; the old checkout_card_expiry_date_hint was overridden by the
+            // v5 card module.
+            arguments(
+                CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT,
+                R.string.adyen_checkout_card_expiry_date_hint,
             ),
         )
 
