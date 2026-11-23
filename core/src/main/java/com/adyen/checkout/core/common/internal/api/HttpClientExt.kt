@@ -9,12 +9,12 @@
 package com.adyen.checkout.core.common.internal.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.toStringPretty
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.error.internal.HttpError
 import org.json.JSONArray
 import org.json.JSONObject
@@ -25,7 +25,7 @@ suspend fun <T : ModelObject> HttpClient.get(
     responseSerializer: ModelObject.Serializer<T>,
     queryParameters: Map<String, String> = emptyMap(),
 ): T {
-    adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
+    adyenLog(CheckoutLogLevel.DEBUG) { "GET - $path" }
 
     val response = runAndLogHttpException { get(path, queryParameters) }
 
@@ -40,7 +40,7 @@ suspend fun <T : ModelObject> HttpClient.getList(
     responseSerializer: ModelObject.Serializer<T>,
     queryParameters: Map<String, String> = emptyMap(),
 ): List<T> {
-    adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
+    adyenLog(CheckoutLogLevel.DEBUG) { "GET - $path" }
 
     val response = runAndLogHttpException { get(path, queryParameters) }
 
@@ -57,11 +57,11 @@ suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
     responseSerializer: ModelObject.Serializer<R>,
     queryParameters: Map<String, String> = emptyMap(),
 ): R {
-    adyenLog(AdyenLogLevel.DEBUG) { "POST - $path" }
+    adyenLog(CheckoutLogLevel.DEBUG) { "POST - $path" }
 
     val requestJson = requestSerializer.serialize(body)
 
-    adyenLog(AdyenLogLevel.VERBOSE) { "request - ${requestJson.toStringPretty()}" }
+    adyenLog(CheckoutLogLevel.VERBOSE) { "request - ${requestJson.toStringPretty()}" }
 
     val response = runAndLogHttpException { post(path, requestJson.toString(), queryParameters) }
 
@@ -75,7 +75,7 @@ private inline fun <T : Any, R> T.runAndLogHttpException(block: T.() -> R): R {
     return try {
         block()
     } catch (httpError: HttpError) {
-        adyenLog(AdyenLogLevel.ERROR) { "API error - ${httpError.getLogMessage()}" }
+        adyenLog(CheckoutLogLevel.ERROR) { "API error - ${httpError.getLogMessage()}" }
         throw httpError
     }
 }
@@ -97,12 +97,12 @@ private fun String.toJSONObject(): JSONObject {
 }
 
 private fun Any.logResponse(response: AdyenApiResponse) {
-    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${response.statusCode} .../${response.path}" }
+    adyenLog(CheckoutLogLevel.VERBOSE) { "response - ${response.statusCode} .../${response.path}" }
     response.headers.forEach { (key, value) ->
-        adyenLog(AdyenLogLevel.VERBOSE) { "$key: $value" }
+        adyenLog(CheckoutLogLevel.VERBOSE) { "$key: $value" }
     }
-    adyenLog(AdyenLogLevel.VERBOSE) { response.body.tryToFormatJson() }
-    adyenLog(AdyenLogLevel.VERBOSE) { "response - END" }
+    adyenLog(CheckoutLogLevel.VERBOSE) { response.body.tryToFormatJson() }
+    adyenLog(CheckoutLogLevel.VERBOSE) { "response - END" }
 }
 
 private fun String.tryToFormatJson(): String = when {

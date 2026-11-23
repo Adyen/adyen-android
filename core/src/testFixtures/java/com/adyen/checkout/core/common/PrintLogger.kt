@@ -8,24 +8,22 @@
 
 package com.adyen.checkout.core.common
 
+import com.adyen.checkout.core.common.internal.helper.LogWriter
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import java.io.PrintWriter
 import java.io.StringWriter
 
-internal class PrintLogger : AdyenLogger {
+internal class PrintLogger : LogWriter {
 
-    override fun shouldLog(level: AdyenLogLevel): Boolean = true
-
-    override fun setLogLevel(level: AdyenLogLevel) = Unit
-
-    override fun log(level: AdyenLogLevel, tag: String, message: String, throwable: Throwable?) {
+    override fun write(level: CheckoutLogLevel, tag: String, message: String, throwable: Throwable?) {
         println("${getLogColor(level)}${concatThrowable(message, throwable)}$RESET_COLOR")
     }
 
-    private fun getLogColor(level: AdyenLogLevel): String {
+    private fun getLogColor(level: CheckoutLogLevel): String {
         return when (level) {
-            AdyenLogLevel.WARN -> YELLOW_COLOR
-            AdyenLogLevel.ERROR,
-            AdyenLogLevel.ASSERT -> RED_COLOR
+            CheckoutLogLevel.WARN -> YELLOW_COLOR
+            CheckoutLogLevel.ERROR,
+            CheckoutLogLevel.ASSERT -> RED_COLOR
 
             else -> ""
         }

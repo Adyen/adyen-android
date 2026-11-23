@@ -12,11 +12,11 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.BillingAddressMode
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.FieldVisibility
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
 
@@ -75,19 +75,19 @@ internal class CardComponentParamsMapper {
         val supportedCardBrands = cardConfiguration?.supportedCardBrands
         return when {
             !supportedCardBrands.isNullOrEmpty() -> {
-                adyenLog(AdyenLogLevel.VERBOSE) { "Reading supportedCardTypes from configuration" }
+                adyenLog(CheckoutLogLevel.VERBOSE) { "Reading supportedCardTypes from configuration" }
                 supportedCardBrands
             }
 
             paymentMethod?.brands?.isNotEmpty() == true -> {
-                adyenLog(AdyenLogLevel.VERBOSE) { "Reading supportedCardTypes from API brands" }
+                adyenLog(CheckoutLogLevel.VERBOSE) { "Reading supportedCardTypes from API brands" }
                 paymentMethod.brands.map {
                     CardBrand(txVariant = it)
                 }
             }
 
             else -> {
-                adyenLog(AdyenLogLevel.VERBOSE) { "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST" }
+                adyenLog(CheckoutLogLevel.VERBOSE) { "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST" }
                 DEFAULT_SUPPORTED_CARDS_LIST
             }
         }

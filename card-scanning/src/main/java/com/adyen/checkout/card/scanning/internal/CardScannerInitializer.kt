@@ -10,9 +10,9 @@ package com.adyen.checkout.card.scanning.internal
 
 import android.content.Context
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.google.android.gms.wallet.PaymentCardRecognitionIntentRequest
 import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
@@ -56,7 +56,7 @@ object CardScannerInitializer {
                 }
                 .addOnFailureListener { e ->
                     adyenLog(
-                        AdyenLogLevel.WARN,
+                        CheckoutLogLevel.WARN,
                         TAG,
                         e,
                     ) { "Card scanning not available" }

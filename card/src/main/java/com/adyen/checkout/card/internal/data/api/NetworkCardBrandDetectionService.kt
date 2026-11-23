@@ -13,16 +13,17 @@ import com.adyen.checkout.card.internal.data.model.BinLookupResponse
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.helper.isHiddenCardType
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.error.internal.GenericError
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.Encryptor
+import com.adyen.checkout.cse.internal.CheckoutEncryptor
 import java.util.UUID
 
 internal class NetworkCardBrandDetectionService(
-    private val cardEncryptor: BaseCardEncryptor,
+    private val checkoutEncryptor: CheckoutEncryptor,
     private val binLookupService: BinLookupService,
     private val publicKey: String?,
     private val supportedCardBrands: List<CardBrand>,
@@ -30,15 +31,15 @@ internal class NetworkCardBrandDetectionService(
 ) {
 
     suspend fun getCardBrands(bin: String): Result<BinLookupNetworkResult> {
-        adyenLog(AdyenLogLevel.DEBUG) { "fetching card brands from network - bin lookup" }
+        adyenLog(CheckoutLogLevel.DEBUG) { "fetching card brands from network - bin lookup" }
         val publicKey = publicKey
         if (publicKey == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Public key is null" }
+            adyenLog(CheckoutLogLevel.ERROR) { "Public key is null" }
             // no need for an error callback since BIN lookup failing is not a fatal error
             return Result.failure(GenericError("Public key is missing."))
         }
         val binLookupResult = runSuspendCatching {
-            val encryptedBin = cardEncryptor.encryptBin(bin, publicKey)
+            val encryptedBin = checkoutEncryptor.encrypt(Encryptor.Field.Bin, bin, publicKey).getOrThrow()
             val stringCardBrands = supportedCardBrands.map { it.txVariant }
             val requestId = UUID.randomUUID().toString()
             val request = BinLookupRequest(encryptedBin, requestId, stringCardBrands, paymentMethodType)
@@ -46,7 +47,7 @@ internal class NetworkCardBrandDetectionService(
             binLookupService.makeBinLookup(request)
         }
             .onFailure { e ->
-                adyenLog(AdyenLogLevel.ERROR, e) { "getCardBrands - Error calling bin lookup" }
+                adyenLog(CheckoutLogLevel.ERROR, e) { "getCardBrands - Error calling bin lookup" }
             }
 
         return binLookupResult.map { response ->
@@ -58,7 +59,7 @@ internal class NetworkCardBrandDetectionService(
     }
 
     private fun mapResponse(binLookupResponse: BinLookupResponse): List<DetectedCardType> {
-        adyenLog(AdyenLogLevel.VERBOSE) { "Brands: ${binLookupResponse.brands}" }
+        adyenLog(CheckoutLogLevel.VERBOSE) { "Brands: ${binLookupResponse.brands}" }
 
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse.brands.orEmpty().mapNotNull { brandResponse ->

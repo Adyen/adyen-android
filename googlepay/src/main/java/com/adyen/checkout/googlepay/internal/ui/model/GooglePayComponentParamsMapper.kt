@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.googlepay.internal.ui.model
 
-import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.CheckoutCurrency
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.error.internal.InvalidConfigurationError
@@ -104,7 +104,7 @@ internal class GooglePayComponentParamsMapper {
         return brands.mapNotNull { brand ->
             val network = mapBrandToGooglePayNetwork(brand)
             if (network == null) {
-                adyenLog(AdyenLogLevel.ERROR) { "skipping brand $brand, as it is not an allowed card network." }
+                adyenLog(CheckoutLogLevel.ERROR) { "skipping brand $brand, as it is not an allowed card network." }
             }
             return@mapNotNull network
         }

@@ -12,4 +12,8 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 /**
  * Exception thrown when the Adyen encryption fails.
  */
+@Deprecated(
+    message = "Deprecated. This will be removed in a future release.",
+    level = DeprecationLevel.WARNING,
+)
 class EncryptionException(message: String, cause: Throwable?) : CheckoutException(message, cause)

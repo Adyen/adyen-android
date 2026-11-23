@@ -19,6 +19,7 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStatePostProcessor
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateReducer
 import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateValidator
+import com.adyen.checkout.card.internal.ui.state.StoredCardIntent
 import com.adyen.checkout.card.internal.ui.state.StoredCardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
@@ -28,9 +29,7 @@ import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPay
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.paymentmethod.StoredCardDetails
-import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.internal.TestCheckoutEncryptor
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,6 +38,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -54,16 +54,17 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class StoredCardComponentTest(
-    @param:Mock private val cardEncryptor: BaseCardEncryptor,
     @param:Mock private val sdkDataProvider: SdkDataProvider,
     @param:Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
+    private lateinit var checkoutEncryptor: TestCheckoutEncryptor
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
+        checkoutEncryptor = TestCheckoutEncryptor()
     }
 
     @Test
@@ -92,13 +93,6 @@ internal class StoredCardComponentTest(
         @Test
         fun `and state is valid and publicKey is present then Submit event is emitted`() = runTest {
             // GIVEN
-            val encryptedCard = EncryptedCard(
-                encryptedCardNumber = null,
-                encryptedExpiryMonth = null,
-                encryptedExpiryYear = null,
-                encryptedSecurityCode = "encrypted_cvc",
-            )
-            whenever(cardEncryptor.encryptFields(any(), any())).thenReturn(encryptedCard)
             whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
             val component = createComponent(
                 storedCVCVisibility = StoredCVCVisibility.HIDE,
@@ -117,15 +111,89 @@ internal class StoredCardComponentTest(
         }
 
         @Test
-        fun `and state is valid then the state contains the stored card details`() = runTest {
+        fun `and the security code is shown and state is valid then the state contains the stored card details`() =
+            runTest {
+                // GIVEN
+                whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
+                val component = createComponent(
+                    storedCVCVisibility = StoredCVCVisibility.SHOW,
+                    publicKey = "test_public_key",
+                )
+                component.onIntent(StoredCardIntent.UpdateSecurityCode("737"))
+                val eventFlow = component.eventFlow.test(testScheduler)
+
+                // WHEN
+                component.submit()
+
+                // THEN
+                val state = (eventFlow.latestValue as PaymentComponentEvent.Submit).state
+                assertInstanceOf(StoredCardPaymentComponentState::class.java, state)
+                val expectedDetails = StoredCardDetails(
+                    type = PAYMENT_METHOD_TYPE,
+                    sdkData = "sdk_data",
+                    storedPaymentMethodId = "stored_pm_id",
+                    encryptedSecurityCode = "737",
+                )
+                assertEquals(expectedDetails, (state as StoredCardPaymentComponentState).data.paymentMethod)
+            }
+
+        @Test
+        fun `and the security code is shown but publicKey is null then Error event is emitted`() = runTest {
             // GIVEN
-            val encryptedCard = EncryptedCard(
-                encryptedCardNumber = null,
-                encryptedExpiryMonth = null,
-                encryptedExpiryYear = null,
-                encryptedSecurityCode = "encrypted_cvc",
+            val component = createComponent(
+                storedCVCVisibility = StoredCVCVisibility.SHOW,
+                publicKey = null,
             )
-            whenever(cardEncryptor.encryptFields(any(), any())).thenReturn(encryptedCard)
+            component.onIntent(StoredCardIntent.UpdateSecurityCode("737"))
+            val eventFlow = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            assertEquals(1, eventFlow.values.size)
+            assertTrue(eventFlow.latestValue is PaymentComponentEvent.Error)
+        }
+
+        @Test
+        fun `and the security code is shown but publicKey is null then API_PUBLIC_KEY analytics error is tracked`() =
+            runTest {
+                // GIVEN
+                val component = createComponent(
+                    storedCVCVisibility = StoredCVCVisibility.SHOW,
+                    publicKey = null,
+                )
+                component.onIntent(StoredCardIntent.UpdateSecurityCode("737"))
+
+                // WHEN
+                component.submit()
+
+                // THEN
+                val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+                analyticsManager.assertHasEventEquals(expected)
+            }
+
+        @Test
+        fun `and the security code is hidden and publicKey is null then Submit event is emitted`() = runTest {
+            // GIVEN
+            whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
+            val component = createComponent(
+                storedCVCVisibility = StoredCVCVisibility.HIDE,
+                publicKey = null,
+            )
+            val eventFlow = component.eventFlow.test(testScheduler)
+
+            // WHEN
+            component.submit()
+
+            // THEN
+            assertEquals(1, eventFlow.values.size)
+            assertInstanceOf(PaymentComponentEvent.Submit::class.java, eventFlow.latestValue)
+        }
+
+        @Test
+        fun `and the security code is hidden then nothing is encrypted`() = runTest {
+            // GIVEN
             whenever(sdkDataProvider.createEncodedSdkData(any(), any())).thenReturn("sdk_data")
             val component = createComponent(
                 storedCVCVisibility = StoredCVCVisibility.HIDE,
@@ -137,24 +205,20 @@ internal class StoredCardComponentTest(
             component.submit()
 
             // THEN
-            val state = (eventFlow.latestValue as PaymentComponentEvent.Submit).state
-            assertInstanceOf(StoredCardPaymentComponentState::class.java, state)
-            val expectedDetails = StoredCardDetails(
-                type = PAYMENT_METHOD_TYPE,
-                sdkData = "sdk_data",
-                storedPaymentMethodId = "stored_pm_id",
-                encryptedSecurityCode = "encrypted_cvc",
-            )
-            assertEquals(expectedDetails, (state as StoredCardPaymentComponentState).data.paymentMethod)
+            val event = assertInstanceOf(PaymentComponentEvent.Submit::class.java, eventFlow.latestValue)
+            val details = (event.state as StoredCardPaymentComponentState).data.paymentMethod as StoredCardDetails
+            assertNull(details.encryptedSecurityCode)
         }
 
         @Test
-        fun `and state is valid but publicKey is null then Error event is emitted`() = runTest {
+        fun `and the security code is shown but encryption fails then Error event is emitted`() = runTest {
             // GIVEN
+            checkoutEncryptor.shouldFailFieldEncryption = true
             val component = createComponent(
-                storedCVCVisibility = StoredCVCVisibility.HIDE,
-                publicKey = null,
+                storedCVCVisibility = StoredCVCVisibility.SHOW,
+                publicKey = "test_public_key",
             )
+            component.onIntent(StoredCardIntent.UpdateSecurityCode("737"))
             val eventFlow = component.eventFlow.test(testScheduler)
 
             // WHEN
@@ -166,58 +230,26 @@ internal class StoredCardComponentTest(
         }
 
         @Test
-        fun `and state is valid but publicKey is null then API_PUBLIC_KEY analytics error is tracked`() = runTest {
-            // GIVEN
-            val component = createComponent(
-                storedCVCVisibility = StoredCVCVisibility.HIDE,
-                publicKey = null,
-            )
+        fun `and the security code is shown but encryption fails then ENCRYPTION analytics error is tracked`() =
+            runTest {
+                // GIVEN
+                checkoutEncryptor.shouldFailFieldEncryption = true
+                val component = createComponent(
+                    storedCVCVisibility = StoredCVCVisibility.SHOW,
+                    publicKey = "test_public_key",
+                )
+                component.onIntent(StoredCardIntent.UpdateSecurityCode("737"))
 
-            // WHEN
-            component.submit()
+                // WHEN
+                component.submit()
 
-            // THEN
-            val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
-            analyticsManager.assertHasEventEquals(expected)
-        }
-
-        @Test
-        fun `and state is valid but encryption fails then Error event is emitted`() = runTest {
-            // GIVEN
-            whenever(cardEncryptor.encryptFields(any(), any())).thenThrow(EncryptionException("test", null))
-            val component = createComponent(
-                storedCVCVisibility = StoredCVCVisibility.HIDE,
-                publicKey = "test_public_key",
-            )
-            val eventFlow = component.eventFlow.test(testScheduler)
-
-            // WHEN
-            component.submit()
-
-            // THEN
-            assertEquals(1, eventFlow.values.size)
-            assertTrue(eventFlow.latestValue is PaymentComponentEvent.Error)
-        }
+                // THEN
+                val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+                analyticsManager.assertHasEventEquals(expected)
+            }
 
         @Test
-        fun `and state is valid but encryption fails then ENCRYPTION analytics error is tracked`() = runTest {
-            // GIVEN
-            whenever(cardEncryptor.encryptFields(any(), any())).thenThrow(EncryptionException("test", null))
-            val component = createComponent(
-                storedCVCVisibility = StoredCVCVisibility.HIDE,
-                publicKey = "test_public_key",
-            )
-
-            // WHEN
-            component.submit()
-
-            // THEN
-            val expected = GenericEvents.error(PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
-            analyticsManager.assertHasEventEquals(expected)
-        }
-
-        @Test
-        fun `and state is invalid then no Submit event is emitted`() = runTest {
+        fun `and the security code is shown and state is invalid then no Submit event is emitted`() = runTest {
             // GIVEN - CVC is required but empty (invalid)
             val component = createComponent(
                 storedCVCVisibility = StoredCVCVisibility.SHOW,
@@ -271,7 +303,7 @@ internal class StoredCardComponentTest(
         return StoredCardComponent(
             storedPaymentMethod = storedPaymentMethod,
             analyticsManager = analyticsManager,
-            cardEncryptor = cardEncryptor,
+            checkoutEncryptor = checkoutEncryptor,
             componentStateValidator = StoredCardComponentStateValidator(CardValidationMapper()),
             componentStateFactory = StoredCardComponentStateFactory(storedPaymentMethod, componentParams),
             componentStateReducer = StoredCardComponentStateReducer(),
