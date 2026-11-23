@@ -241,7 +241,7 @@ private fun CardFormElementContent(
             checked = element.isSelected,
             onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
         ) {
-            Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
+            Body(resolveString(CheckoutLocalizationKey.CARD_STORE_DETAILS_LABEL))
         }
 
         is CardFormElement.Installments -> InstallmentsField(

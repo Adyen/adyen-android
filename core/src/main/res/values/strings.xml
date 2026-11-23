@@ -42,23 +42,23 @@
     <string name="checkout_mbway_country_code_picker_title" translatable="false">Prefix</string>
     <string name="checkout_mbway_country_code_picker_description" translatable="false">Select your country/region prefix.</string>
     <string name="checkout_card_number" translatable="false">Card Number</string>
-    <string name="checkout_card_number_invalid" translatable="false">Invalid card number</string>
+    <string name="checkout_card_number_invalid" translatable="false">Enter a valid card number</string>
     <string name="checkout_card_number_invalid_unsupported_brand" translatable="false">The entered card brand isn\'t supported</string>
     <string name="checkout_card_expiry_date" translatable="false">Expiry Date</string>
-    <string name="checkout_card_expiry_date_invalid" translatable="false">Invalid Expiry Date</string>
+    <string name="checkout_card_expiry_date_invalid" translatable="false">Enter a valid expiration date. Front of card in MM/YY format</string>
     <string name="checkout_card_expiry_date_invalid_too_old" translatable="false">Card too old</string>
     <string name="checkout_card_expiry_date_invalid_too_far_in_the_future" translatable="false">Expiry date too far in the future</string>
-    <string name="checkout_card_expiry_date_hint" translatable="false">Front of card, MM/YY format</string>
+    <string name="adyen_checkout_card_expiry_date_hint" translatable="false">Front of card in MM/YY format</string>
     <string name="adyen_checkout_card_security_code_label" translatable="false">Security code</string>
     <string name="adyen_checkout_card_security_code_hint_three_digits" translatable="false">3 digits on back of card</string>
     <string name="adyen_checkout_card_security_code_hint_four_digits" translatable="false">4 digits on front of card</string>
-    <string name="adyen_checkout_card_security_code_error_empty_three_digits" translatable="false">Enter the security code. 3 digits on back of card.</string>
-    <string name="adyen_checkout_card_security_code_error_empty_four_digits" translatable="false">Enter the security code. 4 digits on front of card.</string>
-    <string name="adyen_checkout_card_security_code_error_incomplete_three_digits" translatable="false">Enter the complete security code. 3 digits on back of card.</string>
-    <string name="adyen_checkout_card_security_code_error_incomplete_four_digits" translatable="false">Enter the complete security code. 4 digits on front of card.</string>
+    <string name="adyen_checkout_card_security_code_error_empty_three_digits" translatable="false">Enter the security code. 3 digits on back of card</string>
+    <string name="adyen_checkout_card_security_code_error_empty_four_digits" translatable="false">Enter the security code. 4 digits on front of card</string>
+    <string name="adyen_checkout_card_security_code_error_incomplete_three_digits" translatable="false">Enter a valid security code. 3 digits on back of card</string>
+    <string name="adyen_checkout_card_security_code_error_incomplete_four_digits" translatable="false">Enter a valid security code. 4 digits on front of card</string>
     <string name="checkout_card_holder_name" translatable="false">Name on Card</string>
     <string name="checkout_card_holder_name_invalid" translatable="false">Holder name invalid</string>
-    <string name="checkout_card_store_payment_method" translatable="false">Save details for next time</string>
+    <string name="adyen_checkout_card_store_details_label" translatable="false">Remember my card details for future payments</string>
     <string name="checkout_card_dual_brand_selector_title" translatable="false">Card Brand</string>
     <string name="checkout_card_dual_brand_selector_description" translatable="false">You can select the card brand you prefer to pay with. This is optional.</string>
     <string name="checkout_card_social_security_number" translatable="false">CPF/CNPJ</string>
@@ -126,4 +126,5 @@
     <string name="checkout_redirect_title" translatable="false">Redirection</string>
     <string name="checkout_redirect_description" translatable="false">You are guided to the next step of the process.</string>
     <string name="checkout_redirect_status" translatable="false">Processing..</string>
+    <string name="adyen_checkout_store_details_label" translatable="false">Remember for next time</string>
 </resources>
