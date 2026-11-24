@@ -45,7 +45,7 @@
     <string name="checkout_card_number_invalid" translatable="false">Enter a valid card number</string>
     <string name="checkout_card_number_invalid_unsupported_brand" translatable="false">The entered card brand isn\'t supported</string>
     <string name="checkout_card_expiry_date" translatable="false">Expiry Date</string>
-    <string name="checkout_card_expiry_date_invalid" translatable="false">Enter a valid expiration date. Front of card in MM/YY format</string>
+    <string name="checkout_card_expiry_date_invalid" translatable="false">Enter a valid expiry date. Front of card in MM/YY format</string>
     <string name="checkout_card_expiry_date_invalid_too_old" translatable="false">Card too old</string>
     <string name="checkout_card_expiry_date_invalid_too_far_in_the_future" translatable="false">Expiry date too far in the future</string>
     <string name="adyen_checkout_card_expiry_date_hint" translatable="false">Front of card in MM/YY format</string>
