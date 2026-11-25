@@ -10,7 +10,7 @@ Use session flow when you want the SDK to manage the checkout flow from a `Sessi
 
 ## Example
 
-Create the controller in a `ViewModel`, and pass its `viewModelScope` and `SavedStateHandle` so the checkout flow can be restored after process death:
+Create the controller in a `ViewModel`, and pass its `viewModelScope`:
 
 ```kotlin
 val configuration = CheckoutConfiguration(
@@ -55,7 +55,6 @@ viewModelScope.launch {
                     )
                 },
                 coroutineScope = viewModelScope,
-                savedStateHandle = savedStateHandle,
             )
         }
     }

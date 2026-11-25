@@ -8,19 +8,15 @@
 
 package com.adyen.checkout.core.components.internal
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -29,20 +25,18 @@ internal class ActionOnlyCheckoutFlowTest(
     @param:Mock private val actionHandler: ActionHandler,
 ) {
 
-    private val stateStore = CheckoutFlowStateStore(SavedStateHandle(), target = null)
-
     @Test
     fun `when created, then handleAction is called on actionHandler`() {
         val action = createAction()
 
-        createFlow(action)
+        ActionOnlyCheckoutFlow(action, actionHandler)
 
         verify(actionHandler).handleAction(action)
     }
 
     @Test
     fun `when paymentComponent is accessed, then null is returned`() {
-        val flow = createFlow()
+        val flow = ActionOnlyCheckoutFlow(createAction(), actionHandler)
 
         assertNull(flow.paymentComponent)
     }
@@ -52,62 +46,21 @@ internal class ActionOnlyCheckoutFlowTest(
         val mockActionComponent = mock<ActionComponent>()
         whenever(actionHandler.actionComponent).thenReturn(mockActionComponent)
 
-        val flow = createFlow()
+        val flow = ActionOnlyCheckoutFlow(createAction(), actionHandler)
 
         assertEquals(mockActionComponent, flow.actionComponent)
     }
 
     @Test
     fun `when submit is called, then no exception is thrown`() {
-        val flow = createFlow()
+        val flow = ActionOnlyCheckoutFlow(createAction(), actionHandler)
 
         flow.submit()
     }
 
-    @Nested
-    inner class RestoreTest {
-
-        @Test
-        fun `when the same action was being handled, then it is restored`() {
-            val action = createAction()
-            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
-
-            createFlow(action)
-
-            verify(actionHandler).restoreAction(action)
-        }
-
-        @Test
-        fun `when the same action was being handled, then it is not handled again`() {
-            val action = createAction()
-            stateStore.save(CheckoutFlowPhase.HandlingAction(action))
-
-            createFlow(action)
-
-            verify(actionHandler, never()).handleAction(any())
-        }
-
-        @Test
-        fun `when another action was being handled, then the new action is handled`() {
-            stateStore.save(CheckoutFlowPhase.HandlingAction(createAction(paymentData = "previous_data")))
-            val action = createAction()
-
-            createFlow(action)
-
-            verify(actionHandler).handleAction(action)
-            verify(actionHandler, never()).restoreAction(any())
-        }
-    }
-
-    private fun createFlow(action: TestAction = createAction()) = ActionOnlyCheckoutFlow(
-        action = action,
-        actionHandler = actionHandler,
-        stateStore = stateStore,
-    )
-
-    private fun createAction(paymentData: String = "test_data") = TestAction(
+    private fun createAction() = TestAction(
         type = "redirect",
-        paymentData = paymentData,
+        paymentData = "test_data",
         paymentMethodType = "scheme",
     )
 }

@@ -77,7 +77,6 @@ internal class DropInControllerProviderTest {
                     context = any<CheckoutContext.Advanced>(),
                     callbacks = any<AdvancedCheckoutCallbacks>(),
                     coroutineScope = any(),
-                    savedStateHandle = any(),
                 )
             } doReturn controller
         }
@@ -107,7 +106,6 @@ internal class DropInControllerProviderTest {
                     context = any<CheckoutContext.Sessions>(),
                     callbacks = any<SessionCheckoutCallbacks>(),
                     coroutineScope = any(),
-                    savedStateHandle = any(),
                 )
             } doReturn controller
         }

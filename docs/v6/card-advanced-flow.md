@@ -10,7 +10,7 @@ Use advanced flow when your backend manages payment submission and additional de
 
 ## Example
 
-Create the controller in a `ViewModel`, and pass its `viewModelScope` and `SavedStateHandle` so the checkout flow can be restored after process death:
+Create the controller in a `ViewModel`, and pass its `viewModelScope`:
 
 ```kotlin
 val configuration = CheckoutConfiguration(
@@ -60,7 +60,6 @@ viewModelScope.launch {
                     )
                 },
                 coroutineScope = viewModelScope,
-                savedStateHandle = savedStateHandle,
             )
         }
     }

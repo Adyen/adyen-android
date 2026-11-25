@@ -9,7 +9,6 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
@@ -47,7 +46,6 @@ class CheckoutControllerFactory(
         context: CheckoutContext.Advanced,
         callbacks: AdvancedCheckoutCallbacks,
         coroutineScope: CoroutineScope,
-        savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
         val componentRequestDispatcher = AdvancedComponentRequestDispatcher(callbacks)
         createFullCheckoutController(
@@ -57,7 +55,6 @@ class CheckoutControllerFactory(
             callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
-            savedStateHandle = savedStateHandle,
         )
     }
 
@@ -66,7 +63,6 @@ class CheckoutControllerFactory(
         context: CheckoutContext.Sessions,
         callbacks: SessionCheckoutCallbacks,
         coroutineScope: CoroutineScope,
-        savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
         val checkoutParams = CheckoutParamsFactory().create(context)
         val componentRequestDispatcher = createSessionComponentRequestDispatcher(
@@ -81,7 +77,6 @@ class CheckoutControllerFactory(
             callbacks = callbacks,
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
-            savedStateHandle = savedStateHandle,
         )
     }
 
@@ -89,7 +84,6 @@ class CheckoutControllerFactory(
         context: CheckoutContext.ActionOnly,
         callbacks: ActionOnlyCheckoutCallbacks,
         coroutineScope: CoroutineScope,
-        savedStateHandle: SavedStateHandle,
     ): CheckoutController = runCatchingCreation {
         val checkoutParams = CheckoutParamsFactory().create(context)
         // TODO - what should be the payment method type for action only?
@@ -99,20 +93,16 @@ class CheckoutControllerFactory(
             coroutineScope = coroutineScope,
         )
         val componentRequestDispatcher = ActionOnlyComponentRequestDispatcher(callbacks)
-        val stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = null)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
-            savedStateHandle = savedStateHandle,
-            stateStore = stateStore,
             onAction = {},
         )
         val flow = ActionOnlyCheckoutFlow(
             action = context.action,
             actionHandler = actionHandler,
-            stateStore = stateStore,
         )
         CheckoutController(
             flow = flow,
@@ -145,7 +135,6 @@ class CheckoutControllerFactory(
         callbacks: CheckoutCallbacks,
         componentRequestDispatcher: SubmittableComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
-        savedStateHandle: SavedStateHandle,
     ): CheckoutController {
         val paymentMethod = PaymentMethodResolver.resolve(target, context) ?: return createFailedCheckoutController(
             errorMessage = "Payment method for target '$target' was not found in the payment methods response.",
@@ -158,14 +147,11 @@ class CheckoutControllerFactory(
             paymentMethodType = paymentMethod.type,
             coroutineScope = coroutineScope,
         )
-        val stateStore = CheckoutFlowStateStore(savedStateHandle = savedStateHandle, target = target)
         val actionHandler = createActionHandler(
             componentRequestDispatcher = componentRequestDispatcher,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             params = checkoutParams,
-            savedStateHandle = savedStateHandle,
-            stateStore = stateStore,
             onAction = componentRequestDispatcher::action,
         )
         val sdkDataProvider = DefaultSdkDataProvider(checkoutParams.checkoutAttemptId)
@@ -185,7 +171,6 @@ class CheckoutControllerFactory(
                     coroutineScope = coroutineScope,
                     paymentComponent = paymentComponentResult.component,
                     actionHandler = actionHandler,
-                    stateStore = stateStore,
                 )
 
                 CheckoutController(
@@ -233,22 +218,17 @@ class CheckoutControllerFactory(
         )
     }
 
-    @Suppress("LongParameterList")
     private fun createActionHandler(
         componentRequestDispatcher: ComponentRequestDispatcher,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         params: CheckoutParams,
-        savedStateHandle: SavedStateHandle,
-        stateStore: CheckoutFlowStateStore,
         onAction: (ActionData) -> Unit,
     ) = ActionHandler(
         componentRequestDispatcher = componentRequestDispatcher,
         coroutineScope = coroutineScope,
         analyticsManager = analyticsManager,
         params = params,
-        savedStateHandle = savedStateHandle,
-        stateStore = stateStore,
         onAction = onAction,
     )
 

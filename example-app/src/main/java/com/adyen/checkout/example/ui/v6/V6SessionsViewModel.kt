@@ -182,7 +182,6 @@ internal class V6SessionsViewModel @Inject constructor(
                 )
             },
             coroutineScope = viewModelScope,
-            savedStateHandle = savedStateHandle,
         ).also {
             checkoutController = it
         }

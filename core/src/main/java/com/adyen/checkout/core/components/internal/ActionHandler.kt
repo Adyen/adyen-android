@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
@@ -15,7 +16,6 @@ import com.adyen.checkout.core.action.data.ActionData
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionComponentProvider
-import com.adyen.checkout.core.action.internal.RestorableActionComponent
 import com.adyen.checkout.core.action.internal.ReturningActionComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutResultCode
@@ -23,7 +23,6 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.CheckoutLogLevel
-import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.core.error.internal.InternalCheckoutError
 import com.adyen.checkout.core.error.toCheckoutError
 import kotlinx.coroutines.CoroutineScope
@@ -31,15 +30,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-internal class ActionHandler
-@Suppress("LongParameterList")
-constructor(
+internal class ActionHandler(
     private val componentRequestDispatcher: ComponentRequestDispatcher,
     private val coroutineScope: CoroutineScope,
     private val analyticsManager: AnalyticsManager,
     private val params: CheckoutParams,
-    private val savedStateHandle: SavedStateHandle,
-    private val stateStore: CheckoutFlowStateStore,
     private val onAction: (ActionData) -> Unit,
 ) {
 
@@ -49,41 +44,6 @@ constructor(
     private var job: Job? = null
 
     fun handleAction(action: Action) {
-        val actionComponent = createActionComponent(action) ?: return
-        stateStore.save(CheckoutFlowPhase.HandlingAction(action))
-        observe(actionComponent)
-
-        onAction(ActionData(action.type))
-
-        actionComponent.handleAction()
-    }
-
-    /**
-     * Resumes [action] after process death. The merchant was already notified about the action before, so `onAction`
-     * is not called again.
-     */
-    fun restoreAction(action: Action) {
-        val actionComponent = createActionComponent(action) ?: run {
-            stateStore.clear()
-            return
-        }
-        if (actionComponent !is RestorableActionComponent) {
-            this.actionComponent = null
-            stateStore.clear()
-            val error = CheckoutError(
-                code = CheckoutError.ErrorCode.GENERIC,
-                message = "The '${action.type}' action cannot be resumed, because the app was stopped while it was " +
-                    "being handled. Check the payment status on your server.",
-            )
-            componentRequestDispatcher.failure(error)
-            return
-        }
-        observe(actionComponent)
-
-        actionComponent.restoreAction()
-    }
-
-    private fun createActionComponent(action: Action): ActionComponent? {
         job?.cancel()
         this.actionComponent = null
 
@@ -93,18 +53,16 @@ constructor(
                 coroutineScope = coroutineScope,
                 analyticsManager = analyticsManager,
                 params = params,
-                savedStateHandle = savedStateHandle,
+                // TODO - COSDK-1311 - Figure out how to save action state
+                savedStateHandle = @SuppressLint("VisibleForTests") SavedStateHandle(),
             )
         } catch (e: InternalCheckoutError) {
             adyenLog(CheckoutLogLevel.ERROR, e) { "Could not create an action component for action '${action.type}'" }
             componentRequestDispatcher.failure(e.toCheckoutError())
-            return null
+            return
         }
         this.actionComponent = actionComponent
-        return actionComponent
-    }
 
-    private fun observe(actionComponent: ActionComponent) {
         job = actionComponent.eventFlow
             .onEach { event ->
                 when (event) {
@@ -119,12 +77,15 @@ constructor(
                 }
             }
             .launchIn(coroutineScope)
+
+        onAction(ActionData(action.type))
+
+        actionComponent.handleAction()
     }
 
     private fun handleResult(result: AdditionalDetailsResult) {
         when (result) {
             is AdditionalDetailsResult.Completion -> {
-                stateStore.clear()
                 componentRequestDispatcher.complete(CheckoutResultCode(result.resultCode))
             }
         }
