@@ -24,7 +24,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.PickerInputCom
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.core.components.paymentmethod.CardDetails
-import com.adyen.checkout.cse.EncryptedCard
+import com.adyen.checkout.cse.old.EncryptedCard
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue

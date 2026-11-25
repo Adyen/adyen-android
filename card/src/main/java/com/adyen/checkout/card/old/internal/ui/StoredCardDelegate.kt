@@ -47,10 +47,10 @@ import com.adyen.checkout.core.old.internal.ui.model.toMMyyString
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runCompileOnly
 import com.adyen.checkout.core.old.ui.model.ExpiryDate
-import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.old.EncryptedCard
+import com.adyen.checkout.cse.old.EncryptionException
+import com.adyen.checkout.cse.old.UnencryptedCard
+import com.adyen.checkout.cse.old.internal.BaseCardEncryptor
 import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType

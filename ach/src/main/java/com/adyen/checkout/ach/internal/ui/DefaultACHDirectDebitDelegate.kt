@@ -31,8 +31,8 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.internal.BaseGenericEncryptor
+import com.adyen.checkout.cse.old.EncryptionException
+import com.adyen.checkout.cse.old.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.old.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType

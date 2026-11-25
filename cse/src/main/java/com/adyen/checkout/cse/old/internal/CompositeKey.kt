@@ -6,9 +6,9 @@
  * Created by oscars on 27/9/2023.
  */
 
-package com.adyen.checkout.cse.internal
+package com.adyen.checkout.cse.old.internal
 
-import com.adyen.checkout.cse.EncryptionException
+import com.adyen.checkout.cse.old.EncryptionException
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 

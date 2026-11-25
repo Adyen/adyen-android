@@ -6,9 +6,9 @@
  * Created by oscars on 18/7/2022.
  */
 
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.old
 
-import com.adyen.checkout.cse.internal.CardEncryptorFactory
+import com.adyen.checkout.cse.old.internal.CardEncryptorFactory
 
 /**
  * Allows the encryption of card data to be sent to Adyen's APIs.

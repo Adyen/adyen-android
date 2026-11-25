@@ -32,10 +32,10 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.ui.model.ExpiryDate
-import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.old.EncryptedCard
+import com.adyen.checkout.cse.old.EncryptionException
+import com.adyen.checkout.cse.old.UnencryptedCard
+import com.adyen.checkout.cse.old.internal.BaseCardEncryptor
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardException

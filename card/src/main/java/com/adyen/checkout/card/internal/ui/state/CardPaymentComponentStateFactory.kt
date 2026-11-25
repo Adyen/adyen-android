@@ -19,7 +19,7 @@ import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.model.getPaymentDataValue
 import com.adyen.checkout.core.components.paymentmethod.CardDetails
-import com.adyen.checkout.cse.EncryptedCard
+import com.adyen.checkout.cse.old.EncryptedCard
 import com.adyen.threeds2.ThreeDS2Service
 
 internal class CardPaymentComponentStateFactory(

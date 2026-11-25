@@ -9,6 +9,7 @@
 package com.adyen.checkout.cse.internal
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.cse.old.internal.GenericEncryptorFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CheckoutEncryptorFactory {

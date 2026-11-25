@@ -49,7 +49,7 @@ import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.data.api.HttpClient
 import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
-import com.adyen.checkout.cse.internal.GenericEncryptorFactory
+import com.adyen.checkout.cse.old.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
