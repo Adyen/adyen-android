@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.helper
 
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import java.util.Calendar
 
 /**
@@ -21,9 +21,9 @@ internal class StoredPaymentMethodExpiryCheck(
     private val currentCalendar: () -> Calendar = { Calendar.getInstance() },
 ) {
 
-    fun isExpired(storedPaymentMethod: StoredPaymentMethod): Boolean {
+    fun isExpired(storedPaymentMethod: StoredPaymentMethodResponse): Boolean {
         // TODO - Check StoredBCMCPaymentMethod too once stored Bancontact is supported, like iOS
-        val card = storedPaymentMethod as? StoredCardPaymentMethod ?: return false
+        val card = storedPaymentMethod as? StoredCardPaymentMethodResponse ?: return false
         val expiryMonth = card.expiryMonth
             .takeIf { it.length == MONTH_DIGITS }
             ?.toIntOrNull()

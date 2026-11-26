@@ -54,9 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.core.components.CheckoutAction
 import com.adyen.checkout.core.components.CheckoutPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.stringFromUIText
@@ -212,8 +212,8 @@ private fun DropDownButton(
 
 @Composable
 private fun PaymentMethodOptionsDialog(
-    paymentMethods: List<PaymentMethod>,
-    storedPaymentMethods: List<StoredPaymentMethod>,
+    paymentMethods: List<RegularPaymentMethodResponse>,
+    storedPaymentMethods: List<StoredPaymentMethodResponse>,
     onItemClick: (PaymentMethodResponse) -> Unit,
     onDismissRequest: () -> Unit,
     theme: CheckoutTheme,

@@ -8,8 +8,8 @@ package com.adyen.checkout.googlepay.internal.ui
 
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -62,7 +62,7 @@ internal class GooglePayFactoryTest {
 
         assertThrows<IllegalArgumentException> {
             factory.isAvailable(
-                GenericPaymentMethod(type = "not_google_pay", name = "Other"),
+                GenericPaymentMethodResponse(type = "not_google_pay", name = "Other"),
                 createCheckoutParams(),
             )
         }
@@ -74,7 +74,7 @@ internal class GooglePayFactoryTest {
         }
     }
 
-    private fun createPaymentMethod() = GooglePayPaymentMethod(
+    private fun createPaymentMethod() = GooglePayPaymentMethodResponse(
         type = PaymentMethodTypes.GOOGLE_PAY,
         name = "Google Pay",
         brands = emptyList(),

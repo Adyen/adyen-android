@@ -12,9 +12,9 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.analytics.StoredPaymentMethodManagementEvents
 import com.adyen.checkout.dropin.internal.data.DefaultPaymentMethodRepository
@@ -311,7 +311,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
 
     private fun createRepository(
         remover: StoredPaymentMethodRemover = StoredPaymentMethodRemover { Result.success(Unit) },
-        storedPaymentMethods: List<StoredPaymentMethod> = listOf(storedCard(FIRST_ID), storedCard(SECOND_ID)),
+        storedPaymentMethods: List<StoredPaymentMethodResponse> = listOf(storedCard(FIRST_ID), storedCard(SECOND_ID)),
         coroutineScope: CoroutineScope,
     ) = DefaultPaymentMethodRepository(
         paymentMethods = emptyList(),
@@ -324,7 +324,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
 
     private fun StoredPaymentMethodManagementViewState.removingCardIds() = cards.filter { it.isRemoving }.map { it.id }
 
-    private fun storedCard(id: String, expiryYear: String = "2030") = StoredCardPaymentMethod(
+    private fun storedCard(id: String, expiryYear: String = "2030") = StoredCardPaymentMethodResponse(
         type = PaymentMethodTypes.SCHEME,
         id = id,
         name = "Visa",
@@ -337,7 +337,7 @@ internal class StoredPaymentMethodManagementViewModelTest {
         fundingSource = null,
     )
 
-    private fun storedBlik(id: String) = StoredBLIKPaymentMethod(
+    private fun storedBlik(id: String) = StoredBLIKPaymentMethodResponse(
         type = PaymentMethodTypes.BLIK,
         name = "BLIK",
         id = id,

@@ -15,8 +15,8 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -72,7 +72,7 @@ internal class PaymentMethodViewModelTest {
 
     private val paymentMethodRepository = TestPaymentMethodRepository(
         storedMethods = listOf(
-            StoredCardPaymentMethod(
+            StoredCardPaymentMethodResponse(
                 type = PaymentMethodTypes.SCHEME,
                 name = "Visa",
                 id = STORED_ID,
@@ -86,7 +86,7 @@ internal class PaymentMethodViewModelTest {
             ),
         ),
         paymentMethods = listOf(
-            CardPaymentMethod(
+            CardPaymentMethodResponse(
                 type = PaymentMethodTypes.SCHEME,
                 name = "Cards",
                 brands = listOf("visa"),

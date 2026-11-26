@@ -11,7 +11,7 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 interface StoredPaymentComponentFactory<T : PaymentComponent> : ComponentFactory {
 
     fun create(
-        storedPaymentMethod: StoredPaymentMethod,
+        storedPaymentMethod: StoredPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,

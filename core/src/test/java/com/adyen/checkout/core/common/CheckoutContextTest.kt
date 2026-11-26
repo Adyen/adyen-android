@@ -8,9 +8,9 @@ package com.adyen.checkout.core.common
 
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethodResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,7 +22,7 @@ internal class CheckoutContextTest {
 
     @Test
     fun `when advanced context has payment methods then returns them`() {
-        val expected = listOf(GenericPaymentMethod(type = "scheme", name = "Cards"))
+        val expected = listOf(GenericPaymentMethodResponse(type = "scheme", name = "Cards"))
         val context = advancedContext(PaymentMethods(paymentMethods = expected))
 
         val result = context.getPaymentMethods()
@@ -33,7 +33,7 @@ internal class CheckoutContextTest {
     @Test
     fun `when advanced context has stored payment methods then returns them`() {
         val expected = listOf(
-            StoredUnsupportedPaymentMethod(
+            StoredUnsupportedPaymentMethodResponse(
                 type = "scheme",
                 name = "Stored card",
                 id = "stored-card",
@@ -50,8 +50,8 @@ internal class CheckoutContextTest {
     @Test
     fun `when sessions context has payment methods then returns them in order`() {
         val expected = listOf(
-            GenericPaymentMethod(type = "ideal", name = "iDEAL"),
-            GenericPaymentMethod(type = "scheme", name = "Cards"),
+            GenericPaymentMethodResponse(type = "ideal", name = "iDEAL"),
+            GenericPaymentMethodResponse(type = "scheme", name = "Cards"),
         )
         val context = sessionsContext(PaymentMethods(paymentMethods = expected))
 
@@ -63,7 +63,7 @@ internal class CheckoutContextTest {
     @Test
     fun `when sessions context has stored payment methods then returns them`() {
         val expected = listOf(
-            StoredUnsupportedPaymentMethod(
+            StoredUnsupportedPaymentMethodResponse(
                 type = "scheme",
                 name = "Stored card",
                 id = "stored-card",

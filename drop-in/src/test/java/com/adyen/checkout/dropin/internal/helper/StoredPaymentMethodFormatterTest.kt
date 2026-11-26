@@ -10,13 +10,13 @@ package com.adyen.checkout.dropin.internal.helper
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.ui.UiText
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -28,7 +28,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is scheme, then icon is brand`() {
-        val storedPaymentMethod = StoredCardPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "name",
             id = "id",
@@ -48,7 +48,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is not scheme, then icon is type`() {
-        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethodResponse(
             type = PaymentMethodTypes.ACH,
             name = "name",
             id = "id",
@@ -63,7 +63,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is cash app pay, then title is cashtag`() {
-        val storedPaymentMethod = StoredCashAppPayPaymentMethod(
+        val storedPaymentMethod = StoredCashAppPayPaymentMethodResponse(
             type = PaymentMethodTypes.CASH_APP_PAY,
             name = "name",
             id = "id",
@@ -78,7 +78,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is pay by bank us, then title is label`() {
-        val storedPaymentMethod = StoredPayByBankUSPaymentMethod(
+        val storedPaymentMethod = StoredPayByBankUSPaymentMethodResponse(
             type = PaymentMethodTypes.PAY_BY_BANK_US,
             name = "name",
             id = "id",
@@ -93,7 +93,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is pay to, then title is label`() {
-        val storedPaymentMethod = StoredPayToPaymentMethod(
+        val storedPaymentMethod = StoredPayToPaymentMethodResponse(
             type = PaymentMethodTypes.PAY_TO,
             name = "name",
             id = "id",
@@ -108,7 +108,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is unsupported, then title is name`() {
-        val storedPaymentMethod = StoredUnsupportedPaymentMethod(
+        val storedPaymentMethod = StoredUnsupportedPaymentMethodResponse(
             type = PaymentMethodTypes.PAYPAL,
             name = "name",
             id = "id",
@@ -122,7 +122,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is ach, then title shows last four digits of account number`() {
-        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethodResponse(
             type = PaymentMethodTypes.ACH,
             name = "name",
             id = "id",
@@ -137,7 +137,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is scheme, then title is lastFour`() {
-        val storedPaymentMethod = StoredCardPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "name",
             id = "id",
@@ -157,7 +157,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is other, then title is name`() {
-        val storedPaymentMethod = StoredBLIKPaymentMethod(
+        val storedPaymentMethod = StoredBLIKPaymentMethodResponse(
             type = "other",
             name = "name",
             id = "id",
@@ -171,7 +171,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is ach, then subtitle is name`() {
-        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethodResponse(
             type = PaymentMethodTypes.ACH,
             name = "name",
             id = "id",
@@ -186,7 +186,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is cash app pay, then subtitle is name`() {
-        val storedPaymentMethod = StoredCashAppPayPaymentMethod(
+        val storedPaymentMethod = StoredCashAppPayPaymentMethodResponse(
             type = PaymentMethodTypes.CASH_APP_PAY,
             name = "name",
             id = "id",
@@ -201,7 +201,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is unsupported, then subtitle is null`() {
-        val storedPaymentMethod = StoredUnsupportedPaymentMethod(
+        val storedPaymentMethod = StoredUnsupportedPaymentMethodResponse(
             type = PaymentMethodTypes.PAYPAL,
             name = "name",
             id = "id",
@@ -215,7 +215,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is pay by bank us, then subtitle is name`() {
-        val storedPaymentMethod = StoredPayByBankUSPaymentMethod(
+        val storedPaymentMethod = StoredPayByBankUSPaymentMethodResponse(
             type = PaymentMethodTypes.PAY_BY_BANK_US,
             name = "name",
             id = "id",
@@ -230,7 +230,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is pay to, then subtitle is name`() {
-        val storedPaymentMethod = StoredPayToPaymentMethod(
+        val storedPaymentMethod = StoredPayToPaymentMethodResponse(
             type = PaymentMethodTypes.PAY_TO,
             name = "name",
             id = "id",
@@ -245,7 +245,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is scheme, then subtitle is name`() {
-        val storedPaymentMethod = StoredCardPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "name",
             id = "id",
@@ -265,7 +265,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is other, then subtitle is null`() {
-        val storedPaymentMethod = StoredBLIKPaymentMethod(
+        val storedPaymentMethod = StoredBLIKPaymentMethodResponse(
             type = "other",
             name = "name",
             id = "id",
@@ -279,7 +279,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is scheme, then removal title is name and last four`() {
-        val storedPaymentMethod = StoredCardPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "Visa",
             id = "id",
@@ -299,7 +299,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is ach, then removal title is name and last four digits of account number`() {
-        val storedPaymentMethod = StoredACHDirectDebitPaymentMethod(
+        val storedPaymentMethod = StoredACHDirectDebitPaymentMethodResponse(
             type = PaymentMethodTypes.ACH,
             name = "ACH",
             id = "id",
@@ -314,7 +314,7 @@ internal class StoredPaymentMethodFormatterTest {
 
     @Test
     fun `when type is cash app pay, then removal title is name`() {
-        val storedPaymentMethod = StoredCashAppPayPaymentMethod(
+        val storedPaymentMethod = StoredCashAppPayPaymentMethodResponse(
             type = PaymentMethodTypes.CASH_APP_PAY,
             name = "Cash App Pay",
             id = "id",
@@ -376,7 +376,7 @@ internal class StoredPaymentMethodFormatterTest {
         )
     }
 
-    private fun createStoredCard() = StoredCardPaymentMethod(
+    private fun createStoredCard() = StoredCardPaymentMethodResponse(
         type = PaymentMethodTypes.SCHEME,
         name = "Visa",
         id = "id",

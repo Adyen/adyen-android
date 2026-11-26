@@ -16,9 +16,9 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.CheckoutLogLevel
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponentFactory
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -46,7 +46,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
 
     @Suppress("LongParameterList")
     fun getPaymentComponent(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
@@ -64,7 +64,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
     }
 
     override suspend fun isAvailable(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         params: CheckoutParams,
     ): Boolean {
         return when (val factory = resolveFactory(paymentMethod)) {
@@ -76,7 +76,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
 
     private suspend fun runAvailabilityCheck(
         availabilityCheck: PaymentMethodAvailabilityCheck,
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         params: CheckoutParams,
     ): Boolean {
         return runSuspendCatching {
@@ -89,8 +89,8 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
         }
     }
 
-    private fun resolveFactory(paymentMethod: PaymentMethod): PaymentComponentFactory<*>? {
-        return factories[paymentMethod.type] ?: if (paymentMethod is GenericPaymentMethod) {
+    private fun resolveFactory(paymentMethod: RegularPaymentMethodResponse): PaymentComponentFactory<*>? {
+        return factories[paymentMethod.type] ?: if (paymentMethod is GenericPaymentMethodResponse) {
             GenericPaymentComponentFactory
         } else {
             null
@@ -98,7 +98,7 @@ object PaymentMethodProvider : PaymentMethodAvailabilityCheck {
     }
 
     fun getStoredPaymentComponent(
-        storedPaymentMethod: StoredPaymentMethod,
+        storedPaymentMethod: StoredPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,

@@ -13,11 +13,11 @@ import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.data.provider.DefaultSdkDataProvider
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.GenericPaymentComponent
@@ -113,7 +113,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
-                paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+                paymentMethod = GenericPaymentMethodResponse(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 sdkDataProvider = generateSdkDataProvider(),
@@ -137,7 +137,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.getStoredPaymentComponent(
-                storedPaymentMethod = StoredBLIKPaymentMethod(
+                storedPaymentMethod = StoredBLIKPaymentMethodResponse(
                     type = "txVariant",
                     name = "name",
                     id = "test_id",
@@ -175,7 +175,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", factory)
 
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
-                paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+                paymentMethod = GenericPaymentMethodResponse(type = "txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 sdkDataProvider = generateSdkDataProvider(),
@@ -192,7 +192,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", storedFactory)
 
             val actualComponent = PaymentMethodProvider.getStoredPaymentComponent(
-                storedPaymentMethod = StoredBLIKPaymentMethod(
+                storedPaymentMethod = StoredBLIKPaymentMethodResponse(
                     type = "txVariant",
                     name = "name",
                     id = "test_id",
@@ -211,7 +211,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered and unknown payment method, then GenericPaymentComponent is returned`() =
         runTest {
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
-                paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
+                paymentMethod = GenericPaymentMethodResponse(type = "unregistered_txVariant", name = "name"),
                 // The component keeps its view state alive in this scope, so it has to be one that the test cancels
                 coroutineScope = backgroundScope,
                 analyticsManager = TestAnalyticsManager(),
@@ -226,7 +226,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered and unsupported payment method, then null is returned`() =
         runTest {
             val actualComponent = PaymentMethodProvider.getPaymentComponent(
-                paymentMethod = UnsupportedPaymentMethod(type = "unregistered_txVariant", name = "name"),
+                paymentMethod = UnsupportedPaymentMethodResponse(type = "unregistered_txVariant", name = "name"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 sdkDataProvider = generateSdkDataProvider(),
@@ -239,7 +239,7 @@ internal class PaymentMethodProviderTest {
     @Test
     fun `when get is called for an unregistered stored factory, then null is returned`() = runTest {
         val actualComponent = PaymentMethodProvider.getStoredPaymentComponent(
-            storedPaymentMethod = StoredBLIKPaymentMethod(
+            storedPaymentMethod = StoredBLIKPaymentMethodResponse(
                 type = "unregistered_txVariant",
                 name = "name",
                 id = "test_id",
@@ -258,7 +258,7 @@ internal class PaymentMethodProviderTest {
         PaymentMethodProvider.register("txVariant", generateFactoryWithAvailabilityCheck(isAvailable = true))
 
         val result = PaymentMethodProvider.isAvailable(
-            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            paymentMethod = GenericPaymentMethodResponse(type = "txVariant", name = "name"),
             params = generateCheckoutParams(),
         )
 
@@ -270,7 +270,7 @@ internal class PaymentMethodProviderTest {
         PaymentMethodProvider.register("txVariant", generateFactoryWithAvailabilityCheck(isAvailable = false))
 
         val result = PaymentMethodProvider.isAvailable(
-            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            paymentMethod = GenericPaymentMethodResponse(type = "txVariant", name = "name"),
             params = generateCheckoutParams(),
         )
 
@@ -285,7 +285,7 @@ internal class PaymentMethodProviderTest {
         )
 
         val result = PaymentMethodProvider.isAvailable(
-            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            paymentMethod = GenericPaymentMethodResponse(type = "txVariant", name = "name"),
             params = generateCheckoutParams(),
         )
 
@@ -297,7 +297,7 @@ internal class PaymentMethodProviderTest {
         PaymentMethodProvider.register("txVariant", factory)
 
         val result = PaymentMethodProvider.isAvailable(
-            paymentMethod = GenericPaymentMethod(type = "txVariant", name = "name"),
+            paymentMethod = GenericPaymentMethodResponse(type = "txVariant", name = "name"),
             params = generateCheckoutParams(),
         )
 
@@ -307,7 +307,7 @@ internal class PaymentMethodProviderTest {
     @Test
     fun `when isAvailable is called for an unregistered generic payment method, then true is returned`() = runTest {
         val result = PaymentMethodProvider.isAvailable(
-            paymentMethod = GenericPaymentMethod(type = "unregistered_txVariant", name = "name"),
+            paymentMethod = GenericPaymentMethodResponse(type = "unregistered_txVariant", name = "name"),
             params = generateCheckoutParams(),
         )
 
@@ -318,7 +318,7 @@ internal class PaymentMethodProviderTest {
     fun `when isAvailable is called for an unregistered unsupported payment method, then false is returned`() =
         runTest {
             val result = PaymentMethodProvider.isAvailable(
-                paymentMethod = UnsupportedPaymentMethod(type = "unregistered_txVariant", name = "name"),
+                paymentMethod = UnsupportedPaymentMethodResponse(type = "unregistered_txVariant", name = "name"),
                 params = generateCheckoutParams(),
             )
 
@@ -343,7 +343,7 @@ internal class PaymentMethodProviderTest {
         object :
             PaymentComponentFactory<PaymentComponent> {
             override fun create(
-                paymentMethod: PaymentMethod,
+                paymentMethod: RegularPaymentMethodResponse,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
                 sdkDataProvider: SdkDataProvider,
@@ -359,7 +359,7 @@ internal class PaymentMethodProviderTest {
         PaymentComponentFactory<PaymentComponent>,
         PaymentMethodAvailabilityCheck {
         override fun create(
-            paymentMethod: PaymentMethod,
+            paymentMethod: RegularPaymentMethodResponse,
             coroutineScope: CoroutineScope,
             analyticsManager: AnalyticsManager,
             sdkDataProvider: SdkDataProvider,
@@ -367,7 +367,7 @@ internal class PaymentMethodProviderTest {
             additionalCallbacks: Set<CheckoutAdditionalCallback>,
         ) = component
 
-        override suspend fun isAvailable(paymentMethod: PaymentMethod, params: CheckoutParams): Boolean {
+        override suspend fun isAvailable(paymentMethod: RegularPaymentMethodResponse, params: CheckoutParams): Boolean {
             error?.let { throw it }
             return isAvailable
         }
@@ -377,7 +377,7 @@ internal class PaymentMethodProviderTest {
         object :
             StoredPaymentComponentFactory<PaymentComponent> {
             override fun create(
-                storedPaymentMethod: StoredPaymentMethod,
+                storedPaymentMethod: StoredPaymentMethodResponse,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
                 sdkDataProvider: SdkDataProvider,

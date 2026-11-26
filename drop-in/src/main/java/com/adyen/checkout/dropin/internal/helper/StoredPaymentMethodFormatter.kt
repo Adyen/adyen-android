@@ -11,12 +11,12 @@ package com.adyen.checkout.dropin.internal.helper
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.format
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredACHDirectDebitPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCashAppPayPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayByBankUSPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPayToPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.dropin.internal.ui.UiText
 import java.util.Locale
 
@@ -24,50 +24,50 @@ internal object StoredPaymentMethodFormatter {
 
     private const val LAST_DIGITS_COUNT = 4
 
-    fun getIcon(storedPaymentMethod: StoredPaymentMethod): String {
+    fun getIcon(storedPaymentMethod: StoredPaymentMethodResponse): String {
         return when (storedPaymentMethod) {
-            is StoredCardPaymentMethod -> storedPaymentMethod.brand
+            is StoredCardPaymentMethodResponse -> storedPaymentMethod.brand
             else -> storedPaymentMethod.type
         }
     }
 
-    fun getTitle(storedPaymentMethod: StoredPaymentMethod): String {
+    fun getTitle(storedPaymentMethod: StoredPaymentMethodResponse): String {
         return when (storedPaymentMethod) {
-            is StoredCashAppPayPaymentMethod -> storedPaymentMethod.cashtag
-            is StoredPayByBankUSPaymentMethod -> storedPaymentMethod.label.orEmpty()
-            is StoredPayToPaymentMethod -> storedPaymentMethod.label
-            is StoredACHDirectDebitPaymentMethod -> {
+            is StoredCashAppPayPaymentMethodResponse -> storedPaymentMethod.cashtag
+            is StoredPayByBankUSPaymentMethodResponse -> storedPaymentMethod.label.orEmpty()
+            is StoredPayToPaymentMethodResponse -> storedPaymentMethod.label
+            is StoredACHDirectDebitPaymentMethodResponse -> {
                 "•••• ${storedPaymentMethod.bankAccountNumber.takeLast(LAST_DIGITS_COUNT)}"
             }
 
-            is StoredCardPaymentMethod -> "•••• ${storedPaymentMethod.lastFour}"
+            is StoredCardPaymentMethodResponse -> "•••• ${storedPaymentMethod.lastFour}"
             else -> storedPaymentMethod.name
         }
     }
 
-    fun getSubtitle(storedPaymentMethod: StoredPaymentMethod): String? {
+    fun getSubtitle(storedPaymentMethod: StoredPaymentMethodResponse): String? {
         return when (storedPaymentMethod) {
-            is StoredACHDirectDebitPaymentMethod,
-            is StoredCashAppPayPaymentMethod,
-            is StoredPayByBankUSPaymentMethod,
-            is StoredPayToPaymentMethod,
-            is StoredCardPaymentMethod -> storedPaymentMethod.name
+            is StoredACHDirectDebitPaymentMethodResponse,
+            is StoredCashAppPayPaymentMethodResponse,
+            is StoredPayByBankUSPaymentMethodResponse,
+            is StoredPayToPaymentMethodResponse,
+            is StoredCardPaymentMethodResponse -> storedPaymentMethod.name
 
             else -> null
         }
     }
 
-    fun getRemovalTitle(storedPaymentMethod: StoredPaymentMethod): String {
+    fun getRemovalTitle(storedPaymentMethod: StoredPaymentMethodResponse): String {
         // TODO - Treat StoredBCMCPaymentMethod like a card once stored Bancontact is supported, like iOS
         return when (storedPaymentMethod) {
-            is StoredACHDirectDebitPaymentMethod,
-            is StoredCardPaymentMethod -> "${storedPaymentMethod.name} ${getTitle(storedPaymentMethod)}"
+            is StoredACHDirectDebitPaymentMethodResponse,
+            is StoredCardPaymentMethodResponse -> "${storedPaymentMethod.name} ${getTitle(storedPaymentMethod)}"
 
             else -> storedPaymentMethod.name
         }
     }
 
-    fun getDescription(storedPaymentMethod: StoredPaymentMethod, amount: Amount?, locale: Locale): UiText {
+    fun getDescription(storedPaymentMethod: StoredPaymentMethodResponse, amount: Amount?, locale: Locale): UiText {
         val name = storedPaymentMethod.name
         return when {
             amount == null -> UiText.Localized(

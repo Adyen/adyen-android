@@ -12,7 +12,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -45,7 +45,7 @@ internal class PreselectedPaymentMethodViewModelTest {
         additionalSessionParams = null,
     )
 
-    private val storedPaymentMethod = StoredCardPaymentMethod(
+    private val storedPaymentMethod = StoredCardPaymentMethodResponse(
         type = PaymentMethodTypes.SCHEME,
         name = "Visa",
         id = "stored-id-1",

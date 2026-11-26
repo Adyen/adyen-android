@@ -8,20 +8,20 @@
 
 package com.adyen.checkout.dropin.internal.data
 
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 internal class TestPaymentMethodRepository(
-    storedMethods: List<StoredPaymentMethod> = emptyList(),
-    override val paymentMethods: List<PaymentMethod> = emptyList(),
+    storedMethods: List<StoredPaymentMethodResponse> = emptyList(),
+    override val paymentMethods: List<RegularPaymentMethodResponse> = emptyList(),
 ) : PaymentMethodRepository {
 
     private val _storedPaymentMethods = MutableStateFlow(storedMethods)
-    override val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>> = _storedPaymentMethods
+    override val storedPaymentMethods: StateFlow<List<StoredPaymentMethodResponse>> = _storedPaymentMethods
 
     override val storedPaymentMethodIdsBeingRemoved: StateFlow<Set<String>> = MutableStateFlow(emptySet())
 

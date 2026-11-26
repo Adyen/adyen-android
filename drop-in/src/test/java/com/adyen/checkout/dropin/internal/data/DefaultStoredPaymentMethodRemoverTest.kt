@@ -14,7 +14,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import com.adyen.checkout.dropin.internal.data.api.DisableTokenRepository
@@ -134,7 +134,7 @@ internal class DefaultStoredPaymentMethodRemoverTest(
             clientKey = CLIENT_KEY,
         )
 
-        private val STORED_PAYMENT_METHOD = StoredCardPaymentMethod(
+        private val STORED_PAYMENT_METHOD = StoredCardPaymentMethodResponse(
             type = "scheme",
             id = STORED_ID,
             name = "MasterCard",

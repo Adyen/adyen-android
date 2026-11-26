@@ -11,9 +11,9 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutCallbacks
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import kotlinx.coroutines.CoroutineScope
 
@@ -29,7 +29,7 @@ internal object PaymentComponentResolver {
         checkoutParams: CheckoutParams,
     ): PaymentComponentResult {
         return when (paymentMethod) {
-            is PaymentMethod -> resolvePaymentMethod(
+            is RegularPaymentMethodResponse -> resolvePaymentMethod(
                 paymentMethod = paymentMethod,
                 callbacks = callbacks,
                 coroutineScope = coroutineScope,
@@ -38,7 +38,7 @@ internal object PaymentComponentResolver {
                 checkoutParams = checkoutParams,
             )
 
-            is StoredPaymentMethod -> resolveStoredPaymentMethod(
+            is StoredPaymentMethodResponse -> resolveStoredPaymentMethod(
                 paymentMethod = paymentMethod,
                 coroutineScope = coroutineScope,
                 analyticsManager = analyticsManager,
@@ -52,7 +52,7 @@ internal object PaymentComponentResolver {
 
     @Suppress("LongParameterList")
     private fun resolvePaymentMethod(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         callbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -75,7 +75,7 @@ internal object PaymentComponentResolver {
     }
 
     private fun resolveStoredPaymentMethod(
-        paymentMethod: StoredPaymentMethod,
+        paymentMethod: StoredPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,

@@ -13,9 +13,9 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import kotlinx.parcelize.Parcelize
 
@@ -77,7 +77,7 @@ sealed interface CheckoutContext : Parcelable {
  *
  * Returns an empty list when no regular payment methods are available.
  */
-fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> = when (this) {
+fun CheckoutContext.getPaymentMethods(): List<RegularPaymentMethodResponse> = when (this) {
     is CheckoutContext.Advanced -> paymentMethods.paymentMethods.orEmpty()
     is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods?.paymentMethods.orEmpty()
     is CheckoutContext.ActionOnly -> emptyList()
@@ -88,7 +88,7 @@ fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> = when (this) {
  *
  * Returns an empty list when no stored payment methods are available.
  */
-fun CheckoutContext.getStoredPaymentMethods(): List<StoredPaymentMethod> = when (this) {
+fun CheckoutContext.getStoredPaymentMethods(): List<StoredPaymentMethodResponse> = when (this) {
     is CheckoutContext.Advanced -> paymentMethods.storedPaymentMethods.orEmpty()
     is CheckoutContext.Sessions -> checkoutSession.sessionSetupResponse.paymentMethods?.storedPaymentMethods.orEmpty()
     is CheckoutContext.ActionOnly -> emptyList()

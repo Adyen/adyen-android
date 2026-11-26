@@ -12,7 +12,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.test
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.model.sdkData.PaymentMethodBehavior
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
@@ -44,7 +44,7 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class GenericStoredPaymentComponentTest(
-    @param:Mock private val storedPaymentMethod: StoredPaymentMethod,
+    @param:Mock private val storedPaymentMethod: StoredPaymentMethodResponse,
     @param:Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 

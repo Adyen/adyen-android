@@ -16,9 +16,9 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.format
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.PaymentMethodFormatter
@@ -110,12 +110,12 @@ internal class PaymentMethodViewModel(
     }
 
     private fun PaymentMethodResponse.getStoredTitle(): String = when (this) {
-        is StoredPaymentMethod -> StoredPaymentMethodFormatter.getTitle(this)
+        is StoredPaymentMethodResponse -> StoredPaymentMethodFormatter.getTitle(this)
         else -> name
     }
 
     private fun PaymentMethodResponse.getStoredDescription(): UiText = when (this) {
-        is StoredPaymentMethod -> StoredPaymentMethodFormatter.getDescription(
+        is StoredPaymentMethodResponse -> StoredPaymentMethodFormatter.getDescription(
             storedPaymentMethod = this,
             amount = checkoutParams.amount,
             locale = checkoutParams.shopperLocale,
@@ -125,8 +125,8 @@ internal class PaymentMethodViewModel(
     }
 
     private fun PaymentMethodResponse.getLogoTxVariant() = when (this) {
-        is StoredPaymentMethod -> StoredPaymentMethodFormatter.getIcon(this)
-        is PaymentMethod -> PaymentMethodFormatter.getIcon(this)
+        is StoredPaymentMethodResponse -> StoredPaymentMethodFormatter.getIcon(this)
+        is RegularPaymentMethodResponse -> PaymentMethodFormatter.getIcon(this)
         else -> type
     }
 

@@ -10,8 +10,8 @@ package com.adyen.checkout.example.ui.v6
 
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.Checkout
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -25,12 +25,12 @@ private val SUPPORTED_PAYMENT_METHODS = setOf(
     PaymentMethodTypes.SCHEME,
 )
 
-internal fun List<PaymentMethod>.filterSupportedPaymentMethods(): List<PaymentMethod> =
-    filter { it.type in SUPPORTED_PAYMENT_METHODS || it is GenericPaymentMethod }
+internal fun List<RegularPaymentMethodResponse>.filterSupportedPaymentMethods(): List<RegularPaymentMethodResponse> =
+    filter { it.type in SUPPORTED_PAYMENT_METHODS || it is GenericPaymentMethodResponse }
 
-internal suspend fun List<PaymentMethod>.filterAvailablePaymentMethods(
+internal suspend fun List<RegularPaymentMethodResponse>.filterAvailablePaymentMethods(
     context: CheckoutContext,
-): List<PaymentMethod> = coroutineScope {
+): List<RegularPaymentMethodResponse> = coroutineScope {
     map { paymentMethod ->
         async { paymentMethod to Checkout.isPaymentMethodAvailable(paymentMethod.type, context) }
     }

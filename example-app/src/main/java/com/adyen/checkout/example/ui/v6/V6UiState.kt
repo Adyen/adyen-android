@@ -9,17 +9,17 @@
 package com.adyen.checkout.example.ui.v6
 
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.UIText
 
 sealed interface V6UiState {
 
     data class Component(
-        val paymentMethods: List<PaymentMethod>,
-        val storedPaymentMethods: List<StoredPaymentMethod>,
+        val paymentMethods: List<RegularPaymentMethodResponse>,
+        val storedPaymentMethods: List<StoredPaymentMethodResponse>,
         val selectedPaymentMethod: PaymentMethodResponse,
         val checkoutController: CheckoutController,
         val showCustomButton: Boolean,

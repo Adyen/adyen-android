@@ -10,10 +10,10 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.CheckoutParams
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.UnsupportedPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.PaymentMethodAvailabilityCheck
@@ -94,7 +94,7 @@ internal class CheckoutTest {
     @Test
     fun `when the payment method type is unsupported, then false is returned`() = runTest {
         val context = advancedContext(
-            UnsupportedPaymentMethod(type = UNSUPPORTED_PAYMENT_METHOD_TYPE, name = "Unsupported"),
+            UnsupportedPaymentMethodResponse(type = UNSUPPORTED_PAYMENT_METHOD_TYPE, name = "Unsupported"),
         )
         val result = Checkout.isPaymentMethodAvailable(UNSUPPORTED_PAYMENT_METHOD_TYPE, context)
 
@@ -111,8 +111,8 @@ internal class CheckoutTest {
     }
 
     private fun advancedContext(
-        vararg paymentMethods: PaymentMethod = arrayOf(
-            GenericPaymentMethod(type = TEST_PAYMENT_METHOD_TYPE, name = "Test"),
+        vararg paymentMethods: RegularPaymentMethodResponse = arrayOf(
+            GenericPaymentMethodResponse(type = TEST_PAYMENT_METHOD_TYPE, name = "Test"),
         ),
     ) = CheckoutContext.Advanced(
         paymentMethods = PaymentMethods(
@@ -129,7 +129,7 @@ internal class CheckoutTest {
 
     private fun generateFactory() = object : PaymentComponentFactory<PaymentComponent> {
         override fun create(
-            paymentMethod: PaymentMethod,
+            paymentMethod: RegularPaymentMethodResponse,
             coroutineScope: CoroutineScope,
             analyticsManager: AnalyticsManager,
             sdkDataProvider: SdkDataProvider,
@@ -145,7 +145,7 @@ internal class CheckoutTest {
         PaymentComponentFactory<PaymentComponent>,
         PaymentMethodAvailabilityCheck {
         override fun create(
-            paymentMethod: PaymentMethod,
+            paymentMethod: RegularPaymentMethodResponse,
             coroutineScope: CoroutineScope,
             analyticsManager: AnalyticsManager,
             sdkDataProvider: SdkDataProvider,
@@ -153,7 +153,7 @@ internal class CheckoutTest {
             additionalCallbacks: Set<CheckoutAdditionalCallback>,
         ) = TestPaymentComponent()
 
-        override suspend fun isAvailable(paymentMethod: PaymentMethod, params: CheckoutParams): Boolean {
+        override suspend fun isAvailable(paymentMethod: RegularPaymentMethodResponse, params: CheckoutParams): Boolean {
             error?.let { throw it }
             return isAvailable
         }

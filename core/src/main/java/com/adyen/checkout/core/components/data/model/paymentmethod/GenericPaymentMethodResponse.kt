@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 21/1/2025.
+ */
+
+package com.adyen.checkout.core.components.data.model.paymentmethod
+
+import kotlinx.parcelize.Parcelize
+import org.json.JSONObject
+
+/**
+ * Payment method model for instant/unknown payment methods.
+ *
+ * This is the fallback type used when a payment method type is not explicitly supported.
+ * It contains only the base fields.
+ */
+@Parcelize
+data class GenericPaymentMethodResponse(
+    override val type: String,
+    override val name: String,
+) : RegularPaymentMethodResponse() {
+
+    companion object {
+        @JvmField
+        val SERIALIZER: Serializer<GenericPaymentMethodResponse> =
+            object : Serializer<GenericPaymentMethodResponse> {
+                override fun serialize(modelObject: GenericPaymentMethodResponse): JSONObject {
+                    return JSONObject().apply {
+                        put(TYPE, modelObject.type)
+                        put(NAME, modelObject.name)
+                    }
+                }
+
+                override fun deserialize(jsonObject: JSONObject): GenericPaymentMethodResponse {
+                    return GenericPaymentMethodResponse(
+                        type = jsonObject.getString(TYPE),
+                        name = jsonObject.getString(NAME),
+                    )
+                }
+            }
+    }
+}

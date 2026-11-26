@@ -15,10 +15,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.format
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PayByBankUSPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.PayByBankUSPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -125,7 +125,7 @@ internal class PaymentMethodListViewModel(
     }
 
     private fun createInitialViewState(
-        storedPaymentMethods: List<StoredPaymentMethod>,
+        storedPaymentMethods: List<StoredPaymentMethodResponse>,
         unavailableTypes: Set<String>,
     ): PaymentMethodListViewState {
         val visibleStoredPaymentMethods = if (dropInParams.hideStoredPaymentMethods) {
@@ -199,7 +199,7 @@ internal class PaymentMethodListViewModel(
         return UiText.Localized(key)
     }
 
-    private fun StoredPaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
+    private fun StoredPaymentMethodResponse.toPaymentMethodItem(): PaymentMethodItem {
         val icon = StoredPaymentMethodFormatter.getIcon(this)
         val title = StoredPaymentMethodFormatter.getTitle(this)
         val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)
@@ -213,12 +213,12 @@ internal class PaymentMethodListViewModel(
         )
     }
 
-    private fun PaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
+    private fun RegularPaymentMethodResponse.toPaymentMethodItem(): PaymentMethodItem {
         val icon = PaymentMethodFormatter.getIcon(this)
 
         val brands = when (this) {
-            is CardPaymentMethod -> brands
-            is PayByBankUSPaymentMethod -> PayByBankUSBrandLogo.entries.map { it.path }
+            is CardPaymentMethodResponse -> brands
+            is PayByBankUSPaymentMethodResponse -> PayByBankUSBrandLogo.entries.map { it.path }
             else -> null
         }
 

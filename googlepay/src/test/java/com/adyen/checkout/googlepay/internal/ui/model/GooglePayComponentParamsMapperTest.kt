@@ -13,7 +13,7 @@ import com.adyen.checkout.core.common.LoggingExtension
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.Configuration
-import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
@@ -542,7 +542,7 @@ internal class GooglePayComponentParamsMapperTest {
     private fun createPaymentMethod(
         brands: List<String> = emptyList(),
         configuration: Configuration? = null,
-    ) = GooglePayPaymentMethod(
+    ) = GooglePayPaymentMethodResponse(
         type = PaymentMethodTypes.GOOGLE_PAY,
         name = "Google Pay",
         brands = brands,

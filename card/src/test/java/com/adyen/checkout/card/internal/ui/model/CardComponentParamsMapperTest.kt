@@ -17,7 +17,7 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.AdditionalSessionParams
 import com.adyen.checkout.core.common.internal.CheckoutParams
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.sessions.internal.model.SessionInstallmentConfiguration
@@ -661,7 +661,7 @@ internal class CardComponentParamsMapperTest {
     private fun createCardPaymentMethod(
         brands: List<String> = emptyList(),
         fundingSource: String? = null,
-    ) = CardPaymentMethod(
+    ) = CardPaymentMethodResponse(
         type = "scheme",
         name = "Card",
         brands = brands,

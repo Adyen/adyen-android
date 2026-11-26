@@ -27,7 +27,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -49,7 +49,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class StoredCardComponent
 @Suppress("LongParameterList")
 constructor(
-    private val storedPaymentMethod: StoredCardPaymentMethod,
+    private val storedPaymentMethod: StoredCardPaymentMethodResponse,
     private val analyticsManager: AnalyticsManager,
     private val checkoutEncryptor: CheckoutEncryptor,
     private val componentStateValidator: StoredCardComponentStateValidator,
