@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
 import com.adyen.checkout.dropin.internal.helper.StoredPaymentMethodFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,9 @@ internal class PreselectedPaymentMethodViewModel(
         }
     }
 
-    private fun createInitialViewState(storedPaymentMethod: StoredPaymentMethod): PreselectedPaymentMethodViewState {
+    private fun createInitialViewState(
+        storedPaymentMethod: StoredPaymentMethodResponse,
+    ): PreselectedPaymentMethodViewState {
         return PreselectedPaymentMethodViewState(
             logoTxVariant = StoredPaymentMethodFormatter.getIcon(storedPaymentMethod),
             title = StoredPaymentMethodFormatter.getTitle(storedPaymentMethod),
@@ -55,7 +57,7 @@ internal class PreselectedPaymentMethodViewModel(
         )
     }
 
-    private fun createPayButtonText(storedPaymentMethod: StoredPaymentMethod): UiText {
+    private fun createPayButtonText(storedPaymentMethod: StoredPaymentMethodResponse): UiText {
         return if (checkoutParams.amount?.value == 0L) {
             UiText.Localized(CheckoutLocalizationKey.PAY_BUTTON_ZERO_AMOUNT)
         } else {

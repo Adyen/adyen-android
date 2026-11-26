@@ -15,7 +15,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Suppress("LongParameterList")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericStoredPaymentComponent(
-    private val storedPaymentMethod: StoredPaymentMethod,
+    private val storedPaymentMethod: StoredPaymentMethodResponse,
     private val analyticsManager: AnalyticsManager,
     private val sdkDataProvider: SdkDataProvider,
     private val componentStateValidator: GenericComponentStateValidator,

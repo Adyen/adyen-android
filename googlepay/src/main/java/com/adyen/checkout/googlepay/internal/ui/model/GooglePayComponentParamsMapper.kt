@@ -14,7 +14,7 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCurrency
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethodResponse
 import com.adyen.checkout.core.error.internal.InvalidConfigurationError
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
@@ -26,7 +26,7 @@ internal class GooglePayComponentParamsMapper {
 
     fun mapToParams(
         params: CheckoutParams,
-        paymentMethod: GooglePayPaymentMethod,
+        paymentMethod: GooglePayPaymentMethodResponse,
     ): GooglePayComponentParams {
         val googlePayConfiguration = params.getConfiguration<GooglePayConfiguration>()
         // TODO - Pass isCreatedByDropIn
@@ -57,7 +57,7 @@ internal class GooglePayComponentParamsMapper {
      * paymentMethod.configuration.gatewayMerchantId field returned by the API.
      */
     private fun GooglePayConfiguration?.getPreferredGatewayMerchantId(
-        paymentMethod: GooglePayPaymentMethod,
+        paymentMethod: GooglePayPaymentMethodResponse,
     ): String {
         return this?.merchantAccount
             ?: paymentMethod.configuration?.gatewayMerchantId
@@ -73,7 +73,7 @@ internal class GooglePayComponentParamsMapper {
      * auth methods and card networks) are filled in during resolution.
      */
     private fun GooglePayConfiguration?.getAllowedPaymentMethods(
-        paymentMethod: GooglePayPaymentMethod,
+        paymentMethod: GooglePayPaymentMethodResponse,
     ): List<GooglePayPaymentMethodParams> {
         val allowedPaymentMethods = this?.allowedPaymentMethods
         val configuredPaymentMethods = listOfNotNull(
@@ -84,7 +84,7 @@ internal class GooglePayComponentParamsMapper {
     }
 
     private fun GooglePayAllowedPaymentMethods.Card.resolveDefaults(
-        paymentMethod: GooglePayPaymentMethod,
+        paymentMethod: GooglePayPaymentMethodResponse,
     ): GooglePayPaymentMethodParams {
         return GooglePayPaymentMethodParams.Card(
             allowedAuthMethods = allowedAuthMethods ?: AllowedAuthMethods.allAllowedAuthMethods,
@@ -99,7 +99,7 @@ internal class GooglePayComponentParamsMapper {
         )
     }
 
-    private fun getAvailableCardNetworksFromApi(paymentMethod: GooglePayPaymentMethod): List<String> {
+    private fun getAvailableCardNetworksFromApi(paymentMethod: GooglePayPaymentMethodResponse): List<String> {
         val brands = paymentMethod.brands
         return brands.mapNotNull { brand ->
             val network = mapBrandToGooglePayNetwork(brand)

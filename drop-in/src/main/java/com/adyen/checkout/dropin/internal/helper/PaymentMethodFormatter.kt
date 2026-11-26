@@ -9,16 +9,16 @@
 package com.adyen.checkout.dropin.internal.helper
 
 import com.adyen.checkout.core.common.internal.ui.CARD_LOGO_TX_VARIANT
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.GiftCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.GiftCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
 
 internal object PaymentMethodFormatter {
 
-    fun getIcon(paymentMethod: PaymentMethod): String {
+    fun getIcon(paymentMethod: RegularPaymentMethodResponse): String {
         return when (paymentMethod) {
-            is CardPaymentMethod -> CARD_LOGO_TX_VARIANT
-            is GiftCardPaymentMethod -> paymentMethod.brand
+            is CardPaymentMethodResponse -> CARD_LOGO_TX_VARIANT
+            is GiftCardPaymentMethodResponse -> paymentMethod.brand
             else -> paymentMethod.type
         }
     }

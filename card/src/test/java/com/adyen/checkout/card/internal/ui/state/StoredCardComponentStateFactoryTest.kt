@@ -15,7 +15,7 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -175,7 +175,7 @@ internal class StoredCardComponentStateFactoryTest {
         brand: String = CardBrand.VISA.txVariant,
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW,
     ) = StoredCardComponentStateFactory(
-        storedPaymentMethod = StoredCardPaymentMethod(
+        storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = "scheme",
             name = "Test Card",
             id = "test_id",

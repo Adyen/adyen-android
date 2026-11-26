@@ -13,9 +13,9 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutTarget
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredUnsupportedPaymentMethodResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -31,7 +31,7 @@ internal class PaymentMethodResolverTest {
 
         @Test
         fun `when payment method is found, then it is returned`() {
-            val expected = GenericPaymentMethod(type = "scheme", name = "Card")
+            val expected = GenericPaymentMethodResponse(type = "scheme", name = "Card")
             val context = advancedContext(
                 PaymentMethods(paymentMethods = listOf(expected)),
             )
@@ -48,7 +48,7 @@ internal class PaymentMethodResolverTest {
         fun `when payment method is not found, then null is returned`() {
             val context = advancedContext(
                 PaymentMethods(
-                    paymentMethods = listOf(GenericPaymentMethod(type = "ideal", name = "iDEAL")),
+                    paymentMethods = listOf(GenericPaymentMethodResponse(type = "ideal", name = "iDEAL")),
                 ),
             )
 
@@ -76,13 +76,13 @@ internal class PaymentMethodResolverTest {
 
         @Test
         fun `when multiple payment methods exist, then the matching one is returned`() {
-            val expected = GenericPaymentMethod(type = "scheme", name = "Card")
+            val expected = GenericPaymentMethodResponse(type = "scheme", name = "Card")
             val context = advancedContext(
                 PaymentMethods(
                     paymentMethods = listOf(
-                        GenericPaymentMethod(type = "ideal", name = "iDEAL"),
+                        GenericPaymentMethodResponse(type = "ideal", name = "iDEAL"),
                         expected,
-                        GenericPaymentMethod(type = "paypal", name = "PayPal"),
+                        GenericPaymentMethodResponse(type = "paypal", name = "PayPal"),
                     ),
                 ),
             )
@@ -101,7 +101,7 @@ internal class PaymentMethodResolverTest {
 
         @Test
         fun `when stored payment method is found, then it is returned`() {
-            val expected = StoredUnsupportedPaymentMethod(
+            val expected = StoredUnsupportedPaymentMethodResponse(
                 type = "scheme",
                 name = "Card",
                 id = "test_id",
@@ -124,7 +124,7 @@ internal class PaymentMethodResolverTest {
             val context = advancedContext(
                 PaymentMethods(
                     storedPaymentMethods = listOf(
-                        StoredUnsupportedPaymentMethod(
+                        StoredUnsupportedPaymentMethodResponse(
                             type = "scheme",
                             name = "Card",
                             id = "other_id",
@@ -158,7 +158,7 @@ internal class PaymentMethodResolverTest {
 
         @Test
         fun `when multiple stored payment methods exist, then the matching one is returned`() {
-            val expected = StoredUnsupportedPaymentMethod(
+            val expected = StoredUnsupportedPaymentMethodResponse(
                 type = "scheme",
                 name = "Card",
                 id = "test_id",
@@ -167,7 +167,7 @@ internal class PaymentMethodResolverTest {
             val context = advancedContext(
                 PaymentMethods(
                     storedPaymentMethods = listOf(
-                        StoredUnsupportedPaymentMethod(
+                        StoredUnsupportedPaymentMethodResponse(
                             type = "blik",
                             name = "BLIK",
                             id = "other_id",
@@ -218,7 +218,7 @@ internal class PaymentMethodResolverTest {
 
         @Test
         fun `when context is Sessions, then payment method is resolved from session setup response`() {
-            val expected = GenericPaymentMethod(type = "scheme", name = "Card")
+            val expected = GenericPaymentMethodResponse(type = "scheme", name = "Card")
             val context = sessionsContext(
                 PaymentMethods(paymentMethods = listOf(expected)),
             )
@@ -233,7 +233,7 @@ internal class PaymentMethodResolverTest {
 
         @Test
         fun `when context is Sessions, then stored payment method is resolved from session setup response`() {
-            val expected = StoredUnsupportedPaymentMethod(
+            val expected = StoredUnsupportedPaymentMethodResponse(
                 type = "scheme",
                 name = "Card",
                 id = "test_id",

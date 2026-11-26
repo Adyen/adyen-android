@@ -20,8 +20,8 @@ import org.json.JSONObject
  */
 @Parcelize
 data class PaymentMethods(
-    val storedPaymentMethods: List<StoredPaymentMethod>? = null,
-    val paymentMethods: List<PaymentMethod>? = null,
+    val storedPaymentMethods: List<StoredPaymentMethodResponse>? = null,
+    val paymentMethods: List<RegularPaymentMethodResponse>? = null,
 ) : ModelObject() {
 
     companion object {
@@ -34,13 +34,13 @@ data class PaymentMethods(
                 return JSONObject().apply {
                     putOpt(
                         STORED_PAYMENT_METHODS,
-                        serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER),
+                        serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethodResponse.SERIALIZER),
                     )
                     putOpt(
                         PAYMENT_METHODS,
                         serializeOptList(
                             modelObject.paymentMethods,
-                            PaymentMethod.SERIALIZER,
+                            RegularPaymentMethodResponse.SERIALIZER,
                         ),
                     )
                 }
@@ -50,11 +50,11 @@ data class PaymentMethods(
                 return PaymentMethods(
                     storedPaymentMethods = deserializeOptList(
                         jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
-                        StoredPaymentMethod.SERIALIZER,
+                        StoredPaymentMethodResponse.SERIALIZER,
                     ),
                     paymentMethods = deserializeOptList(
                         jsonObject.optJSONArray(PAYMENT_METHODS),
-                        PaymentMethod.SERIALIZER,
+                        RegularPaymentMethodResponse.SERIALIZER,
                     ),
                 )
             }

@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.model.ModelObject
 
 /**
- * Abstract parent class for [PaymentMethod] and [StoredPaymentMethod].
+ * Abstract parent class for [RegularPaymentMethodResponse] and [StoredPaymentMethodResponse].
  */
 abstract class PaymentMethodResponse
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

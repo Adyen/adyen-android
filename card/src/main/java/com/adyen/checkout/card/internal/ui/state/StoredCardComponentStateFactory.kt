@@ -12,13 +12,13 @@ import com.adyen.checkout.card.internal.helper.LocalCardBrandMapper
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class StoredCardComponentStateFactory(
-    private val storedPaymentMethod: StoredCardPaymentMethod,
+    private val storedPaymentMethod: StoredCardPaymentMethodResponse,
     private val componentParams: CardComponentParams,
 ) : ComponentStateFactory<StoredCardComponentState> {
     override fun createInitialState(): StoredCardComponentState {

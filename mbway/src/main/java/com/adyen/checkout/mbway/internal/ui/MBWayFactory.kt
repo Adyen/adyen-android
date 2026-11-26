@@ -11,7 +11,7 @@ package com.adyen.checkout.mbway.internal.ui
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
@@ -24,7 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 internal class MBWayFactory : PaymentComponentFactory<MBWayComponent> {
 
     override fun create(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,

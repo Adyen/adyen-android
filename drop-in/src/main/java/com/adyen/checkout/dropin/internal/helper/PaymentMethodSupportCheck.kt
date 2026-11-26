@@ -8,19 +8,19 @@
 
 package com.adyen.checkout.dropin.internal.helper
 
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 
 internal class PaymentMethodSupportCheck {
 
-    fun isSupported(paymentMethod: PaymentMethod): Boolean {
+    fun isSupported(paymentMethod: RegularPaymentMethodResponse): Boolean {
         // Only checks if the payment method type is explicitly not supported. This allows unknown redirect payment
         // methods to be supported.
         return !PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type)
     }
 
-    fun isSupported(paymentMethod: StoredPaymentMethod): Boolean {
+    fun isSupported(paymentMethod: StoredPaymentMethodResponse): Boolean {
         return paymentMethod.id.isNotEmpty() &&
             PaymentMethodTypes.SUPPORTED_STORED_PAYMENT_METHODS.contains(paymentMethod.type) &&
             paymentMethod.supportedShopperInteractions.contains(SHOPPER_INTERACTION_ECOMMERCE)

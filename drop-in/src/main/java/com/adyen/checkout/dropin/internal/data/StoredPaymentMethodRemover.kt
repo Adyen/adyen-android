@@ -9,12 +9,12 @@
 package com.adyen.checkout.dropin.internal.data
 
 import com.adyen.checkout.core.common.CheckoutContext
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.dropin.internal.data.api.DisableTokenRepository
 
 internal fun interface StoredPaymentMethodRemover {
 
-    suspend fun remove(storedPaymentMethod: StoredPaymentMethod): Result<Unit>
+    suspend fun remove(storedPaymentMethod: StoredPaymentMethodResponse): Result<Unit>
 }
 
 internal class DefaultStoredPaymentMethodRemover(
@@ -22,7 +22,7 @@ internal class DefaultStoredPaymentMethodRemover(
     private val disableTokenRepository: DisableTokenRepository,
 ) : StoredPaymentMethodRemover {
 
-    override suspend fun remove(storedPaymentMethod: StoredPaymentMethod): Result<Unit> {
+    override suspend fun remove(storedPaymentMethod: StoredPaymentMethodResponse): Result<Unit> {
         return when (checkoutContext) {
             is CheckoutContext.Sessions -> disableTokenRepository.removeStoredPaymentMethod(
                 checkoutSession = checkoutContext.checkoutSession,

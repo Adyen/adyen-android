@@ -14,8 +14,8 @@ import com.adyen.checkout.core.common.getStoredPaymentMethods
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.CheckoutTarget
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
 
 internal object PaymentMethodResolver {
 
@@ -44,7 +44,7 @@ internal object PaymentMethodResolver {
     fun resolve(
         target: CheckoutTarget.PaymentMethod,
         context: CheckoutContext,
-    ): PaymentMethod? = context.getPaymentMethods().find { it.type == target.type }
+    ): RegularPaymentMethodResponse? = context.getPaymentMethods().find { it.type == target.type }
 
     private fun resolveStoredPaymentMethod(
         target: CheckoutTarget.StoredPaymentMethod,

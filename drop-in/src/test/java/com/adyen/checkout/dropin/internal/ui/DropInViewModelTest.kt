@@ -22,11 +22,11 @@ import com.adyen.checkout.core.common.internal.CheckoutParamsFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutConfigurationScope
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.dropin.DropInResult
@@ -279,7 +279,7 @@ internal class DropInViewModelTest {
     private fun createInput() = DropInResultContract.Input(
         checkoutContext = TestCheckoutContext.advanced(
             paymentMethods = PaymentMethods(
-                paymentMethods = listOf(GenericPaymentMethod(type = PaymentMethodTypes.SCHEME, name = "Cards")),
+                paymentMethods = listOf(GenericPaymentMethodResponse(type = PaymentMethodTypes.SCHEME, name = "Cards")),
             ),
             checkoutConfiguration = CheckoutConfiguration(
                 environment = Environment.TEST,
@@ -292,9 +292,9 @@ internal class DropInViewModelTest {
     )
 
     private fun createViewModel(
-        storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),
-        paymentMethods: List<PaymentMethod> = listOf(
-            GenericPaymentMethod(type = PaymentMethodTypes.SCHEME, name = "Cards"),
+        storedPaymentMethods: List<StoredPaymentMethodResponse> = emptyList(),
+        paymentMethods: List<RegularPaymentMethodResponse> = listOf(
+            GenericPaymentMethodResponse(type = PaymentMethodTypes.SCHEME, name = "Cards"),
         ),
         persister: BackStackPersister = InMemoryBackStackPersister(),
         dropInServiceManager: DropInServiceManager = DropInServiceManager(DropInService::class.java),
@@ -329,7 +329,7 @@ internal class DropInViewModelTest {
         )
     }
 
-    private fun storedPaymentMethod(id: String) = StoredCardPaymentMethod(
+    private fun storedPaymentMethod(id: String) = StoredCardPaymentMethodResponse(
         type = PaymentMethodTypes.SCHEME,
         name = "Visa",
         id = id,

@@ -33,7 +33,7 @@ import com.adyen.checkout.core.components.CheckoutTarget
 import com.adyen.checkout.core.components.SubmitResult
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -213,7 +213,7 @@ internal class V6ViewModel @Inject constructor(
         paymentMethod: PaymentMethodResponse,
         checkoutContext: CheckoutContext.Advanced,
     ): CheckoutController {
-        val target = if (paymentMethod is StoredPaymentMethod) {
+        val target = if (paymentMethod is StoredPaymentMethodResponse) {
             CheckoutTarget.StoredPaymentMethod(paymentMethod.id)
         } else {
             CheckoutTarget.PaymentMethod(paymentMethod.type)

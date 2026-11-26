@@ -9,10 +9,10 @@
 package com.adyen.checkout.dropin.internal.helper
 
 import android.os.Parcel
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -25,7 +25,7 @@ internal class PaymentMethodSupportCheckTest {
     @Test
     fun `when payment method type is supported, then isSupported returns true`() {
         // GIVEN
-        val paymentMethod = CardPaymentMethod(
+        val paymentMethod = CardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "Cards",
             brands = emptyList(),
@@ -42,7 +42,7 @@ internal class PaymentMethodSupportCheckTest {
     @Test
     fun `when payment method type is unsupported, then isSupported returns false`() {
         // GIVEN
-        val paymentMethod = UnsupportedPaymentMethod()
+        val paymentMethod = UnsupportedPaymentMethodResponse()
 
         // WHEN
         val isSupported = paymentMethodSupportCheck.isSupported(paymentMethod)
@@ -54,7 +54,7 @@ internal class PaymentMethodSupportCheckTest {
     @Test
     fun `when stored payment method is valid, then isSupported returns true`() {
         // GIVEN
-        val storedPaymentMethod = StoredCardPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             id = "123",
             name = "Cards",
@@ -77,7 +77,7 @@ internal class PaymentMethodSupportCheckTest {
     @Test
     fun `when stored payment method id is empty, then isSupported returns false`() {
         // GIVEN
-        val storedPaymentMethod = StoredCardPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             id = "",
             name = "Cards",
@@ -100,7 +100,7 @@ internal class PaymentMethodSupportCheckTest {
     @Test
     fun `when stored payment method type is not supported, then isSupported returns false`() {
         // GIVEN
-        val storedPaymentMethod = UnsupportedStoredPaymentMethod(
+        val storedPaymentMethod = UnsupportedStoredPaymentMethodResponse(
             supportedShopperInteractions = listOf("Ecommerce"),
         )
 
@@ -114,7 +114,7 @@ internal class PaymentMethodSupportCheckTest {
     @Test
     fun `when stored payment method does not support Ecommerce, then isSupported returns false`() {
         // GIVEN
-        val storedPaymentMethod = StoredCardPaymentMethod(
+        val storedPaymentMethod = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             id = "123",
             name = "Cards",
@@ -134,16 +134,16 @@ internal class PaymentMethodSupportCheckTest {
         assertFalse(isSupported)
     }
 
-    private class UnsupportedPaymentMethod : PaymentMethod() {
+    private class UnsupportedPaymentMethodResponse : RegularPaymentMethodResponse() {
         override val type: String = PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.first()
         override val name: String = "Unknown"
 
         override fun writeToParcel(p0: Parcel, p1: Int) = Unit
     }
 
-    private class UnsupportedStoredPaymentMethod(
+    private class UnsupportedStoredPaymentMethodResponse(
         override val supportedShopperInteractions: List<String> = emptyList()
-    ) : StoredPaymentMethod() {
+    ) : StoredPaymentMethodResponse() {
         override val type: String = "unknown_type"
         override val name: String = "Unknown"
         override val id: String = "unknown"

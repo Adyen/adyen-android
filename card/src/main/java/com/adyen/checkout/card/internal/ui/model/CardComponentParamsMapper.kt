@@ -18,14 +18,14 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutLogLevel
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
 
 // TODO - Card Component Mapper Tests.
 internal class CardComponentParamsMapper {
 
     fun mapToParams(
         params: CheckoutParams,
-        paymentMethod: CardPaymentMethod?,
+        paymentMethod: CardPaymentMethodResponse?,
     ): CardComponentParams {
         val cardConfiguration = params.getConfiguration<CardConfiguration>()
         return CardComponentParams(
@@ -70,7 +70,7 @@ internal class CardComponentParamsMapper {
      */
     private fun getSupportedCardBrands(
         cardConfiguration: CardConfiguration?,
-        paymentMethod: CardPaymentMethod?
+        paymentMethod: CardPaymentMethodResponse?
     ): List<CardBrand> {
         val supportedCardBrands = cardConfiguration?.supportedCardBrands
         return when {
@@ -104,7 +104,7 @@ internal class CardComponentParamsMapper {
         sessionParams: AdditionalSessionParams?,
         cardConfiguration: CardConfiguration?,
         amount: Amount?,
-        paymentMethod: CardPaymentMethod?,
+        paymentMethod: CardPaymentMethodResponse?,
     ): InstallmentParams? {
         return when {
             paymentMethod?.fundingSource.equals(DEBIT_FUNDING_SOURCE, ignoreCase = true) -> null

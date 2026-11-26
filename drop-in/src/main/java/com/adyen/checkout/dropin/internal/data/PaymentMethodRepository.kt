@@ -11,8 +11,8 @@ package com.adyen.checkout.dropin.internal.data
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.CheckoutLogLevel
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
@@ -28,9 +28,9 @@ import kotlinx.coroutines.flow.update
 
 internal interface PaymentMethodRepository {
 
-    val paymentMethods: List<PaymentMethod>
+    val paymentMethods: List<RegularPaymentMethodResponse>
 
-    val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>>
+    val storedPaymentMethods: StateFlow<List<StoredPaymentMethodResponse>>
 
     /**
      * The ids of the stored payment methods whose removal is still running. Removals outlive the screen that started
@@ -48,14 +48,15 @@ internal interface PaymentMethodRepository {
 }
 
 internal class DefaultPaymentMethodRepository(
-    override val paymentMethods: List<PaymentMethod>,
-    storedPaymentMethods: List<StoredPaymentMethod>,
+    override val paymentMethods: List<RegularPaymentMethodResponse>,
+    storedPaymentMethods: List<StoredPaymentMethodResponse>,
     private val storedPaymentMethodRemover: StoredPaymentMethodRemover,
     private val coroutineScope: CoroutineScope,
 ) : PaymentMethodRepository {
 
     private val _storedPaymentMethods = MutableStateFlow(storedPaymentMethods)
-    override val storedPaymentMethods: StateFlow<List<StoredPaymentMethod>> = _storedPaymentMethods.asStateFlow()
+    override val storedPaymentMethods: StateFlow<List<StoredPaymentMethodResponse>> =
+        _storedPaymentMethods.asStateFlow()
 
     private val ongoingRemovals = mutableMapOf<String, Deferred<Result<Unit>>>()
 
@@ -88,7 +89,7 @@ internal class DefaultPaymentMethodRepository(
         return removal.await()
     }
 
-    private suspend fun remove(storedPaymentMethod: StoredPaymentMethod): Result<Unit> = try {
+    private suspend fun remove(storedPaymentMethod: StoredPaymentMethodResponse): Result<Unit> = try {
         runSuspendCatching { storedPaymentMethodRemover.remove(storedPaymentMethod).getOrThrow() }
             .onSuccess {
                 _storedPaymentMethods.update { current -> current.filterNot { it.id == storedPaymentMethod.id } }

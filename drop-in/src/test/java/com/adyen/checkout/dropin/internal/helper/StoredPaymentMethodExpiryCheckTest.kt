@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.helper
 
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -58,7 +58,7 @@ internal class StoredPaymentMethodExpiryCheckTest {
 
     @Test
     fun `when the stored payment method is not a card, then it is not expired`() {
-        val storedPaymentMethod = StoredBLIKPaymentMethod(
+        val storedPaymentMethod = StoredBLIKPaymentMethodResponse(
             type = PaymentMethodTypes.BLIK,
             name = "BLIK",
             id = "id",
@@ -68,7 +68,7 @@ internal class StoredPaymentMethodExpiryCheckTest {
         assertFalse(expiryCheck.isExpired(storedPaymentMethod))
     }
 
-    private fun storedCard(expiryMonth: String, expiryYear: String) = StoredCardPaymentMethod(
+    private fun storedCard(expiryMonth: String, expiryYear: String) = StoredCardPaymentMethodResponse(
         type = PaymentMethodTypes.SCHEME,
         name = "Visa",
         id = "id",

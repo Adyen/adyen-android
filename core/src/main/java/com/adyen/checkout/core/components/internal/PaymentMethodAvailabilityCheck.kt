@@ -8,7 +8,7 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.CheckoutParams
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
 
 /**
  * Optional check to verify whether a payment method is available in the current environment.
@@ -24,7 +24,7 @@ interface PaymentMethodAvailabilityCheck {
      * Returns whether the payment method can be used in the current environment.
      */
     suspend fun isAvailable(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         params: CheckoutParams,
     ): Boolean
 }

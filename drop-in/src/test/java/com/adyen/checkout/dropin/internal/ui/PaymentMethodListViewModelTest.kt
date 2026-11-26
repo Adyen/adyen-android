@@ -16,11 +16,11 @@ import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.components.internal.PaymentMethodAvailabilityCheck
@@ -78,10 +78,10 @@ internal class PaymentMethodListViewModelTest {
     }
 
     private val checkedParams = mutableListOf<CheckoutParams>()
-    private var isAvailable: suspend (PaymentMethod) -> Boolean = { true }
+    private var isAvailable: suspend (RegularPaymentMethodResponse) -> Boolean = { true }
 
     private val availabilityCheck = object : PaymentMethodAvailabilityCheck {
-        override suspend fun isAvailable(paymentMethod: PaymentMethod, params: CheckoutParams): Boolean {
+        override suspend fun isAvailable(paymentMethod: RegularPaymentMethodResponse, params: CheckoutParams): Boolean {
             checkedParams += params
             return isAvailable(paymentMethod)
         }
@@ -344,8 +344,8 @@ internal class PaymentMethodListViewModelTest {
         paymentOptionsSection?.options.orEmpty().map { it.id }
 
     private fun createViewModel(
-        paymentMethods: List<PaymentMethod>,
-        storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),
+        paymentMethods: List<RegularPaymentMethodResponse>,
+        storedPaymentMethods: List<StoredPaymentMethodResponse> = emptyList(),
         dropInParams: DropInParams = createDropInParams(),
         amount: Amount? = checkoutParams.amount,
     ) = PaymentMethodListViewModel(
@@ -379,7 +379,7 @@ internal class PaymentMethodListViewModelTest {
         private const val CLIENT_KEY = "test_client_key"
         private const val STORED_ID = "stored-id-1"
 
-        private val STORED_CARD = StoredCardPaymentMethod(
+        private val STORED_CARD = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "Visa",
             id = STORED_ID,
@@ -392,21 +392,21 @@ internal class PaymentMethodListViewModelTest {
             fundingSource = null,
         )
 
-        private val CARD = CardPaymentMethod(
+        private val CARD = CardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "Cards",
             brands = listOf("visa"),
             fundingSource = null,
         )
 
-        private val GOOGLE_PAY = GooglePayPaymentMethod(
+        private val GOOGLE_PAY = GooglePayPaymentMethodResponse(
             type = PaymentMethodTypes.GOOGLE_PAY,
             name = "Google Pay",
             brands = emptyList(),
             configuration = null,
         )
 
-        private val GOOGLE_PAY_LEGACY = GooglePayPaymentMethod(
+        private val GOOGLE_PAY_LEGACY = GooglePayPaymentMethodResponse(
             type = PaymentMethodTypes.GOOGLE_PAY_LEGACY,
             name = "Pay with Google",
             brands = emptyList(),

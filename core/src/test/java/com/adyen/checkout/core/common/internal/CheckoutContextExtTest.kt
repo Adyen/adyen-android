@@ -12,7 +12,7 @@ import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
@@ -87,7 +87,7 @@ internal class CheckoutContextExtTest {
     }
 
     private val paymentMethods = PaymentMethods(
-        paymentMethods = listOf(GenericPaymentMethod(type = "ideal", name = "iDEAL")),
+        paymentMethods = listOf(GenericPaymentMethodResponse(type = "ideal", name = "iDEAL")),
     )
 
     private val checkoutSession = CheckoutSession(

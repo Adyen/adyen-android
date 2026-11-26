@@ -17,12 +17,12 @@ import com.adyen.checkout.core.components.AdditionalDetailsResult
 import com.adyen.checkout.core.components.AdvancedCheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
 import com.adyen.checkout.core.components.SubmitResult
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredBLIKPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.internal.data.provider.TestSdkDataProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -43,7 +43,7 @@ internal class PaymentComponentResolverTest {
 
     @Test
     fun `when payment method is not supported, then Failure is returned`() = runTest {
-        val paymentMethod = CardPaymentMethod(
+        val paymentMethod = CardPaymentMethodResponse(
             type = "scheme",
             name = "Card",
             brands = emptyList(),
@@ -63,7 +63,7 @@ internal class PaymentComponentResolverTest {
     @Test
     fun `when stored payment method is not supported, then Failure is returned`() = runTest {
         val result = resolve(
-            StoredBLIKPaymentMethod(
+            StoredBLIKPaymentMethodResponse(
                 type = "blik",
                 name = "BLIK",
                 id = "test_id",
@@ -101,7 +101,7 @@ internal class PaymentComponentResolverTest {
         val component = TestPaymentComponent()
         registerFactory(type = "scheme", component = component)
 
-        val result = resolve(GenericPaymentMethod(type = "scheme", name = "Card"))
+        val result = resolve(GenericPaymentMethodResponse(type = "scheme", name = "Card"))
 
         assertEquals(PaymentComponentResult.Success(component), result)
     }
@@ -112,7 +112,7 @@ internal class PaymentComponentResolverTest {
         registerStoredFactory(type = "blik", component = component)
 
         val result = resolve(
-            StoredBLIKPaymentMethod(
+            StoredBLIKPaymentMethodResponse(
                 type = "blik",
                 name = "BLIK",
                 id = "test_id",
@@ -159,7 +159,7 @@ internal class PaymentComponentResolverTest {
             type,
             object : PaymentComponentFactory<PaymentComponent> {
                 override fun create(
-                    paymentMethod: PaymentMethod,
+                    paymentMethod: RegularPaymentMethodResponse,
                     coroutineScope: CoroutineScope,
                     analyticsManager: AnalyticsManager,
                     sdkDataProvider: SdkDataProvider,
@@ -175,7 +175,7 @@ internal class PaymentComponentResolverTest {
             type,
             object : StoredPaymentComponentFactory<PaymentComponent> {
                 override fun create(
-                    storedPaymentMethod: StoredPaymentMethod,
+                    storedPaymentMethod: StoredPaymentMethodResponse,
                     coroutineScope: CoroutineScope,
                     analyticsManager: AnalyticsManager,
                     sdkDataProvider: SdkDataProvider,

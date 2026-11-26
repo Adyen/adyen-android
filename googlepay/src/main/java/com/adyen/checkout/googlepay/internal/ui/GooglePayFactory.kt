@@ -12,8 +12,8 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GooglePayPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.ApplicationContextHolder
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.PaymentMethodAvailabilityCheck
@@ -42,7 +42,7 @@ internal class GooglePayFactory @VisibleForTesting constructor(
     )
 
     override fun create(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
@@ -65,16 +65,16 @@ internal class GooglePayFactory @VisibleForTesting constructor(
         )
     }
 
-    override suspend fun isAvailable(paymentMethod: PaymentMethod, params: CheckoutParams): Boolean {
+    override suspend fun isAvailable(paymentMethod: RegularPaymentMethodResponse, params: CheckoutParams): Boolean {
         return availabilityCheckFor(mapToComponentParams(paymentMethod, params)).isAvailable()
     }
 
     private fun mapToComponentParams(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         params: CheckoutParams,
     ): GooglePayComponentParams {
         // TODO - Remove casting when paymentMethod object is typed
-        val googlePayPaymentMethod = paymentMethod as? GooglePayPaymentMethod
+        val googlePayPaymentMethod = paymentMethod as? GooglePayPaymentMethodResponse
             ?: throw IllegalArgumentException("Incorrect paymentMethod")
         return GooglePayComponentParamsMapper().mapToParams(
             params = params,

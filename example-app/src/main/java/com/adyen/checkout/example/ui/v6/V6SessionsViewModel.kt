@@ -31,7 +31,7 @@ import com.adyen.checkout.core.components.SessionCheckoutResult
 import com.adyen.checkout.core.components.data.BeforeSubmitData
 import com.adyen.checkout.core.components.data.ShopperName
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethodResponse
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.error.CheckoutError
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.OnBeforeSubmitMode
@@ -161,7 +161,7 @@ internal class V6SessionsViewModel @Inject constructor(
         paymentMethod: PaymentMethodResponse,
         checkoutContext: CheckoutContext.Sessions,
     ): CheckoutController {
-        val target = if (paymentMethod is StoredPaymentMethod) {
+        val target = if (paymentMethod is StoredPaymentMethodResponse) {
             CheckoutTarget.StoredPaymentMethod(paymentMethod.id)
         } else {
             CheckoutTarget.PaymentMethod(paymentMethod.type)

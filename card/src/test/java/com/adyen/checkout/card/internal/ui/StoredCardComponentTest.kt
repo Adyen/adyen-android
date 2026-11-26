@@ -25,7 +25,7 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateProducer
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.data.provider.SdkDataProvider
 import com.adyen.checkout.core.components.paymentmethod.StoredCardDetails
@@ -318,7 +318,7 @@ internal class StoredCardComponentTest(
         )
     }
 
-    private fun createStoredPaymentMethod() = StoredCardPaymentMethod(
+    private fun createStoredPaymentMethod() = StoredCardPaymentMethodResponse(
         type = PAYMENT_METHOD_TYPE,
         name = "Test Card",
         id = "stored_pm_id",

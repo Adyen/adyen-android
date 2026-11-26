@@ -9,9 +9,9 @@
 package com.adyen.checkout.dropin.internal.data
 
 import app.cash.turbine.test
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +31,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
     @Test
     fun `when initialized with payment methods, then regulars are set`() {
-        val paymentMethods = listOf(GenericPaymentMethod(type = "scheme", name = "Cards"))
+        val paymentMethods = listOf(GenericPaymentMethodResponse(type = "scheme", name = "Cards"))
         val repository = createRepository(paymentMethods = paymentMethods)
 
         assertEquals(paymentMethods, repository.paymentMethods)
@@ -41,7 +41,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     fun `when initialized with empty payment methods, then regulars are empty`() {
         val repository = createRepository()
 
-        assertEquals(emptyList<GenericPaymentMethod>(), repository.paymentMethods)
+        assertEquals(emptyList<GenericPaymentMethodResponse>(), repository.paymentMethods)
     }
 
     @Test
@@ -56,13 +56,13 @@ internal class DefaultPaymentMethodRepositoryTest {
     fun `when initialized with empty stored payment methods, then stored payment methods are empty`() = runTest {
         val repository = createRepository()
 
-        assertEquals(emptyList<StoredCardPaymentMethod>(), repository.storedPaymentMethods.first())
+        assertEquals(emptyList<StoredCardPaymentMethodResponse>(), repository.storedPaymentMethods.first())
     }
 
     @Test
     fun `when removeStoredPaymentMethod is called, then the stored payment method is passed to the remover`() =
         runTest {
-            val removed = mutableListOf<StoredPaymentMethod>()
+            val removed = mutableListOf<StoredPaymentMethodResponse>()
             val repository = createRepository(
                 storedPaymentMethods = listOf(storedCard("1"), storedCard("2")),
                 remover = {
@@ -109,7 +109,7 @@ internal class DefaultPaymentMethodRepositoryTest {
     @Test
     fun `when removeStoredPaymentMethod is called with unknown id, then failure is returned and nothing is removed`() =
         runTest {
-            val removed = mutableListOf<StoredPaymentMethod>()
+            val removed = mutableListOf<StoredPaymentMethodResponse>()
             val repository = createRepository(
                 storedPaymentMethods = listOf(storedCard("1")),
                 remover = {
@@ -122,7 +122,7 @@ internal class DefaultPaymentMethodRepositoryTest {
             val result = repository.removeStoredPaymentMethod("999")
 
             assertTrue(result.isFailure)
-            assertEquals(emptyList<StoredPaymentMethod>(), removed)
+            assertEquals(emptyList<StoredPaymentMethodResponse>(), removed)
             assertEquals(listOf(storedCard("1")), repository.storedPaymentMethods.first())
         }
 
@@ -253,7 +253,7 @@ internal class DefaultPaymentMethodRepositoryTest {
 
         assertTrue(retry.isSuccess)
         assertEquals(2, removerCalls)
-        assertEquals(emptyList<StoredPaymentMethod>(), repository.storedPaymentMethods.first())
+        assertEquals(emptyList<StoredPaymentMethodResponse>(), repository.storedPaymentMethods.first())
     }
 
     @Test
@@ -287,8 +287,8 @@ internal class DefaultPaymentMethodRepositoryTest {
     }
 
     private fun createRepository(
-        paymentMethods: List<GenericPaymentMethod> = emptyList(),
-        storedPaymentMethods: List<StoredPaymentMethod> = emptyList(),
+        paymentMethods: List<GenericPaymentMethodResponse> = emptyList(),
+        storedPaymentMethods: List<StoredPaymentMethodResponse> = emptyList(),
         remover: StoredPaymentMethodRemover = StoredPaymentMethodRemover { Result.success(Unit) },
         coroutineScope: CoroutineScope = TestScope(),
     ) = DefaultPaymentMethodRepository(
@@ -298,7 +298,7 @@ internal class DefaultPaymentMethodRepositoryTest {
         coroutineScope = coroutineScope,
     )
 
-    private fun storedCard(id: String) = StoredCardPaymentMethod(
+    private fun storedCard(id: String) = StoredCardPaymentMethodResponse(
         type = "scheme",
         id = id,
         name = "MasterCard",

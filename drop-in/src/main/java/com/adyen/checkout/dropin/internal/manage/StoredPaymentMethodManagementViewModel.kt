@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.dropin.internal.analytics.StoredPaymentMethodManagementEvents
 import com.adyen.checkout.dropin.internal.data.PaymentMethodRepository
@@ -62,7 +62,7 @@ internal class StoredPaymentMethodManagementViewModel(
     }
 
     private fun createViewState(
-        storedPaymentMethods: List<StoredPaymentMethod>,
+        storedPaymentMethods: List<StoredPaymentMethodResponse>,
         idsBeingRemoved: Set<String>,
         showRemovalError: Boolean,
     ): StoredPaymentMethodManagementViewState {
@@ -79,7 +79,9 @@ internal class StoredPaymentMethodManagementViewModel(
         )
     }
 
-    private fun StoredPaymentMethod.toListItem(isRemoving: Boolean): StoredPaymentMethodManagementViewState.ListItem {
+    private fun StoredPaymentMethodResponse.toListItem(
+        isRemoving: Boolean,
+    ): StoredPaymentMethodManagementViewState.ListItem {
         val icon = StoredPaymentMethodFormatter.getIcon(this)
         val title = StoredPaymentMethodFormatter.getTitle(this)
         val subtitle = StoredPaymentMethodFormatter.getSubtitle(this)

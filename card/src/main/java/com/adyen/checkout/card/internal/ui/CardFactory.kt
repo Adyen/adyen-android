@@ -40,10 +40,10 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.CheckoutParams
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutAdditionalCallback
-import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.CardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.RegularPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredPaymentMethodResponse
 import com.adyen.checkout.core.components.getAdditionalCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentFactory
 import com.adyen.checkout.core.components.internal.StoredPaymentComponentFactory
@@ -57,14 +57,14 @@ internal class CardFactory :
 
     @Suppress("LongMethod")
     override fun create(
-        paymentMethod: PaymentMethod,
+        paymentMethod: RegularPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
         additionalCallbacks: Set<CheckoutAdditionalCallback>,
     ): CardComponent {
-        require(paymentMethod is CardPaymentMethod) { "Payment method should be of type CardPaymentMethod" }
+        require(paymentMethod is CardPaymentMethodResponse) { "Payment method should be of type CardPaymentMethod" }
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             params = params,
             paymentMethod = paymentMethod,
@@ -143,14 +143,14 @@ internal class CardFactory :
     }
 
     override fun create(
-        storedPaymentMethod: StoredPaymentMethod,
+        storedPaymentMethod: StoredPaymentMethodResponse,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         sdkDataProvider: SdkDataProvider,
         params: CheckoutParams,
     ): StoredCardComponent {
         // TODO - Remove casting when paymentMethod object is typed
-        val storedCardPaymentMethod = storedPaymentMethod as? StoredCardPaymentMethod
+        val storedCardPaymentMethod = storedPaymentMethod as? StoredCardPaymentMethodResponse
             ?: throw IllegalArgumentException("Incorrect paymentMethod")
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             params = params,

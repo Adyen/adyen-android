@@ -12,9 +12,9 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.TestCheckoutContext
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.GenericPaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.paymentmethod.PaymentMethods
-import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethod
+import com.adyen.checkout.core.components.data.model.paymentmethod.StoredCardPaymentMethodResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -25,8 +25,8 @@ internal class DropInAnalyticsSourceTest {
     fun `when created, then the source is Drop-in with the regular payment method types in order`() {
         val checkoutContext = createCheckoutContext(
             paymentMethods = listOf(
-                GenericPaymentMethod(type = PaymentMethodTypes.SCHEME, name = "Cards"),
-                GenericPaymentMethod(type = PaymentMethodTypes.IDEAL, name = "iDEAL"),
+                GenericPaymentMethodResponse(type = PaymentMethodTypes.SCHEME, name = "Cards"),
+                GenericPaymentMethodResponse(type = PaymentMethodTypes.IDEAL, name = "iDEAL"),
             ),
             storedPaymentMethods = listOf(STORED_CARD),
         )
@@ -49,8 +49,8 @@ internal class DropInAnalyticsSourceTest {
     }
 
     private fun createCheckoutContext(
-        paymentMethods: List<GenericPaymentMethod>,
-        storedPaymentMethods: List<StoredCardPaymentMethod>,
+        paymentMethods: List<GenericPaymentMethodResponse>,
+        storedPaymentMethods: List<StoredCardPaymentMethodResponse>,
     ) = TestCheckoutContext.advanced(
         paymentMethods = PaymentMethods(
             paymentMethods = paymentMethods,
@@ -62,7 +62,7 @@ internal class DropInAnalyticsSourceTest {
     private companion object {
         private const val CLIENT_KEY = "test_client_key"
 
-        private val STORED_CARD = StoredCardPaymentMethod(
+        private val STORED_CARD = StoredCardPaymentMethodResponse(
             type = PaymentMethodTypes.SCHEME,
             name = "Visa",
             id = "stored-id-1",
